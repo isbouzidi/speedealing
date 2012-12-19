@@ -53,7 +53,7 @@ class Societe extends nosqlDocument {
 		try {
 			$fk_extrafields = new ExtraFields($db);
 			$this->fk_extrafields = $fk_extrafields->load("extrafields:" . get_class($this), true); // load and cache
-			$this->fk_country = $this->couchdb->getDoc("dict:country"); //load country table
+			$this->fk_country = $this->couchdb->getDoc("dict:fk_country"); //load country table
 		} catch (Exception $e) {
 			$error = "Something weird happened: " . $e->getMessage() . " (errcode=" . $e->getCode() . ")\n";
 			print $error;
