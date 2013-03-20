@@ -160,7 +160,7 @@ class AbstractInvoice extends nosqlDocument {
         $head = $this->datatablesEditLine("listlines", $langs->trans("Lines"));
         print show_title($title, "icon-bag", $head);
 
-        print '<fieldset class="fieldset">';
+        print '<fieldset class="fieldset white-bg">';
         print '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
 
         $i = 0;
@@ -345,7 +345,7 @@ class AbstractInvoice extends nosqlDocument {
     function showAmounts($edit = true) {
         global $conf, $user, $langs;
 
-        $out.= '<fieldset class="fieldset">';
+        $out.= '<fieldset class="fieldset white-bg">';
         $out.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
         $out.= '<table class="simple-table responsive-table" id="table-amount">
 				<!--

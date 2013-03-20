@@ -2800,7 +2800,7 @@ class Commande extends AbstractInvoice {
 
 		//print start_box($langs->trans("LinkedObjects"), "six", $this->fk_extrafields->ico, false);
 
-		print '<fieldset class="fieldset">';
+		print '<fieldset class="fieldset white-bg">';
 		print '<legend class="anthracite large"><div class="no-margin-bottom left-icon ' . $this->fk_extrafields->ico . '">' . $langs->trans("LinkedObjects") . '</div></legend>';
 
 		print '<table class="display dt_act" id="listlinkedobjects" >';
