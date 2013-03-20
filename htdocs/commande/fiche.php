@@ -1329,11 +1329,12 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 
 
 	print column_start("six");
-	// Print Notes
-	print $object->show_notes();
 
 	// Print Total
 	print $object->showAmounts();
+
+	// Print Notes
+	print $object->show_notes();
 
 	print column_end();
 
