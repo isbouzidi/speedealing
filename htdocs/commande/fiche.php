@@ -185,7 +185,7 @@ if ($action == 'add' && $user->rights->commande->creer) {
 			dol_syslog("Try to find source object origin=" . $object->origin . " originid=" . $object->origin_id . " to add lines");
 			$result = $srcobject->fetch($object->origin_id);
 			if (!empty($result)) {
-				
+
 				// Hooks
 				$parameters = array('objFrom' => $srcobject);
 				$reshook = $hookmanager->executeHooks('createFrom', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
@@ -1323,13 +1323,13 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	dol_fiche_end();
 
 	print column_end();
-	
-	
-	
+
+
+
 	print column_start("six");
 	// Print Notes
 	print $object->show_notes();
-	
+
 	// Print Total
 	print $object->showAmounts();
 

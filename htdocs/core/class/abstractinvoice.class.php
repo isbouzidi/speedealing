@@ -161,7 +161,7 @@ class AbstractInvoice extends nosqlDocument {
         //print show_title($title, "icon-bag", $head);
 
         print '<fieldset class="fieldset">';
-        print '<legend class="legend"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
+        print '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
 
         $i = 0;
         print '<table class="display dt_act" id="listlines" >';
@@ -346,7 +346,7 @@ class AbstractInvoice extends nosqlDocument {
         global $conf, $user, $langs;
 
         $out.= '<fieldset class="fieldset">';
-        $out.= '<legend class="legend"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
+        $out.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
         $out.= '<table class="simple-table responsive-table" id="table-amount">
 				<thead>
 					<tr>
