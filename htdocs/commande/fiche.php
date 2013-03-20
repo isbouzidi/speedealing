@@ -1125,12 +1125,14 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	print '</form>';
 	print end_box();
 } else {
+	print '<br>';
+
 	/* Default View */
 	print column_start("six");
 
 	dol_fiche_head();
 
-	print '<table class="border" width="100%">';
+	print '<table class="simple-table responsive-table">';
 
 	// Ref
 	print '<tr><td width="30%">' . $langs->trans('Ref') . '</td>';
