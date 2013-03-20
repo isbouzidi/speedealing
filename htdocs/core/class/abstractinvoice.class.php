@@ -348,13 +348,15 @@ class AbstractInvoice extends nosqlDocument {
         $out.= '<fieldset class="fieldset">';
         $out.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
         $out.= '<table class="simple-table responsive-table" id="table-amount">
-				<thead>
+				<!--
+        		<thead>
 					<tr>
-						<!-- <th scope="col"><div class="no-margin-bottom red left-icon icon-bag"><h4 class="no-margin-bottom">' . $langs->trans("Summary") . '</h4></div></th> -->
+						<th scope="col"><div class="no-margin-bottom red left-icon icon-bag"><h4 class="no-margin-bottom">' . $langs->trans("Summary") . '</h4></div></th>
 						<th scope="col" width="40%"></th>
 						<th scope="col" width="15%" class="hide-on-mobile-portrait"></th>
 					</tr>
 				</thead>
+				-->
 				<tbody>';
         foreach ($this->fk_extrafields->amountsBox as $aRow) {
             $out.= '<tr>
