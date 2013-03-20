@@ -622,8 +622,10 @@ class Societe extends nosqlDocument {
 	 *  Define third party as a customer
 	 *
 	 * 	@return		int		<0 if KO, >0 if OK
+	 * @deprecated
 	 */
 	function set_as_client() {
+		/*
 		if ($this->id) {
 			$newclient = 1;
 			if ($this->client == 2 || $this->client == 3)
@@ -639,7 +641,7 @@ class Societe extends nosqlDocument {
 			}
 			else
 				return -1;
-		}
+		}*/
 		return 0;
 	}
 

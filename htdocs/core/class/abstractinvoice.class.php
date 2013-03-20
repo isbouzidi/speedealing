@@ -158,11 +158,14 @@ class AbstractInvoice extends nosqlDocument {
         //print start_box(, "twelve", $object->fk_extrafields->ico, false);
         //print show_title($title);
         $head = $this->datatablesEditLine("listlines", $langs->trans("Lines"));
-        print show_title($title, "icon-bag", $head);
+        //print show_title($title, "icon-bag", $head);
+
+        print '<fieldset class="fieldset">';
+        print '<legend class="legend"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
 
         $i = 0;
         print '<table class="display dt_act" id="listlines" >';
-        // Ligne des titres 
+        // Ligne des titres
         print'<thead>';
         print'<tr>';
         print'<th>';
@@ -330,6 +333,8 @@ class AbstractInvoice extends nosqlDocument {
         $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=lines&id=" . $this->id;
 
         $this->datatablesCreate($obj, "listlines", true, true);
+
+        print '</fieldset>';
     }
 
     /**
@@ -340,10 +345,12 @@ class AbstractInvoice extends nosqlDocument {
     function showAmounts($edit = true) {
         global $conf, $user, $langs;
 
+        $out.= '<fieldset class="fieldset">';
+        $out.= '<legend class="legend"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
         $out.= '<table class="simple-table responsive-table" id="table-amount">
 				<thead>
 					<tr>
-						<th scope="col"><div class="no-margin-bottom red left-icon icon-bag"><h4 class="no-margin-bottom">' . $langs->trans("Summary") . '</h4></div></th>
+						<!-- <th scope="col"><div class="no-margin-bottom red left-icon icon-bag"><h4 class="no-margin-bottom">' . $langs->trans("Summary") . '</h4></div></th> -->
 						<th scope="col" width="40%"></th>
 						<th scope="col" width="15%" class="hide-on-mobile-portrait"></th>
 					</tr>
@@ -377,6 +384,7 @@ class AbstractInvoice extends nosqlDocument {
 					</tr>';
         }
         $out.='</tbody></table>';
+        $out.='</fieldset>';
 
         return $out;
     }
