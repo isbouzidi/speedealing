@@ -1130,9 +1130,11 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	/* Default View */
 	print column_start("six");
 
+	//print '<fieldset class="fieldset">';
+
 	dol_fiche_head();
 
-	print '<table class="simple-table responsive-table">';
+	print '<table class="table responsive-table">';
 
 	// Ref
 	print '<tr><td width="30%">' . $langs->trans('Ref') . '</td>';
@@ -1323,6 +1325,8 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 
 
 	dol_fiche_end();
+
+	//print '</fieldset>';
 
 	print column_end();
 

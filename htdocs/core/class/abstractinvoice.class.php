@@ -158,7 +158,7 @@ class AbstractInvoice extends nosqlDocument {
         //print start_box(, "twelve", $object->fk_extrafields->ico, false);
         //print show_title($title);
         $head = $this->datatablesEditLine("listlines", $langs->trans("Lines"));
-        //print show_title($title, "icon-bag", $head);
+        print show_title($title, "icon-bag", $head);
 
         print '<fieldset class="fieldset">';
         print '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
