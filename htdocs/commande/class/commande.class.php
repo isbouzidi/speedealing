@@ -2798,7 +2798,11 @@ class Commande extends AbstractInvoice {
 	public function showLinkedObjects() {
 		global $langs;
 
-		print start_box($langs->trans("LinkedObjects"), "six", $this->fk_extrafields->ico, false);
+		//print start_box($langs->trans("LinkedObjects"), "six", $this->fk_extrafields->ico, false);
+
+		print '<fieldset class="fieldset">';
+		print '<legend class="anthracite large"><div class="no-margin-bottom left-icon ' . $this->fk_extrafields->ico . '">' . $langs->trans("LinkedObjects") . '</div></legend>';
+
 		print '<table class="display dt_act" id="listlinkedobjects" >';
 		// Ligne des titres
 
@@ -2812,7 +2816,7 @@ class Commande extends AbstractInvoice {
 		$obj->aoColumns[$i]->bSearchable = false;
 		$obj->aoColumns[$i]->bVisible = false;
 		$i++;
-		
+
 		print'<th class="essential">';
 		print $langs->trans("Ref");
 		print'</th>';
@@ -2859,7 +2863,8 @@ class Commande extends AbstractInvoice {
 		$obj->aaSorting = array(array(1, 'asc'));
 		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listLinkedObjects&class=" . get_class($this) . "&key=" . $this->id;
 		$this->datatablesCreate($obj, "listlinkedobjects", true);
-		print end_box();
+		//print end_box();
+		print '</fieldset>';
 	}
 
 	public function addInPlace($obj) {
@@ -2909,7 +2914,7 @@ class Commande extends AbstractInvoice {
 		print '<dt>';
 		print show_title($langs->trans("Orders"), "icon-chat no-margin-bottom");
 		print '</dt>';
-		
+
 		print '<dd><div class="with-mid-padding">';
 		print '<table class="display dt_act" id="listcommandes" >';
 		// Ligne des titres

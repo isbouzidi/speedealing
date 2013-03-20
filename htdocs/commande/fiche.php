@@ -1411,14 +1411,19 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 		$genallowed = $user->rights->commande->creer;
 		$delallowed = $user->rights->commande->supprimer;
 
+		print column_start("six");
 		$somethingshown = $formfile->show_documents('commande', $comref, $filedir, $urlsource, $genallowed, $delallowed, $object->modelpdf, 1, 0, 0, 28, 0, '', '', '', $soc->default_lang);
+		print column_end();
 
 		/*
 		 * Linked object block
 		 */
 		//$somethingshown = $object->showLinkedObjectBlock();
 //        $object->printLinkedObjects();
+
+		print column_start("six");
 		$object->showLinkedObjects();
+		print column_end();
 
 //        print '</td><td valign="top" width="50%">';
 		// List of actions on element
