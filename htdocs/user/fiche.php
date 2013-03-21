@@ -429,7 +429,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 		print_fiche_titre($title);
 		print '<div class="with-padding">';
 		print '<div class="columns">';
-		print start_box($title, "twelve", "16-User.png", false);
+		print column_start();
 
 		dol_fiche_head($head, 'user', $title, 0, 'user');
 
@@ -654,7 +654,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 			print '</div>';
 
-			print end_box();
+			print column_end();
 
 			/*
 			 * Liste des groupes dans lequel est l'utilisateur
@@ -662,7 +662,8 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 			if ($canreadgroup) {
 
-				print start_box($langs->trans("ListOfGroups"), "twelve", "16-Users-2.png", false);
+				print column_start();
+				print start_box($langs->trans("ListOfGroups"), "16-Users-2.png");
 
 				// On selectionne les users qui ne sont pas deja dans le groupe
 				$exclude = array();
@@ -747,8 +748,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 				$fuser->datatablesCreate($obj, "group");
 				print end_box();
+				print column_end();
 
-				print start_box($langs->trans("Permissions"), "twelve", "16-User-2.png", false);
+				print column_start();
+				print start_box($langs->trans("Permissions"), "16-User-2.png");
 				// Search all modules with permission and reload permissions def.
 
 				/*
@@ -900,6 +903,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 
 				print end_box();
+				print column_end();
 			}
 		}
 
@@ -996,7 +1000,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			// Administrator
 			$name = $fuser->name;
 			$admins = $fuser->getUserAdmins();
-			
+
 			if (isset($admins->$name))
 				$fuser->admin = true;
 			else

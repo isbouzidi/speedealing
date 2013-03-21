@@ -155,13 +155,13 @@ class AbstractInvoice extends nosqlDocument {
 				break;
 		}
 
-        //print start_box(, "twelve", $object->fk_extrafields->ico, false);
-        //print show_title($title);
-        $head = $this->datatablesEditLine("listlines", $langs->trans("Lines"));
-        print show_title($title, "icon-bag", $head);
+		//print start_box(, "twelve", $object->fk_extrafields->ico, false);
+		//print show_title($title);
+		$head = $this->datatablesEditLine("listlines", $langs->trans("Lines"));
+		print start_box($title, "icon-bag", $head);
 
-        print '<fieldset class="fieldset white-bg">';
-        print '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
+		//print '<fieldset class="fieldset white-bg">';
+		//print '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
 
 		$i = 0;
 		print '<table class="display dt_act" id="listlines" >';
@@ -334,7 +334,7 @@ class AbstractInvoice extends nosqlDocument {
 
 		$this->datatablesCreate($obj, "listlines", true, true);
 
-		print '</fieldset>';
+		print end_box();
 	}
 
 	/**
@@ -345,9 +345,9 @@ class AbstractInvoice extends nosqlDocument {
 	function showAmounts($edit = true) {
 		global $conf, $user, $langs;
 
-        $out.= '<fieldset class="fieldset white-bg">';
-        $out.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
-        $out.= '<table class="simple-table responsive-table" id="table-amount">
+		$out.= start_box($langs->trans("Summary"), "icon-bag");
+		//$out.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
+		$out.= '<table class="simple-table responsive-table" id="table-amount">
 				<!--
         		<thead>
 					<tr>
@@ -386,7 +386,7 @@ class AbstractInvoice extends nosqlDocument {
 					</tr>';
 		}
 		$out.='</tbody></table>';
-		$out.='</fieldset>';
+		$out.=end_box();
 
 		return $out;
 	}

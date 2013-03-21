@@ -715,6 +715,10 @@ function dol_print_date($time, $format = '', $tzoutput = 'tzserver', $outputlang
 
 
 
+
+
+
+		
 // If date undefined or "", we return ""
 	if (dol_strlen($time) == 0)
 		return '';  // $time=0 allowed (it means 01/01/1970 00:00:00)
@@ -743,6 +747,10 @@ function dol_print_date($time, $format = '', $tzoutput = 'tzserver', $outputlang
 
 
 
+
+
+
+		
 //print 'x'.$time;
 
 	if (preg_match('/%b/i', $format)) {  // There is some text to translate
@@ -2212,56 +2220,36 @@ function print_titre($title) {
  * 	Start a box
  *
  * 	@param	string	$title			Title of the box
- * 	@param	string	$nbcolumn		Number of column see style.css
  * 	@param	array	$head			list of top menu on box
  * 	@param	boolean	$box_action		Enable or Disable buttons reduse and delete box
  * 	@return	string					Title to show
  */
-function start_box($title, $nbcolumn = 'twelve', $icon = 'icon-object-default', $box_action = true, $head = null) {
+function start_box($title, $cssClass = 'icon-object-default', $menu = array(), $box_action = true) {
 
-	$path = DOL_URL_ROOT;
-	if (empty($path))
-		$path = "..";
+	if (!empty($title)) {
+		$rtr = "";
 
-	if (empty($icon))
-		$icon = 'icon-object-default';
+		$rtr.= '<fieldset class="fieldset white-bg">';
+		$rtr.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon relative ' . $cssClass . '">' . $title;
 
-	switch ($nbcolumn) {
-		case "two" :
-			$rtr = '<div class="two-columns four-columns-mobile-landscape six-columns-mobile-portrait">';
-			break;
-		case "four" :
-			$rtr = '<div class="four-columns six-columns-tablet twelve-columns-mobile">';
-			break;
-		case "six" :
-			$rtr = '<div class="six-columns twelve-columns-mobile">';
-			break;
-		default :
-			$rtr = '<div class="twelve-columns">';
+		//$rtr.= '<h3 class="green left-icon-big relative ' . $cssClass . '">' . $title;
+		if (count($menu) > 0 && $box_action)
+			if (count($menu) == 1)
+				$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '">' . $menu[0]->title . '</a>';
+			else {
+				$rtr.= '<div class="button-group absolute-right compact">';
+				foreach ($menu as $aRow)
+					if (isset($aRow->onclick))
+						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '">' . $aRow->title . '</a>';
+					else
+						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '" >' . $aRow->title . '</a>';
+				/* <a href="#" class="button icon-pencil">Edit</a>
+				  <a href="#" class="button icon-gear with-tooltip" title="Other actions"></a>
+				  <a href="#" class="button icon-trash with-tooltip confirm" title="Delete"></a> */
+				$rtr.='</div>';
+			}
+		$rtr.= '</div></legend>';
 	}
-
-
-
-
-	$rtr.= '<div class="box_c">';
-	if ($box_action && empty($head))
-		$rtr.= '<div class="box_c_heading cf box_actions">';
-	else
-		$rtr.= '<div class="box_c_heading cf">';
-	$rtr.= '<div class="box_c_ico"><span class="' . $icon . '"></span></div>';
-	$rtr.= '<p>' . $title . '</p>';
-
-	// See menu on top box
-	if (!empty($head)) {
-		$rtr.='<ul class="tabs cf right">';
-		foreach ($head as $aRow) {
-			$rtr.='<li><a href="#" id="' . $aRow[2] . '">' . $aRow[1] . '</a></li>';
-		}
-		$rtr.='</ul>';
-	}
-	$rtr.= '</div>';
-	$rtr.= '<div class="box_c_content">';
-
 	return $rtr;
 }
 
@@ -2271,10 +2259,7 @@ function start_box($title, $nbcolumn = 'twelve', $icon = 'icon-object-default', 
  * 	@return	string					Title to show
  */
 function end_box() {
-	$rtr = '</div>'; //end content box
-	$rtr.= '</div>'; //end box
-	$rtr.= '</div>'; //end columns
-	return $rtr;
+	return '</fieldset>';
 }
 
 function column_start($nbcolumn = "tweleve") {
@@ -2296,30 +2281,6 @@ function column_start($nbcolumn = "tweleve") {
 
 function column_end() {
 	return "</div>";
-}
-
-function show_title($title, $cssClass, $menu = array()) {
-	if (!empty($title)) {
-		$rtr = "";
-		$rtr.= '<h3 class="green left-icon-big relative ' . $cssClass . '">' . $title;
-		if (count($menu) > 0)
-			if (count($menu) == 1)
-				$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '">' . $menu[0]->title . '</a>';
-			else {
-				$rtr.= '<div class="button-group absolute-right compact">';
-				foreach ($menu as $aRow)
-					if (isset($aRow->onclick))
-						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '">' . $aRow->title . '</a>';
-					else
-						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '" >' . $aRow->title . '</a>';
-				/* <a href="#" class="button icon-pencil">Edit</a>
-				  <a href="#" class="button icon-gear with-tooltip" title="Other actions"></a>
-				  <a href="#" class="button icon-trash with-tooltip confirm" title="Delete"></a> */
-				$rtr.='</div>';
-			}
-		$rtr.= '</h3>';
-	}
-	return $rtr;
 }
 
 /**
@@ -2675,6 +2636,10 @@ function price2num($amount, $rounding = '', $alreadysqlnb = 0) {
 			$nbofdectoround = $conf->global->MAIN_MAX_DECIMALS_SHOWN;
 		elseif (is_numeric($rounding))
 			$nbofdectoround = $rounding;  // For admin info page
+
+
+
+
 
 
 
@@ -3083,6 +3048,10 @@ function dol_mkdir($dir, $dataroot = '') {
 			$ccdir .= $cdir[$i];
 		if (preg_match("/^.:$/", $ccdir, $regs))
 			continue; // Si chemin Windows incomplet, on poursuit par rep suivant
+
+
+
+
 
 
 

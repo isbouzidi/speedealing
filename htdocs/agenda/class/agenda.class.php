@@ -957,8 +957,7 @@ class Agenda extends nosqlDocument {
 		$head[$h]->icon = "icon-calendar";
 		$h++;
 
-		print column_start("six");
-		print show_title($titre, "icon-calendar", $head);
+		print start_box($titre, "icon-calendar", $head);
 
 		$i = 0;
 		$obj = new stdClass();
@@ -1050,8 +1049,8 @@ class Agenda extends nosqlDocument {
 			</script>
 			<?php
 		}*/
-		print column_end();
-		//print end_box();
+		print end_box();
+		
 	}
 
 	/**

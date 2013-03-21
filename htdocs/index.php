@@ -90,7 +90,8 @@ print '<div class="columns">';
  * Informations area
 */
 
-print start_box($langs->trans("Informations"), 'four', '16-User.png');
+print column_start("four");
+print start_box($langs->trans("Informations"), 'icon-user');
 print '<table class="noborder" width="100%">';
 print '<tr ' . $bc[false] . '>';
 print '<td nowrap="nowrap">' . $langs->trans("User") . '</td><td>' . $user->getNomUrl(0) . '</td></tr>';
@@ -104,6 +105,7 @@ print '</td>';
 print "</tr>\n";
 print "</table>\n";
 print end_box();
+print column_end();
 
 
 /*

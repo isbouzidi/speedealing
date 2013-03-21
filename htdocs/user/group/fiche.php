@@ -202,7 +202,8 @@ if ($action == 'create') {
              * Liste des utilisateurs dans le groupe
              */
 
-            print start_box($langs->trans("ListOfUsersInGroup"), "twelve", "16-User-2.png", false);
+			print column_start();
+            print start_box($langs->trans("ListOfUsersInGroup"), "16-User-2.png");
 
 // On selectionne les users qui ne sont pas deja dans le groupe
             $exclude = array();
@@ -303,9 +304,11 @@ if ($action == 'create') {
 
             $object->datatablesCreate($obj, "users");
 
-            print end_box();
+			print end_box();
+            print column_end();
 
-            print start_box($title, "twelve", "16-Users-2.png", false);
+			print column_start();
+            print start_box($title, "16-Users-2.png");
 
             /*
              * Ecran ajout/suppression permission
@@ -450,6 +453,7 @@ if ($action == 'create') {
 
 
             print end_box();
+			print column_end();
         }
 
         /*

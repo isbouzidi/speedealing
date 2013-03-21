@@ -1763,29 +1763,29 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		print $object->show_notes();
 		print column_end();
 		
-		print column_start("six");
-		print '<dl class="accordion">';
-		
 		if ($conf->propal->enabled) {
 			require_once(DOL_DOCUMENT_ROOT . '/propal/class/propal.class.php');
 			$propal = new Propal($db);
+			print column_start("six");
 			$propal->show($object->id);
+			print column_end();
 		}
 
 		if ($conf->commande->enabled) {
 			require_once(DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php');
 			$commande = new Commande($db);
+			print column_start("six");
 			$commande->show($object->id);
+			print column_end();
 		}
 
 		if ($conf->facture->enabled) {
 			require_once(DOL_DOCUMENT_ROOT . '/facture/class/facture.class.php');
 			$facture = new Facture($db);
+			print column_start("six");
 			$facture->show($object->id);
+			print column_end();
 		}
-		
-		print '</dl>';
-		print column_end();
 
 		if ($conf->ecm->enabled) {
 			// Generated documents
@@ -1795,14 +1795,17 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			$delallowed = $user->rights->societe->supprimer;
 
 			$var = true;
-
+			print column_start("six");
 			$somethingshown = $formfile->show_documents('company', $object->id, $filedir, $urlsource, $genallowed, $delallowed, '', 0, 0, 0, 28, 0, '', 0, '', $object->default_lang);
+			print column_end();
 		}
 
 		// Subsidiaries list
 		//$result = show_subsidiaries($conf, $langs, $db, $object);
 		// Contacts list
+		print column_start("six");
 		$contact->show(25, $object->id);
+		print column_end();
 		//$result = show_contacts($conf, $langs, $db, $object, $_SERVER["PHP_SELF"] . '?id=' . $object->id);
 		// Show actions
 		// TODO use hookmanager for show box of anothers modules for avoid multiple declarations
@@ -1813,7 +1816,9 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 		if ($conf->agenda->enabled) {
 			$cal = new Agenda($db);
+			print column_start("six");
 			$cal->show($object->id, 25);
+			print column_end();
 		}
 
 		// Addresses list

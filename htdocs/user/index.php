@@ -51,7 +51,8 @@ $title = $langs->trans("ListOfUsers");
 print_fiche_titre($title);
 print '<div class="with-padding">';
 print '<div class="columns">';
-print start_box($title, "twelve", "16-User.png", false);
+
+print column_start();
 
 /*
  * Barre d'actions
@@ -183,7 +184,7 @@ $obj->sAjaxSource = 'user/ajax/list.php?json=list';
 
 $object->datatablesCreate($obj, "user", true);
 
-print end_box();
+print column_end();
 print '<div>';
 
 llxFooter();

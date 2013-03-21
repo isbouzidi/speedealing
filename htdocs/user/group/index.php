@@ -88,7 +88,7 @@ $title = $langs->trans("ListOfGroups");
 print_fiche_titre($title);
 print '<div class="with-padding">';
 print '<div class="columns">';
-print start_box($title, "twelve", "16-Users-2.png", false);
+print column_start();
 
 /*
  * Barre d'actions
@@ -159,7 +159,7 @@ $object->datatablesCreate($obj, "group", true);
 
 
 
-print end_box();
+print column_end();
 print '<div>';
 
 llxFooter();

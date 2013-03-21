@@ -303,7 +303,8 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         print '<div class="with-padding">';
         print '<div class="columns">';
 
-        print start_box($title, "twelve", $object->fk_extrafields->ico, false);
+		print column_start();
+        //print start_box($title, $object->fk_extrafields->ico);
 
         dol_fiche_head($head, 'card', $title, 0, 'contact');
     }
@@ -325,7 +326,8 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
             print '<div class="with-padding">';
             print '<div class="columns">';
 
-            print start_box($title, "twelve", $object->fk_extrafields->ico, false);
+			print column_start();
+            print start_box($title, $object->fk_extrafields->ico);
 
             // Affiche les erreurs
             dol_htmloutput_errors(is_numeric($error) ? '' : $error, $errors);
@@ -509,6 +511,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
             print "</form>";
             print end_box();
+			print column_end();
         } elseif ($action == 'edit' && !empty($id)) {
             /*
              * Fiche en mode edition
@@ -693,7 +696,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
             print "</form>";
 
-            print end_box();
+			print column_end();
         }
     }
 
@@ -898,12 +901,16 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
             print "</div>";
         }
 
-        print end_box();
+		print column_end();
 
-        print $object->show_notes();
+		print column_start("six");
+        print $object->show_notes(true);
+		print column_end();
 
         $agenda = new Agenda($db);
-        print $agenda->show(25, $object->id);
+		print column_start("six");
+        print $agenda->show($object->id, 25);
+		print column_end();
     }
 }
 

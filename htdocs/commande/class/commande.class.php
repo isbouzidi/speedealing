@@ -2798,10 +2798,7 @@ class Commande extends AbstractInvoice {
 	public function showLinkedObjects() {
 		global $langs;
 
-		//print start_box($langs->trans("LinkedObjects"), "six", $this->fk_extrafields->ico, false);
-
-		print '<fieldset class="fieldset white-bg">';
-		print '<legend class="anthracite large"><div class="no-margin-bottom left-icon ' . $this->fk_extrafields->ico . '">' . $langs->trans("LinkedObjects") . '</div></legend>';
+		print start_box($langs->trans("LinkedObjects"), $this->fk_extrafields->ico);
 
 		print '<table class="display dt_act" id="listlinkedobjects" >';
 		// Ligne des titres
@@ -2863,8 +2860,7 @@ class Commande extends AbstractInvoice {
 		$obj->aaSorting = array(array(1, 'asc'));
 		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listLinkedObjects&class=" . get_class($this) . "&key=" . $this->id;
 		$this->datatablesCreate($obj, "listlinkedobjects", true);
-		//print end_box();
-		print '</fieldset>';
+		print end_box();
 	}
 
 	public function addInPlace($obj) {
@@ -2909,13 +2905,8 @@ class Commande extends AbstractInvoice {
 		require_once(DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php');
 		$commande = new Commande($this->db);
 
-		//print start_box($langs->trans("Orders"), "twelve", $this->fk_extrafields->ico);
-		//print column_start("six");
-		print '<dt>';
-		print show_title($langs->trans("Orders"), "icon-chat no-margin-bottom");
-		print '</dt>';
+		print start_box($langs->trans("Orders"), $this->fk_extrafields->ico);
 
-		print '<dd><div class="with-mid-padding">';
 		print '<table class="display dt_act" id="listcommandes" >';
 		// Ligne des titres
 
@@ -2974,8 +2965,7 @@ class Commande extends AbstractInvoice {
 		$obj->iDisplayLength = $max;
 		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listBySociete&class=" . get_class($this) . "&key=" . id;
 		$this->datatablesCreate($obj, "listcommandes", true);
-		//print column_end();
-		print '</div></dd>';
+		print end_box();
 	}
 
 }
@@ -2994,14 +2984,14 @@ class OrderLine extends nosqlDocument {
 	var $fk_parent_line;
 	var $fk_facture;
 	var $label;
-	var $description;	 // Description ligne
+	var $description;  // Description ligne
 	var $fk_product;  // Id produit predefini
 	var $product_type = 0; // Type 0 = product, 1 = Service
 	var $qty; // Quantity (example 2)
 	var $tva_tx;   // VAT Rate for product/service (example 19.6)
 	var $localtax1_tx;   // Local tax 1
 	var $localtax2_tx;   // Local tax 2
-	var $subprice;	// U.P. HT (example 100)
+	var $subprice; // U.P. HT (example 100)
 	var $remise_percent; // % for line discount (example 20%)
 	var $fk_remise_except;
 	var $rang = 0;

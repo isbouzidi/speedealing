@@ -429,7 +429,8 @@ if ($action == 'create') {
 	print '<div class="with-padding">';
 	print '<div class="columns">';
 
-	print start_box($title, "twelve", $object->fk_extrafields->ico, false);
+	print column_start();
+	//print start_box($title, "twelve", $object->fk_extrafields->ico, false);
 
 	print "\n" . '<script type="text/javascript" language="javascript">';
 	print 'jQuery(document).ready(function () {
@@ -749,7 +750,7 @@ if ($action == 'create') {
 
 	print "</div>";
 
-	print end_box();
+	print column_end();
 }
 
 // View or edit
@@ -804,7 +805,7 @@ if ($id) {
 	print '<div class="with-padding">';
 	print '<div class="columns">';
 
-	print start_box($object->print_fk_extrafields("type_code") . " : " . $object->label, "tweleve", "16-Timer.png", false);
+	print column_start();
 
 	/*
 	 * Affichage onglets
@@ -1066,6 +1067,9 @@ if ($id) {
 
 		print '</form>';
 		print '</div>';
+		
+		print column_end();
+		
 	} else {
 		/**
 		 * Mode View
@@ -1278,10 +1282,12 @@ if ($id) {
 		print '</span>';
 		print '</div>';
 		print '</div>';
+		
+		print column_end();
 
-		print end_box();
-
-		print $object->show_notes();
+		print column_start("six");
+		print $object->show_notes(true);
+		print column_end();
 	}
 }
 

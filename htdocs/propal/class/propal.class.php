@@ -2295,13 +2295,7 @@ class Propal extends AbstractInvoice {
         require_once(DOL_DOCUMENT_ROOT . '/propal/class/propal.class.php');
         $propal = new Propal($this->db);
 
-        //print start_box($langs->trans("Proposals"), "twelve", $this->fk_extrafields->ico);
-        //print column_start("six");
-		print '<dt>';
-		print show_title($langs->trans("Proposals"), "icon-chat no-margin-bottom");
-		print '</dt>';
-		
-		print '<dd><div class="with-mid-padding">';
+		print start_box($langs->trans("Proposals"), $this->fk_extrafields->ico);
 		print '<table class="display dt_act" id="listpropals" >';
         // Ligne des titres
 
@@ -2360,8 +2354,7 @@ class Propal extends AbstractInvoice {
         $obj->iDisplayLength = $max;
         $obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listBySociete&class=" . get_class($this) . "&key=" . $id;
         $this->datatablesCreate($obj, "listpropals", true);
-        //print column_end();
-		print '</div></dd>';
+        print end_box();
     }
 
 }

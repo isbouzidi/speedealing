@@ -839,17 +839,16 @@ class Contact extends nosqlDocument {
 		global $langs, $conf, $user, $db, $bc;
 
 		$titre = $langs->trans("ContactsForCompany");
-		print column_start("six");
 		if ($user->rights->societe->contact->creer) {
 			$h = 0;
 			$head[$h] = new stdClass();
 			$head[$h]->href = 'contact/fiche.php?action=create&socid=' . $id;
 			$head[$h]->title = $langs->trans("NewContact");
 			$head[$h]->icon = "icon-pencil";
-			print show_title($titre, "icon-users", $head);
+			print start_box($titre, "icon-users", $head);
 		}
 		else
-			print show_title($titre, "icon-users");
+			print start_box($titre, "icon-users");
 
 		$i = 0;
 		$obj = new stdClass();
@@ -910,7 +909,7 @@ class Contact extends nosqlDocument {
 		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listSociete&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "contacts_datatable", true);
 
-		print column_end();
+		print end_box();
 	}
 
 	/* function show_contacts($conf, $langs, $db, $object, $backtopage = '') {
