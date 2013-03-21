@@ -1578,7 +1578,20 @@ abstract class nosqlDocument extends CommonObject {
 	function show_notes($edit = true) {
 		global $conf, $user, $langs;
 
-		//$out = start_box("", "six");
+		//$out = start_box($langs->trans("Notes"), "icon-info-round");
+
+		$out.= '<div class="standard-tabs">';
+
+		// Tabs
+		$out.= '<ul class="tabs">';
+		$out.= '<li class="active"><a href="#tab-private-note">' . $langs->trans('PrivateNotes') . '</a></li>';
+		$out.= '<li><a href="#tab-public-note">' . $langs->trans('PublicNotes') . '</a></li>';
+		$out.= '</ul>';
+
+		// Contents
+		$out.= '<div class="tabs-content">';
+
+		$out.= '<div id="tab-private-note" class="with-padding">';
 
 		// Notes
 		if ($edit) {
@@ -1597,7 +1610,34 @@ abstract class nosqlDocument extends CommonObject {
 			$out.= '</div>';
 		}
 
+		$out.= '</div>';
+
+		$out.= '<div id="tab-public-note" class="with-padding">';
+
+		// Notes
+		if ($edit) {
+			$out.= '<input id="element_id_public_notes" type="hidden" value="' . $this->id . '"/>';
+			$out.= '<input id="element_class_public_notes" type="hidden" value="' . get_class($this) . '"/>';
+			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
+			$out.= '<h4 class="no-margin-bottom">'.$langs->trans("Notes").'</h4>';
+			$out.= '<div id="editval_public_notes" class="edit_wysiwyg with-tooltip">';
+			$out.= $this->public_notes . '</div>';
+			$out.= '</div>';
+		}
+		else {
+			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
+			$out.= '<h4 class="no-margin-bottom">'.$langs->trans("Notes").'</h4>';
+			$out.= $this->public_notes;
+			$out.= '</div>';
+		}
+
+		$out.= '</div>';
+
+		$out.= '</div>';
+		$out.= '</div>';
+
 		//$out.= end_box();
+
 		return $out;
 	}
 

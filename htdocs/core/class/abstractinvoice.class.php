@@ -342,10 +342,10 @@ class AbstractInvoice extends nosqlDocument {
 	 *
 	 *  @return	@string
 	 */
-	function showAmounts($edit = true) {
+	function showAmounts() {
 		global $conf, $user, $langs;
 
-		$out.= start_box($langs->trans("Summary"), "icon-bag");
+		$out = start_box($langs->trans("Summary"), "icon-bag");
 		//$out.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $langs->trans("Summary") . '</div></legend>';
 		$out.= '<table class="simple-table responsive-table" id="table-amount">
 				<!--
@@ -387,6 +387,43 @@ class AbstractInvoice extends nosqlDocument {
 		}
 		$out.='</tbody></table>';
 		$out.=end_box();
+
+		return $out;
+	}
+
+	/**
+	 * return address bloc
+	 *
+	 *  @return	@string
+	 */
+	function showAddresses() {
+		global $conf, $user, $langs;
+
+		//$out = start_box($langs->trans("ContactsAddresses"), "icon-bag");
+
+		$out.= '<div class="standard-tabs">';
+
+		// Tabs
+		$out.= '<ul class="tabs">';
+		$out.= '<li class="active"><a href="#tab-1">' . $langs->trans('DeliveryAddress') . '</a></li>';
+		$out.= '<li><a href="#tab-2">' . $langs->trans('BillingAddress') . '</a></li>';
+		$out.= '</ul>';
+
+		// Contents
+		$out.= '<div class="tabs-content">';
+
+		$out.= '<div id="tab-1" class="with-padding">';
+		$out.= '<br><br><br><br><br><br><br>Delivery address content<br><br><br><br><br><br>';
+		$out.= '</div>';
+
+		$out.= '<div id="tab-2" class="with-padding">';
+		$out.= '<br><br><br><br><br><br><br>Billing address content<br><br><br><br><br><br>';
+		$out.= '</div>';
+
+		$out.= '</div>';
+		$out.= '</div>';
+
+		//$out.= end_box();
 
 		return $out;
 	}
