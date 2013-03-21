@@ -2301,7 +2301,7 @@ function column_end() {
 function show_title($title, $cssClass, $menu = array()) {
 	if (!empty($title)) {
 		$rtr = "";
-		//$rtr.= '<h4 class="red underline left-icon ' . $cssClass . '">' . $title;
+		$rtr.= '<h3 class="green left-icon-big relative ' . $cssClass . '">' . $title;
 		if (count($menu) > 0)
 			if (count($menu) == 1)
 				$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '">' . $menu[0]->title . '</a>';
@@ -2317,7 +2317,7 @@ function show_title($title, $cssClass, $menu = array()) {
 				  <a href="#" class="button icon-trash with-tooltip confirm" title="Delete"></a> */
 				$rtr.='</div>';
 			}
-		//$rtr.= '</h4>';
+		$rtr.= '</h3>';
 	}
 	return $rtr;
 }
@@ -2698,7 +2698,7 @@ function price2num($amount, $rounding = '', $alreadysqlnb = 0) {
 
 
 
-
+			
 //print "RR".$amount.' - '.$nbofdectoround.'<br>';
 		if (dol_strlen($nbofdectoround))
 			$amount = round($amount, $nbofdectoround); // $nbofdectoround can be 0.
@@ -3107,7 +3107,7 @@ function dol_mkdir($dir, $dataroot = '') {
 
 
 
-
+			
 // Attention, le is_dir() peut echouer bien que le rep existe.
 		// (ex selon config de open_basedir)
 		if ($ccdir) {
