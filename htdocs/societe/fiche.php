@@ -582,7 +582,8 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		print '<div class="columns">';
 
 		$titre = $langs->trans("NewThirdParty");
-		print start_box($titre, "twelve", $object->fk_extrafields->ico, false);
+		//print start_box($titre, $object->fk_extrafields->ico);
+		print column_start();
 
 		if (!empty($conf->use_javascript_ajax)) {
 			print "\n" . '<script type="text/javascript">';
@@ -923,7 +924,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 		print '</form>' . "\n";
 
-		print end_box();
+		print column_end();
 		print '</div></div>';
 	} elseif ($action == 'edit') {
 		/*

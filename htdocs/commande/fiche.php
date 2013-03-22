@@ -677,7 +677,8 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 		}
 	}
 
-	print start_box($title, "twelve", $object->fk_extrafields->ico, false);
+	//print start_box($title, $object->fk_extrafields->ico);
+	print column_start();
 	print '<form name="crea_commande" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="' . ($action == 'create' ? 'add' : 'update') . '">';
@@ -832,7 +833,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	print '<br><center><input type="submit" class="button" name="bouton" value="' . ($action == 'edit' ? $langs->trans('Modify') : $langs->trans('CreateDraft')) . '"></center>';
 
 	print '</form>';
-	print end_box();
+	print column_end();
 } else {
 	print '<br>';
 
