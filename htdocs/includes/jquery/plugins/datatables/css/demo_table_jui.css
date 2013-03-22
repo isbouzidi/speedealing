@@ -12,7 +12,7 @@ table.display thead th:hover {color: #0059A0;}
 div.dataTables_wrapper .ui-widget-header{font-weight:400}
 table.display thead th div.DataTables_sort_wrapper{position:relative; padding-right: 15px;}
 table.display thead th div.DataTables_sort_wrapper span{position:absolute;top:50%;margin-top:-8px;right:0}
-table.display tbody {border-bottom: 2px solid #000; border-top: 2px solid #000;}
+table.display tbody {border-bottom: 1px solid #000; border-top: 1px solid #000;}
 table.display > tbody > tr:hover {background: #F0F0F0;}
 .dataTables_wrapper{position:relative;min-height:132px;clear:both;overflow:hidden}
 .dataTables_length{width:30%;float:left}

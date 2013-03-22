@@ -968,8 +968,8 @@ abstract class nosqlDocument extends CommonObject {
 				$rtr = 'function(obj) {
 	 		var ar = [];
 			';
-				if (strpos($key,".") > 0)
-					$rtr.='if(obj.aData.' . substr($key, 0, strpos($key,".")) . '=== undefined)
+				if (strpos($key, ".") > 0)
+					$rtr.='if(obj.aData.' . substr($key, 0, strpos($key, ".")) . '=== undefined)
 							return ar.join("");
 	 		if(obj.aData.' . $key . ' === undefined)
 				if(obj.aData.' . $params["id"] . ' === undefined)
@@ -1579,26 +1579,44 @@ abstract class nosqlDocument extends CommonObject {
 		global $conf, $user, $langs;
 
 		//$out = start_box("", "six");
-
 		// Notes
 		if ($edit) {
 			$out.= '<input id="element_id_notes" type="hidden" value="' . $this->id . '"/>';
 			$out.= '<input id="element_class_notes" type="hidden" value="' . get_class($this) . '"/>';
 			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
-			$out.= '<h4 class="no-margin-bottom">'.$langs->trans("Notes").'</h4>';
+			$out.= '<h4 class="no-margin-bottom">' . $langs->trans("Notes") . '</h4>';
 			$out.= '<div id="editval_notes" class="edit_wysiwyg with-tooltip">';
 			$out.= $this->notes . '</div>';
 			$out.= '</div>';
-		}
-		else {
+		} else {
 			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
-			$out.= '<h4 class="no-margin-bottom">'.$langs->trans("Notes").'</h4>';
+			$out.= '<h4 class="no-margin-bottom">' . $langs->trans("Notes") . '</h4>';
 			$out.= $this->notes;
 			$out.= '</div>';
 		}
 
 		//$out.= end_box();
 		return $out;
+	}
+
+	/**
+	 * Test if an object is changed before a record()
+	 * return boolean
+	 */
+	function isChanged($oldObj) {
+		$change = false;
+		if (is_object($oldObj)) {
+			if (get_class($this) != get_class($oldObj))
+				return true;
+		}
+		else
+			return true;
+
+		foreach ($this->fk_extrafields->fields as $key => $aRow) {
+			if ($this->$key != $oldObj->$key)
+				$change = true;
+		}
+		return $change;
 	}
 
 }

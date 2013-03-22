@@ -2229,8 +2229,8 @@ function start_box($title, $cssClass = 'icon-object-default', $menu = array(), $
 	if (!empty($title)) {
 		$rtr = "";
 
-		$rtr.= '<fieldset class="fieldset white-bg">';
-		$rtr.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon relative ' . $cssClass . '">' . $title;
+		$rtr.= '<fieldset class="fieldset">';
+		$rtr.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon ' . $cssClass . '">' . $title;
 
 		//$rtr.= '<h3 class="green left-icon-big relative ' . $cssClass . '">' . $title;
 		if (count($menu) > 0 && $box_action)
