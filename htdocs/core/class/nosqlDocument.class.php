@@ -203,7 +203,7 @@ abstract class nosqlDocument extends CommonObject {
 	 * @return 	object			value of storeDoc
 	 */
 	public function record($cache = false) {
-		global $conf;
+		global $conf, $user;
 
 		$values = new stdClass();
 
@@ -229,6 +229,22 @@ abstract class nosqlDocument extends CommonObject {
 			unset($values->rights);
 		else
 			$values->entity = $conf->Couchdb->name;
+
+		// Save Status and TMS for history
+		if (isset($this->fk_extrafields) && $this->fk_extrafields->history) {
+			if (!isset($values->history))
+				$values->history = array();
+
+			$history = new stdClass();
+			$history->date = $values->tms;
+			$history->author->id = $user->id;
+			$history->author->name = $user->name;
+			$history->Status = $values->Status;
+			$history->rev = $values->_rev;
+
+			$values->history[] = $history;
+		}
+
 
 		try {
 			$this->couchdb->clean($values);
@@ -1031,7 +1047,7 @@ abstract class nosqlDocument extends CommonObject {
 			if(obj.aData.' . $key . ')
 			{
 				var date = new Date(obj.aData.' . $key . ');
-	 		return date.toLocaleDateString() +"<br>"+date.toLocaleTimeString();
+	 		return date.toLocaleDateString() +" "+date.toLocaleTimeString();
 			}
 	 		else
 	 		return null;
@@ -1657,6 +1673,72 @@ abstract class nosqlDocument extends CommonObject {
 				$change = true;
 		}
 		return $change;
+	}
+
+	/**
+	 *  Show history record
+	 *
+	 *  @param	int		$max		Max nb of records
+	 *  @return	void
+	 */
+	function show_history($max = 5) {
+		global $langs, $conf, $user, $db, $bc;
+
+		$titre = $langs->trans("History");
+		print start_box($titre, "icon-calendar");
+
+		$i = 0;
+		$obj = new stdClass();
+		$societe = new Societe($this->db);
+
+		print '<table class="display dt_act" id="history_datatable" >';
+		// Ligne des titres
+
+		print '<thead>';
+		print'<tr>';
+		print'<th class="essential">';
+		print $langs->trans("Date");
+		print'</th>';
+		$obj->aoColumns[$i] = new stdClass();
+		$obj->aoColumns[$i]->mDataProp = "date";
+		$obj->aoColumns[$i]->bUseRendered = false;
+		$obj->aoColumns[$i]->bSearchable = true;
+		$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("date", "datetime");
+		$i++;
+		print'<th class="essential">';
+		print $langs->trans('User');
+		print'</th>';
+		$userstatic = new User();
+		$obj->aoColumns[$i] = new stdClass();
+		$obj->aoColumns[$i]->mDataProp = "author";
+		$obj->aoColumns[$i]->sDefaultContent = "";
+		$obj->aoColumns[$i]->fnRender = $userstatic->datatablesFnRender("author.name", "url", array('id' => "author.id"));
+		$i++;
+
+		print'<th class="essential">';
+		print $langs->trans("Status");
+		print'</th>';
+		$obj->aoColumns[$i] = new stdClass();
+		$obj->aoColumns[$i]->mDataProp = "Status";
+		$obj->aoColumns[$i]->sClass = "center";
+		
+		$obj->aoColumns[$i]->sDefaultContent = "ERROR";
+		$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("Status", "status");
+		$i++;
+		print '</tr>';
+		print '</thead>';
+		print'<tfoot>';
+		print'</tfoot>';
+		print'<tbody>';
+		print'</tbody>';
+		print "</table>";
+
+		$obj->iDisplayLength = $max;
+		$obj->aaSorting = array(array(0, "desc"));
+		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=history&class=" . get_class($this) . "&key=" . $this->id;
+		$this->datatablesCreate($obj, "history_datatable", true);
+
+		print end_box();
 	}
 
 }

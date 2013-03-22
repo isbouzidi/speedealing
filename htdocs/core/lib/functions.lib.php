@@ -2262,19 +2262,19 @@ function end_box() {
 	return '</fieldset>';
 }
 
-function column_start($nbcolumn = "tweleve") {
+function column_start($nbcolumn = "tweleve" , $cssClass="") {
 	switch ($nbcolumn) {
 		case "two" :
-			$rtr = '<div class="two-columns four-columns-mobile-landscape six-columns-mobile-portrait">';
+			$rtr = '<div class="'.$cssClass.' two-columns four-columns-mobile-landscape six-columns-mobile-portrait">';
 			break;
 		case "four" :
-			$rtr = '<div class="four-columns six-columns-tablet twelve-columns-mobile">';
+			$rtr = '<div class="'.$cssClass.' four-columns six-columns-tablet twelve-columns-mobile">';
 			break;
 		case "six" :
-			$rtr = '<div class="six-columns twelve-columns-mobile">';
+			$rtr = '<div class="'.$cssClass.' six-columns twelve-columns-mobile">';
 			break;
 		default :
-			$rtr = '<div class="twelve-columns">';
+			$rtr = '<div class="'.$cssClass.' twelve-columns">';
 	}
 	return $rtr;
 }

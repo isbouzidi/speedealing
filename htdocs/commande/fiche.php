@@ -110,9 +110,10 @@ if (!empty($_GET['json'])) {
 	$output["iTotalRecords"] = $iTotal;
 	$output["iTotalDisplayRecords"] = $iTotal;
 	$i = 0;
-	foreach ($result->rows as $aRow) {
-		$output["aaData"][] = $aRow->value;
-	}
+	if (count($result->rows))
+		foreach ($result->rows as $aRow) {
+			$output["aaData"][] = $aRow->value;
+		}
 
 	header('Content-type: application/json');
 	echo json_encode($output);
@@ -188,7 +189,7 @@ if ($action == 'add' && $user->rights->commande->creer) {
 
 				// Hooks
 				$parameters = array('objFrom' => $srcobject);
-				$reshook = $hookmanager->executeHooks('createFrom', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
+				$reshook = $hookmanager->executeHooks('createFrom', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 				if ($reshook < 0)
 					$error++;
 			}
@@ -333,7 +334,7 @@ else if ($action == 'confirm_modif' && $user->rights->commande->creer) {
 				$outputlangs->setDefaultLang($newlang);
 			}
 			if (empty($conf->global->MAIN_DISABLE_PDF_AUTOUPDATE)) {
-				$ret = $object->fetch($object->id);	// Reload to get new records
+				$ret = $object->fetch($object->id); // Reload to get new records
 				commande_pdf_create($db, $object, $object->modelpdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
 			}
 		}
@@ -754,7 +755,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 
 	// Other attributes
 	$parameters = array('objectsrc' => $objectsrc, 'colspan' => ' colspan="3"');
-	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 	if (empty($reshook) && !empty($extrafields->attribute_label)) {
 		foreach ($extrafields->attribute_label as $key => $label) {
 			$value = (isset($_POST["options_" . $key]) ? $_POST["options_" . $key] : $object->array_options["options_" . $key]);
@@ -968,8 +969,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 				$numshipping = $object->nb_expedition();
 
 				if ($object->statut > 0 && $object->statut < 3 && $object->getNbOfProductsLines() > 0) {
-					if (($conf->expedition_bon->enabled && $user->rights->expedition->creer)
-							|| ($conf->livraison_bon->enabled && $user->rights->expedition->livraison->creer)) {
+					if (($conf->expedition_bon->enabled && $user->rights->expedition->creer) || ($conf->livraison_bon->enabled && $user->rights->expedition->livraison->creer)) {
 						if ($user->rights->expedition->creer) {
 							print '<a class="butAction" href="' . DOL_URL_ROOT . '/expedition/shipment.php?id=' . $object->id . '">' . $langs->trans('ShipProduct') . '</a>';
 						} else {
@@ -1032,26 +1032,22 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 
 
 	dol_fiche_end();
-
-	print '<br>';
-
-	// Print Total
-	print $object->showAmounts();
-
 	print column_end();
-
-	print column_start("six");
 
 	// Print Addresses
+	print column_start("six");
 	print $object->showAddresses();
-
-	print '<br>';
-
-	// Print Notes
-	print $object->show_notes();
-
 	print column_end();
 
+	// Print Notes
+	print column_start("six");
+	print $object->show_notes();
+	print column_end();
+
+	// Print Total
+	print column_start("six");
+	print $object->showAmounts();
+	print column_end();
 
 	if (!empty($conf->global->MAIN_DISABLE_CONTACTS_TAB)) {
 		$blocname = 'contacts';
@@ -1134,6 +1130,11 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 
 		print column_start("six");
 		$object->showLinkedObjects();
+		print column_end();
+
+		// Print History
+		print column_start("six");
+		print $object->show_history();
 		print column_end();
 
 //        print '</td><td valign="top" width="50%">';

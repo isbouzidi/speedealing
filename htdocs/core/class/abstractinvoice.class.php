@@ -413,11 +413,11 @@ class AbstractInvoice extends nosqlDocument {
 		$out.= '<div class="tabs-content">';
 
 		$out.= '<div id="tab-1" class="with-padding">';
-		$out.= '<br><br><br><br><br><br><br>Delivery address content<br><br><br><br><br><br>';
+		$out.= '<br><br><br><br>Delivery address content<br><br><br><br>';
 		$out.= '</div>';
 
 		$out.= '<div id="tab-2" class="with-padding">';
-		$out.= '<br><br><br><br><br><br><br>Billing address content<br><br><br><br><br><br>';
+		$out.= '<br><br><br><<br>Billing address content<br><br><br><br>';
 		$out.= '</div>';
 
 		$out.= '</div>';

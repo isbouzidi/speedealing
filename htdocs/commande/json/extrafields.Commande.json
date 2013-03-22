@@ -1,212 +1,213 @@
 {
-   "_id": "extrafields:Commande",
-   "_rev": "74-84ffd04ecb304d15789428e026c6373b",
-   "class": "extrafields",
-   "ico": "icon-object-order",
-   "langs": [
-       "orders"
-   ],
-   "createList": [
-       "client",
-       "date",
-       "ref_client",
-       "Status"
-   ],
-   "createLine": [
-       "product",
-       "product_type",
-       "description",
-       "pu_ht",
-       "qty",
-       "tva_tx",
-       "remise"
-   ],
-   "amountsBox": [
-       "total_ht",
-       "shipping",
-       "total_tva",
-       "total_ttc"
-   ],
-   "fields": {
-       "Status": {
-           "type": "select",
-           "enable": true,
-           "default": "DRAFT",
-           "status": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_order_status"
-       },
-       "cond_reglement_code": {
-           "type": "select",
-           "enable": true,
-           "default": "RECEP",
-           "aoColumns": {
-               "sClass": "",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_payment_term"
-       },
-       "mode_reglement_code": {
-           "type": "select",
-           "enable": true,
-           "default": "TIP",
-           "aoColumns": {
-               "sClass": "",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_paiement"
-       },
-       "availability_code": {
-           "type": "select",
-           "enable": true,
-           "default": "AV_NOW",
-           "aoColumns": {
-               "sClass": "",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_availability"
-       },
-       "demand_reason_code": {
-           "type": "select",
-           "enable": true,
-           "default": "SRC_CAMP_EMAIL",
-           "aoColumns": {
-               "sClass": "",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_input_reason"
-       },
-       "client": {
-           "type": "select",
-           "enable": true,
-           "class": "Societe",
-           "view": "list",
-           "label": "Company"
-       },
-       "ref_client": {
-           "type": "text",
-           "enable": true,
-           "label": "RefCustomer"
-       },
-       "date": {
-           "type": "date",
-           "enable": true,
-           "label": "Date"
-       },
-       "date_livraison": {
-           "type": "date",
-           "enable": true,
-           "label": "DateEnd"
-       },
-       "societe": {
-           "enable": true
-       },
-       "notes": {
-           "enable": true
-       },
-       "description": {
-           "type": "text",
-           "enable": true,
-           "label": "Description"
-       },
-       "pu_ht": {
-           "type": "text",
-           "enable": true,
-           "label": "PriceUHT"
-       },
-       "qty": {
-           "type": "text",
-           "enable": true,
-           "label": "Qty"
-       },
-       "tva_tx": {
-           "type": "text",
-           "enable": true,
-           "label": "VAT"
-       },
-       "remise": {
-           "type": "text",
-           "enable": true,
-           "label": "ReductionShort"
-       },
-       "product": {
-           "type": "select",
-           "enable": true,
-           "class": "Product",
-           "view": "list",
-           "label": "Product"
-       },
-       "product_type": {
-           "type": "select",
-           "enable": true,
-           "default": "PRODUCT",
-           "status": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "values": {
-               "PRODUCT": {
-                   "enable": true,
-                   "label": "Product",
-                   "cssClass": "blue-gradient"
-               },
-               "SERVICE": {
-                   "label": "Service",
-                   "enable": true,
-                   "cssClass": "green-gradient"
-               }
-           }
-       },
-       "total_ht": {
-           "type": "text",
-           "settype": "float",
-           "price": true,
-           "cssClass": "red",
-           "enable": true,
-           "label": "AmountHT",
-           "mode": "absolute",
-           "default": 0
-       },
-       "total_tva": {
-           "type": "text",
-           "settype": "float",
-           "price": true,
-           "enable": true,
-           "label": "AmountVAT",
-           "mode": "absolute",
-           "default": 0
-       },
-       "total_ttc": {
-           "type": "text",
-           "settype": "float",
-           "price": true,
-           "enable": true,
-           "label": "AmountTTC",
-           "mode": "absolute",
-           "default": 0
-       },
-       "shipping": {
-           "type": "text",
-           "icon": "icon-plane",
-           "settype": "float",
-           "price": true,
-           "enable": true,
-           "label": "ShippingHT",
-           "mode": "absolute",
-           "default": 0
-       },
-       "subprice": {
-           "enable": true
-       }
-   }
+	"_id": "extrafields:Commande",
+	"_rev": "74-84ffd04ecb304d15789428e026c6373b",
+	"class": "extrafields",
+	"ico": "icon-object-order",
+	"langs": [
+		"orders"
+	],
+	"history": true,
+	"createList": [
+		"client",
+		"date",
+		"ref_client",
+		"Status"
+	],
+	"createLine": [
+		"product",
+		"product_type",
+		"description",
+		"pu_ht",
+		"qty",
+		"tva_tx",
+		"remise"
+	],
+	"amountsBox": [
+		"total_ht",
+		"shipping",
+		"total_tva",
+		"total_ttc"
+	],
+	"fields": {
+		"Status": {
+			"type": "select",
+			"enable": true,
+			"default": "DRAFT",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_order_status"
+		},
+		"cond_reglement_code": {
+			"type": "select",
+			"enable": true,
+			"default": "RECEP",
+			"aoColumns": {
+				"sClass": "",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_payment_term"
+		},
+		"mode_reglement_code": {
+			"type": "select",
+			"enable": true,
+			"default": "TIP",
+			"aoColumns": {
+				"sClass": "",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_paiement"
+		},
+		"availability_code": {
+			"type": "select",
+			"enable": true,
+			"default": "AV_NOW",
+			"aoColumns": {
+				"sClass": "",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_availability"
+		},
+		"demand_reason_code": {
+			"type": "select",
+			"enable": true,
+			"default": "SRC_CAMP_EMAIL",
+			"aoColumns": {
+				"sClass": "",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_input_reason"
+		},
+		"client": {
+			"type": "select",
+			"enable": true,
+			"class": "Societe",
+			"view": "list",
+			"label": "Company"
+		},
+		"ref_client": {
+			"type": "text",
+			"enable": true,
+			"label": "RefCustomer"
+		},
+		"date": {
+			"type": "date",
+			"enable": true,
+			"label": "Date"
+		},
+		"date_livraison": {
+			"type": "date",
+			"enable": true,
+			"label": "DateEnd"
+		},
+		"societe": {
+			"enable": true
+		},
+		"notes": {
+			"enable": true
+		},
+		"description": {
+			"type": "text",
+			"enable": true,
+			"label": "Description"
+		},
+		"pu_ht": {
+			"type": "text",
+			"enable": true,
+			"label": "PriceUHT"
+		},
+		"qty": {
+			"type": "text",
+			"enable": true,
+			"label": "Qty"
+		},
+		"tva_tx": {
+			"type": "text",
+			"enable": true,
+			"label": "VAT"
+		},
+		"remise": {
+			"type": "text",
+			"enable": true,
+			"label": "ReductionShort"
+		},
+		"product": {
+			"type": "select",
+			"enable": true,
+			"class": "Product",
+			"view": "list",
+			"label": "Product"
+		},
+		"product_type": {
+			"type": "select",
+			"enable": true,
+			"default": "PRODUCT",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"values": {
+				"PRODUCT": {
+					"enable": true,
+					"label": "Product",
+					"cssClass": "blue-gradient"
+				},
+				"SERVICE": {
+					"label": "Service",
+					"enable": true,
+					"cssClass": "green-gradient"
+				}
+			}
+		},
+		"total_ht": {
+			"type": "text",
+			"settype": "float",
+			"price": true,
+			"cssClass": "red",
+			"enable": true,
+			"label": "AmountHT",
+			"mode": "absolute",
+			"default": 0
+		},
+		"total_tva": {
+			"type": "text",
+			"settype": "float",
+			"price": true,
+			"enable": true,
+			"label": "AmountVAT",
+			"mode": "absolute",
+			"default": 0
+		},
+		"total_ttc": {
+			"type": "text",
+			"settype": "float",
+			"price": true,
+			"enable": true,
+			"label": "AmountTTC",
+			"mode": "absolute",
+			"default": 0
+		},
+		"shipping": {
+			"type": "text",
+			"icon": "icon-plane",
+			"settype": "float",
+			"price": true,
+			"enable": true,
+			"label": "ShippingHT",
+			"mode": "absolute",
+			"default": 0
+		},
+		"subprice": {
+			"enable": true
+		}
+	}
 }

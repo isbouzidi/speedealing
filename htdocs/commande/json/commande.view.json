@@ -1,6 +1,6 @@
 {
    "_id": "_design/Commande",
-   "_rev": "91-5e5e3f1aa41b398b9e7cdb05c21f1e95",
+   "_rev": "109-7e6eb6d2406e4f748537adf0c9a2c58c",
    "language": "javascript",
    "views": {
        "list": {
@@ -40,6 +40,9 @@
        },
        "planning": {
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Commande\" && (doc.Status != \"CANCELED\" && doc.Status != \"CLOSED\" && doc.Status != \"DRAFT\"))\n  emit(doc._id, doc);\n}"
+       },
+       "history": {
+           "map": "function(doc) {\nif(doc.class && doc.class == \"Commande\" && doc.history.length > 0) {\n    for(var idx in doc.history) {\n      emit(doc._id, {date:doc.history[idx].date, author:doc.history[idx].author, Status:doc.history[idx].Status});\n    }\n  }\n}"
        }
    },
    "updates": {
