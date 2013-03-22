@@ -1597,13 +1597,13 @@ abstract class nosqlDocument extends CommonObject {
 		if ($edit) {
 			$out.= '<input id="element_id_notes" type="hidden" value="' . $this->id . '"/>';
 			$out.= '<input id="element_class_notes" type="hidden" value="' . get_class($this) . '"/>';
-			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
+			$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
 			$out.= '<h4 class="no-margin-bottom">' . $langs->trans("Notes") . '</h4>';
 			$out.= '<div id="editval_notes" class="edit_wysiwyg with-tooltip">';
 			$out.= $this->notes . '</div>';
 			$out.= '</div>';
 		} else {
-			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
+			$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
 			$out.= '<h4 class="no-margin-bottom">' . $langs->trans("Notes") . '</h4>';
 			$out.= $this->notes;
 			$out.= '</div>';
@@ -1617,13 +1617,13 @@ abstract class nosqlDocument extends CommonObject {
 		if ($edit) {
 			$out.= '<input id="element_id_public_notes" type="hidden" value="' . $this->id . '"/>';
 			$out.= '<input id="element_class_public_notes" type="hidden" value="' . get_class($this) . '"/>';
-			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
+			$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
 			$out.= '<h4 class="no-margin-bottom">' . $langs->trans("Notes") . '</h4>';
 			$out.= '<div id="editval_public_notes" class="edit_wysiwyg with-tooltip">';
 			$out.= $this->public_notes . '</div>';
 			$out.= '</div>';
 		} else {
-			$out.= '<div class="wrapped margin-bottom left-icon icon-info-round">';
+			$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
 			$out.= '<h4 class="no-margin-bottom">' . $langs->trans("Notes") . '</h4>';
 			$out.= $this->public_notes;
 			$out.= '</div>';
