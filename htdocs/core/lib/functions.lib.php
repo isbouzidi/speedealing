@@ -718,10 +718,12 @@ function dol_print_date($time, $format = '', $tzoutput = 'tzserver', $outputlang
 
 
 
+
 		
 // If date undefined or "", we return ""
 	if (dol_strlen($time) == 0)
 		return '';  // $time=0 allowed (it means 01/01/1970 00:00:00)
+
 
 
 
@@ -2230,25 +2232,23 @@ function start_box($title, $cssClass = 'icon-object-default', $menu = array(), $
 		$rtr = "";
 
 		$rtr.= '<fieldset class="fieldset">';
-		$rtr.= '<legend class="anthracite large"><div class="no-margin-bottom left-icon ' . $cssClass . '">' . $title;
+		$rtr.= '<legend class="no-margin-bottom anthracite large left-icon ' . $cssClass . '">' . $title;
+		$rtr.= '</legend><div class="relative margin-bottom">';
 
 		//$rtr.= '<h3 class="green left-icon-big relative ' . $cssClass . '">' . $title;
 		if (count($menu) > 0 && $box_action)
 			if (count($menu) == 1)
-				$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '">' . $menu[0]->title . '</a>';
+				$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button with-tooltip ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '" title="' . $menu[0]->title . '"></a>';
 			else {
-				$rtr.= '<div class="button-group absolute-right compact">';
+				$rtr.= '<div class="button-group absolute-right compact children-tooltip">';
 				foreach ($menu as $aRow)
-					if (isset($aRow->onclick))
-						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '">' . $aRow->title . '</a>';
-					else
-						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '" >' . $aRow->title . '</a>';
+						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></a>';
 				/* <a href="#" class="button icon-pencil">Edit</a>
 				  <a href="#" class="button icon-gear with-tooltip" title="Other actions"></a>
 				  <a href="#" class="button icon-trash with-tooltip confirm" title="Delete"></a> */
 				$rtr.='</div>';
 			}
-		$rtr.= '</div></legend>';
+		$rtr.= '</div>';
 	}
 	return $rtr;
 }
@@ -2262,19 +2262,19 @@ function end_box() {
 	return '</fieldset>';
 }
 
-function column_start($nbcolumn = "tweleve" , $cssClass="") {
+function column_start($nbcolumn = "tweleve", $cssClass = "") {
 	switch ($nbcolumn) {
 		case "two" :
-			$rtr = '<div class="'.$cssClass.' two-columns four-columns-mobile-landscape six-columns-mobile-portrait">';
+			$rtr = '<div class="' . $cssClass . ' two-columns four-columns-mobile-landscape six-columns-mobile-portrait">';
 			break;
 		case "four" :
-			$rtr = '<div class="'.$cssClass.' four-columns six-columns-tablet twelve-columns-mobile">';
+			$rtr = '<div class="' . $cssClass . ' four-columns six-columns-tablet twelve-columns-mobile">';
 			break;
 		case "six" :
-			$rtr = '<div class="'.$cssClass.' six-columns twelve-columns-mobile">';
+			$rtr = '<div class="' . $cssClass . ' six-columns twelve-columns-mobile">';
 			break;
 		default :
-			$rtr = '<div class="'.$cssClass.' twelve-columns">';
+			$rtr = '<div class="twelve-columns">';
 	}
 	return $rtr;
 }
@@ -2636,6 +2636,7 @@ function price2num($amount, $rounding = '', $alreadysqlnb = 0) {
 			$nbofdectoround = $conf->global->MAIN_MAX_DECIMALS_SHOWN;
 		elseif (is_numeric($rounding))
 			$nbofdectoround = $rounding;  // For admin info page
+
 
 
 
@@ -3048,6 +3049,7 @@ function dol_mkdir($dir, $dataroot = '') {
 			$ccdir .= $cdir[$i];
 		if (preg_match("/^.:$/", $ccdir, $regs))
 			continue; // Si chemin Windows incomplet, on poursuit par rep suivant
+
 
 
 
