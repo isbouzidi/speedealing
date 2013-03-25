@@ -60,13 +60,13 @@ $orders = array(
 		'StatusOrderReceivedAllShort' => 'Complet recepţionată',
 		'StatusOrderCanceled' => 'Anulată',
 		'StatusOrderDraft' => 'Draft (trebuie să fie validată)',
-		'StatusOrderNeedQuotes' => 'Draft (needs manual quotes)',
+		'StatusOrderNeedQuotes' => 'Ciornă (necesită  ofertă manuală)',
 		'StatusOrderNew' => 'Ordin nou (trebuie să fie validat)',
 		'StatusOrderProcessing' => 'Procesare',
 		'StatusOrderValidated' => 'Validată',
 		'StatusOrderOnProcess' => 'Aşteaptă recepţia',
-		'StatusOrderSending' => 'Sending',
-		'StatusOrderClosed' => 'Closed (Shipped)',
+		'StatusOrderSending' => 'Trimitere',
+		'StatusOrderClosed' => 'Inchisă( Livrată )',
 		'StatusOrderToBill' => 'Livrată',
 		'StatusOrderToBill2' => 'De facturat',
 		'StatusOrderApproved' => 'Aprobată',
@@ -182,6 +182,6 @@ $orders = array(
 		'MenuOrdersToBill2' => 'Comenzi de facturat',
 		'LinkedInvoices' => 'Facturi ataşate',
 		'LinkedProposals' => 'Propuneri comerciale ataşate',
-		'ShippingHT' => 'Shipping cost'
+		'ShippingHT' => 'Cost Livrare'
 );
 ?>
