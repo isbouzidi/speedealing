@@ -920,19 +920,9 @@ class Agenda extends nosqlDocument {
 	function show($id, $max = 5) {
 		global $langs, $conf, $user, $db, $bc;
 
-		$h = 0;
-		$head[$h][0] = "#";
-		$head[$h][1] = $langs->trans("StatusActionToDo");
-		$head[$h][2] = "TODO";
-		$h++;
-		$head[$h][0] = "#";
-		$head[$h][1] = $langs->trans("StatusActionDone");
-		$head[$h][2] = "DONE";
-
 		$langs->load("agenda");
 
 		$titre = $langs->trans("Actions");
-		//print start_box($titre, "twelve", "16-Mail.png", true, $head);
 		
 		$h = 0;
 		if ($user->rights->agenda->myactions->write || $user->rights->agenda->allactions->write) {

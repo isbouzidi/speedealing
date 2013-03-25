@@ -34,7 +34,7 @@ $langs->load("suppliers");
 // Security check
 $contactid = GETPOST('id', 'alpha');
 if ($user->societe_id)
-    $socid = $user->societe_id;
+	$socid = $user->societe_id;
 $result = restrictedArea($user, 'contact', $contactid, '');
 
 $type = GETPOST("type");
@@ -46,69 +46,69 @@ $userid = GETPOST('userid', 'int');
 $langs->load("companies");
 $titre = (!empty($conf->global->SOCIETE_ADDRESSES_MANAGEMENT) ? $langs->trans("ListOfContacts") : $langs->trans("ListOfContactsAddresses"));
 if ($type == "c") {
-    $titre.='  (' . $langs->trans("ThirdPartyCustomers") . ')';
-    $urlfiche = "fiche.php";
+	$titre.='  (' . $langs->trans("ThirdPartyCustomers") . ')';
+	$urlfiche = "fiche.php";
 } else if ($type == "p") {
-    $titre.='  (' . $langs->trans("ThirdPartyProspects") . ')';
-    $urlfiche = "prospect/fiche.php";
+	$titre.='  (' . $langs->trans("ThirdPartyProspects") . ')';
+	$urlfiche = "prospect/fiche.php";
 } else if ($type == "f") {
-    $titre.=' (' . $langs->trans("ThirdPartySuppliers") . ')';
-    $urlfiche = "fiche.php";
+	$titre.=' (' . $langs->trans("ThirdPartySuppliers") . ')';
+	$urlfiche = "fiche.php";
 } else if ($type == "o") {
-    $titre.=' (' . $langs->trans("OthersNotLinkedToThirdParty") . ')';
-    $urlfiche = "";
+	$titre.=' (' . $langs->trans("OthersNotLinkedToThirdParty") . ')';
+	$urlfiche = "";
 }
 
 $object = new Contact($db);
 $soc = new Societe($db);
 
 if ($_GET['json'] == "list") {
-    $output = array(
-        "sEcho" => intval($_GET['sEcho']),
-        "iTotalRecords" => 0,
-        "iTotalDisplayRecords" => 0,
-        "aaData" => array()
-    );
+	$output = array(
+		"sEcho" => intval($_GET['sEcho']),
+		"iTotalRecords" => 0,
+		"iTotalDisplayRecords" => 0,
+		"aaData" => array()
+	);
 
-    $keystart[0] = $viewname;
-    $keyend[0] = $viewname;
-    $keyend[1] = new stdClass();
+	$keystart[0] = $viewname;
+	$keyend[0] = $viewname;
+	$keyend[1] = new stdClass();
 
-    $result = array();
-    try {
-		if($_GET["disable"]=="true")
+	$result = array();
+	try {
+		if ($_GET["disable"] == "true")
 			$resultsoc = $soc->getView("listDisableByCommercial", array("key" => $user->id));
 		else
-			$resultsoc = $soc->getView("listByCommercial", array("key" => $user->id));
-    } catch (Exception $exc) {
-        print $exc->getMessage();
-    }
+			$resultsoc = $soc->getView("listEnableByCommercial", array("key" => $user->id));
+	} catch (Exception $exc) {
+		print $exc->getMessage();
+	}
 
-    if (count($resultsoc->rows)) {
-        foreach ($resultsoc->rows as $aRow) {
-            $resultcontact = $object->getView("listSociete", array("key" => $aRow->id));
-            if (count($resultcontact->rows)) {
-                foreach ($resultcontact->rows as $row) {
-                    $result[] = $row;
-                }
-            }
-        }
-    }
-    //print_r($result);
-    //exit;
+	if (count($resultsoc->rows)) {
+		foreach ($resultsoc->rows as $aRow) {
+			$resultcontact = $object->getView("listSociete", array("key" => $aRow->id));
+			if (count($resultcontact->rows)) {
+				foreach ($resultcontact->rows as $row) {
+					$result[] = $row;
+				}
+			}
+		}
+	}
+	//print_r($result);
+	//exit;
 
-    $iTotal = count($result);
-    $output["iTotalRecords"] = $iTotal;
-    $output["iTotalDisplayRecords"] = $iTotal;
-    $i = 0;
-    foreach ($result as $aRow) {
-        $output["aaData"][] = $aRow->value;
-        unset($element);
-    }
+	$iTotal = count($result);
+	$output["iTotalRecords"] = $iTotal;
+	$output["iTotalDisplayRecords"] = $iTotal;
+	$i = 0;
+	foreach ($result as $aRow) {
+		$output["aaData"][] = $aRow->value;
+		unset($element);
+	}
 
-    header('Content-type: application/json');
-    echo json_encode($output);
-    exit;
+	header('Content-type: application/json');
+	echo json_encode($output);
+	exit;
 }
 
 /*
@@ -200,15 +200,15 @@ $obj->aoColumns[$i]->mDataProp = "email";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("email", "email");
 $i++;
-/*print'<th class="essential">';
-print $langs->trans('DateModificationShort');
-print'</th>';
-$obj->aoColumns[$i]->mDataProp = "tms";
-$obj->aoColumns[$i]->sClass = "center";
-$obj->aoColumns[$i]->sDefaultContent = "";
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("tms", "date");
-//$obj->aoColumns[$i]->sClass = "edit";
-$i++;*/
+/* print'<th class="essential">';
+  print $langs->trans('DateModificationShort');
+  print'</th>';
+  $obj->aoColumns[$i]->mDataProp = "tms";
+  $obj->aoColumns[$i]->sClass = "center";
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("tms", "date");
+  //$obj->aoColumns[$i]->sClass = "edit";
+  $i++; */
 print'<th class="essential">';
 print $langs->trans('Categories');
 print'</th>';
@@ -272,8 +272,8 @@ print'<th id="' . $i . '"></th>';
 $i++;
 print'<th id="' . $i . '"></th>';
 $i++;
-/*print'<th id="' . $i . '"></th>';
-$i++;*/
+/* print'<th id="' . $i . '"></th>';
+  $i++; */
 print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Category") . '" /></th>';
 $i++;
 print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Status") . '" /></th>';
@@ -288,11 +288,13 @@ print'</tbody>';
 print "</table>";
 
 //$obj->bServerSide = true;
-if($_GET["disable"])
+if ($_GET["disable"])
 	$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
+else
+	$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listEnable&class=" . get_class($object);
 
 if (!$user->rights->societe->client->voir)
-    $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list&class=" . get_class($object) . "&key=" . $user->id . "&disable=".($_GET["disable"]?"true":"false");
+	$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list&class=" . get_class($object) . "&key=" . $user->id . "&disable=" . ($_GET["disable"] ? "true" : "false");
 
 $object->datatablesCreate($obj, "list_contacts", true, true);
 

@@ -237,8 +237,11 @@ if ($product) {
 			unset($price);
 		}
 		foreach($obj[$i]->price as $price) {
-			if(!isset($price->PriceLevel)) {
-				$price->PriceLevel = "BASE";
+			print_r($obj[$i]->price);exit;
+			if($price->price_level == "BASE") {
+				unset($obj[$i]->price);
+				$obj[$i]->price->BASE = clone $price;
+				print_r($obj[$i]->price);exit;
 			}
 		}
 		$i++;

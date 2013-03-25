@@ -1,10 +1,10 @@
 {
    "_id": "_design/Product",
-   "_rev": "124-b5479de5454b7ef62766eadc61dd3f46",
+   "_rev": "174-2436b92597b25ffc6f1847a4bbff4a08",
    "language": "javascript",
    "views": {
        "list": {
-           "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  emit(doc.ref, doc);\n}"
+           "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\"){\n     var price = {};\n     if(doc.price[\"BASE\"])\n       price = doc.price[\"BASE\"];\n\n     var docu = {};\n     for(x in doc)\n        if(x!=\"price\")\n\t  docu[x] = doc[x];\n        else\n          docu[x] = price;\n     delete docu.history;\n\n     emit(doc.ref, docu);\n   }\n}"
        },
        "tag": {
            "map": "function(doc) {\nif(doc.class==\"Product\" && doc.Tag.length > 0) {\n    for(var idx in doc.Tag) {\n      emit(doc.Tag[idx], 1);\n    }\n  }\n}",
@@ -17,11 +17,17 @@
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  emit(doc.type, doc);\n}"
        },
        "listPrice": {
-           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price.length > 0) {\n    for(var idx in doc.price) {\n      emit([doc.price[idx].PriceLevel,doc.price[idx].tms],doc.price[idx]);\n    }\n  }\n}"
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price.length > 0) {\n    for(var idx in doc.price) {\n      emit([doc.price[idx].price_level,doc.price[idx].tms],doc.price[idx]);\n    }\n  }\n}"
        },
        "listPriceLevel": {
-           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price.length > 0) {\n    for(var idx in doc.price) {\n      if(doc.price[idx].PriceLevel)\n      \temit(doc.price[idx].PriceLevel,1);\n    }\n  }\n}",
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price) {\n    for(idx in doc.price) {\n      \temit(idx,1);\n    }\n  }\n}",
            "reduce": "_count"
+       },
+       "listProductPrices": {
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price) { \n    for(var idx in doc.price) {\n        var docu = {};\n        for(var x in doc.price[idx])\n    \t  docu[x] = doc.price[idx][x];\n\tvar id;\n\tdocu._id=doc._id +\"#\"+ idx;\n        docu.price_level = idx;\n      emit(doc._id,docu);\n    }\n  }\n}"
+       },
+       "listHistoryPrices": {
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.history.length > 0) { \n    for(var idx in doc.history) {\n        var docu = {};\n        for(var x in doc.history[idx])\n    \t  docu[x] = doc.history[idx][x];\n\tvar id;\n\tdocu._id=doc._id +\"#\"+ idx;\n      emit(doc._id,docu);\n    }\n  }\n}"
        }
    },
    "updates": {

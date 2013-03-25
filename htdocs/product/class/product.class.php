@@ -37,7 +37,7 @@ class Product extends nosqlDocument {
 	public $element = 'product';
 	public $table_element = 'product';
 	public $fk_element = 'fk_product';
-	protected $childtables = array('propaldet', 'commandedet', 'facturedet', 'contratdet');	// To test if we can delete object
+	protected $childtables = array('propaldet', 'commandedet', 'facturedet', 'contratdet'); // To test if we can delete object
 	//! Identifiant unique
 	var $id;
 	//! Ref
@@ -47,22 +47,7 @@ class Product extends nosqlDocument {
 	//! Type 0 for regular product, 1 for service (Advanced feature: 2 for assembly kit, 3 for stock kit)
 	var $type;
 	//! Selling price
-	var $price = array();	// Price net
-	var $price_ttc;   // Price with tax
-	var $price_min;		 // Minimum price net
-	var $price_min_ttc;	 // Minimum price with tax
-	//! Base price ('TTC' for price including tax or 'HT' for net price)
-	var $price_base_type;
-	//! Default VAT rate of product
-	var $tva_tx;
-	//! French VAT NPR (0 or 1)
-	var $tva_npr = 0;
-	//! Spanish local taxes
-	var $localtax1_tx;
-	var $localtax2_tx;
-	//! EcoTaxe
-	var $ecotax;
-	var $ecotax_ttc;
+	var $price = array(); // Price net
 	//! Type 0 for regular product, 1 for service (Advanced feature: 2 for assembly kit, 3 for stock kit)
 	var $typestring;
 	//! Stock
@@ -81,8 +66,8 @@ class Product extends nosqlDocument {
 	var $Status_buy;
 	// Statut indique si le produit est un produit fini '1' ou une matiere premiere '0'
 	var $finished;
-	var $customcode;	   // Customs code
-	var $country_id;	   // Country origin id
+	var $customcode; // Customs code
+	var $country_id; // Country origin id
 	//! Unites de mesure
 	var $weight;
 	var $weight_units;
@@ -95,16 +80,11 @@ class Product extends nosqlDocument {
 	var $accountancy_code_buy;
 	var $accountancy_code_sell;
 	//! barcode
-	var $barcode;			   // value
-	var $barcode_type;		  // id
-	var $barcode_type_code;	 // code (loaded by fetch_barcode)
-	var $barcode_type_label;	// label (loaded by fetch_barcode)
-	var $barcode_type_coder;	// coder (loaded by fetch_barcode)
-	var $stats_propale = array();
-	var $stats_commande = array();
-	var $stats_contrat = array();
-	var $stats_facture = array();
-	var $multilangs = array();
+	var $barcode;   // value
+	var $barcode_type; // id
+	var $barcode_type_code;  // code (loaded by fetch_barcode)
+	var $barcode_type_label; // label (loaded by fetch_barcode)
+	var $barcode_type_coder; // coder (loaded by fetch_barcode)
 	//! Taille de l'image
 	var $imgWidth;
 	var $imgHeight;
@@ -117,8 +97,8 @@ class Product extends nosqlDocument {
 	//! Product ID already linked to a reference supplier
 	var $product_id_already_linked;
 	var $nbphoto;
+
 	//! Contains detail of stock of product into each warehouse
-	var $stock_warehouse = array();
 
 	/**
 	 *  Constructor
@@ -377,7 +357,7 @@ class Product extends nosqlDocument {
 			// Actions on extra fields (by external module or standard code)
 			$hookmanager->initHooks(array('productdao'));
 			$parameters = array('id' => $this->id);
-			$reshook = $hookmanager->executeHooks('insertExtraFields', $parameters, $this, $action);	// Note that $action and $object may have been modified by some hooks
+			$reshook = $hookmanager->executeHooks('insertExtraFields', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 			if (empty($reshook)) {
 				$result = $this->insertExtraFields();
 				if ($result < 0) {
@@ -685,10 +665,10 @@ class Product extends nosqlDocument {
 		if ($resql) {
 			$obj = $this->db->fetch_object($resql);
 			if ($obj && $obj->quantity > 0) {
-				$this->buyprice = $obj->price;					  // \deprecated
-				$this->fourn_pu = $obj->price / $obj->quantity;	 // Prix unitaire du produit pour le fournisseur $fourn_id
-				$this->ref_fourn = $obj->ref_fourn;				 // Ref supplier
-				$this->vatrate_supplier = $obj->tva_tx;			 // Vat ref supplier
+				$this->buyprice = $obj->price; // \deprecated
+				$this->fourn_pu = $obj->price / $obj->quantity;  // Prix unitaire du produit pour le fournisseur $fourn_id
+				$this->ref_fourn = $obj->ref_fourn;  // Ref supplier
+				$this->vatrate_supplier = $obj->tva_tx; // Vat ref supplier
 				$result = $obj->fk_product;
 				return $result;
 			} else {
@@ -707,10 +687,10 @@ class Product extends nosqlDocument {
 				if ($resql) {
 					$obj = $this->db->fetch_object($resql);
 					if ($obj && $obj->quantity > 0) {
-						$this->buyprice = $obj->price;					  // \deprecated
-						$this->fourn_pu = $obj->price / $obj->quantity;	 // Prix unitaire du produit pour le fournisseur $fourn_id
-						$this->ref_fourn = $obj->ref_fourn;				 // Ref supplier
-						$this->vatrate_supplier = $obj->tva_tx;			 // Vat ref supplier
+						$this->buyprice = $obj->price; // \deprecated
+						$this->fourn_pu = $obj->price / $obj->quantity;  // Prix unitaire du produit pour le fournisseur $fourn_id
+						$this->ref_fourn = $obj->ref_fourn;  // Ref supplier
+						$this->vatrate_supplier = $obj->tva_tx; // Vat ref supplier
 						$result = $obj->fk_product;
 						return $result;
 					} else {
@@ -802,6 +782,12 @@ class Product extends nosqlDocument {
 				$localtax1 = 0; // If = '' then = 0
 			if (empty($localtax2))
 				$localtax2 = 0; // If = '' then = 0
+
+
+
+
+
+
 
 
 
@@ -1701,7 +1687,7 @@ class Product extends nosqlDocument {
 						'stock' => $this->stock_warehouse[1]->real, // Stock
 						'stock_alert' => $this->seuil_stock_alerte, // Stock alert
 						'fullpath' => $compl_path . $nom_pere, // Label
-						'type' => $type	 // Nb of units that compose parent product
+						'type' => $type  // Nb of units that compose parent product
 					);
 				} else {
 					$this->fetch($desc_pere[0]);
@@ -1715,7 +1701,7 @@ class Product extends nosqlDocument {
 						'stock' => $this->stock_warehouse[1]->real, // Stock
 						'stock_alert' => $this->seuil_stock_alerte, // Stock alert
 						'fullpath' => $compl_path . $nom_pere, // Label
-						'type' => $type	 // Nb of units that compose parent product
+						'type' => $type  // Nb of units that compose parent product
 					);
 				}
 			} else if ($nom_pere != "0" && $nom_pere != "1") {
@@ -2209,7 +2195,7 @@ class Product extends nosqlDocument {
 								$return.= '</tr>';
 						}
 
-						if ($size == 0) {	 // Format origine
+						if ($size == 0) {  // Format origine
 							$return.= '<img class="photo" border="0" src="' . DOL_URL_ROOT . '/viewimage.php?modulepart=product&entity=' . $this->entity . '&file=' . urlencode($pdir . $photo) . '">';
 
 							if ($showfilename)
@@ -2423,24 +2409,33 @@ class Product extends nosqlDocument {
 		global $langs, $conf, $user, $db, $bc;
 
 		$titre = $langs->trans("SellingPrice");
-		print start_box($titre, "tweleve", "icon-object-price", false);
+
+		$h = 0;
+		$head[$h] = new stdClass();
+		$head[$h]->href = strtolower(get_class($object)) . '/fiche.php?action=create&socid=' . $id . '&backtopage=' . $_SERVER['PHP_SELF'] . '?id=' . $id;
+		$head[$h]->title = $langs->trans("UpdatePrice");
+		$head[$h]->icon = "icon-pencil";
+		$h++;
+		$head[$h] = new stdClass();
+		$head[$h]->href = "#";
+		$head[$h]->title = $langs->trans("SellingPrice");
+		$head[$h]->id = "NOW";
+		$head[$h]->onclick = "var oTable = $('#price_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listProductPrices&class=" . get_class($this) . "&key=" . $id . "'); return false;";
+		$head[$h]->icon = "icon-home";
+		$h++;
+		$head[$h] = new stdClass();
+		$head[$h]->href = "#";
+		$head[$h]->title = $langs->trans("HistorySellingPrice");
+		$head[$h]->id = "HISTORY";
+		$head[$h]->onclick = "var oTable = $('#price_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listHistoryPrices&class=" . get_class($this) . "&key=" . $id . "'); return false;";
+		$head[$h]->icon = "icon-list";
+		$h++;
+
+		print start_box($titre, "icon-object-price", $head, $user->rights->produit->creer || $user->rights->service->creer);
 
 		$i = 0;
 		$obj = new stdClass();
 		$societe = new Societe($this->db);
-
-		/*
-		 * Barre d'actions
-		 *
-		 */
-
-		if ($user->rights->produit->creer || $user->rights->service->creer) {
-			print '<p class="button-height right">';
-			print '<span class="button-group">';
-			print '<a class="button compact icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create&socid=' . $id . '&backtopage=' . $_SERVER['PHP_SELF'] . '?id=' . $id . '">' . $langs->trans("UpdatePrice") . '</a>';
-			print "</span>";
-			print "</p>";
-		}
 
 		print '<table class="display dt_act" id="price_datatable" >';
 		// Ligne des titres
@@ -2456,7 +2451,7 @@ class Product extends nosqlDocument {
 		$obj->aoColumns[$i]->bVisible = false;
 		$i++;
 		print'<th class="essential">';
-		print $langs->trans("AppliedPricesFrom");
+		print $langs->trans("Date");
 		print'</th>';
 		$obj->aoColumns[$i] = new stdClass();
 		$obj->aoColumns[$i]->mDataProp = "tms";
@@ -2465,12 +2460,13 @@ class Product extends nosqlDocument {
 		$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("tms", "datetime");
 		$i++;
 		print'<th class="essential">';
-		print $langs->trans('MultiPriceLevelsName');
+		print $langs->trans('PriceLevel');
 		print'</th>';
 		$obj->aoColumns[$i] = new stdClass();
 		$obj->aoColumns[$i]->mDataProp = "price_level";
 		$obj->aoColumns[$i]->sDefaultContent = "";
-		$obj->aoColumns[$i]->sClass = "fright";
+		$obj->aoColumns[$i]->sClass = "center";
+		$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("price_level", "tag");
 		$i++;
 		print'<th class="essential">';
 		print $langs->trans('PriceBase');
@@ -2510,15 +2506,6 @@ class Product extends nosqlDocument {
 				$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("ecotax", "price");
 				$i++;
 			}
-			print'<th class="essential">';
-			print $langs->trans("MinPrice") . ' ' . $langs->trans("HT");
-			print'</th>';
-			$obj->aoColumns[$i] = new stdClass();
-			$obj->aoColumns[$i]->mDataProp = "min_price";
-			$obj->aoColumns[$i]->sClass = "fright";
-			$obj->aoColumns[$i]->sDefaultContent = "";
-			$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("min_price", "price");
-			$i++;
 		} else {
 			print'<th class="essential">';
 			print $langs->trans('TTC');
@@ -2555,6 +2542,9 @@ class Product extends nosqlDocument {
 		$obj->aoColumns[$i] = new stdClass();
 		$obj->aoColumns[$i]->mDataProp = "user_mod";
 		$obj->aoColumns[$i]->sDefaultContent = "";
+		$obj->aoColumns[$i]->sClass = "center";
+		$user_tmp = new User($db);
+		$obj->aoColumns[$i]->fnRender = $user_tmp->datatablesFnRender("user_mod.name", "url", array('id' => "user_mod.id"));
 		print '</tr>';
 		print '</thead>';
 		print'<tfoot>';
@@ -2565,7 +2555,7 @@ class Product extends nosqlDocument {
 
 		$obj->iDisplayLength = $max;
 		$obj->aaSorting = array(array(1, "desc"));
-		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listPrices&class=" . get_class($this) . "&key=" . $id;
+		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listProductPrices&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "price_datatable", true);
 
 		print end_box();

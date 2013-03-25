@@ -123,7 +123,7 @@ if (empty($builder)) {
 		$obj->aoColumns[$i]->sDefaultContent = "";
 		$obj->aoColumns[$i]->editable = true;
 		$user_tmp = new User($db);
-		$obj->aoColumns[$i]->fnRender = $user->datatablesFnRender("commercial_id.name", "url", array('id' => "commercial_id.id"));
+		$obj->aoColumns[$i]->fnRender = $user_tmp->datatablesFnRender("commercial_id.name", "url", array('id' => "commercial_id.id"));
 		$i++;
 	}
 	foreach ($object->fk_extrafields->oldList as $aRow) {
@@ -256,6 +256,8 @@ if (empty($builder)) {
 //$obj->sDom = 'C<\"clear\">lfrtip';
 	if ($_GET["disable"])
 		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
+	else
+		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listEnable&class=" . get_class($object);
 
 	if (!$user->rights->societe->client->voir)
 		if ($_GET["disable"])

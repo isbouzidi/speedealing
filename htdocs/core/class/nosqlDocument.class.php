@@ -1147,13 +1147,10 @@ abstract class nosqlDocument extends CommonObject {
 			case "price":
 				$rtr = 'function(obj) {
 						var ar = [];
-						if(obj.aData.' . $key . ' === undefined) {
-						ar[ar.length] = "0.00 €";
-						var str = ar.join("");
-						return str;
-                        }
-						else
-						{
+						if(obj.aData.' . $key . ' === undefined || obj.aData.' . $key . ' == "") {
+							var str = ar.join("");
+							return str;
+                        } else {
 						var price = obj.aData.' . $key . ';
 						price = ((Math.round(price*100))/100).toFixed(2);
 						ar[ar.length] = price;
@@ -1189,12 +1186,19 @@ abstract class nosqlDocument extends CommonObject {
 				$rtr = 'function(obj) {
 					var ar = [];
 
-					for (var i in obj.aData.' . $key . ') {
-					ar[ar.length] = "<small class=\"tag anthracite-gradient glossy";
-					ar[ar.length] = " \">";
-					ar[ar.length] = obj.aData.' . $key . '[i].toString();
-					ar[ar.length] = "</small> ";
-                                }
+					if(typeof(obj.aData.' . $key . ')=="string") {
+						ar[ar.length] = "<small class=\"tag anthracite-gradient glossy";
+						ar[ar.length] = " \">";
+						ar[ar.length] = obj.aData.' . $key . '.toString();
+						ar[ar.length] = "</small> ";
+                    } else {
+						for (var i in obj.aData.' . $key . ') {
+							ar[ar.length] = "<small class=\"tag anthracite-gradient glossy";
+							ar[ar.length] = " \">";
+							ar[ar.length] = obj.aData.' . $key . '[i].toString();
+							ar[ar.length] = "</small> ";
+                        }
+					}
 					var str = ar.join("");
 					return str;
 			}';
@@ -1269,7 +1273,10 @@ abstract class nosqlDocument extends CommonObject {
 	public function showList() {
 
 		//$data_source = "core/ajax/listdatatables.php?json=list&class=" . get_class($this) . "&bServerSide=true";
-		$data_source = "core/ajax/listdatatables.php?json=list&class=" . get_class($this);
+		if ($_GET["disable"])
+			$data_source = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($this);
+		else
+			$data_source = "core/ajax/listdatatables.php?json=listEnable&class=" . get_class($this);
 		$table = new datatables\Datatables(compact('data_source'));
 		$table->setSchema(new datatables\schemas\DefaultSchema);
 		$table->setConfig('object_class', get_class($this));
