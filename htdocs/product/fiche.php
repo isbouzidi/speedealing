@@ -148,7 +148,7 @@ if (empty($reshook)) {
         }
 
         if (!$error) {
-            $object->name = $ref;
+            $object->ref = $ref;
             $object->label = GETPOST('libelle');
 
             $object->type = $type;
@@ -235,7 +235,7 @@ if (empty($reshook)) {
             if ($object->fetch($id)) {
                 $object->oldcopy = dol_clone($object);
 
-                $object->name = $ref;
+                $object->ref = $ref;
                 $object->label = GETPOST('libelle');
                 $object->description = dol_htmlcleanlastbr(GETPOST('desc'));
                 $object->notes = dol_htmlcleanlastbr(GETPOST('note'));
@@ -581,7 +581,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
             $type = $langs->trans('Product');
             if ($object->isservice())
                 $type = $langs->trans('Service');
-            print_fiche_titre($langs->trans('Modify') . ' ' . $type . ' : ' . $object->name);
+            print_fiche_titre($langs->trans('Modify') . ' ' . $type . ' : ' . $object->ref);
             print '<div class="with-padding">';
             print '<div class="columns">';
 
@@ -598,7 +598,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
             print '<table class="border allwidth">';
 
             // Ref
-            print '<tr><td width="15%" class="fieldrequired">' . $langs->trans("Ref") . '</td><td colspan="2"><input name="ref" size="40" maxlength="32" value="' . (GETPOST("ref") ? GETPOST("ref") : $object->name) . '"></td></tr>';
+            print '<tr><td width="15%" class="fieldrequired">' . $langs->trans("Ref") . '</td><td colspan="2"><input name="ref" size="40" maxlength="32" value="' . (GETPOST("ref") ? GETPOST("ref") : $object->ref) . '"></td></tr>';
 
             // Label
             print '<tr><td class="fieldrequired">' . $langs->trans("Label") . '</td><td colspan="2"><input name="libelle" size="40" value="' . $object->label . '"></td></tr>';
@@ -760,7 +760,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
             print '</tr>';
 
             //Name
-            print '<tr><td>' . $langs->trans("Name") . '</td><td colspan="2">' . $object->name . '</td>';
+            print '<tr><td>' . $langs->trans("Name") . '</td><td colspan="2">' . $object->ref . '</td>';
 
             // Label
             print '<tr><td>' . $form->editfieldkey("Label", 'label', $object->label, $object, $user->rights->produit->creer || $user->rights->service->creer, 'string') . '</td><td colspan="2">';

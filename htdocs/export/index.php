@@ -52,7 +52,8 @@ print '<br>';
 
 print '<div class="columns">';
 
-print start_box($langs->trans("Module"), "seven", "16-User.png", false);
+print column_start("seven");
+print start_box($langs->trans("Module"), "16-User.png");
 
 // List export set
 print '<table class="noborder" width="100%">';
@@ -98,10 +99,11 @@ if (count($export->array_export_code)) {
      */
 }
 print '</center>';
-
 print end_box();
+print column_end();
 
-print start_box($langs->trans("AvailableFormats"), "five", "16-User.png", false);
+print column_start("five");
+print start_box($langs->trans("AvailableFormats"), "16-User.png");
 
 
 // List of available export format
@@ -133,6 +135,7 @@ print '</table>';
 
 
 print end_box();
+print column_end();
 print '</div></div>';
 
 

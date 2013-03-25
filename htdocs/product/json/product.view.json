@@ -1,19 +1,27 @@
 {
    "_id": "_design/Product",
+   "_rev": "124-b5479de5454b7ef62766eadc61dd3f46",
    "language": "javascript",
    "views": {
        "list": {
-           "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  emit(doc.name, doc);\n}"
+           "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  emit(doc.ref, doc);\n}"
        },
        "tag": {
            "map": "function(doc) {\nif(doc.class==\"Product\" && doc.Tag.length > 0) {\n    for(var idx in doc.Tag) {\n      emit(doc.Tag[idx], 1);\n    }\n  }\n}",
-           "reduce": "function(keys, values) {\n  return sum(values)\n}"
+           "reduce": "_sum"
        },
        "target_id": {
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  \temit(doc._id, {_id:doc._id, _rev:doc._rev});\n}"
        },
        "listType": {
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  emit(doc.type, doc);\n}"
+       },
+       "listPrice": {
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price.length > 0) {\n    for(var idx in doc.price) {\n      emit([doc.price[idx].PriceLevel,doc.price[idx].tms],doc.price[idx]);\n    }\n  }\n}"
+       },
+       "listPriceLevel": {
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price.length > 0) {\n    for(var idx in doc.price) {\n      if(doc.price[idx].PriceLevel)\n      \temit(doc.price[idx].PriceLevel,1);\n    }\n  }\n}",
+           "reduce": "_count"
        }
    },
    "updates": {

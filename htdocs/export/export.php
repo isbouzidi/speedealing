@@ -293,7 +293,7 @@ if ($step == 1 || !$datatoexport) {
     print '<div class="with-padding">';
     print '<div class="columns">';
 
-    print start_box($langs->trans("NewExport"), "twelve", "16-User.png", false);
+    print column_start();
 
     dol_fiche_head($head, $hselected, $langs->trans("NewExport"));
 
@@ -339,7 +339,7 @@ if ($step == 1 || !$datatoexport) {
 
     print '</div>';
 
-    print end_box();
+    print column_end();
     print '</div></div>';
 
     if ($mesg)
@@ -368,7 +368,7 @@ if ($step == 2 && $datatoexport) {
     print '<div class="with-padding">';
     print '<div class="columns">';
 
-    print start_box($langs->trans("NewExport"), "twelve", "16-User.png", false);
+    print column_start();
 
     dol_fiche_head($head, $hselected, $langs->trans("NewExport"));
 
@@ -509,7 +509,7 @@ if ($step == 2 && $datatoexport) {
     }
 
     print '</div>';
-    print end_box();
+    print column_end();
     print '</div></div>';
 }
 
@@ -540,7 +540,7 @@ if ($step == 3 && $datatoexport) {
     print '<div class="with-padding">';
     print '<div class="columns">';
 
-    print start_box($langs->trans("NewExport"), "twelve", "16-User.png", false);
+    print column_start();
 
     dol_fiche_head($head, $hselected, $langs->trans("NewExport"));
 
@@ -702,7 +702,7 @@ if ($step == 3 && $datatoexport) {
         print '</table>';
         print '</form>';
     }
-    print end_box();
+    print column_end();
     print '</div></div>';
 }
 
@@ -738,7 +738,7 @@ if ($step == 4 && $datatoexport) {
     print '<div class="with-padding">';
     print '<div class="columns">';
 
-    print start_box($langs->trans("NewExport"), "twelve", "16-User.png", false);
+    print column_start();
     dol_fiche_head($head, $hselected, $langs->trans("NewExport"));
 
     print '<table width="100%" class="border">';
@@ -806,15 +806,17 @@ if ($step == 4 && $datatoexport) {
     }
     print '</table>';
     
-    print end_box();
+    print column_end();
 
     if (!is_dir($conf->export->dir_temp))
         dol_mkdir($conf->export->dir_temp);
 
     // Affiche liste des documents
     // NB: La fonction show_documents rescanne les modules qd genallowed=1, sinon prend $liste
-    $formfile->show_documents('export', '', $conf->export->dir_temp . '/' . $user->id, $_SERVER["PHP_SELF"] . '?step=4&datatoexport=' . $datatoexport, $liste, 1, (!empty($_POST['model']) ? $_POST['model'] : 'csv'), 1, 1);
-    
+    print column_start("six");
+	$formfile->show_documents('export', '', $conf->export->dir_temp . '/' . $user->id, $_SERVER["PHP_SELF"] . '?step=4&datatoexport=' . $datatoexport, $liste, 1, (!empty($_POST['model']) ? $_POST['model'] : 'csv'), 1, 1);
+    print column_end();
+	
     print '</div></div>';
 }
 
