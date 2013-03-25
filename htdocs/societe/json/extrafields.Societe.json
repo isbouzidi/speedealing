@@ -1,5 +1,6 @@
 {
    "_id": "extrafields:Societe",
+   "_rev": "78-b5f97f4791006bb5f30e05ab4901f613",
    "class": "extrafields",
    "ico": "icon-object-company",
    "langs": [
@@ -303,28 +304,14 @@
        "price_level": {
            "type": "select",
            "enable": true,
+           "settype": "string",
            "default": "base",
-           "values": {
-               "base": {
-                   "enable": true,
-                   "label": "base"
-               },
-               "level1": {
-                   "enable": true,
-                   "label": "level1"
-               },
-               "level2": {
-                   "enable": true,
-                   "label": "level2"
-               },
-               "level3": {
-                   "enable": true,
-                   "label": "level3"
-               },
-               "level4": {
-                   "enable": true,
-                   "label": "level4"
-               }
+           "label": "PriceLevel",
+           "class": "Product",
+           "view": "listPriceLevel",
+           "getkey": true,
+           "params": {
+               "group": true
            }
        },
        "prospectlevel": {
@@ -364,6 +351,7 @@
            "type": "select",
            "label": "ZoneGeo",
            "enable": true,
+           "settype": "string",
            "list": {
                "cssclass": "center",
                "editable": true

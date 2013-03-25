@@ -376,7 +376,7 @@ class FormFile
             $buttonlabeltoshow=$buttonlabel;
             if (empty($buttonlabel)) $buttonlabel=$langs->trans('Generate');
 
-            if (empty($noform)) $out.= '<form action="'.$urlsource.(empty($conf->global->MAIN_JUMP_TAG)?'':'#builddoc').'" name="'.$forname.'" id="'.$forname.'_form" method="post">';
+            if (empty($noform)) $out.= '<form action="'.$urlsource.(empty($conf->global->MAIN_JUMP_TAG)?'':'#builddoc').'" name="'.$forname.'" id="'.$forname.'_form" method="POST">';
             $out.= '<input type="hidden" name="action" value="builddoc">';
             $out.= '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 
@@ -422,11 +422,11 @@ class FormFile
 
             // Button
             $out.= '<th align="center" colspan="'.($delallowed?'2':'1').'" class="formdocbutton liste_titre">';
-//            $out.= '<input class="button" id="'.$forname.'_generatebutton"';
-//            $out.= ' type="submit" value="'.$buttonlabel.'"';
-//            if (! $allowgenifempty && ! is_array($modellist) && empty($modellist)) $out.= ' disabled="disabled"';
-//            $out.= '>';
-            $out .= '<a href="'.$urlsource.(empty($conf->global->MAIN_JUMP_TAG)?'':'#builddoc').'&action=builddoc" class="button" >' . $buttonlabel . '</a>';
+            $out.= '<input class="button" id="'.$forname.'_generatebutton"';
+            $out.= ' type="submit" value="'.$buttonlabel.'"';
+            if (! $allowgenifempty && ! is_array($modellist) && empty($modellist)) $out.= ' disabled="disabled"';
+            $out.= '>';
+//            $out .= '<a href="'.$urlsource.(empty($conf->global->MAIN_JUMP_TAG)?'':'#builddoc').'&action=builddoc" class="button" >' . $buttonlabel . '</a>';
             if ($allowgenifempty && ! is_array($modellist) && empty($modellist) && $modulepart != 'unpaid')
             {
                 $langs->load("errors");

@@ -66,7 +66,8 @@ if (!empty($key) && !empty($id) && !empty($class)) {
 	if ($type == "select" && empty($value))
 		$value = ""; // remove 0
 
-	if (isset($object->fk_extrafields->fields->$key->class) && $type == "select") {
+	if (isset($object->fk_extrafields->fields->$key->class) && $type == "select" && !$object->fk_extrafields->fields->$key->getkey) {
+		// if getkey it's not an object => it's a simple string value
 		$class_tmp = $object->fk_extrafields->fields->$key->class;
 		$old_value = $value;
 		$value = new stdClass();

@@ -719,10 +719,12 @@ function dol_print_date($time, $format = '', $tzoutput = 'tzserver', $outputlang
 
 
 
+
 		
 // If date undefined or "", we return ""
 	if (dol_strlen($time) == 0)
 		return '';  // $time=0 allowed (it means 01/01/1970 00:00:00)
+
 
 
 
@@ -2233,22 +2235,24 @@ function start_box($title, $cssClass = 'icon-object-default', $menu = array(), $
 
 		$rtr.= '<fieldset class="fieldset">';
 		$rtr.= '<legend class="no-margin-bottom anthracite large left-icon ' . $cssClass . '">' . $title;
-		$rtr.= '</legend><div class="relative margin-bottom">';
+		$rtr.= '</legend>';
 
 		//$rtr.= '<h3 class="green left-icon-big relative ' . $cssClass . '">' . $title;
-		if (count($menu) > 0 && $box_action)
+		if (count($menu) > 0 && $box_action) {
+			$rtr.= '<div class="relative margin-bottom">';
 			if (count($menu) == 1)
 				$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button with-tooltip ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '" title="' . $menu[0]->title . '"></a>';
 			else {
 				$rtr.= '<div class="button-group absolute-right compact children-tooltip">';
 				foreach ($menu as $aRow)
-						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></a>';
+					$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></a>';
 				/* <a href="#" class="button icon-pencil">Edit</a>
 				  <a href="#" class="button icon-gear with-tooltip" title="Other actions"></a>
 				  <a href="#" class="button icon-trash with-tooltip confirm" title="Delete"></a> */
 				$rtr.='</div>';
 			}
-		$rtr.= '</div>';
+			$rtr.= '</div>';
+		}
 	}
 	return $rtr;
 }
@@ -2664,6 +2668,7 @@ function price2num($amount, $rounding = '', $alreadysqlnb = 0) {
 
 
 
+
 			
 //print "RR".$amount.' - '.$nbofdectoround.'<br>';
 		if (dol_strlen($nbofdectoround))
@@ -3049,6 +3054,7 @@ function dol_mkdir($dir, $dataroot = '') {
 			$ccdir .= $cdir[$i];
 		if (preg_match("/^.:$/", $ccdir, $regs))
 			continue; // Si chemin Windows incomplet, on poursuit par rep suivant
+
 
 
 

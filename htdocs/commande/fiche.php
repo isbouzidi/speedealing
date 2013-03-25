@@ -1046,7 +1046,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	print column_end();
 
 	// Print Total
-	print column_start("six");
+	print column_start("six","new-row");
 	print $object->showAmounts();
 	print column_end();
 

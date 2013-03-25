@@ -211,4 +211,47 @@ if ($id_user) {
 	print "Mise a jour en cours";
 	exit;
 }
+
+$product = $_GET["product"];
+if ($product) {
+// reset old value
+//$result = $couchdb->limit(50000)->getView('unlink','link');
+	$result = $couchdb->limit(50000)->getView('Product', 'list');
+	$i = 0;
+
+	if (count($result->rows) == 0) {
+		print "Uograde produt terminé";
+		exit;
+	}
+
+	foreach ($result->rows AS $aRow) {
+		$obj[$i] = clone $aRow->value;
+		if (isset($obj[$i]->name)) {
+			$obj[$i]->ref = $obj[$i]->name;
+			unset($obj[$i]->name);
+		}
+		if (is_object($obj[$i]->price)) { // not an array
+			$price = clone $obj[$i]->price;
+			$obj[$i]->price = array();
+			$obj[$i]->price[] = clone $price;
+			unset($price);
+		}
+		foreach($obj[$i]->price as $price) {
+			if(!isset($price->PriceLevel)) {
+				$price->PriceLevel = "BASE";
+			}
+		}
+		$i++;
+	}
+
+	try {
+		$couchdb->storeDocs($obj);
+	} catch (Exception $e) {
+		echo "Something weird happened: " . $e->getMessage() . " (errcode=" . $e->getCode() . ")\n";
+		exit(1);
+	}
+
+	print "Upgrade product en cours";
+	exit;
+}
 ?>

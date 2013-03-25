@@ -101,15 +101,18 @@ if (!empty($key) && !empty($class) && !empty($id)) {
         }
 
         if ($type == "select") {
+			$aRow->values[0] = new stdClass();
             $aRow->values[0]->label = "";
             $aRow->values[0]->enable = true;
         }
 
         foreach ($result->rows as $row) {
             if (empty($aRow->getkey)) {
+				$aRow->values[$row->value->_id] = new stdClass();
                 $aRow->values[$row->value->_id]->label = $row->value->name;
                 $aRow->values[$row->value->_id]->enable = true;
             } else { // For getkey
+				$aRow->values[$row->key] = new stdClass();
                 $aRow->values[$row->key]->label = $row->key;
                 $aRow->values[$row->key]->enable = true;
             }

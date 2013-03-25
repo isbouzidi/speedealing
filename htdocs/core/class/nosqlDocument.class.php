@@ -237,6 +237,7 @@ abstract class nosqlDocument extends CommonObject {
 
 			$history = new stdClass();
 			$history->date = $values->tms;
+			$history->author = new stdClass();
 			$history->author->id = $user->id;
 			$history->author->name = $user->name;
 			$history->Status = $values->Status;
