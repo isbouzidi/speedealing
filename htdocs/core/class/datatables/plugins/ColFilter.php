@@ -28,7 +28,14 @@ class ColFilter implements PluginInterface {
 	public function apply(Datatables $table) {
 		$var_name = $table->getConfig('var_name');
 		$table->method("
+			// Input field
 			$('tfoot input').keyup( function () {
+				/* Filter on the column */
+				var id = $(this).parent().attr('id');
+				{$var_name}.fnFilter( this.value, id);
+			});
+			// Select field
+			$('tfoot select').change( function () {
 				/* Filter on the column */
 				var id = $(this).parent().attr('id');
 				{$var_name}.fnFilter( this.value, id);

@@ -27,7 +27,7 @@ function upgrade() {
 	if (!$user->admin)
 		accessforbidden();
 
-	$log = dol_getcache("mesgs");
+	$log = array();
 
 	//Update modules configuration
 	$object = new DolibarrModules($db);
