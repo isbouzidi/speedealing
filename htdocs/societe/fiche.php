@@ -295,13 +295,6 @@ if (empty($reshook)) {
 					exit;
 				}
 
-				// To not set code if third party is not concerned. But if it had values, we keep them.
-				if (empty($object->client) && empty($oldcopy->code_client))
-					$object->code_client = '';
-				if (empty($object->fournisseur) && empty($oldcopy->code_fournisseur))
-					$object->code_fournisseur = '';
-				//var_dump($object);exit;
-
 				$result = $object->update($socid, $user, 1, $oldcopy->codeclient_modifiable(), $oldcopy->codefournisseur_modifiable());
 				if ($result <= 0) {
 					$error = $object->error;

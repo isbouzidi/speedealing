@@ -23,8 +23,8 @@
 		"remise"
 	],
 	"amountsBox": [
-		"total_ht",
 		"shipping",
+		"total_ht",
 		"total_tva",
 		"total_ttc"
 	],

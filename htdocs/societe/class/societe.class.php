@@ -225,8 +225,8 @@ class Societe extends nosqlDocument {
 			$this->errors[] = 'ErrorBadThirdPartyName';
 			$result = -2;
 		}
-
-		if ($this->client && $this->codeclient_modifiable()) {
+		
+		if ($this->codeclient_modifiable()) {
 			// On ne verifie le code client que si la societe est un client / prospect et que le code est modifiable
 			// Si il n'est pas modifiable il n'est pas mis a jour lors de l'update
 			$rescode = $this->check_codeclient();
