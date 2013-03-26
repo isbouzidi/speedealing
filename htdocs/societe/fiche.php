@@ -941,7 +941,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			print '<div class="columns">';
 
 			$titre = $langs->trans("ThirdParty");
-			print start_box($titre, "twelve", $object->fk_extrafields->ico, false);
+			print column_start();
 
 			dol_fiche_head($head, 'card', $langs->trans("ThirdParty"), 0, 'company');
 
@@ -1317,6 +1317,8 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			print '</center>';
 
 			print '</form>';
+			
+			print column_end();
 
 			print '</div></div>';
 		}
