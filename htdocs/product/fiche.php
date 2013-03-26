@@ -83,7 +83,7 @@ $hookmanager->initHooks(array('productcard'));
  */
 
 $parameters = array('id' => $id, 'ref' => $ref, 'objcanvas' => $objcanvas);
-$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action);	// Note that $action and $object may have been modified by some hooks
+$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 $error = $hookmanager->error;
 $errors = $hookmanager->errors;
 
@@ -333,14 +333,14 @@ if (empty($reshook)) {
 	}
 	if ($action == 'confirm_delete' && $confirm == 'yes') {
 		$object = new Product($db);
-		$object->fetch($id);
+		$object->load($id);
 
 		if (($object->type == "PRODUCT" && $user->rights->produit->supprimer) || ($object->type == "SERVICE" && $user->rights->service->supprimer)) {
-			$result = $object->delete($object->id);
+			$result = $object->delete();
 		}
 
 		if ($result > 0) {
-			header('Location: ' . DOL_URL_ROOT . '/product/liste.php?delprod=' . urlencode($object->ref));
+			header('Location: ' . DOL_URL_ROOT . '/product/list.php?delprod=' . urlencode($object->ref));
 			exit;
 		} else {
 			$mesg = $object->error;
@@ -387,7 +387,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		$object->fetch($id, $ref);
 	}
 	$objcanvas->assign_values($action, $object->id, $ref); // Set value for templates
-	$objcanvas->display_canvas($action);	// Show template
+	$objcanvas->display_canvas($action); // Show template
 } else {
 	// -----------------------------------------
 	// When used in standard mode
@@ -512,7 +512,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 		// Other attributes
 		$parameters = array('colspan' => ' colspan="2"');
-		$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
+		$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 		if (empty($reshook) && !empty($extrafields->attribute_label)) {
 			foreach ($extrafields->attribute_label as $key => $label) {
 				$value = (GETPOST('options_' . $key) ? GETPOST('options_' . $key) : $object->array_options["options_" . $key]);
@@ -703,7 +703,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 			// Other attributes
 			$parameters = array('colspan' => ' colspan="2"');
-			$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
+			$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 			if (empty($reshook) && !empty($extrafields->attribute_label)) {
 				foreach ($extrafields->attribute_label as $key => $label) {
 					$value = (isset($_POST["options_" . $key]) ? $_POST["options_" . $key] : $object->array_options["options_" . $key]);
@@ -930,7 +930,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 			// Other attributes
 			$parameters = array('colspan' => ' colspan="' . (2 + (($showphoto || $showbarcode) ? 1 : 0)) . '"');
-			$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
+			$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 			if (empty($reshook) && !empty($extrafields->attribute_label)) {
 				foreach ($extrafields->attribute_label as $key => $label) {
 					$value = (isset($_POST["options_" . $key]) ? $_POST["options_" . $key] : $object->array_options["options_" . $key]);
@@ -972,7 +972,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 					if (empty($object_is_used) && (!isset($object->no_button_delete) || $object->no_button_delete <> 1)) {
 						if (!empty($conf->use_javascript_ajax)) {
 							print '<span id="action-delete" class="butActionDelete">' . $langs->trans('Delete') . '</span>' . "\n";
-							print $form->formconfirm("fiche.php?id=" . $object->id, $langs->trans("DeleteProduct"), $langs->trans("ConfirmDeleteProduct"), "confirm_delete", '', 0, "action-delete");
+							print $form->formconfirm($_SERVER["PHP_SELF"] . "?id=" . $object->id, $langs->trans("DeleteProduct"), $langs->trans("ConfirmDeleteProduct"), "confirm_delete", '', 0, "action-delete");
 						} else {
 							print '<a class="butActionDelete" href="' . $_SERVER["PHP_SELF"] . '?action=delete&amp;id=' . $object->id . '">' . $langs->trans("Delete") . '</a>';
 						}

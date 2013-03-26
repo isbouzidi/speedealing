@@ -319,6 +319,14 @@ abstract class nosqlDocument extends CommonObject {
 	}
 
 	/**
+	 * delete object
+	 */
+	public function delete() {
+		if (!empty($this->_id))
+			$this->deleteDoc($this);
+	}
+
+	/**
 	 * 	store a file in document
 	 *  @param	$name		Name of the variable
 	 *  @return value of storeAttachment
@@ -1729,7 +1737,7 @@ abstract class nosqlDocument extends CommonObject {
 		$obj->aoColumns[$i] = new stdClass();
 		$obj->aoColumns[$i]->mDataProp = "Status";
 		$obj->aoColumns[$i]->sClass = "center";
-		
+
 		$obj->aoColumns[$i]->sDefaultContent = "ERROR";
 		$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("Status", "status");
 		$i++;

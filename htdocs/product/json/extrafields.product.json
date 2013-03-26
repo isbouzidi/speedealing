@@ -1,5 +1,6 @@
 {
    "_id": "extrafields:Product",
+   "_rev": "75-7d6fa2d0690d9d8ae06af65ea820e389",
    "class": "extrafields",
    "ico": "icon-object-product",
    "langs": [
@@ -8,6 +9,12 @@
    ],
    "defaultprice": "HT",
    "fields": {
+       "label": {
+           "type": "text",
+           "label": "Label",
+           "length": 60,
+           "enable": true
+       },
        "type": {
            "type": "select",
            "enable": true,

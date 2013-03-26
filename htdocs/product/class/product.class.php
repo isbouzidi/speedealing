@@ -420,7 +420,6 @@ class Product extends nosqlDocument {
 		if ($user->rights->produit->supprimer) {
 			$objectisused = $this->isObjectUsed($id);
 			if (empty($objectisused)) {
-				$this->db->begin();
 
 				if (!$error) {
 					// Appel des triggers
@@ -434,34 +433,7 @@ class Product extends nosqlDocument {
 					// Fin appel triggers
 				}
 
-				// Delete all child tables
-				$elements = array('product_fournisseur_price', 'product_price', 'product_lang', 'categorie_product');
-				foreach ($elements as $table) {
-					if (!$error) {
-						$sql = "DELETE FROM " . MAIN_DB_PREFIX . $table;
-						$sql.= " WHERE fk_product = " . $id;
-						dol_syslog(get_class($this) . '::delete sql=' . $sql, LOG_DEBUG);
-						$result = $this->db->query($sql);
-						if (!$result) {
-							$error++;
-							$this->error = $this->db->lasterror();
-							dol_syslog(get_class($this) . '::delete error ' . $this->error, LOG_ERR);
-						}
-					}
-				}
-
-				// Delete product
-				if (!$error) {
-					$sqlz = "DELETE FROM " . MAIN_DB_PREFIX . "product";
-					$sqlz.= " WHERE rowid = " . $id;
-					dol_syslog(get_class($this) . '::delete sql=' . $sql, LOG_DEBUG);
-					$resultz = $this->db->query($sqlz);
-					if (!$resultz) {
-						$error++;
-						$this->error = $this->db->lasterror();
-						dol_syslog(get_class($this) . '::delete error ' . $this->error, LOG_ERR);
-					}
-				}
+				parent::delete();
 
 				if (!$error) {
 					// We remove directory
@@ -478,13 +450,7 @@ class Product extends nosqlDocument {
 					}
 				}
 
-				if (!$error) {
-					$this->db->commit();
-					return 1;
-				} else {
-					$this->db->rollback();
-					return -$error;
-				}
+				return 1;
 			} else {
 				$this->error = "ErrorRecordHasChildren";
 				return 0;
@@ -782,6 +748,7 @@ class Product extends nosqlDocument {
 				$localtax1 = 0; // If = '' then = 0
 			if (empty($localtax2))
 				$localtax2 = 0; // If = '' then = 0
+
 
 
 
@@ -2420,7 +2387,7 @@ class Product extends nosqlDocument {
 		$head[$h]->href = "#";
 		$head[$h]->title = $langs->trans("SellingPrice");
 		$head[$h]->id = "NOW";
-		$head[$h]->onclick = "var oTable = $('#price_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listProductPrices&class=" . get_class($this) . "&key=" . $id . "'); return false;";
+		$head[$h]->onclick = "var oTable = $('#price_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listPrices&class=" . get_class($this) . "&key=" . $id . "'); return false;";
 		$head[$h]->icon = "icon-home";
 		$h++;
 		$head[$h] = new stdClass();
@@ -2555,7 +2522,7 @@ class Product extends nosqlDocument {
 
 		$obj->iDisplayLength = $max;
 		$obj->aaSorting = array(array(1, "desc"));
-		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listProductPrices&class=" . get_class($this) . "&key=" . $id;
+		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listPrices&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "price_datatable", true);
 
 		print end_box();

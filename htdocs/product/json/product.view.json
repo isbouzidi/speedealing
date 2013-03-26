@@ -1,6 +1,6 @@
 {
    "_id": "_design/Product",
-   "_rev": "174-2436b92597b25ffc6f1847a4bbff4a08",
+   "_rev": "177-af8c90dfc906b59ebccb232f05bfb9f9",
    "language": "javascript",
    "views": {
        "list": {
@@ -16,18 +16,15 @@
        "listType": {
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  emit(doc.type, doc);\n}"
        },
-       "listPrice": {
-           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price.length > 0) {\n    for(var idx in doc.price) {\n      emit([doc.price[idx].price_level,doc.price[idx].tms],doc.price[idx]);\n    }\n  }\n}"
-       },
        "listPriceLevel": {
            "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price) {\n    for(idx in doc.price) {\n      \temit(idx,1);\n    }\n  }\n}",
            "reduce": "_count"
        },
-       "listProductPrices": {
-           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price) { \n    for(var idx in doc.price) {\n        var docu = {};\n        for(var x in doc.price[idx])\n    \t  docu[x] = doc.price[idx][x];\n\tvar id;\n\tdocu._id=doc._id +\"#\"+ idx;\n        docu.price_level = idx;\n      emit(doc._id,docu);\n    }\n  }\n}"
-       },
        "listHistoryPrices": {
            "map": "function(doc) {\nif(doc.class==\"Product\" && doc.history.length > 0) { \n    for(var idx in doc.history) {\n        var docu = {};\n        for(var x in doc.history[idx])\n    \t  docu[x] = doc.history[idx][x];\n\tvar id;\n\tdocu._id=doc._id +\"#\"+ idx;\n      emit(doc._id,docu);\n    }\n  }\n}"
+       },
+       "listPrices": {
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price) { \n    for(var idx in doc.price) {\n        var docu = {};\n        for(var x in doc.price[idx])\n    \t  docu[x] = doc.price[idx][x];\n\tvar id;\n\tdocu._id=doc._id +\"#\"+ idx;\n        docu.price_level = idx;\n      emit(doc._id,docu);\n    }\n  }\n}"
        }
    },
    "updates": {
