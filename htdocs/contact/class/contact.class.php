@@ -94,8 +94,6 @@ class Contact extends nosqlDocument {
 		$error = 0;
 		$now = dol_now();
 
-		$this->db->begin();
-
 		// Clean parameters
 		$this->lastname = $this->lastname ? trim($this->lastname) : $this->name;
 		$this->firstname = trim($this->firstname);

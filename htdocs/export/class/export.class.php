@@ -21,14 +21,14 @@
 class Export {
 
 	var $db;
-	var $array_export_code = array();			 // Tableau de "idmodule_numlot"
-	var $array_export_module = array();		   // Tableau de "nom de modules"
-	var $array_export_label = array();			// Tableau de "libelle de lots"
-	var $array_export_sql = array();			  // Tableau des "requetes sql"
-	var $array_export_fields = array();		   // Tableau des listes de champ+libelle a exporter
-	var $array_export_entities = array();		 // Tableau des listes de champ+alias a exporter
-	var $array_export_dependencies = array();	 // array of list of entities that must take care of the DISTINCT if a field is added into export
-	var $array_export_special = array();		  // Tableau des operations speciales sur champ
+	var $array_export_code = array();	// Tableau de "idmodule_numlot"
+	var $array_export_module = array();	 // Tableau de "nom de modules"
+	var $array_export_label = array();   // Tableau de "libelle de lots"
+	var $array_export_sql = array();	 // Tableau des "requetes sql"
+	var $array_export_fields = array();	 // Tableau des listes de champ+libelle a exporter
+	var $array_export_entities = array();   // Tableau des listes de champ+alias a exporter
+	var $array_export_dependencies = array();  // array of list of entities that must take care of the DISTINCT if a field is added into export
+	var $array_export_special = array();	// Tableau des operations speciales sur champ
 	// To store export modules
 	var $hexa;
 	var $datatoexport;
@@ -116,7 +116,7 @@ class Export {
 
 			foreach ($object->fk_extrafields->fields as $idx => $row) {
 				if ($row->enable && $row->type != "uploadfile")
-					if ($row->class) {
+					if ($row->class && !$row->getkey) {
 						$this->array_export_fields[$i][$idx . "->name"] = $idx . "->name";
 						$this->array_export_fields[$i][$idx . "->id"] = $idx . "->id";
 					}
