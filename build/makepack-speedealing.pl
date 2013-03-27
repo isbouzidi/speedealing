@@ -9,6 +9,7 @@
 use Cwd;
 #use strict;
 #use warnings;
+use File::Basename;
 use File::NCopy;
 
 $PROJECT="speedealing";
@@ -58,7 +59,9 @@ $VERSION="3.2";
 ($DIR=$0) =~ s/([^\/\\]+)$//; ($PROG=$1) =~ s/\.([^\.]*)$//; $Extension=$1;
 $DIR||='.'; $DIR =~ s/([^\/\\])[\\\/]+$/$1/;
 
-$ROOT="$DIR/..";
+my $ROOT = dirname(dirname(__FILE__));
+
+#$ROOT="$DIR/..";
 $SOURCE="$ROOT/htdocs";
 $DESTI="$ROOT/build";
 
