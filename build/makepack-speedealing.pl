@@ -247,7 +247,8 @@ if ($nboftargetok) {
 	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
 	    	$cp->copy("$ROOT/build", "$BUILDROOT/$PROJECT")
             	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
-	    	#$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
+	    	
+	    	$ret=`cp -p "$ROOT/changelog" "$BUILDROOT/$PROJECT"`;
 	    	
 	    	#$cp->copy("$ROOT/Changelog", "$BUILDROOT/$PROJECT")
             #	or die "Could not perform rcopy of $ROOT/Changelog to $BUILDROOT/$PROJECT: $!";
