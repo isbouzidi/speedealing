@@ -56,7 +56,7 @@ $VERSION="3.2";
 $DIR||='.'; $DIR =~ s/([^\/\\])[\\\/]+$/$1/;
 
 $ROOT="$DIR/..";
-$SOURCE="$DIR/../htdocs";
+$SOURCE="$ROOT/htdocs";
 $DESTI="$ROOT/build";
 
 # Detect OS type
