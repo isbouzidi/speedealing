@@ -1,16 +1,17 @@
 #!/usr/bin/perl
 #----------------------------------------------------------------------------
-# \file         build/makepack-dolibarr.pl
+# \file         build/makepack-speedealing.pl
 # \brief        Speedealing package builder (tgz, zip, rpm, deb, exe, aps)
-# \author       (c)2004-2012 Laurent Destailleur  <eldy@users.sourceforge.net>
+# \author       (c)2004-2012 Laurent Destailleur <eldy@users.sourceforge.net>
+# \author       (c)2012-2013 Regis Houssin <regis.houssin@capnetworks.com>
 #----------------------------------------------------------------------------
 
 use Cwd;
 
-$PROJECT="dolibarr";
-$MAJOR="3";
+$PROJECT="speedealing";
+$MAJOR="0";
 $MINOR="2";
-$BUILD="0-beta";		# Mettre x pour release, x-dev pour dev, x-beta pour beta, x-rc pour release candidate
+$BUILD="34";			# Mettre x pour release
 $RPMSUBVERSION="auto";	# auto use value found into BUILD
 
 @LISTETARGET=("TGZ","ZIP","RPM_GENERIC","RPM_FEDORA","RPM_MANDRIVA","RPM_OPENSUSE","DEB","APS","EXEDOLIWAMP","SNAPSHOT");   # Possible packages
@@ -54,8 +55,9 @@ $VERSION="3.2";
 ($DIR=$0) =~ s/([^\/\\]+)$//; ($PROG=$1) =~ s/\.([^\.]*)$//; $Extension=$1;
 $DIR||='.'; $DIR =~ s/([^\/\\])[\\\/]+$/$1/;
 
-$SOURCE="$DIR/..";
-$DESTI="$SOURCE/build";
+$ROOT="$DIR/..";
+$SOURCE="$DIR/../htdocs/";
+$DESTI="$ROOT/build";
 
 # Detect OS type
 # --------------
@@ -111,10 +113,6 @@ print "Building package name: $PROJECT\n";
 print "Building package version: $MAJOR.$MINOR.$BUILD\n";
 print "Source directory (SOURCE): $SOURCE\n";
 print "Target directory (DESTI) : $DESTI\n";
-<<<<<<< HEAD
-=======
-
->>>>>>> 5563ef9d67ff8a21e03194e3598c6d6f88de6ed9
 
 
 # Choose package targets
@@ -170,7 +168,7 @@ $atleastonerpm=0;
 foreach my $target (keys %CHOOSEDTARGET) {
 	if ($target =~ /RPM/i)
 	{
-		if ($atleastonerpm && ($DESTI eq "$SOURCE/build"))
+		if ($atleastonerpm && ($DESTI eq "$ROOT/build"))
 		{
 			print "Error: You asked creation of several rpms. Because all rpm have same name, you must defined an environment variable DESTI to tell packager where it can create subdirs for each generated package.\n";
 			exit;
@@ -226,18 +224,6 @@ foreach my $target (keys %CHOOSEDTARGET) {
 }
 
 if ($nboftargetok) {
-
-    # Update CVS if required
-    #-----------------------
-    if ($nboftargetneedcvs)
-	{
-    	print "Go to directory $SOURCE\n";
-   		$olddir=getcwd();
-   		chdir("$SOURCE");
-    	print "Run cvs update -P -d\n";
-    	$ret=`cvs update -P -d 2>&1`;
-    	chdir("$olddir");
-	}
 	
     # Update buildroot if required
     #-----------------------------
@@ -265,37 +251,25 @@ if ($nboftargetok) {
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/build.xml`;
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/quickbuild.xml`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/pom.xml`;
-<<<<<<< HEAD
         $ret=`rm -f  $BUILDROOT/$PROJECT/README.md`;
-        
-=======
-        $ret=`rm -f  $BUILDROOT/$PROJECT/default.properties`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/git2cvs.sh`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/README.md`;
-
->>>>>>> 5563ef9d67ff8a21e03194e3598c6d6f88de6ed9
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/build/html`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/build/Doli*-*`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr_*.deb`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr_*.dsc`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr_*.tar.gz`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr-*.deb`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr-*.rpm`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr-*.tar`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr-*.tar.gz`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr-*.tgz`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/dolibarr-*.zip`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing_*.deb`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing_*.dsc`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing_*.tar.gz`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.deb`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.rpm`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.tar`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.tar.gz`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.tgz`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.zip`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/build/doxygen/doxygen_warnings.log`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/cache.manifest`;
-	    $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/conf/conf.php`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/conf/conf.php.mysql`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/conf/conf.php.old`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/conf/conf.php.postgres`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/conf/conf*sav*`;
-
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/install/mssql/README`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/install/mysql/README`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/install/pgsql/README`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/cache.manifest`;
+	    $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php.mysql`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php.old`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php.postgres`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf*sav*`;
 
         $ret=`rm -fr $BUILDROOT/$PROJECT/dev/codesniffer`;
         $ret=`rm -fr $BUILDROOT/$PROJECT/dev/codetemplates`;
@@ -312,37 +286,27 @@ if ($nboftargetok) {
         $ret=`rm -fr $BUILDROOT/$PROJECT/dev/test`;
         $ret=`rm -fr $BUILDROOT/$PROJECT/dev/uml`;
         $ret=`rm -fr $BUILDROOT/$PROJECT/dev/xdebug`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/dev/dolibarr_changes.txt`;
+        $ret=`rm -f  $BUILDROOT/$PROJECT/dev/speedealing_changes.txt`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/dev/README`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot2.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot3.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot4.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot5.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot6.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot7.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot8.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot9.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot10.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot11.png`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/dolibarr_screenshot12.png`;
+        #$ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/speedealing_screenshot2.png`;
 
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/documents`;
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/document`;
-	    $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/custom*`;
+	    $ret=`rm -fr $BUILDROOT/$PROJECT/custom*`;
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/test`;
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/Thumbs.db $BUILDROOT/$PROJECT/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/*/*/Thumbs.db`;
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/.cvsignore $BUILDROOT/$PROJECT/*/.cvsignore $BUILDROOT/$PROJECT/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/*/*/.cvsignore`;
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/.gitignore $BUILDROOT/$PROJECT/*/.gitignore $BUILDROOT/$PROJECT/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/*/*/.gitignore`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/theme/amarok`;
-   	    $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/includes/geoip/sample*.*`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/includes/nusoap/lib/Mail`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/includes/phpexcel/license.txt`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/includes/phpexcel/PHPExcel/Shared/PDF`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/includes/phpexcel/PHPExcel/Shared/PCLZip`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/includes/tcpdf/fonts/dejavu-fonts-ttf-2.33`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/includes/tcpdf/fonts/freefont-20100919`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/htdocs/includes/tcpdf/fonts/utils`;
-	    $ret=`rm -f  $BUILDROOT/$PROJECT/htdocs/includes/tcpdf/LICENSE.TXT`;
+   	    $ret=`rm -f  $BUILDROOT/$PROJECT/man
+   	    $ret=`rm -f  $BUILDROOT/$PROJECT/includes/geoip/sample*.*`;
+        $ret=`rm -fr $BUILDROOT/$PROJECT/includes/nusoap/lib/Mail`;
+        $ret=`rm -fr $BUILDROOT/$PROJECT/includes/phpexcel/license.txt`;
+        $ret=`rm -fr $BUILDROOT/$PROJECT/includes/phpexcel/PHPExcel/Shared/PDF`;
+        $ret=`rm -fr $BUILDROOT/$PROJECT/includes/phpexcel/PHPExcel/Shared/PCLZip`;
+        $ret=`rm -fr $BUILDROOT/$PROJECT/includes/tcpdf/fonts/dejavu-fonts-ttf-2.33`;
+        $ret=`rm -fr $BUILDROOT/$PROJECT/includes/tcpdf/fonts/freefont-20100919`;
+        $ret=`rm -fr $BUILDROOT/$PROJECT/includes/tcpdf/fonts/utils`;
+	    $ret=`rm -f  $BUILDROOT/$PROJECT/includes/tcpdf/LICENSE.TXT`;
 	}
     
     # Build package for each target
@@ -483,7 +447,7 @@ if ($nboftargetok) {
 
 			# Build tgz
     		print "Compress $FILENAMETGZ2 into $FILENAMETGZ2.tgz...\n";
-    		$ret=`tar --exclude-from "$SOURCE/build/tgz/tar_exclude.txt" --directory "$BUILDROOT" -czvf "$BUILDROOT/$FILENAMETGZ2.tgz" $FILENAMETGZ2`;
+    		$ret=`tar --exclude-from "$ROOT/build/tgz/tar_exclude.txt" --directory "$BUILDROOT" -czvf "$BUILDROOT/$FILENAMETGZ2.tgz" $FILENAMETGZ2`;
 
     		print "Move $BUILDROOT/$FILENAMETGZ2.tgz to $RPMDIR/SOURCES/$FILENAMETGZ2.tgz\n";
     		$cmd="mv $BUILDROOT/$FILENAMETGZ2.tgz $RPMDIR/SOURCES/$FILENAMETGZ2.tgz";
@@ -495,8 +459,8 @@ if ($nboftargetok) {
     		if ($target =~ /MAND/i) { $BUILDFICSRC="${FILENAME}_mandriva.spec"; }
     		if ($target =~ /OPEN/i) { $BUILDFICSRC="${FILENAME}_opensuse.spec"; }
     		
- 			print "Generate file $BUILDROOT/$BUILDFIC from $SOURCE/build/rpm/${BUILDFICSRC}\n";
-            open (SPECFROM,"<$SOURCE/build/rpm/${BUILDFICSRC}") || die "Error";
+ 			print "Generate file $BUILDROOT/$BUILDFIC from $ROOT/build/rpm/${BUILDFICSRC}\n";
+            open (SPECFROM,"<$ROOT/build/rpm/${BUILDFICSRC}") || die "Error";
             open (SPECTO,">$BUILDROOT/$BUILDFIC") || die "Error";
             while (<SPECFROM>) {
                 $_ =~ s/__FILENAMETGZ__/$FILENAMETGZ/;
@@ -508,8 +472,8 @@ if ($nboftargetok) {
             close SPECTO;
     
     		print "Copy patch file to $RPMDIR/SOURCES\n";
-    		$ret=`cp "$SOURCE/build/rpm/dolibarr-forrpm.patch" "$RPMDIR/SOURCES"`;
-		    $ret=`chmod 644 $RPMDIR/SOURCES/dolibarr-forrpm.patch`;
+    		$ret=`cp "$ROOT/build/rpm/speedealing-forrpm.patch" "$RPMDIR/SOURCES"`;
+		    $ret=`chmod 644 $RPMDIR/SOURCES/speedealing-forrpm.patch`;
 
     		print "Launch RPM build (rpmbuild --clean -ba $BUILDROOT/${BUILDFIC})\n";
     		#$ret=`rpmbuild -vvvv --clean -ba $BUILDROOT/${BUILDFIC}`;
@@ -581,15 +545,15 @@ if ($nboftargetok) {
             $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/compat`;
             $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/control*`;
             $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/copyright`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.config`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.desktop`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.doc-base`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.install`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.lintian-overrides`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.postrm`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.postinst`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.templates`;
-            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/dolibarr.templates.futur`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.config`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.desktop`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.doc-base`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.install`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.lintian-overrides`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.postrm`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.postinst`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.templates`;
+            $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/speedealing.templates.futur`;
             $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/rules`;
             $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/README.howto`;
             $ret=`rm -f  $BUILDROOT/$PROJECT.tmp/build/debian/wash`;
@@ -602,36 +566,36 @@ if ($nboftargetok) {
             $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/build/rpm`;
             $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/build/zip`;
             # We remove embedded libraries or fonts (this is also inside rules file, target clean)
-	   	    $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/htdocs/includes/ckeditor`;
-			$ret=`rm -fr $BUILDROOT/$PROJECT.tmp/htdocs/includes/fonts`,
-	   	    $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/htdocs/includes/geoip`;
-	   	    $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/htdocs/includes/nusoap`;
-            $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/htdocs/includes/odtphp/zip/pclzip`;
+	   	    $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/includes/ckeditor`;
+			$ret=`rm -fr $BUILDROOT/$PROJECT.tmp/includes/fonts`,
+	   	    $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/includes/geoip`;
+	   	    $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/includes/nusoap`;
+            $ret=`rm -fr $BUILDROOT/$PROJECT.tmp/includes/odtphp/zip/pclzip`;
 
             # Prepare source package (init debian dir)
             print "Create directory $BUILDROOT/$PROJECT.tmp/debian\n";
             $ret=`mkdir "$BUILDROOT/$PROJECT.tmp/debian"`;
-            print "Copy $SOURCE/build/debian/xxx to $BUILDROOT/$PROJECT.tmp/debian\n";
+            print "Copy $ROOT/build/debian/xxx to $BUILDROOT/$PROJECT.tmp/debian\n";
             # Add files for dpkg-source
-            $ret=`cp -f  "$SOURCE/build/debian/changelog"      "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/compat"         "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/control"        "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/copyright"      "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.desktop"        	"$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.doc-base"        	"$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.install" 	        "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.lintian-overrides"  "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.xpm"  		      	"$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/README.source"  "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/rules"          "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -fr "$SOURCE/build/debian/patches"        "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -fr "$SOURCE/build/debian/po"             "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -fr "$SOURCE/build/debian/source"         "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/changelog"      "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/compat"         "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/control"        "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/copyright"      "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.desktop"        	"$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.doc-base"        	"$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.install" 	        "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.lintian-overrides"  "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.xpm"  		      	"$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/README.source"  "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/rules"          "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -fr "$ROOT/build/debian/patches"        "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -fr "$ROOT/build/debian/po"             "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -fr "$ROOT/build/debian/source"         "$BUILDROOT/$PROJECT.tmp/debian"`;
             # Add files also required to build binary package
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.config"         "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.postinst"       "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.postrm"         "$BUILDROOT/$PROJECT.tmp/debian"`;
-            $ret=`cp -f  "$SOURCE/build/debian/dolibarr.templates"      "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.config"         "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.postinst"       "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.postrm"         "$BUILDROOT/$PROJECT.tmp/debian"`;
+            $ret=`cp -f  "$ROOT/build/debian/speedealing.templates"      "$BUILDROOT/$PROJECT.tmp/debian"`;
             
 			# Set owners and permissions
             print "Set owners on files/dir\n";
@@ -774,19 +738,19 @@ if ($nboftargetok) {
      		print "Remove target $FILENAMEEXEDOLIWAMP.exe...\n";
     		unlink "$NEWDESTI/$FILENAMEEXEDOLIWAMP.exe";
  
- 			$SOURCEBACK=$SOURCE;
- 			$SOURCEBACK =~ s/\//\\/g;
-    		print "Compil exe $FILENAMEEXEDOLIWAMP.exe file from iss file \"$SOURCEBACK\\build\\exe\\doliwamp\\doliwamp.iss\"\n";
-    		$cmd= "ISCC.exe \"$SOURCEBACK\\build\\exe\\doliwamp\\doliwamp.iss\"";
+ 			$ROOTBACK=$ROOT;
+ 			$ROOTBACK =~ s/\//\\/g;
+    		print "Compil exe $FILENAMEEXEDOLIWAMP.exe file from iss file \"$ROOTBACK\\build\\exe\\doliwamp\\doliwamp.iss\"\n";
+    		$cmd= "ISCC.exe \"$ROOTBACK\\build\\exe\\doliwamp\\doliwamp.iss\"";
 			print "$cmd\n";
 			$ret= `$cmd`;
 			#print "$ret\n";
 
     		# Move to final dir
-			print "Move \"$SOURCE\\build\\$FILENAMEEXEDOLIWAMP.exe\" to $NEWDESTI/$FILENAMEEXEDOLIWAMP.exe\n";
-    		rename("$SOURCE/build/$FILENAMEEXEDOLIWAMP.exe","$NEWDESTI/$FILENAMEEXEDOLIWAMP.exe");
-            print "Move $SOURCE/build/$FILENAMEEXEDOLIWAMP.exe to $NEWDESTI/$FILENAMEEXEDOLIWAMP.exe\n";
-            $ret=`mv "$SOURCE/build/$FILENAMEEXEDOLIWAMP.exe" "$NEWDESTI/$FILENAMEEXEDOLIWAMP.exe"`;
+			print "Move \"$ROOT\\build\\$FILENAMEEXEDOLIWAMP.exe\" to $NEWDESTI/$FILENAMEEXEDOLIWAMP.exe\n";
+    		rename("$ROOT/build/$FILENAMEEXEDOLIWAMP.exe","$NEWDESTI/$FILENAMEEXEDOLIWAMP.exe");
+            print "Move $ROOT/build/$FILENAMEEXEDOLIWAMP.exe to $NEWDESTI/$FILENAMEEXEDOLIWAMP.exe\n";
+            $ret=`mv "$ROOT/build/$FILENAMEEXEDOLIWAMP.exe" "$NEWDESTI/$FILENAMEEXEDOLIWAMP.exe"`;
     		next;
     	}
     }
