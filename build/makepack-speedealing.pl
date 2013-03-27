@@ -245,18 +245,20 @@ if ($nboftargetok) {
 	    	my $cp = File::NCopy->new(recursive => 1);
             $cp->copy("$SOURCE/*", "$BUILDROOT/$PROJECT")
             	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
+	    	
 	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
 	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
-	    	$cp->copy("$ROOT/Changelog", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/Changelog to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/COPYING", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/COPYING to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/COPYRIGHT", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/COPYRIGHT to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/INSTALL", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/INSTALL to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/README-FR", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/README-FR to $BUILDROOT/$PROJECT: $!";
+	    	
+	    	#$cp->copy("$ROOT/Changelog", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/Changelog to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/COPYING", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/COPYING to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/COPYRIGHT", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/COPYRIGHT to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/INSTALL", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/INSTALL to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/README-FR", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/README-FR to $BUILDROOT/$PROJECT: $!";
 	    }
 	    print "Clean $BUILDROOT\n";
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php`;
