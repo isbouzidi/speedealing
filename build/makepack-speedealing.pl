@@ -241,13 +241,13 @@ if ($nboftargetok) {
 	    	mkdir "$BUILDROOT";
 	    	mkdir "$BUILDROOT/$PROJECT";
 	    	print "Copy $SOURCE/* into $BUILDROOT/$PROJECT\n";
-	    	#$ret=`cp -pr "$SOURCE/*" "$BUILDROOT/$PROJECT"`;
-	    	my $cp = File::NCopy->new(recursive => 1);
+	    	my $cp = File::NCopy->new(recursive => 1, preserve => 1);
             $cp->copy("$SOURCE/*", "$BUILDROOT/$PROJECT")
             	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
-	    	
 	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
-	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
+	    	$cp->copy("$ROOT/build", "$BUILDROOT/$PROJECT")
+            	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
+	    	#$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
 	    	
 	    	#$cp->copy("$ROOT/Changelog", "$BUILDROOT/$PROJECT")
             #	or die "Could not perform rcopy of $ROOT/Changelog to $BUILDROOT/$PROJECT: $!";
