@@ -237,8 +237,8 @@ if ($nboftargetok) {
 	    
 	    	mkdir "$BUILDROOT";
 	    	mkdir "$BUILDROOT/$PROJECT";
-	    	print "Copy $SOURCE into $BUILDROOT/$PROJECT\n";
-	    	$ret=`cp -pr "$SOURCE" "$BUILDROOT/$PROJECT"`;
+	    	print "Copy $SOURCE/* into $BUILDROOT/$PROJECT\n";
+	    	$ret=`cp -pr "$SOURCE/*" "$BUILDROOT/$PROJECT"`;
 	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
 	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
 	    }
