@@ -249,61 +249,17 @@ if ($nboftargetok) {
 	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
 	    }
 	    print "Clean $BUILDROOT\n";
-	    $ret=`rm -f  $BUILDROOT/$PROJECT/.buildpath`;
-	    $ret=`rm -fr $BUILDROOT/$PROJECT/.cache`;
-	    $ret=`rm -fr $BUILDROOT/$PROJECT/.git`;
-	    $ret=`rm -f  $BUILDROOT/$PROJECT/.gitmodules`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/.gitignore`;
-	    $ret=`rm -fr $BUILDROOT/$PROJECT/.project`;
-	    $ret=`rm -fr $BUILDROOT/$PROJECT/.settings`;
-	    $ret=`rm -f  $BUILDROOT/$PROJECT/build.xml`;
-	    $ret=`rm -f  $BUILDROOT/$PROJECT/quickbuild.xml`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/pom.xml`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/README.md`;
-	    $ret=`rm -fr $BUILDROOT/$PROJECT/build/html`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/Doli*-*`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing_*.deb`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing_*.dsc`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing_*.tar.gz`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.deb`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.rpm`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.tar`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.tar.gz`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.tgz`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/speedealing-*.zip`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/build/doxygen/doxygen_warnings.log`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/cache.manifest`;
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php.mysql`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php.old`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php.postgres`;
         $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf*sav*`;
 
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/codesniffer`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/codetemplates`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/dbmodel`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/initdata`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/iso-normes`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/ldap`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/licence`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/mail`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/phpcheckstyle`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/phpunit`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/security`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/spec`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/test`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/uml`;
-        $ret=`rm -fr $BUILDROOT/$PROJECT/dev/xdebug`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/dev/speedealing_changes.txt`;
-        $ret=`rm -f  $BUILDROOT/$PROJECT/dev/README`;
-        #$ret=`rm -f  $BUILDROOT/$PROJECT/doc/images/speedealing_screenshot2.png`;
-
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/documents`;
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/document`;
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/custom*`;
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/test`;
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/Thumbs.db $BUILDROOT/$PROJECT/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/*/*/Thumbs.db`;
-	    $ret=`rm -f  $BUILDROOT/$PROJECT/.cvsignore $BUILDROOT/$PROJECT/*/.cvsignore $BUILDROOT/$PROJECT/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/*/*/.cvsignore`;
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/.gitignore $BUILDROOT/$PROJECT/*/.gitignore $BUILDROOT/$PROJECT/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/*/*/.gitignore`;
    	    $ret=`rm -fr $BUILDROOT/$PROJECT/man`;
    	    $ret=`rm -f  $BUILDROOT/$PROJECT/includes/geoip/sample*.*`;
@@ -337,6 +293,8 @@ if ($nboftargetok) {
             print "Copy $BUILDROOT/$PROJECT to $BUILDROOT/$FILENAMESNAPSHOT\n";
     		$cmd="cp -pr \"$BUILDROOT/$PROJECT\" \"$BUILDROOT/$FILENAMESNAPSHOT\"";
             $ret=`$cmd`;
+            
+            $ret=`rm -fr $BUILDROOT/$FILENAMESNAPSHOT/build`;
 
     		print "Compress $BUILDROOT into $FILENAMESNAPSHOT.tgz...\n";
    		    #$cmd="tar --exclude \"$BUILDROOT/tgz/tar_exclude.txt\" --exclude .cache --exclude .settings --exclude conf.php --directory \"$BUILDROOT\" -czvf \"$FILENAMESNAPSHOT.tgz\" $FILENAMESNAPSHOT";
@@ -363,7 +321,8 @@ if ($nboftargetok) {
             print "Copy $BUILDROOT/$PROJECT/ to $BUILDROOT/$FILENAMETGZ\n";
     		$cmd="cp -pr \"$BUILDROOT/$PROJECT/\" \"$BUILDROOT/$FILENAMETGZ\"";
             $ret=`$cmd`;
-
+            
+            $ret=`rm -fr $BUILDROOT/$FILENAMETGZ/build`;
 		    $ret=`rm -fr $BUILDROOT/$PROJECT/build/exe`;
 
     		print "Compress $FILENAMETGZ into $FILENAMETGZ.tgz...\n";
@@ -389,6 +348,8 @@ if ($nboftargetok) {
             print "Copy $BUILDROOT/$PROJECT to $BUILDROOT/$FILENAMEZIP\n";
     		$cmd="cp -pr \"$BUILDROOT/$PROJECT\" \"$BUILDROOT/$FILENAMEZIP\"";
             $ret=`$cmd`;
+            
+            $ret=`rm -fr $BUILDROOT/$FILENAMEZIP/build`;
 
     		print "Compress $FILENAMEZIP into $FILENAMEZIP.zip...\n";
  
@@ -443,6 +404,8 @@ if ($nboftargetok) {
             print "Copy $BUILDROOT/$PROJECT to $BUILDROOT/$FILENAMETGZ2\n";
     		$cmd="cp -pr '$BUILDROOT/$PROJECT' '$BUILDROOT/$FILENAMETGZ2'";
             $ret=`$cmd`;
+            
+            $ret=`rm -fr $BUILDROOT/$FILENAMETGZ2/build`;
 
 			# Set owners
             print "Set owners on files/dir\n";
