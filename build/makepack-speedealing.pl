@@ -7,6 +7,9 @@
 #----------------------------------------------------------------------------
 
 use Cwd;
+#use strict;
+#use warnings;
+use File::NCopy;
 
 $PROJECT="speedealing";
 $MAJOR="0";
@@ -238,7 +241,10 @@ if ($nboftargetok) {
 	    	mkdir "$BUILDROOT";
 	    	mkdir "$BUILDROOT/$PROJECT";
 	    	print "Copy $SOURCE/* into $BUILDROOT/$PROJECT\n";
-	    	$ret=`cp -pr "$SOURCE/*" "$BUILDROOT/$PROJECT"`;
+	    	#$ret=`cp -pr "$SOURCE/*" "$BUILDROOT/$PROJECT"`;
+	    	my $cp = File::NCopy->new(recursive => 1);
+            $cp->copy("$SOURCE/*", "$BUILDROOT/$PROJECT")
+            	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
 	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
 	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
 	    }
@@ -299,7 +305,7 @@ if ($nboftargetok) {
 	    $ret=`rm -fr $BUILDROOT/$PROJECT/Thumbs.db $BUILDROOT/$PROJECT/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/*/Thumbs.db $BUILDROOT/$PROJECT/*/*/*/*/Thumbs.db`;
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/.cvsignore $BUILDROOT/$PROJECT/*/.cvsignore $BUILDROOT/$PROJECT/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/*/.cvsignore $BUILDROOT/$PROJECT/*/*/*/*/*/*/.cvsignore`;
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/.gitignore $BUILDROOT/$PROJECT/*/.gitignore $BUILDROOT/$PROJECT/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/*/.gitignore $BUILDROOT/$PROJECT/*/*/*/*/*/*/.gitignore`;
-   	    $ret=`rm -f  $BUILDROOT/$PROJECT/man`;
+   	    $ret=`rm -fr $BUILDROOT/$PROJECT/man`;
    	    $ret=`rm -f  $BUILDROOT/$PROJECT/includes/geoip/sample*.*`;
         $ret=`rm -fr $BUILDROOT/$PROJECT/includes/nusoap/lib/Mail`;
         $ret=`rm -fr $BUILDROOT/$PROJECT/includes/phpexcel/license.txt`;
