@@ -56,12 +56,9 @@ $VERSION="3.2";
 #------------------------------------------------------------------------------
 # MAIN
 #------------------------------------------------------------------------------
-($DIR=$0) =~ s/([^\/\\]+)$//; ($PROG=$1) =~ s/\.([^\.]*)$//; $Extension=$1;
-$DIR||='.'; $DIR =~ s/([^\/\\])[\\\/]+$/$1/;
+my $DIR = dirname(__FILE__);
 
-my $ROOT = dirname(dirname(__FILE__));
-
-#$ROOT="$DIR/..";
+$ROOT="$DIR/..";
 $SOURCE="$ROOT/htdocs";
 $DESTI="$ROOT/build";
 
@@ -251,7 +248,7 @@ if ($nboftargetok) {
 	    	$cp->copy("$ROOT/build", "$BUILDROOT/$PROJECT")
             	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
 	    	
-	    	$ret=`cp -p "$ROOT/Changelog" "$BUILDROOT/$PROJECT"`;
+	    	#$ret=`cp -p "$ROOT/Changelog" "$BUILDROOT/$PROJECT"`;
 	    	
 	    	#$cp->copy("$ROOT/Changelog", "$BUILDROOT/$PROJECT")
             #	or die "Could not perform rcopy of $ROOT/Changelog to $BUILDROOT/$PROJECT: $!";
