@@ -247,6 +247,11 @@ if ($nboftargetok) {
             	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
 	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
 	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
+	    	$ret=`cp -p "$ROOT/Changelog" "$BUILDROOT/$PROJECT"`;
+	    	$ret=`cp -p "$ROOT/COPYING" "$BUILDROOT/$PROJECT"`;
+	    	$ret=`cp -p "$ROOT/COPYRIGHT" "$BUILDROOT/$PROJECT"`;
+	    	$ret=`cp -p "$ROOT/INSTALL" "$BUILDROOT/$PROJECT"`;
+	    	$ret=`cp -p "$ROOT/README-FR" "$BUILDROOT/$PROJECT"`;
 	    }
 	    print "Clean $BUILDROOT\n";
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php`;
