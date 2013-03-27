@@ -56,7 +56,7 @@ $VERSION="3.2";
 $DIR||='.'; $DIR =~ s/([^\/\\])[\\\/]+$/$1/;
 
 $ROOT="$DIR/..";
-$SOURCE="$DIR/../htdocs/";
+$SOURCE="$DIR/../htdocs";
 $DESTI="$ROOT/build";
 
 # Detect OS type
@@ -239,6 +239,8 @@ if ($nboftargetok) {
 	    	mkdir "$BUILDROOT/$PROJECT";
 	    	print "Copy $SOURCE into $BUILDROOT/$PROJECT\n";
 	    	$ret=`cp -pr "$SOURCE" "$BUILDROOT/$PROJECT"`;
+	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
+	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
 	    }
 	    print "Clean $BUILDROOT\n";
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/.buildpath`;
