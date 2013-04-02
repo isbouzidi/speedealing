@@ -2690,8 +2690,9 @@ class Product extends nosqlDocument {
 				$price_level = $record['price_level'];
 				
 				// Price TMS is the same	
-				if(strtotime($record['tms']) <= strtotime($product->price->$price_level->tms))
+				if(strtotime($record['tms']) <= strtotime($product->price->$price_level->tms)) {
 					continue;
+				}
 
 				$price = new stdClass();
 				for ($i = 4; $i < count($fieldssource); $i++) {
@@ -2727,9 +2728,7 @@ class Product extends nosqlDocument {
 
 				$price->price_level = $price_level;
 				$product->history[] = clone $price;
-
-
-
+				
 				//print_r($product);
 				//exit;
 				$result = $product->record();

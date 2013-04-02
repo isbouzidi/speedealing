@@ -195,7 +195,7 @@ class AbstractInvoice extends nosqlDocument {
 		$obj->aoColumns[$i]->bUseRendered = false;
 		$obj->aoColumns[$i]->bSearchable = true;
 		$obj->aoColumns[$i]->sDefaultContent = "";
-		$obj->aoColumns[$i]->fnRender = $product->datatablesFnRender("product.label", "url", array("id" => "product.id"));
+		$obj->aoColumns[$i]->fnRender = $product->datatablesFnRender("product.label", "url", array("id" => "product.id", "title" => "product.ref"));
 		$i++;
 
 		print'<th class="essential">';

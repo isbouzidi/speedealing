@@ -1005,7 +1005,7 @@ abstract class nosqlDocument extends CommonObject {
 			';
 
 				if (!empty($this->fk_extrafields->ico)) {
-					$rtr.= 'ar[ar.length] = "<span class=\"' . $this->fk_extrafields->ico . '\" title=\"' . $langs->trans("See " . get_class($this)) . ' : " + obj.aData.' . $key . '.toString() + "\">";';
+				$rtr.= 'ar[ar.length] = "<span class=\"' . $this->fk_extrafields->ico . '\" title=\"' . $langs->trans("See " . get_class($this)) . ' : " + obj.aData.' . (!empty($params['title'])?$params['title']:$key) . ' + "\">";';
 				}
 
 				$rtr.= 'if(obj.aData.' . $params["id"] . ' === undefined) {
