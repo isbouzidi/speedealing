@@ -776,6 +776,13 @@ class Product extends nosqlDocument {
 
 
 
+
+
+
+
+
+
+
 				
 // Ne pas mettre de quote sur les numeriques decimaux.
 			// Ceci provoque des stockages avec arrondis en base au lieu des valeurs exactes.
@@ -2459,10 +2466,10 @@ class Product extends nosqlDocument {
 			print $langs->trans('HT');
 			print'</th>';
 			$obj->aoColumns[$i] = new stdClass();
-			$obj->aoColumns[$i]->mDataProp = "price";
+			$obj->aoColumns[$i]->mDataProp = "pu_ht";
 			$obj->aoColumns[$i]->sClass = "fright";
 			$obj->aoColumns[$i]->sDefaultContent = "";
-			$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("price", "price");
+			$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("pu_ht", "price");
 			$i++;
 			if ($conf->global->PRODUCT_USE_ECOTAX && $this->type == "PRODUCT") {
 				print'<th class="essential">';
@@ -2556,6 +2563,7 @@ class Product extends nosqlDocument {
 			$dirname = sys_get_temp_dir() . '/' . $user->id;
 
 			$array_selected = array("_id" => 1,
+				"ref" => 1,
 				"label" => 1,
 				"price_level" => 1,
 				"tms" => 1,
@@ -2564,12 +2572,13 @@ class Product extends nosqlDocument {
 				"price" => 1);
 
 			$export_fields = array("_id" => "_id",
-				"label" => $langs->trans("Label"),
-				"price_level" => $langs->trans("PriceLevel"),
-				"tms" => $langs->trans("Date"),
-				"price_base_type" => "HT / TTC",
-				"tva_tx" => $langs->trans("VAT"),
-				"price" => $langs->trans("Price"));
+				"ref" => "ref",
+				"label" => "label",
+				"price_level" => "price_level",
+				"tms" => "tms",
+				"price_base_type" => "price_base_type",
+				"tva_tx" => "tva_tx",
+				"price" => "price");
 
 			$outputlangs = dol_clone($langs); // We clone to have an object we can modify (for example to change output charset by csv handler) without changing original value
 			// Open file
@@ -2607,6 +2616,126 @@ class Product extends nosqlDocument {
 		} else {
 			$this->error = "No record";
 			return -1;
+		}
+	}
+
+	/**
+	 * Import a price_list or update price
+	 */
+	public function importPrice($filetoimport) {
+		global $langs, $conf, $user;
+
+		require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
+
+		$model = "csv";
+		$separator = ";";
+		$enclosure = '"';
+
+		// Create classe to use for import
+		$dir = DOL_DOCUMENT_ROOT . "/import/core/modules/import/";
+		$file = "import_" . $model . ".modules.php";
+		$classname = "Import" . ucfirst($model);
+		require_once $dir . $file;
+		$obj = new $classname($db, $datatoimport);
+		if ($model == 'csv') {
+			$obj->separator = $separator;
+			$obj->enclosure = $enclosure;
+		}
+
+		// Load source fields in input file
+		$fieldssource = array();
+		$result = $obj->import_open_file($conf->import->dir_temp . '/' . $filetoimport, $langs);
+		if ($result >= 0) {
+			// Read first line
+			$arrayrecord = $obj->import_read_record();
+			// Put into array fieldssource starting with 1.
+			$i = 0;
+			foreach ($arrayrecord as $key => $val) {
+				$fieldssource[$i] = dol_trunc($val['val'], 24);
+				$i++;
+			}
+
+			$nboflines = dol_count_nb_of_line($conf->import->dir_temp . '/' . $filetoimport);
+			$sourcelinenb = 1;
+			while ($sourcelinenb < $nboflines) {
+				$sourcelinenb++;
+				// Read line and stor it into $arrayrecord
+				$arrayrecord = $obj->import_read_record();
+
+				foreach ($fieldssource as $key => $row) {
+					$record[$row] = $arrayrecord[$key]['val'];
+				}
+
+				if (empty($record['ref']))
+					continue;
+
+				//find if product exist
+				$product = new Product($this->db);
+				$result = $product->getView("list", array("key" => $record['ref']));
+				if (count($result->rows))
+					$product->load($result->rows[0]->id);
+				else {
+					// create a new product
+					$product->label = $record['label'];
+					$product->Status = "SELL";
+					$product->description = $record['desciption'];
+					$product->type = "PRODUCT";
+					$product->ref = $record['ref'];
+					$product->datec = dol_now();
+					$product->user_mod->id = $user->id;
+					$product->user_mod->name = $user->name;
+					$product->country_id = "FR";
+				}
+
+				$price_level = $record['price_level'];
+				
+				// Price TMS is the same	
+				if(strtotime($record['tms']) <= strtotime($product->price->$price_level->tms))
+					continue;
+
+				$price = new stdClass();
+				for ($i = 4; $i < count($fieldssource); $i++) {
+					$key = $fieldssource[$i];
+
+					//string conversion
+					if (isset($product->fk_extrafields->fields->$key->settype)) {
+						switch ($product->fk_extrafields->fields->$key->settype) {
+							case "int" :
+								$price->$key=intval($record[$key]);
+								settype($price->$key, $product->fk_extrafields->fields->$key->settype);
+								break;
+							case "float" :
+								$price->$key=floatval(str_replace(",", ".",$record[$key]));
+								settype($price->$key, $product->fk_extrafields->fields->$key->settype);
+								break;
+							case "date" :
+								$price->$key=date("c",strtotime($record[$key]));
+								break;
+						}
+					} else
+						$price->$key = $record[$key];
+				}
+
+				$price->user_mod = new stdClass();
+				$price->user_mod->id = $user->id;
+				$price->user_mod->name = $user->name;
+
+				if (is_array($product->price))
+					$product->price = new stdClass();
+
+				$product->price->$price_level = clone $price;
+
+				$price->price_level = $price_level;
+				$product->history[] = clone $price;
+
+
+
+				//print_r($product);
+				//exit;
+				$result = $product->record();
+			}
+
+			$obj->import_close_file();
 		}
 	}
 

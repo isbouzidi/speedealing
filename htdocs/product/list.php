@@ -89,7 +89,7 @@ if ($action == 'builddoc') {
 
 if ($action == 'import') {
 // Build export file
-	$result = $object->importPrice($_GET['price_level']);
+	$result = $object->importPrice("price_level_import_UGAP.csv");
 	if ($result < 0) {
 		setEventMessage($object->error, "errors");
 	} else {
@@ -127,7 +127,10 @@ if ($type == "PRODUCT" || empty($type))
 	print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create&type=PRODUCT">' . $langs->trans("NewProduct") . '</a>';
 
 if ($user->rights->produit->export)
-	print '<button class="button icon-download" onclick="openExportPrice();" title="ExportPriceLevels" ></button>';
+	print '<button class="button icon-outbox" onclick="openExportPrice();" title="ExportPriceLevels" ></button>';
+
+if ($user->rights->produit->import)
+	print '<a class="button icon-inbox" href="' . $_SERVER["PHP_SELF"] . '?action=import&type=' . $_GET["type"] . '" title="ImportPriceLevels" ></a>';
 
 print "</div>";
 
@@ -196,10 +199,10 @@ print'<th class="essential">';
 print $langs->trans('SellingPrice');
 print'</th>';
 $obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "price.price";
+$obj->aoColumns[$i]->mDataProp = "price.pu_ht";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->sClass = "fright";
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("price.price", "price");
+$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("price.pu_ht", "price");
 $i++;
 print'<th class="essential">';
 print $langs->trans("Date");

@@ -210,7 +210,8 @@ abstract class nosqlDocument extends CommonObject {
 		foreach (get_object_vars($this) as $key => $aRow)
 			if (!in_array($key, $this->no_save)) {
 				$values->$key = $aRow;
-				if (isset($this->fk_extrafields->fields->$key->settype)) // transtypage
+				if (isset($this->fk_extrafields->fields->$key->settype) &&
+						$this->fk_extrafields->fields->$key->settype != "date") // transtypage
 					settype($values->$key, $this->fk_extrafields->fields->$key->settype);
 
 				// If empty set default value

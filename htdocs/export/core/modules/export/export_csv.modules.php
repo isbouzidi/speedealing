@@ -30,287 +30,291 @@ require_once DOL_DOCUMENT_ROOT . '/export/core/modules/export/modules_export.php
  */
 class ExportCsv extends ModeleExports {
 
-    var $id;
-    var $label;
-    var $extension;
-    var $version;
-    var $label_lib;
-    var $version_lib;
-    var $separator;
-    var $handle;    // Handle fichier
+	var $id;
+	var $label;
+	var $extension;
+	var $version;
+	var $label_lib;
+	var $version_lib;
+	var $separator;
+	var $handle;	// Handle fichier
 
-    /**
-     * 	Constructor
-     *
-     * 	@param	    DoliDB	$db      Database handler
-     */
+	/**
+	 * 	Constructor
+	 *
+	 * 	@param	    DoliDB	$db      Database handler
+	 */
 
-    function __construct($db) {
-        global $conf, $langs;
-        $this->db = $db;
+	function __construct($db) {
+		global $conf, $langs;
+		$this->db = $db;
 
-        $this->separator = ';';
-        if (!empty($conf->global->EXPORT_CSV_SEPARATOR_TO_USE))
-            $this->separator = $conf->global->EXPORT_CSV_SEPARATOR_TO_USE;
-        $this->escape = '"';
-        $this->enclosure = '"';
+		$this->separator = ';';
+		if (!empty($conf->global->EXPORT_CSV_SEPARATOR_TO_USE))
+			$this->separator = $conf->global->EXPORT_CSV_SEPARATOR_TO_USE;
+		$this->escape = '"';
+		$this->enclosure = '"';
 
-        $this->id = 'csv';                // Same value then xxx in file name export_xxx.modules.php
-        $this->label = 'CSV';             // Label of driver
-        $this->desc = $langs->trans("CSVFormatDesc", $this->separator, $this->enclosure, $this->escape);
-        $this->extension = 'csv';         // Extension for generated file by this driver
-        $this->picto = 'mime/other';  // Picto
-        $this->version = '1.32';         // Driver version
-        // If driver use an external library, put its name here
-        $this->label_lib = 'Dolibarr';
-        $this->version_lib = DOL_VERSION;
-    }
+		$this->id = 'csv';				// Same value then xxx in file name export_xxx.modules.php
+		$this->label = 'CSV';			 // Label of driver
+		$this->desc = $langs->trans("CSVFormatDesc", $this->separator, $this->enclosure, $this->escape);
+		$this->extension = 'csv';		 // Extension for generated file by this driver
+		$this->picto = 'mime/other';  // Picto
+		$this->version = '1.32';		 // Driver version
+		// If driver use an external library, put its name here
+		$this->label_lib = 'Dolibarr';
+		$this->version_lib = DOL_VERSION;
+	}
 
-    /**
-     * getDriverId
-     *
-     * @return int
-     */
-    function getDriverId() {
-        return $this->id;
-    }
+	/**
+	 * getDriverId
+	 *
+	 * @return int
+	 */
+	function getDriverId() {
+		return $this->id;
+	}
 
-    /**
-     * getDriverLabel
-     *
-     * @return string
-     */
-    function getDriverLabel() {
-        return $this->label;
-    }
+	/**
+	 * getDriverLabel
+	 *
+	 * @return string
+	 */
+	function getDriverLabel() {
+		return $this->label;
+	}
 
-    /**
-     * getDriverDesc
-     *
-     * @return string
-     */
-    function getDriverDesc() {
-        return $this->desc;
-    }
+	/**
+	 * getDriverDesc
+	 *
+	 * @return string
+	 */
+	function getDriverDesc() {
+		return $this->desc;
+	}
 
-    /**
-     * getDriverExtension
-     *
-     * @return string
-     */
-    function getDriverExtension() {
-        return $this->extension;
-    }
+	/**
+	 * getDriverExtension
+	 *
+	 * @return string
+	 */
+	function getDriverExtension() {
+		return $this->extension;
+	}
 
-    /**
-     * getDriverVersion
-     *
-     * @return string
-     */
-    function getDriverVersion() {
-        return $this->version;
-    }
+	/**
+	 * getDriverVersion
+	 *
+	 * @return string
+	 */
+	function getDriverVersion() {
+		return $this->version;
+	}
 
-    /**
-     * getLabelLabel
-     *
-     * @return string
-     */
-    function getLibLabel() {
-        return $this->label_lib;
-    }
+	/**
+	 * getLabelLabel
+	 *
+	 * @return string
+	 */
+	function getLibLabel() {
+		return $this->label_lib;
+	}
 
-    /**
-     * getLibVersion
-     *
-     * @return string
-     */
-    function getLibVersion() {
-        return $this->version_lib;
-    }
+	/**
+	 * getLibVersion
+	 *
+	 * @return string
+	 */
+	function getLibVersion() {
+		return $this->version_lib;
+	}
 
-    /**
-     * 	Open output file
-     *
-     * 	@param		string		$file			Path of filename to generate
-     * 	@param		Translate	$outputlangs	Output language object
-     * 	@return		int							<0 if KO, >=0 if OK
-     */
-    function open_file($file, $outputlangs) {
-        global $langs;
+	/**
+	 * 	Open output file
+	 *
+	 * 	@param		string		$file			Path of filename to generate
+	 * 	@param		Translate	$outputlangs	Output language object
+	 * 	@return		int							<0 if KO, >=0 if OK
+	 */
+	function open_file($file, $outputlangs) {
+		global $langs;
 
-        dol_syslog("ExportCsv::open_file file=" . $file);
+		dol_syslog("ExportCsv::open_file file=" . $file);
 
-        $ret = 1;
+		$ret = 1;
 
-        $outputlangs->load("exports");
-        $this->handle = fopen($file, "wt");
-        if (!$this->handle) {
-            $langs->load("errors");
-            $this->error = $langs->trans("ErrorFailToCreateFile", $file);
-            $ret = -1;
-        }
+		$outputlangs->load("exports");
+		$this->handle = fopen($file, "wt");
+		if (!$this->handle) {
+			$langs->load("errors");
+			$this->error = $langs->trans("ErrorFailToCreateFile", $file);
+			$ret = -1;
+		}
 
-        return $ret;
-    }
+		return $ret;
+	}
 
-    /**
-     * 	Output header into file
-     *
-     * 	@param		Translate	$outputlangs	Output language object
-     * 	@return		int							<0 if KO, >0 if OK
-     */
-    function write_header($outputlangs) {
-        return 0;
-    }
+	/**
+	 * 	Output header into file
+	 *
+	 * 	@param		Translate	$outputlangs	Output language object
+	 * 	@return		int							<0 if KO, >0 if OK
+	 */
+	function write_header($outputlangs) {
+		return 0;
+	}
 
-    /**
-     * 	Output title line into file
-     *
-     *  @param      array		$array_export_fields_label   	Array with list of label of fields
-     *  @param      array		$array_selected_sorted       	Array with list of field to export
-     *  @param      Translate	$outputlangs    				Object lang to translate values
-     * 	@return		int											<0 if KO, >0 if OK
-     */
-    function write_title($array_export_fields_label, $array_selected_sorted, $outputlangs) {
-        global $conf;
+	/**
+	 * 	Output title line into file
+	 *
+	 *  @param      array		$array_export_fields_label   	Array with list of label of fields
+	 *  @param      array		$array_selected_sorted       	Array with list of field to export
+	 *  @param      Translate	$outputlangs    				Object lang to translate values
+	 * 	@return		int											<0 if KO, >0 if OK
+	 */
+	function write_title($array_export_fields_label, $array_selected_sorted, $outputlangs) {
+		global $conf;
 
-        if (!empty($conf->global->EXPORT_CSV_FORCE_CHARSET)) {
-            $outputlangs->charset_output = $conf->global->EXPORT_CSV_FORCE_CHARSET;
-        } else {
-            $outputlangs->charset_output = 'ISO-8859-1';
-        }
+		if (!empty($conf->global->EXPORT_CSV_FORCE_CHARSET)) {
+			$outputlangs->charset_output = $conf->global->EXPORT_CSV_FORCE_CHARSET;
+		} else {
+			$outputlangs->charset_output = 'ISO-8859-1';
+		}
 
-        $i = 0;
-        foreach ($array_selected_sorted as $code => $value) {
-            //$newvalue = $outputlangs->transnoentities($array_export_fields_label[$code]);
-            $newvalue = $array_export_fields_label[$code];
-            $newvalue = $this->csv_clean($newvalue, $outputlangs->charset_output);
+		$i = 0;
+		foreach ($array_selected_sorted as $code => $value) {
+			//$newvalue = $outputlangs->transnoentities($array_export_fields_label[$code]);
+			$newvalue = $array_export_fields_label[$code];
+			$newvalue = $this->csv_clean($newvalue, $outputlangs->charset_output);
 
-            if ($i == 0)
-                fwrite($this->handle, $newvalue);
-            else
-                fwrite($this->handle, $this->separator . $newvalue);
-            $i++;
-        }
-        fwrite($this->handle, "\n");
-        return 0;
-    }
+			if ($i == 0)
+				fwrite($this->handle, $newvalue);
+			else
+				fwrite($this->handle, $this->separator . $newvalue);
+			$i++;
+		}
+		fwrite($this->handle, "\n");
+		return 0;
+	}
 
-    /**
-     * 	Output record line into file
-     *
-     *  @param     	array		$array_selected_sorted      Array with list of field to export
-     *  @param     	resource	$objp                       A record from a fetch with all fields from select
-     *  @param     	Translate	$outputlangs    			Object lang to translate values
-     * 	@return		int										<0 if KO, >0 if OK
-     */
-    function write_record($array_selected_sorted, $objp, $outputlangs) {
-        global $conf;
+	/**
+	 * 	Output record line into file
+	 *
+	 *  @param     	array		$array_selected_sorted      Array with list of field to export
+	 *  @param     	resource	$objp                       A record from a fetch with all fields from select
+	 *  @param     	Translate	$outputlangs    			Object lang to translate values
+	 * 	@return		int										<0 if KO, >0 if OK
+	 */
+	function write_record($array_selected_sorted, $objp, $outputlangs) {
+		global $conf;
 
-        if (!empty($conf->global->EXPORT_CSV_FORCE_CHARSET)) {
-            $outputlangs->charset_output = $conf->global->EXPORT_CSV_FORCE_CHARSET;
-        } else {
-            $outputlangs->charset_output = 'ISO-8859-1';
-        }
+		if (!empty($conf->global->EXPORT_CSV_FORCE_CHARSET)) {
+			$outputlangs->charset_output = $conf->global->EXPORT_CSV_FORCE_CHARSET;
+		} else {
+			$outputlangs->charset_output = 'UTF-8';
+		}
 
-        $this->col = 0;
-        foreach ($array_selected_sorted as $code => $value) {
-            //$alias = str_replace(array('.', '-'), '_', $code);
-            $alias = $code;
-            if (empty($alias))
-                dol_print_error('', 'Bad value for field with key=' . $code . '. Try to redefine export.');
+		$this->col = 0;
+		foreach ($array_selected_sorted as $code => $value) {
+			//$alias = str_replace(array('.', '-'), '_', $code);
+			$alias = $code;
+			if (empty($alias))
+				dol_print_error('', 'Bad value for field with key=' . $code . '. Try to redefine export.');
 
-            if (is_array($objp->$alias) && count($objp->$alias)) {
-                $i = 0;
-                foreach ($objp->$alias as $aRow) {
-                    if ($i == 0)
-                        $newvalue = $aRow;
-                    else
-                        $newvalue .= ',' . $aRow;
-                    $i++;
-                }
-            } else {
-                if (strpos($code, "->")) { // For commercial_id->name by sample
-                    $alias = substr($code, 0, strpos($code, "->"));
-                    $alias1 = substr($code, strpos($code, "->") + 2);
+			if (is_array($objp->$alias) && count($objp->$alias)) {
+				$i = 0;
+				foreach ($objp->$alias as $aRow) {
+					if ($i == 0)
+						$newvalue = $aRow;
+					else
+						$newvalue .= ',' . $aRow;
+					$i++;
+				}
+			} else {
+				if (strpos($code, "->")) { // For commercial_id->name by sample
+					$alias = substr($code, 0, strpos($code, "->"));
+					$alias1 = substr($code, strpos($code, "->") + 2);
 
-                    $newvalue = $objp->$alias->$alias1;
-                } else
-                    $newvalue = $objp->$alias;
-            }
+					$newvalue = $objp->$alias->$alias1;
+				} else {
+					if (is_float($objp->$alias))
+						$newvalue = str_replace(".", ',', strval($objp->$alias)); // convert . to , for excel
+					else
+						$newvalue = $objp->$alias;
+				}
+			}
 
-            $newvalue = $outputlangs->convToOutputCharset($newvalue);
-            //print "[".$alias."]".$newvalue."<br>";
-            // Translation newvalue
-            if (preg_match('/^\((.*)\)$/i', $newvalue, $reg)) {
-                $newvalue = $outputlangs->transnoentities($reg[1]);
-            }
+			$newvalue = $outputlangs->convToOutputCharset($newvalue);
+			//print "[".$alias."]".$newvalue."<br>";
+			// Translation newvalue
+			if (preg_match('/^\((.*)\)$/i', $newvalue, $reg)) {
+				$newvalue = $outputlangs->transnoentities($reg[1]);
+			}
 
-            $newvalue = $this->csv_clean($newvalue, $outputlangs->charset_output);
+			$newvalue = $this->csv_clean($newvalue, $outputlangs->charset_output);
 
-            if ($this->col == 0)
-                fwrite($this->handle, $newvalue);
-            else
-                fwrite($this->handle, $this->separator . $newvalue);
-            
-            $this->col++;
-        }
+			if ($this->col == 0)
+				fwrite($this->handle, $newvalue);
+			else
+				fwrite($this->handle, $this->separator . $newvalue);
 
-        fwrite($this->handle, "\n");
-        return 0;
-    }
+			$this->col++;
+		}
 
-    /**
-     * 	Output footer into file
-     *
-     * 	@param		Translate	$outputlangs	Output language object
-     * 	@return		int							<0 if KO, >0 if OK
-     */
-    function write_footer($outputlangs) {
-        return 0;
-    }
+		fwrite($this->handle, "\n");
+		return 0;
+	}
 
-    /**
-     * 	Close file handle
-     *
-     * 	@return		int							<0 if KO, >0 if OK
-     */
-    function close_file() {
-        fclose($this->handle);
-        return 0;
-    }
+	/**
+	 * 	Output footer into file
+	 *
+	 * 	@param		Translate	$outputlangs	Output language object
+	 * 	@return		int							<0 if KO, >0 if OK
+	 */
+	function write_footer($outputlangs) {
+		return 0;
+	}
 
-    /**
-     * Clean a cell to respect rules of CSV file cells
-     *
-     * @param 	string	$newvalue	String to clean
-     * @param	string	$charset	Output character set
-     * @return 	string				Value cleaned
-     */
-    function csv_clean($newvalue, $charset) {
-        $addquote = 0;
+	/**
+	 * 	Close file handle
+	 *
+	 * 	@return		int							<0 if KO, >0 if OK
+	 */
+	function close_file() {
+		fclose($this->handle);
+		return 0;
+	}
 
-        // Rule Dolibarr: No HTML
-        $newvalue = dol_string_nohtmltag($newvalue, 1, $charset);
+	/**
+	 * Clean a cell to respect rules of CSV file cells
+	 *
+	 * @param 	string	$newvalue	String to clean
+	 * @param	string	$charset	Output character set
+	 * @return 	string				Value cleaned
+	 */
+	function csv_clean($newvalue, $charset) {
+		$addquote = 0;
 
-        // Rule 1 CSV: No CR, LF in cells
-        $newvalue = str_replace("\r", '', $newvalue);
-        $newvalue = str_replace("\n", '\n', $newvalue);
+		// Rule Dolibarr: No HTML
+		$newvalue = dol_string_nohtmltag($newvalue, 1, $charset);
 
-        // Rule 2 CSV: If value contains ", we must escape with ", and add "
-        if (preg_match('/"/', $newvalue)) {
-            $addquote = 1;
-            $newvalue = str_replace('"', '""', $newvalue);
-        }
+		// Rule 1 CSV: No CR, LF in cells
+		$newvalue = str_replace("\r", '', $newvalue);
+		$newvalue = str_replace("\n", '\n', $newvalue);
 
-        // Rule 3 CSV: If value contains separator, we must add "
-        if (preg_match('/' . $this->separator . '/', $newvalue)) {
-            $addquote = 1;
-        }
+		// Rule 2 CSV: If value contains ", we must escape with ", and add "
+		if (preg_match('/"/', $newvalue)) {
+			$addquote = 1;
+			$newvalue = str_replace('"', '""', $newvalue);
+		}
 
-        return ($addquote ? '"' : '') . $newvalue . ($addquote ? '"' : '');
-    }
+		// Rule 3 CSV: If value contains separator, we must add "
+		if (preg_match('/' . $this->separator . '/', $newvalue)) {
+			$addquote = 1;
+		}
+
+		return ($addquote ? '"' : '') . $newvalue . ($addquote ? '"' : '');
+	}
 
 }
 

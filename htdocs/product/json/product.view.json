@@ -1,6 +1,6 @@
 {
    "_id": "_design/Product",
-   "_rev": "184-633b8403e31eb19af28f6ebefaba261c",
+   "_rev": "187-ecc6dc35f70dae350008072b68b92ca9",
    "language": "javascript",
    "views": {
        "list": {
@@ -14,10 +14,10 @@
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  \temit(doc._id, {_id:doc._id, _rev:doc._rev});\n}"
        },
        "listType": {
-           "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\")\n  emit(doc.type, doc);\n}"
+           "map": "function(doc) {\n  if(doc.class && doc.class==\"Product\"){\n     var price = {};\n     if(doc.price[\"BASE\"])\n       price = doc.price[\"BASE\"];\n\n     var docu = {};\n     for(x in doc)\n        if(x!=\"price\")\n\t  docu[x] = doc[x];\n        else\n          docu[x] = price;\n     delete docu.history;\n\n     emit(doc.type, docu);\n   }\n}"
        },
        "listPriceLevel": {
-           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price) {\n    var docu = {};\n    docu._id = doc._id;\n    docu.label = doc.label;\n    for(idx in doc.price) {\n      for(x in doc.price[idx])\n\tdocu[x] = doc.price[idx][x];\n      emit(idx,docu);\n    }\n  }\n}",
+           "map": "function(doc) {\nif(doc.class==\"Product\" && doc.price) {\n    var docu = {};\n    docu._id = doc._id;\n    docu.label = doc.label;\n    docu.ref = doc.ref;\n    for(idx in doc.price) {\n      for(x in doc.price[idx])\n\tdocu[x] = doc.price[idx][x];\n      emit(idx,docu);\n    }\n  }\n}",
            "reduce": "_count"
        },
        "listHistoryPrices": {

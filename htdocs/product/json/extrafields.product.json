@@ -1,6 +1,6 @@
 {
    "_id": "extrafields:Product",
-   "_rev": "75-7d6fa2d0690d9d8ae06af65ea820e389",
+   "_rev": "82-f4b596e50cc379d26fc1084cfa9f55b7",
    "class": "extrafields",
    "ico": "icon-object-product",
    "langs": [
@@ -79,6 +79,7 @@
        },
        "tva_tx": {
            "type": "select",
+           "settype": "float",
            "enable": true,
            "dict": "dict:fk_tva",
            "default": 19.6
@@ -242,6 +243,14 @@
                    "enable": true
                }
            }
+       },
+       "pu_ht": {
+           "type": "input",
+           "settype": "float",
+           "enable": true
+       },
+       "tms": {
+           "settype": "date"
        }
    }
 }

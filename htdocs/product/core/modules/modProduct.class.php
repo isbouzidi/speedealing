@@ -117,6 +117,13 @@ class modProduct extends DolibarrModules {
         $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('export');
         $r++;
+		
+		$this->rights[$r] = new stdClass();
+        $this->rights[$r]->id = 39; // Must be same permission than in service module
+        $this->rights[$r]->desc = 'Importer les produits';
+        $this->rights[$r]->default = 0;
+        $this->rights[$r]->perm = array('import');
+        $r++;
 
         // Menus
         //--------
