@@ -9,6 +9,7 @@
 use Cwd;
 #use strict;
 #use warnings;
+use File::Basename;
 use File::NCopy;
 
 $PROJECT="speedealing";
@@ -55,8 +56,7 @@ $VERSION="3.2";
 #------------------------------------------------------------------------------
 # MAIN
 #------------------------------------------------------------------------------
-($DIR=$0) =~ s/([^\/\\]+)$//; ($PROG=$1) =~ s/\.([^\.]*)$//; $Extension=$1;
-$DIR||='.'; $DIR =~ s/([^\/\\])[\\\/]+$/$1/;
+my $DIR = dirname(__FILE__);
 
 $ROOT="$DIR/..";
 $SOURCE="$ROOT/htdocs";
@@ -241,22 +241,25 @@ if ($nboftargetok) {
 	    	mkdir "$BUILDROOT";
 	    	mkdir "$BUILDROOT/$PROJECT";
 	    	print "Copy $SOURCE/* into $BUILDROOT/$PROJECT\n";
-	    	#$ret=`cp -pr "$SOURCE/*" "$BUILDROOT/$PROJECT"`;
-	    	my $cp = File::NCopy->new(recursive => 1);
+	    	my $cp = File::NCopy->new(recursive => 1, preserve => 1);
             $cp->copy("$SOURCE/*", "$BUILDROOT/$PROJECT")
             	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
 	    	print "Copy $ROOT/build into $BUILDROOT/$PROJECT\n";
-	    	$ret=`cp -pr "$ROOT/build" "$BUILDROOT/$PROJECT"`;
-	    	$cp->copy("$ROOT/Changelog", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/Changelog to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/COPYING", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/COPYING to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/COPYRIGHT", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/COPYRIGHT to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/INSTALL", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/INSTALL to $BUILDROOT/$PROJECT: $!";
-	    	$cp->copy("$ROOT/README-FR", "$BUILDROOT/$PROJECT")
-            	or die "Could not perform rcopy of $ROOT/README-FR to $BUILDROOT/$PROJECT: $!";
+	    	$cp->copy("$ROOT/build", "$BUILDROOT/$PROJECT")
+            	or die "Could not perform rcopy of $SOURCE to $BUILDROOT/$PROJECT: $!";
+	    	
+	    	#$ret=`cp -p "$ROOT/Changelog" "$BUILDROOT/$PROJECT"`;
+	    	
+	    	#$cp->copy("$ROOT/Changelog", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/Changelog to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/COPYING", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/COPYING to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/COPYRIGHT", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/COPYRIGHT to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/INSTALL", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/INSTALL to $BUILDROOT/$PROJECT: $!";
+	    	#$cp->copy("$ROOT/README-FR", "$BUILDROOT/$PROJECT")
+            #	or die "Could not perform rcopy of $ROOT/README-FR to $BUILDROOT/$PROJECT: $!";
 	    }
 	    print "Clean $BUILDROOT\n";
 	    $ret=`rm -f  $BUILDROOT/$PROJECT/conf/conf.php`;
