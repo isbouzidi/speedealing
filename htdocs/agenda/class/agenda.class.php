@@ -933,14 +933,12 @@ class Agenda extends nosqlDocument {
 			$h++;
 		}
 		$head[$h] = new stdClass();
-		$head[$h]->href = "#";
 		$head[$h]->title = $langs->trans("StatusActionToDo");
 		$head[$h]->id = "TODO";
 		$head[$h]->onclick="var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('". DOL_URL_ROOT ."/core/ajax/listdatatables.php?json=actionsTODO&class=Agenda&key=".$id."'); return false;";
 		$head[$h]->icon = "icon-clock";
 		$h++;
 		$head[$h] = new stdClass();
-		$head[$h]->href = "#";
 		$head[$h]->title = $langs->trans("StatusActionDone");
 		$head[$h]->id = "DONE";
 		$head[$h]->onclick="var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('". DOL_URL_ROOT ."/core/ajax/listdatatables.php?json=actionsDONE&class=Agenda&key=".$id."'); return false;";

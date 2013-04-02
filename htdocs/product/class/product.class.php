@@ -772,6 +772,10 @@ class Product extends nosqlDocument {
 
 
 
+
+
+
+
 				
 // Ne pas mettre de quote sur les numeriques decimaux.
 			// Ceci provoque des stockages avec arrondis en base au lieu des valeurs exactes.
@@ -2384,14 +2388,12 @@ class Product extends nosqlDocument {
 		$head[$h]->icon = "icon-pencil";
 		$h++;
 		$head[$h] = new stdClass();
-		$head[$h]->href = "#";
 		$head[$h]->title = $langs->trans("SellingPrice");
 		$head[$h]->id = "NOW";
 		$head[$h]->onclick = "var oTable = $('#price_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listPrices&class=" . get_class($this) . "&key=" . $id . "'); return false;";
 		$head[$h]->icon = "icon-home";
 		$h++;
 		$head[$h] = new stdClass();
-		$head[$h]->href = "#";
 		$head[$h]->title = $langs->trans("HistorySellingPrice");
 		$head[$h]->id = "HISTORY";
 		$head[$h]->onclick = "var oTable = $('#price_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listHistoryPrices&class=" . get_class($this) . "&key=" . $id . "'); return false;";
@@ -2526,6 +2528,86 @@ class Product extends nosqlDocument {
 		$this->datatablesCreate($obj, "price_datatable", true);
 
 		print end_box();
+	}
+
+	/**
+	 * Export price list
+	 */
+	public function exportPrice($price_level, $model = "csv") {
+		global $conf, $user, $langs;
+
+		if (empty($price_level) || !$user->rights->produit->export) {
+			$this->error = $langs->trans("PermissionsNotFound");
+			return -1;
+		}
+
+		$dir = DOL_DOCUMENT_ROOT . "/export/core/modules/export/";
+		$file = "export_" . $model . ".modules.php";
+		$classname = "Export" . $model;
+		require_once $dir . $file;
+		$objmodel = new $classname($this->db);
+
+		$result = $this->getView("listPriceLevel", array("key" => $price_level, "reduce" => false));
+
+		if (count($result->rows)) {
+			//$this->array_export_label[$indice]
+			$filename = "price_level_" . $price_level;
+			$filename.='.' . $objmodel->getDriverExtension();
+			$dirname = sys_get_temp_dir() . '/' . $user->id;
+
+			$array_selected = array("_id" => 1,
+				"label" => 1,
+				"price_level" => 1,
+				"tms" => 1,
+				"price_base_type" => 1,
+				"tva_tx" => 1,
+				"price" => 1);
+
+			$export_fields = array("_id" => "_id",
+				"label" => $langs->trans("Label"),
+				"price_level" => $langs->trans("PriceLevel"),
+				"tms" => $langs->trans("Date"),
+				"price_base_type" => "HT / TTC",
+				"tva_tx" => $langs->trans("VAT"),
+				"price" => $langs->trans("Price"));
+
+			$outputlangs = dol_clone($langs); // We clone to have an object we can modify (for example to change output charset by csv handler) without changing original value
+			// Open file
+			dol_mkdir($dirname);
+			$result_file = $objmodel->open_file($dirname . "/" . $filename, $outputlangs);
+
+			if ($result_file >= 0) {
+				// Genere en-tete
+				$objmodel->write_header($outputlangs);
+
+				// Genere ligne de titre
+				$objmodel->write_title($export_fields, $array_selected, $outputlangs);
+
+				foreach ($result->rows as $aRow) {
+					//print_r($array_selected);exit;
+					//if(is_string($aRow->value))
+					$objp = $aRow->value;
+					$objp->price_level = $aRow->key;
+
+					$objmodel->write_record($array_selected, $objp, $outputlangs);
+				}
+
+				// Genere en-tete
+				$objmodel->write_footer($outputlangs);
+
+				// Close file
+				$objmodel->close_file();
+
+				return $filename;
+			} else {
+				$this->error = $objmodel->error;
+				dol_syslog("Export::build_file Error: " . $this->error, LOG_ERR);
+				return -1;
+			}
+		} else {
+			$this->error = "No record";
+			return -1;
+		}
 	}
 
 }

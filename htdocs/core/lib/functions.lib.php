@@ -2241,11 +2241,17 @@ function start_box($title, $cssClass = 'icon-object-default', $menu = array(), $
 		if (count($menu) > 0 && $box_action) {
 			$rtr.= '<div class="relative margin-bottom">';
 			if (count($menu) == 1)
-				$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button with-tooltip ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '" title="' . $menu[0]->title . '"></a>';
+				if(isset($menu[0]->href))
+					$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button with-tooltip ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '" title="' . $menu[0]->title . '"></a>';
+				else
+					$rtr.= '<button class="absolute-right compact button with-tooltip ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '" title="' . $menu[0]->title . '"></button>';
 			else {
 				$rtr.= '<div class="button-group absolute-right compact children-tooltip">';
 				foreach ($menu as $aRow)
-					$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></a>';
+					if(isset($aRow->href))
+						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></a>';
+					else
+						$rtr.= '<button class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></button>';
 				/* <a href="#" class="button icon-pencil">Edit</a>
 				  <a href="#" class="button icon-gear with-tooltip" title="Other actions"></a>
 				  <a href="#" class="button icon-trash with-tooltip confirm" title="Delete"></a> */

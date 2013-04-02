@@ -21,26 +21,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* Specific to download the price list file */
+if (isset($_GET["action"]) && $_GET["action"] == "builddoc") {
+	define('NOTOKENRENEWAL', 1); // Disables token renewal
+
+	function llxHeader() {
+		
+	}
+
+	if (!defined('NOREQUIREMENU'))
+		define('NOREQUIREMENU', '1');
+	if (!defined('NOREQUIREHTML'))
+		define('NOREQUIREHTML', '1');
+	if (!defined('NOREQUIREAJAX'))
+		define('NOREQUIREAJAX', '1');
+}
+
 require '../main.inc.php';
 require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
 
 $type = GETPOST("type", "alpha");
+$action = GETPOST('action', 'alpha');
 
 $canvas = GETPOST("canvas");
 $objcanvas = '';
 if (!empty($canvas)) {
-    require_once DOL_DOCUMENT_ROOT . '/core/class/canvas.class.php';
-    $objcanvas = new Canvas($db, $action);
-    $objcanvas->getCanvas('product', 'list', $canvas);
+	require_once DOL_DOCUMENT_ROOT . '/core/class/canvas.class.php';
+	$objcanvas = new Canvas($db, $action);
+	$objcanvas->getCanvas('product', 'list', $canvas);
 }
 
 // Security check
 if ($type == 'PRODUCT')
-    $result = restrictedArea($user, 'produit', '', '', '', '', '', $objcanvas);
+	$result = restrictedArea($user, 'produit', '', '', '', '', '', $objcanvas);
 else if ($type == 'SERVICE')
-    $result = restrictedArea($user, 'service', '', '', '', '', '', $objcanvas);
+	$result = restrictedArea($user, 'service', '', '', '', '', '', $objcanvas);
 else
-    $result = restrictedArea($user, 'produit|service', '', '', '', '', '', $objcanvas);
+	$result = restrictedArea($user, 'produit|service', '', '', '', '', '', $objcanvas);
 
 $object = new Product($db);
 /*
@@ -52,11 +69,32 @@ llxHeader('', $langs->trans("ProductsAndServices"), '', '', '', '');
 $title = $langs->trans("ProductsAndServices");
 
 if (!empty($type)) {
-    if ($type == "SERVICE") {
-        $title = $langs->trans("Services");
-    } else {
-        $title = $langs->trans("Products");
-    }
+	if ($type == "SERVICE") {
+		$title = $langs->trans("Services");
+	} else {
+		$title = $langs->trans("Products");
+	}
+}
+
+if ($action == 'builddoc') {
+// Build export file
+	$result = $object->exportPrice($_GET['price_level']);
+	if ($result < 0) {
+		setEventMessage($object->error, "errors");
+	} else {
+		setEventMessage($langs->trans("FileSuccessfullyBuilt"));
+		$object->downloadTempFile($result);
+	}
+}
+
+if ($action == 'import') {
+// Build export file
+	$result = $object->importPrice($_GET['price_level']);
+	if ($result < 0) {
+		setEventMessage($object->error, "errors");
+	} else {
+		setEventMessage($langs->trans("FileSuccessfullyBuilt"));
+	}
 }
 
 print_fiche_titre($title);
@@ -82,12 +120,38 @@ print '<div class="with-padding">';
  *
  */
 
-print '<p class="button-height right">';
+print '<div class="margin-bottom button-group right compact children-tooltip">';
 if ($type == "SERVICE" || empty($type))
-    print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create&type=SERVICE">' . $langs->trans("NewService") . '</a> ';
+	print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create&type=SERVICE">' . $langs->trans("NewService") . '</a> ';
 if ($type == "PRODUCT" || empty($type))
-    print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create&type=PRODUCT">' . $langs->trans("NewProduct") . '</a>';
-print "</p>";
+	print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create&type=PRODUCT">' . $langs->trans("NewProduct") . '</a>';
+
+if ($user->rights->produit->export)
+	print '<button class="button icon-download" onclick="openExportPrice();" title="ExportPriceLevels" ></button>';
+
+print "</div>";
+
+if ($user->rights->produit->export)
+	print "<script>
+	function openExportPrice()
+		{
+			var cancelled = false;
+
+			$.modal.prompt('Please enter value list price : ', function(value)
+			{
+				if (value.length == 0)
+				{
+					$(this).getModalContentBlock().message('Please enter a correct value', { append: false, classes: ['red-gradient'] });
+					return false;
+				}
+
+				window.location.href = '" . $_SERVER['PHP_SELF'] . "?action=builddoc&type=" . $_GET["type"] . "&price_level='+value;
+
+			}, function()
+			{
+			});
+		};
+		</script>";
 
 $i = 0;
 $obj = new stdClass();
@@ -147,16 +211,16 @@ $obj->aoColumns[$i]->bUseRendered = false;
 $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("tms", "date");
 $i++;
 if (empty($type)) {
-    print'<th class="essential">';
-    print $langs->trans("Type");
-    print'</th>';
-    $obj->aoColumns[$i] = new stdClass();
-    $obj->aoColumns[$i]->mDataProp = "type";
-    $obj->aoColumns[$i]->sClass = "center";
-    $obj->aoColumns[$i]->sWidth = "60px";
-    $obj->aoColumns[$i]->sDefaultContent = "PRODUCT";
-    $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("type", "status");
-    $i++;
+	print'<th class="essential">';
+	print $langs->trans("Type");
+	print'</th>';
+	$obj->aoColumns[$i] = new stdClass();
+	$obj->aoColumns[$i]->mDataProp = "type";
+	$obj->aoColumns[$i]->sClass = "center";
+	$obj->aoColumns[$i]->sWidth = "60px";
+	$obj->aoColumns[$i]->sDefaultContent = "PRODUCT";
+	$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("type", "status");
+	$i++;
 }
 print'<th class="essential">';
 print $langs->trans("Status");
@@ -180,15 +244,15 @@ $obj->aoColumns[$i]->sDefaultContent = "";
 
 $url = "product/fiche.php";
 $obj->aoColumns[$i]->fnRender = 'function(obj) {
-	var ar = [];
-	ar[ar.length] = "<a href=\"' . $url . '?id=";
-	ar[ar.length] = obj.aData._id.toString();
-	ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
+			var ar = [];
+			ar[ar.length] = "<a href=\"' . $url . '?id=";
+						ar[ar.length] = obj.aData._id.toString();
+						ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
 	ar[ar.length] = "<a href=\"\"";
-	ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
+						ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
 	var str = ar.join("");
 	return str;
-}';
+	}';
 print'</tr>';
 print'</thead>';
 print'<tfoot>';
@@ -208,8 +272,8 @@ $i++;
 print'<th id="' . $i . '"></th>';
 $i++;
 if (empty($type)) {
-    print'<th id="' . $i . '"></th>';
-    $i++;
+	print'<th id="' . $i . '"></th>';
+	$i++;
 }
 print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search status") . '" /></th>';
 $i++;
@@ -222,7 +286,7 @@ print'</tbody>';
 print "</table>";
 
 if (!empty($type))
-    $obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listType&class=" . get_class($object) . "&key=" . $type;
+	$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listType&class=" . get_class($object) . "&key=" . $type;
 //$obj->bServerSide = true;
 //$obj->sDom = 'C<\"clear\">lfrtip';
 $object->datatablesCreate($obj, "product", true, true);

@@ -1757,5 +1757,38 @@ abstract class nosqlDocument extends CommonObject {
 		print end_box();
 	}
 
+	/**
+	 * Download file for temporary directy
+	 * Set header to develop file
+	 */
+	public function downloadTempFile($original_file) {
+		global $conf, $user;
+
+		require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
+		$original_file = sys_get_temp_dir() . '/' . $user->id . '/' . $original_file;
+
+		clearstatcache();
+
+		$filename = basename($original_file);
+
+		//$type = 'application/octet-stream';
+		$type = dol_mimetype($original_file);
+
+		header('Content-Description: File Transfer');
+		if ($type)
+			header('Content-Type: ' . $type . (preg_match('/text/', $type) ? '; charset="' . $conf->file->character_set_client : ''));
+		if ($attachment)
+			header('Content-Disposition: attachment; filename="' . $filename . '"');
+		else
+			header('Content-Disposition: inline; filename="' . $filename . '"');
+		header('Content-Length: ' . dol_filesize($original_file));
+// Ajout directives pour resoudre bug IE
+		header('Cache-Control: Public, must-revalidate');
+		header('Pragma: public');
+
+		readfile($original_file);
+		unlink($original_file);
+	}
+
 }
 ?>
