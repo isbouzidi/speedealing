@@ -2688,7 +2688,7 @@ class Product extends nosqlDocument {
 				}
 
 				$price_level = $record['price_level'];
-				
+								
 				// Price TMS is the same	
 				if(strtotime($record['tms']) <= strtotime($product->price->$price_level->tms)) {
 					continue;
