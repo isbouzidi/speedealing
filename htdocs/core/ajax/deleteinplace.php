@@ -63,18 +63,10 @@ if (!empty($json) && !empty($id) && !empty($class)) {
                 $object->record();
                 $object->update_price();
                 exit;
-
             }
-
             else {
-
                 $object->load($id);
-
-                if (method_exists($object, 'deleteInPlace'))
-                        $object->deleteInPlace();
-
                 $res = $object->deleteDoc();
-
             }
             exit;
         } catch (Exception $exc) {

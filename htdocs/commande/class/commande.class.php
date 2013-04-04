@@ -2880,17 +2880,6 @@ class Commande extends AbstractInvoice {
 		$this->author->name = $user->login;
 	}
 
-	public function deleteInPlace($obj) {
-
-		global $user;
-
-		// Delete lines of Commande
-		//        $lines = $this->getView('linesPerCommande', array('key' => $this->id));
-		//        foreach ($lines->rows as $l) {
-		//            $this->deleteline($l->value->_id);
-		//        }
-	}
-
 	public function fetch_thirdparty() {
 
 		$thirdparty = new Societe($this->db);
