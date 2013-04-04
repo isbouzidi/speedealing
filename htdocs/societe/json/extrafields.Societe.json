@@ -1,6 +1,5 @@
 {
    "_id": "extrafields:Societe",
-   "_rev": "78-b5f97f4791006bb5f30e05ab4901f613",
    "class": "extrafields",
    "ico": "icon-object-company",
    "langs": [
@@ -381,7 +380,7 @@
            "type": "action",
            "enable": true,
            "list": {
-               "width": 35,
+               "width": 45,
                "cssclass": "center",
                "sortable": false,
                "searchable": false,
@@ -390,11 +389,11 @@
            "action": {
                "edit": {
                    "label": "Edit",
-                   "cssclass": "icon edit"
+                   "cssclass": "icon-action-edit action-edit"
                },
                "delete": {
                    "label": "Delete",
-                   "cssclass": "icon delete delEnqBtn"
+                   "cssclass": "icon-action-delete action-delete"
                }
            }
        },

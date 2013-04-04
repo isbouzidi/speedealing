@@ -88,11 +88,11 @@
            "action": {
                "restore": {
                    "label": "Restore",
-                   "cssclass": "icon restore restoreEnqBtn"
+                   "cssclass": "icon-action-restore action-restore"
                },
                "delete": {
                    "label": "Delete",
-                   "cssclass": "icon delete delEnqBtn"
+                   "cssclass": "icon-action-delete action-delete"
                }
            }
        },

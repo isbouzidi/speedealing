@@ -31,9 +31,8 @@ class DeleteNotification implements PluginInterface {
 		$var_name = $table->getConfig('var_name');
 		$object_class = $table->getConfig('object_class');
 
-		// TODO: add translation for recycle bin
 		$table->method("
-			$('tbody tr td .delEnqBtn').live('click', function(){
+			$('tbody tr td .action-delete').live('click', function(){
 				var aPos = {$var_name}.fnGetPosition(this.parentNode);
 				var aData = {$var_name}.fnGetData(aPos[0]);
 				if(aData['name'] === undefined)
