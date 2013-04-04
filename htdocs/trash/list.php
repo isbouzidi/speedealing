@@ -47,7 +47,7 @@ echo '<div class="with-padding">';
 
 echo '<br>';
 
-echo $object->showList();
+echo $object->showList('list');
 
 echo '</div>'; // end
 
