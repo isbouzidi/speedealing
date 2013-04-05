@@ -1,5 +1,5 @@
 // Copyright (C) 2005-2010 Laurent Destailleur  <eldy@users.sourceforge.net>
-// Copyright (C) 2005-2012 Regis Houssin        <regis.houssin@capnetworks.com>
+// Copyright (C) 2005-2013 Regis Houssin        <regis.houssin@capnetworks.com>
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -635,6 +635,20 @@ function confirmConstantAction(action, url, code, input, box, entity, yesButton,
 		}
 		]
 	});
+}
+
+/*
+ * Set Trash status
+ */
+function setTrashStatus() {
+	var trashStatus = requestCore('getTrash', 'count');
+	if (trashStatus) {
+		var trash = $('#shortcuts li.trashList a.shortcut-trash-empty');
+		trash.removeClass('shortcut-trash-empty').addClass('shortcut-trash-full');
+	} else {
+		var trash = $('#shortcuts li.trashList a.shortcut-trash-full');
+		trash.removeClass('shortcut-trash-full').addClass('shortcut-trash-empty');
+	}
 }
 
 /*

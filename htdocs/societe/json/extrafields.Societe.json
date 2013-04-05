@@ -9,7 +9,7 @@
    ],
    "pluginsList": [
        "RowAction",
-       "DeleteNotification",
+       "TrashNotification",
        "RowShowHide",
        "FieldEditable",
        "ColFilter"
@@ -391,9 +391,9 @@
                    "label": "Edit",
                    "cssclass": "icon-action-edit action-edit"
                },
-               "delete": {
+               "trash": {
                    "label": "Delete",
-                   "cssclass": "icon-action-delete action-delete"
+                   "cssclass": "icon-action-trash action-trash"
                }
            }
        },
