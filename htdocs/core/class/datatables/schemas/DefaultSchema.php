@@ -63,7 +63,7 @@ class DefaultSchema extends Schema {
 			// Footer element
 			$footer = ''; // Footer by default
 			if ($field->list->searchable !== false) {
-				if (1==2 && !empty($field->values)) {
+				if (!empty($field->values)) {
 					$footer = $this->element('FilterSelect', array(object2array($field->values)));
 				} else {
 					$footer = $this->element('FilterInput', array($langs->trans('Search') . ' {:label}'));

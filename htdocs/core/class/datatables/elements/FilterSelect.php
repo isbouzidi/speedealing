@@ -36,7 +36,8 @@ class FilterSelect implements ElementInterface {
         	if ($val['enable'] || $key == -1) {
         		$label = (!empty($val['label']) ? $val['label'] : $langs->trans($key));
         		$label = ($key == -1) ? '' : $label;
-        		$output .= "<option value='{$key}'>{$label}</option>";
+        		//$output .= "<option value='{$key}'>{$label}</option>"; // FIXME use this with bServerSide
+        		$output .= "<option value='{$label}'>{$label}</option>";
         	}
         }
         $output .= "</select>";
