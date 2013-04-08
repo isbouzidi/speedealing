@@ -21,7 +21,7 @@ namespace datatables\plugins;
 use datatables\Datatables,
 	datatables\PluginInterface;
 
-class DeleteNotification implements PluginInterface {
+class TrashNotification implements PluginInterface {
 
 	/* ______________________________________________________________________ */
 
@@ -32,29 +32,26 @@ class DeleteNotification implements PluginInterface {
 		$object_class = $table->getConfig('object_class');
 
 		$table->method("
-			$('tbody tr td .action-delete').live('click', function(){
+			$('tbody tr td .action-trash').live('click', function(){
 				var aPos = {$var_name}.fnGetPosition(this.parentNode);
 				var aData = {$var_name}.fnGetData(aPos[0]);
-				var objClass = '{$object_class}';
-				
-				if (objClass == 'Trash')
-					objClass = aData['element'];
-				
 				if(aData['name'] === undefined)
 					var text = aData['label'];
 				else
 					var text = aData['name'];
 
-				$.modal.confirm('" . $langs->trans("ConfirmPermanentlyDelete") . "',
+				$.modal.confirm('" . $langs->trans("ConfirmTrash") . "',
 					function() {
 						$.ajax({
 							type: 'POST',
 							url: '/core/ajax/deleteinplace.php',
-							data: 'json=delete&class=' + objClass + '&id=' + aData['_id'],
+							data: 'json=trash&class={$object_class}&id=' + aData['_id'],
 							success: function(msg){
 								// delete row
 								{$var_name}.fnDeleteRow(aPos[0]);
-								setTrashStatus();
+								// change trash status
+								var trash = $('#shortcuts li.trashList a.shortcut-trash-empty');
+								trash.removeClass('shortcut-trash-empty').addClass('shortcut-trash-full');
 							}
 						});
 					},
@@ -62,7 +59,7 @@ class DeleteNotification implements PluginInterface {
 						return false;
 					},
 					{
-						title: '" . $langs->trans("PermanentlyDelete") . " ' + text,
+						title: '" . $langs->trans("PutInTheTrash") . " ' + text,
 						textCancel: '" . $langs->trans("Cancel") . "',
 						textConfirm: '" . $langs->trans("Delete") . "'
 					}

@@ -270,8 +270,12 @@ if (empty($builder)) {
 
 echo '<br>';
 
-if (!empty($builder))
-	echo $object->showList();
+if (!empty($builder)) {
+	$view = 'listEnable';
+	if (GETPOST('disable'))
+		$view = 'listDisable';
+	echo $object->showList($view);
+}
 
 //print end_box();
 print '</div>'; // end

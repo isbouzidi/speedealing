@@ -3070,18 +3070,6 @@ public function showPayments(){
 
     }
 
-    public function deleteInPlace($obj){
-
-        global $user;
-
-        // Delete lines of Facture
-        $lines = $this->getView('linesPerFacture', array('key' => $this->id));
-        foreach ($lines->rows as $l) {
-            $this->deleteline($l->value->_id);
-        }
-
-    }
-
     public function fetch_thirdparty(){
 
         $thirdparty = new Societe($this->db);

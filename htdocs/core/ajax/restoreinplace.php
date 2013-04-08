@@ -47,41 +47,16 @@ if (!empty($json) && !empty($id) && !empty($class)) {
 	dol_include_once("/" . strtolower($class) . "/class/" . strtolower($class) . ".class.php");
 
 	$object = new $class($db);
-
-	if ($json == "delete") {
-		try {
-
-			if (preg_match("#^([a-z0-9]+)\#([0-9]+)$#", $id, $matches)) {
-
-				$idInvoice = $matches[1];
-				$idLine = $matches[2];
-
-				$object->fetch($idInvoice);
-				unset($object->lines[$idLine]);
-				$object->lines = array_merge($object->lines);
-				$object->record();
-				$object->update_price();
-				exit;
-			}
-			else {
-				$object->load($id);
-				$res = $object->deleteDoc();
-			}
-			exit;
-		} catch (Exception $exc) {
-			error_log($exc->getMessage());
-			exit;
-		}
-		
-	} else if ($json == "trash") {
+	
+	if ($json == "restore") {
 		try {
 			$object->load($id);
 			
-			$object->trash = true;
-			$object->trashed_by = new stdClass();
-			$object->trashed_by->id = $user->id;
-			$object->trashed_by->name = $user->name;
-			$object->trashed_by->date = dol_now();
+			$object->trash = false;
+			$object->restore_by = new stdClass();
+			$object->restore_by->id = $user->id;
+			$object->restore_by->name = $user->name;
+			$object->restore_by->date = dol_now();
 			
 			$res = $object->record();
 			

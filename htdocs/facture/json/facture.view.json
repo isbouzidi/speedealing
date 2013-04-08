@@ -1,6 +1,5 @@
 {
    "_id": "_design/Facture",
-   "_rev": "88-6b4664d112b05853f9e0a8e35ff4b138",
    "language": "javascript",
    "views": {
        "list": {
@@ -15,9 +14,6 @@
        },
        "lines": {
            "map": "function(doc) {\nif (doc.class && doc.class == \"Facture\"){\nfor (i in doc.lines) {\n\tvar id;\n\tid=doc._id +\"#\"+ i;\n  emit(doc._id, {_id:id,description:doc.lines[i].description,pu_ht:doc.lines[i].pu_ht,qty:doc.lines[i].qty,tva_tx:doc.lines[i].tva_tx,total_ht:doc.lines[i].total_ht,total_tva:doc.lines[i].total_tva,total_ttc:doc.lines[i].total_ttc,product_type:doc.lines[i].product_type,remise:doc.lines[i].remise,product:doc.lines[i].product});\n}\n }\n}"
-       },
-       "linesPerFacture": {
-           "map": "function(doc) {\nif (doc.class && doc.class == 'FactureLigne')\n  emit(doc.fk_facture, doc);\n}"
        },
        "listUnpaid": {
            "map": "function(doc) {\nif (doc.class && doc.class==\"Facture\" && doc.Status != 'PAID' && doc.Status != 'CANCELED')\n  emit(doc.client.id, doc);\n}"

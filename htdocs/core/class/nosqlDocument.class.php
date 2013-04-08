@@ -1277,15 +1277,14 @@ abstract class nosqlDocument extends CommonObject {
 	}
 
 	/**
+	 *	Show object list
 	 *
+	 *	@param	string	$view	Requested view
 	 */
-	public function showList() {
+	public function showList($view = 'list') {
 
 		//$data_source = "core/ajax/listdatatables.php?json=list&class=" . get_class($this) . "&bServerSide=true";
-		if ($_GET["disable"])
-			$data_source = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($this);
-		else
-			$data_source = "core/ajax/listdatatables.php?json=listEnable&class=" . get_class($this);
+		$data_source = "core/ajax/listdatatables.php?json=" . (!empty($view) ? $view : 'list') . "&class=" . get_class($this);
 		$table = new datatables\Datatables(compact('data_source'));
 		$table->setSchema(new datatables\schemas\DefaultSchema);
 		$table->setConfig('object_class', get_class($this));

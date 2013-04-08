@@ -8,6 +8,7 @@
    ],
    "pluginsList": [
        "RowAction",
+       "RestoreNotification",
        "DeleteNotification"
    ],
    "longList": [
@@ -20,7 +21,10 @@
        "Action"
    ],
    "shortList": [
-       "name"
+       "_id",
+       "element",
+       "label",
+       "Action"
    ],
    "fields": {
        "_id": {
@@ -79,7 +83,7 @@
            "type": "action",
            "enable": true,
            "list": {
-               "width": 35,
+               "width": 45,
                "cssclass": "center",
                "sortable": false,
                "searchable": false,
@@ -88,11 +92,11 @@
            "action": {
                "restore": {
                    "label": "Restore",
-                   "cssclass": "icon restore restoreEnqBtn"
+                   "cssclass": "icon-action-restore action-restore"
                },
                "delete": {
                    "label": "Delete",
-                   "cssclass": "icon delete delEnqBtn"
+                   "cssclass": "icon-action-delete action-delete"
                }
            }
        },

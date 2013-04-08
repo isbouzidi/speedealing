@@ -161,6 +161,7 @@ class User extends nosqlDocument {
 
 			//$result = $this->couchAdmin->getUser($login);
 			//print_r($result);exit;
+			$login = str_replace('user:', '', $login); // For avoid error
 			$this->load("user:" . $login, $cache);
 		} catch (Exception $e) {
 			error_log("Login error : " . $login . " " . $e->getMessage());

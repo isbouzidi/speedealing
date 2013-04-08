@@ -75,14 +75,7 @@
 	</ul>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var trashStatus = requestCore('getTrash', 'count');
-			if (trashStatus) {
-				var trash = $('#shortcuts li.trashList a.shortcut-trash-empty');
-				trash.removeClass('shortcut-trash-empty').addClass('shortcut-trash-full');
-			} else {
-				var trash = $('#shortcuts li.trashList a.shortcut-trash-full');
-				trash.removeClass('shortcut-trash-full').addClass('shortcut-trash-empty');
-			}
+			setTrashStatus();
 			$('#shortcuts li.<?php echo $shortcut; ?>').addClass('current');
 		});
 	</script>

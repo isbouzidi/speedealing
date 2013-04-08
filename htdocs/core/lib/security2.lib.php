@@ -44,8 +44,8 @@ function dol_getwebuser($mode) {
  * @return		void
  */
 function dol_loginfunction($langs, $conf, $mysoc) {
-    global $dolibarr_main_demo, $db;
-    global $smartphone, $hookmanager;
+    global $dolibarr_main_demo;
+    global $hookmanager;
 
     // Instantiate hooks of thirdparty module only if not already define
     $hookmanager->initHooks(array('mainloginpage'));

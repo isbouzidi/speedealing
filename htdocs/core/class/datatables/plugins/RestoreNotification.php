@@ -21,7 +21,7 @@ namespace datatables\plugins;
 use datatables\Datatables,
 	datatables\PluginInterface;
 
-class DeleteNotification implements PluginInterface {
+class RestoreNotification implements PluginInterface {
 
 	/* ______________________________________________________________________ */
 
@@ -29,28 +29,22 @@ class DeleteNotification implements PluginInterface {
 		global $langs;
 
 		$var_name = $table->getConfig('var_name');
-		$object_class = $table->getConfig('object_class');
 
 		$table->method("
-			$('tbody tr td .action-delete').live('click', function(){
+			$('tbody tr td .action-restore').live('click', function(){
 				var aPos = {$var_name}.fnGetPosition(this.parentNode);
 				var aData = {$var_name}.fnGetData(aPos[0]);
-				var objClass = '{$object_class}';
-				
-				if (objClass == 'Trash')
-					objClass = aData['element'];
-				
 				if(aData['name'] === undefined)
 					var text = aData['label'];
 				else
 					var text = aData['name'];
 
-				$.modal.confirm('" . $langs->trans("ConfirmPermanentlyDelete") . "',
+				$.modal.confirm('" . $langs->trans("ConfirmRestore") . "',
 					function() {
 						$.ajax({
 							type: 'POST',
-							url: '/core/ajax/deleteinplace.php',
-							data: 'json=delete&class=' + objClass + '&id=' + aData['_id'],
+							url: '/core/ajax/restoreinplace.php',
+							data: 'json=restore&class=' + aData['element'] + '&id=' + aData['_id'],
 							success: function(msg){
 								// delete row
 								{$var_name}.fnDeleteRow(aPos[0]);
@@ -62,9 +56,9 @@ class DeleteNotification implements PluginInterface {
 						return false;
 					},
 					{
-						title: '" . $langs->trans("PermanentlyDelete") . " ' + text,
+						title: '" . $langs->trans("RestoreElement") . " ' + text,
 						textCancel: '" . $langs->trans("Cancel") . "',
-						textConfirm: '" . $langs->trans("Delete") . "'
+						textConfirm: '" . $langs->trans("Restore") . "'
 					}
 				);
 			});
