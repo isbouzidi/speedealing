@@ -116,7 +116,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					if (!empty($conf->main_resolver)) {
 						echo $langs->trans("Entity") . " : " . substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], "."));
 						if (substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")) == "demo") {
-							echo "login : demo / password : demo";
+							echo '<p class="icon-user orange">login : demo / password : demo</p';
 						}
 					}
 					?></h5>
