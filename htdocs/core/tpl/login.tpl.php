@@ -113,8 +113,12 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 			<hgroup id="login-title" class="large-margin-bottom">
 				<h1 class="login-title-image">Speedealing</h1>
 				<h5><?php
-					if (!empty($conf->main_resolver))
+					if (!empty($conf->main_resolver)) {
 						echo $langs->trans("Entity") . " : " . substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], "."));
+						if (substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")) == "demo") {
+							echo "login : demo / password : demo";
+						}
+					}
 					?></h5>
 			</hgroup>
 			<form name="login" action="<?php echo $php_self; ?>" method="post" id="form-login">
@@ -132,7 +136,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 						<!-- The autocomplete="off" attributes is the only way to prevent webkit browsers from filling the inputs with yellow -->
 						<li>
 							<span class="icon-user mid-margin-right"></span>
-							<input type="text" name="username" id="login" value="<?php echo (!empty($login)?$login:''); ?>" class="input-unstyled" placeholder="<?php echo $langs->trans('EMail'); ?>" autocomplete="off" />
+							<input type="text" name="username" id="login" value="<?php echo (!empty($login) ? $login : ''); ?>" class="input-unstyled" placeholder="<?php echo $langs->trans('EMail'); ?>" autocomplete="off" />
 						</li>
 						<li>
 							<span class="icon-lock mid-margin-right"></span>
