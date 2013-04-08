@@ -671,7 +671,7 @@ function left_menu() {
  * @return	void
  */
 function main_menu() {
-	global $user, $conf, $langs, $db;
+	global $user, $conf, $langs;
 	global $hookmanager, $count_icon;
 
 
@@ -683,28 +683,23 @@ function main_menu() {
 	// Load the top menu manager
 	require DOL_DOCUMENT_ROOT . '/core/menus/standard/' . $conf->top_menu;
 
-	$searchform = '';
-	$bookmarks = '';
-
 	// Instantiate hooks of thirdparty module
 	$hookmanager->initHooks(array('searchform', 'leftblock'));
 
 	print "\n";
-
-	$countTODO = null;
-	if ($conf->agenda->enabled) {
-		require_once DOL_DOCUMENT_ROOT . '/agenda/class/agenda.class.php';
-		$agenda = new \Agenda($db);
-		$countTODO = $agenda->getView("countTODO", array("group" => true, "key" => $user->id), true);
-	}
-
+	
 	// Show menu
-	$menu = new MenuAuguria($db);
+	$menu = new MenuAuguria();
 	$menu->atarget = $target;
-
+	
+	$countTODO = null;
 	$listMyTasks = null;
-	if ($conf->agenda->enabled) {
-		$agenda = new \Agenda($db);
+	if (!empty($conf->agenda->enabled)) {
+		require_once DOL_DOCUMENT_ROOT . '/agenda/class/agenda.class.php';
+		$agenda = new \Agenda();
+		
+		$countTODO = $agenda->getView("countTODO", array("group" => true, "key" => $user->id), true);
+		
 		$params = array(
 				'startkey' => array($user->id, mktime(0, 0, 0, date("m"), date("d"), date("Y"))),
 				'endkey' => array($user->id, mktime(23, 59, 59, date("m"), date("d"), date("Y")))

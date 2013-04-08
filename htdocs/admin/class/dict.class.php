@@ -29,7 +29,7 @@ class Dict extends nosqlDocument {
 	public $table_element = 'dict';
 
 	/**
-	 *    Constructor de la classe
+	 *    Constructor
 	 */
 	function __construct($db) {
 		$this->db = $db;

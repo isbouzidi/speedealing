@@ -35,7 +35,7 @@ class MenuAuguria extends nosqlDocument {
 	 *  @param      DoliDb		$db      Database handler
 	 */
 
-	function __construct($db) {
+	function __construct($db = null) {
 		global $conf;
 
 		parent::__construct($db);

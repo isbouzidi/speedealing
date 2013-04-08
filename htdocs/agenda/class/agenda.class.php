@@ -70,7 +70,7 @@ class Agenda extends nosqlDocument {
 	 *      @param		DoliDB		$db      Database handler
 	 */
 
-	function __construct($db) {
+	function __construct($db = null) {
 		parent::__construct($db);
 
 		$this->fk_extrafields = new ExtraFields($db);
