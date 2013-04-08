@@ -580,7 +580,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 		$name = 'Speedealing';
 		if (!empty($mysoc->name))
 			$name = $mysoc->name;
-		$title = $name . (!empty($title) ? $title : '');
+		$title = $name . (!empty($title) ? ' - ' . $title : '');
 
 		// Base href
 		$base_href = MAIN_PROTOCOL . '://' . $_SERVER['HTTP_HOST'] . DOL_URL_ROOT . '/';
