@@ -7,17 +7,17 @@
  * Copyright (C) 2005-2013	Regis Houssin			<regis.houssin@capnetworks.com>
  * Copyright (C) 2011-2013	Herve Prot				<herve.prot@symeos.com>
  * Copyright (C) 2011		Juanjo Menent			<jmenent@2byte.es>
- *
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,7 +32,7 @@ $mesg = GETPOST("mesg");
 $action = GETPOST('action');
 
 if (!$user->admin)
-    accessforbidden();
+	accessforbidden();
 
 $object = new DolibarrModules($db);
 
@@ -53,54 +53,54 @@ dol_htmloutput_errors($mesg);
  * Actions
  */
 if ($action == 'set' && $user->admin) {
-    try {
-        $object->load($_GET['id']); // update if module exist
-    } catch (Exception $e) {
+	try {
+		$object->load($_GET['id']); // update if module exist
+	} catch (Exception $e) {
 
-    }
+	}
 
-    try {
-        $key = $_GET['value'];
-        $objMod = $modules[$key];
+	try {
+		$key = $_GET['value'];
+		$objMod = $modules[$key];
 
-        foreach ($objMod as $key => $aRow)
-            $object->$key = $aRow;
+		foreach ($objMod as $key => $aRow)
+			$object->$key = $aRow;
 
-        $object->_id = "module:" . $objMod->name;
-        $object->enabled = true;
-        dol_delcache("MenuAuguria:list"); //refresh menu
-        dol_delcache("MenuAuguria:submenu"); //refresh menu
-        dol_delcache("extrafields:" . $objMod->name); //refresh extrafields
-        dol_delcache("const"); //delete $conf
-        dol_delcache("DolibarrModules:list"); //refresh menu
-        dol_delcache("DolibarrModules:default_right");
+		$object->_id = "module:" . $objMod->name;
+		$object->enabled = true;
+		dol_delcache("MenuAuguria:list"); //refresh menu
+		dol_delcache("MenuAuguria:submenu"); //refresh menu
+		dol_delcache("extrafields:" . $objMod->name); //refresh extrafields
+		dol_delcache("const"); //delete $conf
+		dol_delcache("DolibarrModules:list"); //refresh menu
+		dol_delcache("DolibarrModules:default_right");
 
-        $object->record();
-        $object->_load_documents();
-    } catch (Exception $e) {
-        $mesg = $e->getMessage();
-    }
-    Header("Location: " . $_SERVER['PHP_SELF'] . "?&mesg=" . urlencode($mesg));
-    exit;
+		$object->record();
+		$object->_load_documents();
+	} catch (Exception $e) {
+		$mesg = $e->getMessage();
+	}
+	Header("Location: " . $_SERVER['PHP_SELF'] . "?&mesg=" . urlencode($mesg));
+	exit;
 }
 
 if ($action == 'reset' && $user->admin) {
-    try {
-        $object->load($_GET['id']);
-        unset($object->enabled);
+	try {
+		$object->load($_GET['id']);
+		unset($object->enabled);
 
-        dol_delcache("MenuTop:list"); //refresh menu
-        dol_delcache("MenuTop:submenu"); //refresh menu
-        dol_delcache("const"); //delete $conf
-        dol_delcache("DolibarrModules:list"); //refresh menu
-        dol_delcache("DolibarrModules:default_right");
+		dol_delcache("MenuTop:list"); //refresh menu
+		dol_delcache("MenuTop:submenu"); //refresh menu
+		dol_delcache("const"); //delete $conf
+		dol_delcache("DolibarrModules:list"); //refresh menu
+		dol_delcache("DolibarrModules:default_right");
 
-        $object->record();
-    } catch (Exception $e) {
-        $mesg = $e->getMessage();
-    }
-    Header("Location: " . $_SERVER['PHP_SELF'] . "?&mesg=" . urlencode($mesg));
-    exit;
+		$object->record();
+	} catch (Exception $e) {
+		$mesg = $e->getMessage();
+	}
+	Header("Location: " . $_SERVER['PHP_SELF'] . "?&mesg=" . urlencode($mesg));
+	exit;
 }
 
 /*
@@ -115,7 +115,7 @@ print_fiche_titre($langs->trans("Setup"));
 print '<div class="with-padding">';
 print '<div class="columns">';
 
-print start_box($langs->trans("ModulesSetup"), 'twelve', '16-Cog-4.png', false);
+print start_box($langs->trans("ModulesSetup"), 'icon-object-config', '', false);
 
 
 $obj = new stdClass();
@@ -180,32 +180,28 @@ $obj->aoColumns[$i]->sClass = "center";
 print'</tr>';
 
 print'</thead>';
-$obj->fnDrawCallback = "function(oSettings){
-                if ( oSettings.aiDisplay.length == 0 )
-                {
-                    return;
-                }
-                var nTrs = jQuery('#list_modules tbody tr');
-                var iColspan = nTrs[0].getElementsByTagName('td').length;
-                var sLastGroup = '';
-                for ( var i=0 ; i<nTrs.length ; i++ )
-                {
-                    var iDisplayIndex = oSettings._iDisplayStart + i;
-                     var sGroup = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex] ]._aData['family'];
-                         if (sGroup!=null && sGroup!='' && sGroup != sLastGroup)
-                            {
-                                var nGroup = document.createElement('tr');
-                                var nCell = document.createElement('td');
-                                nCell.colSpan = iColspan;
-                                nCell.className = 'group';
-                                nCell.innerHTML = sGroup;
-                                nGroup.appendChild( nCell );
-                                nTrs[i].parentNode.insertBefore( nGroup, nTrs[i] );
-                                sLastGroup = sGroup;
-                            }
-
-
-                }
+$obj->fnDrawCallback = "
+	function(oSettings) {
+		if ( oSettings.aiDisplay.length == 0 ) {
+			return;
+		}
+		var nTrs = jQuery('#list_modules tbody tr');
+		var iColspan = nTrs[0].getElementsByTagName('td').length;
+		var sLastGroup = '';
+		for ( var i=0 ; i<nTrs.length ; i++ ) {
+			var iDisplayIndex = oSettings._iDisplayStart + i;
+			var sGroup = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex] ]._aData['family'];
+			if (sGroup!=null && sGroup!='' && sGroup != sLastGroup) {
+				var nGroup = document.createElement('tr');
+				var nCell = document.createElement('td');
+				nCell.colSpan = iColspan;
+				nCell.className = 'group';
+				nCell.innerHTML = sGroup;
+				nGroup.appendChild( nCell );
+				nTrs[i].parentNode.insertBefore( nGroup, nTrs[i] );
+				sLastGroup = sGroup;
+			}
+		}
 	}";
 
 $i = 0;
@@ -219,144 +215,144 @@ $var = true;
 $oldfamily = '';
 
 $familylib = array(
-    'base' => $langs->trans("ModuleFamilyBase"),
-    'crm' => $langs->trans("ModuleFamilyCrm"),
-    'products' => $langs->trans("ModuleFamilyProducts"),
-    'hr' => $langs->trans("ModuleFamilyHr"),
-    'projects' => $langs->trans("ModuleFamilyProjects"),
-    'financial' => $langs->trans("ModuleFamilyFinancial"),
-    'ecm' => $langs->trans("ModuleFamilyECM"),
-    'technic' => $langs->trans("ModuleFamilyTechnic"),
-    'other' => $langs->trans("ModuleFamilyOther")
+		'base' => $langs->trans("ModuleFamilyBase"),
+		'crm' => $langs->trans("ModuleFamilyCrm"),
+		'products' => $langs->trans("ModuleFamilyProducts"),
+		'hr' => $langs->trans("ModuleFamilyHr"),
+		'projects' => $langs->trans("ModuleFamilyProjects"),
+		'financial' => $langs->trans("ModuleFamilyFinancial"),
+		'ecm' => $langs->trans("ModuleFamilyECM"),
+		'technic' => $langs->trans("ModuleFamilyTechnic"),
+		'other' => $langs->trans("ModuleFamilyOther")
 );
 
 foreach ($orders as $key => $value) {
-    $tab = explode('_', $value);
-    $family = $tab[0];
-    $numero = $tab[1];
+	$tab = explode('_', $value);
+	$family = $tab[0];
+	$numero = $tab[1];
 
-    $modName = $filename[$key];
-    $objMod = $modules[$key];
-    //var_dump($objMod);
+	$modName = $filename[$key];
+	$objMod = $modules[$key];
+	//var_dump($objMod);
 
-    if (!$objMod->getName()) {
-        dol_syslog("Error for module " . $key . " - Property name of module looks empty", LOG_WARNING);
-        continue;
-    }
+	if (!$objMod->getName()) {
+		dol_syslog("Error for module " . $key . " - Property name of module looks empty", LOG_WARNING);
+		continue;
+	}
 
-    $const_name = 'MAIN_MODULE_' . strtoupper(preg_replace('/^mod/i', '', get_class($objMod)));
+	$const_name = 'MAIN_MODULE_' . strtoupper(preg_replace('/^mod/i', '', get_class($objMod)));
 
-    // Load all lang files of module
-    if (isset($objMod->langfiles) && is_array($objMod->langfiles)) {
-        foreach ($objMod->langfiles as $domain) {
-            $langs->load($domain);
-        }
-    }
+	// Load all lang files of module
+	if (isset($objMod->langfiles) && is_array($objMod->langfiles)) {
+		foreach ($objMod->langfiles as $domain) {
+			$langs->load($domain);
+		}
+	}
 
-    //print "\n<!-- Module ".$objMod->numero." ".$objMod->getName()." found into ".$dirmod[$key]." -->\n";
-    print '<tr>';
+	//print "\n<!-- Module ".$objMod->numero." ".$objMod->getName()." found into ".$dirmod[$key]." -->\n";
+	print '<tr>';
 
-    // Id
-    print '<td>';
-    print $objMod->numero;
-    print '</td>';
+	// Id
+	print '<td>';
+	print $objMod->numero;
+	print '</td>';
 
-    // Family
-    print '<td>';
-    $family = $objMod->family;
-    print $familytext = empty($familylib[$family]) ? $family : $familylib[$family];
-    print "</td>\n";
+	// Family
+	print '<td>';
+	$family = $objMod->family;
+	print $familytext = empty($familylib[$family]) ? $family : $familylib[$family];
+	print "</td>\n";
 
-    // Picto
-    print '  <td>';
-    $alttext = '';
-    //if (is_array($objMod->need_dolibarr_version)) $alttext.=($alttext?' - ':'').'Dolibarr >= '.join('.',$objMod->need_dolibarr_version);
-    //if (is_array($objMod->phpmin)) $alttext.=($alttext?' - ':'').'PHP >= '.join('.',$objMod->phpmin);
-    if (!empty($objMod->picto)) {
-        if (preg_match('/^\//i', $objMod->picto))
-            print img_picto($alttext, $objMod->picto, ' width="14px"', 1);
-        else
-            print img_object($alttext, $objMod->picto, ' width="14px"');
-    }
-    else {
-        print img_object($alttext, 'generic');
-    }
+	// Picto
+	print '  <td>';
+	$alttext = '';
+	//if (is_array($objMod->need_dolibarr_version)) $alttext.=($alttext?' - ':'').'Dolibarr >= '.join('.',$objMod->need_dolibarr_version);
+	//if (is_array($objMod->phpmin)) $alttext.=($alttext?' - ':'').'PHP >= '.join('.',$objMod->phpmin);
+	if (!empty($objMod->picto)) {
+		if (preg_match('/^\//i', $objMod->picto))
+			print img_picto($alttext, $objMod->picto, ' width="14px"', 1);
+		else
+			print img_object($alttext, $objMod->picto, ' width="14px"');
+	}
+	else {
+		print img_object($alttext, 'generic');
+	}
 
 
-    // Name
-    print ' ' . $objMod->getName();
-    print "</td>\n";
+	// Name
+	print ' ' . $objMod->getName();
+	print "</td>\n";
 
-    // Desc
-    print "<td>";
-    print nl2br($objMod->getDesc());
-    print "</td>\n";
+	// Desc
+	print "<td>";
+	print nl2br($objMod->getDesc());
+	print "</td>\n";
 
-    // Version
-    print "<td>";
-    print $objMod->getVersion();
-    print "</td>\n";
+	// Version
+	print "<td>";
+	print $objMod->getVersion();
+	print "</td>\n";
 
-    // Activate/Disable and Setup (2 columns)
-    $name = strtolower($objMod->name);
+	// Activate/Disable and Setup (2 columns)
+	$name = strtolower($objMod->name);
 
-    if (isset($conf->$name) && !empty($conf->$name->enabled)) {
+	if (isset($conf->$name) && !empty($conf->$name->enabled)) {
 
-        $disableSetup = 0;
+		$disableSetup = 0;
 
-        print "<td>";
+		print "<td>";
 
-        // Module actif
-        if (!empty($conf->$name->always_enabled)) {
+		// Module actif
+		if (!empty($conf->$name->always_enabled)) {
 
-            print '<span class="tag green-gradient glossy">' . $langs->trans("Required") . '</span>';
-            print '</td>' . "\n";
-        } else {
-            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=reset&amp;value=' . $key . '">';
-            print img_picto($langs->trans("Activated"), 'switch_on');
-            print '</a></td>' . "\n";
-        }
+			print '<span class="tag green-gradient glossy">' . $langs->trans("Required") . '</span>';
+			print '</td>' . "\n";
+		} else {
+			print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=reset&amp;value=' . $key . '">';
+			print img_picto($langs->trans("Activated"), 'switch_on');
+			print '</a></td>' . "\n";
+		}
 
-        if (!empty($objMod->config_page_url) && !$disableSetup) {
-            if (is_array($objMod->config_page_url)) {
-                print '  <td>';
-                $i = 0;
-                foreach ($objMod->config_page_url as $page) {
-                    $urlpage = $page;
-                    if ($i++) {
-                        print '<a href="' . $_SERVER['PHP_SELF'] . '/' . $urlpage . '" title="' . $langs->trans($page) . '">' . img_picto(ucfirst($page), "setup") . '</a>&nbsp;';
-                        //    print '<a href="'.$page.'">'.ucfirst($page).'</a>&nbsp;';
-                    } else {
-                        if (preg_match('/^([^@]+)@([^@]+)$/i', $urlpage, $regs)) {
-                            print '<a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
-                        } else {
-                            print '<a href="' . DOL_URL_ROOT . '/admin/' . $urlpage . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
-                        }
-                    }
-                }
-                print "</td>\n";
-            } else if (preg_match('/^([^@]+)@([^@]+)$/i', $objMod->config_page_url, $regs)) {
-                print '<td><a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a></td>';
-            } else {
-                print '<td><a href="' . $objMod->config_page_url . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a></td>';
-            }
-        } else {
-            print "<td>&nbsp;</td>";
-        }
-    } else {
-        print "<td>";
+		if (!empty($objMod->config_page_url) && !$disableSetup) {
+			if (is_array($objMod->config_page_url)) {
+				print '  <td>';
+				$i = 0;
+				foreach ($objMod->config_page_url as $page) {
+					$urlpage = $page;
+					if ($i++) {
+						print '<a href="' . $_SERVER['PHP_SELF'] . '/' . $urlpage . '" title="' . $langs->trans($page) . '">' . img_picto(ucfirst($page), "setup") . '</a>&nbsp;';
+						//    print '<a href="'.$page.'">'.ucfirst($page).'</a>&nbsp;';
+					} else {
+						if (preg_match('/^([^@]+)@([^@]+)$/i', $urlpage, $regs)) {
+							print '<a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
+						} else {
+							print '<a href="' . DOL_URL_ROOT . '/admin/' . $urlpage . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
+						}
+					}
+				}
+				print "</td>\n";
+			} else if (preg_match('/^([^@]+)@([^@]+)$/i', $objMod->config_page_url, $regs)) {
+				print '<td><a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a></td>';
+			} else {
+				print '<td><a href="' . $objMod->config_page_url . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a></td>';
+			}
+		} else {
+			print "<td>&nbsp;</td>";
+		}
+	} else {
+		print "<td>";
 
-        if ($objMod->version == 'dolibarr') {
-            print "</td>\n  <td>&nbsp;</td>\n";
-        } else {
-            // Module non actif
-            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=set&amp;value=' . $key . '">';
-            print img_picto($langs->trans("Disabled"), 'switch_off');
-            print "</a></td>\n  <td>&nbsp;</td>\n";
-        }
-    }
+		if ($objMod->version == 'dolibarr') {
+			print "</td>\n  <td>&nbsp;</td>\n";
+		} else {
+			// Module non actif
+			print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=set&amp;value=' . $key . '">';
+			print img_picto($langs->trans("Disabled"), 'switch_off');
+			print "</a></td>\n  <td>&nbsp;</td>\n";
+		}
+	}
 
-    print "</tr>\n";
+	print "</tr>\n";
 }
 print'</tbody>';
 print'</table>';
