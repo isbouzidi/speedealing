@@ -60,13 +60,13 @@ $orders = array(
 		'StatusOrderReceivedAllShort' => 'Recibido',
 		'StatusOrderCanceled' => 'Anulado',
 		'StatusOrderDraft' => 'Borrador (a validar)',
-		'StatusOrderNeedQuotes' => 'Draft (needs manual quotes)',
-		'StatusOrderNew' => 'New order (needs to be validated)',
-		'StatusOrderProcessing' => 'Processing',
+		'StatusOrderNeedQuotes' => 'Borrador (necesita validarse)',
+		'StatusOrderNew' => 'Nuevo pedido (necesita validarse)',
+		'StatusOrderProcessing' => 'Procesando',
 		'StatusOrderValidated' => 'Validado',
 		'StatusOrderOnProcess' => 'Pendiente de recibir',
-		'StatusOrderSending' => 'Sending',
-		'StatusOrderClosed' => 'Closed (Shipped)',
+		'StatusOrderSending' => 'Envíos',
+		'StatusOrderClosed' => 'Cerrado (enviado)',
 		'StatusOrderToBill' => 'A facturar',
 		'StatusOrderToBill2' => 'To bill',
 		'StatusOrderApproved' => 'Aprobado',
@@ -182,6 +182,6 @@ $orders = array(
 		'MenuOrdersToBill2' => 'Pedidos facturables',
 		'LinkedInvoices' => 'Linked invoices',
 		'LinkedProposals' => 'Linked proposals',
-		'ShippingHT' => 'Shipping cost'
+		'ShippingHT' => 'Costes de envío'
 );
 ?>
