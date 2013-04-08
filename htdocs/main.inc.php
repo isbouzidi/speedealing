@@ -472,8 +472,10 @@ if (!function_exists("llxHeader")) {
 
 		top_htmlhead($head, $title, $disablejs, $disablehead, $arrayofjs, $arrayofcss); // Show html headers
 
-		if (!defined('NOHEADER'))
-			print '<body class="clearfix with-menu with-shortcuts grdnt_c mhover_c">';
+		if (!defined('NOHEADER')) {
+			$reversed = (!empty($conf->global->MAIN_MENU_REVERSED)?' reversed':'');
+			print '<body class="clearfix with-menu with-shortcuts grdnt_c mhover_c' . $reversed . '">';
+		}
 		else
 			print '<body class="fullW" style="background: white;">';
 
