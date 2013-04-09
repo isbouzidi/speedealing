@@ -253,54 +253,37 @@ foreach ($orders as $key => $value) {
 
 	// Activate/Disable and Setup (2 columns)
 	$name = strtolower($objMod->name);
-
-	if (isset($conf->$name) && !empty($conf->$name->enabled)) {
-
-		print "<td>";
-
-		// Module actif
-		if (!empty($conf->$name->always_enabled))
-			print '<span class="tag green-gradient glossy">' . $langs->trans("Required") . '</span>';
-		else
-			print ajax_moduleonoff('module:' . $objMod->name, $key, true);
-		
-		print '</td>' . "\n";
-
-		if (!empty($objMod->config_page_url)) {
-			if (is_array($objMod->config_page_url)) {
-				print '  <td>';
-				$i = 0;
-				foreach ($objMod->config_page_url as $page) {
-					$urlpage = $page;
-					if ($i++) {
-						print '<a href="' . $_SERVER['PHP_SELF'] . '/' . $urlpage . '" title="' . $langs->trans($page) . '">' . img_picto(ucfirst($page), "setup") . '</a>&nbsp;';
-						//    print '<a href="'.$page.'">'.ucfirst($page).'</a>&nbsp;';
+	
+	print '<td>';
+	print ajax_moduleonoff($objMod->name, $key, $objMod->version);
+	print '</td>' . "\n";
+	
+	print '<td>';
+	if (!empty($objMod->config_page_url)) {
+		print '<div id="config_' . $key . '" class="hideobject">';
+		if (is_array($objMod->config_page_url)) {
+			$i = 0;
+			foreach ($objMod->config_page_url as $page) {
+				$urlpage = $page;
+				if ($i++) {
+					print '<a href="' . $_SERVER['PHP_SELF'] . '/' . $urlpage . '" title="' . $langs->trans($page) . '">' . img_picto(ucfirst($page), "setup") . '</a>&nbsp;';
+					//    print '<a href="'.$page.'">'.ucfirst($page).'</a>&nbsp;';
+				} else {
+					if (preg_match('/^([^@]+)@([^@]+)$/i', $urlpage, $regs)) {
+						print '<a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
 					} else {
-						if (preg_match('/^([^@]+)@([^@]+)$/i', $urlpage, $regs)) {
-							print '<a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
-						} else {
-							print '<a href="' . DOL_URL_ROOT . '/admin/' . $urlpage . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
-						}
+						print '<a href="' . DOL_URL_ROOT . '/admin/' . $urlpage . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
 					}
 				}
-				print "</td>\n";
-			} else if (preg_match('/^([^@]+)@([^@]+)$/i', $objMod->config_page_url, $regs)) {
-				print '<td><a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a></td>';
-			} else {
-				print '<td><a href="' . $objMod->config_page_url . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a></td>';
 			}
+		} else if (preg_match('/^([^@]+)@([^@]+)$/i', $objMod->config_page_url, $regs)) {
+			print '<a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>';
 		} else {
-			print "<td>&nbsp;</td>";
+			print '<a href="' . $objMod->config_page_url . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>';
 		}
-	} else {
-		print "<td>";
-
-		if ($objMod->version != 'dolibarr')
-			print ajax_moduleonoff('module:' . $objMod->name, $key, false); // Module non actif
-		
-		print '</td>' . "\n";
-		print '<td>&nbsp;</td>' . "\n";
+		print '</div>';
 	}
+	print "</td>\n";
 
 	print "</tr>\n";
 }

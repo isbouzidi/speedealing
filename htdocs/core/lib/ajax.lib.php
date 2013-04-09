@@ -342,37 +342,60 @@ function ajax_constantonoff($code, $input=array(), $entity=false)
 /**
  * 	On/off button for module
  *
- * 	@param	string	$id			Module name
+ * 	@param	string	$name		Module name
  * 	@param	int		$code		Module number
- * 	@param	bool	$active		Current status
+ * 	@param	string	$version	Module version
  * 	@return	void
  */
-function ajax_moduleonoff($id, $code, $active) {
-	global $langs;
-
-	$out= '<script type="text/javascript">
-		$(function() {
-			var id = \''.$id.'\';
-			var code = \''.$code.'\';
-
-			// Set module
-			$("#set_" + code).click(function() {
-				setModule("set", id, code);
-				$(this).hide();
-				$("#reset_" + code).show();
+function ajax_moduleonoff($name, $code, $version) {
+	global $conf, $langs;
+	
+	$out = '';
+	
+	if ($version != 'dolibarr') {
+		$modulename = strtolower($name);
+		
+		$active = false;
+		if (isset($conf->$modulename) && !empty($conf->$modulename->enabled))
+			$active = true;
+		
+		$out.= '
+		<script type="text/javascript">
+			$(function() {
+				var id = \'module:' . $name . '\';
+				var code = \'' . $code . '\';
+				var active = \'' . $active . '\';
+				
+				if (active)
+					$("#config_" + code).show();
+				else
+					$("#config_" + code).hide();
+			
+				// Set module
+				$("#set_" + code).click(function() {
+					setModule("set", id, code);
+					$(this).hide();
+					$("#reset_" + code).show();
+					$("#config_" + code).show();
+				});
+			
+				// Reset module
+				$("#reset_" + code).click(function() {
+					setModule("reset", id, code);
+					$(this).hide();
+					$("#set_" + code).show();
+					$("#config_" + code).hide();
+				});
 			});
-
-			// Reset module
-			$("#reset_" + code).click(function() {
-				setModule("reset", id, code);
-				$(this).hide();
-				$("#set_" + code).show();
-			});
-		});
-	</script>';
-
-	$out.= '<span id="set_'.$code.'" class="linkobject '.($active?'hideobject':'').'">'.img_picto($langs->trans("Disabled"),'switch_off').'</span>';
-	$out.= '<span id="reset_'.$code.'" class="linkobject '.($active?'':'hideobject').'">'.img_picto($langs->trans("Enabled"),'switch_on').'</span>';
+		</script>';
+		
+		if (!empty($conf->$modulename->always_enabled)) {
+			$out.= '<span class="tag green-gradient glossy">' . $langs->trans("Required") . '</span>';
+		} else {
+			$out.= '<span id="set_' . $code . '" class="linkobject ' . ($active?'hideobject':'') . '">' . img_picto($langs->trans("Disabled"),'switch_off') . '</span>';
+			$out.= '<span id="reset_' . $code . '" class="linkobject ' . ($active?'':'hideobject') . '">' . img_picto($langs->trans("Enabled"),'switch_on') . '</span>';
+		}
+	}
 
 	return $out;
 }
