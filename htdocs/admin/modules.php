@@ -262,18 +262,11 @@ foreach ($orders as $key => $value) {
 	if (!empty($objMod->config_page_url)) {
 		print '<div id="config_' . $key . '" class="hideobject">';
 		if (is_array($objMod->config_page_url)) {
-			$i = 0;
 			foreach ($objMod->config_page_url as $page) {
-				$urlpage = $page;
-				if ($i++) {
-					print '<a href="' . $_SERVER['PHP_SELF'] . '/' . $urlpage . '" title="' . $langs->trans($page) . '">' . img_picto(ucfirst($page), "setup") . '</a>&nbsp;';
-					//    print '<a href="'.$page.'">'.ucfirst($page).'</a>&nbsp;';
+				if (preg_match('/^([^@]+)@([^@]+)$/i', $page, $regs)) {
+					print '<a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
 				} else {
-					if (preg_match('/^([^@]+)@([^@]+)$/i', $urlpage, $regs)) {
-						print '<a href="' . dol_buildpath('/' . $regs[2] . '/admin/' . $regs[1], 1) . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
-					} else {
-						print '<a href="' . DOL_URL_ROOT . '/admin/' . $urlpage . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
-					}
+					print '<a href="' . DOL_URL_ROOT . '/admin/' . $page . '" title="' . $langs->trans("Setup") . '">' . img_picto($langs->trans("Setup"), "setup") . '</a>&nbsp;';
 				}
 			}
 		} else if (preg_match('/^([^@]+)@([^@]+)$/i', $objMod->config_page_url, $regs)) {
