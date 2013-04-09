@@ -308,17 +308,12 @@ foreach ($orders as $key => $value) {
 		print "<td>";
 
 		// Module actif
-		if (!empty($conf->$name->always_enabled)) {
-
+		if (!empty($conf->$name->always_enabled))
 			print '<span class="tag green-gradient glossy">' . $langs->trans("Required") . '</span>';
-			print '</td>' . "\n";
-		} else {
-			//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=reset&amp;value=' . $key . '">';
-			//print img_picto($langs->trans("Activated"), 'switch_on');
-			//print '</a>';
+		else
 			print ajax_moduleonoff('module:' . $objMod->name, $key, true);
-			print '</td>' . "\n";
-		}
+		
+		print '</td>' . "\n";
 
 		if (!empty($objMod->config_page_url)) {
 			if (is_array($objMod->config_page_url)) {
@@ -349,17 +344,11 @@ foreach ($orders as $key => $value) {
 	} else {
 		print "<td>";
 
-		if ($objMod->version == 'dolibarr') {
-			print "</td>\n  <td>&nbsp;</td>\n";
-		} else {
-			// Module non actif
-			//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=set&amp;value=' . $key . '">';
-			//print img_picto($langs->trans("Disabled"), 'switch_off');
-			//print '</a>';
-			print ajax_moduleonoff('module:' . $objMod->name, $key, false);
-			print '</td>' . "\n";
-			print '<td>&nbsp;</td>' . "\n";
-		}
+		if ($objMod->version != 'dolibarr')
+			print ajax_moduleonoff('module:' . $objMod->name, $key, false); // Module non actif
+		
+		print '</td>' . "\n";
+		print '<td>&nbsp;</td>' . "\n";
 	}
 
 	print "</tr>\n";
