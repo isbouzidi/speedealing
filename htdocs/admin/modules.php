@@ -50,60 +50,11 @@ if (!empty($mesg))
 	setEventMessage($mesg, 'errors');
 
 
-/**
+/*
  * Actions
  */
-if ($action == 'set' && $user->admin) {
-	try {
-		$object->load($_GET['id']); // update if module exist
-	} catch (Exception $e) {
 
-	}
 
-	try {
-		$key = $_GET['value'];
-		$objMod = $modules[$key];
-
-		foreach ($objMod as $key => $aRow)
-			$object->$key = $aRow;
-
-		$object->_id = "module:" . $objMod->name;
-		$object->enabled = true;
-		dol_delcache("MenuAuguria:list"); //refresh menu
-		dol_delcache("MenuAuguria:submenu"); //refresh menu
-		dol_delcache("extrafields:" . $objMod->name); //refresh extrafields
-		dol_delcache("const"); //delete $conf
-		dol_delcache("DolibarrModules:list"); //refresh menu
-		dol_delcache("DolibarrModules:default_right");
-
-		$object->record();
-		$object->_load_documents();
-	} catch (Exception $e) {
-		setEventMessage($e->getMessage(), 'errors');
-	}
-	Header("Location: " . $_SERVER['PHP_SELF']);
-	exit;
-}
-
-if ($action == 'reset' && $user->admin) {
-	try {
-		$object->load($_GET['id']);
-		unset($object->enabled);
-
-		dol_delcache("MenuAuguria:list"); //refresh menu
-		dol_delcache("MenuAuguria:submenu"); //refresh menu
-		dol_delcache("extrafields:" . $objMod->name); //refresh extrafields
-		dol_delcache("const"); //delete $conf
-		dol_delcache("DolibarrModules:list"); //refresh menu
-		dol_delcache("DolibarrModules:default_right");
-
-		$object->record();
-	} catch (Exception $e) {
-		setEventMessage($e->getMessage(), 'errors');
-	}
-	Header("Location: " . $_SERVER['PHP_SELF']);
-	exit;
-}
 
 /*
  * View
