@@ -28,11 +28,10 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/admin.lib.php';
 $langs->load("errors");
 $langs->load("admin");
 
-$mesg = GETPOST("mesg");
-$action = GETPOST('action');
-
-if (!$user->admin)
+if (empty($user->admin))
 	accessforbidden();
+
+$action = GETPOST('action', 'alpha');
 
 $object = new DolibarrModules($db);
 
@@ -47,7 +46,9 @@ $modNameLoaded = array();
 
 $mesg = $object->load_modules_files($filename, $modules, $orders, $categ, $dirmod, $modNameLoaded);
 
-dol_htmloutput_errors($mesg);
+if (!empty($mesg))
+	setEventMessage($mesg, 'errors');
+
 
 /**
  * Actions
@@ -78,9 +79,9 @@ if ($action == 'set' && $user->admin) {
 		$object->record();
 		$object->_load_documents();
 	} catch (Exception $e) {
-		$mesg = $e->getMessage();
+		setEventMessage($e->getMessage(), 'errors');
 	}
-	Header("Location: " . $_SERVER['PHP_SELF'] . "?&mesg=" . urlencode($mesg));
+	Header("Location: " . $_SERVER['PHP_SELF']);
 	exit;
 }
 
@@ -89,17 +90,18 @@ if ($action == 'reset' && $user->admin) {
 		$object->load($_GET['id']);
 		unset($object->enabled);
 
-		dol_delcache("MenuTop:list"); //refresh menu
-		dol_delcache("MenuTop:submenu"); //refresh menu
+		dol_delcache("MenuAuguria:list"); //refresh menu
+		dol_delcache("MenuAuguria:submenu"); //refresh menu
+		dol_delcache("extrafields:" . $objMod->name); //refresh extrafields
 		dol_delcache("const"); //delete $conf
 		dol_delcache("DolibarrModules:list"); //refresh menu
 		dol_delcache("DolibarrModules:default_right");
 
 		$object->record();
 	} catch (Exception $e) {
-		$mesg = $e->getMessage();
+		setEventMessage($e->getMessage(), 'errors');
 	}
-	Header("Location: " . $_SERVER['PHP_SELF'] . "?&mesg=" . urlencode($mesg));
+	Header("Location: " . $_SERVER['PHP_SELF']);
 	exit;
 }
 
@@ -128,6 +130,7 @@ print'<tr>';
 
 print'<th>';
 print'</th>';
+$obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "id";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->bVisible = false;
@@ -136,6 +139,7 @@ $i++;
 print'<th class="essential">';
 print $langs->trans("Family");
 print'</th>';
+$obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "family";
 $obj->aoColumns[$i]->sDefaultContent = "other";
 $obj->aoColumns[$i]->bVisible = false;
@@ -144,6 +148,7 @@ $i++;
 print'<th class="essential">';
 print $langs->trans("Module");
 print'</th>';
+$obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "name";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $i++;
@@ -151,6 +156,7 @@ $i++;
 print'<th>';
 print $langs->trans("Description");
 print'</th>';
+$obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "desc";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->bVisible = true;
@@ -158,6 +164,7 @@ $i++;
 print'<th class="essential">';
 print $langs->trans("Version");
 print'</th>';
+$obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "version";
 $obj->aoColumns[$i]->sDefaultContent = "false";
 $obj->aoColumns[$i]->sClass = "center";
@@ -166,6 +173,7 @@ $i++;
 print'<th class="essential">';
 print $langs->trans("Status");
 print'</th>';
+$obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "Status";
 $obj->aoColumns[$i]->sDefaultContent = "false";
 $obj->aoColumns[$i]->sClass = "center";
@@ -173,6 +181,7 @@ $i++;
 print'<th class="essential">';
 print $langs->trans("SetupShort");
 print'</th>';
+$obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "setup";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->bSortable = false;
@@ -204,7 +213,6 @@ $obj->fnDrawCallback = "
 		}
 	}";
 
-$i = 0;
 print'<tfoot>';
 print'</tfoot>';
 print'<tbody>';
@@ -236,7 +244,6 @@ foreach ($orders as $key => $value) {
 	//var_dump($objMod);
 
 	if (!$objMod->getName()) {
-		dol_syslog("Error for module " . $key . " - Property name of module looks empty", LOG_WARNING);
 		continue;
 	}
 
@@ -298,8 +305,6 @@ foreach ($orders as $key => $value) {
 
 	if (isset($conf->$name) && !empty($conf->$name->enabled)) {
 
-		$disableSetup = 0;
-
 		print "<td>";
 
 		// Module actif
@@ -308,12 +313,14 @@ foreach ($orders as $key => $value) {
 			print '<span class="tag green-gradient glossy">' . $langs->trans("Required") . '</span>';
 			print '</td>' . "\n";
 		} else {
-			print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=reset&amp;value=' . $key . '">';
-			print img_picto($langs->trans("Activated"), 'switch_on');
-			print '</a></td>' . "\n";
+			//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=reset&amp;value=' . $key . '">';
+			//print img_picto($langs->trans("Activated"), 'switch_on');
+			//print '</a>';
+			print ajax_moduleonoff('module:' . $objMod->name, $key, true);
+			print '</td>' . "\n";
 		}
 
-		if (!empty($objMod->config_page_url) && !$disableSetup) {
+		if (!empty($objMod->config_page_url)) {
 			if (is_array($objMod->config_page_url)) {
 				print '  <td>';
 				$i = 0;
@@ -346,9 +353,12 @@ foreach ($orders as $key => $value) {
 			print "</td>\n  <td>&nbsp;</td>\n";
 		} else {
 			// Module non actif
-			print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=set&amp;value=' . $key . '">';
-			print img_picto($langs->trans("Disabled"), 'switch_off');
-			print "</a></td>\n  <td>&nbsp;</td>\n";
+			//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=module:' . $objMod->name . '&amp;action=set&amp;value=' . $key . '">';
+			//print img_picto($langs->trans("Disabled"), 'switch_off');
+			//print '</a>';
+			print ajax_moduleonoff('module:' . $objMod->name, $key, false);
+			print '</td>' . "\n";
+			print '<td>&nbsp;</td>' . "\n";
 		}
 	}
 

@@ -339,4 +339,42 @@ function ajax_constantonoff($code, $input=array(), $entity=false)
 	return $out;
 }
 
+/**
+ * 	On/off button for module
+ *
+ * 	@param	string	$id			Module name
+ * 	@param	int		$code		Module number
+ * 	@param	bool	$active		Current status
+ * 	@return	void
+ */
+function ajax_moduleonoff($id, $code, $active) {
+	global $langs;
+
+	$out= '<script type="text/javascript">
+		$(function() {
+			var id = \''.$id.'\';
+			var code = \''.$code.'\';
+
+			// Set module
+			$("#set_" + code).click(function() {
+				setModule("set", id, code);
+				$(this).hide();
+				$("#reset_" + code).show();
+			});
+
+			// Reset module
+			$("#reset_" + code).click(function() {
+				setModule("reset", id, code);
+				$(this).hide();
+				$("#set_" + code).show();
+			});
+		});
+	</script>';
+
+	$out.= '<span id="set_'.$code.'" class="linkobject '.($active?'hideobject':'').'">'.img_picto($langs->trans("Disabled"),'switch_off').'</span>';
+	$out.= '<span id="reset_'.$code.'" class="linkobject '.($active?'':'hideobject').'">'.img_picto($langs->trans("Enabled"),'switch_on').'</span>';
+
+	return $out;
+}
+
 ?>
