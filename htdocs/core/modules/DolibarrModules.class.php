@@ -55,7 +55,7 @@ class DolibarrModules extends nosqlDocument {
 	var $global; // Load global from database
 	var $dbversion = "-";
 
-	function __construct($db) {
+	function __construct($db = null) {
 		global $couch, $conf;
 
 		parent::__construct($db);

@@ -509,6 +509,20 @@ function requestCore(action, string, element, option) {
 }
 
 /*
+ * Set module status
+ */
+function setModule(action, id, value) {
+	$.post('core/ajax/moduleonoff.php', {
+		action: action,
+		id: id,
+		value: value
+	},
+	function(result) {
+		
+	}, 'json');
+}
+
+/*
  * 
  */
 function setConstant(url, code, input, entity) {
