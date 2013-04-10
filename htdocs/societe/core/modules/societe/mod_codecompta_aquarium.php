@@ -23,7 +23,7 @@
  *	\ingroup    societe
  *	\brief      File of class to manage accountancy code of thirdparties with Panicum rules
  */
-require_once DOL_DOCUMENT_ROOT.'/core/modules/societe/modules_societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/core/modules/societe/modules_societe.class.php';
 
 
 /**
@@ -151,6 +151,7 @@ class mod_codecompta_aquarium extends ModeleAccountancyCode
 	 */
 	function verif($db, $code, $societe, $type)
 	{
+		/*
 		$sql = "SELECT ";
 		if ($type == 'customer') $sql.= "code_compta";
 		else if ($type == 'supplier') $sql.= "code_compta_fournisseur";
@@ -181,6 +182,7 @@ class mod_codecompta_aquarium extends ModeleAccountancyCode
 			dol_syslog("mod_codecompta_aquarium::verif error".$this->error, LOG_ERR);
 			return -1;		// Erreur
 		}
+		*/
 	}
 }
 

@@ -3,7 +3,7 @@
 /* Copyright (C) 2004      Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004      Eric Seigne          <eric.seigne@ryxeo.com>
  * Copyright (C) 2005-2011 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2005-2012 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2013 Regis Houssin        <regis.houssin@capnetworks.com>
  * Copyright (C) 2011-2012 Juanjo Menent        <jmenent@2byte.es>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -197,7 +197,7 @@ dol_fiche_head($head, 'general', $langs->trans("ThirdParties"), 0, 'company');
 
 dol_htmloutput_mesg($mesg);
 
-$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 
 
 // Module to manage customer/supplier code
@@ -215,7 +215,7 @@ print "</tr>\n";
 
 $var = true;
 foreach ($dirsociete as $dirroot) {
-    $dir = dol_buildpath($dirroot, 0);
+    $dir = dol_buildpath($dirroot);
 
     $handle = @opendir($dir);
     if (is_resource($handle)) {
@@ -225,9 +225,9 @@ foreach ($dirsociete as $dirroot) {
                 $file = substr($file, 0, dol_strlen($file) - 4);
 
                 try {
-                    dol_include_once($dirroot . $file . '.php');
+                    include_once $dir . $file . '.php';
                 } catch (Exception $e) {
-                    dol_syslog($e->getMessage(), LOG_ERR);
+                    error_log($e->getMessage());
                 }
 
                 $modCodeTiers = new $file;
@@ -344,6 +344,7 @@ print '<br>';
 print_titre($langs->trans("ModelModules"));
 
 // Load array def with activated templates
+/*
 $def = array();
 $sql = "SELECT nom";
 $sql.= " FROM " . MAIN_DB_PREFIX . "document_model";
@@ -361,6 +362,7 @@ if ($resql) {
 } else {
     dol_print_error($db);
 }
+*/
 
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre">';

@@ -24,7 +24,7 @@
  *       \brief      Fichier de la classe des gestion lion des codes clients
  */
 
-require_once DOL_DOCUMENT_ROOT.'/core/modules/societe/modules_societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/core/modules/societe/modules_societe.class.php';
 
 
 /**
@@ -121,7 +121,7 @@ class mod_codeclient_monkey extends ModeleThirdPartyCode
 		$sql.= " FROM ".MAIN_DB_PREFIX."societe";
 		$sql.= " WHERE ".$field." LIKE '".$prefix."____-%'";
 		$sql.= " AND entity IN (".getEntity('societe', 1).")";
-
+/*
 		$resql=$db->query($sql);
 		if ($resql)
 		{
@@ -134,7 +134,7 @@ class mod_codeclient_monkey extends ModeleThirdPartyCode
 			dol_syslog(get_class($this)."::getNextValue sql=".$sql, LOG_ERR);
 			return -1;
 		}
-
+*/
 		$date	= dol_now();
 		$yymm	= strftime("%y%m",$date);
 		$num	= sprintf("%04s",$max+1);
