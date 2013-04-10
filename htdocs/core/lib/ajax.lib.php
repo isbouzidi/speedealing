@@ -342,18 +342,17 @@ function ajax_constantonoff($code, $input=array(), $entity=false)
 /**
  * 	On/off button for module
  *
- * 	@param	string	$name		Module name
+ * 	@param	object	$objMod		Module object
  * 	@param	int		$code		Module number
- * 	@param	string	$version	Module version
  * 	@return	void
  */
-function ajax_moduleonoff($name, $code, $version) {
+function ajax_moduleonoff($objMod, $code) {
 	global $conf, $langs;
 	
 	$out = '';
 	
-	if ($version != 'dolibarr') {
-		$modulename = strtolower($name);
+	if ($objMod->version != 'dolibarr') {
+		$modulename = strtolower($objMod->name);
 		
 		$active = false;
 		if (isset($conf->$modulename) && !empty($conf->$modulename->enabled))
@@ -362,7 +361,7 @@ function ajax_moduleonoff($name, $code, $version) {
 		$out.= '
 		<script type="text/javascript">
 			$(function() {
-				var id = \'module:' . $name . '\';
+				var id = \'module:' . $objMod->name . '\';
 				var code = \'' . $code . '\';
 				var active = \'' . $active . '\';
 				

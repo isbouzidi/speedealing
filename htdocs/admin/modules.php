@@ -252,10 +252,8 @@ foreach ($orders as $key => $value) {
 	print "</td>\n";
 
 	// Activate/Disable and Setup (2 columns)
-	$name = strtolower($objMod->name);
-	
 	print '<td>';
-	print ajax_moduleonoff($objMod->name, $key, $objMod->version);
+	print ajax_moduleonoff($objMod, $key);
 	print '</td>' . "\n";
 	
 	print '<td>';
