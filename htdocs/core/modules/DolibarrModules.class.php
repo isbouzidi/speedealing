@@ -1325,6 +1325,8 @@ class DolibarrModules extends nosqlDocument {
 				while (($file = readdir($handle)) !== false) {
 					if (is_dir($dirroot . '/' . $file) && substr($file, 0, 1) <> '.' && !in_array($file, $excludes)) {
 						$dir = $dirroot . '/' . $file . '/core/modules/';
+						if ($file == 'core')
+							$dir = $dirroot . '/' . $file . '/modules/';
 						if (is_dir($dir)) {
 							$filehandle = @opendir($dir);
 							if (is_resource($filehandle)) {
