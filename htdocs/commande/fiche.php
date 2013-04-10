@@ -69,8 +69,12 @@ $lineid = GETPOST('lineid', 'alpha');
 $origin = GETPOST('origin', 'alpha');
 $originid = (GETPOST('originid', 'alpha') ? GETPOST('originid', 'alpha') : GETPOST('origin_id', 'alpha')); // For backward compatibility
 
-
 $title = $langs->trans('Order');
+
+if(count($_POST)) {
+	print_r($_POST);
+	exit;
+}
 
 $object = new Commande($db);
 $soc = new Societe($db);
@@ -248,7 +252,7 @@ if ($action == 'add' && $user->rights->commande->creer) {
 	 * Generate order document
 	 * define into /core/modules/commande/modules_commande.php
 	 */
-
+print $_REQUEST['model'];exit;
 	// Sauvegarde le dernier modele choisi pour generer un document
 	if ($_REQUEST['model']) {
 		$object->setDocModel($user, $_REQUEST['model']);

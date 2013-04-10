@@ -43,7 +43,7 @@ class Societe extends nosqlDocument {
 	var $civility_id;
 	var $address;
 	var $adresse;  // TODO obsolete
-	var $cp;	// TODO obsolete
+	var $cp; // TODO obsolete
 	var $zip;
 	var $ville; // TODO obsolete
 	var $town;
@@ -66,8 +66,8 @@ class Societe extends nosqlDocument {
 	var $email;
 	var $url;
 	//! barcode
-	var $barcode;	  // value
-	var $barcode_type;	// id
+	var $barcode;   // value
+	var $barcode_type; // id
 	var $barcode_type_code;  // code (loaded by fetch_barcode)
 	var $barcode_type_label; // label (loaded by fetch_barcode)
 	var $barcode_type_coder; // coder (loaded by fetch_barcode)
@@ -225,7 +225,7 @@ class Societe extends nosqlDocument {
 			$this->errors[] = 'ErrorBadThirdPartyName';
 			$result = -2;
 		}
-		
+
 		if ($this->codeclient_modifiable()) {
 			// On ne verifie le code client que si la societe est un client / prospect et que le code est modifiable
 			// Si il n'est pas modifiable il n'est pas mis a jour lors de l'update
@@ -626,22 +626,22 @@ class Societe extends nosqlDocument {
 	 */
 	function set_as_client() {
 		/*
-		if ($this->id) {
-			$newclient = 1;
-			if ($this->client == 2 || $this->client == 3)
-				$newclient = 3; //If prospect, we keep prospect tag
-			$sql = "UPDATE " . MAIN_DB_PREFIX . "societe";
-			$sql.= " SET client = " . $newclient;
-			$sql.= " WHERE rowid = " . $this->id;
+		  if ($this->id) {
+		  $newclient = 1;
+		  if ($this->client == 2 || $this->client == 3)
+		  $newclient = 3; //If prospect, we keep prospect tag
+		  $sql = "UPDATE " . MAIN_DB_PREFIX . "societe";
+		  $sql.= " SET client = " . $newclient;
+		  $sql.= " WHERE rowid = " . $this->id;
 
-			$resql = $this->db->query($sql);
-			if ($resql) {
-				$this->client = $newclient;
-				return 1;
-			}
-			else
-				return -1;
-		}*/
+		  $resql = $this->db->query($sql);
+		  if ($resql) {
+		  $this->client = $newclient;
+		  return 1;
+		  }
+		  else
+		  return -1;
+		  } */
 		return 0;
 	}
 
@@ -1684,7 +1684,7 @@ class Societe extends nosqlDocument {
 		$this->pays_id = $member->country_id; // TODO obsolete
 		$this->country_id = $member->country_id;
 		$this->tel = $member->phone; // deprecated
-		$this->phone = $member->phone;	// Prof phone
+		$this->phone = $member->phone; // Prof phone
 		$this->email = $member->email;
 
 		$this->client = 1; // A member is a customer by default
@@ -1793,11 +1793,11 @@ class Societe extends nosqlDocument {
 
 		$this->id = 0;
 		$this->name = (!empty($conf->global->MAIN_INFO_SOCIETE_NOM)) ? $conf->global->MAIN_INFO_SOCIETE_NOM : '';
-		$this->nom = $this->name;	// deprecated
+		$this->nom = $this->name; // deprecated
 		$this->address = (!empty($conf->global->MAIN_INFO_SOCIETE_ADRESSE)) ? $conf->global->MAIN_INFO_SOCIETE_ADRESSE : '';
 		$this->adresse = $this->address;  // deprecated
 		$this->zip = (!empty($conf->global->MAIN_INFO_SOCIETE_CP)) ? $conf->global->MAIN_INFO_SOCIETE_CP : '';
-		$this->cp = $this->zip;	// deprecated
+		$this->cp = $this->zip; // deprecated
 		$this->town = (!empty($conf->global->MAIN_INFO_SOCIETE_VILLE)) ? $conf->global->MAIN_INFO_SOCIETE_VILLE : '';
 		$this->ville = $this->town;   // deprecated
 		$this->state_id = $conf->global->MAIN_INFO_SOCIETE_DEPARTEMENT;
@@ -1811,7 +1811,7 @@ class Societe extends nosqlDocument {
 			if (!empty($tmp[1])) {   // If $conf->global->MAIN_INFO_SOCIETE_PAYS is "id:code:label"
 				$country_code = $tmp[1];
 				$country_label = $tmp[2];
-			} else {	 // For backward compatibility
+			} else {  // For backward compatibility
 				include_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 				$country_code = getCountry($country_id, 2, $db);  // This need a SQL request, but it's the old feature
 				$country_label = getCountry($country_id, 0, $db);  // This need a SQL request, but it's the old feature

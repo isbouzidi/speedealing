@@ -45,6 +45,8 @@ if (!$user->admin)
 $action = GETPOST('action', 'alpha');
 $value = GETPOST('value', 'alpha');
 
+$object = new Commande($db);
+
 /*
  * Actions
  */
@@ -107,24 +109,13 @@ if ($action == 'specimen') {
 if ($action == 'set') {
 	$label = GETPOST('label', 'alpha');
 	$scandir = GETPOST('scandir', 'alpha');
+	
+	$object->fk_extrafields->setModel($value);
 
-	$type = 'order';
-	$sql = "INSERT INTO " . MAIN_DB_PREFIX . "document_model (nom, type, entity, libelle, description)";
-	$sql.= " VALUES ('" . $db->escape($value) . "','" . $type . "'," . $conf->entity . ", ";
-	$sql.= ($label ? "'" . $db->escape($label) . "'" : 'null') . ", ";
-	$sql.= (!empty($scandir) ? "'" . $db->escape($scandir) . "'" : "null");
-	$sql.= ")";
-	if ($db->query($sql)) {
-		
-	}
 }
 
 if ($action == 'del') {
-	$type = 'order';
-	$sql = "DELETE FROM " . MAIN_DB_PREFIX . "document_model";
-	$sql.= " WHERE nom = '" . $db->escape($value) . "'";
-	$sql.= " AND type = '" . $type . "'";
-	$sql.= " AND entity = " . $conf->entity;
+	$object->fk_extrafields->delModel($value);
 
 	if ($db->query($sql)) {
 		if ($conf->global->COMMANDE_ADDON_PDF == "$value")
@@ -143,28 +134,7 @@ if ($action == 'setdoc') {
 	}
 
 	// On active le modele
-	$type = 'order';
-
-	$sql_del = "DELETE FROM " . MAIN_DB_PREFIX . "document_model";
-	$sql_del.= " WHERE nom = '" . $db->escape($value) . "'";
-	$sql_del.= " AND type = '" . $type . "'";
-	$sql_del.= " AND entity = " . $conf->entity;
-	dol_syslog("Delete from model table " . $sql_del);
-	$result1 = $db->query($sql_del);
-
-	$sql = "INSERT INTO " . MAIN_DB_PREFIX . "document_model (nom, type, entity, libelle, description)";
-	$sql.= " VALUES ('" . $value . "', '" . $type . "', " . $conf->entity . ", ";
-	$sql.= ($label ? "'" . $db->escape($label) . "'" : 'null') . ", ";
-	$sql.= (!empty($scandir) ? "'" . $scandir . "'" : "null");
-	$sql.= ")";
-	dol_syslog("Insert into model table " . $sql);
-	$result2 = $db->query($sql);
-	if ($result1 && $result2) {
-		$db->commit();
-	} else {
-		dol_syslog("Error " . $db->lasterror(), LOG_ERR);
-		$db->rollback();
-	}
+	$object->fk_extrafields->setModel($value);
 }
 
 if ($action == 'setmod') {
@@ -214,8 +184,8 @@ llxHeader("", $langs->trans("OrdersSetup"));
 $form = new Form($db);
 
 $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">' . $langs->trans("BackToModuleList") . '</a>';
-print_fiche_titre($langs->trans("OrdersSetup"), $linkback, 'setup');
-print '<br>';
+print_fiche_titre($langs->trans("OrdersSetup"));
+print '<div class="with-padding" >';
 
 
 
@@ -324,25 +294,7 @@ print '</table><br>';
 print_titre($langs->trans("OrdersModelModule"));
 
 // Load array def with activated templates
-$type = 'order';
-$def = array();
-$sql = "SELECT nom";
-$sql.= " FROM " . MAIN_DB_PREFIX . "document_model";
-$sql.= " WHERE type = '" . $type . "'";
-$sql.= " AND entity = " . $conf->entity;
-$resql = $db->query($sql);
-if ($resql) {
-	$i = 0;
-	$num_rows = $db->num_rows($resql);
-	while ($i < $num_rows) {
-		$array = $db->fetch_array($resql);
-		array_push($def, $array[0]);
-		$i++;
-	}
-} else {
-	dol_print_error($db);
-}
-
+$def = $object->fk_extrafields->models;
 
 print "<table class=\"noborder\" width=\"100%\">\n";
 print "<tr class=\"liste_titre\">\n";
@@ -358,7 +310,7 @@ clearstatcache();
 $var = true;
 foreach ($dirmodels as $reldir) {
 	foreach (array('', '/doc') as $valdir) {
-		$dir = dol_buildpath($reldir . "core/modules/commande" . $valdir);
+		$dir = dol_buildpath($reldir . "commande/core/modules/commande" . $valdir);
 
 		if (is_dir($dir)) {
 			$handle = opendir($dir);
@@ -477,7 +429,7 @@ print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">'
 print '<input type="hidden" name="action" value="set_COMMANDE_FREE_TEXT">';
 print '<tr ' . $bc[$var] . '><td colspan="2">';
 print $langs->trans("FreeLegalTextOnOrders") . ' (' . $langs->trans("AddCRIfTooLong") . ')<br>';
-print '<textarea name="COMMANDE_FREE_TEXT" class="flat" cols="120">' . $conf->global->COMMANDE_FREE_TEXT . '</textarea>';
+print '<textarea name="COMMANDE_FREE_TEXT" class="flat" cols="100">' . $conf->global->COMMANDE_FREE_TEXT . '</textarea>';
 print '</td><td align="right">';
 print '<input type="submit" class="button" value="' . $langs->trans("Modify") . '">';
 print "</td></tr>\n";
@@ -498,7 +450,7 @@ print '</form>';
 
 print '</table>';
 
-print '<br>';
+print '</div>';
 
 dol_htmloutput_mesg($mesg);
 

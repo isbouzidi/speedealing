@@ -32,7 +32,7 @@ abstract class nosqlDocument extends CommonObject {
 	public $no_save = array("no_save", "global", "token", "id", "fk_extrafields", "couchdb", "db",
 		"error", "errors", "childtables", "table_element", "element", "fk_element", "ismultientitymanaged",
 		"dbversion", "oldcopy", "state", "country", "status", "statut", "import_key", "couchAdmin",
-		"all_permissions_are_loaded", "right");
+		"all_permissions_are_loaded", "right", "type2label");
 
 	/**
 	 * 	class constructor
@@ -1283,8 +1283,10 @@ abstract class nosqlDocument extends CommonObject {
 	 */
 	public function showList($view = 'list') {
 
+		require DOL_DOCUMENT_ROOT . '/core/class/autoloader.php';
+		
 		//$data_source = "core/ajax/listdatatables.php?json=list&class=" . get_class($this) . "&bServerSide=true";
-		$data_source = "core/ajax/listdatatables.php?json=" . (!empty($view) ? $view : 'list') . "&class=" . get_class($this);
+		$data_source = "core/ajax/listdatatables.php?json=" . $view . "&class=" . get_class($this);
 		$table = new datatables\Datatables(compact('data_source'));
 		$table->setSchema(new datatables\schemas\DefaultSchema);
 		$table->setConfig('object_class', get_class($this));

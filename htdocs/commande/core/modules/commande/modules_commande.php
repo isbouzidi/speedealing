@@ -53,9 +53,12 @@ abstract class ModelePDFCommandes extends CommonDocGenerator
 
 		$type='order';
 		$liste=array();
+		
+		$commande = new Commande($db);
+		$liste = $commande->fk_extrafields->models;
 
-		include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-		$liste=getListOfModels($db,$type,$maxfilenamelength);
+		//include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
+		//$liste=getListOfModels($db,$type,$maxfilenamelength);
 
 		return $liste;
 	}

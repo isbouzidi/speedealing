@@ -26,7 +26,6 @@
  * 	\ingroup    thirdparty
  */
 require '../main.inc.php';
-require DOL_DOCUMENT_ROOT . '/core/class/autoloader.php';
 
 $langs->load("companies");
 $langs->load("customers");
@@ -85,7 +84,7 @@ print '<p class="button-height right">';
 print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create">' . $langs->trans("NewThirdParty") . '</a>';
 print "</p>";
 
-if (empty($builder)) {
+/*if (empty($builder)) {
 
 	print $object->datatablesEdit("societe", $langs->trans("NewThirdParty"));
 
@@ -163,7 +162,7 @@ if (empty($builder)) {
 	  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("tms", "date");
 	  $i++; */
 
-	print'<th class="essential">';
+	/*print'<th class="essential">';
 	print $langs->trans("Status");
 	print'</th>';
 	$obj->aoColumns[$i] = new stdClass();
@@ -221,7 +220,7 @@ if (empty($builder)) {
 	print'<tfoot>';
 	/* input search view */
 
-	$i = 0; //Doesn't work with bServerSide
+/*	$i = 0; //Doesn't work with bServerSide
 	print'<tr>';
 	print'<th id="' . $i . '"></th>';
 	$i++;
@@ -268,14 +267,14 @@ if (empty($builder)) {
 	$object->datatablesCreate($obj, "societe", true, true);
 }
 
-echo '<br>';
+echo '<br>';*/
 
-if (!empty($builder)) {
+//if (!empty($builder)) {
 	$view = 'listEnable';
 	if (GETPOST('disable'))
 		$view = 'listDisable';
 	echo $object->showList($view);
-}
+//}
 
 //print end_box();
 print '</div>'; // end

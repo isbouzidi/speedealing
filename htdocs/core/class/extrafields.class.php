@@ -178,7 +178,7 @@ class ExtraFields extends nosqlDocument {
 			$this->load("extrafields:" . $class, true); // load and cache
 			//print_r($this->fields->Status);
 		} catch (Exception $e) {
-
+			
 		}
 
 		if (isset($this->fields) && count($this->fields))
@@ -296,6 +296,37 @@ class ExtraFields extends nosqlDocument {
 			return 0;
 		}
 		return ($a1 > $b1) ? +1 : -1;
+	}
+
+	/**
+	 * Add a model PDF or ODT in list
+	 */
+	public function setModel($name) {
+		if (!is_array($this->models))
+			$this->models = array();
+
+		if (!in_array($name, $this->models, true)) {
+			array_push($this->models, $name);
+			$this->record(true);
+		}
+
+		return 1;
+	}
+
+	/**
+	 * Remove a model PDF or ODT from list model
+	 */
+	public function delModel($name) {
+		if (!is_array($this->models))
+			$this->models = array();
+
+		$result = array_search($name, $this->models);
+		if ($result !== false) {
+			unset($this->models[$result]);
+			$this->models = array_merge($this->models);
+			$this->record(true);
+		}
+		return 1;
 	}
 
 }
