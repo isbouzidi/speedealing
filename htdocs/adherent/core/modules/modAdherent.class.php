@@ -34,12 +34,10 @@
 class modAdherent extends DolibarrModules {
 
     /**
-	 *   Constructor. Define names, constants, directories, boxes, permissions
-	 *
-	 *   @param      DoliDB		$db      Database handler
+	 *   Constructor.
      */
-	function modAdherent($db) {
-		parent::__construct($db);
+	function modAdherent() {
+		parent::__construct();
 
 		$this->numero = 310;
 
@@ -344,14 +342,10 @@ class modAdherent extends DolibarrModules {
 	 * 		The init function add constants, boxes, permissions and menus (defined in constructor) into Dolibarr database.
 	 * 		It also creates data directories
 	 *
-     *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
      */
-	function init($options = '') {
-
-        $sql = array();
-
-		return $this->_init($sql, $options);
+	function init() {
+		return $this->_init();
     }
 
     /**
@@ -359,13 +353,10 @@ class modAdherent extends DolibarrModules {
 	 *      Remove from database constants, boxes and permissions from Dolibarr database.
 	 * 		Data directories are not deleted
 	 *
-     *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
      */
-	function remove($options = '') {
-		$sql = array();
-
-		return $this->_remove($sql, $options);
+	function remove() {
+		return $this->_remove();
     }
 
 }

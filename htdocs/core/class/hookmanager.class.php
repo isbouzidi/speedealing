@@ -47,7 +47,7 @@ class HookManager
 	 *
 	 * @param	DoliDB		$db		Handler acces base de donnees
 	 */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		$this->db = $db;
 	}

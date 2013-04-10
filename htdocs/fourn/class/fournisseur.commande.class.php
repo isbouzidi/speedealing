@@ -84,7 +84,7 @@ class CommandeFournisseur extends CommonOrder
      *
      *  @param      DoliDB		$db      Database handler
      */
-    function __construct($db)
+    function __construct($db = '')
     {
         $this->db = $db;
         $this->products = array();
@@ -1921,7 +1921,7 @@ class CommandeFournisseurLigne
      *
      *  @param		DoliDB		$db      Database handler
      */
-    function __construct($db)
+    function __construct($db = '')
     {
         $this->db= $db;
     }

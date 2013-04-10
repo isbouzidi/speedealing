@@ -58,7 +58,7 @@ class Form {
 	/**
 	 * Constructor
 	 */
-	public function __construct($db) {
+	public function __construct($db = '') {
 		$this->db = $db;
 	}
 

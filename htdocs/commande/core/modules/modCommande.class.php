@@ -5,10 +5,9 @@
  * Copyright (C) 2004      Sebastien Di Cintio  <sdicintio@ressource-toi.org>
  * Copyright (C) 2004      Benoit Mortier       <benoit.mortier@opensides.be>
  * Copyright (C) 2004      Eric Seigne          <eric.seigne@ryxeo.com>
- * Copyright (C) 2005-2011 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2005-2013 Regis Houssin        <regis.houssin@capnetworks.com>
  * Copyright (C) 2012      Juanjo Menent		<jmenent@2byte.es>
- * Copyright (C) 2011-2012 Herve Prot           <herve.prot@symeos.com>
- * Copyright (C) 2012 Herve Prot           <dmoothen@websitti.fr>
+ * Copyright (C) 2011-2013 Herve Prot           <herve.prot@symeos.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,14 +31,12 @@ include_once DOL_DOCUMENT_ROOT . '/core/modules/DolibarrModules.class.php';
 class modCommande extends DolibarrModules {
 
 	/**
-	 *   Constructor. Define names, constants, directories, boxes, permissions
-	 *
-	 *   @param      DoliDB		$db      Database handler
+	 *   Constructor.
 	 */
-	function __construct($db) {
+	function __construct() {
 		global $conf;
 
-		parent::__construct($db);
+		parent::__construct();
 		$this->numero = 25;
 
 		$this->family = "crm";
@@ -240,37 +237,10 @@ class modCommande extends DolibarrModules {
 	 * 		The init function add constants, boxes, permissions and menus (defined in constructor) into Dolibarr database.
 	 * 		It also creates data directories
 	 *
-	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function init($options = '') {
-		global $conf, $langs;
-
-		// Permissions
-		$this->remove($options);
-
-		//ODT template
-		$src = DOL_DOCUMENT_ROOT . '/install/doctemplates/orders/template_order.odt';
-		$dirodt = DOL_DATA_ROOT . '/doctemplates/orders';
-		$dest = $dirodt . '/template_order.odt';
-
-		if (file_exists($src) && !file_exists($dest)) {
-			require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
-			dol_mkdir($dirodt);
-			$result = dol_copy($src, $dest, 0, 0);
-			if ($result < 0) {
-				$langs->load("errors");
-				$this->error = $langs->trans('ErrorFailToCopyFile', $src, $dest);
-				return 0;
-			}
-		}
-
-		$sql = array(
-			"DELETE FROM " . MAIN_DB_PREFIX . "document_model WHERE nom = '" . $this->const[0][2] . "' AND entity = " . $conf->entity,
-			"INSERT INTO " . MAIN_DB_PREFIX . "document_model (nom, type, entity) VALUES('" . $this->const[0][2] . "','order'," . $conf->entity . ")"
-		);
-
-		return $this->_init($sql, $options);
+	function init() {
+		return $this->_init();
 	}
 
 	/**
@@ -278,13 +248,10 @@ class modCommande extends DolibarrModules {
 	 *      Remove from database constants, boxes and permissions from Dolibarr database.
 	 * 		Data directories are not deleted
 	 *
-	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function remove($options = '') {
-		$sql = array();
-
-		return $this->_remove($sql, $options);
+	function remove() {
+		return $this->_remove();
 	}
 
 }

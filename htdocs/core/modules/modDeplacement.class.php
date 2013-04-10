@@ -38,7 +38,7 @@ class modDeplacement extends DolibarrModules
 	 *
 	 *   @param      DoliDB		$DB      Database handler
 	 */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		global $conf;
 

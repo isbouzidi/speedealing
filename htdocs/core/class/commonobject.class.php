@@ -43,7 +43,7 @@ abstract class CommonObject {
      * 	@param	couchClient	$db		Database handler
      */
 
-    function __construct($db) {
+    function __construct($db = '') {
         global $conf;
 
         $this->db = $db;

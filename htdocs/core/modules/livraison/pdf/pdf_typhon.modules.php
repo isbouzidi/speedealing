@@ -45,7 +45,7 @@ class pdf_typhon extends ModelePDFDeliveryOrder
 	 *
 	 *  @param		DoliDB		$db      Database handler
 	 */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		global $conf,$langs,$mysoc;
 

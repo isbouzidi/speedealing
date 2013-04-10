@@ -36,7 +36,7 @@ class modCommissions extends DolibarrModules
      *
      * 	@param	DoliDB	$db		Database handler
      */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		$this->db = $db;
 		parent::__construct($db);

@@ -38,7 +38,7 @@ class Planning extends nosqlDocument {
 	 *      @param		DoliDB		$db      Database handler
 	 */
 
-	function __construct($db) {
+	function __construct($db = '') {
 		parent::__construct($db);
 
 		$this->fk_extrafields = new ExtraFields($db);

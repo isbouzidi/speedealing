@@ -53,7 +53,7 @@ class pdf_crabe extends ModelePDFFactures {
      *  @param		DoliDB		$db      Database handler
      */
 
-    function __construct($db) {
+    function __construct($db = '') {
         global $conf, $langs, $mysoc;
 
         $langs->load("main");

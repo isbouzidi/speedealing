@@ -2,8 +2,8 @@
 
 /* Copyright (C) 2005      Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2005-2009 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2005-2010 Regis Houssin        <regis.houssin@capnetworks.com>
- * Copyright (C) 2012      Herve Prot           <herve.prot@symeos.com>
+ * Copyright (C) 2005-2013 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2012-2013 Herve Prot           <herve.prot@symeos.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,15 +27,12 @@ include_once DOL_DOCUMENT_ROOT . '/core/modules/DolibarrModules.class.php';
 class modUser extends DolibarrModules {
 
 	/**
-	 *   Constructor. Define names, constants, directories, boxes, permissions
-	 *
-	 *   @param      DoliDB		$db      Database handler
+	 *   Constructor.
 	 */
-	function __construct($db) {
+	function __construct() {
 		global $conf;
 
-		//$this->couchdb = $db; // Just for first install
-		parent::__construct($db);
+		parent::__construct();
 		$this->numero = 0;
 
 		$this->family = "base";  // Family for module (or "base" if core module)
@@ -546,21 +543,13 @@ class modUser extends DolibarrModules {
 	 * 		The init function add constants, boxes, permissions and menus (defined in constructor) into Dolibarr database.
 	 * 		It also creates data directories
 	 *
-	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function init($options = '') {
-		global $conf;
-
-		// Permissions
-		//$this->remove($options);
-		//$result=$this->create_view();
+	function init() {
 
 		$this->_load_documents('/user/json/');
 
-		$sql = array();
-
-		return $this->_init($sql, $options);
+		return $this->_init();
 	}
 
 	/**
@@ -568,13 +557,10 @@ class modUser extends DolibarrModules {
 	 *      Remove from database constants, boxes and permissions from Dolibarr database.
 	 * 		Data directories are not deleted
 	 *
-	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function remove($options = '') {
-		$sql = array();
-
-		return $this->_remove($sql, $options);
+	function remove() {
+		return $this->_remove();
 	}
 
 }

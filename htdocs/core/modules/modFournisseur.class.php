@@ -41,7 +41,7 @@ class modFournisseur extends DolibarrModules
 	 *
 	 *   @param      DoliDB		$db      Database handler
 	 */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		global $conf;
 

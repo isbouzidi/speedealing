@@ -90,7 +90,7 @@ class Commande extends AbstractInvoice {
 	 *
 	 *  @param		DoliDB		$db      Database handler
 	 */
-	function __construct($db) {
+	function __construct($db = '') {
 		parent::__construct($db);
 
 		$this->no_save[] = 'thirdparty';
@@ -3017,7 +3017,7 @@ class OrderLine extends nosqlDocument {
 	 *      @param     DoliDB	$db      handler d'acces base de donnee
 	 */
 
-	function __construct($db) {
+	function __construct($db = '') {
 		parent::__construct($db);
 	}
 

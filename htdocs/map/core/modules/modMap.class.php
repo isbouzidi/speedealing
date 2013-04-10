@@ -30,8 +30,8 @@ class modMap extends DolibarrModules {
 	 *   \brief      Constructeur. Definit les noms, constantes et boites
 	 *   \param      DB      Database handler
 	 */
-	function modMap($DB) {
-		parent::__construct($DB);
+	function __construct($db = '') {
+		parent::__construct($db);
 		$this->numero = 450;
 
 		$this->family = "technic";

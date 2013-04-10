@@ -37,7 +37,7 @@ class Auth
 	 * @param	DoliDB	$db			Database handler
 	 * @return	void
 	 */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		$this->db = $db;
 		$this->reponse(null);

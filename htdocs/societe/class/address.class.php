@@ -57,7 +57,7 @@ class Address
 	 *
 	 *  @param	DoliDB		$db     Database handler
 	 */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		$this->db = $db;
 	}
@@ -537,7 +537,7 @@ class AddressLine
 	 *
 	 *  @param	DoliDB		$db     Database handler
 	 */
-	function __construct($db)
+	function __construct($db = '')
 	{
 		$this->db = $db;
 	}

@@ -5,7 +5,7 @@
  * Copyright (C) 2004-2008 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2004      Sebastien Di Cintio  <sdicintio@ressource-toi.org>
  * Copyright (C) 2004      Benoit Mortier       <benoit.mortier@opensides.be>
- * Copyright (C) 2009-2011 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2009-2013 Regis Houssin        <regis.houssin@capnetworks.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,12 +26,10 @@ include_once(DOL_DOCUMENT_ROOT . "/core/modules/DolibarrModules.class.php");
 class modAgenda extends DolibarrModules {
 
 	/**
-	 *   Constructor. Define names, constants, directories, boxes, permissions
-	 *
-	 *   @param      DoliDB		$db      Database handler
+	 *   Constructor.
 	 */
-	function modAgenda($db) {
-		parent::__construct($db);
+	function modAgenda() {
+		parent::__construct();
 
 		$this->numero = 2400;
 
@@ -424,16 +422,10 @@ class modAgenda extends DolibarrModules {
 	 * 		The init function add constants, boxes, permissions and menus (defined in constructor) into Dolibarr database.
 	 * 		It also creates data directories
 	 *
-	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function init($options = '') {
-		// Prevent pb of modules not correctly disabled
-		//$this->remove($options);
-
-		$sql = array();
-
-		return $this->_init($sql, $options);
+	function init() {
+		return $this->_init();
 	}
 
 	/**
@@ -441,13 +433,10 @@ class modAgenda extends DolibarrModules {
 	 *      Remove from database constants, boxes and permissions from Dolibarr database.
 	 * 		Data directories are not deleted
 	 *
-	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function remove($options = '') {
-		$sql = array();
-
-		return $this->_remove($sql, $options);
+	function remove() {
+		return $this->_remove();
 	}
 
 }

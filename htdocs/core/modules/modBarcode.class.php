@@ -39,7 +39,7 @@ class modBarcode extends DolibarrModules {
 	 *
 	 *   @param      DoliDB		$db      Database handler
 	 */
-	function modBarcode($db) {
+	function __construct($db = '') {
 		parent::__construct($db);
 		$this->numero = 55;
 

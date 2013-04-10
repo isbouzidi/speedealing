@@ -4,8 +4,8 @@
  * Copyright (C) 2004-2010 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2004      Sebastien Di Cintio  <sdicintio@ressource-toi.org>
  * Copyright (C) 2004      Benoit Mortier       <benoit.mortier@opensides.be>
- * Copyright (C) 2005-2009 Regis Houssin        <regis.houssin@capnetworks.com>
- * Copyright (C) 2011-2012 Herve Prot           <herve.prot@symeos.com>
+ * Copyright (C) 2005-2013 Regis Houssin        <regis.houssin@capnetworks.com>
+ * Copyright (C) 2011-2013 Herve Prot           <herve.prot@symeos.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,14 +37,12 @@ include_once DOL_DOCUMENT_ROOT . '/core/modules/DolibarrModules.class.php';
 class modService extends DolibarrModules {
 
 	/**
-	 *   Constructor. Define names, constants, directories, boxes, permissions
-	 *
-	 *   @param      DoliDB		$db      Database handler
+	 *   Constructor.
 	 */
-	function __construct($db) {
+	function __construct() {
 		global $conf;
 
-		parent::__construct($db);
+		parent::__construct();
 
 		$this->numero = 53;
 
@@ -179,13 +177,8 @@ class modService extends DolibarrModules {
 	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function init($options = '') {
-		// Permissions et valeurs par defaut
-		$this->remove($options);
-
-		$sql = array();
-
-		return $this->_init($sql, $options);
+	function init() {
+		return $this->_init();
 	}
 
 	/**
@@ -193,13 +186,10 @@ class modService extends DolibarrModules {
 	 *      Remove from database constants, boxes and permissions from Dolibarr database.
 	 * 		Data directories are not deleted
 	 *
-	 *      @param      string	$options    Options when enabling module ('', 'noboxes')
 	 *      @return     int             	1 if OK, 0 if KO
 	 */
-	function remove($options = '') {
-		$sql = array();
-
-		return $this->_remove($sql, $options);
+	function remove() {
+		return $this->_remove();
 	}
 
 }
