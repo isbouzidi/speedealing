@@ -1318,93 +1318,82 @@ class DolibarrModules extends nosqlDocument {
 		global $conf;
 
 		// Search modules dirs
-		$modulesdir = array();
+		$excludes = array('admin', 'conf', 'includes', 'install', 'langs', 'man', 'public', 'theme');
 		foreach ($conf->file->dol_document_root as $type => $dirroot) {
-			$modulesdir[$dirroot . '/core/modules/'] = $dirroot . '/core/modules/';
-
 			$handle = @opendir($dirroot);
 			if (is_resource($handle)) {
 				while (($file = readdir($handle)) !== false) {
-					if (is_dir($dirroot . '/' . $file) && substr($file, 0, 1) <> '.' && substr($file, 0, 3) <> 'CVS' && $file != 'includes') {
-						if (is_dir($dirroot . '/' . $file . '/core/modules/')) {
-							$modulesdir[$dirroot . '/' . $file . '/core/modules/'] = $dirroot . '/' . $file . '/core/modules/';
+					if (is_dir($dirroot . '/' . $file) && substr($file, 0, 1) <> '.' && !in_array($file, $excludes)) {
+						$dir = $dirroot . '/' . $file . '/core/modules/';
+						if (is_dir($dir)) {
+							$filehandle = @opendir($dir);
+							if (is_resource($filehandle)) {
+								while (($file = readdir($filehandle)) !== false) {
+									//print "$i ".$file."\n<br>";
+									if (is_readable($dir . $file) && substr($file, 0, 3) == 'mod' && substr($file, dol_strlen($file) - 10) == '.class.php') {
+										$modName = substr($file, 0, dol_strlen($file) - 10);
+							
+										if ($modName) {
+											if (!empty($modNameLoaded[$modName])) {
+												$mesg = "Error: Module " . $modName . " was found twice: Into " . $modNameLoaded[$modName] . " and " . $dir . ". You probably have an old file on your disk.<br>";
+												error_log($mesg);
+												continue;
+											}
+							
+											try {
+												$res = include_once($dir . $file);
+												$objMod = new $modName($db);
+												$modNameLoaded[$modName] = $dir;
+							
+												if ($objMod->numero >= 0) {
+													$j = $objMod->numero;
+												} else {
+													$j = 1000 + $i;
+												}
+							
+												$modulequalified = 1;
+							
+												// We discard modules according to features level (PS: if module is activated we always show it)
+												$const_name = 'MAIN_MODULE_' . strtoupper(preg_replace('/^mod/i', '', get_class($objMod)));
+												if ($objMod->version == 'development' && $conf->global->MAIN_FEATURES_LEVEL < 2 && !$conf->global->$const_name)
+													$modulequalified = 0;
+												if ($objMod->version == 'experimental' && $conf->global->MAIN_FEATURES_LEVEL < 1 && !$conf->global->$const_name)
+													$modulequalified = 0;
+							
+												if ($modulequalified) {
+													$modules[$j] = $objMod;
+													$filename[$j] = $modName;
+													$orders[$j] = $objMod->family . "_" . $j;   // Tri par famille puis numero module
+													//print "x".$modName." ".$orders[$i]."\n<br>";
+													if (isset($categ[$objMod->special]))
+														$categ[$objMod->special]++;  // Array of all different modules categories
+													else
+														$categ[$objMod->special] = 1;
+														$dirmod[$j] = $dir;
+														$j++;
+														$i++;
+												}
+												else
+													error_log("Module " . get_class($objMod) . " not qualified");
+											} catch (Exception $e) {
+												error_log("Failed to load " . $dir . $file . " " . $e->getMessage());
+											}
+										}
+									}
+								}
+								closedir($filehandle);
+							} else {
+								error_log("htdocs/admin/modules.php: Failed to open directory " . $dir . ". See permission and open_basedir option.");
+							}
 						}
 					}
 				}
 				closedir($handle);
 			}
 		}
-
-		foreach ($modulesdir as $dir) {
-
-			// Load modules attributes in arrays (name, numero, orders) from dir directory
-			//print $dir."\n<br>";
-			$handle = @opendir($dir);
-			if (is_resource($handle)) {
-				while (($file = readdir($handle)) !== false) {
-					//print "$i ".$file."\n<br>";
-					if (is_readable($dir . $file) && substr($file, 0, 3) == 'mod' && substr($file, dol_strlen($file) - 10) == '.class.php') {
-						$modName = substr($file, 0, dol_strlen($file) - 10);
-
-						if ($modName) {
-							if (!empty($modNameLoaded[$modName])) {
-								$mesg = "Error: Module " . $modName . " was found twice: Into " . $modNameLoaded[$modName] . " and " . $dir . ". You probably have an old file on your disk.<br>";
-								dol_syslog($mesg, LOG_ERR);
-								continue;
-							}
-
-							try {
-								$res = include_once($dir . $file);
-								$objMod = new $modName($db);
-								$modNameLoaded[$modName] = $dir;
-
-								if ($objMod->numero >= 0) {
-									$j = $objMod->numero;
-								} else {
-									$j = 1000 + $i;
-								}
-
-								$modulequalified = 1;
-
-								// We discard modules according to features level (PS: if module is activated we always show it)
-								$const_name = 'MAIN_MODULE_' . strtoupper(preg_replace('/^mod/i', '', get_class($objMod)));
-								if ($objMod->version == 'development' && $conf->global->MAIN_FEATURES_LEVEL < 2 && !$conf->global->$const_name)
-									$modulequalified = 0;
-								if ($objMod->version == 'experimental' && $conf->global->MAIN_FEATURES_LEVEL < 1 && !$conf->global->$const_name)
-									$modulequalified = 0;
-
-								if ($modulequalified) {
-									$modules[$j] = $objMod;
-									$filename[$j] = $modName;
-									$orders[$j] = $objMod->family . "_" . $j;   // Tri par famille puis numero module
-									//print "x".$modName." ".$orders[$i]."\n<br>";
-									if (isset($categ[$objMod->special]))
-										$categ[$objMod->special]++;  // Array of all different modules categories
-									else
-										$categ[$objMod->special] = 1;
-									$dirmod[$j] = $dir;
-									$j++;
-									$i++;
-								}
-								else
-									dol_syslog("Module " . get_class($objMod) . " not qualified");
-							} catch (Exception $e) {
-								dol_syslog("Failed to load " . $dir . $file . " " . $e->getMessage(), LOG_ERR);
-							}
-						}
-					}
-				}
-				closedir($handle);
-			} else {
-				dol_syslog("htdocs/admin/modules.php: Failed to open directory " . $dir . ". See permission and open_basedir option.", LOG_WARNING);
-			}
-		}
-
+		
 		asort($orders);
-//var_dump($orders);
-//var_dump($categ);
-//var_dump($modules);exit;
-// Affichage debut page
+
 		return $mesg;
 	}
 
