@@ -1061,7 +1061,7 @@ class Societe extends nosqlDocument {
 	function get_codeclient($objsoc = 0, $type = 0) {
 		global $conf;
 		if (!empty($conf->global->SOCIETE_CODECLIENT_ADDON)) {
-			$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+			$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 			foreach ($dirsociete as $dirroot) {
 				$res = dol_include_once($dirroot . $conf->global->SOCIETE_CODECLIENT_ADDON . '.php');
 				if ($res)
@@ -1086,7 +1086,7 @@ class Societe extends nosqlDocument {
 	function get_codefournisseur($objsoc = 0, $type = 1) {
 		global $conf;
 		if (!empty($conf->global->SOCIETE_CODEFOURNISSEUR_ADDON)) {
-			$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+			$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 			foreach ($dirsociete as $dirroot) {
 				$res = dol_include_once($dirroot . $conf->global->SOCIETE_FOURNISSEUR_ADDON . '.php');
 				if ($res)
@@ -1108,7 +1108,7 @@ class Societe extends nosqlDocument {
 	function codeclient_modifiable() {
 		global $conf;
 		if (!empty($conf->global->SOCIETE_CODECLIENT_ADDON)) {
-			$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+			$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 			foreach ($dirsociete as $dirroot) {
 				$res = dol_include_once($dirroot . $conf->global->SOCIETE_CODECLIENT_ADDON . '.php');
 				if ($res)
@@ -1140,7 +1140,7 @@ class Societe extends nosqlDocument {
 	function codefournisseur_modifiable() {
 		global $conf;
 		if (!empty($conf->global->SOCIETE_CODEFOURNISSEUR_ADDON)) {
-			$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+			$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 			foreach ($dirsociete as $dirroot) {
 				$res = dol_include_once($dirroot . $conf->global->SOCIETE_CODEFOURNISSEUR_ADDON . '.php');
 				if ($res)
@@ -1207,7 +1207,7 @@ class Societe extends nosqlDocument {
 	function check_codefournisseur() {
 		global $conf;
 		if (!empty($conf->global->SOCIETE_CODEFOURNISSEUR_ADDON)) {
-			$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+			$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 			foreach ($dirsociete as $dirroot) {
 				$res = dol_include_once($dirroot . $conf->global->SOCIETE_CODEFOURNISSEUR_ADDON . '.php');
 				if ($res)
@@ -1239,7 +1239,7 @@ class Societe extends nosqlDocument {
 
 		if (!empty($conf->global->SOCIETE_CODECOMPTA_ADDON)) {
 			$file = '';
-			$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+			$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 			foreach ($dirsociete as $dirroot) {
 				if (file_exists(DOL_DOCUMENT_ROOT . '/' . $dirroot . $conf->global->SOCIETE_CODECOMPTA_ADDON . ".php")) {
 					$file = $dirroot . $conf->global->SOCIETE_CODECOMPTA_ADDON . ".php";

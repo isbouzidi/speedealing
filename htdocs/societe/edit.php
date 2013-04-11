@@ -441,7 +441,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         if (substr($module, 0, 15) == 'mod_codeclient_' && substr($module, -3) == 'php') {
             $module = substr($module, 0, dol_strlen($module) - 4);
         }
-        $dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+        $dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
         foreach ($dirsociete as $dirroot) {
             $res = dol_include_once($dirroot . $module . ".php");
             if ($res)
@@ -454,7 +454,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         if (substr($module, 0, 15) == 'mod_codeclient_' && substr($module, -3) == 'php') {
             $module = substr($module, 0, dol_strlen($module) - 4);
         }
-        $dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+        $dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
         foreach ($dirsociete as $dirroot) {
             $res = dol_include_once($dirroot . $module . ".php");
             if ($res)
@@ -894,7 +894,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         if (substr($module, 0, 15) == 'mod_codeclient_' && substr($module, -3) == 'php') {
             $module = substr($module, 0, dol_strlen($module) - 4);
         }
-        $dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+        $dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
         foreach ($dirsociete as $dirroot) {
             $res = dol_include_once($dirroot . $module . ".php");
             if ($res)
@@ -907,7 +907,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         if (substr($module, 0, 15) == 'mod_codeclient_' && substr($module, -3) == 'php') {
             $module = substr($module, 0, dol_strlen($module) - 4);
         }
-        $dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+        $dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
         foreach ($dirsociete as $dirroot) {
             $res = dol_include_once($dirroot . $module . ".php");
             if ($res)
