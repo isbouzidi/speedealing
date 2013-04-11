@@ -1,13 +1,13 @@
 <?php
-/* Copyright (C) 2002-2006 Rodolphe Quiedeville <rodolphe@quiedeville.org>
- * Copyright (C) 2004-2010 Laurent Destailleur  <eldy@users.sourceforge.net>
- * Copyright (C) 2004      Eric Seigne          <eric.seigne@ryxeo.com>
- * Copyright (C) 2003      Brian Fraval         <brian@fraval.org>
- * Copyright (C) 2006      Andre Cianfarani     <acianfa@free.fr>
- * Copyright (C) 2005-2012 Regis Houssin        <regis.houssin@capnetworks.com>
- * Copyright (C) 2008      Patrick Raguin       <patrick.raguin@auguria.net>
- * Copyright (C) 2010-2011 Juanjo Menent        <jmenent@2byte.es>
- * Copyright (C) 2010-2012 Herve Prot           <herve.prot@symeos.com>
+/* Copyright (C) 2002-2006	Rodolphe Quiedeville	<rodolphe@quiedeville.org>
+ * Copyright (C) 2004-2010	Laurent Destailleur		<eldy@users.sourceforge.net>
+ * Copyright (C) 2004		Eric Seigne				<eric.seigne@ryxeo.com>
+ * Copyright (C) 2003		Brian Fraval			<brian@fraval.org>
+ * Copyright (C) 2006		Andre Cianfarani		<acianfa@free.fr>
+ * Copyright (C) 2005-2013	Regis Houssin			<regis.houssin@capnetworks.com>
+ * Copyright (C) 2008		Patrick Raguin			<patrick.raguin@auguria.net>
+ * Copyright (C) 2010-2011	Juanjo Menent			<jmenent@2byte.es>
+ * Copyright (C) 2010-2013	Herve Prot				<herve.prot@symeos.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1176,7 +1176,7 @@ class Societe extends nosqlDocument {
 	function check_codeclient() {
 		global $conf;
 		if (!empty($conf->global->SOCIETE_CODECLIENT_ADDON)) {
-			$dirsociete = array_merge(array('/core/modules/societe/'), $conf->societe_modules);
+			$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
 			foreach ($dirsociete as $dirroot) {
 				$res = dol_include_once($dirroot . $conf->global->SOCIETE_CODECLIENT_ADDON . '.php');
 				if ($res)

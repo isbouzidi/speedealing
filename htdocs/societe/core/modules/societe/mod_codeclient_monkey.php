@@ -1,7 +1,7 @@
 <?php
 /* Copyright (C) 2004		Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2006-2007	Laurent Destailleur		<eldy@users.sourceforge.net>
- * Copyright (C) 2006-2012	Regis Houssin			<regis.houssin@capnetworks.com>
+ * Copyright (C) 2006-2013	Regis Houssin			<regis.houssin@capnetworks.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -214,8 +214,7 @@ class mod_codeclient_monkey extends ModeleThirdPartyCode
 	 */
 	function verif_dispo($db, $code, $soc)
 	{
-		global $conf, $mc;
-
+		/*
 		$sql = "SELECT code_client FROM ".MAIN_DB_PREFIX."societe";
 		$sql.= " WHERE code_client = '".$code."'";
 		$sql.= " AND entity IN (".getEntity('societe', 1).")";
@@ -238,7 +237,7 @@ class mod_codeclient_monkey extends ModeleThirdPartyCode
 		{
 			return -2;
 		}
-
+		*/
 	}
 
 
