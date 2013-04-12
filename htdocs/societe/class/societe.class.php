@@ -221,7 +221,7 @@ class Societe extends nosqlDocument {
 		$result = 0;
 		$this->name = trim($this->name);
 
-		if (!$this->name) {
+		if (empty($this->name)) {
 			$this->errors[] = 'ErrorBadThirdPartyName';
 			$result = -2;
 		}
@@ -248,15 +248,15 @@ class Societe extends nosqlDocument {
 		}
 
 		/* Verify code_client must be unique */
-		if ($this->code_client) {
-			$result = $this->getView("code_client", array("key" => $this->code_client));
-			if (count($result->rows) && $result->rows[0]->id != $this->id) {
+		if (!empty($this->code_client)) {
+			$rescode = $this->getView("code_client", array("key" => $this->code_client));
+			if (count($rescode->rows) && $rescode->rows[0]->id != $this->id) {
 				$this->errors[] = 'ErrorCustomerCodeAlreadyUsed';
 				$result = -3;
 			}
 		}
 
-		if ($this->fournisseur && $this->codefournisseur_modifiable()) {
+		if (!empty($this->fournisseur) && $this->codefournisseur_modifiable()) {
 			// On ne verifie le code fournisseur que si la societe est un fournisseur et que le code est modifiable
 			// Si il n'est pas modifiable il n'est pas mis a jour lors de l'update
 			$rescode = $this->check_codefournisseur();
