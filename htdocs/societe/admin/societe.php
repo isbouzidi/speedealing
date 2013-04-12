@@ -197,7 +197,7 @@ dol_fiche_head($head, 'general', $langs->trans("ThirdParties"), 0, 'company');
 
 dol_htmloutput_mesg($mesg);
 
-$dirsociete = array_merge(array('/societe/core/modules/societe/'), $conf->societe_modules);
+$dirsociete = array_merge(array('/societe/core/models/'), $conf->societe_modules);
 
 
 // Module to manage customer/supplier code

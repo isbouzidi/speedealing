@@ -328,7 +328,7 @@ abstract class ActionsCardCommon
             }
             else
             {
-                require_once DOL_DOCUMENT_ROOT.'/core/modules/societe/modules_societe.class.php';
+                require_once DOL_DOCUMENT_ROOT.'/core/models/modules_societe.class.php';
 
                 $this->object->fetch_thirdparty();
 
@@ -430,7 +430,7 @@ abstract class ActionsCardCommon
             {
                 $module = substr($module, 0, dol_strlen($module)-4);
             }
-            $dirsociete=array_merge(array('/societe/core/modules/societe/'),$conf->societe_modules);
+            $dirsociete=array_merge(array('/societe/core/models/'),$conf->societe_modules);
             foreach ($dirsociete as $dirroot)
             {
                 $res=dol_include_once($dirroot.$module.'.php');
@@ -467,7 +467,7 @@ abstract class ActionsCardCommon
             	{
             		$module = substr($module, 0, dol_strlen($module)-4);
             	}
-                $dirsociete=array_merge(array('/societe/core/modules/societe/'),$conf->societe_modules);
+                $dirsociete=array_merge(array('/societe/core/models/'),$conf->societe_modules);
                 foreach ($dirsociete as $dirroot)
                 {
                     $res=dol_include_once($dirroot.$module.'.php');

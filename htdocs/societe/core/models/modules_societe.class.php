@@ -20,7 +20,7 @@
  */
 
 /**
- *	    \file       htdocs/core/modules/societe/modules_societe.class.php
+ *	    \file       htdocs/core/models/modules_societe.class.php
  *		\ingroup    societe
  *		\brief      File with parent class of submodules to manage numbering and document generation
  */
@@ -375,7 +375,7 @@ function thirdparty_doc_create($db, $object, $message, $modele, $outputlangs)
 	global $conf,$langs,$user;
 	$langs->load("bills");
 
-	$dir = DOL_DOCUMENT_ROOT . "/core/modules/societe/doc";
+	$dir = DOL_DOCUMENT_ROOT . "/core/models/doc";
 	$srctemplatepath='';
 
 	// Positionne modele sur le nom du modele a utiliser

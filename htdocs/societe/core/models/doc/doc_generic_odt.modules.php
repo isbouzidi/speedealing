@@ -17,12 +17,12 @@
  */
 
 /**
- *	\file       htdocs/core/modules/societe/doc/doc_generic_odt.modules.php
+ *	\file       htdocs/core/models/doc/doc_generic_odt.modules.php
  *	\ingroup    societe
  *	\brief      File of class to build ODT documents for third parties
  */
 
-require_once DOL_DOCUMENT_ROOT . '/societe/core/modules/societe/modules_societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/core/models/modules_societe.class.php';
 require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';

@@ -20,12 +20,12 @@
  */
 
 /**
- *       \file       htdocs/core/modules/societe/mod_codeclient_elephant.php
+ *       \file       htdocs/core/models/mod_codeclient_elephant.php
  *       \ingroup    societe
  *       \brief      File of class to manage third party code with elephant rule
  */
 
-require_once DOL_DOCUMENT_ROOT . '/societe/core/modules/societe/modules_societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/core/models/modules_societe.class.php';
 
 
 /**

@@ -19,12 +19,12 @@
  */
 
 /**
- *       \file       htdocs/core/modules/societe/mod_codeclient_monkey.php
+ *       \file       htdocs/core/models/mod_codeclient_monkey.php
  *       \ingroup    societe
  *       \brief      Fichier de la classe des gestion lion des codes clients
  */
 
-require_once DOL_DOCUMENT_ROOT . '/societe/core/modules/societe/modules_societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/core/models/modules_societe.class.php';
 
 
 /**

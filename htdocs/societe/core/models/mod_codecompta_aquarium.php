@@ -19,11 +19,11 @@
  */
 
 /**
- *	\file       htdocs/core/modules/societe/mod_codecompta_aquarium.php
+ *	\file       htdocs/core/models/mod_codecompta_aquarium.php
  *	\ingroup    societe
  *	\brief      File of class to manage accountancy code of thirdparties with Panicum rules
  */
-require_once DOL_DOCUMENT_ROOT . '/societe/core/modules/societe/modules_societe.class.php';
+require_once DOL_DOCUMENT_ROOT . '/societe/core/models/modules_societe.class.php';
 
 
 /**

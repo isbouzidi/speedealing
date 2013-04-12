@@ -18,7 +18,7 @@
  */
 
 /**
- *	\file       htdocs/core/modules/societe/doc/doc_generic_odt.modules.php
+ *	\file       htdocs/core/models/doc/doc_generic_odt.modules.php
  *	\ingroup    societe
  *	\brief      File of class to build ODT documents for third parties
  *	\author	    Laurent Destailleur
