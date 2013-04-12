@@ -39,6 +39,9 @@
        "code_client": {
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Societe\" && doc.code_client)\n  emit(doc.code_client, doc._id);\n}"
        },
+       "customerCode": {
+           "map": "function(doc) {\n  if(doc.class && doc.class==\"Societe\" && doc.code_client) {\n        var prefix = doc.code_client.match(/^CU[0-9]{4}\\-[0-9]{4}$/i);\n        if(prefix)\n            emit(doc.code_client, doc._id);\n    }\n}"
+       },
        "listDisable": {
            "map": "function(doc) {\n  if(doc.class && doc.class==\"Societe\" && doc._id != \"societe:mysoc\" && doc.trash != true && (doc.Status == \"ST_NO\" || doc.Status == \"ST_NEVER\"))\n  emit(doc.name, doc);\n}"
        },

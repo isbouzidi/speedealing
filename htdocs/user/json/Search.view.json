@@ -3,7 +3,7 @@
    "language": "javascript",
    "fulltext": {
        "list": {
-           "index": "function(doc) {\n if(doc.class == \"Societe\" && doc._id != \"societe:mysoc\"){ var result = new Document(); result.add(doc.name);  result.add(doc.customercode); result.add(doc.idporof1); return result;}}"
+           "index": "function(doc) {\n if(doc.class == \"Societe\" && doc._id != \"societe:mysoc\"){ var result = new Document(); result.add(doc.name);  result.add(doc.customercode); result.add(doc.idprof1); return result;}}"
        }
    }
 }
