@@ -1075,8 +1075,11 @@ function pdf_getlineqty($object, $i, $outputlangs, $hidedetails = 0) {
             return $hookmanager->executeHooks('pdf_getlineqty', $parameters, $object, $action);    // Note that $action and $object may have been modified by some hooks
         }
         else {
-            if (empty($hidedetails) || $hidedetails > 1)
-                return $object->lines[$i]->qty;
+            if (empty($hidedetails) || $hidedetails > 1) {
+                $qty = price2num($object->lines[$i]->qty, 'MT');
+				$qty = price($qty, 0, '', 0, 0);
+				return $qty;
+			}
         }
     }
 }
@@ -1224,7 +1227,8 @@ function pdf_getlinetotalexcltax($object, $i, $outputlangs, $hidedetails = 0) {
         }
         else {
             if (empty($hidedetails) || $hidedetails > 1)
-                return price($sign * $object->lines[$i]->total_ht);
+				$price = price2num($sign * $object->lines[$i]->total_ht, 'MT');
+                return price($price);
         }
     }
 }

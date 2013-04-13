@@ -161,6 +161,7 @@ class FormFile {
 		$this->numoffiles = 0;
 		$titre = $langs->trans("Documents");
 		print start_box($titre, "icon-object-documents");
+		print '<a name="builddoc"></a>';
 		print $this->showdocuments($modulepart, $filename, $filedir, $urlsource, $genallowed, $delallowed, $modelselected, $allowgenifempty, $forcenomultilang, $iconPDF, $maxfilenamelength, $noform, $param, $title, $buttonlabel, $codelang);
 		print end_box();
 		return $this->numoffiles;
@@ -335,7 +336,7 @@ class FormFile {
 				$buttonlabel = $langs->trans('Generate');
 
 			if (empty($noform))
-				$out.= '<form action="' . $urlsource . (empty($conf->global->MAIN_JUMP_TAG) ? '' : '#builddoc') . '" name="' . $forname . '" id="' . $forname . '_form" method="POST">';
+				$out.= '<form action="' . $urlsource . '#builddoc' . '" name="' . $forname . '" id="' . $forname . '_form" method="POST">';
 			$out.= '<input type="hidden" name="action" value="builddoc">';
 			$out.= '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 
@@ -446,7 +447,7 @@ class FormFile {
 
 					if ($delallowed) {
 						$out.= '<td align="right">';
-						$out.= '<a href="' . $urlsource . (strpos($urlsource, '?') ? '&' : '?') . 'action=remove_file&file=' . urlencode($relativepath);
+						$out.= '<a href="' . $urlsource . (strpos($urlsource, '?') ? '&' : '?') . 'action=remove_file&file=' . urlencode($relativepath) .'#builddoc';
 						$out.= ($param ? '&' . $param : '');
 						//$out.= '&modulepart='.$modulepart; // TODO obsolete ?
 						//$out.= '&urlsource='.urlencode($urlsource); // TODO obsolete ?

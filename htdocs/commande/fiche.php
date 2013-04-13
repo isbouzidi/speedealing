@@ -25,6 +25,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+if (!empty($_GET["json"]) && !defined('NOTOKENRENEWAL'))
+	define('NOTOKENRENEWAL', '1'); // Disables token renewal
+
 require '../main.inc.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formorder.class.php';
@@ -33,6 +36,7 @@ require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/order.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
 if (!empty($conf->propal->enabled))
 	require DOL_DOCUMENT_ROOT . '/propal/class/propal.class.php';
 if (!empty($conf->projet->enabled)) {
@@ -70,11 +74,6 @@ $origin = GETPOST('origin', 'alpha');
 $originid = (GETPOST('originid', 'alpha') ? GETPOST('originid', 'alpha') : GETPOST('origin_id', 'alpha')); // For backward compatibility
 
 $title = $langs->trans('Order');
-
-if(count($_POST)) {
-	print_r($_POST);
-	exit;
-}
 
 $object = new Commande($db);
 $soc = new Societe($db);
@@ -247,12 +246,17 @@ if ($action == 'add' && $user->rights->commande->creer) {
 	} else {
 		$mesg = '<div class="error">' . $object->error . '</div>';
 	}
+} else if ($action == 'remove_file') {
+        $langs->load("other");
+		$comref = dol_sanitizeFileName($object->ref);
+        $file = $conf->commande->dir_output . '/' . GETPOST('file'); // Do not use urldecode here ($_GET and $_REQUEST are already decoded by PHP).
+		$ret = dol_delete_file($file);
 } else if ($action == 'builddoc') { // In get or post
 	/*
 	 * Generate order document
 	 * define into /core/modules/commande/modules_commande.php
 	 */
-print $_REQUEST['model'];exit;
+
 	// Sauvegarde le dernier modele choisi pour generer un document
 	if ($_REQUEST['model']) {
 		$object->setDocModel($user, $_REQUEST['model']);
@@ -384,8 +388,6 @@ else if ($action == 'reopen' && $user->rights->commande->creer) {
  * Add file in email form
  */
 if (GETPOST('addfile')) {
-	require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
-
 	// Set tmp user directory TODO Use a dedicated directory for temp mails files
 	$vardir = $conf->user->dir_output . "/" . $user->id;
 	$upload_dir_tmp = $vardir . '/temp';
@@ -1050,7 +1052,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	print column_end();
 
 	// Print Total
-	print column_start("six","new-row");
+	print column_start("six", "new-row");
 	print $object->showAmounts();
 	print column_end();
 
@@ -1065,6 +1067,22 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 		$title = $langs->trans('Notes');
 		include DOL_DOCUMENT_ROOT . '/core/tpl/bloc_showhide.tpl.php';
 	}
+
+	/*
+	 * Documents generes
+	 *
+	 */
+	$comref = dol_sanitizeFileName($object->ref);
+	$file = $conf->commande->dir_output . '/' . $comref . '/' . $comref . '.pdf';
+	$relativepath = $comref . '/' . $comref . '.pdf';
+	$filedir = $conf->commande->dir_output . '/' . $comref;
+	$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
+	$genallowed = $user->rights->commande->creer;
+	$delallowed = $user->rights->commande->supprimer;
+
+	print column_start("six");
+	$somethingshown = $formfile->show_documents('commande', $comref, $filedir, $urlsource, $genallowed, $delallowed, $object->modelpdf, 1, 0, 0, 28, 0, '', '', '', $soc->default_lang);
+	print column_end();
 
 	// Lines
 	print column_start();
@@ -1109,24 +1127,6 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 //
 
 	if ($action != 'presend') {
-		print '<a name="builddoc"></a>'; // ancre
-
-		/*
-		 * Documents generes
-		 *
-		 */
-		$comref = dol_sanitizeFileName($object->ref);
-		$file = $conf->commande->dir_output . '/' . $comref . '/' . $comref . '.pdf';
-		$relativepath = $comref . '/' . $comref . '.pdf';
-		$filedir = $conf->commande->dir_output . '/' . $comref;
-		$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
-		$genallowed = $user->rights->commande->creer;
-		$delallowed = $user->rights->commande->supprimer;
-
-		print column_start("six");
-		$somethingshown = $formfile->show_documents('commande', $comref, $filedir, $urlsource, $genallowed, $delallowed, $object->modelpdf, 1, 0, 0, 28, 0, '', '', '', $soc->default_lang);
-		print column_end();
-
 		/*
 		 * Linked object block
 		 */

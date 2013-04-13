@@ -691,70 +691,10 @@ function dol_print_date($time, $format = '', $tzoutput = 'tzserver', $outputlang
 	if ($format == 'dayhourrfc')
 		$format = '%Y-%m-%dT%H:%M:%SZ';   // DATETIME RFC3339
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		
 // If date undefined or "", we return ""
 	if (dol_strlen($time) == 0)
 		return '';  // $time=0 allowed (it means 01/01/1970 00:00:00)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
 //print 'x'.$time;
 
 	if (preg_match('/%b/i', $format)) {  // There is some text to translate
@@ -2241,14 +2181,14 @@ function start_box($title, $cssClass = 'icon-object-default', $menu = array(), $
 		if (count($menu) > 0 && $box_action) {
 			$rtr.= '<div class="relative margin-bottom">';
 			if (count($menu) == 1)
-				if(isset($menu[0]->href))
+				if (isset($menu[0]->href))
 					$rtr.= '<a href="' . $menu[0]->href . '" class="absolute-right compact button with-tooltip ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '" title="' . $menu[0]->title . '"></a>';
 				else
 					$rtr.= '<button class="absolute-right compact button with-tooltip ' . $menu[0]->icon . '" id="' . $menu[0]->id . '" onclick="' . $menu[0]->onclick . '" title="' . $menu[0]->title . '"></button>';
 			else {
 				$rtr.= '<div class="button-group absolute-right compact children-tooltip">';
 				foreach ($menu as $aRow)
-					if(isset($aRow->href))
+					if (isset($aRow->href))
 						$rtr.= '<a href="' . $aRow->href . '" class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></a>';
 					else
 						$rtr.= '<button class="button ' . $aRow->icon . '" id="' . $aRow->id . '"  onclick="' . $aRow->onclick . '" title="' . $aRow->title . '"></button>';
@@ -2675,6 +2615,8 @@ function price2num($amount, $rounding = '', $alreadysqlnb = 0) {
 
 
 
+
+
 			
 //print "RR".$amount.' - '.$nbofdectoround.'<br>';
 		if (dol_strlen($nbofdectoround))
@@ -3060,6 +3002,8 @@ function dol_mkdir($dir, $dataroot = '') {
 			$ccdir .= $cdir[$i];
 		if (preg_match("/^.:$/", $ccdir, $regs))
 			continue; // Si chemin Windows incomplet, on poursuit par rep suivant
+
+
 
 
 
@@ -3715,15 +3659,15 @@ function get_htmloutput_mesg($mesgstring = '', $mesgarray = '', $style = 'ok', $
 				break;
 		}
 		?><script>
-			$(document).ready(function() {
-				notify('<?php echo dol_escape_js($row->title); ?>', '<?php echo dol_escape_js($out); ?>', {
-					autoClose: true,
-					delay: 500,
-					closeDelay: <?php echo $closeDelay; ?>,
-					classes: ["<?php echo $color; ?>"],
-					icon: '<?php echo $icon; ?>'
-				});
-			});
+					$(document).ready(function() {
+						notify('<?php echo dol_escape_js($row->title); ?>', '<?php echo dol_escape_js($out); ?>', {
+							autoClose: true,
+							delay: 500,
+							closeDelay: <?php echo $closeDelay; ?>,
+							classes: ["<?php echo $color; ?>"],
+							icon: '<?php echo $icon; ?>'
+						});
+					});
 		</script><?php
 	}
 	return $return;

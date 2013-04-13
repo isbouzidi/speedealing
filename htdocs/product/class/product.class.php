@@ -783,6 +783,7 @@ class Product extends nosqlDocument {
 
 
 
+
 				
 // Ne pas mettre de quote sur les numeriques decimaux.
 			// Ceci provoque des stockages avec arrondis en base au lieu des valeurs exactes.
@@ -2688,9 +2689,9 @@ class Product extends nosqlDocument {
 				}
 
 				$price_level = $record['price_level'];
-								
+
 				// Price TMS is the same	
-				if(strtotime($record['tms']) <= strtotime($product->price->$price_level->tms)) {
+				if (strtotime($record['tms']) <= strtotime($product->price->$price_level->tms)) {
 					continue;
 				}
 
@@ -2702,18 +2703,19 @@ class Product extends nosqlDocument {
 					if (isset($product->fk_extrafields->fields->$key->settype)) {
 						switch ($product->fk_extrafields->fields->$key->settype) {
 							case "int" :
-								$price->$key=intval($record[$key]);
+								$price->$key = intval($record[$key]);
 								settype($price->$key, $product->fk_extrafields->fields->$key->settype);
 								break;
 							case "float" :
-								$price->$key=floatval(str_replace(",", ".",$record[$key]));
+								$price->$key = floatval(str_replace(",", ".", $record[$key]));
 								settype($price->$key, $product->fk_extrafields->fields->$key->settype);
 								break;
 							case "date" :
-								$price->$key=date("c",strtotime($record[$key]));
+								$price->$key = date("c", strtotime($record[$key]));
 								break;
 						}
-					} else
+					}
+					else
 						$price->$key = $record[$key];
 				}
 
@@ -2728,7 +2730,7 @@ class Product extends nosqlDocument {
 
 				$price->price_level = $price_level;
 				$product->history[] = clone $price;
-				
+
 				//print_r($product);
 				//exit;
 				$result = $product->record();

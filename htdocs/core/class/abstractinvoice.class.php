@@ -154,14 +154,11 @@ class AbstractInvoice extends nosqlDocument {
 				$url = 'facture/fiche.php';
 				break;
 		}
-
+		
 		//print start_box(, "twelve", $object->fk_extrafields->ico, false);
 		//print show_title($title);
 		$head = $this->datatablesEditLine("listlines", $langs->trans("Lines"));
 		print start_box($title, "icon-bag", $head);
-
-		//print '<fieldset class="fieldset white-bg">';
-		//print '<legend class="anthracite large"><div class="no-margin-bottom left-icon icon-bag">' . $title . '</div></legend>';
 
 		$i = 0;
 		print '<table class="display dt_act" id="listlines" >';
@@ -273,7 +270,6 @@ class AbstractInvoice extends nosqlDocument {
 		$obj->aoColumns[$i]->sDefaultContent = "";
 
 		$obj->aoColumns[$i]->fnRender = 'function(obj) {
-
 	var ar = [];
 	ar[ar.length] = "<a href=\"\"";
 	ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";

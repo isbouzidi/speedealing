@@ -1,4 +1,5 @@
 <?php
+
 /* Copyright (C) 2003-2004 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2011 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2004      Eric Seigne          <eric.seigne@ryxeo.com>
@@ -27,128 +28,122 @@
  *  \brief			Fichier contenant la classe mere de generation des commandes en PDF
  *  				et la classe mere de numerotation des commandes
  */
-
-require_once DOL_DOCUMENT_ROOT.'/core/class/commondocgenerator.class.php';
-require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';	// requis car utilise par les classes qui heritent
-require_once DOL_DOCUMENT_ROOT.'/core/class/discount.class.php';
-
+require_once DOL_DOCUMENT_ROOT . '/core/class/commondocgenerator.class.php';
+require_once DOL_DOCUMENT_ROOT . '/compta/bank/class/account.class.php'; // requis car utilise par les classes qui heritent
+require_once DOL_DOCUMENT_ROOT . '/core/class/discount.class.php';
 
 /**
- *	Classe mere des modeles de commandes
+ * 	Classe mere des modeles de commandes
  */
-abstract class ModelePDFCommandes extends CommonDocGenerator
-{
-	var $error='';
+abstract class ModelePDFCommandes extends CommonDocGenerator {
+
+	var $error = '';
 
 	/**
 	 *  Return list of active generation modules
 	 *
-     *  @param	DoliDB	$db     			Database handler
-     *  @param  string	$maxfilenamelength  Max length of value to show
-     *  @return	array						List of templates
+	 *  @param	DoliDB	$db     			Database handler
+	 *  @param  string	$maxfilenamelength  Max length of value to show
+	 *  @return	array						List of templates
 	 */
-	static function liste_modeles($db,$maxfilenamelength=0)
-	{
+	static function liste_modeles($db, $maxfilenamelength = 0) {
 		global $conf;
 
-		$type='order';
-		$liste=array();
-		
+		$type = 'order';
+		$liste = array();
+
 		$commande = new Commande($db);
-		$liste = $commande->fk_extrafields->models;
+		if (count($commande->fk_extrafields->models))
+			foreach ($commande->fk_extrafields->models as $aRow)
+				$liste[$aRow] = $aRow;
 
 		//include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 		//$liste=getListOfModels($db,$type,$maxfilenamelength);
 
 		return $liste;
 	}
+
 }
-
-
 
 /**
  *  \class      ModeleNumRefCommandes
  *  \brief      Classe mere des modeles de numerotation des references de commandes
  */
+abstract class ModeleNumRefCommandes {
 
-abstract class ModeleNumRefCommandes
-{
-	var $error='';
+	var $error = '';
 
 	/**
-	 *	Return if a module can be used or not
+	 * 	Return if a module can be used or not
 	 *
-	 *	@return		boolean     true if module can be used
+	 * 	@return		boolean     true if module can be used
 	 */
-	function isEnabled()
-	{
+	function isEnabled() {
 		return true;
 	}
 
 	/**
-	 *	Renvoie la description par defaut du modele de numerotation
+	 * 	Renvoie la description par defaut du modele de numerotation
 	 *
-	 *	@return     string      Texte descripif
+	 * 	@return     string      Texte descripif
 	 */
-	function info()
-	{
+	function info() {
 		global $langs;
 		$langs->load("orders");
 		return $langs->trans("NoDescription");
 	}
 
 	/**
-	 *	Renvoie un exemple de numerotation
+	 * 	Renvoie un exemple de numerotation
 	 *
-	 *	@return     string      Example
+	 * 	@return     string      Example
 	 */
-	function getExample()
-	{
+	function getExample() {
 		global $langs;
 		$langs->load("orders");
 		return $langs->trans("NoExample");
 	}
 
 	/**
-	 *	Test si les numeros deja en vigueur dans la base ne provoquent pas de conflits qui empecheraient cette numerotation de fonctionner.
+	 * 	Test si les numeros deja en vigueur dans la base ne provoquent pas de conflits qui empecheraient cette numerotation de fonctionner.
 	 *
-	 *	@return     boolean     false si conflit, true si ok
+	 * 	@return     boolean     false si conflit, true si ok
 	 */
-	function canBeActivated()
-	{
+	function canBeActivated() {
 		return true;
 	}
 
 	/**
-	 *	Renvoie prochaine valeur attribuee
+	 * 	Renvoie prochaine valeur attribuee
 	 *
-	 *	@param	Societe		$objsoc     Object thirdparty
-	 *	@param	Object		$object		Object we need next value for
-	 *	@return	string      Valeur
+	 * 	@param	Societe		$objsoc     Object thirdparty
+	 * 	@param	Object		$object		Object we need next value for
+	 * 	@return	string      Valeur
 	 */
-	function getNextValue($objsoc,$object)
-	{
+	function getNextValue($objsoc, $object) {
 		global $langs;
 		return $langs->trans("NotAvailable");
 	}
 
 	/**
-	 *	Renvoie version du module numerotation
+	 * 	Renvoie version du module numerotation
 	 *
-	 *	@return     string      Valeur
+	 * 	@return     string      Valeur
 	 */
-	function getVersion()
-	{
+	function getVersion() {
 		global $langs;
 		$langs->load("admin");
 
-		if ($this->version == 'development') return $langs->trans("VersionDevelopment");
-		if ($this->version == 'experimental') return $langs->trans("VersionExperimental");
-		if ($this->version == 'dolibarr') return DOL_VERSION;
+		if ($this->version == 'development')
+			return $langs->trans("VersionDevelopment");
+		if ($this->version == 'experimental')
+			return $langs->trans("VersionExperimental");
+		if ($this->version == 'dolibarr')
+			return DOL_VERSION;
 		return $langs->trans("NotAvailable");
 	}
-}
 
+}
 
 /**
  *  Create a document onto disk accordign to template module.
@@ -162,75 +157,67 @@ abstract class ModeleNumRefCommandes
  *  @param      int			$hideref        Hide ref
  *  @return     int         				0 if KO, 1 if OK
  */
-function commande_pdf_create($db, $object, $modele, $outputlangs, $hidedetails=0, $hidedesc=0, $hideref=0)
-{
-	global $conf,$user,$langs;
+function commande_pdf_create($db, $object, $modele, $outputlangs, $hidedetails = 0, $hidedesc = 0, $hideref = 0) {
+	global $conf, $user, $langs;
 	$langs->load("orders");
 
-	$error=0;
+	$error = 0;
 
-	$srctemplatepath='';
+	$srctemplatepath = '';
 
 	// Positionne le modele sur le nom du modele a utiliser
-	if (! dol_strlen($modele))
-	{
-	    if (! empty($conf->global->COMMANDE_ADDON_PDF))
-	    {
-	        $modele = $conf->global->COMMANDE_ADDON_PDF;
-	    }
-	    else
-	    {
-	        $modele = 'einstein';
-	    }
+	if (!dol_strlen($modele)) {
+		if (!empty($conf->global->COMMANDE_ADDON_PDF)) {
+			$modele = $conf->global->COMMANDE_ADDON_PDF;
+		} else {
+			$modele = 'einstein';
+		}
 	}
 
-    // If selected modele is a filename template (then $modele="modelname:filename")
-	$tmp=explode(':',$modele,2);
-    if (! empty($tmp[1]))
-    {
-        $modele=$tmp[0];
-        $srctemplatepath=$tmp[1];
-    }
+	// If selected modele is a filename template (then $modele="modelname:filename")
+	$tmp = explode(':', $modele, 2);
+	if (!empty($tmp[1])) {
+		$modele = $tmp[0];
+		$srctemplatepath = $tmp[1];
+	}
 
 	// Search template files
-	$file=''; $classname=''; $filefound=0;
-	$dirmodels=array('/commande/');
-	if (is_array($conf->modules_parts['models'])) $dirmodels=array_merge($dirmodels,$conf->modules_parts['models']);
-	foreach($dirmodels as $reldir)
-	{
-    	foreach(array('doc','pdf') as $prefix)
-    	{
-    	    $file = $prefix."_".$modele.".modules.php";
+	$file = '';
+	$classname = '';
+	$filefound = 0;
+	$dirmodels = array('/commande/');
+	if (is_array($conf->modules_parts['models']))
+		$dirmodels = array_merge($dirmodels, $conf->modules_parts['models']);
+	foreach ($dirmodels as $reldir) {
+		foreach (array('doc', 'pdf') as $prefix) {
+			$file = $prefix . "_" . $modele . ".modules.php";
 
-    		// On verifie l'emplacement du modele
-	        $file=dol_buildpath($reldir."core/modules/commande/doc/".$file,0);
-    		if (file_exists($file))
-    		{
-    			$filefound=1;
-    			$classname=$prefix.'_'.$modele;
-    			break;
-    		}
-    	}
-    	if ($filefound) break;
-    }
+			// On verifie l'emplacement du modele
+			$file = dol_buildpath($reldir . "core/modules/commande/doc/" . $file, 0);
+			if (file_exists($file)) {
+				$filefound = 1;
+				$classname = $prefix . '_' . $modele;
+				break;
+			}
+		}
+		if ($filefound)
+			break;
+	}
 
 	// Charge le modele
-	if ($filefound)
-	{
+	if ($filefound) {
 		require_once $file;
 
 		$obj = new $classname($db);
 		//$obj->message = $message;
-
 		// We save charset_output to restore it because write_file can change it if needed for
 		// output format that does not support UTF8.
-		$sav_charset_output=$outputlangs->charset_output;
-		if ($obj->write_file($object, $outputlangs, $srctemplatepath, $hidedetails, $hidedesc, $hideref) > 0)
-		{
-			$outputlangs->charset_output=$sav_charset_output;
+		$sav_charset_output = $outputlangs->charset_output;
+		if ($obj->write_file($object, $outputlangs, $srctemplatepath, $hidedetails, $hidedesc, $hideref) > 0) {
+			$outputlangs->charset_output = $sav_charset_output;
 
 			// We delete old preview
-			require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+			require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
 			dol_delete_preview($object);
 
 			// Success in building document. We build meta file.
@@ -238,25 +225,24 @@ function commande_pdf_create($db, $object, $modele, $outputlangs, $hidedetails=0
 
 			// Appel des triggers
 			include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-			$interface=new Interfaces($db);
-			$result=$interface->run_triggers('ORDER_BUILDDOC',$object,$user,$langs,$conf);
-			if ($result < 0) { $error++; $this->errors=$interface->errors; }
+			$interface = new Interfaces($db);
+			$result = $interface->run_triggers('ORDER_BUILDDOC', $object, $user, $langs, $conf);
+			if ($result < 0) {
+				$error++;
+				$this->errors = $interface->errors;
+			}
 			// Fin appel triggers
 
 			return 1;
-		}
-		else
-		{
-			$outputlangs->charset_output=$sav_charset_output;
-			dol_print_error($db,"order_pdf_create Error: ".$obj->error);
+		} else {
+			$outputlangs->charset_output = $sav_charset_output;
+			dol_print_error($db, "order_pdf_create Error: " . $obj->error);
 			return -1;
 		}
-
-	}
-	else
-	{
-		dol_print_error('',$langs->trans("Error")." ".$langs->trans("ErrorFileDoesNotExists",$file));
+	} else {
+		dol_print_error('', $langs->trans("Error") . " " . $langs->trans("ErrorFileDoesNotExists", $file));
 		return -1;
 	}
 }
+
 ?>

@@ -615,7 +615,8 @@ class pdf_einstein extends ModelePDFCommandes
 		$pdf->MultiCell($col2x-$col1x, $tab2_hl, $outputlangs->transnoentities("TotalHT"), 0, 'L', 1);
 
 		$pdf->SetXY($col2x, $tab2_top + 0);
-		$pdf->MultiCell($largcol2, $tab2_hl, price($object->total_ht + (! empty($object->remise)?$object->remise:0)), 0, 'R', 1);
+		$total_ht = price2num($object->total_ht + (! empty($object->remise)?$object->remise:0), 'MT');
+		$pdf->MultiCell($largcol2, $tab2_hl, price($total_ht), 0, 'R', 1);
 
 		// Show VAT by rates and total
 		$pdf->SetFillColor(248,248,248);
@@ -650,6 +651,7 @@ class pdf_einstein extends ModelePDFCommandes
 						$pdf->MultiCell($col2x-$col1x, $tab2_hl, $totalvat, 0, 'L', 1);
 
 						$pdf->SetXY($col2x, $tab2_top + $tab2_hl * $index);
+						$tvaval = price2num($tvaval, 'MT');
 						$pdf->MultiCell($largcol2, $tab2_hl, price($tvaval), 0, 'R', 1);
 					}
 				}
@@ -660,7 +662,8 @@ class pdf_einstein extends ModelePDFCommandes
 					$pdf->MultiCell($col2x-$col1x, $tab2_hl, $outputlangs->transnoentities("TotalVAT"), 0, 'L', 1);
 
 					$pdf->SetXY($col2x, $tab2_top + $tab2_hl * $index);
-					$pdf->MultiCell($largcol2, $tab2_hl, price($object->total_tva), 0, 'R', 1);
+					$total_tva = price2num($object->total_tva, 'MT');
+					$pdf->MultiCell($largcol2, $tab2_hl, price($total_tva), 0, 'R', 1);
 
 					// Total LocalTax1
 					if (! empty($conf->global->FACTURE_LOCAL_TAX1_OPTION) && $conf->global->FACTURE_LOCAL_TAX1_OPTION=='localtax1on' && $object->total_localtax1>0)
@@ -749,7 +752,8 @@ class pdf_einstein extends ModelePDFCommandes
 				$pdf->MultiCell($col2x-$col1x, $tab2_hl, $outputlangs->transnoentities("TotalTTC"), $useborder, 'L', 1);
 
 				$pdf->SetXY($col2x, $tab2_top + $tab2_hl * $index);
-				$pdf->MultiCell($largcol2, $tab2_hl, price($object->total_ttc), $useborder, 'R', 1);
+				$total_ttc = price2num($object->total_ttc, 'MT');
+				$pdf->MultiCell($largcol2, $tab2_hl, price($total_ttc), $useborder, 'R', 1);
 			}
 		}
 

@@ -203,6 +203,7 @@ if (!defined('NOTOKENRENEWAL')) {
 // Check validity of token, only if option enabled (this option breaks some features sometimes)
 if (isset($_POST['token']) && isset($_SESSION['token'])) {
 	if (($_POST['token'] != $_SESSION['token'])) {
+		error_log("Token ERROR : DELETED POST");
 		unset($_POST);
 	}
 }
