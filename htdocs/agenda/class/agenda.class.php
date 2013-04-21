@@ -923,7 +923,7 @@ class Agenda extends nosqlDocument {
 		$langs->load("agenda");
 
 		$titre = $langs->trans("Actions");
-		
+
 		$h = 0;
 		if ($user->rights->agenda->myactions->write || $user->rights->agenda->allactions->write) {
 			$head[$h] = new stdClass();
@@ -1038,7 +1038,7 @@ class Agenda extends nosqlDocument {
 			<?php
 		}*/
 		print end_box();
-		
+
 	}
 
 	/**
@@ -1081,7 +1081,7 @@ class Agenda extends nosqlDocument {
 		$firstDayTimestamp = dol_mktime(-1, -1, -1, date('n', $date), 1, date('Y', $date));
 		$lastDayTimestamp = dol_mktime(23, 59, 59, date('n', $date), $nbDaysInMonth, date('Y', $date));
 		$todayTimestamp = dol_mktime(-1, -1, -1, date('n'), date('j'), date('Y'));
-		$firstDayOfMonth = date('w', $firstDayTimestamp);
+		$firstDayOfMonth = date('W', $firstDayTimestamp);
 
 		$object = new Agenda($db);
 		$events = $object->getView("listMyTasks", array("startkey" => array($user->id, $firstDayTimestamp), "endkey" => array($user->id, $lastDayTimestamp)));
@@ -1098,13 +1098,13 @@ class Agenda extends nosqlDocument {
 		// Days names
 		print '<thead>';
 		print '<tr>';
-		print '<th scope="col">Sun</th>';
-		print '<th scope="col">Mon</th>';
-		print '<th scope="col">Tue</th>';
-		print '<th scope="col">Wed</th>';
-		print '<th scope="col">Thu</th>';
-		print '<th scope="col">Fri</th>';
-		print '<th scope="col">Sat</th>';
+		print '<th scope="col">' . $langs->trans('SundayMin') . '</th>';
+		print '<th scope="col">' . $langs->trans('MondayMin') . '</th>';
+		print '<th scope="col">' . $langs->trans('TuesdayMin') . '</th>';
+		print '<th scope="col">' . $langs->trans('WednesdayMin') . '</th>';
+		print '<th scope="col">' . $langs->trans('ThursdayMin') . '</th>';
+		print '<th scope="col">' . $langs->trans('FridayMin') . '</th>';
+		print '<th scope="col">' . $langs->trans('SaturdayMin') . '</th>';
 		print '</tr>';
 		print '</thead>';
 		print '<tbody>';

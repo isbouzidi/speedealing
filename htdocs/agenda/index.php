@@ -133,7 +133,7 @@ $object = new Agenda($db);
 /*
  * View
  */
-
+$now = dol_now();
 
 llxHeader('', $langs->trans("Calendar"));
 
@@ -142,11 +142,11 @@ print '<div class="with-padding">';
 print '<div class="columns">';
 
 print '<div class="twelve-columns">';
-$object->print_week(dol_now());
+$object->print_week($now);
 print '</div>';
 
 print '<div class="twelve-columns">';
-$object->print_calendar(dol_now());
+$object->print_calendar($now);
 print '</div>';
 
 print '</div></div>';
