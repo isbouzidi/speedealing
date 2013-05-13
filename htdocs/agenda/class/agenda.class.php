@@ -1077,10 +1077,10 @@ class Agenda extends nosqlDocument {
 
 		$date = strtotime($date);
 		$nbDaysInMonth = date('t', $date);
-		$firstDayTimestamp = dol_mktime(-1, -1, -1, date('n', $date), 1, date('Y', $date));
+		$firstDayTimestamp = mktime(-1, -1, -1, date('n', $date), 1, date('Y', $date));
 		$lastDayTimestamp = dol_mktime(23, 59, 59, date('n', $date), $nbDaysInMonth, date('Y', $date));
 		$todayTimestamp = dol_mktime(-1, -1, -1, date('n'), date('j'), date('Y'));
-		$firstDayOfMonth = date('W', $firstDayTimestamp);
+		$firstDayOfMonth = date('w', $firstDayTimestamp);
 
 		$object = new Agenda($db);
 		$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
@@ -1097,13 +1097,13 @@ class Agenda extends nosqlDocument {
 		// Days names
 		print '<thead>';
 		print '<tr>';
-		print '<th scope="col">' . $langs->trans('SundayMin') . '</th>';
 		print '<th scope="col">' . $langs->trans('MondayMin') . '</th>';
 		print '<th scope="col">' . $langs->trans('TuesdayMin') . '</th>';
 		print '<th scope="col">' . $langs->trans('WednesdayMin') . '</th>';
 		print '<th scope="col">' . $langs->trans('ThursdayMin') . '</th>';
 		print '<th scope="col">' . $langs->trans('FridayMin') . '</th>';
 		print '<th scope="col">' . $langs->trans('SaturdayMin') . '</th>';
+		print '<th scope="col">' . $langs->trans('SundayMin') . '</th>';
 		print '</tr>';
 		print '</thead>';
 		print '<tbody>';
@@ -1162,7 +1162,7 @@ class Agenda extends nosqlDocument {
 		}
 
 		$object = new Agenda($db);
-		$events = $object->getView("listMyTasks", array("startkey" => array($user->id, $timestamps[0]['start']), "endkey" => array($user->id, $timestamps[6]['end'])));
+		$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
 
 		$styles = array(
 			0 => 'left: 0%; right: 85.7143%; margin-left: -1px;',
@@ -1175,13 +1175,13 @@ class Agenda extends nosqlDocument {
 		);
 
 		$days = array(
-			0 => 'Sunday',
-			1 => 'Monday',
-			2 => 'Tuesday',
-			3 => 'Wednesday',
-			4 => 'Thursday',
-			5 => 'Friday',
-			6 => 'Saturday'
+			6 => 'Sunday',
+			0 => 'Monday',
+			1 => 'Tuesday',
+			2 => 'Wednesday',
+			3 => 'Thursday',
+			4 => 'Friday',
+			5 => 'Saturday'
 		);
 
 		print '<div class="agenda with-header auto-scroll scrolling-agenda">';
