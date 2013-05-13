@@ -32,16 +32,6 @@
 	.tar{text-align:right}
 	.taj{text-align:justify}
 
-	a {color:#21759b}
-	a:hover {color:#21759b;}
-	a:active,a:focus {color: #21759b}
-	a.inv {text-decoration:underline}
-	a.inv:hover {text-decoration:none}
-	.external_link {background: url(img/external_link.png) no-repeat right center;padding-right:12px}
-	a.button {text-decoration:none}
-	.clear_form {vertical-align:middle;margin:0 5px}
-	*::-moz-selection {background: none repeat scroll 0 0 #367aa9;color: #fff;text-shadow: none}
-
 	/* colors */
 		.m_color {color:#fe6001 !important}
 		.s_color {color:#8c8c8c !important}

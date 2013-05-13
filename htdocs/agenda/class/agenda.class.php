@@ -47,14 +47,14 @@ class Agenda extends nosqlDocument {
 	var $percentage; // Percentage
 	var $location;   // Location
 	var $priority;   // Free text ('' By default)
-	var $notes;	// Description
+	var $notes; // Description
 	var $usertodo;  // Object user that must do action
 	var $userdone;   // Object user that did action
 	var $societe;  // Company linked to action (optionnal)
 	var $contact;  // Contact linked tot action (optionnal)
 	var $fk_project; // Id of project (optionnal)
 	var $fk_lead; // Id of lead (optionnal)
-	var $fk_task;	// Id of mother task (optionnal)
+	var $fk_task; // Id of mother task (optionnal)
 	// Properties for links to other objects
 	var $fk_element; // Id of record
 	var $elementtype;   // Type of record. This if property ->element of object linked to.
@@ -935,13 +935,13 @@ class Agenda extends nosqlDocument {
 		$head[$h] = new stdClass();
 		$head[$h]->title = $langs->trans("StatusActionToDo");
 		$head[$h]->id = "TODO";
-		$head[$h]->onclick="var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('". DOL_URL_ROOT ."/core/ajax/listdatatables.php?json=actionsTODO&class=Agenda&key=".$id."'); return false;";
+		$head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=Agenda&key=" . $id . "'); return false;";
 		$head[$h]->icon = "icon-clock";
 		$h++;
 		$head[$h] = new stdClass();
 		$head[$h]->title = $langs->trans("StatusActionDone");
 		$head[$h]->id = "DONE";
-		$head[$h]->onclick="var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('". DOL_URL_ROOT ."/core/ajax/listdatatables.php?json=actionsDONE&class=Agenda&key=".$id."'); return false;";
+		$head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsDONE&class=Agenda&key=" . $id . "'); return false;";
 		$head[$h]->icon = "icon-calendar";
 		$h++;
 
@@ -1027,18 +1027,17 @@ class Agenda extends nosqlDocument {
 		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "actions_datatable", true);
 
-		/*foreach ($head as $aRow) {
-			?>
-			<script>
-				$(document).ready(function() {
-					var js = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax(\"<?php echo DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actions" . $aRow->id . "&class=" . get_class($this) . "&key=" . $id; ?>\")";
-					$("#<?php echo $aRow->id; ?>").attr("onclick", js);
-				});
-			</script>
-			<?php
-		}*/
+		/* foreach ($head as $aRow) {
+		  ?>
+		  <script>
+		  $(document).ready(function() {
+		  var js = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax(\"<?php echo DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actions" . $aRow->id . "&class=" . get_class($this) . "&key=" . $id; ?>\")";
+		  $("#<?php echo $aRow->id; ?>").attr("onclick", js);
+		  });
+		  </script>
+		  <?php
+		  } */
 		print end_box();
-
 	}
 
 	/**
@@ -1084,9 +1083,9 @@ class Agenda extends nosqlDocument {
 		$firstDayOfMonth = date('W', $firstDayTimestamp);
 
 		$object = new Agenda($db);
-		$events = $object->getView("listMyTasks", array("startkey" => array($user->id, $firstDayTimestamp), "endkey" => array($user->id, $lastDayTimestamp)));
+		$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
 
-		print '<table class="calendar fluid large-margin-bottom with-events">';
+		print '<table class="calendar fluid with-events large-margin-bottom with-events">';
 
 		// Month an scroll arrows
 		print '<caption>';
@@ -1116,7 +1115,7 @@ class Agenda extends nosqlDocument {
 			print '<td class="prev-month"><span class="cal-day">' . date('d', $previousTimestamp) . '</span></td>';
 		}
 
-		$cursor = 0;
+		//$cursor = 0;
 		for ($i = 1; $i <= $nbDaysInMonth; $i++, $calendarCounter++) {
 			$dayTimestamp = dol_mktime(-1, -1, -1, date('n', $date), $i, date('Y', $date));
 			if ($calendarCounter > 1 && ($calendarCounter - 1) % 7 == 0)
@@ -1124,16 +1123,13 @@ class Agenda extends nosqlDocument {
 			print '<td class="' . ((date('w', $dayTimestamp) == 0 || date('w', $dayTimestamp) == 6) ? 'week-end ' : '') . ' ' . (($dayTimestamp == $todayTimestamp) ? 'today ' : '') . '"><span class="cal-day">' . $i . '</span>';
 			print '<ul class="cal-events">';
 
-			if (!empty($events->rows[$cursor])) {
-				for ($j = 0; $j < count($events->rows); $j++) {
-					if ($events->rows[$cursor]->key[1] >= $dayTimestamp && $events->rows[$cursor]->key[1] < $dayTimestamp + 3600 * 24) {
-						print '<li><a href="agenda/fiche.php?id=' . $events->rows[$cursor]->id . '" >' . "[" . $events->rows[$cursor]->value->societe->name . "] " . $events->rows[$cursor]->value->label . '</a></li>';
-						$cursor++;
-					}
-					else
-						break;
+			//if (!empty($events->rows[$cursor])) {
+			for ($j = 0; $j < count($events->rows); $j++) {
+				if ($events->rows[$j]->key[3] == $i) {
+					print '<li ' . ($events->rows[$j]->value->type_code == "AC_RDV" ? 'class="important"' : "") . '><a href="agenda/fiche.php?id=' . $events->rows[$j]->id . '" >' . "[" . $events->rows[$j]->value->societe->name . "] " . $events->rows[$j]->value->label . '</a></li>';
 				}
 			}
+			//}
 
 			print '</ul>';
 			print '</td>';
