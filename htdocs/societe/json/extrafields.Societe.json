@@ -376,6 +376,10 @@
            "type": "textarea",
            "enable": true
        },
+	   "public_notes": {
+           "type": "textarea",
+           "enable": true
+       },
        "Action": {
            "type": "action",
            "enable": true,
