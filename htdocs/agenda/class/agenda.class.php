@@ -1231,7 +1231,7 @@ class Agenda extends nosqlDocument {
 					else
 						$hourEnd = date('G', strtotime($events->rows[$j]->value->datef) + 1);
 
-					print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ($events->rows[$j]->value->type_code == 'AC_RDV' ? ' red-gradient' : '') . ' href="agenda/fiche.php?id=' . $events->rows[$j]->id . '">';
+					print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ($events->rows[$j]->value->type_code == 'AC_RDV' ? ' red-gradient' : '') . '" href="agenda/fiche.php?id=' . $events->rows[$j]->id . '">';
 
 					print '<time>' . $hourStart . 'h - ' . $hourEnd . 'h</time>';
 					if (isset($events->rows[$j]->value->societe->name))
