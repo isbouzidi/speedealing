@@ -1150,19 +1150,22 @@ class Agenda extends nosqlDocument {
 	function print_week($date) {
 		global $db, $langs, $user;
 
-		$timestamps = array();
+		//$timestamps = array();
 		$date = strtotime($date);
-		$dayOfWeek = date('w', $date);
-		for ($i = 0, $d = -$dayOfWeek; $i < 7; $i++, $d++) {
-			$tmpTimestamp = strtotime($d . " day", $date);
-			$timestamps[$i] = array(
-				'start' => dol_mktime(0, 0, 0, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
-				'end' => dol_mktime(23, 59, 59, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
-			);
-		}
+		//$dayOfWeek = date('w', $date);
+		/* for ($i = 0, $d = -$dayOfWeek; $i < 7; $i++, $d++) {
+		  $tmpTimestamp = strtotime($d . " day", $date);
+		  $timestamps[$i] = array(
+		  'start' => mktime(0, 0, 0, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
+		  'end' => mktime(23, 59, 59, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
+		  );
+		  } */
+
+		//print date('j', strtotime(-date('w', $date)+1 . " day", $date));
 
 		$object = new Agenda($db);
 		$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+		//print_r($events);
 		$styles = array(
 			0 => 'left: 0%; right: 85.7143%; margin-left: -1px;',
 			1 => 'left: 14.2857%; right: 71.4286%; margin-left: 0px;',
@@ -1215,28 +1218,31 @@ class Agenda extends nosqlDocument {
 			print $langs->trans($days[$i]);
 			print '</div>';
 
-			if (!empty($events->rows[$cursor])) {
-				for ($j = 0; $j < count($events->rows); $j++) {
-					if ($events->rows[$cursor]->key[1] >= $timestamps[$i]['start'] && $events->rows[$cursor]->key[1] < $timestamps[$i]['end']) {
-						$dateStart = $events->rows[$cursor]->value->datep;
-						$dateEnd = $events->rows[$cursor]->value->datef;
-						if ($events->rows[$cursor]->value->type_code != 'AC_RDV')
-							$dateEnd = $dateStart + $events->rows[$cursor]->value->durationp;
-						$hourStart = date('G', $dateStart);
-						$hourEnd = date('G', $dateEnd);
-
-						print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ' anthracite-gradient" href="agenda/fiche.php?id=' . $events->rows[$cursor]->id . '">';
-						print '<time>' . $hourStart . 'h - ' . $hourEnd . 'h</time>';
-						if (isset($events->rows[$cursor]->value->societe->name))
-							print "[" . $events->rows[$cursor]->value->societe->name . "] ";
-						print $events->rows[$cursor]->value->label;
-						print '</a>';
-						$cursor++;
-					}
+			//if (!empty($events->rows[$cursor])) {
+			for ($j = 0; $j < count($events->rows); $j++) {
+				if ($events->rows[$j]->key[3] == date('j', strtotime(-date('w', $date) + 1 . " day", $date)) + $i) {
+					//$dateStart = $events->rows[$j]->value->datep;
+					//$dateEnd = $events->rows[$j]->value->datef;
+					//if ($events->rows[$j]->value->type_code != 'AC_RDV')
+					//	$dateEnd = $dateStart + $events->rows[$j]->value->durationp;
+					$hourStart = $events->rows[$j]->key[4];
+					if ($events->rows[$j]->value->type_code != 'AC_RDV')
+						$hourEnd = $events->rows[$j]->key[4] + $events->rows[$j]->value->durationp / 3600;
 					else
-						break;
+						$hourEnd = date('G', strtotime($events->rows[$j]->value->datef) + 1);
+
+					print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ($events->rows[$j]->value->type_code == 'AC_RDV' ? ' red-gradient' : '') . ' href="agenda/fiche.php?id=' . $events->rows[$j]->id . '">';
+
+					print '<time>' . $hourStart . 'h - ' . $hourEnd . 'h</time>';
+					if (isset($events->rows[$j]->value->societe->name))
+						print "[" . $events->rows[$j]->value->societe->name . "] ";
+					print $events->rows[$j]->value->label;
+					print '</a>';
 				}
+				//else
+				//	break;
 			}
+			//}
 
 			print '</div>';
 		}
