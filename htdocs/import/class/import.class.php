@@ -106,7 +106,7 @@ class Import extends nosqlDocument {
 			if (isset($object->fk_extrafields))
 				foreach ($object->fk_extrafields->fields as $idx => $row) {
 					if ($row->enable && $row->type != "uploadfile")
-						if ($row->class) {
+						if ($row->class && !$row->getkey) {
 							$this->array_import_fields[$i][$idx . "->name"] = $idx . "->name";
 							$this->array_import_fields[$i][$idx . "->id"] = $idx . "->id";
 						}

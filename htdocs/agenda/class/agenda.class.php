@@ -1163,7 +1163,6 @@ class Agenda extends nosqlDocument {
 
 		$object = new Agenda($db);
 		$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
-
 		$styles = array(
 			0 => 'left: 0%; right: 85.7143%; margin-left: -1px;',
 			1 => 'left: 14.2857%; right: 71.4286%; margin-left: 0px;',
@@ -1204,7 +1203,7 @@ class Agenda extends nosqlDocument {
 
 		print '<div class="agenda-wrapper">';
 
-		$cursor = 0;
+		//$cursor = 0;
 		for ($i = 0; $i < 7; $i++) {
 			$extraClass = '';
 			if ($i == 0)
