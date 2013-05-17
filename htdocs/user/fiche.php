@@ -163,12 +163,27 @@ if ((($action == 'add' && $canadduser) || ($action == 'update' && $canedituser))
 	if (!$_POST["nom"]) {
 		setEventMessage($langs->trans("NameNotDefined"), 'errors');
 		$error++;
-		$action = "create"; // Go back to create page
+		if ($action == 'add')
+			$action = "create"; // Go back to create page
+		else
+			$action = "edit";
 	}
 	if (!$_POST["login"]) {
 		setEventMessage($langs->trans("LoginNotDefined"), 'errors');
 		$error++;
-		$action = "create"; // Go back to create page
+		if ($action == 'add')
+			$action = "create"; // Go back to create page
+		else
+			$action = "edit";
+	}
+	if (!isValidEMail($_POST["email"])) {
+		$langs->load("errors");
+		setEventMessage($langs->trans("ErrorBadEMail"), 'errors');
+		$error++;
+		if ($action == 'add')
+			$action = "create"; // Go back to create page
+		else
+			$action = "edit";
 	}
 
 	if (!empty($conf->file->main_limit_users) && $action == 'add') { // If option to limit users is set

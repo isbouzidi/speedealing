@@ -632,9 +632,9 @@ class User extends nosqlDocument {
 
 		// Check parameters
 		/* if (!isValidEMail($this->email)) {
-		  $langs->load("errors");
-		  $this->error = $langs->trans("ErrorBadEMail", $this->email);
-		  return -1;
+			$langs->load("errors");
+			$this->error = $langs->trans("ErrorBadEMail", $this->email);
+			return -1;
 		  } */
 
 		$error = 0;
