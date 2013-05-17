@@ -24,7 +24,9 @@ require_once(DOL_DOCUMENT_ROOT . "/agenda/class/agenda.class.php");
 require_once(DOL_DOCUMENT_ROOT . "/core/lib/date.lib.php");
 require_once(DOL_DOCUMENT_ROOT . "/agenda/lib/agenda.lib.php");
 if ($conf->projet->enabled)
-    require_once(DOL_DOCUMENT_ROOT . "/core/lib/project.lib.php");
+	require_once(DOL_DOCUMENT_ROOT . "/core/lib/project.lib.php");
+
+$date = GETPOST("date", "int");
 
 /*
   if (!isset($conf->global->AGENDA_MAX_EVENTS_DAY_VIEW))
@@ -108,18 +110,18 @@ if ($conf->projet->enabled)
 // Security check
 $socid = GETPOST("socid", "alpha", 1);
 if ($user->societe_id)
-    $socid = $user->societe_id;
+	$socid = $user->societe_id;
 $result = restrictedArea($user, 'agenda', 0, '', 'myactions');
 
 $canedit = 1;
 if (!$user->rights->agenda->myactions->read)
-    accessforbidden();
+	accessforbidden();
 if (!$user->rights->agenda->allactions->read)
-    $canedit = 0;
+	$canedit = 0;
 if (!$user->rights->agenda->allactions->read || $filter == 'mine') {  // If no permission to see all, we show only affected to me
-    $filtera = $user->id;
-    $filtert = $user->id;
-    $filterd = $user->id;
+	$filtera = $user->id;
+	$filtert = $user->id;
+	$filterd = $user->id;
 }
 
 $view = GETPOST('view', 'alpha') ? GETPOST('view', 'alpha') : 'month';
@@ -133,7 +135,10 @@ $object = new Agenda($db);
 /*
  * View
  */
-$now = dol_now();
+if (empty($date))
+	$date = dol_now();
+else
+	$date = date("c", $date);
 
 llxHeader('', $langs->trans("Calendar"));
 
@@ -141,12 +146,12 @@ print_fiche_titre($langs->trans("Calendar"), true);
 print '<div class="with-padding">';
 print '<div class="columns">';
 
-print '<div class="twelve-columns">';
-$object->print_week($now);
-print '</div>';
+//print '<div class="twelve-columns">';
+//$object->print_week($now);
+//print '</div>';
 
 print '<div class="twelve-columns">';
-$object->print_calendar($now);
+$object->print_calendar($date);
 print '</div>';
 
 print '</div></div>';

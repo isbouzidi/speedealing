@@ -23,6 +23,7 @@ define('NOCSRFCHECK', 1); // This is login page. We must be able to go on it fro
 
 require("./main.inc.php");
 require_once(DOL_DOCUMENT_ROOT . "/core/class/html.formother.class.php");
+require_once(DOL_DOCUMENT_ROOT . "/agenda/class/agenda.class.php");
 
 // If not defined, we select menu "home"
 $action = GETPOST('action');
@@ -105,6 +106,15 @@ print '</td>';
 print "</tr>\n";
 print "</table>\n";
 print end_box();
+print column_end();
+
+print column_start("four");
+print column_end();
+
+// print today action
+print column_start("four");
+$agenda = new Agenda($db);
+$agenda->print_week(dol_now());
 print column_end();
 
 

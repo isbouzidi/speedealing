@@ -1078,7 +1078,7 @@ class Agenda extends nosqlDocument {
 		$date = strtotime($date);
 		$nbDaysInMonth = date('t', $date);
 		$firstDayTimestamp = mktime(-1, -1, -1, date('n', $date), 1, date('Y', $date));
-		$lastDayTimestamp = dol_mktime(23, 59, 59, date('n', $date), $nbDaysInMonth, date('Y', $date));
+		$lastDayTimestamp = mktime(23, 59, 59, date('n', $date), $nbDaysInMonth, date('Y', $date));
 		$todayTimestamp = dol_mktime(-1, -1, -1, date('n'), date('j'), date('Y'));
 		$firstDayOfMonth = date('w', $firstDayTimestamp);
 
@@ -1089,8 +1089,8 @@ class Agenda extends nosqlDocument {
 
 		// Month an scroll arrows
 		print '<caption>';
-		print '<span class="cal-prev" >◄</span>';
-		print '<a class="cal-next" href="#">►</a>';
+		print '<a class="cal-prev" href="' . $_SERVER["PHP_SELF"] . '?date=' . mktime(0, 0, 0, date('n', $date) - 1, 1, date('Y', $date)) . '">◄</a>';
+		print '<a class="cal-next" href="' . $_SERVER["PHP_SELF"] . '?date=' . mktime(0, 0, 0, date('n', $date) + 1, 1, date('Y', $date)) . '">►</a>';
 		print $langs->trans(date('F', $date)) . ' ' . date('Y', $date);
 		print '</caption>';
 
@@ -1177,16 +1177,28 @@ class Agenda extends nosqlDocument {
 		);
 
 		$days = array(
-			6 => 'Sunday',
-			0 => 'Monday',
-			1 => 'Tuesday',
-			2 => 'Wednesday',
-			3 => 'Thursday',
-			4 => 'Friday',
-			5 => 'Saturday'
+			0 => 'Sunday',
+			1 => 'Monday',
+			2 => 'Tuesday',
+			3 => 'Wednesday',
+			4 => 'Thursday',
+			5 => 'Friday',
+			6 => 'Saturday'
 		);
 
-		print '<div class="agenda with-header auto-scroll scrolling-agenda">';
+		$first = date('j', $date) - date('j', strtotime(-date('w', $date) . " day", $date));
+
+		print '<div class="block">
+				<div class="block-title">
+					<h3 id="agenda-day">Tuesday</h3>
+					<div class="button-group absolute-right compact">
+						<a href="#" class="button" id="agenda-previous"><span class="icon-left-fat"></span></a>
+						<a href="#" class="button" id="agenda-today">' . $langs->trans("Today") . '</a>
+						<a href="#" class="button" id="agenda-next"><span class="icon-right-fat"></span></a>
+					</div>
+				</div>';
+
+		print '<div class="agenda" id="agenda">';
 		print '<ul class="agenda-time">
 								<li class="from-7 to-8"><span>7 AM</span></li>
 								<li class="from-8 to-9"><span>8 AM</span></li>
@@ -1209,18 +1221,18 @@ class Agenda extends nosqlDocument {
 		//$cursor = 0;
 		for ($i = 0; $i < 7; $i++) {
 			$extraClass = '';
-			if ($i == 0)
-				$extraClass = 'agenda-visible-first';
-			else if ($i == 6)
-				$extraClass = 'agenda-visible-last';
-			print '<div class="agenda-events agenda-day' . ($i + 1) . ' agenda-visible-column ' . $extraClass . '" style="' . $styles[$i] . '">';
+			//if ($i == 0)
+			//	$extraClass = 'agenda-visible-first';
+			//else if ($i == 6)
+			//	$extraClass = 'agenda-visible-last';
+			print '<div class="agenda-events agenda-day' . ($i + 1) . '" style="' . $styles[$i] . '">';
 			print '<div class="agenda-header">';
 			print $langs->trans($days[$i]);
 			print '</div>';
 
 			//if (!empty($events->rows[$cursor])) {
 			for ($j = 0; $j < count($events->rows); $j++) {
-				if ($events->rows[$j]->key[3] == date('j', strtotime(-date('w', $date) + 1 . " day", $date)) + $i) {
+				if ($events->rows[$j]->key[3] == date('j', strtotime(-date('w', $date) . " day", $date)) + $i) {
 					//$dateStart = $events->rows[$j]->value->datep;
 					//$dateEnd = $events->rows[$j]->value->datef;
 					//if ($events->rows[$j]->value->type_code != 'AC_RDV')
@@ -1249,6 +1261,48 @@ class Agenda extends nosqlDocument {
 
 		print '</div>';
 		print '</div>';
+		?>
+		<script>
+			$(document).ready(function() {
+				// Days
+				var daysName = ['<?php echo $langs->trans('Sunday'); ?>', '<?php echo $langs->trans('Monday'); ?>', '<?php echo $langs->trans('Tuesday'); ?>', '<?php echo $langs->trans('Wednesday'); ?>', '<?php echo $langs->trans('Thursday'); ?>', '<?php echo $langs->trans('Friday'); ?>', '<?php echo $langs->trans('Saturday'); ?>'],
+						// Name display
+						agendaDay = $('#agenda-day'),
+						// Agenda scrolling
+						agenda = $('#agenda').scrollAgenda({
+					first: <?php echo $first; ?>,
+					onRangeChange: function(start, end)
+					{
+						if (start != end)
+						{
+							agendaDay.text(daysName[start].substr(0, 3) + ' - ' + daysName[end].substr(0, 3));
+						}
+						else
+						{
+							agendaDay.text(daysName[start]);
+						}
+					}
+				});
+
+		// Remote controls
+				$('#agenda-previous').click(function(event)
+				{
+					event.preventDefault();
+					agenda.scrollAgendaToPrevious();
+				});
+				$('#agenda-today').click(function(event)
+				{
+					event.preventDefault();
+					agenda.scrollAgendaFirstColumn(<?php echo $first; ?>);
+				});
+				$('#agenda-next').click(function(event)
+				{
+					event.preventDefault();
+					agenda.scrollAgendaToNext();
+				});
+			});
+		</script>
+		<?php
 	}
 
 	/*
