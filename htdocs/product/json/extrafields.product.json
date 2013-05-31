@@ -1,6 +1,6 @@
 {
    "_id": "extrafields:Product",
-   "_rev": "82-f4b596e50cc379d26fc1084cfa9f55b7",
+   "_rev": "57-4d362b6fe994b15df4ce2539543574b7",
    "class": "extrafields",
    "ico": "icon-object-product",
    "langs": [
@@ -75,7 +75,8 @@
            "type": "select",
            "enable": true,
            "dict": "dict:fk_country",
-           "default": "substr($langs->defaultlang,3,5)"
+           "default": "substr($langs->defaultlang,3,5)",
+           "sort": true
        },
        "tva_tx": {
            "type": "select",
@@ -250,7 +251,8 @@
            "enable": true
        },
        "tms": {
-           "settype": "date"
+           "settype": "date",
+           "enable": false
        }
    }
 }

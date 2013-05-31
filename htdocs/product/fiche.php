@@ -171,29 +171,27 @@ if (empty($reshook)) {
 			$object->finished = GETPOST('finished');
 			$object->hidden = GETPOST('hidden') == 'yes' ? 1 : 0;
 
-			// Price
+			// ADD BASE Price
 			$obj = new stdClass();
 			$obj->tms = dol_now();
 			$obj->price_base_type = GETPOST('price_base_type');
 			if ($obj->price_base_type == 'TTC')
-				$obj->price_ttc = GETPOST('price');
+				$obj->price_ttc = floatval(GETPOST('price'));
 			else
-				$obj->price = GETPOST('price');
+				$obj->pu_ht = floatval(GETPOST('price'));
 			if ($obj->price_base_type == 'TTC')
-				$obj->price_min_ttc = GETPOST('price_min');
+				$obj->price_min_ttc = floatval(GETPOST('price_min'));
 			else
-				$obj->price_min = GETPOST('price_min');
+				$obj->price_min = floatval(GETPOST('price_min'));
 
-			$obj->tva_tx = str_replace('*', '', GETPOST('tva_tx'));
+			$obj->tva_tx = floatval(str_replace('*', '', GETPOST('tva_tx')));
 			$obj->tva_npr = preg_match('/\*/', GETPOST('tva_tx')) ? 1 : 0;
 
 			// local taxes.
 			$obj->localtax1_tx = get_localtax($obj->tva_tx, 1);
 			$obj->localtax2_tx = get_localtax($obj->tva_tx, 2);
 
-			$obj->fk_user_author = $user->login;
-
-			$object->price = $obj;
+			$object->updatePrice($obj);
 
 			/* // MultiPrix
 			  if (!empty($conf->global->PRODUIT_MULTIPRICES)) {

@@ -190,7 +190,10 @@ class ExtraFields extends nosqlDocument {
 					} catch (Exception $e) {
 						error_log($aRow->dict . " : Not found");
 					}
-					$aRow->values = clone $values->values;
+					if (is_object($values->values))
+						$aRow->values = clone $values->values;
+					else
+						$aRow->values = $values->values;
 				}
 			}
 

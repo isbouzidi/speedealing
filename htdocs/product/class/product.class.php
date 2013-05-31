@@ -110,17 +110,8 @@ class Product extends nosqlDocument {
 
 		parent::__construct($db);
 
-		try {
-			$fk_extrafields = new ExtraFields($db);
-			$this->fk_extrafields = $fk_extrafields->load("extrafields:Product", true); // load and cache
-			// Load langs files
-			if (count($this->fk_extrafields->langs))
-				foreach ($this->fk_extrafields->langs as $row)
-					$langs->load($row);
-		} catch (Exception $e) {
-			dol_print_error('', $e->getMessage());
-			exit;
-		}
+		$this->fk_extrafields = new ExtraFields($db);
+		$this->fk_extrafields->fetch(get_class($this));
 
 		$this->Status = "DISABLE";
 		$this->nbphoto = 0;
@@ -678,160 +669,37 @@ class Product extends nosqlDocument {
 	/**
 	 * 	Modify price of a product/Service
 	 *
-	 * 	@param  	int		$id          	Id of product/service to change
-	 * 	@param  	double	$newprice		New price
-	 * 	@param  	string	$newpricebase	HT or TTC
-	 * 	@param  	User	$user        	Object user that make change
-	 * 	@param  	double	$newvat			New VAT Rate
-	 *  @param		double	$newminprice	New price min
-	 *  @param		int		$level			0=standard, >0 = level if multilevel prices
-	 *  @param     	int		$newnpr         0=Standard vat rate, 1=Special vat rate for French NPR VAT
+	 * 	@param  	stdclass	$price		New price object
+	 * 	@param  	string	$price_level	Price Name : Default BASE
 	 * 	@return		int						<0 if KO, >0 if OK
 	 */
-	function updatePrice($id, $newprice, $newpricebase, $user, $newvat = '', $newminprice = '', $newecotax = 0, $level = 0, $newnpr = 0) {
-		global $conf, $langs;
+	function updatePrice($price, $price_level = "BASE") {
+		global $conf, $langs, $user;
 
-		dol_syslog(get_class($this) . "update_price id=" . $id . " newprice=" . $newprice . " newpricebase=" . $newpricebase . " newminprice=" . $newminprice . " level=" . $level . " npr=" . $newnpr);
+		$price->tva_tx = price2num($price->tva_tx);
 
-		// Clean parameters
-		if (empty($this->tva_tx))
-			$this->tva_tx = 0;
-		if (empty($newnpr))
-			$newnpr = 0;
-
-		// Check parameters
-		if ($newvat == '')
-			$newvat = $this->tva_tx;
-
-		if ($newprice != '' || $newprice == 0) {
-			if ($newpricebase == 'TTC') {
-				$price_ttc = price2num($newprice, 'MU');
-				$price = price2num($newprice) / (1 + ($newvat / 100));
-				$price = price2num($price, 'MU');
-
-				if ($newminprice != '' || $newminprice == 0) {
-					$price_min_ttc = price2num($newminprice, 'MU');
-					$price_min = price2num($newminprice) / (1 + ($newvat / 100));
-					$price_min = price2num($price_min, 'MU');
-				} else {
-					$price_min = 0;
-					$price_min_ttc = 0;
-				}
-
-				$ecotax_ttc = price2num($newecotax, 'MU');
-				$ecotax = price2num($newecotax) / (1 + ($newvat / 100));
-				$ecotax = price2num($ecotax, 'MU');
-			} else {
-				$price = price2num($newprice, 'MU');
-				$price_ttc = price2num($newprice) * (1 + ($newvat / 100));
-				$price_ttc = price2num($price_ttc, 'MU');
-
-				if ($newminprice != '' || $newminprice == 0) {
-					$price_min = price2num($newminprice, 'MU');
-					$price_min_ttc = price2num($newminprice) * (1 + ($newvat / 100));
-					$price_min_ttc = price2num($price_min_ttc, 'MU');
-					//print 'X'.$newminprice.'-'.$price_min;
-				} else {
-					$price_min = 0;
-					$price_min_ttc = 0;
-				}
-
-				$ecotax = price2num($newecotax, 'MU');
-				$ecotax_ttc = price2num($newecotax) * (1 + ($newvat / 100));
-				$ecotax_ttc = price2num($ecotax_ttc, 'MU');
-			}
-			//print 'x'.$id.'-'.$newprice.'-'.$newpricebase.'-'.$price.'-'.$price_ttc.'-'.$price_min.'-'.$price_min_ttc;
-			//Local taxes
-			$localtax1 = get_localtax($newvat, 1);
-			$localtax2 = get_localtax($newvat, 2);
-			if (empty($localtax1))
-				$localtax1 = 0; // If = '' then = 0
-			if (empty($localtax2))
-				$localtax2 = 0; // If = '' then = 0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				
-// Ne pas mettre de quote sur les numeriques decimaux.
-			// Ceci provoque des stockages avec arrondis en base au lieu des valeurs exactes.
-			$sql = "UPDATE " . MAIN_DB_PREFIX . "product SET";
-			$sql.= " price_base_type='" . $newpricebase . "',";
-			$sql.= " price=" . $price . ",";
-			$sql.= " price_ttc=" . $price_ttc . ",";
-			$sql.= " price_min=" . $price_min . ",";
-			$sql.= " price_min_ttc=" . $price_min_ttc . ",";
-			$sql.= " ecotax=" . $ecotax . ",";
-			$sql.= " ecotax_ttc=" . $ecotax_ttc . ",";
-			$sql.= " localtax1_tx=" . ($localtax1 >= 0 ? $localtax1 : 'NULL') . ",";
-			$sql.= " localtax2_tx=" . ($localtax2 >= 0 ? $localtax2 : 'NULL') . ",";
-			$sql.= " tva_tx='" . price2num($newvat) . "',";
-			$sql.= " recuperableonly='" . $newnpr . "'";
-			$sql.= " WHERE rowid = " . $id;
-
-			dol_syslog(get_class($this) . "update_price sql=" . $sql, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if ($resql) {
-				$this->price = $price;
-				$this->price_ttc = $price_ttc;
-				$this->price_min = $price_min;
-				$this->price_min_ttc = $price_min_ttc;
-				$this->price_base_type = $newpricebase;
-				$this->tva_tx = $newvat;
-				$this->tva_npr = $newnpr;
-				//Local taxes
-				$this->localtax1_tx = $localtax1;
-				$this->localtax2_tx = $localtax2;
-				$this->ecotax = $ecotax;
-				$this->ecotax_ttc = $ecotax_ttc;
-
-				$this->_log_price($user, $level);
-
-				// Appel des triggers
-				include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
-				$interface = new Interfaces($this->db);
-				$result = $interface->run_triggers('PRODUCT_PRICE_MODIFY', $this, $user, $langs, $conf);
-				if ($result < 0) {
-					$error++;
-					$this->errors = $interface->errors;
-				}
-				// Fin appel triggers
-			} else {
-				dol_print_error($this->db);
-			}
+		// Amount TTC or HT
+		if ($price->price_base_type == 'TTC') {
+			$price->price_ttc = price2num($price->price_ttc);
+			$price->pu_ht = $price->price_ttc / (1 + ($price->tva_tx / 100));
+		} else {
+			$price->pu_ht = price2num($price->pu_ht);
+			$price->price_ttc = $price->pu_ht * (1 + ($price->tva_tx / 100));
 		}
+
+		if (empty($price->user_mod)) {
+			$price->user_mod = new stdClass();
+			$price->user_mod->id = $user->id;
+			$price->user_mod->name = $user->name;
+		}
+
+		if (is_array($this->price)) // Fix old format
+			$this->price = new stdClass();
+
+		$this->price->$price_level = clone $price;
+
+		$price->price_level = $price_level;
+		$this->history[] = clone $price;
 
 		return 1;
 	}

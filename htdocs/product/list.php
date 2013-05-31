@@ -177,6 +177,7 @@ $obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "ref";
 $obj->aoColumns[$i]->bUseRendered = false;
 $obj->aoColumns[$i]->bSearchable = true;
+$obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("ref", "url");
 $i++;
 print'<th class="essential">';

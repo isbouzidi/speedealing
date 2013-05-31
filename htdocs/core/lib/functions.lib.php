@@ -2643,7 +2643,7 @@ function price2num($amount, $rounding = '', $alreadysqlnb = 0) {
 		$amount = str_replace($dec, '.', $amount);
 	}
 
-	return $amount;
+	return floatval($amount);
 }
 
 /**
