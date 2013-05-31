@@ -60,15 +60,15 @@ $contact = new Contact($db);
 
 // Get object canvas (By default, this is not defined, so standard usage of dolibarr)
 /*
-$object->getCanvas($socid);
-$canvas = $object->canvas ? $object->canvas : GETPOST("canvas");
-$objcanvas = '';
-if (!empty($canvas)) {
-	require_once DOL_DOCUMENT_ROOT . '/core/class/canvas.class.php';
-	$objcanvas = new Canvas($db, $action);
-	$objcanvas->getCanvas('thirdparty', 'card', $canvas);
-}
-*/
+  $object->getCanvas($socid);
+  $canvas = $object->canvas ? $object->canvas : GETPOST("canvas");
+  $objcanvas = '';
+  if (!empty($canvas)) {
+  require_once DOL_DOCUMENT_ROOT . '/core/class/canvas.class.php';
+  $objcanvas = new Canvas($db, $action);
+  $objcanvas->getCanvas('thirdparty', 'card', $canvas);
+  }
+ */
 
 // Security check
 $result = restrictedArea($user, 'societe', $socid, '&societe', '', 'fk_soc', 'rowid');
@@ -82,7 +82,7 @@ $hookmanager->initHooks(array('thirdpartycard'));
  */
 
 $parameters = array('id' => $socid);
-$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action);	// Note that $action and $object may have been modified by some hooks
+$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
 $error = $hookmanager->error;
 $errors = array_merge($errors, (array) $hookmanager->errors);
 
@@ -98,8 +98,7 @@ if (empty($reshook)) {
 	}
 
 	// Add new third party
-	if ((!GETPOST('getcustomercode') && !GETPOST('getsuppliercode'))
-			&& ($action == 'add' || $action == 'update') && $user->rights->societe->creer) {
+	if ((!GETPOST('getcustomercode') && !GETPOST('getsuppliercode')) && ($action == 'add' || $action == 'update') && $user->rights->societe->creer) {
 		require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
 
 		if ($action == 'update') {
@@ -793,7 +792,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		$form = new Form($db);
 		print '<tr><td>' . $langs->trans('VATIsUsed') . '</td>';
 		print '<td>';
-		print $form->selectyesno('assujtva_value', 1, 1);	 // Assujeti par defaut en creation
+		print $form->selectyesno('assujtva_value', 1, 1);  // Assujeti par defaut en creation
 		print '</td>';
 		print '<td nowrap="nowrap">' . $langs->trans('VATIntra') . '</td>';
 		print '<td nowrap="nowrap">';
@@ -1317,7 +1316,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			print '</center>';
 
 			print '</form>';
-			
+
 			print column_end();
 
 			print '</div></div>';
@@ -1636,7 +1635,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 		// Other attributes
 		$parameters = array('socid' => $socid, 'colspan' => ' colspan="3"');
-		$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
+		$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 		if (empty($reshook)) {
 			foreach ($object->fk_extrafields->fields as $key => $aRow) {
 				if ($aRow->optional && $aRow->enable) {
@@ -1758,7 +1757,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		// Print Notes
 		print $object->show_notes();
 		print column_end();
-		
+
 		if ($conf->propal->enabled) {
 			require_once(DOL_DOCUMENT_ROOT . '/propal/class/propal.class.php');
 			$propal = new Propal($db);
@@ -1807,7 +1806,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		// TODO use hookmanager for show box of anothers modules for avoid multiple declarations
 		// Other attributes
 		$parameters = array();
-		$reshook = $hookmanager->executeHooks('show', $parameters, $object, $action);	// Note that $action and $object may have been modified by hook
+		$reshook = $hookmanager->executeHooks('show', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 
 
 		if ($conf->agenda->enabled) {
