@@ -1126,7 +1126,10 @@ class Agenda extends nosqlDocument {
 			//if (!empty($events->rows[$cursor])) {
 			for ($j = 0; $j < count($events->rows); $j++) {
 				if ($events->rows[$j]->key[3] == $i) {
-					print '<li ' . ($events->rows[$j]->value->type_code == "AC_RDV" ? 'class="important"' : "") . '><a href="agenda/fiche.php?id=' . $events->rows[$j]->id . '" >' . "[" . $events->rows[$j]->value->societe->name . "] " . $events->rows[$j]->value->label . '</a></li>';
+					$user_tmp = new User();
+					$user_tmp->id = $events->rows[$j]->value->usertodo->id;
+					$user_tmp->name = $events->rows[$j]->value->usertodo->name;
+					print '<li ' . ($events->rows[$j]->value->usertodo->id == $user->id ? 'class="important"' : "") . '><a href="agenda/fiche.php?id=' . $events->rows[$j]->id . '" >' . "[" . $events->rows[$j]->value->societe->name . "] " . $events->rows[$j]->value->label . ($events->rows[$j]->value->usertodo->id != $user->id ? '<br><i>' . $user_tmp->getNomUrl(1) . '</i>' : '') . '</a></li>';
 				}
 			}
 			//}
@@ -1243,12 +1246,20 @@ class Agenda extends nosqlDocument {
 					else
 						$hourEnd = date('G', strtotime($events->rows[$j]->value->datef) + 1);
 
-					print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ($events->rows[$j]->value->type_code == 'AC_RDV' ? ' red-gradient' : '') . '" href="agenda/fiche.php?id=' . $events->rows[$j]->id . '">';
+					print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ($events->rows[$j]->value->usertodo->id == $user->id ? ' red-gradient' : '') . '" href="agenda/fiche.php?id=' . $events->rows[$j]->id . '">';
 
 					print '<time>' . $hourStart . 'h - ' . $hourEnd . 'h</time>';
 					if (isset($events->rows[$j]->value->societe->name))
 						print "[" . $events->rows[$j]->value->societe->name . "] ";
 					print $events->rows[$j]->value->label;
+					
+					if ($events->rows[$j]->value->usertodo->id != $user->id) {
+						$user_tmp = new User();
+						$user_tmp->id = $events->rows[$j]->value->usertodo->id;
+						$user_tmp->name = $events->rows[$j]->value->usertodo->name;
+
+						print '<br><i>' . $user_tmp->getNomUrl(1, 'span') . '</i>';
+					}
 					print '</a>';
 				}
 				//else
@@ -1284,7 +1295,7 @@ class Agenda extends nosqlDocument {
 					}
 				});
 
-		// Remote controls
+				// Remote controls
 				$('#agenda-previous').click(function(event)
 				{
 					event.preventDefault();

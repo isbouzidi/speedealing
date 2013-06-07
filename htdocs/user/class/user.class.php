@@ -1302,6 +1302,11 @@ class User extends nosqlDocument {
 			$lien = '<a href="' . DOL_URL_ROOT . '/user/fiche.php?id=' . $this->id . '">';
 			$lienfin = '</a>';
 		}
+		
+		if ($option == 'span') {
+			$lien = '<span>';
+			$lienfin = '</span>';
+		}
 
 		if ($withpicto)
 			$result.=($lien . img_object($langs->trans("ShowUser"), 'user') . $lienfin);
