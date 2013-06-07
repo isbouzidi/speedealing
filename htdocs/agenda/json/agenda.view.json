@@ -1,6 +1,6 @@
 {
    "_id": "_design/Agenda",
-   "_rev": "125-7f21430cb1837fee6944369d6d732f0f",
+   "_rev": "128-9e2837b2e4a346bf519bc9727df3f2b8",
    "language": "javascript",
    "views": {
        "list": {
@@ -44,7 +44,7 @@
            "map": "function(doc) {\nif (doc.class == \"Agenda\" && doc.Status =='DONE') {\nif(doc.usertodo.id)\n  emit([doc.usertodo.id,doc.datep], doc);\nelse if(doc.author.id)\n  emit([doc.author.id,doc.datep], doc);\nelse if(doc.userdone.id)\n  emit([doc.userdone.id,doc.datep], doc);\n}\n}"
        },
        "calendarMyTasks": {
-           "map": "function(doc) {\n    if (doc.class == \"Agenda\" && doc.Status!='DONE') {\n      if(doc.usertodo.id) {\n        var d = new Date(doc.datep);\n        emit([doc.usertodo.id,d.getFullYear(),d.getMonth()+1,d.getDate(),d.getHours(),d.getMinutes()], doc);\n      }\n    }\n}"
+           "map": "function(doc) {\n    if (doc.class == \"Agenda\" && doc.Status!='DONE' && doc.type_code == \"AC_RDV\") {\n      if(doc.author.id) {\n        var d = new Date(doc.datep);\n        emit([doc.author.id,d.getFullYear(),d.getMonth()+1,d.getDate(),d.getHours(),d.getMinutes()], doc);\n      }\n      if(doc.usertodo.id) {\n        var d = new Date(doc.datep);\n        emit([doc.usertodo.id,d.getFullYear(),d.getMonth()+1,d.getDate(),d.getHours(),d.getMinutes()], doc);\n      }\n    }\n}"
        }
    },
    "updates": {
