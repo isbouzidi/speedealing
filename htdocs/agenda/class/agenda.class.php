@@ -1083,7 +1083,11 @@ class Agenda extends nosqlDocument {
 		$firstDayOfMonth = date('w', $firstDayTimestamp);
 
 		$object = new Agenda($db);
-		$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+		//if($user->right->)
+		if ($user->rights->agenda->allactions->read)
+			$events = $object->getView("calendarTasks", array("startkey" => array(intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array(intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+		else
+			$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
 
 		print '<table class="calendar fluid with-events large-margin-bottom with-events">';
 
@@ -1125,7 +1129,7 @@ class Agenda extends nosqlDocument {
 
 			//if (!empty($events->rows[$cursor])) {
 			for ($j = 0; $j < count($events->rows); $j++) {
-				if ($events->rows[$j]->key[3] == $i) {
+				if ($events->rows[$j]->key[3 - $user->rights->agenda->allactions->read] == $i) {
 					$user_tmp = new User();
 					$user_tmp->id = $events->rows[$j]->value->usertodo->id;
 					$user_tmp->name = $events->rows[$j]->value->usertodo->name;
@@ -1252,7 +1256,7 @@ class Agenda extends nosqlDocument {
 					if (isset($events->rows[$j]->value->societe->name))
 						print "[" . $events->rows[$j]->value->societe->name . "] ";
 					print $events->rows[$j]->value->label;
-					
+
 					if ($events->rows[$j]->value->usertodo->id != $user->id) {
 						$user_tmp = new User();
 						$user_tmp->id = $events->rows[$j]->value->usertodo->id;
