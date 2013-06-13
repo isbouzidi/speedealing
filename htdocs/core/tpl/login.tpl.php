@@ -136,7 +136,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 						<!-- The autocomplete="off" attributes is the only way to prevent webkit browsers from filling the inputs with yellow -->
 						<li>
 							<span class="icon-user mid-margin-right"></span>
-							<input type="text" name="username" id="login" value="<?php echo (!empty($login) ? $login : ''); ?>" class="input-unstyled" placeholder="<?php echo $langs->trans('EMail'); ?>" autocomplete="off" />
+							<input type="text" name="username" id="login" value="<?php echo (!empty($login) ? $login : ''); ?>" class="input-unstyled" placeholder="<?php echo $langs->trans('User'); ?>" autocomplete="off" />
 						</li>
 						<li>
 							<span class="icon-lock mid-margin-right"></span>
