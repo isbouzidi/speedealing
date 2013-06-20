@@ -54,7 +54,7 @@
 		}
 
 		return _topNotificationDiv;
-	};
+	}
 
 	/**
 	 * Internal reference: the div holding bottom notifications
@@ -75,7 +75,7 @@
 		}
 
 		return _bottomNotificationDiv;
-	};
+	}
 
 	/**
 	 * Internal function: output archived notifications
@@ -442,7 +442,7 @@
 			// Function on click
 			if (settings.onClick)
 			{
-				element.children(':first').on('click', settings.onClick);
+				element.children().not('.close').on('click', settings.onClick);
 			}
 
 			// Save some data

@@ -32,9 +32,9 @@
 	-ms-transition: all 400ms;
 	-o-transition: all 400ms;
 	transition: all 400ms;
-	-webkit-box-shadow: -0 1px 1px rgba(255, 255, 255, 0.5), -0 0 0 rgba(51, 153, 255, 0);
-	-moz-box-shadow: -0 1px 1px rgba(255, 255, 255, 0.5), -0 0 0 rgba(51, 153, 255, 0);
-	box-shadow: -0 1px 1px rgba(255, 255, 255, 0.5), -0 0 0 rgba(51, 153, 255, 0);
+	-webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 0 rgba(51, 153, 255, 0);
+	-moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 0 rgba(51, 153, 255, 0);
+	box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 0 rgba(51, 153, 255, 0);
 	}
 	.switch > input {
 		display: block;
@@ -50,9 +50,9 @@
 		width: 155px;
 	}
 	.switch.focus {
-		-webkit-box-shadow: -0 1px 1px rgba(255, 255, 255, 0.5), -0 0 5px rgba(51, 153, 255, 0.75);
-		-moz-box-shadow: -0 1px 1px rgba(255, 255, 255, 0.5), -0 0 5px rgba(51, 153, 255, 0.75);
-		box-shadow: -0 1px 1px rgba(255, 255, 255, 0.5), -0 0 5px rgba(51, 153, 255, 0.75);
+		-webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 5px rgba(51, 153, 255, 0.75);
+		-moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 5px rgba(51, 153, 255, 0.75);
+		box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5), 0 0 5px rgba(51, 153, 255, 0.75);
 	}
 	.button-height .switch {
 		margin-top: -2px;
@@ -94,12 +94,12 @@
 			-ms-transition: left 200ms;
 			-o-transition: left 200ms;
 			transition: left 200ms;
-			-webkit-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.75), inset 5px 1px 3px rgba(0, 0, 0, 0.5);
-			-moz-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.75), inset 5px 1px 3px rgba(0, 0, 0, 0.5);
-			box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.75), inset 5px 1px 3px rgba(0, 0, 0, 0.5);
-			-webkit-text-shadow: -0 -1px 0 rgba(0, 0, 0, 0.35);
-			-moz-text-shadow: -0 -1px 0 rgba(0, 0, 0, 0.35);
-			text-shadow: -0 -1px 0 rgba(0, 0, 0, 0.35);
+			-webkit-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.75), inset 5px 1px 3px rgba(0, 0, 0, 0.5);
+			-moz-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.75), inset 5px 1px 3px rgba(0, 0, 0, 0.5);
+			box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.75), inset 5px 1px 3px rgba(0, 0, 0, 0.5);
+			-webkit-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
+			-moz-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
 			}
 			.wide > .switch-on {
 				left: 121px;
@@ -122,9 +122,9 @@
 				-ms-transition: right 200ms;
 				-o-transition: right 200ms;
 				transition: right 200ms;
-				-webkit-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.75), inset -5px 1px 3px rgba(0, 0, 0, 0.5);
-				-moz-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.75), inset -5px 1px 3px rgba(0, 0, 0, 0.5);
-				box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.75), inset -5px 1px 3px rgba(0, 0, 0, 0.5);
+				-webkit-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.75), inset -5px 1px 3px rgba(0, 0, 0, 0.5);
+				-moz-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.75), inset -5px 1px 3px rgba(0, 0, 0, 0.5);
+				box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.75), inset -5px 1px 3px rgba(0, 0, 0, 0.5);
 				}
 				.reversed-switches .wide > .switch-on {
 					right: 121px;
@@ -146,19 +146,19 @@
 			-ms-transition: right 200ms;
 			-o-transition: right 200ms;
 			transition: right 200ms;
-			-webkit-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.5), inset -5px 1px 3px rgba(0, 0, 0, 0.3);
-			-moz-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.5), inset -5px 1px 3px rgba(0, 0, 0, 0.3);
-			box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.5), inset -5px 1px 3px rgba(0, 0, 0, 0.3);
-			-webkit-text-shadow: -0 1px 0 rgba(255, 255, 255, 0.75);
-			-moz-text-shadow: -0 1px 0 rgba(255, 255, 255, 0.75);
-			text-shadow: -0 1px 0 rgba(255, 255, 255, 0.75);
+			-webkit-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.5), inset -5px 1px 3px rgba(0, 0, 0, 0.3);
+			-moz-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.5), inset -5px 1px 3px rgba(0, 0, 0, 0.3);
+			box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.5), inset -5px 1px 3px rgba(0, 0, 0, 0.3);
+			-webkit-text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+			-moz-text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
 			}
 			.black-inputs .switch-off,
 			.black-input > .switch-off {
 				color: #505050;
-				-webkit-text-shadow: -0 1px 0 rgba(255, 255, 255, 0.35);
-				-moz-text-shadow: -0 1px 0 rgba(255, 255, 255, 0.35);
-				text-shadow: -0 1px 0 rgba(255, 255, 255, 0.35);
+				-webkit-text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+				-moz-text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+				text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 			}
 			.reversed-switches .switch-off {
 				right: 0;
@@ -175,9 +175,9 @@
 				-ms-transition: left 200ms;
 				-o-transition: left 200ms;
 				transition: left 200ms;
-				-webkit-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.5), inset 5px 1px 3px rgba(0, 0, 0, 0.3);
-				-moz-box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.5), inset 5px 1px 3px rgba(0, 0, 0, 0.3);
-				box-shadow: inset -0 1px 5px rgba(0, 0, 0, 0.5), inset 5px 1px 3px rgba(0, 0, 0, 0.3);
+				-webkit-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.5), inset 5px 1px 3px rgba(0, 0, 0, 0.3);
+				-moz-box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.5), inset 5px 1px 3px rgba(0, 0, 0, 0.3);
+				box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.5), inset 5px 1px 3px rgba(0, 0, 0, 0.3);
 			}
 		.switch-on > span,
 		.switch-off > span {
@@ -243,15 +243,15 @@
 		-ms-transition: right 200ms, border-color 400ms;
 		-o-transition: right 200ms, border-color 400ms;
 		transition: right 200ms, border-color 400ms;
-		-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.75);
-		-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.75);
-		box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.75);
+		-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+		-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 		}
 		.black-inputs .switch-button,
 		.black-input > .switch-button {
-			-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.35);
-			-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.35);
-			box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.35);
+			-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+			-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 		}
 		.reversed-switches .switch-button {
 			right: auto;
@@ -267,9 +267,9 @@
 		}
 		.switch-button.silver-gradient,
 		.switch-button.white-gradient {
-			-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.75);
-			-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.75);
-			box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.75);
+			-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+			-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 		}
 		.switch-button.black-gradient,
 		.switch-button.anthracite-gradient,
@@ -278,9 +278,9 @@
 		.switch-button.orange-gradient,
 		.switch-button.green-gradient,
 		.switch-button.blue-gradient {
-			-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.3);
-			-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.3);
-			box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.3);
+			-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+			-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 		}
 		.medium > .switch-button:after,
 		.tiny > .switch-button:after,
@@ -595,15 +595,15 @@
 			-webkit-border-radius: 10px;
 			-moz-border-radius: 10px;
 			border-radius: 10px;
-			-webkit-box-shadow: inset -0 1px 0 white, -0 1px 3px rgba(0, 0, 0, 0.5);
-			-moz-box-shadow: inset -0 1px 0 white, -0 1px 3px rgba(0, 0, 0, 0.5);
-			box-shadow: inset -0 1px 0 white, -0 1px 3px rgba(0, 0, 0, 0.5);
+			-webkit-box-shadow: inset 0 1px 0 white, 0 1px 3px rgba(0, 0, 0, 0.5);
+			-moz-box-shadow: inset 0 1px 0 white, 0 1px 3px rgba(0, 0, 0, 0.5);
+			box-shadow: inset 0 1px 0 white, 0 1px 3px rgba(0, 0, 0, 0.5);
 			}
 			.black-inputs .tiny > .switch-button,
 			.black-input.tiny > .switch-button {
-				-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.35), -0 1px 3px rgba(0, 0, 0, 0.5);
-				-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.35), -0 1px 3px rgba(0, 0, 0, 0.5);
-				box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.35), -0 1px 3px rgba(0, 0, 0, 0.5);
+				-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 3px rgba(0, 0, 0, 0.5);
+				-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 3px rgba(0, 0, 0, 0.5);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 3px rgba(0, 0, 0, 0.5);
 			}
 			.reversed-switches .tiny > .switch-button {
 				right: auto;

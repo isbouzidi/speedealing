@@ -71,6 +71,20 @@ $(selector).confirm();
 		Older syntax and options are still supported
 	</p>
 
+	<p>Note that if you use a click event to open the confirmation bubble, you may need to prevent the default behavior, other wise the bubble will close as soon as it opens:</p>
+
+	<pre class="prettyprint">
+$('#button').click(function(event)
+{
+	event.preventDefault();
+	$(selector).confirm();
+});
+</pre>
+
+	<p class="wrapped left-icon icon-info-round">
+		In some cases, you may even need to call <b>event.stopPropagation()</b> too.
+	</p>
+
 	<p>Of course, you may pass an option object with all desired settings (see reference below):</p>
 
 	<pre class="prettyprint">

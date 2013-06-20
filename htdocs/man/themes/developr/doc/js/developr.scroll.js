@@ -159,7 +159,7 @@
 							// Update scrollbars
 							if (refreshH) refreshH();
 							if (refreshV) refreshV();
-						};
+						}
 						doc.on('mousemove', watchMouse);
 
 						// Watch for mouseup
@@ -167,7 +167,7 @@
 						{
 							doc.off('mousemove', watchMouse);
 							doc.off('mouseup', endDrag);
-						};
+						}
 						doc.on('mouseup', endDrag);
 					});
 				};
@@ -310,7 +310,7 @@
 							// Update scrollbars
 							if (refreshH) refreshH();
 							if (refreshV) refreshV();
-						};
+						}
 						doc.on('mousemove', watchMouse);
 
 						// Watch for mouseup
@@ -320,7 +320,7 @@
 
 							doc.off('mousemove', watchMouse);
 							doc.off('mouseup', endDrag);
-						};
+						}
 						doc.on('mouseup', endDrag);
 					});
 				};
@@ -411,6 +411,16 @@
 				var initScrollH = scrollH,
 					initScrollV = scrollV;
 
+				// Hide scrollbars to prevent erroneous values
+				if (refreshH)
+				{
+					hscrollbar.hide();
+				}
+				if (refreshV)
+				{
+					vscrollbar.hide();
+				}
+
 				// New scroll values
 				scrollH = Math.max(0, Math.min(scrollH+deltaX, element[0].scrollWidth-element.innerWidth()));
 				scrollV = Math.max(0, Math.min(scrollV-deltaY, element[0].scrollHeight-element.innerHeight()));
@@ -433,16 +443,16 @@
 				{
 					// Scroll
 					element.scrollLeft(scrollH)
-						   .scrollTop(scrollV)
-						   .refreshInnerTrackedElements();
+							.scrollTop(scrollV)
+							.refreshInnerTrackedElements();
 				}
 
 				// Update scrollbars
-				if (refreshH && deltaX != 0)
+				if (refreshH && deltaX !== 0)
 				{
 					refreshH();
 				}
-				if (refreshV && deltaY != 0)
+				if (refreshV && deltaY !== 0)
 				{
 					refreshV();
 				}
@@ -452,7 +462,7 @@
 					x: scrollH-initScrollH,
 					y: scrollV-initScrollV
 				};
-			};
+			}
 
 			/**
 			 * Handle mouse wheel
@@ -469,18 +479,18 @@
 				 * for instance 0.05 instead of 1, so we use a minimum value here to prevent these mouses
 				 * to scroll too slow
 				 */
-				if (deltaX != 0)
+				if (deltaX !== 0)
 				{
 					deltaX = (deltaX > 0) ? Math.max(deltaX, settings.minWheelScroll) : Math.min(deltaX, -settings.minWheelScroll);
 				}
-				if (deltaY != 0)
+				if (deltaY !== 0)
 				{
 					deltaY = (deltaY > 0) ? Math.max(deltaY, settings.minWheelScroll) : Math.min(deltaY, -settings.minWheelScroll);
 				}
 
 				// Move
 				return move(deltaX*settings.speed, deltaY*settings.speed, doNotAnimate);
-			};
+			}
 
 			// Global refresh function
 			function refresh()
@@ -516,7 +526,7 @@
 					hiddenV = (!scrollingV && settings.autoHide);
 					refreshV();
 				}
-			};
+			}
 
 			// Store for further calls
 			element.data('custom-scroll', {
@@ -532,7 +542,7 @@
 
 				// Functions
 				refresh: refresh,
-				refreshH: refreshV,
+				refreshH: refreshH,
 				refreshV: refreshV,
 				move: move,
 				mousewheel: mousewheel
@@ -553,12 +563,12 @@
 				if (touch)
 				{
 					element.on('touchstart', _handleScrolledMouseEnter)
-						   .on('touchend', _handleScrolledMouseLeave)
+							.on('touchend', _handleScrolledMouseLeave);
 				}
 				else
 				{
 					element.on('mouseenter', _handleScrolledMouseEnter)
-						   .on('mouseleave', _handleScrolledMouseLeave);
+							.on('mouseleave', _handleScrolledMouseLeave);
 				}
 			}
 
@@ -566,8 +576,8 @@
 			init = true;
 
 		}).on('mousewheel', _handleMouseWheel)
-		  .on('scroll sizechange scrollsizechange', _handleScroll)
-		  .on('touchstart', _handleTouchScroll);
+			.on('scroll sizechange scrollsizechange', _handleScroll)
+			.on('touchstart', _handleTouchScroll);
 
 		return this;
 	};
@@ -580,7 +590,7 @@
 		this.filter('.custom-scroll')
 			.off('mousewheel', _handleMouseWheel)
 			.off('scroll sizechange scrollsizechange', _handleScroll)
-		  	.off('touchstart', _handleTouchScroll)
+			.off('touchstart', _handleTouchScroll)
 			.off('touchstart', _handleScrolledMouseEnter)
 			.off('touchend', _handleScrolledMouseLeave)
 			.off('mouseenter', _handleScrolledMouseEnter)
@@ -621,7 +631,7 @@
 			if (object.hscrollbar()) object.hscrollbar().animate({ opacity: 1 });
 			if (object.vscrollbar()) object.vscrollbar().animate({ opacity: 1 });
 		}
-	};
+	}
 
 	/**
 	 * Internal function: handle fade out effect on mouse leave
@@ -640,7 +650,7 @@
 			if (object.hscrollbar()) object.hscrollbar().animate({ opacity: 0 });
 			if (object.vscrollbar()) object.vscrollbar().animate({ opacity: 0 });
 		}
-	};
+	}
 
 	/**
 	 * Internal function: handle mousewheel event
@@ -659,13 +669,13 @@
 			var movement = object.mousewheel(deltaX, deltaY);
 
 			// If the element scrolled
-			if (movement.x != 0 || movement.y != 0 || !object.settings.continuousWheelScroll)
+			if (movement.x !== 0 || movement.y !== 0 || !object.settings.continuousWheelScroll)
 			{
 				// Prevent parents from scrolling
 				event.preventDefault();
 			}
 		}
-	};
+	}
 
 	/**
 	 * Internal function: handle scroll event
@@ -673,7 +683,7 @@
 	function _handleScroll(event)
 	{
 		$(this).refreshCustomScroll();
-	};
+	}
 
 	/**
 	 * Internal function: handle touch scroll
@@ -683,7 +693,7 @@
 		// Init
 		var element = $(this),
 			object = element.data('custom-scroll'),
-			posX = event.originalEvent.touches[0].pageX, /* jQuery event normalization does not preserve touch events properties */
+			posX = event.originalEvent.touches[0].pageX,
 			posY = event.originalEvent.touches[0].pageY,
 			moveFunc, endFunc, movement;
 

@@ -1256,7 +1256,11 @@
 				// Format
 				if (typeof value !== 'number')
 				{
-					value = parseFloat(value, 10) || def;
+					value = parseFloat(value);
+					if (isNaN(value))
+					{
+						value = def;
+					}
 				}
 
 				// Range

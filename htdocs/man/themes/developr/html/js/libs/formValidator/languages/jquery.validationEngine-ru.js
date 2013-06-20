@@ -10,6 +10,12 @@
                     "alertTextCheckboxMultiple": "* Вы должны выбрать вариант",
                     "alertTextCheckboxe": "* Необходимо отметить"
                 },
+                "requiredInFunction": { 
+                    "func": function(field, rules, i, options){
+                        return (field.val() == "test") ? true : false;
+                    },
+                    "alertText": "* Значением поля должно быть test"
+                },
                 "minSize": {
                     "regex": "none",
                     "alertText": "* Минимум ",
@@ -20,9 +26,9 @@
                     "alertText": "* Максимум ",
                     "alertText2": " символа(ов)"
                 },
-				"groupRequired": {
+		"groupRequired": {
                     "regex": "none",
-                    "alertText": "* You must fill one of the following fields"
+                    "alertText": "* Вы должны заполнить одно из следующих полей"
                 },
                 "min": {
                     "regex": "none",
@@ -73,7 +79,7 @@
                 },
                 "number": {
                     // Number, including positive, negative, and floating decimal. credit: orefalo
-                    "regex": /^[\-\+]?(([0-9]+)([\.,]([0-9]+))?|([\.,]([0-9]+))?)$/,
+                    "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,
                     "alertText": "* Неправильное число с плавающей точкой"
                 },
                 "date": {

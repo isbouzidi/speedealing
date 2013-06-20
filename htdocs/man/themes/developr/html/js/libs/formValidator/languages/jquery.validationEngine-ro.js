@@ -11,6 +11,12 @@
                     "alertTextCheckboxe": "* Optiune obligatorie",
                     "alertTextDateRange": "* Campurile data cu ajutorul carora se stabileste perioada sunt obligatorii"
                 },
+                "requiredInFunction": { 
+                    "func": function(field, rules, i, options){
+                        return (field.val() == "test") ? true : false;
+                    },
+                    "alertText": "* Field must equal test"
+                },
                 "dateRange": {
                     "regex": "none",
                     "alertText": "* Perioada ",
@@ -85,7 +91,7 @@
                 },
                 "number": {
                     // Number, including positive, negative, and floating decimal. credit: orefalo
-                    "regex": /^[\-\+]?(([0-9]+)([\.,]([0-9]+))?|([\.,]([0-9]+))?)$/,
+                    "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,
                     "alertText": "* Trebuie sa fie un numar"
                 },
                 "date": {

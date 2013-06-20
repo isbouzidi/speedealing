@@ -17,7 +17,9 @@
 	<!-- http://davidbcalhoun.com/2010/viewport-metatag -->
 	<meta name="HandheldFriendly" content="True">
 	<meta name="MobileOptimized" content="320">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<!-- http://www.kylejlarson.com/blog/2012/iphone-5-web-design/ -->
+	<meta name="viewport" content="user-scalable=0, initial-scale=1.0">
 
 	<!-- For all browsers -->
 	<link rel="stylesheet" href="css/reset.css?v=1">
@@ -39,9 +41,6 @@
 	<link rel="stylesheet" href="css/styles/form.css?v=1">
 	<link rel="stylesheet" href="css/styles/switches.css?v=1">
 
-	<!-- CLEditor -->
-	<link rel="stylesheet" href="js/libs/CLEditor/jquery.cleditor.css">
-
 	<!-- JavaScript at bottom except for Modernizr -->
 	<script src="js/libs/modernizr.custom.js"></script>
 
@@ -49,21 +48,34 @@
 	<link rel="shortcut icon" href="img/favicons/favicon.png">
 	<!-- For everything else -->
 	<link rel="shortcut icon" href="img/favicons/favicon.ico">
-	<!-- For retina screens -->
-	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/favicons/apple-touch-icon-retina.png">
-	<!-- For iPad 1-->
-	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/favicons/apple-touch-icon-ipad.png">
-	<!-- For iPhone 3G, iPod Touch and Android -->
-	<link rel="apple-touch-icon-precomposed" href="img/favicons/apple-touch-icon.png">
 
 	<!-- iOS web-app metas -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-	<!-- Startup image for web apps -->
-	<link rel="apple-touch-startup-image" href="img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
-	<link rel="apple-touch-startup-image" href="img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
-	<link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+	<!-- iPhone ICON -->
+	<link rel="apple-touch-icon" href="img/favicons/apple-touch-icon.png" sizes="57x57">
+	<!-- iPad ICON -->
+	<link rel="apple-touch-icon" href="img/favicons/apple-touch-icon-ipad.png" sizes="72x72">
+	<!-- iPhone (Retina) ICON -->
+	<link rel="apple-touch-icon" href="img/favicons/apple-touch-icon-retina.png" sizes="114x114">
+	<!-- iPad (Retina) ICON -->
+	<link rel="apple-touch-icon" href="img/favicons/apple-touch-icon-ipad-retina.png" sizes="144x144">
+
+	<!-- iPhone SPLASHSCREEN (320x460) -->
+	<link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="(device-width: 320px)">
+	<!-- iPhone (Retina) SPLASHSCREEN (640x960) -->
+	<link rel="apple-touch-startup-image" href="img/splash/iphone-retina.png" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)">
+	<!-- iPhone 5 SPLASHSCREEN (640×1096) -->
+	<link rel="apple-touch-startup-image" href="img/splash/iphone5.png" media="(device-height: 568px) and (-webkit-device-pixel-ratio: 2)">
+	<!-- iPad (portrait) SPLASHSCREEN (748x1024) -->
+	<link rel="apple-touch-startup-image" href="img/splash/ipad-portrait.png" media="(device-width: 768px) and (orientation: portrait)">
+	<!-- iPad (landscape) SPLASHSCREEN (768x1004) -->
+	<link rel="apple-touch-startup-image" href="img/splash/ipad-landscape.png" media="(device-width: 768px) and (orientation: landscape)">
+	<!-- iPad (Retina, portrait) SPLASHSCREEN (2048x1496) -->
+	<link rel="apple-touch-startup-image" href="img/ipad-portrait-retina.png" media="(device-width: 1536px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2)">
+	<!-- iPad (Retina, landscape) SPLASHSCREEN (1536x2008) -->
+	<link rel="apple-touch-startup-image" href="img/ipad-landscape-retina.png" media="(device-width: 1536px)  and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2)">
 
 	<!-- Microsoft clear type rendering -->
 	<meta http-equiv="cleartype" content="on">
@@ -112,7 +124,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 					<h3 class="thin">WYSIWYG editor</h3>
 
-					<textarea name="cleditor" id="cleditor">This is a rich-text editor: select <b>some text</b> and click buttons!</textarea>
+					<textarea name="ckeditor" id="ckeditor">This is a rich-text editor: select <b>some text</b> and click buttons!</textarea>
 
 				</div>
 
@@ -288,7 +300,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 	<!-- JavaScript at the bottom for fast page loading -->
 
 	<!-- Scripts -->
-	<script src="js/libs/jquery-1.8.2.min.js"></script>
+	<script src="js/libs/jquery-1.9.1.min.js"></script>
 	<script src="js/setup.js"></script>
 
 	<!-- Template functions -->
@@ -299,26 +311,17 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 	<script src="js/developr.tooltip.js"></script>
 	<script src="js/developr.auto-resizing.js"></script>
 
-	<!-- CLEditor -->
-    <script src="js/libs/CLEditor/jquery.cleditor.min.js"></script>
+	<!-- CKEditor -->
+    <script src="js/libs/ckeditor/ckeditor.js"></script>
 
 	<script>
 
 		// Call template init (optional, but faster if called manually)
 		$.template.init();
 
-		// CLEditor
-		var editorTextarea = $('#cleditor'),
-			editorWrapper = editorTextarea.parent(),
-			editor = editorTextarea.cleditor({
-				width:	'100%',
-				height:	350
-			})[0];
-
-		// Update size when resizing
-		editorWrapper.sizechange(function()
-		{
-			editor.refresh();
+		// CKEditor
+		CKEDITOR.replace( 'ckeditor', {
+			height: 300
 		});
 
 	</script>

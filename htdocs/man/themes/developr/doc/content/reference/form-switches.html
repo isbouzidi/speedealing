@@ -116,6 +116,20 @@
 &lt;input type="checkbox" class="switch mini"&gt;
 </pre>
 
+	<h3 class="thin">Dynamic changes</h3>
+
+	<p>If you change the value of the radios/checkboxes with javascript, you need to tell the styling plugin that it has changed: just fire a <strong>change</strong> event:</p>
+
+	<pre class="prettyprint">
+$(selector).change();
+</pre>
+
+	<p>If the change event already has listeners, you can trigger the <strong>silent-change</strong> event instead</p>
+
+	<pre class="prettyprint">
+$(selector).trigger('silent-change');
+</pre>
+
 	<h3 class="thin">Disabled state</h3>
 
 	<p>As any input, switches may be disabled: disabled the original radio/checkbox or add the class disabled.</p>

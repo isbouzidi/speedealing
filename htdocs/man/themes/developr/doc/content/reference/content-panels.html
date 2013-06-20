@@ -400,7 +400,7 @@
 	<dl class="definition">
 		<dt>onStartLoad</dt>
 		<dd class="boxed margin-bottom">
-			Callback before loading content (either through the API or when clicking on a link). The function receive the settings object for the current load as parameter<br>
+			Callback before loading content (either through the API or when clicking on a link). The function receive the settings object for the current load and the ajax options as parameters: function(settings, ajaxOptions). The ajax options object may be modified to affect the incoming ajax call.<br>
 			Note: the callback may return false to prevent loading<br>
 			<span class="icon-marker black">Type:</span> function<br>
 			<span class="icon-star black">Default:</span> null

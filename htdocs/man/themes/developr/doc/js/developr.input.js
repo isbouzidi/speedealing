@@ -136,14 +136,12 @@
 			var element = $(this),
 				settings = $.extend({}, globalSettings, element.data('select-options')),
 				replacement = element.data('replacement'),
-				hidden,
-				extraWidth = 0,
 				disabled = this.disabled ? ' disabled' : '',
 				showAsMultiple = ((this.multiple || element.hasClass('multiple')) && !element.hasClass('multiple-as-single')),
 				isSized = (element.attr('size') > 1),
 				title = (this.title && this.title.length > 0) ? ' title="'+this.title+'"' : '',
 				tabIndex = (this.tabIndex > 0) ? this.tabIndex : 0,
-				width, widthString, select, dropDown, text, isWatching, values;
+				select, dropDown, text, isWatching, values;
 
 			// If already set
 			if (replacement)
@@ -154,72 +152,11 @@
 			// Stop DOM watching
 			isWatching = $.template.disableDOMWatch();
 
-			// Reveal hidden parents for correct width processing
-			hidden = element.tempShow();
-
-			// Element width
-			if (element.is(':hidden'))
-			{
-				element.show();
-			}
-			width = element.width();
-
-			// Restore hidden parents
-			hidden.tempShowRevert();
-
-			// If full width, no need to set width
-			if (element.hasClass('full-width'))
-			{
-				widthString = '';
-			}
-			else
-			{
-				// Check if width has been set in the element styling
-				if (this.style.width !== '' && this.style.width != 'auto')
-				{
-					extraWidth = showAsMultiple ? 0 : -26;
-				}
-				else
-				{
-					// Size adjustment
-					if (this.multiple)
-					{
-						if (showAsMultiple)
-						{
-							extraWidth = element.hasClass('check-list') ? 36 : 8;
-						}
-						else
-						{
-							extraWidth = element.hasClass('check-list') ? 10 : 8;
-						}
-					}
-					else if (showAsMultiple)
-					{
-						extraWidth = element.hasClass('check-list') ? 21 : 0;
-					}
-
-					// Space for scrollbar
-					if (showAsMultiple && isSized)
-					{
-						extraWidth += $.fn.customScroll ? 6 : 20;
-					}
-
-					// Extra width for safari
-					if (navigator.userAgent.match(/Safari/) && !navigator.userAgent.match(/Chrome/))
-					{
-						extraWidth += $.template.iPhone ? 6 : 23;
-					}
-				}
-
-				// Final width string
-				widthString = ' style="width:'+(width+extraWidth)+'px"';
-			}
-
 			// Create replacement
 			if (showAsMultiple)
 			{
 				// Create
-				select = $('<span class="'+this.className.replace(/validate\[.*\]/, '').replace(/(\s*)select(\s*)/, '$1selectMultiple$2')+disabled+' replacement"'+title+widthString+' tabindex="'+tabIndex+'">'+
+				select = $('<span class="'+this.className.replace(/validate\[.*\]/, '').replace(/(\s*)select(\s*)/, '$1selectMultiple$2')+disabled+' replacement"'+title+' tabindex="'+tabIndex+'">'+
 								'<span class="drop-down"></span>'+
 							'</span>')
 				.insertAfter(element)
@@ -227,9 +164,6 @@
 
 				// Register
 				element.data('replacement', select);
-
-				// Load options
-				_refreshSelectValues.call(select);
 
 				// If the number of visible options is set
 				if (isSized && !element.getStyleString().match(/height\s*:\s*[0-9]+/i))
@@ -248,18 +182,26 @@
 						});
 					}
 				}
+
+				// Load options
+				_refreshSelectValues(select, element);
+
+				// Custom event to refresh values list
+				element.on('change silent-change update-select-list', function(event)
+				{
+					_refreshSelectValues(select, element);
+				});
 			}
 			else
 			{
 				// Create
-				select = $('<span class="'+this.className.replace(/validate\[.*\]/, '')+disabled+' replacement"'+title+widthString+' tabindex="'+tabIndex+'">'+
+				select = $('<span class="'+this.className.replace(/validate\[.*\]/, '')+disabled+' replacement"'+title+' tabindex="'+tabIndex+'">'+
 								'<span class="select-value"></span>'+
 								'<span class="select-arrow">'+($.template.ie7 ? '<span class="select-arrow-before"></span><span class="select-arrow-after"></span>' : '')+'</span>'+
 								'<span class="drop-down"></span>'+
 							'</span>')
 				.insertAfter(element)
-				.data('replaced', element)
-				.on('select-prepare-open', _refreshSelectValues); // Load at first opening to reduce startup load
+				.data('replaced', element);
 
 				// Gather selected values texts
 				values = [];
@@ -269,43 +211,44 @@
 				});
 
 				// Update displayed value
-				if (this.multiple)
+				if (settings.staticValue)
+				{
+					select.children('.select-value').html(settings.staticValue);
+				}
+				else if (this.multiple)
 				{
 					switch (values.length)
 					{
 						case 1:
-							_updateSelectValueText(select, values, element.data('single-value-text'), settings.singleValueText);
+							_updateSelectValueText(select.children('.select-value'), values, element.data('single-value-text'), settings.singleValueText);
 							break;
 
 						case this.options.length:
-							_updateSelectValueText(select, values, element.data('all-values-text'), settings.allValuesText);
+							_updateSelectValueText(select.children('.select-value'), values, element.data('all-values-text'), settings.allValuesText);
 							break;
 
 						default:
-							_updateSelectValueText(select, values, element.data('multiple-values-text'), settings.multipleValuesText);
+							_updateSelectValueText(select.children('.select-value'), values, element.data('multiple-values-text'), settings.multipleValuesText);
 							break;
 					}
 				}
 				else
 				{
-					select.children('.select-value').html((values.length > 0) ? values.join(', ') : '&nbsp;');
+					select.children('.select-value').html((values.length > 0) ? values.pop() : '&nbsp;');
 				}
 
 				// Register
 				element.data('replacement', select);
-			}
 
-			// Custom event to refresh values list
-			element.on('update-select-list', function(event)
-			{
-				_refreshSelectValues.apply(select[0]);
-			});
+				// Refresh size mode
+				_refreshSelectSize(select, this, select.children('.drop-down'));
+			}
 
 			// Prevent the element from being focusable by keyboard
 			this.tabIndex = -1;
 
 			// Move select inside replacement, and remove styling
-			element.detach().appendTo(select).data('initial-classes', this.className);
+			element.detach().prependTo(select).data('initial-classes', this.className);
 			this.className = (this.className.indexOf('validate[') > -1) ? this.className.match(/validate\[.*\]/)[0] : '';
 
 			// Add clear function
@@ -334,7 +277,7 @@
 						(settings.styledOnTouch === true ||
 						(settings.styledOnTouch === null && select.hasClass('check-list')))))))
 			{
-				element.hide();
+				select.addClass('select-styled-list');
 			}
 
 			// Re-enable DOM watching if required
@@ -375,6 +318,12 @@
 		noValueText: '',
 
 		/**
+		 * Static text, always displayed no matter the value
+		 * @var string|boolean
+		 */
+		staticValue: false,
+
+		/**
 		 * Text for multiple select with one value selected, or false to just display the selected value
 		 * @var string|boolean
 		 */
@@ -404,7 +353,7 @@
 		 * Minimum number of elements to trigger a search field, if searchField is null
 		 * @var int
 		 */
-		searchIfMoreThan: 40,
+		searchIfMoreThan: 25,
 
 		/**
 		 * Helper text for seach field
@@ -637,13 +586,20 @@
 	 */
 	function _formatNumberValue(value, options)
 	{
-		var parts;
+		var parts, decimalPlaces;
 
 		// Remove format
 		value = _unformatNumberValue(value, options);
 
 		// Round value
 		value = Math.round(value/options.precision)*options.precision;
+
+		// Precision bug on float values
+		if (options.precision < 1)
+		{
+			decimalPlaces = options.precision.toString().length-2;
+			value = Math.round(value*Math.pow(10, decimalPlaces))/Math.pow(10, decimalPlaces);
+		}
 
 		// Check min/max
 		if (options.min !== null)
@@ -742,11 +698,17 @@
 				// Enable
 				element.prop('disabled', false);
 
-				// Style replacement
+				// Style
 				replacement = element.data('replacement');
 				if (replacement)
 				{
 					replacement.removeClass('disabled');
+				}
+
+				// Number inputs
+				if (element.parent().hasClass('number'))
+				{
+					element.parent().removeClass('disabled');
 				}
 			}
 			// Replacements
@@ -759,8 +721,14 @@
 					// Enable input
 					replaced.prop('disabled', false);
 
-					// Style replacement
+					// Style
 					element.removeClass('disabled');
+				}
+				// Number inputs
+				else if (element.hasClass('number'))
+				{
+					element.removeClass('disabled');
+					element.children('input').prop('disabled', false);
 				}
 			}
 		});
@@ -779,14 +747,20 @@
 			// Inputs
 			if (mayBeDisabled(element))
 			{
-				// Enable
+				// Disable
 				element.prop('disabled', true);
 
-				// Style replacement
+				// Style
 				replacement = element.data('replacement');
 				if (replacement)
 				{
 					replacement.addClass('disabled');
+				}
+
+				// Number inputs
+				if (element.parent().hasClass('number'))
+				{
+					element.parent().addClass('disabled');
 				}
 			}
 			// Replacements
@@ -796,11 +770,17 @@
 				replaced = element.data('replaced');
 				if (replaced && mayBeDisabled(replaced))
 				{
-					// Enable input
+					// Disable input
 					replaced.prop('disabled', true);
 
-					// Style replacement
+					// Style
 					element.addClass('disabled');
+				}
+				// Number inputs
+				else if (element.hasClass('number'))
+				{
+					element.addClass('disabled');
+					element.children('input').prop('disabled', true);
 				}
 			}
 		});
@@ -888,17 +868,16 @@
 	{
 		var replaced = select.data('replaced'),
 			settings = select.data('select-settings') || {},
-			list = select.children('.drop-down'),
-			formAttr, form, placeholder,
-			addedClasses = [], inheritParent,
-			scrollParents, hasFocus,
+			list,
+			clone,
+			inheritParent,
+			scrollParents,
 			position, listOffset,
 			winHeight, listHeight, optionHeight,
 			listExtra, availableHeight,
-			fixedSize = false,
-			search = false, searchSpan, searchField,
+			searchWrapper, search = false, searchFocus = false,
 			date = new Date(), time = date.getTime(),
-			isWatching, updateList, onBlur;
+			isWatching, updateList, onChange, onBlur;
 
 		// Prevent event default
 		if (event)
@@ -913,388 +892,496 @@
 		}
 
 		// Do not handle if the OS UI should be used
-		if (replaced && !replaced.is(':hidden'))
+		if (replaced && !select.hasClass('select-styled-list'))
 		{
 			return;
 		}
 
-		// Parent form
-		if (replaced)
+		// If already open
+		if (select.hasClass('select-cloned'))
 		{
-			formAttr = replaced.attr('form');
-			form = (!formAttr || formAttr === '') ? replaced.closest('form') : $('#'+formAttr);
+			return;
 		}
 
-		// If not open yet
-		if (!select.hasClass('open') && list.length > 0)
-		{
-			// List of scrolling parents
-			scrollParents = select.parents('.custom-scroll');
+		// List of scrolling parents
+		scrollParents = select.parents('.custom-scroll');
 
-			// Add class if the select is in a top-level element
-			if (select.closest('.modal, .notification, .tooltip').length > 0)
+		// Add class if the select is in a top-level element
+		if (select.closest('.modal, .notification, .tooltip').length)
+		{
+			select.addClass('over');
+		}
+		else
+		{
+			select.removeClass('over');
+		}
+
+		// Stop DOM watching
+		isWatching = $.template.disableDOMWatch();
+
+		// Clone
+		clone = select.clone().addClass('select-clone').css('width', select.width()+'px');
+		clone[0].tabIndex = -1;
+		clone.children('select').remove();
+		clone.appendTo(document.body).trackElement(select);
+
+		// Some browsers report wrong values for the first call to determine the select position - hope to fix that soon...
+		setTimeout(function()
+		{
+			select.refreshTrackedElements();
+		}, 1);
+
+		// Store reference
+		select.data('clone', clone);
+		select.addClass('select-cloned');
+
+		// Refernce
+		list = clone.children('.drop-down');
+
+		// Fill options list
+		if (replaced)
+		{
+			clone.data('replaced', replaced);
+			_refreshSelectValues(clone, replaced);
+
+			// Listen for changes
+			onChange = function(event)
 			{
-				select.addClass('over');
+				// Refresh list
+				_refreshSelectValues(clone, replaced);
+
+				// Update displayed value
+				_updateSelectText(clone, replaced, select.data('select-settings'));
+			};
+			replaced.on('change silent-change update-select-list', onChange);
+		}
+
+		/*
+		 * Inherited classes checks
+		 */
+
+		// Glossy
+		if (!select.is('.glossy'))
+		{
+			inheritParent = select.closest('.glossy');
+			if (inheritParent.length > 0)
+			{
+				clone.addClass('glossy');
 			}
+		}
+
+		// Size
+		if (!select.is('.compact'))
+		{
+			inheritParent = select.parent('.compact');
+			if (inheritParent.length > 0)
+			{
+				clone.addClass('compact');
+			}
+		}
+
+		// Re-enable DOM watching if required
+		if (isWatching)
+		{
+			$.template.enableDOMWatch();
+		}
+
+		// Prepare and open
+		clone.removeClass('reversed').addClass('open');
+		if (replaced)
+		{
+			list.on('touchend click', function(event)
+			{
+				// Check if scrolling
+				if (event.type === 'touchend' && list.data('touch-scrolling'))
+				{
+					return;
+				}
+				event.stopPropagation();
+			});
+		}
+
+		/*
+		 * Search field
+		 */
+
+		// If search field should be used
+		if (!clone.hasClass('auto-open') && (settings.searchField === true || (settings.searchField === null && list.children('a, span').length >= settings.searchIfMoreThan)))
+		{
+			// Create elements
+			searchWrapper = $('<div class="select-search-wrapper"></div>').appendTo(clone);
+			search = $('<input type="text" class="select-search" value="" placeholder="'+settings.searchText+'" autocomplete="off">').appendTo(searchWrapper);
+
+			// Behavior
+			search.on('keydown', function(event)
+			{
+				event.stopPropagation();
+
+			}).on('focus', function(event)
+			{
+				searchFocus = true;
+
+			}).on('blur', function(event)
+			{
+				searchFocus = false;
+
+			}).keyup(function(event)
+			{
+				var text = $.trim(search.val()),
+					keys = $.template.keys,
+					searchRegex,
+					matches, matchSelected,
+					focus, next,
+					replacedOption;
+
+				event.stopPropagation();
+
+				// Key handling
+				switch (event.keyCode)
+				{
+					case keys.up:
+						// Focused element
+						matches = list.children('a, span').not('.disabled').not(':hidden');
+						focus = matches.filter('.selected:first');
+						if (focus.length === 0)
+						{
+							next = matches.last();
+						}
+						else
+						{
+							next = focus.prevAll('a, span').not('.disabled').not(':hidden').first();
+						}
+
+						// Focus previous option
+						if (next.length > 0)
+						{
+							focus.removeClass('selected');
+							next.addClass('selected');
+							if ($.fn.scrollToReveal)
+							{
+								next.scrollToReveal();
+							}
+
+							// Update replaced and trigger change
+							if (replaced)
+							{
+								replacedOption = next.data('select-value');
+								if (replacedOption)
+								{
+									// If multiple selection, clear all before
+									if (replaced[0].multiple)
+									{
+										replaced.find('option:selected').prop('selected', false);
+									}
+
+									replacedOption.selected = true;
+									replaced.trigger('change');
+								}
+							}
+						}
+						break;
+
+					case keys.down:
+						// Focused element
+						matches = list.children('a, span').not('.disabled').not(':hidden');
+						focus = matches.filter('.selected:last');
+						if (focus.length === 0)
+						{
+							next = matches.first();
+						}
+						else
+						{
+							next = focus.nextAll('a, span').not('.disabled').not(':hidden').first();
+						}
+
+						// Focus next option
+						if (next.length > 0)
+						{
+							focus.removeClass('selected');
+							next.addClass('selected');
+							if ($.fn.scrollToReveal)
+							{
+								next.scrollToReveal();
+							}
+
+							// Update replaced and trigger change
+							if (replaced)
+							{
+								replacedOption = next.data('select-value');
+								if (replacedOption)
+								{
+									// If multiple selection, clear all before
+									if (replaced[0].multiple)
+									{
+										replaced.find('option:selected').prop('selected', false);
+									}
+
+									replacedOption.selected = true;
+									replaced.trigger('change');
+								}
+							}
+						}
+						break;
+
+					case keys.enter:
+					case keys.space:
+						// Just close the select if open
+						select.trigger('close-select');
+						break;
+
+					default:
+						// If search is empty
+						if (text.length === 0)
+						{
+							list.children('a, span').show();
+						}
+						else
+						{
+							// Regular expression
+							searchRegex = new RegExp(text.toLowerCase(), 'g');
+
+							// Loop through values to find a match
+							list.children('a, span').each(function(i)
+							{
+								var option = $(this);
+
+								// If matches
+								if ($.trim(option.text().toLowerCase()).match(searchRegex))
+								{
+									option.show();
+								}
+								else
+								{
+									option.hide();
+								}
+							});
+						}
+						break;
+				}
+			});
+		}
+
+		/*
+		 * Set select list position according to available screen space
+		 */
+
+		// Add scroll
+		if ($.fn.customScroll && !list.hasCustomScroll())
+		{
+			list.customScroll({
+				padding: 4,
+				showOnHover: false,
+				usePadding: true,
+				continuousWheelScroll: false,
+				continuousTouchScroll: false
+			});
+		}
+
+		// Get heights
+		listOffset = list.removeClass('reversed').position().top;
+		listHeight = list.outerHeight();
+		listExtra = listHeight-list.height();
+
+		// Function to refresh position on resize/scroll
+		updateList = function()
+		{
+			var scrollPos;
+
+			// Refresh size
+			listHeight = list.css('max-height', '').outerHeight();
+
+			// Select vertical position
+			position = clone.offset().top-win.scrollTop();
+
+			// Viewport height
+			winHeight = win.height();
+
+			// If too long to fit
+			if (position+listOffset+listHeight > winHeight)
+			{
+				// Check if it fits on top
+				if (position-listOffset-listHeight > 0)
+				{
+					// Display on top
+					clone.addClass('reversed');
+				}
+				/*
+				 * Now we know that the list can't be displayed full size, so we truncate it.
+				 * If the select is above 60% of screen height, it will show under, otherwise on top
+				 */
+				else
+				{
+					if (position > winHeight*0.6)
+					{
+						// Display on top
+						clone.addClass('reversed');
+						availableHeight = position;
+					}
+					else
+					{
+						// Display under
+						clone.removeClass('reversed');
+						availableHeight = winHeight-position-listOffset;
+					}
+
+					// Remove list padding/borders from available size
+					availableHeight -= listExtra;
+
+					// Set max-height to use available space
+					list.css({
+						maxHeight: (availableHeight-10)+'px'
+					});
+
+					// Try to restore scroll position
+					scrollPos = select.data('scrollPosition');
+					if (scrollPos)
+					{
+						list[0].scrollTop = scrollPos;
+					}
+				}
+			}
+			else
+			{
+				// Clear changes
+				clone.removeClass('reversed');
+			}
+
+			// Clear data
+			select.removeData('scrollPosition');
+
+			// Update scroll
+			if ($.fn.customScroll)
+			{
+				list.refreshCustomScroll();
+			}
+		};
+
+		// Function to handle focus loss
+		onBlur = function(event)
+		{
+			var target = $(event.target);
+
+			// Validation for click/touchend event
+			if ((event.type === 'click' || event.type === 'touchend') && (target.closest(list).length || (searchWrapper && target.closest(searchWrapper).length)))
+			{
+				return;
+			}
+			// Validation for scroll events when search field has focus
+			else if (event.type === 'scroll' && searchFocus)
+			{
+				updateList();
+				return;
+			}
+
+			// Remove events
+			win.off('resize', updateList);
+			doc.off('scroll', onBlur);
+			scrollParents.off('scroll', onBlur);
+			if (onHover && !$.template.touchOs)
+			{
+				clone.off('mouseleave', onBlur);
+			}
+			else
+			{
+				doc.off('touchend click', onBlur);
+			}
+			select.off('close-select', onBlur);
+			clone.off('close-select', onBlur);
+
+			// Stop listening for changes
+			if (replaced)
+			{
+				replaced.off('change silent-change update-select-list', onChange);
+			}
+
+			// Remove search field
+			if (search)
+			{
+				list.children('a, span').show();
+			}
+
+			// Store scroll position for later re-opening
+			select.data('scrollPosition', list[0].scrollTop);
 
 			// Stop DOM watching
 			isWatching = $.template.disableDOMWatch();
 
-			// Position
-			selectOffset = select.offset();
-
-			// Check if has focus
-			hasFocus = select.is(':focus');
-
-			// Placeholder
-			placeholder = $('<span class="'+select[0].className+'" style="'+
-								'width: '+select.width()+'px !important; '+
-								'-webkit-box-shadow: none !important; '+
-								'-moz-box-shadow: none !important; '+
-								'box-shadow: none !important;'+
-							'"></span>').insertBefore(select).append(select.children('.select-value').clone());
-
-			// Size for fluid elements
-			if (select.hasClass('full-width'))
-			{
-				select.css({ width: select.width()+'px' });
-				fixedSize = true;
-			}
-
-			/*
-			 * Inherited classes check
-			 */
-
-			// Glossy
-			if (!select.is('.glossy'))
-			{
-				inheritParent = select.closest('.glossy');
-				if (inheritParent.length > 0)
-				{
-					addedClasses.push('glossy');
-				}
-			}
-
-			// Size
-			if (!select.is('.compact'))
-			{
-				inheritParent = select.parent('.compact');
-				if (inheritParent.length > 0)
-				{
-					addedClasses.push('compact');
-				}
-			}
-
-			// If any extra class found
-			if (addedClasses.length > 0)
-			{
-				select.addClass(addedClasses.join(' '));
-			}
-
-			// Detach and put on top of everything, then track placeholder's position
-			select.detach().appendTo(document.body).trackElement(placeholder);
+			// Put element back in place
+			clone.detach();		// Detach is used to preserve event listeners
+			select.removeData('clone').removeClass('select-cloned');
 
 			// Re-enable DOM watching if required
 			if (isWatching)
 			{
 				$.template.enableDOMWatch();
 			}
+		};
 
-			// Restore focus if required
-			if (hasFocus)
+		// First call and binding
+		updateList();
+		win.on('resize', updateList);
+		doc.on('scroll', onBlur);
+		scrollParents.on('scroll', onBlur);
+		if (onHover && !$.template.touchOs)
+		{
+			clone.on('mouseleave', onBlur);
+		}
+		else
+		{
+			doc.on('touchend click', onBlur);
+		}
+		clone.on('close-select', onBlur);
+		select.on('close-select', onBlur);
+	}
+
+	/**
+	 * Detect fixed or fluid size
+	 *
+	 * @param jQuery select the replacement select
+	 * @param DOM replaced the replaced select
+	 * @param jQuery list the replacement drop-down list
+	 * @return void
+	 */
+	function _refreshSelectSize(select, replaced, list)
+	{
+		// Detect fixed width
+		if (replaced.style.width !== '' && replaced.style.width != 'auto')
+		{
+			if (!select.hasClass('fixedWidth'))
 			{
-				select.focus();
-			}
-
-			// Prepare and open
-			select.removeClass('reversed')
-				.trigger('select-prepare-open')
-				.addClass('open')
-				.trigger('select-open')
-				.on('click', _preventSelectClick);
-
-			/*
-			 * Search field
-			 */
-
-			// If search field should be used
-			if (!select.hasClass('auto-open') && (settings.searchField === true || (settings.searchField === null && list.children('a, span').length >= settings.searchIfMoreThan)))
-			{
-				// Create elements
-				search = $('<span class="select-search"></span>').appendTo(select);
-				searchSpan = $('<span>'+settings.searchText+'</span>').appendTo(search);
-				searchField = $('<input type="text" value="">').appendTo(search);
-
-				// Behavior
-				search.on('keydown click touchend', function(event)
+				select.addClass('fixedWidth');
+				if (select.hasClass('selectMultiple'))
 				{
-					event.stopPropagation();
-				});
-				searchField.focus(function()
-				{
-					select.addClass('focus');
-
-				}).blur(function()
-				{
-					select.removeClass('focus');
-
-				}).keyup(function(event)
-				{
-					var text = $.trim(searchField.val()),
-						searchRegex;
-
-					// If search is empty
-					if (text.length === 0)
-					{
-						list.children().show();
-						searchSpan.fadeIn();
-						return;
-					}
-
-					// Hide placeholder
-					searchSpan.hide();
-
-					// Regular expression
-					searchRegex = new RegExp($.trim(searchField.val()).toLowerCase(), 'g');
-
-					// Loop through values to find a match
-					list.children('a, span').each(function(i)
-					{
-						var option = $(this);
-
-						// If matches
-						if ($.trim(option.text().toLowerCase()).match(searchRegex))
-						{
-							option.show();
-						}
-						else
-						{
-							option.hide();
-						}
-					});
-				});
-			}
-
-			/*
-			 * Set select list position according to available screen space
-			 */
-
-			// Add scroll
-			if ($.fn.customScroll)
-			{
-				if (!list.hasCustomScroll())
-				{
-					list.customScroll({
-						padding: 4,
-						showOnHover: false,
-						usePadding: true
-					});
+					list.css('width', replaced.style.width);
 				}
 			}
-
-			// Get heights
-			listOffset = list.removeClass('reversed').position().top;
-			listHeight = list.outerHeight();
-			listExtra = listHeight-list.height();
-
-			// Function to refresh position on resize/scroll
-			updateList = function()
+		}
+		else
+		{
+			if (select.hasClass('fixedWidth'))
 			{
-				var scrollPos;
-
-				// Refresh size
-				listHeight = list.css('max-height', '').outerHeight();
-
-				// Select vertical position
-				position = select.offset().top-win.scrollTop();
-
-				// Viewport height
-				winHeight = win.height();
-
-				// If too long to fit
-				if (position+listOffset+listHeight > winHeight)
+				select.removeClass('fixedWidth');
+				if (select.hasClass('selectMultiple'))
 				{
-					// Check if it fits on top
-					if (position-listOffset-listHeight > 0)
-					{
-						// Display on top
-						select.addClass('reversed');
-					}
-					/*
-					 * Now we know that the list can't be displayed full size, so we truncate it.
-					 * If the select is above 60% of screen height, it will show under, otherwise on top
-					 */
-					else
-					{
-						if (position > winHeight*0.6)
-						{
-							// Display on top
-							select.addClass('reversed');
-							availableHeight = position;
-						}
-						else
-						{
-							// Display under
-							select.removeClass('reversed');
-							availableHeight = winHeight-position-listOffset;
-						}
-
-						// Remove list padding/borders from available size
-						availableHeight -= listExtra;
-
-						// Set max-height to use available space
-						list.css({
-							maxHeight: (availableHeight-10)+'px'
-						});
-
-						// Try to restore scroll position
-						scrollPos = select.data('scrollPosition');
-						if (scrollPos)
-						{
-							list[0].scrollTop = scrollPos;
-						}
-					}
+					list.css('width', '');
 				}
-				else
-				{
-					// Clear changes
-					select.removeClass('reversed');
-				}
-
-				// Clear data
-				select.removeData('scrollPosition');
-
-				// Update scroll
-				if ($.fn.customScroll)
-				{
-					list.refreshCustomScroll();
-				}
-			};
-
-			// Function to handle focus loss
-			onBlur = function(event)
-			{
-				// Remove events
-				win.off('resize', updateList);
-				doc.off('scroll', onBlur);
-				if (form)
-				{
-					form.off('submit', onBlur);
-				}
-				scrollParents.off('scroll', onBlur);
-				if (onHover && !$.template.touchOs)
-				{
-					select.off('mouseleave', onBlur);
-				}
-				else
-				{
-					doc.off('touchend click', onBlur);
-				}
-
-				// Clear data
-				select.removeData('selectCloseFunction');
-
-				// Check if has focus
-				var hasFocus = select.is(':focus');
-
-				// Remove search field
-				if (search)
-				{
-					if (searchField.is(':focus'))
-					{
-						hasFocus = true;
-					}
-					search.remove();
-					list.children().show();
-				}
-
-				// Size for fluid elements
-				if (fixedSize)
-				{
-					select.css({ width: '' });
-				}
-
-				// Inherited classes
-				if (addedClasses.length > 0)
-				{
-					select.removeClass(addedClasses.join(' '));
-				}
-
-				// Store scroll position for later re-opening
-				select.data('scrollPosition', list[0].scrollTop);
-
-				// Stop DOM watching
-				isWatching = $.template.disableDOMWatch();
-
-				// Put element back in place
-				select.stopTracking(true)
-					.off('click', _preventSelectClick)
-					.removeClass('over')
-					.detach()
-					.insertAfter(placeholder)
-					.trigger('select-prepare-close')
-					.removeClass('open')
-					.trigger('select-close');
-				placeholder.remove();
-
-				// Re-enable DOM watching if required
-				if (isWatching)
-				{
-					$.template.enableDOMWatch();
-				}
-
-				// Restore focus if required
-				if (hasFocus)
-				{
-					select.focus();
-				}
-			};
-
-			// Store for external calls
-			select.data('selectCloseFunction', onBlur);
-
-			// First call and binding
-			updateList();
-			win.on('resize', updateList);
-			doc.on('scroll', onBlur);
-			if (form)
-			{
-				form.on('submit', onBlur);
-			}
-			scrollParents.on('scroll', onBlur);
-			if (onHover && !$.template.touchOs)
-			{
-				select.on('mouseleave', onBlur);
-			}
-			else
-			{
-				doc.on('click', onBlur);
 			}
 		}
 	}
 
 	/**
-	 * Prevent the click event from bubbling when open
-	 *
-	 * @return void
-	 */
-	function _preventSelectClick(event)
-	{
-		event.preventDefault();
-	}
-
-	/**
 	 * Refresh select values
 	 *
+	 * @param jQuery select the replacement select
+	 * @param jQuery replaced the replaced select
 	 * @return void
 	 */
-	function _refreshSelectValues()
+	function _refreshSelectValues(select, replaced)
 	{
-		var select = $(this),
-			list = select.children('.drop-down'),
-			replaced = select.data('replaced'),
+		var list = select.children('.drop-down'),
 			checkList = select.hasClass('check-list') ? '<span class="check"></span>' : '',
-			isWatching;
+			newItems = $(),
+			existing, isWatching;
 
 		// If valid
 		if (list.length > 0 && replaced)
@@ -1302,13 +1389,64 @@
 			// Disable DOM watching for better performance
 			isWatching = $.template.disableDOMWatch();
 
-			list.empty();
+			// Refresh size mode
+			_refreshSelectSize(select, replaced[0], list);
+
+			// Existing options
+			existing = list.children('span, strong');
+
+			// Synchronise list
 			replaced.find('option, optgroup').each(function(i)
 			{
 				var classes = [],
+					$this = this,
 					option = (this.nodeName.toLowerCase() === 'option'),
 					node = option ? 'span' : 'strong',
-					text = option ? $(this).text() : this.label;
+					text = option ? $(this).text() : this.label,
+					found = false;
+
+				// Empty text
+				if (text.length === 0)
+				{
+					if (!option)
+					{
+						return;
+					}
+					text = '&nbsp;';
+				}
+
+				// Check if the element already exists
+				if (existing.length)
+				{
+					existing.each(function()
+					{
+						var element = $(this);
+						if (element.data('select-value') === $this)
+						{
+							found = element;
+							existing = existing.not(this);
+							return false;
+						}
+					});
+				}
+
+				// If the item already exists
+				if (found)
+				{
+					// Put at end to use right order
+					found.detach().appendTo(list);
+
+					// Reset text in case it changed
+					found.html(checkList+text);
+
+					// Check classes
+					found[this.selected ? 'addClass' : 'removeClass']('selected');
+					found[(this.parentNode.nodeName.toLowerCase() === 'optgroup') ? 'addClass' : 'removeClass']('in-group');
+					found[this.disabled ? 'addClass' : 'removeClass']('disabled');
+
+					// Done
+					return;
+				}
 
 				// Mode
 				if (option)
@@ -1332,26 +1470,25 @@
 					}
 				}
 
-				// Empty text
-				if (text.length === 0)
-				{
-					text = '&nbsp;';
-				}
-
-				$('<'+node+((classes.length > 0) ? ' class="'+classes.join(' ')+'"' : '')+'>'+checkList+text+'</'+node+'>')
-					.appendTo(list)
-					.data('select-value', this);
+				newItems = newItems.add($('<'+node+((classes.length > 0) ? ' class="'+classes.join(' ')+'"' : '')+'>'+checkList+text+'</'+node+'>')
+									.appendTo(list)
+									.data('select-value', this));
 			});
-			list.children('span').not('.disabled').on('touchend click', _clickSelectValue);
+
+			// Remove items not found
+			if (existing.length)
+			{
+				existing.remove();
+			}
+
+			// Set behavior for new items
+			newItems.not('.disabled').on('touchend click', _clickSelectValue);
 
 			// Re-enable DOM watching if required
 			if (isWatching)
 			{
 				$.template.enableDOMWatch();
 			}
-
-			// Remove binding
-			select.off('select-prepare-open', _refreshSelectValues);
 		}
 	}
 
@@ -1363,13 +1500,6 @@
 	 */
 	function _clickSelectValue(event)
 	{
-		// Check if valid touch-click event
-		if (!$.template.processTouchClick(this, event))
-		{
-			event.stopPropagation();
-			return;
-		}
-
 		var option = $(this),
 			list = option.parent(),
 			select = list.parent(),
@@ -1381,6 +1511,13 @@
 		// Detect touch scrolling
 		if (list.data('touch-scrolling'))
 		{
+			return;
+		}
+
+		// Check if valid touch-click event
+		if (!$.template.processTouchClick(this, event))
+		{
+			event.stopPropagation();
 			return;
 		}
 
@@ -1410,12 +1547,6 @@
 					replacedOption.selected = !selected;
 					replaced.trigger('change');
 				}
-
-				// Stop propagation to allow multiple selection
-				if (event.type === 'touchend' || !select.hasClass('selectMultiple'))
-				{
-					event.stopPropagation();
-				}
 			}
 			// Standard selection mode
 			else
@@ -1433,6 +1564,88 @@
 					// Update select
 					replaced.val(replacedOption.value).trigger('change');
 				}
+
+				// Close select
+				if (!select.hasClass('selectMultiple'))
+				{
+					select.trigger('close-select');
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates the select text
+	 *
+	 * @param jQuery select the replacement select
+	 * @param jQuery replaced the replaced select
+	 * @param object settings the options (may be from another object)
+	 * @return void
+	 */
+	function _updateSelectText(select, replaced, settings)
+	{
+		var selected = replaced.find(':selected'),
+			selectValue = select.children('.select-value'),
+			values = [],
+			text;
+
+		// Not for multiple selects
+		if (select.hasClass('selectMultiple'))
+		{
+			return;
+		}
+
+		// Static text
+		if (settings.staticValue)
+		{
+			selectValue.html(settings.staticValue);
+			return;
+		}
+
+		// If nothing selected
+		if (selected.length === 0)
+		{
+			// Get empty placeholder
+			text = replaced.data('no-value-text') || settings.noValueText;
+
+			// Must not be empty to preserve vertical-align
+			if (!text || text.length === 0)
+			{
+				text = '&nbsp;';
+			}
+
+			// Set text
+			selectValue.addClass('alt').html(text);
+		}
+		else
+		{
+			// Gather selected values texts
+			selected.each(function(i)
+			{
+				values.push($(this).text());
+			});
+
+			// Update displayed value
+			if (replaced[0].multiple)
+			{
+				switch (values.length)
+				{
+					case 1:
+						_updateSelectValueText(selectValue, values, replaced.data('single-value-text'), settings.singleValueText);
+						break;
+
+					case replaced[0].options.length:
+						_updateSelectValueText(selectValue, values, replaced.data('all-values-text'), settings.allValuesText);
+						break;
+
+					default:
+						_updateSelectValueText(selectValue, values, replaced.data('multiple-values-text'), settings.multipleValuesText);
+						break;
+				}
+			}
+			else
+			{
+				selectValue.text((values.length > 0) ? values.join(', ') : '&nbsp;');
 			}
 		}
 	}
@@ -1440,13 +1653,13 @@
 	/**
 	 * Set the select replacement text according to options
 	 *
-	 * @param jQuery select the replacement select
+	 * @param jQuery selectValue the text block
 	 * @param array values the list of selected values text
 	 * @param string|boolean dataText template specified in the element's data, if any
 	 * @param string|boolean defaultText default value
 	 * @return void
 	 */
-	function _updateSelectValueText(select, values, dataText, defaultText)
+	function _updateSelectValueText(selectValue, values, dataText, defaultText)
 	{
 		// If no user value, use default
 		if (!dataText)
@@ -1463,11 +1676,11 @@
 		// Check format
 		if (typeof dataText === 'boolean')
 		{
-			select.children('.select-value').removeClass('alt').html((values.length > 0) ? values.join(', ') : '&nbsp;');
+			selectValue.removeClass('alt').html((values.length > 0) ? values.join(', ') : '&nbsp;');
 		}
 		else
 		{
-			select.children('.select-value').addClass('alt').html(dataText.replace('%d', values.length));
+			selectValue.addClass('alt').html(dataText.replace('%d', values.length));
 		}
 	}
 
@@ -1556,8 +1769,7 @@
 	function _removeSelectReplacement()
 	{
 		var element = $(this),
-			select = element.data('replacement'),
-			closeFunc, blurFunc;
+			select = element.data('replacement');
 
 		// If not replaced
 		if (!select)
@@ -1566,21 +1778,22 @@
 		}
 
 		// If open
-		closeFunc = select.data('selectCloseFunction');
-		if (closeFunc)
+		if (select.hasClass('select-cloned'))
 		{
-			closeFunc();
+			select.trigger('close-select');
 		}
 
 		// If focused
-		blurFunc = select.data('selectBlurFunction');
-		if (blurFunc)
+		if (select.hasClass('focus'))
 		{
-			blurFunc();
+			select.blur();
 		}
 
 		// Tabindex
-		this.tabIndex = select[0].tabIndex;
+		if (select[0].tabIndex > 0)
+		{
+			this.tabIndex = select[0].tabIndex;
+		}
 
 		// Remove select from replacement and restore classes
 		element.detach().insertBefore(select).css('display', '');
@@ -1699,7 +1912,7 @@
 			replaced = element.data('replaced');
 
 		// If not valid, exit
-		if (replaced.length === 0)
+		if (!replaced || replaced.length === 0)
 		{
 			return;
 		}
@@ -1774,7 +1987,7 @@
 			ieSelectStart, dragged = false, value;
 
 		// If not valid, exit
-		if (replaced.length === 0)
+		if (!replaced || replaced.length === 0)
 		{
 			return;
 		}
@@ -1881,7 +2094,7 @@
 	});
 
 	// Radios and checkboxes changes
-	doc.on('change', ':radio, :checkbox', function(event)
+	doc.on('change silent-change', ':radio, :checkbox', function(event)
 	{
 		var element = $(this),
 			replacement = element.data('replacement'),
@@ -1917,9 +2130,6 @@
 				{
 					input.parent()[checked ? 'removeClass' : 'addClass']('active');
 				}
-
-				// Trigger special event
-				input.trigger('silent-change');
 			});
 		}
 	});
@@ -1932,7 +2142,7 @@
 			handleKeysEvents = false;
 
 		// If not valid, exit
-		if (replaced.length === 0)
+		if (!replaced || replaced.length === 0)
 		{
 			return;
 		}
@@ -1947,7 +2157,7 @@
 		// IE7-8 focus handle is different from modern browsers
 		if ($.template.ie7 || $.template.ie8)
 		{
-			doc.find('.focus').not(element).blur();
+			//doc.find('.focus').not(element).blur();
 		}
 
 		// Show focus
@@ -1998,11 +2208,8 @@
 	{
 		var element = $(this);
 
-		// IE7-8 focus handle is different from modern browsers
-		if ($.template.ie7 || $.template.ie8)
-		{
-			doc.find('.focus').not(element).blur();
-		}
+		// Fixes the focus issues on some browsers
+		//doc.find('.focus').not(element).blur();
 
 		// Styling
 		element.addClass('focus');
@@ -2041,11 +2248,8 @@
 			return;
 		}
 
-		// IE7-8 focus handle is different from modern browsers
-		if ($.template.ie7 || $.template.ie8)
-		{
-			doc.find('.focus').not(input).blur();
-		}
+		// Fixes the focus issues on some browsers
+		//doc.find('.focus').not(input).blur();
 
 		// Placeholder polyfill
 		if (!Modernizr.input.placeholder && input.attr('placeholder') && input.val() === input.attr('placeholder'))
@@ -2161,7 +2365,7 @@
 	}
 
 	// File inputs
-	doc.on('change', '.file > input[type="file"]', function(event)
+	doc.on('change silent-change', '.file > input[type="file"]', function(event)
 	{
 		var input = $(this),
 			files = [], text, i;
@@ -2193,7 +2397,7 @@
 			value;
 
 		// Check if valid
-		if (input.length === 0)
+		if (input.length === 0 || input.is(':disabled'))
 		{
 			return;
 		}
@@ -2205,118 +2409,43 @@
 	// Scroll on value inputs
 	doc.on('mousewheel', '.number', function(event, delta, deltaX, deltaY)
 	{
-		// If the element scrolled
-		$(this).incrementNumber(delta > 0, event.shiftKey).focus().trigger('change');
+		var input = $(this).find('input');
+
+		// Check if valid
+		if (!input.length || input.is(':disabled'))
+		{
+			return;
+		}
+
+		// Change value
+		input.incrementNumber(delta > 0, event.shiftKey).focus().trigger('change');
 
 		// Prevent parents from scrolling
 		event.preventDefault();
 	});
 
-	// Handle select focus
-	if (!$.template.touchOs)
+	// Handle native select focus
+	doc.on('focus', '.select > select', function()
 	{
-		doc.on('focus', 'select', function()
+		var select = $(this),
+			replacement = select.data('replacement');
+		if (replacement)
 		{
-			var select = $(this).data('replacement');
-			if (select)
+			if (replacement.hasClass('select-styled-list'))
 			{
-				select.focus();
-			}
-
-		});
-	}
-	doc.on('change', 'select', function()
-	{
-		var replaced = $(this),
-			selected = replaced.find(':selected'),
-			select = replaced.data('replacement'),
-			values = [],
-			displayAsMultiple, text, settings;
-
-		// If valid
-		if (select)
-		{
-			// Settings
-			settings = select.data('select-settings');
-
-			// Mode
-			displayAsMultiple = select.hasClass('selectMultiple');
-
-			// If nothing selected
-			if (selected.length === 0)
-			{
-				// Update displayed value
-				if (!displayAsMultiple)
-				{
-					// Get empty placeholder
-					text = replaced.data('no-value-text') || settings.noValueText;
-
-					// Must not be empty to preserve vertical-align
-					if (!text || text.length === 0)
-					{
-						text = '&nbsp;';
-					}
-
-					// Set text
-					select.children('.select-value').addClass('alt').html(text);
-				}
-
-				// If open, deselect all
-				if (select.hasClass('open') || displayAsMultiple)
-				{
-					select.children('.drop-down').children('a, span').removeClass('selected');
-				}
+				replacement.focus();
 			}
 			else
 			{
-				if (!displayAsMultiple)
+				replacement.hasClass('focus');
+				select.one('blur', function()
 				{
-					// Gather selected values texts
-					selected.each(function(i)
-					{
-						values.push($(this).text());
-					});
-
-					// Update displayed value
-					if (this.multiple)
-					{
-						switch (values.length)
-						{
-							case 1:
-								_updateSelectValueText(select, values, replaced.data('single-value-text'), settings.singleValueText);
-								break;
-
-							case this.options.length:
-								_updateSelectValueText(select, values, replaced.data('all-values-text'), settings.allValuesText);
-								break;
-
-							default:
-								_updateSelectValueText(select, values, replaced.data('multiple-values-text'), settings.multipleValuesText);
-								break;
-						}
-					}
-					else
-					{
-						select.children('.select-value').text((values.length > 0) ? values.join(', ') : '&nbsp;');
-					}
-				}
-
-				// Update selected element
-				select.children('.drop-down').children('a, span').each(function()
-				{
-					var option = $(this),
-						selectValue = option.data('select-value');
-					if (selectValue)
-					{
-						option[selectValue.selected ? 'addClass' : 'removeClass']('selected');
-					}
+					replacement.removeClass('focus');
 				});
 			}
 		}
 	});
-
-	// Handle select focus
-	doc.on('focus', 'span.select, span.selectMultiple', function(event)
+	doc.on('focus select-focus', 'span.select, span.selectMultiple', function(event)
 	{
 		// Only work if the element is the event's target
 		if (event.target !== this)
@@ -2324,12 +2453,24 @@
 			return;
 		}
 
-		var select = $(this),
-			settings = select.data('select-settings'),
+		var select = $(this).closest('.select, .selectMultiple'),
+			settings = select.data('select-settings') || {},
 			replaced = select.data('replaced'),
-			list = select.children('.drop-down'),
 			handleKeysEvents, search = '',
 			blurTimeout, searchTimeout;
+
+		// Do not handle clones
+		if (select.hasClass('select-clone'))
+		{
+			return;
+		}
+
+		// Do not handle for non-styled lists
+		if (replaced && !select.hasClass('select-styled-list'))
+		{
+			replaced.focus();
+			return;
+		}
 
 		// Do not handle if disabled
 		if (select.closest('.disabled').length > 0 || (replaced && replaced.is(':disabled')))
@@ -2354,6 +2495,9 @@
 			return;
 		}
 
+		// Fixes the focus issues on some browsers
+		//doc.find('.focus').not(select).blur();
+
 		// Visual style
 		select.addClass('focus');
 
@@ -2365,7 +2509,9 @@
 		handleKeysEvents = function(event)
 		{
 			var keys = $.template.keys,
-				closeFunc, selectedIndex, mode,
+				target = select.data('clone') || select,
+				list = target.children('.drop-down'),
+				selectedIndex, mode,
 				focus, next, replacedOption,
 				character, searchRegex;
 
@@ -2375,35 +2521,30 @@
 			// Key handling
 			switch (event.keyCode)
 			{
-				case keys.tab:
-					// If open, close before tabultation triggers to preserve natural tabultation order
-					closeFunc = select.data('selectCloseFunction');
-					if (closeFunc)
-					{
-						closeFunc();
-					}
-					break;
-
 				case keys.up:
 					// If open or multiple, work on displayed options
-					if (select.hasClass('open') || select.hasClass('selectMultiple'))
+					if (target.hasClass('open') || select.hasClass('selectMultiple'))
 					{
 						// Focused element
 						focus = list.children('.'+mode+':first');
 						if (focus.length === 0)
 						{
-							next = list.children('a:last, span:last');
+							next = list.children('a, span').not('.disabled').last();
 						}
 						else
 						{
-							next = focus.prevAll('a:first, span:first');
+							next = focus.prevAll('a, span').not('.disabled').first();
 						}
 
 						// Focus previous option
 						if (next.length > 0)
 						{
 							focus.removeClass(mode);
-							next.addClass(mode).scrollToReveal();
+							next.addClass(mode);
+							if ($.fn.scrollToReveal)
+							{
+								next.scrollToReveal();
+							}
 
 							// If selection mode, update replaced and trigger change
 							if (mode === 'selected' && replaced)
@@ -2430,18 +2571,29 @@
 					{
 						// Update original, listeners will update the replacement
 						selectedIndex = _getSelectedIndex(replaced);
-						if (selectedIndex !== false && selectedIndex > 0)
+						if (selectedIndex !== false)
 						{
-							replaced[0].selectedIndex = selectedIndex-1;
+							while (selectedIndex > 0)
+							{
+								// Make sure it is not disabled
+								if (!replaced[0].options[selectedIndex-1].disabled)
+								{
+									replaced[0].selectedIndex = selectedIndex-1;
+									replaced.change();
+									break;
+								}
+
+								// Else, next option
+								--selectedIndex;
+							}
 						}
-						replaced.change();
 						event.preventDefault();
 					}
 					break;
 
 				case keys.down:
 					// If not open yet, check if we have to
-					if (select.hasClass('select') && !select.hasClass('open') && settings.openOnKeyDown)
+					if (select.hasClass('select') && !target.hasClass('open') && settings.openOnKeyDown)
 					{
 						_openSelect(select);
 						event.preventDefault();
@@ -2449,24 +2601,28 @@
 					else
 					{
 						// If open or multiple, work on displayed options
-						if (select.hasClass('open') || select.hasClass('selectMultiple'))
+						if (target.hasClass('open') || select.hasClass('selectMultiple'))
 						{
 							// Focused element
 							focus = list.children('.'+mode+':last');
 							if (focus.length === 0)
 							{
-								next = list.children('a:first, span:first');
+								next = list.children('a, span').not('.disabled').first();
 							}
 							else
 							{
-								next = focus.nextAll('a:first, span:first');
+								next = focus.nextAll('a, span').not('.disabled').first();
 							}
 
 							// Focus next option
 							if (next.length > 0)
 							{
 								focus.removeClass(mode);
-								next.addClass(mode).scrollToReveal();
+								next.addClass(mode);
+								if ($.fn.scrollToReveal)
+								{
+									next.scrollToReveal();
+								}
 
 								// If selection mode, update replaced and trigger change
 								if (mode === 'selected' && replaced)
@@ -2474,8 +2630,14 @@
 									replacedOption = next.data('select-value');
 									if (replacedOption)
 									{
-										// Set value
-										replaced.val(replacedOption.value).trigger('change');
+										// If multiple selection, clear all before
+										if (replaced[0].multiple)
+										{
+											replaced.find('option:selected').prop('selected', false);
+										}
+
+										replacedOption.selected = true;
+										replaced.trigger('change');
 									}
 								}
 							}
@@ -2487,11 +2649,22 @@
 						{
 							// Update original, listeners will update the replacement
 							selectedIndex = _getSelectedIndex(replaced);
-							if (selectedIndex !== false && selectedIndex < replaced[0].options.length-1)
+							if (selectedIndex !== false)
 							{
-								replaced[0].selectedIndex = selectedIndex+1;
+								while (selectedIndex < replaced[0].options.length-1)
+								{
+									// Make sure it is not disabled
+									if (!replaced[0].options[selectedIndex+1].disabled)
+									{
+										replaced[0].selectedIndex = selectedIndex+1;
+										replaced.change();
+										break;
+									}
+
+									// Else, next option
+									++selectedIndex;
+								}
 							}
-							replaced.change();
 							event.preventDefault();
 						}
 					}
@@ -2500,7 +2673,7 @@
 				case keys.enter:
 				case keys.space:
 					// If focus mode on, simulate click
-					if (mode === 'focus' && (select.hasClass('selectMultiple') || select.hasClass('open')))
+					if (mode === 'focus' && (select.hasClass('selectMultiple') || target.hasClass('open')))
 					{
 						// Focused element
 						focus = list.children('.'+mode);
@@ -2511,14 +2684,9 @@
 						}
 					}
 					// Else, just close the select if open
-					else if (select.hasClass('open'))
+					else if (target.hasClass('open'))
 					{
-						closeFunc = select.data('selectCloseFunction');
-						if (closeFunc)
-						{
-							closeFunc();
-							event.preventDefault();
-						}
+						target.trigger('close-select');
 					}
 					break;
 
@@ -2547,7 +2715,7 @@
 						}, 1500);
 
 						// Mode
-						if (select.hasClass('open') || select.hasClass('selectMultiple'))
+						if (target.hasClass('open') || select.hasClass('selectMultiple'))
 						{
 							// Loop through values to find a match
 							list.children('a, span').each(function(i)
@@ -2562,7 +2730,11 @@
 
 									// Focus option
 									focus.removeClass(mode);
-									option.addClass(mode).scrollToReveal();
+									option.addClass(mode);
+									if ($.fn.scrollToReveal)
+									{
+										option.scrollToReveal();
+									}
 
 									// If selection mode, update replaced and trigger change
 									if (mode === 'selected' && replaced)
@@ -2609,54 +2781,100 @@
 		};
 
 		// Blur function
-		function onBlur(event)
+		function onBlur(event, timed)
 		{
-			var closeFunc;
+			var target = $(event.target),
+				clone = select.data('clone');
+
+			// Validation for click/touchend event
+			if ((event.type === 'click' || event.type === 'touchend') && (target.closest(select).length || (clone && target.closest(clone).length)))
+			{
+				return;
+			}
 
 			// Handle really close blur/focus events
 			blurTimeout = select.data('selectBlurTimeout');
 			if (!blurTimeout)
 			{
 				// Wait, are you sure you want me to blur? Let's just wait a little...
-				select.data('selectBlurTimeout', setTimeout(function() { onBlur.call(this, event); }, 40));
+				select.data('selectBlurTimeout', setTimeout(function() { onBlur.call(this, event, true); }, 40));
 				return;
 			}
-			else
+			else if (timed)
 			{
 				// The blur timeout has ended without getting back focus, so let's blur!
 				select.removeData('selectBlurTimeout');
 			}
+			else
+			{
+				// Multiple blur events, do not handle
+				return;
+			}
 
-			// Clear data
-			select.removeData('selectBlurFunction');
+			// Close if open
+			select.trigger('close-select');
 
 			// Remove styling
-			if (select.children('.select-search').children('input:focus').length === 0)
-			{
-				select.removeClass('focus');
-			}
-			list.children('.focus').removeClass('focus');
+			select.removeClass('focus');
 
 			// Stop listening
+			doc.off('focusin', onFocusin);
 			doc.off('keydown', handleKeysEvents);
+			doc.off('click', onBlur);
 			select.off('blur', onBlur);
 		}
 
-		// Store for external calls
-		select.data('selectBlurFunction', onBlur);
+		// Watch focus on other elements
+		function onFocusin(event)
+		{
+			var target = $(event.target),
+				clone = select.data('clone');
+
+			// Check if focus target is within the select
+			if (target.closest(select).length || (clone && target.closest(clone).length))
+			{
+				// Pseudo-focus to preserve styling and key events
+				select.trigger('select-focus');
+			}
+			else
+			{
+				// Handle focus on another input while waiting to refocus a select
+				blurTimeout = select.data('selectBlurTimeout');
+				if (blurTimeout)
+				{
+					clearTimeout(blurTimeout);
+				}
+				onBlur.call(this, event, true);
+			}
+		}
 
 		// Start listening
 		select.on('blur', onBlur);
+		doc.on('touchend click', onBlur);
 		doc.on('keydown', handleKeysEvents);
+		doc.on('focusin', onFocusin);
+	});
+
+	// Handle select change
+	doc.on('change silent-change', 'select', function()
+	{
+		var replaced = $(this),
+			select = replaced.data('replacement');
+
+		// If valid
+		if (select)
+		{
+			_updateSelectText(select, replaced, select.data('select-settings'));
+		}
 	});
 
 	// Opening when on touch device
 	if ($.template.touchOs)
 	{
 		// Open on tap
-		doc.on('touchend', '.select', function(event)
+		doc.on('touchend', '.select-arrow, span.select-value', function(event)
 		{
-			_openSelect($(this), false, event);
+			_openSelect($(this).parent(), false, event);
 		});
 	}
 	else
@@ -2665,18 +2883,20 @@
 		doc.on('click', '.select-arrow, span.select-value', function(event)
 		{
 			var select = $(this).parent();
-
-			// Filter here rather than in the delegated event, a little bit faster overall
-			if (!select.hasClass('auto-open'))
+			if (!select.hasClass('select-clone') && !select.hasClass('auto-open'))
 			{
-				_openSelect($(this).parent(), false, event);
+				_openSelect(select, false, event);
 			}
 		});
 
 		// Auto-opening selects
 		doc.on('mouseenter', '.select.auto-open', function(event)
 		{
-			_openSelect($(this), true, event);
+			var select = $(this);
+			if (!select.hasClass('select-clone'))
+			{
+				_openSelect($(this), true, event);
+			}
 		});
 	}
 
@@ -2692,7 +2912,7 @@
 			// Return to normal state
 			validateEnd = function()
 			{
-				hidden.hide();
+				hidden.css('display', '');
 				form.off('jqv.form.result', validateEnd);
 			};
 

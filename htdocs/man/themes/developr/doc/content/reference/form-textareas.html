@@ -35,55 +35,48 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 &lt;textarea class="input full-width autoexpanding"&gt;...&lt;/textarea&gt;
 </pre>
 
+	<p>Since v1.5, a custom event is available to manually trigger a resize on the textarea:</p>
+
+	<pre class="prettyprint">
+$('#textarea').trigger('jsautoexpand');
+</pre>
+
 	<h3 class="thin">WYSIWYG editor</h3>
 
-	<p>The template embeds a simple but complete WYSIWYG editor, CLEditor:</p>
+	<p>Since v1.5, the template embed the powerful CKEditor:</p>
 
 	<div class="margin-bottom">
-		<textarea id="cleditor">This is a rich-text editor: select <b>some text</b> and click buttons!</textarea>
+		<textarea id="ckeditor">This is a rich-text editor: select <b>some text</b> and click buttons!</textarea>
 	</div>
 
 	<p>Basic use:</p>
 
 	<h6>Markup</h6>
 	<pre class="prettyprint">
-&lt;textarea id="cleditor"&gt;...&lt;/textarea&gt;
+&lt;textarea id="ckeditor"&gt;...&lt;/textarea&gt;
 </pre>
 
 	<h6>Javascript</h6>
-	<pre class="prettyprint">
-// Init
-var editorTextarea = $('#cleditor'),
-	editorWrapper = editorTextarea.parent(),
-	editor = editorTextarea.cleditor({
-		width:	'100%',
-		height:	350
-	})[0];
 
-// Update size when resizing
-editorWrapper.sizechange(function()
-{
-	editor.refresh();
+	<p>Simply pass the textarea ID to the main method:</p>
+
+	<pre class="prettyprint">
+CKEDITOR.replace( 'ckeditor', {
+	height: 300
 });
 </pre>
 
-	<p>To learn more on how to use this plugin, go to <a href="http://premiumsoftware.net/cleditor/">http://premiumsoftware.net/cleditor/</a></p>
+	<p>To learn more on how to use this plugin, go to <a href="http://docs.ckeditor.com/">http://docs.ckeditor.com/</a></p>
+
+	<p class="wrapped left-icon icon-info-round">
+		The template was previously bundled with <a href="http://premiumsoftware.net/cleditor/">CLEditor</a>, but this plugin was dropped because it is not compatible with jQuery 1.9 and this is unlikely to be fixed anytime soon. Anyway, if you still want to use it, simply load the <a href="https://github.com/jquery/jquery-migrate/">jQuery Migrate Plugin</a> along with it, it will bring back the required deprecated features required by CLEditor.
+	</p>
 
 </div>
 <script>
 
-	// CLEditor
-	var editorTextarea = $('#cleditor'),
-		editorWrapper = editorTextarea.parent(),
-		editor = editorTextarea.cleditor({
-			width:	'100%',
-			height:	350
-		})[0];
-
-	// Update size when resizing
-	editorWrapper.sizechange(function()
-	{
-		editor.refresh();
+	CKEDITOR.replace( 'ckeditor', {
+		height: 300
 	});
 
 </script>

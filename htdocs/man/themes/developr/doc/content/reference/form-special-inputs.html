@@ -174,7 +174,22 @@
 $('.datepicker').glDatePicker({ zIndex: 100 });
 </pre>
 
-	<p>For more details on the plugin and its use, go to <a href="http://code.gautamlad.com/glDatePicker/">http://code.gautamlad.com/glDatePicker/</a>.</p>
+	<p>Since v1.5, the template includes 2 stylesheets:</p>
+	<ul>
+		<li><strong>developr.css</strong>: fluid size calendar (new default behavior for the plugin)</li>
+		<li><strong>developr.fixed.css</strong>: fixed size calendar, same as old version</li>
+	</ul>
+
+	<p>The new fluid design may not fit in every project, hence the two stylesheets. But you can mix both sizes too: include <strong>developr.css</strong> (so datepickers will be fluid by default), and initialize the plugin like this for datepickers which require a fixed size:<p>
+
+	<pre class="prettyprint">
+$('.datepicker').glDatePicker({
+	cssName: 'default fixed',
+	zIndex: 100
+});
+</pre>
+
+	<p>For more details on the plugin and how to use it, go to <a href="http://glad.github.io/glDatePicker/">http://glad.github.io/glDatePicker/</a>.</p>
 
 </div>
 <script>

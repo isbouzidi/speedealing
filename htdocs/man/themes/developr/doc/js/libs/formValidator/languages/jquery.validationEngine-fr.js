@@ -10,6 +10,12 @@
                     "alertTextCheckboxMultiple": "* Choisir une option",
                     "alertTextCheckboxe": "* Cette option est requise"
                 },
+                "requiredInFunction": { 
+                    "func": function(field, rules, i, options){
+                        return (field.val() == "test") ? true : false;
+                    },
+                    "alertText": "* Field must equal test"
+                },
                "minSize": {
                     "regex": "none",
                     "alertText": "* Minimum ",
@@ -73,7 +79,7 @@
                 },
                 "number": {
                     // Number, including positive, negative, and floating decimal. credit: orefalo
-                    "regex": /^[\-\+]?(([0-9]+)([\.,]([0-9]+))?|([\.,]([0-9]+))?)$/,
+                    "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,
                     "alertText": "* Nombre flottant invalide"
                 },
                 "date": {
@@ -93,11 +99,11 @@
                     "alertText": "* Seuls les chiffres sont acceptés"
                 },
                 "onlyLetterSp": {
-                    "regex": /^[a-zA-Z\ \']+$/,
+                    "regex": /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FD\ \']+$/,
                     "alertText": "* Seules les lettres sont acceptées"
                 },
                 "onlyLetterNumber": {
-                    "regex": /^[0-9a-zA-Z]+$/,
+                    "regex": /^[0-9a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FD]+$/,
                     "alertText": "* Aucun caractère spécial n'est accepté"
                 },
 				// --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings

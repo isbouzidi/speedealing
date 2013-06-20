@@ -33,7 +33,7 @@
 		animate = true;
 
 	// Navigable menus
-	doc.on('click', '.navigable li, .navigable li > span, .navigable li > a', function(event)
+	doc.on('click', '.navigable li, .navigable li > span, .navigable li > a, .navigable li > b', function(event)
 	{
 		// Only work if the element is the event's target
 		if (event.target !== this)
@@ -73,7 +73,7 @@
 			load = root.children('.load'),
 
 			// Other vars
-			current, url, delayedOpen, text;
+			current, url, delayedOpen, text, hidden, parentLi, parentLink;
 
 		// Prepare on first call
 		if (!mainUL.hasClass('fixed'))
@@ -126,7 +126,7 @@
 					else
 					{
 						parentLi = target.closest('li');
-						parentLink = parentLi.children('a, span').first();
+						parentLink = parentLi.children('a, b, span').not('.icon').first();
 						if (!parentLink.length)
 						{
 							parentLink = parentLi;
@@ -184,6 +184,9 @@
 		// If there is a submenu
 		if (submenu.length > 0)
 		{
+			// Reveal hidden parents if needed for correct height processing
+			hidden = root.tempShow();
+
 			// If not ready yet
 			if (parentUL.outerHeight(true) === 0 && allUL.length < 3)
 			{
@@ -241,10 +244,28 @@
 
 			// Show back button
 			back[animate ? 'animate' : 'css']({ marginTop: 0 });
-			backText.text(settings.backText || clicked.contents().filter(function(){ return(this.nodeType == 3); }).text() );
+
+			// Text
+			if (settings.backText)
+			{
+				backText.text(settings.backText);
+			}
+			else
+			{
+				parentLi = li;
+				parentLink = parentLi.children('a, b, span').not('.icon').first();
+				if (!parentLink.length)
+				{
+					parentLink = parentLi;
+				}
+				backText.text(parentLink.contents().filter(function(){ return(this.nodeType == 3); }).text() );
+			}
 
 			// Send open event
 			li.trigger('navigable-open');
+
+			// Hide previously hidden parents
+			hidden.tempShowRevert();
 
 			// Prevent default behavior
 			event.preventDefault();

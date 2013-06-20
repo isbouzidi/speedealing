@@ -30,29 +30,30 @@
 
 /* These styles define the columns size. They must be redefined for each responsive size */
 .column,
-.one-column,
+.one-column				{ width: 6.0833%; }
+.two-columns			{ width: 14.4167%; }
+.three-columns			{ width: 22.75%; }
+.four-columns			{ width: 31.0833%; }
+.five-columns			{ width: 39.4167%; }
+.six-columns			{ width: 47.75%; }
+.seven-columns			{ width: 56.0833%; }
+.eight-columns			{ width: 64.4167%; }
+.nine-columns			{ width: 72.72%; }
+.ten-columns			{ width: 81.0833%; }
+.eleven-columns			{ width: 89.4167%; }
+.twelve-columns			{ width: 97.75%; }
+
 .one-column-tablet		{ width: 6.0833%; }
-.two-columns,
 .two-columns-tablet		{ width: 14.4167%; }
-.three-columns,
 .three-columns-tablet	{ width: 22.75%; }
-.four-columns,
 .four-columns-tablet	{ width: 31.0833%; }
-.five-columns,
 .five-columns-tablet	{ width: 39.4167%; }
-.six-columns,
 .six-columns-tablet		{ width: 47.75%; }
-.seven-columns,
 .seven-columns-tablet	{ width: 56.0833%; }
-.eight-columns,
 .eight-columns-tablet	{ width: 64.4167%; }
-.nine-columns,
 .nine-columns-tablet	{ width: 72.72%; }
-.ten-columns,
 .ten-columns-tablet		{ width: 81.0833%; }
-.eleven-columns,
 .eleven-columns-tablet	{ width: 89.4167%; }
-.twelve-columns,
 .twelve-columns-tablet	{ width: 97.75%; }
 
 /* Line breaks to ensure correct float */
@@ -357,42 +358,114 @@ h2 {
 						transition: none;
 					}
 
+			.shortcut-legend {
+				position: absolute;
+				right: 0;
+				width: 68px;
+				bottom: 6px;
+				font-size: 11px;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				text-align: center;
+				text-indent: 0;
+				color: #999;
+				-webkit-transition: right 200ms, color 200ms;
+				-moz-transition: right 200ms, color 200ms;
+				-o-transition: right 200ms, color 200ms;
+				transition: right 200ms, color 200ms;
+				}
+				.no-generatedcontent .shortcut-legend {
+					bottom: 10px;
+				}
+				a > .shortcut-legend {
+					bottom: -14px;
+					}
+					.no-generatedcontent a > .shortcut-legend {
+						bottom: -10px;
+					}
+					li:hover > a > .shortcut-legend {
+						color: white;
+					}
+				body.reversed .shortcut-legend {
+					right: auto;
+					left: 0;
+					-webkit-transition: left 200ms, color 200ms;
+					-moz-transition: left 200ms, color 200ms;
+					-o-transition: left 200ms, color 200ms;
+					transition: left 200ms, color 200ms;
+					}
+					.no-generatedcontent body.reversed a > .shortcut-legend {
+						left: 68px;
+					}
+
 			.no-touch #shortcuts > li > a:hover,
-			#shortcuts > li.current > a,
-			.no-touch #shortcuts:hover > li.current:hover > a {
+			#shortcuts > .current > a,
+			.no-touch #shortcuts:hover > .current:hover > a {
 				margin-right: -68px;
 				}
-				.no-generatedcontent #shortcuts > li.current > a {
-					background-color: white;
+				.no-touch a:hover > .shortcut-legend,
+				#shortcuts > .current > a > .shortcut-legend,
+				.no-touch #shortcuts:hover > .current:hover > a > .shortcut-legend {
+					right: 68px;
 				}
+				.no-generatedcontent #shortcuts > .current > a {
+					background-color: white;
+					}
+					.no-generatedcontent #shortcuts > .current > a > .shortcut-legend {
+						bottom: -18px;
+					}
 				.no-touch body.reversed #shortcuts > li > a:hover,
-				body.reversed #shortcuts > li.current > a,
-				.no-touch body.reversed #shortcuts:hover > li.current:hover > a {
+				body.reversed #shortcuts > .current > a,
+				.no-touch body.reversed #shortcuts:hover > .current:hover > a {
 					margin-right: 0;
 					margin-left: -68px;
 					}
-					.no-generatedcontent body.reversed #shortcuts > li.current > a,
+					.no-touch body.reversed a:hover > .shortcut-legend,
+					body.reversed #shortcuts > .current > a > .shortcut-legend,
+					.no-touch body.reversed #shortcuts:hover >  .current:hover > a > .shortcut-legend {
+						right: auto;
+						left: 68px;
+					}
+					.no-generatedcontent body.reversed #shortcuts > .current > a,
 					.no-generatedcontent body.reversed #shortcuts > li > a:hover {
 						margin-right: -136px;
 						margin-left: 0;
-					}
+						}
+						.no-touch.no-generatedcontent body.reversed a:hover > .shortcut-legend,
+						.no-generatedcontent body.reversed #shortcuts > .current > a > .shortcut-legend,
+						.no-touch.no-generatedcontent body.reversed #shortcuts:hover >  .current:hover > a > .shortcut-legend {
+							left: 0;
+						}
 
-				.no-touch #shortcuts:hover > li.current > a {
+				.no-touch #shortcuts:hover > .current > a {
 					margin-right: -60px;
 					}
-					.no-touch.no-generatedcontent #shortcuts:hover > li.current > a {
-						margin-right: -68px;
+					.no-touch #shortcuts:hover > .current > a > .shortcut-legend {
+						right: 60px;
 					}
-					.no-touch body.reversed #shortcuts:hover > li.current > a {
+					.no-touch.no-generatedcontent #shortcuts:hover > .current > a {
+						margin-right: -68px;
+						}
+						.no-touch.no-generatedcontent #shortcuts:hover > .current > a > .shortcut-legend {
+							right: 68px;
+						}
+					.no-touch body.reversed #shortcuts:hover > .current > a {
 						margin-right: -8px;
 						margin-left: -60px;
 						}
-						.no-touch.no-generatedcontent body.reversed #shortcuts:hover > li.current > a {
+						.no-touch body.reversed #shortcuts:hover > .current > a > .shortcut-legend {
+							right: auto;
+							left: 60px;
+						}
+						.no-touch.no-generatedcontent body.reversed #shortcuts:hover > .current > a {
 							margin-right: -136px;
 							margin-left: 0;
-						}
+							}
+							.no-touch.no-generatedcontent body.reversed #shortcuts:hover > .current > a > .shortcut-legend {
+								left: 0;
+							}
 
-			#shortcuts > li.at-bottom {
+			#shortcuts > .at-bottom {
 				position: absolute;
 				right: 0;
 				bottom: 0;
@@ -408,9 +481,9 @@ h2 {
 	max-height: 90%;
 	padding: 11px 10px 10px;
 	background: #575d62;
-	-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.5), -0 1px 7px rgba(0, 0, 0, 0.8);
-	-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.5), -0 1px 7px rgba(0, 0, 0, 0.8);
-	box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.5), -0 1px 7px rgba(0, 0, 0, 0.8);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 7px rgba(0, 0, 0, 0.8);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 7px rgba(0, 0, 0, 0.8);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 1px 7px rgba(0, 0, 0, 0.8);
 	border: 1px solid #262626;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
@@ -490,12 +563,12 @@ h2 {
 				left: auto;
 			}
 	#menu-content {
-		-webkit-box-shadow: -0 1px 0 rgba(255, 255, 255, 0.5),
-							-0 -1px 1px rgba(0, 0, 0, 0.8);
-		-moz-box-shadow: -0 1px 0 rgba(255, 255, 255, 0.5),
-						 -0 -1px 1px rgba(0, 0, 0, 0.8);
-		box-shadow: -0 1px 0 rgba(255, 255, 255, 0.5),
-					-0 -1px 1px rgba(0, 0, 0, 0.8);
+		-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5),
+							0 -1px 1px rgba(0, 0, 0, 0.8);
+		-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5),
+						 0 -1px 1px rgba(0, 0, 0, 0.8);
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5),
+					0 -1px 1px rgba(0, 0, 0, 0.8);
 		position: relative;
 		-webkit-border-radius: 2px;
 		-moz-border-radius: 2px;
@@ -516,9 +589,9 @@ h2 {
 				bottom: 0;
 				right: 0;
 				pointer-events: none;
-				-webkit-box-shadow: inset -0 1px 3px rgba(0, 0, 0, 0.75);
-				-moz-box-shadow: inset -0 1px 3px rgba(0, 0, 0, 0.75);
-				box-shadow: inset -0 1px 3px rgba(0, 0, 0, 0.75);
+				-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.75);
+				-moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.75);
+				box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.75);
 			}
 	#menu-footer {
 		margin-top: 10px;
@@ -656,9 +729,9 @@ h2 {
 						-webkit-border-top-left-radius: 5px;
 						-moz-border-radius: 5px 5px 0 0;
 						border-radius: 5px 5px 0 0;
-						-webkit-box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
-						-moz-box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
-						box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
+						-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+						-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+						box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 						}
 						.no-touch .standard-tabs > .tabs > li.active > a:hover {
 							padding-bottom: 7px;
@@ -707,9 +780,9 @@ h2 {
 						-webkit-border-bottom-left-radius: 5px;
 						-moz-border-radius: 0 0 5px 5px;
 						border-radius: 0 0 5px 5px;
-						-webkit-box-shadow: -0 -1px 4px rgba(0, 0, 0, 0.25);
-						-moz-box-shadow: -0 -1px 4px rgba(0, 0, 0, 0.25);
-						box-shadow: -0 -1px 4px rgba(0, 0, 0, 0.25);
+						-webkit-box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.25);
+						-moz-box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.25);
+						box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.25);
 						}
 						.no-touch .standard-tabs.at-bottom > .tabs > li.active > a:hover {
 							padding-bottom: 6px;
@@ -780,9 +853,9 @@ h2 {
 						-webkit-border-bottom-right-radius: 5px;
 						-moz-border-radius: 0 5px 5px 0;
 						border-radius: 0 5px 5px 0;
-						-webkit-box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
-						-moz-box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
-						box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
+						-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+						-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+						box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 						}
 						.no-touch .side-tabs > .tabs > li.active > a:hover {
 							padding-left: 9px;
@@ -865,9 +938,9 @@ h2 {
 		-webkit-border-top-right-radius: 0;
 		-moz-border-radius: 6px 0 6px 6px;
 		border-radius: 6px 0 6px 6px;
-		-webkit-box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
-		-moz-box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
-		box-shadow: -0 1px 4px rgba(0, 0, 0, 0.25);
+		-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+		-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 		}
 		.tabs-fullheight > .tabs-content {
 			-webkit-border-bottom-right-radius: 0;

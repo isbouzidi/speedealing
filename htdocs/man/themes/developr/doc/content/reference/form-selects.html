@@ -63,7 +63,7 @@ $(selector).disableInput();
 
 	<h5 class="green">Search feature</h5>
 
-	<p>Since v1.3, the select can embed a serach field that display over the selected value when the select opens. By default, it is automatically used if the select has more than 40 values, and you can control when to show it using the following options: <b>searchField</b>, <b>searchIfMoreThan</b> and <b>searchText</b> (see reference below for more details).</p>
+	<p>Since v1.3, the select can embed a search field that display over the selected value when the select opens. By default, it is automatically used if the select has more than 40 values, and you can control when to show it using the following options: <b>searchField</b>, <b>searchIfMoreThan</b> and <b>searchText</b> (see reference below for more details).</p>
 
 	<p class="button-height">
 		<select name="country" class="select">
@@ -319,17 +319,15 @@ $(selector).disableInput();
 $(selector).change();
 </pre>
 
-	<p>And if you change the option's list, trigger the corresponding special event to force a refresh:</p>
+	<p>If the change event already has listeners, you can trigger the <strong>silent-change</strong> event instead</p>
 
 	<pre class="prettyprint">
-$(selector).trigger('update-select-list');
+$(selector).trigger('silent-change');
 </pre>
 
-	<p>Both events can be chained if both options list and value have changed:</p>
-
-	<pre class="prettyprint">
-$(selector).trigger('update-select-list').change();
-</pre>
+	<p class="wrapped left-icon icon-info-round">
+		Since v1.5, triggering the event update-select-list is not required anymore, but it is always supported for backward compatibility
+	</p>
 
 	<h3 class="thin">Option classes</h3>
 
@@ -586,6 +584,13 @@ $(selector).trigger('update-select-list').change();
 			Text for multiple select with no value selected<br>
 			<span class="icon-marker black">Type:</span> string<br>
 			<span class="icon-star black">Default:</span> ''
+		</dd>
+
+		<dt>staticValue</dt>
+		<dd class="boxed margin-bottom">
+			Static text, always displayed no matter the value<br>
+			<span class="icon-marker black">Type:</span> boolean|string<br>
+			<span class="icon-star black">Default:</span> false
 		</dd>
 
 		<dt>singleValueText</dt>

@@ -25,9 +25,9 @@
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
-	-webkit-box-shadow: inset -0 2px 5px rgba(0, 0, 0, 0.35), -0 1px 1px rgba(255, 255, 255, 0.5);
-	-moz-box-shadow: inset -0 2px 5px rgba(0, 0, 0, 0.35), -0 1px 1px rgba(255, 255, 255, 0.5);
-	box-shadow: inset -0 2px 5px rgba(0, 0, 0, 0.35), -0 1px 1px rgba(255, 255, 255, 0.5);
+	-webkit-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5);
+	-moz-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5);
+	box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 255, 255, 0.5);
 	margin-top: -1px;
 	}
 	.no-boxshadow .progress,
@@ -38,9 +38,9 @@
 	}
 	.black-inputs .progress, .progress.black-input,
 	.black-inputs .slider, .slider.black-input {
-		-webkit-box-shadow: inset -0 2px 5px rgba(0, 0, 0, 0.735), -0 1px 1px rgba(255, 255, 255, 0.25);
-		-moz-box-shadow: inset -0 2px 5px rgba(0, 0, 0, 0.75), -0 1px 1px rgba(255, 255, 255, 0.25);
-		box-shadow: inset -0 2px 5px rgba(0, 0, 0, 0.75), -0 1px 1px rgba(255, 255, 255, 0.25);
+		-webkit-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.735), 0 1px 1px rgba(255, 255, 255, 0.25);
+		-moz-box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.75), 0 1px 1px rgba(255, 255, 255, 0.25);
+		box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.75), 0 1px 1px rgba(255, 255, 255, 0.25);
 	}
 	.progress {
 		font-size: 11px;
@@ -140,9 +140,9 @@
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.5);
-		-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.5);
-		box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.5);
+		-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+		-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 		}
 		.no-boxshadow .progress-bar,
 		.no-boxshadow .slider-bar {
@@ -252,9 +252,9 @@
 		width: auto;
 		margin: 0 0 -1px;
 		pointer-events: none;
-		-webkit-box-shadow: -0 1px 0 rgba(255, 255, 255, 0.25);
-		-moz-box-shadow: -0 1px 0 rgba(255, 255, 255, 0.25);
-		box-shadow: -0 1px 0 rgba(255, 255, 255, 0.25);
+		-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+		-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
 		}
 		.vertical > .inner-mark {
 			top: auto;
@@ -287,13 +287,13 @@
 		.left-mark {
 			width: 5px;
 			}
-			.right-mark {
-				left: 100%;
-				margin-left: 3px;
-			}
 			.left-mark {
 				right: 100%;
 				margin-right: 3px;
+			}
+			.right-mark {
+				left: 100%;
+				margin-left: 3px;
 			}
 
 	.mark-label {
@@ -318,6 +318,12 @@
 				top: 100%;
 				margin-top: 2px;
 			}
+			.mark-label.align-left {
+				text-align: right;
+				width: auto;
+				right: -1px;
+				white-space: nowrap;
+			}
 			.mark-label.align-right {
 				text-align: left;
 				width: auto;
@@ -325,23 +331,17 @@
 				left: -1px;
 				white-space: nowrap;
 			}
-			.mark-label.align-left {
-				text-align: right;
-				width: auto;
-				right: -1px;
-				white-space: nowrap;
-			}
-		.right-mark > .mark-label {
-			text-align: left;
-			left: 100%;
-			margin-left: 2px;
-			top: -5px;
-			white-space: nowrap;
-		}
 		.left-mark > .mark-label {
 			text-align: right;
 			right: 100%;
 			margin-right: 2px;
+			top: -5px;
+			white-space: nowrap;
+		}
+		.right-mark > .mark-label {
+			text-align: left;
+			left: 100%;
+			margin-left: 2px;
 			top: -5px;
 			white-space: nowrap;
 			}

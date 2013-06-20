@@ -19,11 +19,11 @@
 	width: 230px;
 	text-align: center;
 	border-spacing: 0;
-	border-collapse: collapse;
+	border-collapse: separate;
 	background: #f0f4f7;
-	-webkit-box-shadow: -0 2px 4px rgba(0, 0, 0, 0.45);
-	-moz-box-shadow: -0 2px 4px rgba(0, 0, 0, 0.45);
-	box-shadow: -0 2px 4px rgba(0, 0, 0, 0.45);
+	-webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+	-moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
 	}
 	.no-boxshadow .calendar {
 		border: 1px solid #cccccc;
@@ -52,12 +52,12 @@
 		background: -ms-linear-gradient(top, #006aac, #00438d);
 		background: -o-linear-gradient(top, #006aac, #00438d);
 		background: linear-gradient(top, #006aac, #00438d);
-		-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 2px 4px rgba(0, 0, 0, 0.45);
-		-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 2px 4px rgba(0, 0, 0, 0.45);
-		box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 2px 4px rgba(0, 0, 0, 0.45);
-		-webkit-text-shadow: inset -0 -1px 0 rgba(0, 0, 0, 0.65);
-		-moz-text-shadow: inset -0 -1px 0 rgba(0, 0, 0, 0.65);
-		text-shadow: inset -0 -1px 0 rgba(0, 0, 0, 0.65);
+		-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 2px 4px rgba(0, 0, 0, 0.45);
+		-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 2px 4px rgba(0, 0, 0, 0.45);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 2px 4px rgba(0, 0, 0, 0.45);
+		-webkit-text-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.65);
+		-moz-text-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.65);
+		text-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.65);
 		}
 		.cal-prev,
 		.cal-next {
@@ -128,9 +128,9 @@
 			width: 32px;
 			padding-top: 1px;
 			border-top: 1px solid #c7c9ca;
-			-webkit-text-shadow: -0 1px 0 white;
-			-moz-text-shadow: -0 1px 0 white;
-			text-shadow: -0 1px 0 white;
+			-webkit-text-shadow: 0 1px 0 white;
+			-moz-text-shadow: 0 1px 0 white;
+			text-shadow: 0 1px 0 white;
 		}
 
 	/* Days names */
@@ -177,9 +177,9 @@
 			}
 			.today > .cal-day {
 				color: white;
-				-webkit-text-shadow: -0 -1px 0 rgba(0, 0, 0, 0.65);
-				-moz-text-shadow: -0 -1px 0 rgba(0, 0, 0, 0.65);
-				text-shadow: -0 -1px 0 rgba(0, 0, 0, 0.65);
+				-webkit-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.65);
+				-moz-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.65);
+				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.65);
 			}
 			.calendar > tbody > tr > a.today:hover {
 				background: #005dba;
@@ -238,9 +238,9 @@
 	background: -ms-linear-gradient(top, #b3b3b3, #939393);
 	background: -o-linear-gradient(top, #b3b3b3, #939393);
 	background: linear-gradient(top, #b3b3b3, #939393);
-	-webkit-box-shadow: inset -0 1px 7px rgba(0, 0, 0, 0.65);
-	-moz-box-shadow: inset -0 1px 7px rgba(0, 0, 0, 0.65);
-	box-shadow: inset -0 1px 7px rgba(0, 0, 0, 0.65);
+	-webkit-box-shadow: inset 0 1px 7px rgba(0, 0, 0, 0.65);
+	-moz-box-shadow: inset 0 1px 7px rgba(0, 0, 0, 0.65);
+	box-shadow: inset 0 1px 7px rgba(0, 0, 0, 0.65);
 	}
 
 	/* Arrow */
@@ -282,9 +282,9 @@
 			background: -ms-linear-gradient(top, #006aac, #00438d);
 			background: -o-linear-gradient(top, #006aac, #00438d);
 			background: linear-gradient(top, #006aac, #00438d);
-			-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 1px 2px rgba(0, 0, 0, 0.25);
-			-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 1px 2px rgba(0, 0, 0, 0.25);
-			box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 1px 2px rgba(0, 0, 0, 0.25);
+			-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.25);
+			-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.25);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.25);
 			}
 			.calendar-zoom > td > .cal-events > li + li {
 				margin-top: 4px;
@@ -488,9 +488,9 @@
 				background: -ms-linear-gradient(top, #006aac, #00438d);
 				background: -o-linear-gradient(top, #006aac, #00438d);
 				background: linear-gradient(top, #006aac, #00438d);
-				-webkit-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 1px 2px rgba(0, 0, 0, 0.25);
-				-moz-box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 1px 2px rgba(0, 0, 0, 0.25);
-				box-shadow: inset -0 1px 0 rgba(255, 255, 255, 0.25), -0 1px 2px rgba(0, 0, 0, 0.25);
+				-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.25);
+				-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.25);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(0, 0, 0, 0.25);
 				}
 				.calendar.fluid .cal-events > li + li,
 				.calendar.large .cal-events > li + li,

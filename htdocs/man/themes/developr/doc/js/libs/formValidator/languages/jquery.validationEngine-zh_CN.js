@@ -11,6 +11,12 @@
                     "alertTextCheckboxe": "* 您必须钩选此栏",
                     "alertTextDateRange": "* 日期范围不可空白"
                 },
+                "requiredInFunction": { 
+                    "func": function(field, rules, i, options){
+                        return (field.val() == "test") ? true : false;
+                    },
+                    "alertText": "* Field must equal test"
+                },
                 "dateRange": {
                     "regex": "none",
                     "alertText": "* 无效的 ",
@@ -85,7 +91,7 @@
                 },
                 "number": {
                     // Number, including positive, negative, and floating decimal. credit: orefalo
-                    "regex": /^[\-\+]?(([0-9]+)([\.,]([0-9]+))?|([\.,]([0-9]+))?)$/,
+                    "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,
                     "alertText": "* 无效的数字"
                 },
                 "date": {

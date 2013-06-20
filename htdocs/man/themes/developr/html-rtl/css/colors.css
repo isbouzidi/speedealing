@@ -167,7 +167,7 @@
 .translucid,
 .notification {
 	color: #bdbdbd;
-	background: #000 url(../img/old-browsers/colors/bg_translucid.png) repeat-x;
+	background: url(../img/old-browsers/black75.png) repeat-x;
 	-webkit-background-size: 100% 100%;
 	-moz-background-size: 100% 100%;
 	-o-background-size: 100% 100%;
@@ -290,8 +290,6 @@
 .button, .button:visited,
 .select-value, .select-arrow,
 .switch-button,
-.black-inputs .radio > .check-knob,
-.black-inputs.radio > .check-knob,
 .legend,
 .block-title, .details > summary,
 .accordion > dt,
@@ -396,7 +394,6 @@
 /* Anthracite */
 .black-inputs .switch-button,
 .black-input > .switch-button,
-.radio > .check-knob,
 .wizard-steps {
 	color: white;
 	background: #404040 url(../img/old-browsers/colors/bg_black-inputs_switch-button.png) repeat-x;
