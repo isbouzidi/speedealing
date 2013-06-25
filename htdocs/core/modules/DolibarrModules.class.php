@@ -60,8 +60,6 @@ class DolibarrModules extends nosqlDocument {
 
 		parent::__construct($db);
 
-		$this->useDatabase($conf->Couchdb->name);
-
 		/* try {
 		  $this->global = $couch->getDoc("const", true);
 		  } catch (Exception $e) {
@@ -482,10 +480,10 @@ class DolibarrModules extends nosqlDocument {
 
 		$var_dbuser = array("_design/_auth");
 
-		$var_dbsystem = array("_design/User", "_design/UserGroup");
+		//$var_dbsystem = array("_design/User", "_design/UserGroup");
 
 		$list_db = $this->couchdb->listDatabases();
-		$no_upgradeDB = array("_users", "system", "_replicator", "mips");
+		$no_upgradeDB = array("_users", "_replicator", "mips");
 
 		$error = 0;
 
@@ -510,12 +508,12 @@ class DolibarrModules extends nosqlDocument {
 								$nbDB = 1;
 								if (in_array($obj->_id, $var_dbuser))
 									$this->couchdb->useDatabase("_users");
-								else if (in_array($obj->_id, $var_dbsystem))
-									$this->couchdb->useDatabase("system");
-								else if (substr($obj->_id, 0, 7) == "_design")
+								//else if (in_array($obj->_id, $var_dbsystem))
+								//	$this->couchdb->useDatabase("system");
+								else /*if (substr($obj->_id, 0, 7) == "_design")*/
 									$nbDB = count($list_db);
-								else
-									$this->couchdb->useDatabase("system");
+								//else
+								//	$this->couchdb->useDatabase("system");
 
 								for ($i = 0; $i < $nbDB; $i++) {
 									if ($nbDB > 1) { //Upgrade all db
@@ -554,7 +552,7 @@ class DolibarrModules extends nosqlDocument {
 
 									try {
 										$this->couchdb->storeDoc($obj);
-										$this->couchdb->useDatabase("system");
+										//$this->couchdb->useDatabase("system");
 									} catch (Exception $e) {
 										dol_print_error("", $e->getMessage());
 										$error++;

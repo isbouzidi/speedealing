@@ -133,7 +133,7 @@ class User extends nosqlDocument {
 
 			//Utilisation du contexte dans l'appel
 			$result = json_decode(file_get_contents(
-							'http://127.0.0.1:3000/api/session', false, $context));
+							'http://' . $conf->nodejs->host . ":" . $conf->nodejs->port . '/api/session', false, $context));
 			//$login = $this->couchAdmin->getLoginSession();
 			if ($result->db == $this->couchdb->getDatabaseName())
 				$login = $result->user;

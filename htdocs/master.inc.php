@@ -47,6 +47,9 @@ $conf->Couchdb->name = null;
 // Identifiant pour le serveur memcached
 $conf->memcached->host = $dolibarr_main_memcached_host;
 $conf->memcached->port = $dolibarr_main_memcached_port;
+// Identifiant pour le serveur nodejs
+$conf->nodejs->host = $dolibarr_main_nodejs_host;
+$conf->nodejs->port = $dolibarr_main_nodejs_port;
 // Is urlrewrite enable for multicompany db
 $conf->urlrewrite = $dolibarr_urlrewrite;
 
