@@ -57,7 +57,7 @@ unset($_SESSION['dol_entity']);
 
 // Destroy session
 $prefix = dol_getprefix();
-dol_flushcache(); // reset cache
+//dol_flushcache(); // reset cache
 $sessionname = 'DOLSESSID_' . $prefix;
 $sessiontimeout = 'DOLSESSTIMEOUT_' . $prefix;
 if (!empty($_COOKIE[$sessiontimeout]))
