@@ -47,8 +47,6 @@ class ExtraFields extends nosqlDocument {
 
 		parent::__construct($db);
 
-		$this->useDatabase("system");
-
 		$this->type2label = array(
 			'text' => 'TextLong',
 			'int' => 'Int',

@@ -66,7 +66,7 @@ session_name($sessionname);
 session_destroy();
 
 // destroy couchdb cookie
-setcookie('AuthSession', '', 1, '/');
+setcookie('SpeedSession', '', 1, '/');
 
 
 // Define url to go

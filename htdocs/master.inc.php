@@ -41,6 +41,8 @@ $conf = new Conf();
 //$conf->Couchdb->protocol = $dolibarr_main_couchdb_protocol;
 $conf->Couchdb->host = $dolibarr_main_couchdb_host;
 $conf->Couchdb->port = $dolibarr_main_couchdb_port;
+$conf->Couchdb->user = $dolibarr_main_couchdb_user;
+$conf->Couchdb->passwd = $dolibarr_main_couchdb_passwd;
 $conf->Couchdb->name = null;
 // Identifiant pour le serveur memcached
 $conf->memcached->host = $dolibarr_main_memcached_host;
@@ -156,7 +158,7 @@ if (!defined('NOREQUIREDB')) {
 	}
 
 	if (empty($conf->Couchdb->name))
-		$conf->Couchdb->name = "_users"; // login phase
+		$conf->Couchdb->name = substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")); // host domain
 
 	if (!empty($dolibarr_main_resolver)) {
 		$conf->main_resolver = $dolibarr_main_resolver;
@@ -166,7 +168,7 @@ if (!defined('NOREQUIREDB')) {
 			$r = new Net_DNS2_Resolver(array('nameservers' => array($dolibarr_main_resolver)));
 			try {
 				$result = $r->query($_SERVER["HTTP_HOST"], 'A');
-				$conf->Couchdb->host = "http://" . $result->answer[0]->address;
+				$conf->Couchdb->host = $result->answer[0]->address;
 				dol_setcache("couchdb_host", $conf->Couchdb->host);
 			} catch (Net_DNS2_Exception $e) {
 				echo "::query() failed: ", $e->getMessage(), "\n";
@@ -174,9 +176,19 @@ if (!defined('NOREQUIREDB')) {
 		}
 	}
 
-	$couch = new couchClient($conf->Couchdb->host . ':' . $conf->Couchdb->port . '/', $conf->Couchdb->name);
-	if (!empty($_COOKIE['AuthSession']))
-		$couch->setSessionCookie("AuthSession=" . $_COOKIE['AuthSession']);
+
+	try {
+		$couch = new couchClient("http://" . $conf->Couchdb->user . ":" . $conf->Couchdb->passwd . "@" . $conf->Couchdb->host . ':' . $conf->Couchdb->port . '/', $conf->Couchdb->name, array("cookie_auth" => TRUE));
+	} catch (Exception $e) {
+		print $langs->trans("Error Couchdb Auth");
+		error_log($e->getMessage());
+		exit;
+	}
+	unset($conf->Couchdb->user);
+	unset($conf->Couchdb->passwd);
+
+	//if (!empty($_COOKIE['AuthSession']))
+	//	$couch->setSessionCookie("AuthSession=" . $_COOKIE['AuthSession']);
 }
 
 // Create the global $hookmanager object

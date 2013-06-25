@@ -234,7 +234,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					// Stop normal behavior
 					event.preventDefault();
 					$.ajax({
-						type: "POST", url: urlPrefix + "/db/_session", dataType: "json",
+						type: "POST", url: urlPrefix + "/<?php echo substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")); ?>/api/login", dataType: "json",
 						data: {name: login, password: pass},
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader('Accept', 'application/json');

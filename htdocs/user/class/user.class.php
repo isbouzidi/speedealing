@@ -84,8 +84,6 @@ class User extends nosqlDocument {
 
 		parent::__construct($db);
 
-		$this->useDatabase("system");
-
 		$this->fk_extrafields = new ExtraFields($db);
 		$this->fk_extrafields->fetch(get_class($this));
 
@@ -121,37 +119,30 @@ class User extends nosqlDocument {
 		$login = trim($login);
 
 		if (empty($login)) {
-			try {
-				$login = $this->couchAdmin->getLoginSession();
-			} catch (Exception $e) {
+
+			// get session to nodejs server
+			$opts = array(
+				'http' => array(
+					'method' => 'GET',
+					'header' => "Content-type: application/x-www-form-urlencoded\r\n" .
+					"Cookie: SpeedSession=" . $_COOKIE["SpeedSession"] . "\r\n"
+				)
+			);
+
+			$context = stream_context_create($opts);
+
+			//Utilisation du contexte dans l'appel
+			$result = json_decode(file_get_contents(
+							'http://127.0.0.1:3000/api/session', false, $context));
+			//$login = $this->couchAdmin->getLoginSession();
+			if ($result->db == $this->couchdb->getDatabaseName())
+				$login = $result->user;
+			else
 				$login = null;
-			}
+
 			if (empty($login))
 				return 0;
 		}
-
-		/* if ($conf->Couchdb->name == '_users') { // Login phase
-		  require_once(DOL_DOCUMENT_ROOT . "/useradmin/class/useradmin.class.php");
-
-		  $user_config = new UserAdmin($this->db);
-		  $user_config->fetch("org.couchdb.user:" . $login); // Load for default entity
-		  $user_config->LastConnection = $user_config->NewConnection;
-		  $user_config->NewConnection = dol_now();
-		  //$user_config->record(); // FIXME no record method in fetch method
-		  //print_r($login);
-		  //exit;
-		  $couch->useDatabase($user_config->entity);
-		  $conf->Couchdb->name = $user_config->entity;
-		  dol_setcache("dol_entity", $user_config->entity);
-		  //$this->useDatabase($user_config->entity);
-		  unset($user_config);
-
-		  if (!$conf->urlrewrite) {
-		  $this->LastConnection = $this->NewConnection;
-		  $this->NewConnection = dol_now();
-		  //$this->record(true); // FIXME no record method in fetch method
-		  }
-		  } */
 
 		try {
 			/* if (isValidEmail($login)) {
@@ -632,9 +623,9 @@ class User extends nosqlDocument {
 
 		// Check parameters
 		/* if (!isValidEMail($this->email)) {
-			$langs->load("errors");
-			$this->error = $langs->trans("ErrorBadEMail", $this->email);
-			return -1;
+		  $langs->load("errors");
+		  $this->error = $langs->trans("ErrorBadEMail", $this->email);
+		  return -1;
 		  } */
 
 		$error = 0;
@@ -1302,7 +1293,7 @@ class User extends nosqlDocument {
 			$lien = '<a href="' . DOL_URL_ROOT . '/user/fiche.php?id=' . $this->id . '">';
 			$lienfin = '</a>';
 		}
-		
+
 		if ($option == 'span') {
 			$lien = '<span>';
 			$lienfin = '</span>';

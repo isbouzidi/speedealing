@@ -39,7 +39,6 @@ class MenuAuguria extends nosqlDocument {
 		global $conf;
 
 		parent::__construct($db);
-		$this->useDatabase("system");
 
 		$tabMenu = array();
 

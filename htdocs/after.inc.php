@@ -35,10 +35,11 @@ if (!defined('NOREQUIREDB')) {
 	// if no db specified, using default database form user profile (entity)
 	// Just after login : we choose the default entity
 
-	$conf->useDatabase("system");
+	$conf->useDatabase($conf->Couchdb->name);
 	$conf->setValues();
-	$database = (!empty($conf->Couchdb->name)?$conf->Couchdb->name:$user->entity); // for avoid error
-	$couch->useDatabase($database); //Refresh default dababase if needed
+	//$database = (!empty($conf->Couchdb->name)?$conf->Couchdb->name:$user->entity); // for avoid error
+	//$database = $conf->Couchdb->name;
+	//$couch->useDatabase($database); //Refresh default dababase if needed
 }
 
 // Overwrite database value

@@ -185,6 +185,7 @@ if (!defined('NOREQUIREAJAX'))
 	require DOL_DOCUMENT_ROOT . '/core/lib/ajax.lib.php'; // Need 22ko memory
 
 
+	
 // If install or upgrade process not done or not completely finished, we call the install page.
 if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_UPGRADED)) {
 	Header("Location: " . DOL_URL_ROOT . "/install/index.php");
@@ -249,7 +250,7 @@ if (!defined('NOLOGIN')) {
 	$test = true;
 	$user = new User($db);
 	//print $user->fetch();exit;
-	if (empty($_COOKIE["AuthSession"])) {
+	if (empty($_COOKIE["SpeedSession"])) {
 		// Check URL for urlrewrite
 		if ($conf->urlrewrite && DOL_URL_ROOT != '') {
 			header('Location: /index.php');
@@ -264,7 +265,7 @@ if (!defined('NOLOGIN')) {
 			include DOL_DOCUMENT_ROOT . '/core/class/translatestandalone.class.php'; // Use this class before authentication
 			$langs = new TranslateStandalone();
 		}
-		dol_loginfunction($langs, $conf, (!empty($mysoc)?$mysoc:''));
+		dol_loginfunction($langs, $conf, (!empty($mysoc) ? $mysoc : ''));
 		exit;
 	} else {
 		// We are already into an authenticated session
@@ -281,7 +282,7 @@ if (!defined('NOLOGIN')) {
 
 			$user->trigger_mesg = 'SessionExpire - login=' . $login;
 			$_SESSION["dol_loginmesg"] = $langs->trans("Session expired", $login); // TODO Session Expire
-			setcookie('AuthSession', '', 1, '/'); // Reset auth cookie
+			setcookie('SpeedSession', '', 1, '/'); // Reset auth cookie
 			// Call triggers
 			if (!class_exists('Interfaces'))
 				include DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
@@ -474,7 +475,7 @@ if (!function_exists("llxHeader")) {
 		top_htmlhead($head, $title, $disablejs, $disablehead, $arrayofjs, $arrayofcss); // Show html headers
 
 		if (!defined('NOHEADER')) {
-			$reversed = (!empty($conf->global->MAIN_MENU_REVERSED)?' reversed':'');
+			$reversed = (!empty($conf->global->MAIN_MENU_REVERSED) ? ' reversed' : '');
 			print '<body class="clearfix with-menu with-shortcuts grdnt_c mhover_c' . $reversed . '">';
 		}
 		else
@@ -572,6 +573,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 	if (empty($conf->css))
 		$conf->css = '/theme/eldy/style.css.php'; // If not defined, eldy by default
 
+		
 // DOCTYPE
 	include DOL_DOCUMENT_ROOT . '/core/tpl/preheader.tpl.php';
 
@@ -688,22 +690,22 @@ function main_menu() {
 	$hookmanager->initHooks(array('searchform', 'leftblock'));
 
 	print "\n";
-	
+
 	// Show menu
 	$menu = new MenuAuguria();
 	$menu->atarget = $target;
-	
+
 	$countTODO = null;
 	$listMyTasks = null;
 	if (!empty($conf->agenda->enabled)) {
 		require_once DOL_DOCUMENT_ROOT . '/agenda/class/agenda.class.php';
 		$agenda = new \Agenda();
-		
+
 		$countTODO = $agenda->getView("countTODO", array("group" => true, "key" => $user->id), true);
-		
+
 		$params = array(
-				'startkey' => array($user->id, mktime(0, 0, 0, date("m"), date("d"), date("Y"))),
-				'endkey' => array($user->id, mktime(23, 59, 59, date("m"), date("d"), date("Y")))
+			'startkey' => array($user->id, mktime(0, 0, 0, date("m"), date("d"), date("Y"))),
+			'endkey' => array($user->id, mktime(23, 59, 59, date("m"), date("d"), date("Y")))
 		);
 		$listMyTasks = $agenda->getView("listMyTasks", $params);
 	}
@@ -720,9 +722,9 @@ function main_menu() {
 function main_area($title = '') {
 	global $conf, $langs;
 
-	print '<!-- Main content -->'."\n";
-	print '<section role="main" id="main">'."\n";
-	print '<noscript class="message black-gradient simpler">Your browser does not support JavaScript! Some features won\'t work as expected...</noscript>'."\n";
+	print '<!-- Main content -->' . "\n";
+	print '<section role="main" id="main">' . "\n";
+	print '<noscript class="message black-gradient simpler">Your browser does not support JavaScript! Some features won\'t work as expected...</noscript>' . "\n";
 
 	if (!empty($conf->global->MAIN_ONLY_LOGIN_ALLOWED))
 		print info_admin($langs->trans("WarningYouAreInMaintenanceMode", $conf->global->MAIN_ONLY_LOGIN_ALLOWED));

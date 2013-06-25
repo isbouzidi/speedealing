@@ -60,8 +60,7 @@ class DolibarrModules extends nosqlDocument {
 
 		parent::__construct($db);
 
-		//$this->useDatabase($conf->Couchdb->name);
-		$this->useDatabase("system");
+		$this->useDatabase($conf->Couchdb->name);
 
 		/* try {
 		  $this->global = $couch->getDoc("const", true);
