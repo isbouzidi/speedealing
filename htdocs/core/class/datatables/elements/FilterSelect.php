@@ -33,7 +33,7 @@ class FilterSelect implements ElementInterface {
         }
 
         foreach($this->options as $key => $val) {
-        	if ($val['enable'] || $key == -1) {
+        	if (isset($val['enable']) || $key == -1) {
         		$label = (!empty($val['label']) ? $val['label'] : $langs->trans($key));
         		$label = ($key == -1) ? '' : $label;
         		//$output .= "<option value='{$key}'>{$label}</option>"; // FIXME use this with bServerSide
