@@ -183,7 +183,7 @@ if (!defined('NOREQUIREDB')) {
 	try {
 		$couch = new couchClient("http://" . $conf->Couchdb->user . ":" . $conf->Couchdb->passwd . "@" . $conf->Couchdb->host . ':' . $conf->Couchdb->port . '/', $conf->Couchdb->name, array("cookie_auth" => TRUE));
 	} catch (Exception $e) {
-		print $langs->trans("Error Couchdb Auth");
+		print $langs->trans("Error Couchdb Auth : " . $conf->Couchdb->name);
 		error_log($e->getMessage());
 		exit;
 	}
