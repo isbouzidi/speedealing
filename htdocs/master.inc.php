@@ -144,9 +144,9 @@ if (!defined('NOREQUIREDB')) {
 		$conf->Couchdb->name = strtolower(GETPOST("db", 'alpha'));
 	else { //Query standard
 		if (session_id()) {   // Entity inside an opened session
-			$conf->Couchdb->name = dol_getcache("dol_entity");
-			if (is_int($conf->Couchdb->name))
-				$conf->Couchdb->name = null;
+			$name = dol_getcache("dol_entity");
+			if (!is_int($name))
+				$conf->Couchdb->name = $name;
 		}
 		if (empty($conf->Couchdb->name) && !empty($_ENV["dol_entity"])) { // Entity inside a CLI script
 			$conf->Couchdb->name = strtolower($_ENV["dol_entity"]);
