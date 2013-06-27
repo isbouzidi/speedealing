@@ -34,7 +34,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta name="robots" content="noindex,nofollow" />
 		<meta name="author" content="Speedealing Development Team" />
-		<base href="<?php echo DOL_URL_ROOT; ?>" />
+		<base href="<?php echo (DOL_URL_ROOT==""?"/":DOL_URL_ROOT); ?>" />
 
 		<title><?php echo $langs->trans('Login') . ' ' . $title; ?></title>
 		<meta name="description" content="">
