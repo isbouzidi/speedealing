@@ -185,6 +185,7 @@ if (!defined('NOREQUIREAJAX'))
 	require DOL_DOCUMENT_ROOT . '/core/lib/ajax.lib.php'; // Need 22ko memory
 
 
+
 	
 // If install or upgrade process not done or not completely finished, we call the install page.
 if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_UPGRADED)) {
@@ -252,8 +253,8 @@ if (!defined('NOLOGIN')) {
 	//print $user->fetch();exit;
 	if (empty($_COOKIE["SpeedSession"])) {
 		// Check URL for urlrewrite
-		if ($conf->urlrewrite && DOL_URL_ROOT != '') {
-			header('Location: /index.php');
+		if ($conf->urlrewrite && DOL_URL_ROOT == '') {
+			header('Location: ' . substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")) . '/index.php');
 			exit;
 		}
 
@@ -572,6 +573,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 
 	if (empty($conf->css))
 		$conf->css = '/theme/eldy/style.css.php'; // If not defined, eldy by default
+
 
 		
 // DOCTYPE

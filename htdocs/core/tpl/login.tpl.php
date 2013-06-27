@@ -34,7 +34,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta name="robots" content="noindex,nofollow" />
 		<meta name="author" content="Speedealing Development Team" />
-		<base href="http://<?php echo $_SERVER['HTTP_HOST'] . DOL_URL_ROOT; ?>/" />
+		<base href="<?php echo DOL_URL_ROOT; ?>" />
 
 		<title><?php echo $langs->trans('Login') . ' ' . $title; ?></title>
 		<meta name="description" content="">
@@ -148,7 +148,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 			</form>
 		</div>
 
-	<?php if (!empty($main_home)) { ?>
+		<?php if (!empty($main_home)) { ?>
 		<center>
 			<table summary="info" cellpadding="0" cellspacing="0" border="0" align="center" width="750">
 				<tr>
@@ -224,17 +224,10 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					displayLoading('Checking credentials...');
 					event.preventDefault();
 
-					var urlPrefix;
-
-					if (this.urlPrefix === undefined)
-						urlPrefix = "";
-					else
-						urlPrefix = this.urlPrefix + "";
-
 					// Stop normal behavior
 					event.preventDefault();
 					$.ajax({
-						type: "POST", url: urlPrefix + "<?php //echo "/".substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")); ?>/api/login", dataType: "json",
+						type: "POST", url: document.getElementsByTagName('base')[0].href + "/api/login", dataType: "json",
 						data: {name: login, password: pass},
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader('Accept', 'application/json');
@@ -242,7 +235,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 						complete: function(req) {
 							var resp = $.parseJSON(req.responseText);
 							if (req.status == 200) {
-								document.location.href = 'index.php';
+								document.location.href = document.getElementsByTagName('base')[0].href + '/index.php';
 							} else {
 								formLogin.clearMessages();
 								displayError('Invalid user/password, please try again');
