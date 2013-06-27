@@ -55,7 +55,7 @@
 		var indicatorInPlace = '<img src="theme/<?php echo $conf->theme; ?>/img/working.gif">';
 		var ckeditorConfig = '<?php echo dol_buildpath('/theme/' . $conf->theme . '/ckeditor/config.js', 1); ?>';
 	</script>
-	<script type="text/javascript" src="core/js/editinplace.js" defer></script>
+	<script type="text/javascript" src="js/editinplace.js" defer></script>
 	<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.ckeditor.js" defer></script>
 	<!-- jQuery File Upload -->
 	<!--  <script type="text/javascript" src="includes/jquery/plugins/template/tmpl.min.js"></script> -->
@@ -100,26 +100,26 @@
 	<script type="text/javascript">var CKEDITOR_BASEPATH = '<?php echo DOL_URL_ROOT; ?>/includes/ckeditor/';</script>
 	<script type="text/javascript" src="includes/ckeditor/ckeditor_basic.js" defer></script>
 
-	<script src="theme/symeos/js/setup.min.js"></script>
+	<script src="js/setup.js"></script>
 
-	<script src="theme/symeos/js/developr.navigable.min.js"></script>
-	<script src="theme/symeos/js/developr.scroll.min.js"></script>
-	<script src="theme/symeos/js/developr.accordions.js"></script>
+	<script src="js/developr.navigable.js"></script>
+	<script src="js/developr.scroll.js"></script>
+	<script src="js/developr.accordions.js"></script>
 
 	<!--<script src="theme/symeos/js/s_scripts.js"></script>-->
 
-	<script src="theme/symeos/js/developr.input.min.js"></script>
-	<script src="theme/symeos/js/developr.message.min.js"></script>
-	<script src="theme/symeos/js/developr.modal.min.js"></script>
-	<script src="theme/symeos/js/developr.notify.min.js"></script>
-	<script src="theme/symeos/js/developr.progress-slider.min.js"></script>
-	<script src="theme/symeos/js/developr.tooltip.min.js"></script>
-	<script src="theme/symeos/js/developr.confirm.min.js"></script>
-	<script src="theme/symeos/js/developr.agenda.min.js"></script>
-	<script src="theme/symeos/js/developr.tabs.min.js"></script>
+	<script src="js/developr.input.js"></script>
+	<script src="js/developr.message.js"></script>
+	<script src="js/developr.modal.js"></script>
+	<script src="js/developr.notify.js"></script>
+	<script src="js/developr.progress-slider.js"></script>
+	<script src="js/developr.tooltip.js"></script>
+	<script src="js/developr.confirm.js"></script>
+	<script src="js/developr.agenda.js"></script>
+	<script src="js/developr.tabs.js"></script>
 
 	<!-- Includes specific JS of Speedealing -->
-	<script type="text/javascript" src="core/js/lib_head.js" defer></script>
+	<script type="text/javascript" src="js/lib_head.js" defer></script>
 
 	<!-- Tinycon -->
 	<script src="includes/js/tinycon.min.js"></script>

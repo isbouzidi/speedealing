@@ -37,35 +37,35 @@
 	<link rel="author" title="Speedealing Development Team" href="http://www.speedealing.com">
 
 	<!-- For all browsers -->
-	<link rel="stylesheet" href="theme/symeos/css/reset.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/style.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/colors.css?v=1">
-	<link rel="stylesheet" media="print" href="theme/symeos/css/print.css?v=1">
+	<link rel="stylesheet" href="css/reset.css?v=1">
+	<link rel="stylesheet" href="css/style.css?v=1">
+	<link rel="stylesheet" href="css/colors.css?v=1">
+	<link rel="stylesheet" media="print" href="css/print.css?v=1">
 
 	<!-- For progressively larger displays -->
-	<link rel="stylesheet" media="only all and (min-width: 480px)" href="theme/symeos/css/480.css?v=1">
-	<link rel="stylesheet" media="only all and (min-width: 768px)" href="theme/symeos/css/768.css?v=1">
-	<link rel="stylesheet" media="only all and (min-width: 992px)" href="theme/symeos/css/992.css?v=1">
-	<link rel="stylesheet" media="only all and (min-width: 1200px)" href="theme/symeos/css/1200.css?v=1">
+	<link rel="stylesheet" media="only all and (min-width: 480px)" href="css/480.css?v=1">
+	<link rel="stylesheet" media="only all and (min-width: 768px)" href="css/768.css?v=1">
+	<link rel="stylesheet" media="only all and (min-width: 992px)" href="css/992.css?v=1">
+	<link rel="stylesheet" media="only all and (min-width: 1200px)" href="css/1200.css?v=1">
 
 	<!-- For Retina displays -->
-	<link rel="stylesheet" media="only all and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5)" href="theme/symeos/css/2x.css?v=1">
+	<link rel="stylesheet" media="only all and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5)" href="css/2x.css?v=1">
 
 	<!-- Symeos -->
-	<link rel="stylesheet" href="theme/symeos/css/symeos.css?v=1">
+	<link rel="stylesheet" href="css/symeos.css?v=1">
 
 	<!-- Webfonts -->
 	<!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>-->
 
 	<!-- Additional styles -->
-	<link rel="stylesheet" href="theme/symeos/css/styles/agenda.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/styles/dashboard.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/styles/form.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/styles/modal.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/styles/progress-slider.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/styles/switches.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/styles/table.css?v=1">
-	<link rel="stylesheet" href="theme/symeos/css/styles/calendars.css?v=1">
+	<link rel="stylesheet" href="css/styles/agenda.css?v=1">
+	<link rel="stylesheet" href="css/styles/dashboard.css?v=1">
+	<link rel="stylesheet" href="css/styles/form.css?v=1">
+	<link rel="stylesheet" href="css/styles/modal.css?v=1">
+	<link rel="stylesheet" href="css/styles/progress-slider.css?v=1">
+	<link rel="stylesheet" href="css/styles/switches.css?v=1">
+	<link rel="stylesheet" href="css/styles/table.css?v=1">
+	<link rel="stylesheet" href="css/styles/calendars.css?v=1">
 
 	<!-- DataTables --><!-- jquery UI -->
 	<link rel="stylesheet" href="includes/jquery/css/Aristo/Aristo.css" media="all" />
@@ -139,7 +139,7 @@
 	<link rel="stylesheet" href="includes/jquery/plugins/datatables/css/demo_table_jui.css" media="all" />
 
 	<!-- main styles -->
-	<link rel="stylesheet" href="theme/eldy/style.css" />
+	<!--<link rel="stylesheet" href="theme/eldy/style.css" />-->
 
 	<!-- JQuery. Must be before other includes -->
 	<script type="text/javascript" src="includes/jquery/js/jquery-latest.min.js"></script>

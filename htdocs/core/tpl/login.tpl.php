@@ -34,7 +34,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta name="robots" content="noindex,nofollow" />
 		<meta name="author" content="Speedealing Development Team" />
-		<base href="<?php echo (DOL_URL_ROOT==""?"/":DOL_URL_ROOT); ?>" />
+		<base href="<?php echo (DOL_URL_ROOT==""?"/":DOL_URL_ROOT."/"); ?>" />
 
 		<title><?php echo $langs->trans('Login') . ' ' . $title; ?></title>
 		<meta name="description" content="">
@@ -45,24 +45,24 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		<!-- For all browsers -->
-		<link rel="stylesheet" href="theme/symeos/css/reset.css?v=1">
-		<link rel="stylesheet" href="theme/symeos/css/style.css?v=1">
-		<link rel="stylesheet" href="theme/symeos/css/colors.css?v=1">
-		<link rel="stylesheet" media="print" href="theme/symeos/css/print.css?v=1">
+		<link rel="stylesheet" href="css/reset.css?v=1">
+		<link rel="stylesheet" href="css/style.css?v=1">
+		<link rel="stylesheet" href="css/colors.css?v=1">
+		<link rel="stylesheet" media="print" href="css/print.css?v=1">
 		<!-- For progressively larger displays -->
-		<link rel="stylesheet" media="only all and (min-width: 480px)" href="theme/symeos/css/480.css?v=1">
-		<link rel="stylesheet" media="only all and (min-width: 768px)" href="theme/symeos/css/768.css?v=1">
-		<link rel="stylesheet" media="only all and (min-width: 992px)" href="theme/symeos/css/992.css?v=1">
-		<link rel="stylesheet" media="only all and (min-width: 1200px)" href="theme/symeos/css/1200.css?v=1">
+		<link rel="stylesheet" media="only all and (min-width: 480px)" href="css/480.css?v=1">
+		<link rel="stylesheet" media="only all and (min-width: 768px)" href="css/768.css?v=1">
+		<link rel="stylesheet" media="only all and (min-width: 992px)" href="css/992.css?v=1">
+		<link rel="stylesheet" media="only all and (min-width: 1200px)" href="css/1200.css?v=1">
 		<!-- For Retina displays -->
-		<link rel="stylesheet" media="only all and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5)" href="theme/symeos/css/2x.css?v=1">
+		<link rel="stylesheet" media="only all and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5)" href="css/2x.css?v=1">
 
 		<!-- Additional styles -->
-		<link rel="stylesheet" href="theme/symeos/css/styles/form.css?v=1">
-		<link rel="stylesheet" href="theme/symeos/css/styles/switches.css?v=1">
+		<link rel="stylesheet" href="css/styles/form.css?v=1">
+		<link rel="stylesheet" href="css/styles/switches.css?v=1">
 
 		<!-- Login pages styles -->
-		<link rel="stylesheet" media="screen" href="theme/symeos/css/login.css?v=1">
+		<link rel="stylesheet" media="screen" href="css/login.css?v=1">
 
 		<!-- JavaScript at bottom except for Modernizr -->
 		<script src="includes/js/modernizr.custom.js"></script>
@@ -179,13 +179,13 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 
 	<script src="includes/jquery/js/jquery-latest.min.js"></script>
 	<script src="includes/lib/validate/jquery.validate.min.js"></script>
-	<script src="theme/symeos/js/setup.min.js"></script>
+	<script src="js/setup.min.js"></script>
 
 	<!-- Template functions -->
-	<script src="theme/symeos/js/developr.input.min.js"></script>
-	<script src="theme/symeos/js/developr.message.min.js"></script>
-	<script src="theme/symeos/js/developr.notify.min.js"></script>
-	<script src="theme/symeos/js/developr.tooltip.min.js"></script>
+	<script src="js/developr.input.js"></script>
+	<script src="js/developr.message.js"></script>
+	<script src="js/developr.notify.js"></script>
+	<script src="js/developr.tooltip.js"></script>
 
 	<?php
 	if (!empty($_SESSION['dol_loginmesg']))
@@ -235,7 +235,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					// Stop normal behavior
 					event.preventDefault();
 					$.ajax({
-						type: "POST", url: base + "/api/login", dataType: "json",
+						type: "POST", url: "api/login", dataType: "json",
 						data: {name: login, password: pass},
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader('Accept', 'application/json');
@@ -243,7 +243,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 						complete: function(req) {
 							var resp = $.parseJSON(req.responseText);
 							if (req.status == 200) {
-								document.location.href = base + '/index.php';
+								document.location.href = 'index.php';
 							} else {
 								formLogin.clearMessages();
 								displayError('Invalid user/password, please try again');

@@ -71,8 +71,8 @@ $left = ($langs->trans("DIRECTION") == 'rtl' ? 'right' : 'left');
 $path = '';    // This value may be used in future for external module to overwrite theme
 // Define image path files
 $fontlist = 'arial,tahoma,verdana,helvetica';    //$fontlist='Verdana,Helvetica,Arial,sans-serif';
-$img_head = dol_buildpath($path . '/theme/eldy/img/headbg2.jpg', 1);
-$img_button = dol_buildpath($path . '/theme/eldy/img/button_bg.png', 1);
+$img_head = dol_buildpath('img/headbg2.jpg', 1);
+$img_button = dol_buildpath('img/button_bg.png', 1);
 
 // Define reference colors
 // Example: Light grey: $colred=235;$colgreen=235;$colblue=235;
@@ -460,9 +460,9 @@ div.tmenudiv {
         /*    background-image: -webkit-linear-gradient(bottom, rgb(<?php echo $colorback1; ?>) 40%, rgb(<?php echo $colorback2; ?>) 60%, rgb(<?php echo $colorback1; ?>) 100%);*/
         /*    background-image: -ms-linear-gradient(bottom, rgb(<?php echo $colorback1; ?>) 75%, rgb(<?php echo $colorback2; ?>) 100%);*/
         /*    background-image: linear-gradient(bottom, rgb(<?php echo $colorback1; ?>) 75%, rgb(<?php echo $colorback2; ?>) 100%); */
-        background: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/nav-overlay3.png' ?>) 50% 0% repeat-x;
+        background: url(<?php echo DOL_URL_ROOT . '/img/nav-overlay3.png' ?>) 50% 0% repeat-x;
     <?php } else { ?>
-        background-image: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/tmenu2.jpg' ?>);
+        background-image: url(<?php echo DOL_URL_ROOT . '/img/tmenu2.jpg' ?>);
         background-position:top;
         background-repeat:repeat-x;
     <?php } ?>
@@ -521,7 +521,7 @@ padding: 0px 0px 0px 0px;
 margin: 0px 0px 0px 0px;
 list-style: none;
 height: <?php print $heightmenu; ?>px;
-background: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/nav-overlay3.png' ?>) 0 0 repeat-x !important;
+background: url(<?php echo DOL_URL_ROOT . '/img/nav-overlay3.png' ?>) 0 0 repeat-x !important;
 }
 li.tmenu, li.tmenusel {
 <?php print $minwidthtmenu ? 'min-width: ' . $minwidthtmenu . 'px;' : ''; ?>
@@ -542,7 +542,7 @@ li.tmenu:hover, li.tmenusel {
     /*    background-image: -webkit-linear-gradient(bottom, rgb(<?php echo $colorback1; ?>) 40%, rgb(<?php echo $colorback2; ?>) 60%, rgb(<?php echo $colorback1; ?>) 100%); */
     /*    background-image: -ms-linear-gradient(bottom, rgb(<?php echo $colorback1; ?>) 75%, rgb(<?php echo $colorback2; ?>) 100%);*/
     /*    background-image: linear-gradient(bottom, rgb(<?php echo $colorback1; ?>) 75%, rgb(<?php echo $colorback2; ?>) 100%); */
-    background: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/nav-overlay3.png' ?>) 50% 0 repeat-x;
+    background: url(<?php echo DOL_URL_ROOT . '/img/nav-overlay3.png' ?>) 50% 0 repeat-x;
 <?php } ?>
 }
 div.tmenuleft
@@ -550,7 +550,7 @@ div.tmenuleft
 width: 5px;
 float: <?php print $left; ?>;
 height: <?php print $heightmenu + 4; ?>px;
-background: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/menutab-r.png' ?>) 0 0 no-repeat;
+background: url(<?php echo DOL_URL_ROOT . '/img/menutab-r.png' ?>) 0 0 no-repeat;
 margin-top: -4px;
 }
 div.tmenucenter
@@ -580,54 +580,54 @@ min-width: 40px;
 <?php if (empty($conf->browser->phone)) { ?>
 
     div.mainmenu.home{
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/home.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/home.png', 1) ?>);
     background-position-x: middle;
     }
 
     div.mainmenu.accountancy {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/money.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/money.png', 1) ?>);
     }
 
     div.mainmenu.agenda {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/agenda.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/agenda.png', 1) ?>);
     }
 
     div.mainmenu.bank {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/bank.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/bank.png', 1) ?>);
     }
 
     div.mainmenu.bookmark {
     }
 
     div.mainmenu.cashdesk {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/pointofsale.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/pointofsale.png', 1) ?>);
     }
 
     div.mainmenu.click2dial {
     }
 
     div.mainmenu.companies {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/members.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/members.png', 1) ?>);
     }
 
     div.mainmenu.contacts {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/stethoscope.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/stethoscope.png', 1) ?>);
     }
 
     div.mainmenu.commercial {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/commercial.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/commercial.png', 1) ?>);
     }
 
     div.mainmenu.ecm {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/ecm.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/ecm.png', 1) ?>);
     }
 
     div.mainmenu.externalsite {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/externalsite.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/externalsite.png', 1) ?>);
     }
 
     div.mainmenu.ftp {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/tools.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/tools.png', 1) ?>);
     }
 
     div.mainmenu.gravatar {
@@ -637,34 +637,34 @@ min-width: 40px;
     }
 
     div.mainmenu.holiday {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/holiday.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/holiday.png', 1) ?>);
     }
 
     div.mainmenu.members {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/members.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/members.png', 1) ?>);
     }
 
     div.mainmenu.paypal {
     }
 
     div.mainmenu.products {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/products.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/products.png', 1) ?>);
     margin-left: 10px;
     }
 
     div.mainmenu.project {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/project.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/project.png', 1) ?>);
     }
 
     div.mainmenu.tools {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/tools.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/tools.png', 1) ?>);
     }
 
     div.mainmenu.webservices {
     }
 
     div.mainmenu.google {
-    background-image: url(<?php echo dol_buildpath($path . '/theme/eldy/img/menus/globe.png', 1) ?>);
+    background-image: url(<?php echo dol_buildpath($path . '/img/menus/globe.png', 1) ?>);
     }
 
 
@@ -703,7 +703,7 @@ min-width: 40px;
         }
         // Img file not found
         if (!$found) {
-            $url = dol_buildpath($path . '/theme/eldy/img/menus/generic' . $generic . ".png", 1);
+            $url = dol_buildpath($path . '/img/menus/generic' . $generic . ".png", 1);
             $found = 1;
             if ($generic < 4)
                 $generic++;
@@ -866,7 +866,7 @@ margin: 1px 0px 8px 2px;
     background-image: -ms-linear-gradient(bottom, rgb(<?php echo $colorbacktab1; ?>) 85%, rgb(<?php echo $colorbacktab2; ?>) 100%);
     background-image: linear-gradient(bottom, rgb(<?php echo $colorbacktab1; ?>) 85%, rgb(<?php echo $colorbacktab2; ?>) 100%);
 <?php } else { ?>
-    background-image: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/tmenu.jpg' ?>);
+    background-image: url(<?php echo DOL_URL_ROOT . '/img/tmenu.jpg' ?>);
     background-position:top;
     background-repeat:repeat-x;
 <?php } ?>
@@ -1268,7 +1268,7 @@ border-top: 1px solid #D8D8D8;
     background-image: -ms-linear-gradient(bottom, rgb(<?php echo $colorbacktabcard1; ?>) 25%, rgb(<?php echo $colorbacktabcard2; ?>) 100%);
     background-image: linear-gradient(bottom, rgb(<?php echo $colorbacktabcard1; ?>) 25%, rgb(<?php echo $colorbacktabcard2; ?>) 100%);
 <?php } else { ?>
-    background: #dee7ec url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/tab_background.png' ?>) repeat-x;
+    background: #dee7ec url(<?php echo DOL_URL_ROOT . '/img/tab_background.png' ?>) repeat-x;
 <?php } ?>
 -moz-box-shadow: 4px 4px 4px #CCC;
 -webkit-box-shadow: 4px 4px 4px #CCC;
@@ -1433,7 +1433,7 @@ width: 100%;
 }
 
 #undertopmenu {
-/*	background-image: url("<?php echo dol_buildpath($path . '/theme/eldy/img/gradient.gif', 1) ?>"); */
+/*	background-image: url("<?php echo dol_buildpath($path . '/img/gradient.gif', 1) ?>"); */
 background-repeat: repeat-x;
 margin-top: 0px;
 }
@@ -1596,7 +1596,7 @@ background-repeat: repeat-x;
     background-image: linear-gradient(bottom, rgb(<?php echo $colorbacktitle1; ?>) 15%, rgb(<?php echo $colorbacktitle2; ?>) 100%);
 <?php } else { ?>
     background: #7699A9;
-    background-image: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/liste_titre2.png' ?>);
+    background-image: url(<?php echo DOL_URL_ROOT . '/img/liste_titre2.png' ?>);
 <?php } ?>
 color: #<?php echo $colortextmain; ?>;
 font-family: <?php print $fontlist ?>;
@@ -1743,7 +1743,7 @@ background: #7699A9;
     background-image: -ms-linear-gradient(bottom, rgb(<?php echo $colorbacktitle1; ?>) 15%, rgb(<?php echo $colorbacktitle2; ?>) 100%);
     background-image: linear-gradient(bottom, rgb(<?php echo $colorbacktitle1; ?>) 15%, rgb(<?php echo $colorbacktitle2; ?>) 100%);
 <?php } else { ?>
-    background-image: url(<?php echo DOL_URL_ROOT . '/theme/eldy/img/liste_titre2.png' ?>);
+    background-image: url(<?php echo DOL_URL_ROOT . '/img/liste_titre2.png' ?>);
 <?php } ?>
 background-repeat: repeat-x;
 color: #<?php echo $colortextmain; ?>;
@@ -2084,7 +2084,7 @@ table.cal_event td { border: 0px; padding-<?php print $left; ?>: 0px; padding-<?
 /*  Ajax - Liste deroulante de l'autocompletion                                   */
 /* ============================================================================== */
 
-.ui-autocomplete-loading { background: white url(<?php echo dol_buildpath($path . '/theme/eldy/img/working.gif', 1) ?>) right center no-repeat; }
+.ui-autocomplete-loading { background: white url(<?php echo dol_buildpath($path . '/img/working.gif', 1) ?>) right center no-repeat; }
 .ui-autocomplete {
 position:absolute;
 width:auto;
@@ -2114,12 +2114,12 @@ cursor:pointer;
 /* ============================================================================== */
 
 .editkey_textarea, .editkey_text, .editkey_ckeditor, .editkey_string, .editkey_email, .editkey_numeric, .editkey_select, .editkey_autocomplete {
-background: url(<?php echo dol_buildpath($path . '/theme/eldy/img/edit.png', 1) ?>) right top no-repeat;
+background: url(<?php echo dol_buildpath($path . '/img/action_edit.png', 1) ?>) right top no-repeat;
 cursor: pointer;
 }
 
 .editkey_datepicker {
-background: url(<?php echo dol_buildpath($path . '/theme/eldy/img/calendar.png', 1) ?>) right center no-repeat;
+background: url(<?php echo dol_buildpath($path . '/img/calendar.png', 1) ?>) right center no-repeat;
 cursor: pointer;
 }
 
@@ -2540,9 +2540,9 @@ right:4px;
 }
 
 /* Core Styles */
-.ecmjqft LI.directory { font-weight:normal; background: url(<?php echo dol_buildpath($path . '/theme/common/treemenu/folder2.png', 1); ?>) left top no-repeat; }
-.ecmjqft LI.expanded { font-weight:normal; background: url(<?php echo dol_buildpath($path . '/theme/common/treemenu/folder2-expanded.png', 1); ?>) left top no-repeat; }
-.ecmjqft LI.wait { font-weight:normal; background: url(<?php echo dol_buildpath('/theme/eldy/img/working.gif', 1); ?>) left top no-repeat; }
+.ecmjqft LI.directory { font-weight:normal; background: url(<?php echo dol_buildpath($path . '/img/treemenu/folder2.png', 1); ?>) left top no-repeat; }
+.ecmjqft LI.expanded { font-weight:normal; background: url(<?php echo dol_buildpath($path . '/img/treemenu/folder2-expanded.png', 1); ?>) left top no-repeat; }
+.ecmjqft LI.wait { font-weight:normal; background: url(<?php echo dol_buildpath('/img/working.gif', 1); ?>) left top no-repeat; }
 
 
 /* ============================================================================== */

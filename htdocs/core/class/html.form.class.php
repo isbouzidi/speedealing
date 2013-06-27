@@ -3070,7 +3070,7 @@ class Form {
 			if ($file)
 				$ret.='<img alt="Photo" id="photologo' . (preg_replace('/[^a-z]/i', '_', $file)) . '" class="photologo" border="0" width="' . $width . '" src="' . $object->getFile($file) . '">';
 			else
-				$ret.='<img alt="No photo" border="0" width="' . $width . '" src="' . DOL_URL_ROOT . '/theme/common/nophoto.jpg">';
+				$ret.='<img alt="No photo" border="0" width="' . $width . '" src="img/nophoto.jpg">';
 		} elseif ($dir) {
 			$cache = '0';
 			if ($file && file_exists($dir . "/" . $file)) {

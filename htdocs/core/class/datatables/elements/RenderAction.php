@@ -54,7 +54,7 @@ class RenderAction implements ElementInterface {
 
 		foreach($this->field->action as $action => $param) {
 			if ($action == 'edit') // TODO remove this deprecated method
-				$output.= 'ar[ar.length] = \'<a href="' . $url . '\' + row._id + \'&action=' . $action . '&backtopage=' . $_SERVER['PHP_SELF'] . '" title="' . $langs->trans($param->label) . '"><img src="theme/' . $conf->theme . '/img/edit.png" alt="" /></a>&nbsp;&nbsp;\';';
+				$output.= 'ar[ar.length] = \'<a href="' . $url . '\' + row._id + \'&action=' . $action . '&backtopage=' . $_SERVER['PHP_SELF'] . '" title="' . $langs->trans($param->label) . '"><img src="img/action_edit.png" alt="" /></a>&nbsp;&nbsp;\';';
 			else
 				$output.= 'ar[ar.length] = \'<span class="' . $param->cssclass . '" title="' . $langs->trans($param->label) . '"></span>&nbsp;&nbsp;\';';
 		}

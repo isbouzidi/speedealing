@@ -28,6 +28,6 @@ class DeleteLink implements ElementInterface {
 
     public function render() {
     	global $conf;
-        return "<a href='{$this->url}' class='{$this->class}' title='{$this->label}'><img src=\"theme/{$conf->theme}/img/delete.png\" alt=\"\" /></a>";
+        return "<a href='{$this->url}' class='{$this->class}' title='{$this->label}'><img src=\"img/action_delete.png\" alt=\"\" /></a>";
     }
 }

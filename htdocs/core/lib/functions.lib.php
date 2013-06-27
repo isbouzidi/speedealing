@@ -691,6 +691,7 @@ function dol_print_date($time, $format = '', $tzoutput = 'tzserver', $outputlang
 	if ($format == 'dayhourrfc')
 		$format = '%Y-%m-%dT%H:%M:%SZ';   // DATETIME RFC3339
 
+
 		
 // If date undefined or "", we return ""
 	if (dol_strlen($time) == 0)
@@ -1186,7 +1187,7 @@ function dol_print_address($address, $htmlid, $mode, $id, $gps = false) {
 
 		if ($conf->map->enabled && $gps) {
 			$url = dol_buildpath('/map/map.php?id=' . $id, 1);
-			$rtr.= ' <a href="' . $url . '" target="_gmaps"><img id="' . $htmlid . '" border="0" src="' . DOL_URL_ROOT . '/theme/common/gmap.png"></a>';
+			$rtr.= ' <a href="' . $url . '" target="_gmaps"><img id="' . $htmlid . '" border="0" src="img/gmap.png"></a>';
 		}
 
 
@@ -1533,7 +1534,7 @@ function img_picto($alt, $picto, $options = '', $pictoisfullpath = false) {
 		if (defined('DOL_URL_ROOT_ALT') && DOL_URL_ROOT_ALT && !file_exists(DOL_DOCUMENT_ROOT . '/' . $path . '/img/' . $picto))
 			$url = DOL_URL_ROOT_ALT;
 
-		$fullpathpicto = $url . '/' . $path . '/img/' . $picto;
+		$fullpathpicto = 'img/' . $picto;
 	}
 
 	return '<img src="' . $fullpathpicto . '" border="0" alt="' . dol_escape_htmltag($alt) . '" title="' . dol_escape_htmltag($alt) . '"' . (!empty($options) ? ' ' . $options : '') . '>';
@@ -1573,7 +1574,7 @@ function img_picto_common($alt, $picto, $options = '', $pictoisfullpath = 0) {
 	if ($pictoisfullpath)
 		$path = $picto;
 	else {
-		$path = DOL_URL_ROOT . '/theme/common/' . $picto;
+		$path = 'img/' . $picto;
 
 		if (!empty($conf->global->MAIN_MODULE_CAN_OVERWRITE_COMMONICONS)) {
 			$themepath = DOL_DOCUMENT_ROOT . '/theme/' . $conf->theme . '/img/' . $picto;
@@ -1672,7 +1673,7 @@ function img_edit($alt = 'default', $float = 0, $other = '') {
 	if ($alt == 'default')
 		$alt = $langs->trans('Modify');
 
-	return img_picto($alt, 'edit.png', ($float ? 'style="float: right"' : $other));
+	return img_picto($alt, 'action_edit.png', ($float ? 'style="float: right"' : $other));
 }
 
 /**
@@ -2617,6 +2618,7 @@ function price2num($amount, $rounding = '', $alreadysqlnb = 0) {
 
 
 
+
 			
 //print "RR".$amount.' - '.$nbofdectoround.'<br>';
 		if (dol_strlen($nbofdectoround))
@@ -3002,6 +3004,7 @@ function dol_mkdir($dir, $dataroot = '') {
 			$ccdir .= $cdir[$i];
 		if (preg_match("/^.:$/", $ccdir, $regs))
 			continue; // Si chemin Windows incomplet, on poursuit par rep suivant
+
 
 
 
@@ -3644,30 +3647,30 @@ function get_htmloutput_mesg($mesgstring = '', $mesgarray = '', $style = 'ok', $
 		switch ($style) {
 			case "error":
 				$color = "red-gradient";
-				$icon = 'theme/common/emotes/face-sad.png';
+				$icon = 'img/emotes/face-sad.png';
 				$closeDelay = 10000;
 				break;
 			case "warning":
 				$color = "orange-gradient";
-				$icon = 'theme/common/emotes/face-uncertain.png';
+				$icon = 'img/emotes/face-uncertain.png';
 				$closeDelay = 10000;
 				break;
 			case "ok":
 				$color = "green-gradient";
-				$icon = 'theme/common/emotes/face-smile.png';
+				$icon = 'img/emotes/face-smile.png';
 				$closeDelay = 5000;
 				break;
 		}
 		?><script>
-					$(document).ready(function() {
-						notify('<?php echo dol_escape_js($row->title); ?>', '<?php echo dol_escape_js($out); ?>', {
-							autoClose: true,
-							delay: 500,
-							closeDelay: <?php echo $closeDelay; ?>,
-							classes: ["<?php echo $color; ?>"],
-							icon: '<?php echo $icon; ?>'
-						});
-					});
+			$(document).ready(function() {
+				notify('<?php echo dol_escape_js($row->title); ?>', '<?php echo dol_escape_js($out); ?>', {
+					autoClose: true,
+					delay: 500,
+					closeDelay: <?php echo $closeDelay; ?>,
+					classes: ["<?php echo $color; ?>"],
+					icon: '<?php echo $icon; ?>'
+				});
+			});
 		</script><?php
 	}
 	return $return;

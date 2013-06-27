@@ -28,6 +28,6 @@ class EditLink implements ElementInterface {
 
     public function render() {
     	global $conf;
-        return "<a href='{$this->url}' class='{$this->class}' title='{$this->label}'><img src=\"theme/{$conf->theme}/img/edit.png\" alt=\"\" /></a>";
+        return "<a href='{$this->url}' class='{$this->class}' title='{$this->label}'><img src=\"img/action_edit.png\" alt=\"\" /></a>";
     }
 }
