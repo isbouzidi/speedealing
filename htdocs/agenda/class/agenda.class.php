@@ -1444,7 +1444,7 @@ class Agenda extends nosqlDocument {
 										max: <?php echo 10; ?>,
 										title: {text: "Importance"},
 										plotLines: [{
-												value: <? echo 5; ?>,
+												value: <?php echo 5; ?>,
 												width: 2,
 												color: "red"
 											}],
