@@ -243,7 +243,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 						complete: function(req) {
 							var resp = $.parseJSON(req.responseText);
 							if (req.status == 200) {
-								document.location.href = document.getElementsByTagName('base')[0].href + '/index.php';
+								document.location.href = base + '/index.php';
 							} else {
 								formLogin.clearMessages();
 								displayError('Invalid user/password, please try again');
