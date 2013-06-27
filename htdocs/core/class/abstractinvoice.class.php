@@ -272,7 +272,7 @@ class AbstractInvoice extends nosqlDocument {
 		$obj->aoColumns[$i]->fnRender = 'function(obj) {
 	var ar = [];
 	ar[ar.length] = "<a href=\"\"";
-	ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
+	ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"img/action_delete.png\" alt=\"\" /></a>";
 	var str = ar.join("");
 	return str;
 }';

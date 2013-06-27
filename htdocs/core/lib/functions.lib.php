@@ -1708,7 +1708,7 @@ function img_delete($alt = 'default', $other = '') {
 	if ($alt == 'default')
 		$alt = $langs->trans('Delete');
 
-	return img_picto($alt, 'delete.png', $other);
+	return img_picto($alt, 'action_delete.png', $other);
 }
 
 /**

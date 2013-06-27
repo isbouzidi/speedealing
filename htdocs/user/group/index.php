@@ -120,7 +120,7 @@ $obj->aoColumns[$i]->bUseRendered = false;
 $obj->aoColumns[$i]->bSearchable = true;
 $obj->aoColumns[$i]->fnRender = 'function(obj) {
 	var ar = [];
-	ar[ar.length] = "<img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/ico/icSw2/' . $object->fk_extrafields->ico . '\" border=\"0\" alt=\"' . $langs->trans("See " . get_class($object)) . ' : ";
+	ar[ar.length] = "<img src=\"img/ico/icSw2/' . $object->fk_extrafields->ico . '\" border=\"0\" alt=\"' . $langs->trans("See " . get_class($object)) . ' : ";
 	ar[ar.length] = obj.aData.name.toString();
 	ar[ar.length] = "\" title=\"' . $langs->trans("See " . get_class($object)) . ' : ";
 	ar[ar.length] = obj.aData.name.toString();
