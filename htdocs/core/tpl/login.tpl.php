@@ -223,11 +223,16 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					// Show progress
 					displayLoading('Checking credentials...');
 					event.preventDefault();
+					
+					var base="";
+					 if (document.getElementsByTagName('base').length > 0) {
+						 base = document.getElementsByTagName('base')[0].href;
+					 }
 
 					// Stop normal behavior
 					event.preventDefault();
 					$.ajax({
-						type: "POST", url: document.getElementsByTagName('base')[0].href + "/api/login", dataType: "json",
+						type: "POST", url: base + "/api/login", dataType: "json",
 						data: {name: login, password: pass},
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader('Accept', 'application/json');
