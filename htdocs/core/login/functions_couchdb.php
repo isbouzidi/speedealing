@@ -44,9 +44,9 @@ function check_user_password_couchdb($usertotest, $passwordtotest, $dbname) {
     if (!empty($usertotest)) {
 
         try {
-            $host = substr($conf->Couchdb->host, 7);
+            //$host = substr(, 7);
 
-            $client = new couchClient('http://' . $usertotest . ':' . $passwordtotest . '@' . $host . ':' . $conf->Couchdb->port . '/', $dbname, array("cookie_auth" => TRUE));
+            $client = new couchClient('http://' . $usertotest . ':' . $passwordtotest . '@' . $conf->Couchdb->host . ':' . $conf->Couchdb->port . '/', $dbname, array("cookie_auth" => TRUE));
         } catch (Exception $e) {
             sleep(10);
             dol_print_error("",$e->getMessage());
