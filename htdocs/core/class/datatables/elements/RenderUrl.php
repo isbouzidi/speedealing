@@ -87,7 +87,7 @@ class RenderUrl implements ElementInterface {
 							ar[ar.length] = "<a href=\"" + url + data.id + "\">" + data.name.toString() + "</a> ";
 							if (ico)
 								ar[ar.length] = "</span>";
-						} else {
+						} else if(data.name) {
 							if (ico)
 								ar[ar.length] = "<span class=\"" + ico + "\" title=\"" + title + " : " + data.name.toString() + "\">";
 							ar[ar.length] = data.name.toString();
