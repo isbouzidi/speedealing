@@ -112,183 +112,267 @@ if ($user->rights->commande->creer) {
 }
 
 /*
-$i = 0;
-$obj = new stdClass();
+  $i = 0;
+  $obj = new stdClass();
 
-print $object->datatablesEdit("listorders", $langs->trans("NewOrder"));
+  print $object->datatablesEdit("listorders", $langs->trans("NewOrder"));
 
-print '<table class="display dt_act" id="listorders" >';
-// Ligne des titres
-print'<thead>';
-print'<tr>';
-print'<th>';
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "_id";
-$obj->aoColumns[$i]->bUseRendered = false;
-$obj->aoColumns[$i]->bSearchable = false;
-$obj->aoColumns[$i]->bVisible = false;
-$i++;
-print'<th class="essential">';
-print $langs->trans("Ref");
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "ref";
-$obj->aoColumns[$i]->bUseRendered = false;
-$obj->aoColumns[$i]->bSearchable = true;
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("ref", "url");
-$i++;
-print'<th class="essential">';
-print $langs->trans('Company');
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "client.name";
-$obj->aoColumns[$i]->sDefaultContent = "";
-$obj->aoColumns[$i]->fnRender = $societe->datatablesFnRender("client.name", "url", array('id' => "client.id"));
-$i++;
-print'<th class="essential">';
-print $langs->trans("RefCustomer");
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "ref_client";
-$obj->aoColumns[$i]->bUseRendered = false;
-$obj->aoColumns[$i]->bSearchable = true;
-$obj->aoColumns[$i]->editable = true;
-$obj->aoColumns[$i]->sDefaultContent = "";
-$i++;
+  print '<table class="display dt_act" id="listorders" >';
+  // Ligne des titres
+  print'<thead>';
+  print'<tr>';
+  print'<th>';
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "_id";
+  $obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->bSearchable = false;
+  $obj->aoColumns[$i]->bVisible = false;
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans("Ref");
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "ref";
+  $obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->bSearchable = true;
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("ref", "url");
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans('Company');
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "client.name";
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  $obj->aoColumns[$i]->fnRender = $societe->datatablesFnRender("client.name", "url", array('id' => "client.id"));
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans("RefCustomer");
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "ref_client";
+  $obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->bSearchable = true;
+  $obj->aoColumns[$i]->editable = true;
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  $i++;
 
-$contact = new Contact();
-print'<th class="essential">';
-print $langs->trans('Contact');
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "contact.name";
-$obj->aoColumns[$i]->sDefaultContent = "";
-$obj->aoColumns[$i]->fnRender = $contact->datatablesFnRender("contact.name", "url", array('id' => "contact.id"));
-$i++;
-print'<th class="essential">';
-print $langs->trans('Date');
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "date";
-$obj->aoColumns[$i]->sClass = "center";
-$obj->aoColumns[$i]->sDefaultContent = "";
-$obj->aoColumns[$i]->sType = "date";
-$obj->aoColumns[$i]->bUseRendered = false;
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("date", "date");
-$obj->aoColumns[$i]->editable = true;
-$i++;
-print'<th class="essential">';
-print $langs->trans('AmountHT');
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "total_ht";
-$obj->aoColumns[$i]->sClass = "fright";
-$obj->aoColumns[$i]->sDefaultContent = "";
-//$obj->aoColumns[$i]->bUseRendered = false;
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("total_ht", "price");
-//$obj->aoColumns[$i]->editable = true;
-$i++;
-//print'<th class="essential">';
-//print $langs->trans('Contact');
-//print'</th>';
-//$obj->aoColumns[$i]->mDataProp = "contact.name";
-//$obj->aoColumns[$i]->sDefaultContent = "";
-//$obj->aoColumns[$i]->fnRender = $contact->datatablesFnRender("contact.name", "url", array('id' => "contact.id"));
-//$i++;
-//print'<th class="essential">';
-//  print $langs->trans('Author');
-//  print'</th>';
-//  $obj->aoColumns[$i] = new stdClass();
-//  $obj->aoColumns[$i]->mDataProp = "author";
-//  $obj->aoColumns[$i]->sDefaultContent = "";
-//  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("author.name", "url", array('id' => "author.id"));
-//  $i++;
-print'<th class="essential">';
-print $langs->trans("Status");
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "Status";
-$obj->aoColumns[$i]->sClass = "center";
-$obj->aoColumns[$i]->sDefaultContent = "DRAFT";
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("Status", "status");
-$obj->aoColumns[$i]->editable = true;
-$i++;
-print'<th class="essential">';
-print $langs->trans('Action');
-print'</th>';
-$obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "";
-$obj->aoColumns[$i]->sClass = "center content_actions";
-$obj->aoColumns[$i]->sWidth = "60px";
-$obj->aoColumns[$i]->bSortable = false;
-$obj->aoColumns[$i]->sDefaultContent = "";
+  $contact = new Contact();
+  print'<th class="essential">';
+  print $langs->trans('Contact');
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "contact.name";
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  $obj->aoColumns[$i]->fnRender = $contact->datatablesFnRender("contact.name", "url", array('id' => "contact.id"));
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans('Date');
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "date";
+  $obj->aoColumns[$i]->sClass = "center";
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  $obj->aoColumns[$i]->sType = "date";
+  $obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("date", "date");
+  $obj->aoColumns[$i]->editable = true;
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans('AmountHT');
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "total_ht";
+  $obj->aoColumns[$i]->sClass = "fright";
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  //$obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("total_ht", "price");
+  //$obj->aoColumns[$i]->editable = true;
+  $i++;
+  //print'<th class="essential">';
+  //print $langs->trans('Contact');
+  //print'</th>';
+  //$obj->aoColumns[$i]->mDataProp = "contact.name";
+  //$obj->aoColumns[$i]->sDefaultContent = "";
+  //$obj->aoColumns[$i]->fnRender = $contact->datatablesFnRender("contact.name", "url", array('id' => "contact.id"));
+  //$i++;
+  //print'<th class="essential">';
+  //  print $langs->trans('Author');
+  //  print'</th>';
+  //  $obj->aoColumns[$i] = new stdClass();
+  //  $obj->aoColumns[$i]->mDataProp = "author";
+  //  $obj->aoColumns[$i]->sDefaultContent = "";
+  //  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("author.name", "url", array('id' => "author.id"));
+  //  $i++;
+  print'<th class="essential">';
+  print $langs->trans("Status");
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "Status";
+  $obj->aoColumns[$i]->sClass = "center";
+  $obj->aoColumns[$i]->sDefaultContent = "DRAFT";
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("Status", "status");
+  $obj->aoColumns[$i]->editable = true;
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans('Action');
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "";
+  $obj->aoColumns[$i]->sClass = "center content_actions";
+  $obj->aoColumns[$i]->sWidth = "60px";
+  $obj->aoColumns[$i]->bSortable = false;
+  $obj->aoColumns[$i]->sDefaultContent = "";
 
-$url = "commande/fiche.php";
-$obj->aoColumns[$i]->fnRender = 'function(obj) {
-	var ar = [];
-	ar[ar.length] = "<a href=\"' . $url . '?id=";
-	ar[ar.length] = obj.aData._id.toString();
-	ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
-	ar[ar.length] = "<a href=\"\"";
-	ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
-	var str = ar.join("");
-	return str;
-}';
-print'</tr>';
-print'</thead>';
-print'<tfoot>';
-/* input search view */
-/*$i = 0; //Doesn't work with bServerSide
-print'<tr>';
-print'<th id="' . $i . '"></th>';
-$i++;
-print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Ref") . '" /></th>';
-$i++;
-print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Company") . '" /></th>';
-$i++;
-print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search RefCustomer") . '" /></th>';
-$i++;
-print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Date") . '" /></th>';
-$i++;
-//print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search DateEnd") . '" /></th>';
-//$i++;
-//print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search author") . '" /></th>';
-//$i++;
-print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Status") . '" /></th>';
-$i++;
-print'<th id="' . $i . '"></th>';
-$i++;
-print'</tr>';
-print'</tfoot>';
-print'<tbody>';
-print'</tbody>';
+  $url = "commande/fiche.php";
+  $obj->aoColumns[$i]->fnRender = 'function(obj) {
+  var ar = [];
+  ar[ar.length] = "<a href=\"' . $url . '?id=";
+  ar[ar.length] = obj.aData._id.toString();
+  ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
+  ar[ar.length] = "<a href=\"\"";
+  ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
+  var str = ar.join("");
+  return str;
+  }';
+  print'</tr>';
+  print'</thead>';
+  print'<tfoot>';
+  /* input search view */
+/* $i = 0; //Doesn't work with bServerSide
+  print'<tr>';
+  print'<th id="' . $i . '"></th>';
+  $i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Ref") . '" /></th>';
+  $i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Company") . '" /></th>';
+  $i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search RefCustomer") . '" /></th>';
+  $i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Date") . '" /></th>';
+  $i++;
+  //print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search DateEnd") . '" /></th>';
+  //$i++;
+  //print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search author") . '" /></th>';
+  //$i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Status") . '" /></th>';
+  $i++;
+  print'<th id="' . $i . '"></th>';
+  $i++;
+  print'</tr>';
+  print'</tfoot>';
+  print'<tbody>';
+  print'</tbody>';
 
-print "</table>";
+  print "</table>";
 
-$obj->aaSorting = array(array(1, 'asc'));
-//$obj->bServerSide = true;
-//if ($all) {
-//    if ($type == "DONE")
-//        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=actionsDONE&class=" . get_class($object);
-//    else
-//        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=actionsTODO&class=" . get_class($object);
-//} else {
-//    if ($type == "DONE")
-//        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
-//    else
-//        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
-//
-//}
-//$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list";
+  $obj->aaSorting = array(array(1, 'asc'));
+  //$obj->bServerSide = true;
+  //if ($all) {
+  //    if ($type == "DONE")
+  //        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=actionsDONE&class=" . get_class($object);
+  //    else
+  //        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=actionsTODO&class=" . get_class($object);
+  //} else {
+  //    if ($type == "DONE")
+  //        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
+  //    else
+  //        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
+  //
+  //}
+  //$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list";
 
-if ($_GET["planning"])
-	$obj->sAjaxSource = "core/ajax/listdatatables.php?json=planning&class=" . get_class($object);
+  if ($_GET["planning"])
+  $obj->sAjaxSource = "core/ajax/listdatatables.php?json=planning&class=" . get_class($object);
 
-$object->datatablesCreate($obj, "listorders", true, true);
-*/
+  $object->datatablesCreate($obj, "listorders", true, true);
+ */
 
 echo $object->showList();
+
+print '<div id="grid"></div>
+ <script>
+                $(document).ready(function () {
+                    var crudServiceBaseUrl = "api/planning",
+                        dataSource = new kendo.data.DataSource({
+                            transport: {
+                                read:  {
+                                    url: crudServiceBaseUrl,
+									type: "GET",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url: crudServiceBaseUrl,
+									type: "PUT",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: crudServiceBaseUrl,
+									type: "DELETE",
+                                    dataType: "json"
+                                },
+                                create: {
+                                    url: crudServiceBaseUrl,
+									type: "POST",
+                                    dataType: "json"
+                                },
+                                parameterMap: function(options, operation) {
+                                    if (operation !== "read" && options.models) {
+                                        return {models: kendo.stringify(options.models)};
+                                    }
+                                }
+                            },
+                            batch: true,
+                            pageSize: 10,
+                            schema: {
+                                model: {
+                                    id: "ProductID",
+                                    fields: {
+                                        ProductID: { editable: false, nullable: true },
+                                        ProductName: { editable: true, validation: { required: true } },
+                                        UnitPrice: { type: "number", validation: { required: true, min: 1} },
+										UnitPricing: { type: "number", validation: { required: true, min: 1} },
+                                        Discontinued: { type: "boolean" },
+                                        UnitsInStock: { type: "number", validation: { min: 0, required: true } }
+                                    }
+                                }
+                            }
+                        });
+
+                    $("#grid").kendoGrid({
+                        dataSource: dataSource,
+                        pageable: {
+                            refresh: true,
+							pageSize: 10,
+							pageSizes: [5, 10, 20, 50],
+							buttonCount: 5
+                        },
+						filterable: {
+							extra: false
+						},
+						//scrollable: {
+						//	virtual: true
+						//},
+						sortable: true,
+                        height: 430,
+                        toolbar: [
+							{ 
+								name: "create", 
+								text:"Nouvelle commande",
+								className:"k-button k-button-icontext k-grid-add button",
+							}
+						],
+                        columns: [
+                            "ProductName",
+                            { field: "UnitPrice", title: "Unit Price", format: "{0:c}", width: "100px" },
+							{ field: "UnitPricing", title: "Unit Price", format: "{0:c}", width: "100px" },
+                            { field: "UnitsInStock", title:"Units In Stock", width: "100px" },
+                            { field: "Discontinued", width: "100px" },
+                            { command: [{ name: "edit", text: { edit: "", update: "", cancel: ""}}, {name:"destroy", text:""}], title: "&nbsp;", width: "90px" }],
+                        editable: "inline"
+                    });
+                });
+            </script>';
 
 print '</div>';
 

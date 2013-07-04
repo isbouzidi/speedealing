@@ -100,24 +100,28 @@
 	<script type="text/javascript">var CKEDITOR_BASEPATH = '<?php echo DOL_URL_ROOT; ?>/includes/ckeditor/';</script>
 	<script type="text/javascript" src="includes/ckeditor/ckeditor_basic.js" defer></script>
 
-	<script src="js/setup.js"></script>
+	<script type="text/javascript" src="js/setup.js"></script>
 
-	<script src="js/developr.navigable.js"></script>
-	<script src="js/developr.scroll.js"></script>
-	<script src="js/developr.accordions.js"></script>
+	<script type="text/javascript" src="js/developr.navigable.js"></script>
+	<script type="text/javascript" src="js/developr.scroll.js"></script>
+	<script type="text/javascript" src="js/developr.accordions.js"></script>
 
 	<!--<script src="theme/symeos/js/s_scripts.js"></script>-->
 
-	<script src="js/developr.input.js"></script>
-	<script src="js/developr.message.js"></script>
-	<script src="js/developr.modal.js"></script>
-	<script src="js/developr.notify.js"></script>
-	<script src="js/developr.progress-slider.js"></script>
-	<script src="js/developr.tooltip.js"></script>
-	<script src="js/developr.confirm.js"></script>
-	<script src="js/developr.agenda.js"></script>
-	<script src="js/developr.tabs.js"></script>
-
+	<script type="text/javascript" src="js/developr.input.js"></script>
+	<script type="text/javascript" src="js/developr.message.js"></script>
+	<script type="text/javascript" src="js/developr.modal.js"></script>
+	<script type="text/javascript" src="js/developr.notify.js"></script>
+	<script type="text/javascript" src="js/developr.progress-slider.js"></script>
+	<script type="text/javascript" src="js/developr.tooltip.js"></script>
+	<script type="text/javascript" src="js/developr.confirm.js"></script>
+	<script type="text/javascript" src="js/developr.agenda.js"></script>
+	<script type="text/javascript" src="js/developr.tabs.js"></script>
+	
+	<!-- Kendo library -->
+	<script type="text/javascript" src="includes/kendo/js/kendo.web.min.js"></script>
+	<script type="text/javascript" src="includes/kendo/js/cultures/kendo.culture.fr-FR.min.js"></script>
+	
 	<!-- Includes specific JS of Speedealing -->
 	<script type="text/javascript" src="js/lib_head.js" defer></script>
 

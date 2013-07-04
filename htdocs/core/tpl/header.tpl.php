@@ -138,6 +138,11 @@
 	<!-- datatables -->
 	<link rel="stylesheet" href="includes/jquery/plugins/datatables/css/demo_table_jui.css" media="all" />
 
+	<!-- Kendo library -->
+	<link rel="stylesheet" href="includes/kendo/css/kendo.common.min.css" media="all" />
+	<link rel="stylesheet" href="includes/kendo/css/kendo.default.min.css" media="all" />
+	<link rel="stylesheet" href="includes/kendo/css/kendo.speedealing.css" media="all" />
+	
 	<!-- main styles -->
 	<!--<link rel="stylesheet" href="theme/eldy/style.css" />-->
 

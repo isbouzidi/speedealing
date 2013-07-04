@@ -224,13 +224,13 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					displayLoading('Checking credentials...');
 					event.preventDefault();
 					
-					var base="";
-					 if (document.getElementsByTagName('base').length > 0) {
-						 base = document.getElementsByTagName('base')[0].href;
-					 }
+					//var base="";
+					// if (document.getElementsByTagName('base').length > 0) {
+					//	 base = document.getElementsByTagName('base')[0].href;
+					// }
 					 
-					 if(base.charAt( base.length-1 ) == "/")
-						 base = "";
+					// if(base.charAt( base.length-1 ) == "/")
+					//	 base = "";
 
 					// Stop normal behavior
 					event.preventDefault();
