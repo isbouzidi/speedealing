@@ -35,7 +35,7 @@ include_once DOL_DOCUMENT_ROOT .'/core/modules/DolibarrModules.class.php';
 /**
  *	Classe de description et activation du module Ficheinter
  */
-class modFicheinter extends DolibarrModules
+class modIntervention extends DolibarrModules
 {
 
     /**
@@ -56,7 +56,7 @@ class modFicheinter extends DolibarrModules
         $this->description = "Gestion des fiches d'intervention";
 
         // Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-        $this->version = 'dolibarr';
+        $this->version = 'speedealing';
 
         $this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
         $this->special = 0;
@@ -93,44 +93,49 @@ class modFicheinter extends DolibarrModules
 
         // Permissions
         $this->rights = array();
-        $this->rights_class = 'ficheinter';
-        $r=0;
+        $this->rights_class = 'intervention';
+        
+		
+		$r=0;
+		$this->rights[$r] = new stdClass();
+        $this->rights[$r]->id = 61;
+        $this->rights[$r]->desc = 'Lire les fiches d\'intervention';
+        $this->rights[$r]->default = 1;
+        $this->rights[$r]->perm = array('lire');
 
         $r++;
-        $this->rights[$r][0] = 61;
-        $this->rights[$r][1] = 'Lire les fiches d\'intervention';
-        $this->rights[$r][2] = 'r';
-        $this->rights[$r][3] = 1;
-        $this->rights[$r][4] = 'lire';
+        $this->rights[$r]->id = 62;
+        $this->rights[$r]->desc = 'Creer/modifier les fiches d\'intervention';
+        $this->rights[$r]->default = 0;
+        $this->rights[$r]->perm = array('creer');
 
         $r++;
-        $this->rights[$r][0] = 62;
-        $this->rights[$r][1] = 'Creer/modifier les fiches d\'intervention';
-        $this->rights[$r][2] = 'w';
-        $this->rights[$r][3] = 0;
-        $this->rights[$r][4] = 'creer';
+        $this->rights[$r]->id = 64;
+        $this->rights[$r]->desc = 'Supprimer les fiches d\'intervention';
+        $this->rights[$r]->default = 0;
+        $this->rights[$r]->perm = array('supprimer');
 
         $r++;
-        $this->rights[$r][0] = 64;
-        $this->rights[$r][1] = 'Supprimer les fiches d\'intervention';
-        $this->rights[$r][2] = 'd';
-        $this->rights[$r][3] = 0;
-        $this->rights[$r][4] = 'supprimer';
-
+        $this->rights[$r]->id = 67;
+        $this->rights[$r]->desc = 'Exporter les fiches interventions';
+        $this->rights[$r]->default = 0;
+        $this->rights[$r]->perm = array('export');
+		
+		// Main menu entries
+		$this->menu = array();   // List of menus to add
+		$r = 0;
+		
+		$this->menus[$r] = new stdClass();
+        $this->menus[$r]->_id = "menu:planning";
+        $this->menus[$r]->position = 10;
+        $this->menus[$r]->url = "/intervention/list.php";
+        $this->menus[$r]->langs = "agenda";
+        $this->menus[$r]->perms = '$user->rights->intervention->lire';
+        $this->menus[$r]->enabled = '$conf->intervention->enabled';
+        $this->menus[$r]->usertype = 2;
+        $this->menus[$r]->title = "Planning";
+		$this->menus[$r]->fk_menu = "menu:commandes";
         $r++;
-        $this->rights[$r][0] = 67;
-        $this->rights[$r][1] = 'Exporter les fiches interventions';
-        $this->rights[$r][2] = 'r';
-        $this->rights[$r][3] = 0;
-        $this->rights[$r][4] = 'export';
-
-        $r++;
-        $this->rights[$r][0] = 68;
-        $this->rights[$r][1] = 'Envoyer les fiches d\'intervention par courriel';
-        $this->rights[$r][2] = 'r';
-        $this->rights[$r][3] = 0;
-        $this->rights[$r][4] = 'ficheinter_advance';      // Visible if option MAIN_USE_ADVANCED_PERMS is on
-        $this->rights[$r][5] = 'send';
 
         //Exports
         //--------

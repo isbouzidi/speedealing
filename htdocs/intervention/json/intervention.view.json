@@ -1,0 +1,12 @@
+{
+   "_id": "_design/Intervention",
+   "language": "javascript",
+   "views": {
+       "list": {
+           "map": "function(doc) {\nif (doc.class && doc.class == \"Commande\" && doc.trash != true && (doc.Status != \"CANCELED\" && doc.Status != \"CLOSED\" && doc.Status != \"DRAFT\")){\nfor (i in doc.lines) {\n\tvar id;\n\tid=doc._id +\"#\"+ i;\n  emit(doc._id, {_id:id,order:{name:doc.ref,id:doc._id},description:doc.lines[i].description,qty:doc.lines[i].qty,title:doc.lines[i].title,group:doc.lines[i].group, date_commande:doc.date_commande,date_livraison:doc.date_livraison, societe:doc.client, Status:doc.Status, facility:doc.facility});\n}\n }\n}"
+       }
+   },
+   "updates": {
+       "in-place": "function (doc, req) {\n var field = req.query.field;\n var value = req.query.value;\n doc[field] = value;\n  return [doc, value];\n }"
+   }
+}

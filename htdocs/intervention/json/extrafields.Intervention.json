@@ -1,0 +1,88 @@
+{
+	"_id": "extrafields:Intervention",
+	"_rev": "112-704c9b2c7473cd3038f751df5c57205b",
+	"class": "ExtraFields",
+	"ico": "icon-object-order",
+	"langs": [
+		"orders"
+	],
+	"history": true,
+	"fields": {
+		"_id": {
+			"type": "text",
+			"enable": true,
+			"list": {
+				"visible": false,
+				"static": true
+			}
+		},
+		"order": {
+			"type": "text",
+			"enable": true,
+			"label": "Ref",
+			"list": {
+				"static": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-order"
+			}
+		},
+		"Status": {
+			"type": "select",
+			"enable": true,
+			"default": "NEW",
+			"label": "Status",
+			"status": true,
+			"list": {
+				"cssclass": "center",
+				"editable": true
+			},
+			"render": {
+				"type": "status"
+			},
+			"dict": "dict:fk_order_status"
+		},
+		"societe": {
+			"type": "select",
+			"enable": true,
+			"class": "Societe",
+			"view": "list",
+			"label": "Company",
+			"list": {
+				"editable": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-company"
+			}
+		},
+		"date_commande": {
+			"type": "date",
+			"enable": true,
+			"label": "Date"
+		},
+		"date_livraison": {
+			"type": "date",
+			"enable": true,
+			"label": "DateEnd"
+		},
+		"description": {
+			"type": "text",
+			"enable": true,
+			"label": "Description"
+		},
+		"qty": {
+			"type": "text",
+			"enable": true,
+			"label": "Qty"
+		},
+		"group": {
+			"type": "text",
+			"enable": true,
+			"label": "Group"
+		}
+	},
+	"tms": "2013-04-09T18:51:31+02:00",
+	"entity": "clermont"
+}

@@ -1220,6 +1220,258 @@ abstract class nosqlDocument extends CommonObject {
 
 		return $rtr;
 	}
+	
+	/**
+	 *  For Generate function param for a kendo UI
+	 *
+	 *  @param $obj object of aocolumns parameters
+	 *  @param $ref_css name of #list
+	 *  @return string
+	 */
+	public function kendoTemplateJS($key, $type, $params = array()) {
+		global $langs, $conf;
+
+		switch ($type) {
+			case "url":
+				if (empty($params['url'])) // default url
+					$url = strtolower(get_class($this)) . '/fiche.php?id=';
+				else
+					$url = $params['url'];
+
+				if (empty($params['id']))
+					$params['id'] = "_id";
+
+				$rtr = 'function(obj) {
+	 		var ar = [];
+			if(obj.'.$key.' === undefined)
+				return "";
+			';
+				if (strpos($key, ".") > 0)
+					$rtr.='if(obj.' . substr($key, 0, strpos($key, ".")) . '=== undefined)
+							return ar.join("");
+	 		if(obj.' . $key . ' === undefined)
+				if(obj.' . $params["id"] . ' === undefined)
+					return ar.join("");
+				else
+					obj.' . $key . ' = obj.' . $params["id"] . ';
+			';
+
+				if (!empty($this->fk_extrafields->ico)) {
+				$rtr.= 'ar[ar.length] = "<span class=\"' . $this->fk_extrafields->ico . '\" title=\"' . $langs->trans("See " . get_class($this)) . ' : " + obj.' . (!empty($params['title'])?$params['title']:$key) . ' + "\">";';
+				}
+
+				$rtr.= 'if(obj.' . $params["id"] . ' === undefined) {
+					ar[ar.length] = "<span>";
+					ar[ar.length] = obj.' . $key . '.toString();
+				ar[ar.length] = "</span>";
+				} else {
+					ar[ar.length] = "<a href=\"' . $url . '";
+				ar[ar.length] = obj.' . $params["id"] . ';
+					ar[ar.length] = "\">";
+					ar[ar.length] = obj.' . $key . '.toString();
+				ar[ar.length] = "</a>";
+				}
+				var str = ar.join("");
+				return str;
+			}';
+				break;
+
+			case "email":
+				$rtr = 'function(obj) {
+					var ar = [];
+					if(obj.' . $key . ' === undefined)
+					return ar.join("");
+
+					ar[ar.length] = "<a href=\"mailto:";
+					ar[ar.length] = obj.' . $key . '.toString();
+					ar[ar.length] = "\">";
+					ar[ar.length] = obj.' . $key . '.toString();
+					ar[ar.length] = "</a>";
+					var str = ar.join("");
+					return str;
+			}';
+				break;
+
+			case "date":
+				$rtr = 'function(obj) {
+					if(obj.' . $key . ')
+					{
+					var date = new Date(Date.parse(obj.' . $key . '));
+			return date.toLocaleDateString();
+			}
+	 		else
+	 		return null;
+			}';
+				break;
+
+			case "datetime" :
+				$rtr = 'function(obj) {
+			if(obj.' . $key . ')
+			{
+				var date = new Date(obj.' . $key . ');
+	 		return date.toLocaleDateString() +" "+date.toLocaleTimeString();
+			}
+	 		else
+	 		return null;
+			}';
+				break;
+
+			case "status":
+				$rtr = 'function(obj) {
+			var now = Math.round(+new Date());
+			var status = new Array();
+			var expire = new Array();
+			var statusDateEnd = "";
+			var stat = obj.' . $key . ';
+			if(stat === undefined)
+				stat = "' . $this->fk_extrafields->fields->$key->default . '";';
+
+
+				if (!empty($this->fk_extrafields->fields->$key->values)) {
+					foreach ($this->fk_extrafields->fields->$key->values as $key1 => $aRow) {
+						if (isset($aRow->label))
+							$rtr.= 'status["' . $key1 . '"]= new Array("' . $langs->trans($aRow->label) . '","' . $aRow->cssClass . '");';
+						else
+							$rtr.= 'status["' . $key1 . '"]= new Array("' . $langs->trans($key1) . '","' . $aRow->cssClass . '");';
+						if (isset($aRow->dateEnd)) {
+							$rtr.= 'expire["' . $key1 . '"]="' . $aRow->dateEnd . '";';
+						}
+					}
+				}
+
+				if (isset($params["dateEnd"])) {
+					$rtr.= 'if(obj.aData.' . $params["dateEnd"] . ' === undefined)
+				obj.aData.' . $params["dateEnd"] . ' = "";';
+					$rtr.= 'if(obj.aData.' . $params["dateEnd"] . ' != ""){';
+					$rtr.= 'var dateEnd = new Date(obj.' . $params["dateEnd"] . ').getTime();';
+					$rtr.= 'if(dateEnd < now)';
+					$rtr.= 'if(expire[stat] !== undefined)
+				stat = expire[stat];';
+					$rtr.= '}';
+				}
+				$rtr.= 'if(status[stat]===undefined)
+					stat = "ERROR";';
+
+				$rtr.= 'var ar = [];
+		ar[ar.length] = "<small class=\"tag ";
+		ar[ar.length] = status[stat][1];
+		ar[ar.length] = " glossy\">";
+		ar[ar.length] = status[stat][0];
+		ar[ar.length] = "</small>";
+		var str = ar.join("");
+		return str;
+			}';
+				break;
+
+			case "attachment" :
+				$url_server = "/db/" . $this->couchdb->getDatabaseName();
+
+				$rtr = 'function(obj) {
+			var ar = [];
+			ar[ar.length] = "<img src=\"theme/' . $conf->theme . $this->fk_extrafields->ico . '\" border=\"0\" alt=\"' . $langs->trans("See " . get_class($this)) . ' : ";
+			ar[ar.length] = obj.aData.' . $key . '.toString();
+				ar[ar.length] = "\" title=\"' . $langs->trans("See " . get_class($this)) . ' : ";
+			ar[ar.length] = obj.aData.' . $key . '.toString();
+				ar[ar.length] = "\"></a> <a href=\"' . $url_server . '/";
+				ar[ar.length] = obj.aData._id;
+				ar[ar.length] = "/";
+				ar[ar.length] = obj.aData.' . $key . '.toString();
+	 		ar[ar.length] = "\">";
+	 		ar[ar.length] = obj.aData.' . $key . '.toString();
+			ar[ar.length] = "</a>";
+			var str = ar.join("");
+			return str;
+			}';
+				break;
+
+			case "sizeMo":
+				$rtr = 'function(obj) {
+				var ar = [];
+	 		if(obj.aData.' . $key . ')
+	 		{
+				var size = obj.aData.' . $key . '/1000000;
+			size = (Math.round(size*100))/100;
+			ar[ar.length] = size;
+			ar[ar.length] = " Mo";
+			var str = ar.join("");
+			return str;
+			}
+			else
+			{
+			ar[ar.length] = "0 Mo";
+			var str = ar.join("");
+			return str;
+			}
+			}';
+				break;
+
+			case "price":
+				$rtr = 'function(obj) {
+						var ar = [];
+						if(obj.aData.' . $key . ' === undefined || obj.aData.' . $key . ' == "") {
+							var str = ar.join("");
+							return str;
+                        } else {
+						var price = obj.aData.' . $key . ';
+						price = ((Math.round(price*100))/100).toFixed(2);
+						ar[ar.length] = price;
+						ar[ar.length] = " €";
+						var str = ar.join("");
+						return str;
+			}
+			}';
+				break;
+
+			case "pourcentage":
+				$rtr = 'function(obj) {
+	 		var ar = [];
+	 		if(obj.aData.' . $key . ')
+	 		{
+				var total = obj.aData.' . $key . ';
+				price = ((Math.round(total*100))/100).toFixed(2);
+				ar[ar.length] = total;
+				ar[ar.length] = " %";
+				var str = ar.join("");
+				return str;
+			}
+	 		else
+	 		{
+				ar[ar.length] = "0.00 %";
+				var str = ar.join("");
+				return str;
+			}
+			}';
+				break;
+
+			case "tag":
+				$rtr = 'function(obj) {
+					var ar = [];
+
+					if(typeof(obj.' . $key . ')=="string") {
+						ar[ar.length] = "<small class=\"tag anthracite-gradient glossy";
+						ar[ar.length] = " \">";
+						ar[ar.length] = obj.' . $key . '.toString();
+						ar[ar.length] = "</small> ";
+                    } else {
+						for (var i in obj.' . $key . ') {
+							ar[ar.length] = "<small class=\"tag anthracite-gradient glossy";
+							ar[ar.length] = " \">";
+							ar[ar.length] = obj.' . $key . '[i].toString();
+							ar[ar.length] = "</small> ";
+                        }
+					}
+					var str = ar.join("");
+					return str;
+			}';
+				break;
+
+			default :
+				dol_print_error($db, "Type of fnRender must be url, date, datetime, attachment or status");
+				exit;
+		}
+
+		return $rtr;
+	}
 
 	/**
 	 * Function for ajax inbox to create an new object

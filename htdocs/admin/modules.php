@@ -66,7 +66,6 @@ llxHeader('', $langs->trans("Setup"));
 print_fiche_titre($langs->trans("Setup"));
 
 print '<div class="with-padding">';
-print '<div class="columns">';
 
 print start_box($langs->trans("ModulesSetup"), 'icon-object-config', '', false);
 
@@ -289,7 +288,7 @@ $obj->bServerSide = false;
 print $object->datatablesCreate($obj, "list_modules");
 
 print end_box();
-print '</div></div>';
+print '</div>';
 
 llxFooter();
 ?>

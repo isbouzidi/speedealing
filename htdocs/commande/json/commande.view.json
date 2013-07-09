@@ -1,6 +1,6 @@
 {
    "_id": "_design/Commande",
-   "_rev": "117-fbc201f62301b874385e069772180d53",
+   "_rev": "139-f17770bf19b2abeab72945c796a1f915",
    "language": "javascript",
    "views": {
        "list": {
@@ -36,10 +36,7 @@
            "map": "function(doc) {\nif (doc.class && doc.class == 'Commande' && doc.trash != true)\n  emit(doc.client.id, doc);\n}"
        },
        "lines": {
-           "map": "function(doc) {\nif (doc.class && doc.class == \"Commande\" && doc.trash != true){\nfor (i in doc.lines) {\n\tvar id;\n\tid=doc._id +\"#\"+ i;\n  emit(doc._id, {_id:id,ref:doc.ref,description:doc.lines[i].description,pu_ht:doc.lines[i].pu_ht,qty:doc.lines[i].qty,tva_tx:doc.lines[i].tva_tx,total_ht:doc.lines[i].total_ht,total_tva:doc.lines[i].total_tva,total_ttc:doc.lines[i].total_ttc,product_type:doc.lines[i].product_type,remise:doc.lines[i].remise,product:doc.lines[i].product,group:doc.lines[i].group});\n}\n }\n}"
-       },
-       "planning": {
-           "map": "function(doc) {\n  if(doc.class && doc.class==\"Commande\" && doc.trash != true && (doc.Status != \"CANCELED\" && doc.Status != \"CLOSED\" && doc.Status != \"DRAFT\"))\n  emit(doc._id, doc);\n}"
+           "map": "function(doc) {\nif (doc.class && doc.class == \"Commande\" && doc.trash != true ){\nfor (i in doc.lines) {\n\tvar id;\n\tid=doc._id +\"#\"+ i;\n  emit(doc._id, {_id:id,ref:doc.ref,description:doc.lines[i].description,pu_ht:doc.lines[i].pu_ht,qty:doc.lines[i].qty,tva_tx:doc.lines[i].tva_tx,total_ht:doc.lines[i].total_ht,total_tva:doc.lines[i].total_tva,total_ttc:doc.lines[i].total_ttc,product_type:doc.lines[i].product_type,remise:doc.lines[i].remise,product:doc.lines[i].product,group:doc.lines[i].group});\n}\n }\n}"
        },
        "history": {
            "map": "function(doc) {\nif(doc.class && doc.class == \"Commande\" && doc.trash != true && doc.history.length > 0) {\n    for(var idx in doc.history) {\n      emit(doc._id, {date:doc.history[idx].date, author:doc.history[idx].author, Status:doc.history[idx].Status});\n    }\n  }\n}"

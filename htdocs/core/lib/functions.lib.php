@@ -3569,17 +3569,17 @@ function dol_htmloutput_events() {
 			switch ($aRow) {
 				case "errors":
 					$color = "red-gradient";
-					$icon = 'theme/common/emotes/face-sad.png';
+					$icon = 'img/emotes/face-sad.png';
 					$closeDelay = 8000;
 					break;
 				case "warnings":
 					$color = "orange-gradient";
-					$icon = 'theme/common/emotes/face-uncertain.png';
+					$icon = 'img/emotes/face-uncertain.png';
 					$closeDelay = 8000;
 					break;
 				case "mesgs":
 					$color = "green-gradient";
-					$icon = 'theme/common/emotes/face-smile.png';
+					$icon = 'img/emotes/face-smile.png';
 					$closeDelay = 5000;
 					break;
 			}
