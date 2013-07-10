@@ -141,15 +141,17 @@ print '<div id="grid"></div>
                                         qty: { type: "number", validation: { required: true, min: 1} },
                                         date_commande: {type: "date"},
 										facility: {type: "string"},
+										order: {defaultValue: { id: -1, name: ""} },
+										group: {defaultValue: { url: ""} },
 										Status: {defaultValue: { id: "NEW", name: "Nouvelle commande"} },
 										date_livraison: {type: "date"}
                                     }
                                 }
                             },
 							group: {
-                                     field: "name"
+                                     field: "order.name"
                                    },
-							sort: { field: "date_commande", dir: "asc" }
+							sort: { field: "date_livraison", dir: "asc" }
                         });
 
                     $("#grid").kendoGrid({
@@ -176,8 +178,9 @@ print '<div id="grid"></div>
 							}
 						],
                         columns: [
-                            { field: "name", title: "Commande", template: ';
-print $object->kendoTemplateJS("name", "url");						
+							{ field: "name", title: "Job ticket", template: \'#=group.url# \'},
+                            { field: "order.name", title: "Commande", editor: orderDropDownEditor, template: ';
+print $object->kendoTemplateJS("order.name", "url", array('id' => "order.id"));						
 print '},
 							{ field: "date_commande", title: "Creation", format: "{0:dd/MM/yyyy HH:mm}", filterable: {
                                     ui: "datetimepicker"
@@ -185,7 +188,6 @@ print '},
 								template: ';
 print $object->kendoTemplateJS("date_commande", "date");						
 print '},
-							{ field: "title", title: "Job ticket"},
 							{ field: "societe", title: "Societe", template: ';
 print $object->kendoTemplateJS("societe", "url", array('id' => "societe_id"));						
 print '},
@@ -201,20 +203,45 @@ print '},
                             { field: "facility", title:"Atelier", width: "100px", template: ';
 print $object->kendoTemplateJS("facility", "tag");
 print '},
-                            { command: [{ name: "edit", text: { edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}, {name:"destroy", text:"Supp."}], title: "&nbsp;", width: "90px" }],
+                            { command: [{ name: "edit", text: { edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}, /*{name:"destroy", text:"Supp."}*/], title: "&nbsp;", width: "90px" }],
                         editable: "popup"
                     });
                 });
 				
 				function statusDropDownEditor(container, options) {
-                    $(\'<input required data-text-field="name" data-value-field="id" data-bind="value:\' + options.field + \'"/>\')
+                    $(\'<input data-text-field="name" data-value-field="id" data-bind="value:\' + options.field + \'"/>\')
                         .appendTo(container)
                         .kendoDropDownList({
                             autoBind: false,
                             dataSource: {
-                                type: "odata",
+							transport: {
+                                read: {
+										url: "api/planning/list",
+										type: "GET",
+										dataType: "json"
+									}
+								}
+                            }
+                        });
+                }
+				
+				function orderDropDownEditor(container, options) {
+                    $(\'<input required data-text-field="name" data-value-field="id" data-bind="value:\' + options.field + \'"/>\')
+                        .appendTo(container)
+                        .kendoAutoComplete({
+                            minLength: 3,
+							dataTextField: "name",
+							filter: "contains",
+                            dataSource: {
+								serverFiltering: true,
+								serverPaging: true,
+								pageSize: 5,
                                 transport: {
-                                    read: "http://demos.kendoui.com/service/Northwind.svc/Categories"
+									read: {
+										url: "api/planning/list",
+										type: "GET",
+										dataType: "json"
+									}
                                 }
                             }
                         });
