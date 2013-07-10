@@ -158,9 +158,9 @@ print '<div id="grid"></div>
                         dataSource: dataSource,
                         pageable: {
                             refresh: true,
-							//pageSize: 10,
-							//pageSizes: [5, 10, 20, 50],
-							//buttonCount: 5
+							pageSize: 50,
+							pageSizes: [5, 10, 20, 50],
+							buttonCount: 5
                         },
 						filterable: {
 							extra: false
@@ -216,7 +216,7 @@ print '},
                             dataSource: {
 							transport: {
                                 read: {
-										url: "api/planning/list",
+										url: "api/planning/select",
 										type: "GET",
 										dataType: "json"
 									}
@@ -238,7 +238,7 @@ print '},
 								pageSize: 5,
                                 transport: {
 									read: {
-										url: "api/planning/list",
+										url: "api/planning/autocomplete",
 										type: "GET",
 										dataType: "json"
 									}
