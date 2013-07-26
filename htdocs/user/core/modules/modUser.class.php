@@ -363,7 +363,7 @@ class modUser extends DolibarrModules {
 		$this->menus[$r]->langs = "admin";
 		$this->menus[$r]->usertype = 2;
 		$this->menus[$r]->title = "Memcached";
-		$this->menus[$r]->enabled = '$conf->memcached->host';
+		$this->menus[$r]->enabled = true;
 		$this->menus[$r]->fk_menu = "menu:systeminfo";
 		$r++;
 

@@ -126,14 +126,14 @@ class modIntervention extends DolibarrModules
 		$r = 0;
 		
 		$this->menus[$r] = new stdClass();
-        $this->menus[$r]->_id = "menu:planning";
+        $this->menus[$r]->_id = "menu:intevention";
         $this->menus[$r]->position = 10;
         $this->menus[$r]->url = "/intervention/list.php";
         $this->menus[$r]->langs = "agenda";
         $this->menus[$r]->perms = '$user->rights->intervention->lire';
         $this->menus[$r]->enabled = '$conf->intervention->enabled';
         $this->menus[$r]->usertype = 2;
-        $this->menus[$r]->title = "Planning";
+        $this->menus[$r]->title = "Intervention";
 		$this->menus[$r]->fk_menu = "menu:commandes";
         $r++;
 

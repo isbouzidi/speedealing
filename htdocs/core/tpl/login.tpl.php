@@ -235,7 +235,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					// Stop normal behavior
 					event.preventDefault();
 					$.ajax({
-						type: "POST", url: "api/login", dataType: "json",
+						type: "POST", url: "login", dataType: "json",
 						data: {name: login, password: pass},
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader('Accept', 'application/json');

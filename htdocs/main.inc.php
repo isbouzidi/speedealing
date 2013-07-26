@@ -186,6 +186,8 @@ if (!defined('NOREQUIREAJAX'))
 
 
 
+
+
 	
 // If install or upgrade process not done or not completely finished, we call the install page.
 if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_UPGRADED)) {
@@ -477,7 +479,8 @@ if (!function_exists("llxHeader")) {
 
 		if (!defined('NOHEADER')) {
 			$reversed = (!empty($conf->global->MAIN_MENU_REVERSED) ? ' reversed' : '');
-			print '<body class="clearfix with-menu with-shortcuts grdnt_c mhover_c' . $reversed . '">';
+			$shortcuts = (!empty($conf->global->MAIN_MENU_SHORTCUTS) ? ' with-shortcuts' : '');
+			print '<body class="clearfix with-menu' . $shortcuts . ' grdnt_c mhover_c' . $reversed . '">';
 		}
 		else
 			print '<body class="fullW" style="background: white;">';
@@ -526,9 +529,10 @@ if (!function_exists("llxHeader")) {
 		<!-- Button to open/hide menu -->
 		<a href="#" id="open-menu"><span><?php echo $langs->trans("Menu"); ?></span> </a>
 
-		<!-- Button to open/hide shortcuts -->
-		<a href="#" id="open-shortcuts"><span class="icon-thumbs"></span> </a>
-
+		<?php if ($conf->global->MAIN_MENU_SHORTCUTS): ?>
+			<!-- Button to open/hide shortcuts -->
+			<a href="#" id="open-shortcuts"><span class="icon-thumbs"></span> </a>
+		<?php endif; ?>
 		<?php
 		main_area($title);
 	}
@@ -573,6 +577,8 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 
 	if (empty($conf->css))
 		$conf->css = '/theme/eldy/style.css.php'; // If not defined, eldy by default
+
+
 
 
 		
@@ -750,7 +756,8 @@ if (!function_exists("llxFooter")) {
 
 		<!-- End main content -->
 		<?php
-		left_menu(); // print the left menu
+		if ($conf->global->MAIN_MENU_SHORTCUTS)
+			left_menu(); // print the left menu
 		main_menu(); // print the right menu
 
 		if ($conf->memcached->enabled && get_class($memcache) == 'Memcache')

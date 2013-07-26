@@ -134,7 +134,7 @@ class modProduct extends DolibarrModules {
         $this->menus[$r]->langs = "products";
         $this->menus[$r]->position = 3;
         $this->menus[$r]->perms = '$user->rights->produit->lire || $user->rights->service->lire';
-        $this->menus[$r]->enabled = '$conf->produit->enabled || $conf->service->enabled';
+        $this->menus[$r]->enabled = '$conf->product->enabled || $conf->service->enabled';
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->title = "Products/Services";
         $r++;
@@ -146,7 +146,7 @@ class modProduct extends DolibarrModules {
         $this->menus[$r]->position = 1;
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->perms = '$user->rights->produit->lire';
-        $this->menus[$r]->enabled = '$conf->produit->enabled';
+        $this->menus[$r]->enabled = '$conf->product->enabled';
         $this->menus[$r]->title = "ListProducts";
         $this->menus[$r]->fk_menu = "menu:products";
         $r++;
@@ -158,7 +158,7 @@ class modProduct extends DolibarrModules {
         $this->menus[$r]->position = 4;
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->perms = '$user->rights->produit->lire || $user->rights->service->lire';
-        $this->menus[$r]->enabled = '$conf->produit->enabled && $conf->service->enabled';
+        $this->menus[$r]->enabled = '$conf->product->enabled && $conf->service->enabled';
         $this->menus[$r]->title = "ListAll";
         $this->menus[$r]->fk_menu = "menu:products";
         $r++;
