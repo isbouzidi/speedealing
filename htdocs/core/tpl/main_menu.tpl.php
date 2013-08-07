@@ -32,11 +32,11 @@
 
 			<div id="profile">
 				<?php if (!empty($user->Photo)) : ?>
-				<img alt="User name" src="<?php echo $user->getFile($user->Photo); ?>" width="64" class="user-icon">
+				<img alt="User name" src="<?php echo $user->getFile($user->photo); ?>" width="64" class="user-icon">
 				<?php else : ?>
 				<img src="img/user.png" width="64" class="user-icon" alt="User name">
 				<?php endif; ?>
-				<?php echo $langs->trans('Hello'); ?><span class="name"><?php echo $user->Firstname; ?> <b><?php echo $user->Lastname; ?></b></span>
+				<?php echo $langs->trans('Hello'); ?><span class="name"><?php echo $user->firstname; ?> <b><?php echo $user->lastname; ?></b></span>
 			</div>
 
 			<!-- By default, this section is made for 4 icons, see the doc to learn how to change this, in "basic markup explained" -->

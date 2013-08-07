@@ -199,23 +199,23 @@ if ((($action == 'add' && $canadduser) || ($action == 'update' && $canedituser))
 		if ($action == "update")
 			$edituser->load($id);
 
-		$edituser->Lastname = $_POST["nom"];
-		$edituser->Firstname = $_POST["prenom"];
+		$edituser->lastname = $_POST["nom"];
+		$edituser->firstname = $_POST["prenom"];
 		$edituser->name = $_POST["login"];
 		$edituser->pass = $_POST["password"];
 		$edituser->admin = (bool) $_POST["admin"];
-		$edituser->PhonePro = $_POST["PhonePro"];
-		$edituser->Fax = $_POST["Fax"];
-		$edituser->PhoneMobile = $_POST["user_mobile"];
+		$edituser->phonePro = $_POST["PhonePro"];
+		$edituser->fax = $_POST["Fax"];
+		$edituser->phoneMobile = $_POST["user_mobile"];
 		$edituser->email = $_POST["email"];
-		$edituser->Signature = $_POST["signature"];
+		$edituser->signature = $_POST["signature"];
 		$edituser->entity = $_POST["default_entity"];
 
 		if (GETPOST('deletephoto')) {
-			$del_photo = $edituser->Photo;
-			unset($edituser->Photo);
+			$del_photo = $edituser->photo;
+			unset($edituser->photo);
 		} elseif (!empty($_FILES['photo']['name']))
-			$edituser->Photo = dol_sanitizeFileName($_FILES['photo']['name']);
+			$edituser->photo = dol_sanitizeFileName($_FILES['photo']['name']);
 
 		$id = $edituser->update($user, 0, $action);
 

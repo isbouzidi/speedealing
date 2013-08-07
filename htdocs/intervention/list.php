@@ -34,40 +34,6 @@ $langs->load('companies');
 $object = new Commande($db);
 $societe = new Societe($db);
 
-if (!empty($_GET['json'])) {
-	$output = array(
-		"sEcho" => intval($_GET['sEcho']),
-		"iTotalRecords" => 0,
-		"iTotalDisplayRecords" => 0,
-		"aaData" => array()
-	);
-
-//    $keystart[0] = $user->id;
-//    $keyend[0] = $user->id;
-//    $keyend[1] = new stdClass();
-
-	/* $params = array('startkey' => array($user->id, mktime(0, 0, 0, date("m") - 1, date("d"), date("Y"))),
-	  'endkey' => array($user->id, mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")))); */
-
-	try {
-		$result = $object->getView($_GET["json"]);
-	} catch (Exception $exc) {
-		print $exc->getMessage();
-	}
-
-	$iTotal = count($result->rows);
-	$output["iTotalRecords"] = $iTotal;
-	$output["iTotalDisplayRecords"] = $iTotal;
-	$i = 0;
-	foreach ($result->rows as $aRow) {
-		$output["aaData"][] = $aRow->value;
-	}
-
-	header('Content-type: application/json');
-	echo json_encode($output);
-	exit;
-}
-
 /*
  * View
  */
@@ -80,10 +46,10 @@ $formfile = new FormFile($db);
 $companystatic = new Societe($db);
 
 
-$title = $langs->trans('Orders');
+$title = $langs->trans('Jobs');
 llxHeader('', $title);
 print_fiche_titre($title);
-?>
+/*?>
 <div class="dashboard">
     <div class="columns">
         <div class="four-columns twelve-columns-mobile graph">
@@ -95,7 +61,7 @@ print_fiche_titre($title);
         </div>
     </div>
 </div>
-<?php
+<?php*/
 print '<div class="with-padding" >';
 
 print '<div id="grid"></div>
@@ -168,6 +134,8 @@ print '<div id="grid"></div>
 						//scrollable: {
 						//	virtual: true
 						//},
+                        scrollable: false,
+                        groupable: true,
 						sortable: true,
                         //height: 430,
                         toolbar: [
@@ -182,11 +150,11 @@ print '<div id="grid"></div>
                             { field: "order.name", title: "Commande", editor: orderDropDownEditor, template: ';
 print $object->kendoTemplateJS("order.name", "url", array('id' => "order.id"));						
 print '},
-							{ field: "date_commande", title: "Creation", format: "{0:dd/MM/yyyy HH:mm}", filterable: {
+							{ field: "date_commande", title: "Creation",format: "{0:dd/MM/yyyy HH:mm}", filterable: {
                                     ui: "datetimepicker"
-                                },
-								template: ';
-print $object->kendoTemplateJS("date_commande", "date");						
+                                },';
+								//template: ';
+//print $object->kendoTemplateJS("date_commande", "date");						
 print '},
 							{ field: "societe", title: "Societe", template: ';
 print $object->kendoTemplateJS("societe", "url", array('id' => "societe_id"));						
@@ -194,9 +162,9 @@ print '},
                             { field: "qty", title: "Qte", width: "60px" },
 							{ field: "date_livraison", title: "Livraison", format: "{0:dd/MM/yyyy HH:mm}", filterable: {
                                     ui: "datetimepicker"
-                                },
-								template: ';
-print $object->kendoTemplateJS("date_livraison", "date");						
+                                },';
+								//template: ';
+//print $object->kendoTemplateJS("date_livraison", "date");						
 print '},
 							{ field: "Status", title: "Etat", width: "160px",
 								editor: statusDropDownEditor, template: \'<small class="tag #=Status.css# glossy ">#=Status.name#</small>\'},

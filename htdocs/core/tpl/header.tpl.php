@@ -68,7 +68,7 @@
 	<link rel="stylesheet" href="css/styles/calendars.css?v=1">
 
 	<!-- DataTables --><!-- jquery UI -->
-	<link rel="stylesheet" href="includes/jquery/css/Aristo/Aristo.css" media="all" />
+	<link rel="stylesheet" href="includes/jquery/css/smoothness/jquery-ui-1.9.2.custom.min.css" media="all" />
 
 	<!-- JavaScript at bottom except for Modernizr -->
 	<script src="includes/js/modernizr.custom.js"></script>
@@ -147,5 +147,5 @@
 	<!--<link rel="stylesheet" href="theme/eldy/style.css" />-->
 
 	<!-- JQuery. Must be before other includes -->
-	<script type="text/javascript" src="includes/jquery/js/jquery-latest.min.js"></script>
-	<script type="text/javascript" src="includes/jquery/js/jquery-ui-latest.custom.min.js"></script>
+	<script type="text/javascript" src="includes/jquery/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="includes/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
