@@ -138,7 +138,7 @@ $title = $langs->trans("ListOfDatabases");
 print_fiche_titre($title);
 print '<div class="with-padding">';
 print '<div class="columns">';
-print start_box($title, "twelve", "16-Cloud.png", false);
+print column_start();
 
 if ($user->admin) {
     print '<p class="button-height right">';
@@ -164,7 +164,7 @@ $obj->aoColumns[$i]->bUseRendered = false;
 $obj->aoColumns[$i]->bSearchable = true;
 $obj->aoColumns[$i]->fnRender = 'function(obj) {
 				var ar = [];
-				ar[ar.length] = "<img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/ico/icSw2/' . $object->fk_extrafields->ico . '\" border=\"0\" alt=\"' . $langs->trans("See " . get_class($object)) . ' : ";
+				ar[ar.length] = "<img src=\"img/ico/icSw2/' . $object->fk_extrafields->ico . '\" border=\"0\" alt=\"' . $langs->trans("See " . get_class($object)) . ' : ";
 				ar[ar.length] = obj.aData.db_name.toString();
 				ar[ar.length] = "\" title=\"' . $langs->trans("See " . get_class($object)) . ' : ";
 				ar[ar.length] = obj.aData.db_name.toString();
@@ -242,13 +242,13 @@ $obj->aoColumns[$i]->fnRender = 'function(obj) {
 	var ar = [];
 	ar[ar.length] = "<a href=\"' . $_SERVER['PHP_SELF'] . '?id=";
 	ar[ar.length] = obj.aData.db_name.toString();
-	ar[ar.length] = "&action=compact\" class=\"sepV_a\" title=\"Compact Database\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/processing.png\" alt=\"\" /></a>";
+	ar[ar.length] = "&action=compact\" class=\"sepV_a\" title=\"Compact Database\"><img src=\"img/ico/icSw2/16-Archive.png\" alt=\"\" /> </a>";
 	ar[ar.length] = "<a href=\"' . $_SERVER['PHP_SELF'] . '?id=";
 	ar[ar.length] = obj.aData.db_name.toString();
-	ar[ar.length] = "&action=commit\" class=\"sepV_a\" title=\"Commit\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/save.png\" alt=\"\" /></a>";
+	ar[ar.length] = "&action=commit\" class=\"sepV_a\" title=\"Commit\"><img src=\"img/ico/icSw2/16-Box-Incoming.png\" alt=\"\" /> </a>";
 	ar[ar.length] = "<a href=\"' . $_SERVER['PHP_SELF'] . '?id=";
 	ar[ar.length] = obj.aData.db_name.toString();
-	ar[ar.length] = "&action=delete\" class=\"sepV_a\" title=\"Delete\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
+	ar[ar.length] = "&action=delete\" class=\"sepV_a\" title=\"Delete\"><img src=\"img/ico/icSw2/16-Trashcan.png\" alt=\"\" /> </a>";
 	var str = ar.join("");
 	return str;
 }';
@@ -271,7 +271,7 @@ $object->datatablesCreate($obj, "database", true);
 
 
 
-print end_box();
+print column_end();
 print '<div>';
 print '<div>';
 

@@ -551,63 +551,6 @@ class User extends nosqlDocument {
 	}
 
 	/**
-	 *    	Delete the user
-	 *
-	 * 		@return		int		<0 if KO, >0 if OK
-	 */
-	function delete() {
-		global $user, $conf, $langs;
-
-		$error = 0;
-
-		$this->db->begin();
-
-		$this->fetch($this->id);
-
-		// Supprime droits
-		$sql = "DELETE FROM " . MAIN_DB_PREFIX . "user_rights WHERE fk_user = " . $this->id;
-		if ($this->db->query($sql)) {
-			
-		}
-
-		// Remove group
-		$sql = "DELETE FROM " . MAIN_DB_PREFIX . "usergroup_user WHERE fk_user  = " . $this->id;
-		if ($this->db->query($sql)) {
-			
-		}
-
-		// Si contact, supprime lien
-		if ($this->contact_id) {
-			$sql = "UPDATE " . MAIN_DB_PREFIX . "socpeople SET fk_user_creat = null WHERE rowid = " . $this->contact_id;
-			if ($this->db->query($sql)) {
-				
-			}
-		}
-
-		// Supprime utilisateur
-		$sql = "DELETE FROM " . MAIN_DB_PREFIX . "user WHERE rowid = $this->id";
-		$result = $this->db->query($sql);
-
-		if ($result) {
-			// Appel des triggers
-			include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
-			$interface = new Interfaces($this->db);
-			$result = $interface->run_triggers('USER_DELETE', $this, $user, $langs, $conf);
-			if ($result < 0) {
-				$error++;
-				$this->errors = $interface->errors;
-			}
-			// Fin appel triggers
-
-			$this->db->commit();
-			return 1;
-		} else {
-			$this->db->rollback();
-			return -1;
-		}
-	}
-
-	/**
 	 *  Create or Update an user into database
 	 *
 	 *  @param	User	$user        	Objet user qui demande la creation
@@ -632,7 +575,7 @@ class User extends nosqlDocument {
 
 		$error = 0;
 
-		try {
+		/*try {
 			$result = $this->couchAdmin->getUser($this->name);
 		} catch (Exception $e) {
 			// User doesn-t exist
@@ -660,7 +603,7 @@ class User extends nosqlDocument {
 					return -4;
 				}
 			}
-		}
+		}*/
 
 		try {
 			/* $user_tmp = $this->couchAdmin->getUser($this->name);
@@ -685,24 +628,25 @@ class User extends nosqlDocument {
 				unset($this->pass);
 			}
 
-			//print_r($this);exit;
-			$result = $this->record(); // Save all specific parameters
-
 			if (empty($user)) //install process
 				$caneditpassword = 1;
 			else
 				$caneditpassword = ((($user->login == $this->name) && $user->rights->user->self->password) || (($user->login != $this->name) && $user->rights->user->user->password)) || $user->admin;
 
 			if ($caneditpassword && !empty($pass)) { // Case we can edit only password
-				$this->couchAdmin->setPassword($this->name, $pass);
+				//$this->couchAdmin->setPassword($this->name, $pass);
+                $this->password = $pass;
 			}
 
-			if ($action == 'update') {
+			/*if ($action == 'update') {
 				if ($this->admin)
 					$this->couchAdmin->addRoleToUser($this->name, "_admin");
 				else
 					$this->couchAdmin->removeRoleFromUser($this->name, "_admin");
-			}
+			}*/
+            
+            //print_r($this);exit;
+			$result = $this->record(); // Save all specific parameters
 		} catch (Exception $e) {
 			$this->error = $e->getMessage();
 			error_log($this->error);

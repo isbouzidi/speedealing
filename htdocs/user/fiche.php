@@ -145,8 +145,8 @@ if ($action == 'confirm_enable' && $confirm == "yes" && $candisableuser) {
 
 if ($action == 'confirm_delete' && $confirm == "yes" && $candisableuser) {
 	if ($id <> $user->id) {
-		$edituser->id = $id;
-		$result = $edituser->delete();
+		$edituser->load($id);
+		$result = $edituser->delete(true);
 		if ($result < 0) {
 			$langs->load("errors");
 			setEventMessage($langs->trans("ErrorUserCannotBeDelete"), 'errors');
@@ -262,12 +262,12 @@ if (($action == 'addgroup' || $action == 'removegroup') && $caneditfield) {
 
 		if ($action == 'addgroup') {
 			$edituser->roles[] = $group;
-			$edituser->addRoleToUser($group);
+			//$edituser->addRoleToUser($group);
 		}
 		if ($action == 'removegroup') {
 			unset($edituser->roles[array_search($group, $edituser->roles)]);
 			$edituser->roles = array_merge($edituser->roles);
-			$edituser->removeRoleFromUser($group);
+			//$edituser->removeRoleFromUser($group);
 		}
 		$edituser->record($edituser->id == $user->id);
 
