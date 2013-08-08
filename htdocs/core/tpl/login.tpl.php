@@ -177,7 +177,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 
 	<?php if (!empty($conf->global->MAIN_HTML_FOOTER)) print $conf->global->MAIN_HTML_FOOTER; ?>
 
-	<script src="includes/jquery/js/jquery-latest.min.js"></script>
+	<script src="includes/jquery/js/jquery-1.8.3.min.js"></script>
 	<script src="includes/lib/validate/jquery.validate.min.js"></script>
 	<script src="js/setup.min.js"></script>
 

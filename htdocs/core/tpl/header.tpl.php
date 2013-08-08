@@ -68,7 +68,7 @@
 	<link rel="stylesheet" href="css/styles/calendars.css?v=1">
 
 	<!-- DataTables --><!-- jquery UI -->
-	<link rel="stylesheet" href="includes/jquery/css/smoothness/jquery-ui-1.9.2.custom.min.css" media="all" />
+	<link rel="stylesheet" href="includes/jquery/css/Aristo/Aristo.css" media="all" />
 
 	<!-- JavaScript at bottom except for Modernizr -->
 	<script src="includes/js/modernizr.custom.js"></script>

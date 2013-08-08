@@ -150,20 +150,20 @@ print '<div id="grid"></div>
                             { field: "order.name", title: "Commande", editor: orderDropDownEditor, template: ';
 print $object->kendoTemplateJS("order.name", "url", array('id' => "order.id"));						
 print '},
-							{ field: "date_commande", title: "Creation",format: "{0:dd/MM/yyyy HH:mm}", filterable: {
-                                    ui: "datetimepicker"
+							{ field: "date_commande", title: "Creation",format: "{0:dd/MM/yyyy}", filterable: {
+                                    ui: "datepicker"
                                 },';
-								//template: ';
+								//template: \'#= kendo.toString(date_livraison, "dd/MM/yyyy") #\'';
 //print $object->kendoTemplateJS("date_commande", "date");						
 print '},
 							{ field: "societe", title: "Societe", template: ';
 print $object->kendoTemplateJS("societe", "url", array('id' => "societe_id"));						
 print '},
                             { field: "qty", title: "Qte", width: "60px" },
-							{ field: "date_livraison", title: "Livraison", format: "{0:dd/MM/yyyy HH:mm}", filterable: {
+							{ field: "date_livraison", editor: dateTimeEditor, title: "Livraison", format: "{0:dd/MM/yyyy HH:mm}", filterable: {
                                     ui: "datetimepicker"
-                                },';
-								//template: ';
+                                },
+								';
 //print $object->kendoTemplateJS("date_livraison", "date");						
 print '},
 							{ field: "Status", title: "Etat", width: "160px",
@@ -191,6 +191,13 @@ print '},
 								}
                             }
                         });
+                }
+                
+ 
+                function dateTimeEditor(container, options) {
+                $(\'<input data-text-field="\' + options.field + \'" data-value-field="\' + options.field + \'" data-bind="value:\' + options.field + \'" data-format="\' + options.format + \'"/>\')
+                    .appendTo(container)
+                    .kendoDateTimePicker({});
                 }
 				
 				function orderDropDownEditor(container, options) {

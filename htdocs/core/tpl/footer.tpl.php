@@ -101,22 +101,23 @@
 	<script type="text/javascript" src="includes/ckeditor/ckeditor_basic.js" defer></script>
 
 	<script type="text/javascript" src="js/setup.js"></script>
-
-	<script type="text/javascript" src="js/developr.navigable.js"></script>
-	<script type="text/javascript" src="js/developr.scroll.js"></script>
+    
+    <!-- Template functions -->
 	<script type="text/javascript" src="js/developr.accordions.js"></script>
-
-	<!--<script src="theme/symeos/js/s_scripts.js"></script>-->
-
+	<script type="text/javascript" src="js/developr.auto-resizing.js"></script>
 	<script type="text/javascript" src="js/developr.input.js"></script>
 	<script type="text/javascript" src="js/developr.message.js"></script>
 	<script type="text/javascript" src="js/developr.modal.js"></script>
+	<script type="text/javascript" src="js/developr.navigable.js"></script>
+	<script type="text/javascript" src="js/developr.collapsible.js"></script>
 	<script type="text/javascript" src="js/developr.notify.js"></script>
+	<script type="text/javascript" src="js/developr.scroll.js"></script>
 	<script type="text/javascript" src="js/developr.progress-slider.js"></script>
 	<script type="text/javascript" src="js/developr.tooltip.js"></script>
 	<script type="text/javascript" src="js/developr.confirm.js"></script>
+	<script type="text/javascript" src="js/developr.content-panel.js"></script>
 	<script type="text/javascript" src="js/developr.agenda.js"></script>
-	<script type="text/javascript" src="js/developr.tabs.js"></script>
+	<script type="text/javascript" src="js/developr.tabs.js"></script>		<!-- Must be loaded last -->
 	
 	<!-- Kendo library -->
 	<script type="text/javascript" src="includes/kendo/js/kendo.web.min.js"></script>

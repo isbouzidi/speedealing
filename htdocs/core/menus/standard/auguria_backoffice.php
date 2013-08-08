@@ -127,8 +127,8 @@ class MenuAuguria extends nosqlDocument {
 	 */
 	function print_start_menu_array_auguria() {
 		global $conf;
-		print '<section class="navigable">';
-		print '<ul class="big-menu">';
+		//print '<section class="navigable">';
+		print '<ul class="big-menu collapsible as-accordion">';
 	}
 
 	/**
@@ -139,7 +139,7 @@ class MenuAuguria extends nosqlDocument {
 	function print_end_menu_array_auguria() {
 		global $conf;
 		print '</ul>';
-		print '</section>';
+		//print '</section>';
 	}
 
 	/**
@@ -159,7 +159,7 @@ class MenuAuguria extends nosqlDocument {
 		if (count($result) == 0) { // be a <li> link menu
 			print '<li>';
 			if (!empty($this->idmenu) && $this->menuSelected($menuFather))
-				$classname = "current navigable-current";
+				$classname = "current collapsible-current";
 
 			$url = $this->menuURL($menuFather, $menuFather->_id);
 			print '<a class="' . $classname . '" href="' . $url . '">';
@@ -170,8 +170,9 @@ class MenuAuguria extends nosqlDocument {
 		}
 
 		print '<li class="with-right-arrow">';
-		print '<span><span class="list-count">' . count($result) . '</span>' . $menuFather->title . '</span>';
-		print '<ul class="big-menu">';
+		//print '<span><span class="list-count">' . count($result) . '</span>' . $menuFather->title . '</span>';
+        print '<span>' . $menuFather->title . '</span>';
+		print '<ul class="big-menu '.($level==1?'grey-gradient':'anthracite-gradient').'">';
 
 		foreach ($result as $aRow) {
 			$menu = $aRow;
