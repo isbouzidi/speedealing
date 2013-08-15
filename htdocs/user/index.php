@@ -141,7 +141,7 @@ $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->sClass = "center";
 $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("roles", "tag");
 $i++;
-print'<th class="essential">';
+/*print'<th class="essential">';
 print $langs->trans('Database');
 print'</th>';
 $obj->aoColumns[$i] = new stdClass();
@@ -149,7 +149,7 @@ $obj->aoColumns[$i]->mDataProp = "entityList";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->sClass = "center";
 $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("entityList", "tag");
-$i++;
+$i++;*/
 print'<th class="essential">';
 print $langs->trans('LastConnexion');
 print'</th>';

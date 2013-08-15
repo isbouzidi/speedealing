@@ -132,7 +132,7 @@ class modSociete extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 121; // id de la permission
         $this->rights[$r]->desc = 'Lire les societes'; // libelle de la permission
-        $this->rights[$r]->default = true;
+        $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('lire');
 
         $r++;
@@ -195,7 +195,7 @@ class modSociete extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 262;
         $this->rights[$r]->desc = 'Consulter tous les tiers par utilisateurs internes (sinon uniquement si contact commercial). Non effectif pour utilisateurs externes (tjs limités à eux-meme).';
-        $this->rights[$r]->default = 1;
+        $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('client', 'voir');
 
         // 262 : Resteindre l'acces des commerciaux
@@ -203,7 +203,7 @@ class modSociete extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 281; // id de la permission
         $this->rights[$r]->desc = 'Lire les contacts'; // libelle de la permission
-        $this->rights[$r]->default = 1; // La permission est-elle une permission par defaut
+        $this->rights[$r]->default = 0; // La permission est-elle une permission par defaut
         $this->rights[$r]->perm = array('contact', 'lire');
 
         $r++;

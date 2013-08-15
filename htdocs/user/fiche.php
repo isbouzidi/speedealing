@@ -434,10 +434,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 	if ($id) {
 		$fuser = new User($db);
 		$fuser->load($id);
-		$fuser->getrights();
+		$fuser->getrights('',false);
 
 		// Show tabs
-		$head = user_prepare_head($fuser);
+		//$head = user_prepare_head($fuser);
 
 		$title = $langs->trans("User");
 
@@ -497,7 +497,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 			// Lastname
 			print '<tr><td valign="top">' . $langs->trans("Lastname") . '</td>';
-			print '<td>' . $fuser->Lastname . '</td>';
+			print '<td>' . $fuser->lastname . '</td>';
 
 			// Photo
 			print '<td align="center" valign="middle" width="25%" rowspan="' . $rowspan . '">';
@@ -508,7 +508,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 			// Firstname
 			print '<tr><td valign="top">' . $langs->trans("Firstname") . '</td>';
-			print '<td>' . $fuser->Firstname . '</td>';
+			print '<td>' . $fuser->firstname . '</td>';
 			print '</tr>' . "\n";
 
 			// Login
@@ -529,15 +529,15 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 			// Administrator
 			$name = $fuser->name;
-			if ($user->admin) {
-				$admins = $fuser->getUserAdmins();
-				if (isset($admins->$name))
-					$fuser->admin = true;
-				else
-					$fuser->admin = false;
-			}
-			else
-				$fuser->admin = false;
+			/* if ($user->admin) {
+			  $admins = $fuser->getUserAdmins();
+			  if (isset($admins->$name))
+			  $fuser->admin = true;
+			  else
+			  $fuser->admin = false;
+			  }
+			  else
+			  $fuser->admin = false; */
 
 			print '<tr><td valign="top">' . $langs->trans("Administrator") . '</td><td>';
 			if ($fuser->admin) {
@@ -952,10 +952,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			print '<td valign="top" class="fieldrequired">' . $langs->trans("Lastname") . '</td>';
 			print '<td>';
 			if ($caneditfield && !$fuser->ldap_sid) {
-				print '<input size="30" type="text" class="flat" name="nom" value="' . $fuser->Lastname . '">';
+				print '<input size="30" type="text" class="flat" name="nom" value="' . $fuser->lastname . '">';
 			} else {
-				print '<input type="hidden" name="nom" value="' . $fuser->Lastname . '">';
-				print $fuser->Lastname;
+				print '<input type="hidden" name="nom" value="' . $fuser->lastname . '">';
+				print $fuser->lastname;
 			}
 			print '</td>';
 			// Photo
@@ -979,10 +979,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			print '<tr><td valign="top">' . $langs->trans("Firstname") . '</td>';
 			print '<td>';
 			if ($caneditfield && !$fuser->ldap_sid) {
-				print '<input size="30" type="text" class="flat" name="prenom" value="' . $fuser->Firstname . '">';
+				print '<input size="30" type="text" class="flat" name="prenom" value="' . $fuser->firstname . '">';
 			} else {
-				print '<input type="hidden" name="prenom" value="' . $fuser->Firstname . '">';
-				print $fuser->Firstname;
+				print '<input type="hidden" name="prenom" value="' . $fuser->firstname . '">';
+				print $fuser->firstname;
 			}
 			print '</td></tr>';
 
@@ -1014,12 +1014,12 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 			// Administrator
 			$name = $fuser->name;
-			$admins = $fuser->getUserAdmins();
+			/* $admins = $fuser->getUserAdmins();
 
-			if (isset($admins->$name))
-				$fuser->admin = true;
-			else
-				$fuser->admin = false;
+			  if (isset($admins->$name))
+			  $fuser->admin = true;
+			  else
+			  $fuser->admin = false; */
 			print '<tr><td valign="top">' . $langs->trans("Administrator") . '</td>';
 			print '<td>';
 			if ($user->admin && $user->id != $fuser->id) {  // Don't downgrade ourself

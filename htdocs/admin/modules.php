@@ -1,5 +1,4 @@
 <?php
-
 /* Copyright (C) 2003-2007	Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2003		Jean-Louis Bergamo		<jlb@j1b.org>
  * Copyright (C) 2004-2012	Laurent Destailleur		<eldy@users.sourceforge.net>
@@ -173,15 +172,15 @@ $var = true;
 $oldfamily = '';
 
 $familylib = array(
-		'base' => $langs->trans("ModuleFamilyBase"),
-		'crm' => $langs->trans("ModuleFamilyCrm"),
-		'products' => $langs->trans("ModuleFamilyProducts"),
-		'hr' => $langs->trans("ModuleFamilyHr"),
-		'projects' => $langs->trans("ModuleFamilyProjects"),
-		'financial' => $langs->trans("ModuleFamilyFinancial"),
-		'ecm' => $langs->trans("ModuleFamilyECM"),
-		'technic' => $langs->trans("ModuleFamilyTechnic"),
-		'other' => $langs->trans("ModuleFamilyOther")
+	'base' => $langs->trans("ModuleFamilyBase"),
+	'crm' => $langs->trans("ModuleFamilyCrm"),
+	'products' => $langs->trans("ModuleFamilyProducts"),
+	'hr' => $langs->trans("ModuleFamilyHr"),
+	'projects' => $langs->trans("ModuleFamilyProjects"),
+	'financial' => $langs->trans("ModuleFamilyFinancial"),
+	'ecm' => $langs->trans("ModuleFamilyECM"),
+	'technic' => $langs->trans("ModuleFamilyTechnic"),
+	'other' => $langs->trans("ModuleFamilyOther")
 );
 
 foreach ($orders as $key => $value) {
@@ -254,7 +253,7 @@ foreach ($orders as $key => $value) {
 	print '<td>';
 	print ajax_moduleonoff($objMod, $key);
 	print '</td>' . "\n";
-	
+
 	print '<td>';
 	if (!empty($objMod->config_page_url)) {
 		print '<div id="config_' . $key . '" class="hideobject">';
@@ -284,9 +283,33 @@ $obj->aaSorting = array(array(1, 'asc'));
 $obj->sDom = 'l<fr>t<\"clear\"rtip>';
 $obj->iDisplayLength = 100;
 $obj->bServerSide = false;
+$obj->disableEditInPlace = true;
 
 print $object->datatablesCreate($obj, "list_modules");
 
+?><script type="text/javascript">
+	function changeModule(id, code, active, action) {
+
+		if (active)
+			$("#config_" + code).show();
+		else
+			$("#config_" + code).hide();
+
+		// Set module
+		if (action === "set") {
+			setModule("set", id, code);
+			$("#set_" + code).hide();
+			$("#reset_" + code).show();
+			$("#config_" + code).show();
+		} else {
+			// Reset module
+			setModule("reset", id, code);
+			$("#reset_" + code).hide();
+			$("#set_" + code).show();
+			$("#config_" + code).hide();
+		}
+	}
+</script><?php
 print end_box();
 print '</div>';
 

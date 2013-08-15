@@ -58,16 +58,16 @@ if ($json == "list") {
 
 	try {
 		$result = $object->getView('listAll');
-		$result_all = $object->getAllUsers(true);
-		$admins = $object->getUserAdmins();
+		//$result_all = $object->getAllUsers(true);
+		//$admins = $object->getUserAdmins();
 
-		$list_db = array_diff($couch->listDatabases(), $var_exclude_db);
+		//$list_db = array_diff($couch->listDatabases(), $var_exclude_db);
 		//$admins = $object->getDatabaseAdminUsers();
 		//$enabled = $object->getDatabaseReaderUsers();
-		foreach ($list_db as $db) {
-			$object->useDatabase($db);
-			$listEntity->$db = $object->getDatabaseReaderUsers();
-		}
+		//foreach ($list_db as $db) {
+		//	$object->useDatabase($db);
+		//	$listEntity->$db = $object->getDatabaseReaderUsers();
+		//}
 	} catch (Exception $exc) {
 		print $exc->getMessage();
 	}
@@ -81,11 +81,11 @@ if ($json == "list") {
 				continue;
 
 			$name = substr($aRow->value->_id, 5);
-			if (isset($admins->$name))
+			/*if (isset($admins->$name))
 				$aRow->value->admin = true;
 			else
 				$aRow->value->admin = false;
-
+*/
 			$aRow->value->entityList = array();
 			foreach ($list_db as $db) {
 				if (is_array($listEntity->$db) && in_array($name, $listEntity->$db, true))

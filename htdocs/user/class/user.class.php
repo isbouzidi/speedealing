@@ -162,7 +162,7 @@ class User extends nosqlDocument {
 		}
 
 		// Test if User is a global administrator
-		try {
+		/*try {
 			$admins = $this->couchAdmin->getUserAdmins();
 			$name = $this->couchAdmin->getLoginSession();
 			$user = $this->couchAdmin->getUser($name);
@@ -196,7 +196,7 @@ class User extends nosqlDocument {
 			}
 		} catch (Exception $e) {
 			
-		}
+		}*/
 
 		$this->id = $this->_id;
 
@@ -407,7 +407,7 @@ class User extends nosqlDocument {
 	 * 	@param  string	$moduletag    Limit permission for a particular module ('' by default means load all permissions)
 	 * 	@return	void
 	 */
-	function getrights($moduletag = '') {
+	function getrights($moduletag = '', $cache=true) {
 		global $conf;
 
 		if ($moduletag && isset($this->_tab_loaded[$moduletag]) && $this->_tab_loaded[$moduletag]) {
@@ -423,10 +423,10 @@ class User extends nosqlDocument {
 		$object = new DolibarrModules($this->db);
 
 		try {
-			$result = $object->getView("default_right", '', true);
+			$result = $object->getView("default_right", '', $cache);
 			if (count($this->roles) > 0)
 				foreach ($this->roles as $aRow) // load groups
-					$groups[] = $object->load("group:" . $aRow, true);
+					$groups[] = $object->load("group:" . $aRow, $cache);
 		} catch (Exception $exc) {
 			print $exc->getMessage();
 		}
@@ -532,7 +532,7 @@ class User extends nosqlDocument {
 		else {
 			$userid = $this->email;
 
-			if ($status == 'ENABLE') {
+			/*if ($status == 'ENABLE') {
 				if ($this->admin == true)
 					$this->couchAdmin->addDatabaseAdminUser($userid);
 				else
@@ -541,7 +541,7 @@ class User extends nosqlDocument {
 			elseif ($status == 'DISABLE') {
 				$this->couchAdmin->removeDatabaseAdminUser($userid);
 				$this->couchAdmin->removeDatabaseReaderUser($userid);
-			}
+			}*/
 
 			$this->set("Status", $status);
 			dol_delcache($this->id);

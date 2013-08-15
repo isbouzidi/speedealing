@@ -102,7 +102,7 @@ class modPropal extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 21; // id de la permission
         $this->rights[$r]->desc = 'Lire les propositions commerciales'; // libelle de la permission
-        $this->rights[$r]->default = 1; // La permission est-elle une permission par defaut
+        $this->rights[$r]->default = 0; // La permission est-elle une permission par defaut
         $this->rights[$r]->perm = array('lire');
 
         $r++;

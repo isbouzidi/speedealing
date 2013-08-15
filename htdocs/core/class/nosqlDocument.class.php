@@ -700,7 +700,7 @@ abstract class nosqlDocument extends CommonObject {
                     "fnDrawCallback": <?php echo $obj->fnDrawCallback; ?>,
             <?php endif; ?>
         <?php endif; ?>
-        <?php if ($user->rights->$class->edit || $user->rights->$class->creer || $user->admin) : ?>
+        <?php if (!$obj->disableEditInPlace && ($user->rights->$class->edit || $user->rights->$class->creer || $user->admin)) : ?>
                 }).makeEditable({
                 sUpdateURL: urlSaveInPlace,
                         sAddURL: urlAddInPlace,

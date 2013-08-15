@@ -3905,12 +3905,13 @@ function dol_getIdFromCode($db, $key, $tablename, $fieldkey = 'code', $fieldid =
  */
 function verifCond($strRights) {
 	global $user, $conf, $langs;
+	
 	//global $rights;    // To export to dol_eval function
 	//print $strRights."<br>\n";
-	$rights = true;
+	$rights = false;
 	if ($strRights != '') {
-		$str = 'if(!(' . $strRights . ')) { $rights = false; }';
-		dol_eval($str);
+		$str = 'if(' . $strRights . ') { $rights = true; }';
+		eval($str);
 	}
 	return $rights;
 }
@@ -3929,7 +3930,7 @@ function dol_eval($s) {
 	global $rights;
 
 	//print $s."<br>\n";
-	eval($s);
+	return eval($s);
 }
 
 /**

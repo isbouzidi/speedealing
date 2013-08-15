@@ -98,7 +98,7 @@ class modCommande extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
 		$this->rights[$r]->id = 81;
 		$this->rights[$r]->desc = 'Lire les commandes clients';
-		$this->rights[$r]->default = 1;
+		$this->rights[$r]->default = 0;
 		$this->rights[$r]->perm = array('lire');
 
 		$r++;
@@ -159,7 +159,7 @@ class modCommande extends DolibarrModules {
 		$this->menus[$r]->type = "top";
 		$this->menus[$r]->position = 41;
 		$this->menus[$r]->langs = "orders";
-		$this->menus[$r]->perms = '$user->rights->commande->lire';
+		$this->menus[$r]->perms = '$user->rights->commande->lire || $user->rights->intervention->lire';
 		$this->menus[$r]->enabled = '$conf->commande->enabled';
 		$this->menus[$r]->usertype = 2;
 		$this->menus[$r]->title = "Orders";

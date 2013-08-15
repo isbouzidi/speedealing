@@ -69,7 +69,7 @@ class modExport extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 1201; // id de la permission
         $this->rights[$r]->desc = 'Lire les exports'; // libelle de la permission
-        $this->rights[$r]->default = true;
+        $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('lire');
         $r++;
         

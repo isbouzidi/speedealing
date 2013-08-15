@@ -82,12 +82,12 @@ if ($action == 'adduser' || $action == 'removeuser') {
 
             if ($action == 'adduser') {
                 $edituser->roles[] = $object->name;
-				$edituser->addRoleToUser($object->name);
+				//$edituser->addRoleToUser($object->name);
             }
             if ($action == 'removeuser') {
                 unset($edituser->roles[array_search($object->name, $edituser->roles)]);
                 $edituser->roles = array_merge($edituser->roles);
-				$edituser->removeRoleFromUser($object->name);
+				//$edituser->removeRoleFromUser($object->name);
             }
             $edituser->record($edituser->id == $user->id);
 

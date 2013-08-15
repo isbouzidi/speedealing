@@ -100,7 +100,7 @@ class modIntervention extends DolibarrModules
 		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 61;
         $this->rights[$r]->desc = 'Lire les fiches d\'intervention';
-        $this->rights[$r]->default = 1;
+        $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('lire');
 
         $r++;

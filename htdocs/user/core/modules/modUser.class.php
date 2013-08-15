@@ -135,7 +135,7 @@ class modUser extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
 		$this->rights[$r]->id = 344;
 		$this->rights[$r]->desc = 'Modifier ses propres permissions';
-		$this->rights[$r]->default = 1;
+		$this->rights[$r]->default = 0;
 		$this->rights[$r]->perm = array('self_advance', 'writeperms');
 
 		$r++;

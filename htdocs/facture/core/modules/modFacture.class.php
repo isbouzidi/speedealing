@@ -98,7 +98,7 @@ class modFacture extends DolibarrModules {
 		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 11;
         $this->rights[$r]->desc = 'Lire les factures';
-        $this->rights[$r]->default = 1;
+        $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('lire');
 
         $r++;
