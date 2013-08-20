@@ -30,7 +30,7 @@
  * Load object $conf
  * After this, all parameters conf->global->CONSTANTS are loaded
  */
-if (!defined('NOREQUIREDB')) {
+if (!defined('NOREQUIRECONF')) {
 	// Here we read database (llx_const table) and define $conf->global->XXX var.
 	// if no db specified, using default database form user profile (entity)
 	// Just after login : we choose the default entity

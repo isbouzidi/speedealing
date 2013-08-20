@@ -206,7 +206,7 @@ if ((($action == 'add' && $canadduser) || ($action == 'update' && $canedituser))
 		$edituser->admin = (bool) $_POST["admin"];
 		$edituser->phonePro = $_POST["PhonePro"];
 		$edituser->fax = $_POST["Fax"];
-		$edituser->phoneMobile = $_POST["user_mobile"];
+		$edituser->phoneMobile = $_POST["phoneMobile"];
 		$edituser->email = $_POST["email"];
 		$edituser->signature = $_POST["signature"];
 		$edituser->entity = $_POST["default_entity"];
@@ -269,6 +269,7 @@ if (($action == 'addgroup' || $action == 'removegroup') && $caneditfield) {
 			$edituser->roles = array_merge($edituser->roles);
 			//$edituser->removeRoleFromUser($group);
 		}
+       
 		$edituser->record($edituser->id == $user->id);
 
 		header("Location: fiche.php?id=" . $id);
@@ -389,10 +390,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 	print '<tr><td valign="top">' . $langs->trans("PhoneMobile") . '</td>';
 	print '<td>';
 	if ($ldap_mobile) {
-		print '<input type="hidden" name="user_mobile" value="' . $ldap_mobile . '">';
+		print '<input type="hidden" name="phoneMobile" value="' . $ldap_mobile . '">';
 		print $ldap_mobile;
 	} else {
-		print '<input size="20" type="text" name="user_mobile" value="' . $_POST["user_mobile"] . '">';
+		print '<input size="20" type="text" name="phoneMobile" value="' . $_POST["phoneMobile"] . '">';
 	}
 	print '</td></tr>';
 
@@ -400,10 +401,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 	print '<tr><td valign="top">' . $langs->trans("Fax") . '</td>';
 	print '<td>';
 	if ($ldap_fax) {
-		print '<input type="hidden" name="office_fax" value="' . $ldap_fax . '">';
+		print '<input type="hidden" name="Fax" value="' . $ldap_fax . '">';
 		print $ldap_fax;
 	} else {
-		print '<input size="20" type="text" name="office_fax" value="' . $_POST["office_fax"] . '">';
+		print '<input size="20" type="text" name="Fax" value="' . $_POST["Fax"] . '">';
 	}
 	print '</td></tr>';
 
@@ -481,7 +482,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 		if ($action != 'edit') {
 
 			print '<table class="border" width="100%">';
-
+            
 			// Ref
 			print '<tr><td width="25%" valign="top">' . $langs->trans("Ref") . '</td>';
 			print '<td colspan="2">';
@@ -554,17 +555,17 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 			// Tel pro
 			print '<tr><td valign="top">' . $langs->trans("PhonePro") . '</td>';
-			print '<td>' . dol_print_phone($fuser->PhonePro, '', 0, 0, 1) . '</td>';
+			print '<td>' . dol_print_phone($fuser->phonePro, '', 0, 0, 1) . '</td>';
 			print '</tr>' . "\n";
 
 			// Tel mobile
 			print '<tr><td valign="top">' . $langs->trans("PhoneMobile") . '</td>';
-			print '<td>' . dol_print_phone($fuser->PhoneMobile, '', 0, 0, 1) . '</td>';
+			print '<td>' . dol_print_phone($fuser->phoneMobile, '', 0, 0, 1) . '</td>';
 			print '</tr>' . "\n";
 
 			// Fax
 			print '<tr><td valign="top">' . $langs->trans("Fax") . '</td>';
-			print '<td>' . dol_print_phone($fuser->Fax, '', 0, 0, 1) . '</td>';
+			print '<td>' . dol_print_phone($fuser->fax, '', 0, 0, 1) . '</td>';
 			print '</tr>' . "\n";
 
 			// EMail
@@ -1041,10 +1042,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			print '<tr><td valign="top">' . $langs->trans("PhonePro") . '</td>';
 			print '<td>';
 			if ($caneditfield && !$fuser->ldap_sid) {
-				print '<input size="20" type="text" name="PhonePro" class="flat" value="' . $fuser->PhonePro . '">';
+				print '<input size="20" type="text" name="PhonePro" class="flat" value="' . $fuser->phonePro . '">';
 			} else {
-				print '<input type="hidden" name="PhonePro" value="' . $fuser->PhonePro . '">';
-				print $fuser->PhonePro;
+				print '<input type="hidden" name="PhonePro" value="' . $fuser->phonePro . '">';
+				print $fuser->phonePro;
 			}
 			print '</td></tr>';
 
@@ -1052,10 +1053,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			print '<tr><td valign="top">' . $langs->trans("PhoneMobile") . '</td>';
 			print '<td>';
 			if ($caneditfield && !$fuser->ldap_sid) {
-				print '<input size="20" type="text" name="PhoneMobile" class="flat" value="' . $fuser->PhoneMobile . '">';
+				print '<input size="20" type="text" name="phoneMobile" class="flat" value="' . $fuser->phoneMobile . '">';
 			} else {
-				print '<input type="hidden" name="user_mobile" value="' . $fuser->PhoneMobile . '">';
-				print $fuser->PhoneMobile;
+				print '<input type="hidden" name="phoneMobile" value="' . $fuser->phoneMobile . '">';
+				print $fuser->phoneMobile;
 			}
 			print '</td></tr>';
 
@@ -1063,10 +1064,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			print '<tr><td valign="top">' . $langs->trans("Fax") . '</td>';
 			print '<td>';
 			if ($caneditfield && !$fuser->ldap_sid) {
-				print '<input size="20" type="text" name="office_fax" class="flat" value="' . $fuser->Fax . '">';
+				print '<input size="20" type="text" name="Fax" class="flat" value="' . $fuser->fax . '">';
 			} else {
-				print '<input type="hidden" name="Fax" value="' . $fuser->Fax . '">';
-				print $fuser->Fax;
+				print '<input type="hidden" name="Fax" value="' . $fuser->fax . '">';
+				print $fuser->fax;
 			}
 			print '</td></tr>';
 

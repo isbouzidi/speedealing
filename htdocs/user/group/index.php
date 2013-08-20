@@ -21,7 +21,7 @@
 
 require '../../main.inc.php';
 if (!class_exists('UserGroup'))
-	require DOL_DOCUMENT_ROOT . '/user/class/usergroup.class.php';
+    require DOL_DOCUMENT_ROOT . '/user/class/usergroup.class.php';
 
 $langs->load("users");
 
@@ -42,33 +42,40 @@ if ($_GET['json'] == "list") {
     );
 
     try {
-        $result1 = $object->getView("list");
-        $result2 = $object->getView("count_list", array("group"=>true));
+        $result1 = $object->mongodb->find();
+        $result2 = $user->mongodb->aggregate(array(array('$unwind' => '$roles'), array('$group' => array('_id' => '$roles', 'count' => array('$sum' => 1)))));
     } catch (Exception $exc) {
         print $exc->getMessage();
     }
 
-    $iTotal = count($result1->rows);
+    $iTotal = $object->mongodb->count();
     $output["iTotalRecords"] = $iTotal;
     $output["iTotalDisplayRecords"] = $iTotal;
 
     $result = array();
-    if (!empty($result1->rows)) {
-    	foreach ($result1->rows as $aRow) {
-    		$result[$aRow->value->name] = $aRow->value;
-    	}
+    if (!empty($result1)) {
+        foreach ($result1 as $aRow) {
+            $aRow = (object) $aRow;
+            $result[$aRow->name] = $aRow;
+        }
     }
 
-    if (!empty($result2->rows)) {
-    	foreach ($result2->rows as $aRow) {
-    		$result[$aRow->key]->nb = $aRow->value;
-    	}
+    if (!empty($result2)) {
+        foreach ($result2 as $aRow) {
+            foreach ($aRow as $row) {
+                $row = (object) $row;
+                if ($row->_id) {
+                    //print_r($row);
+                    $result[$row->_id]->nb = $row->count;
+                }
+            }
+        }
     }
 
     if (!empty($result)) {
-    	foreach ($result as $aRow) {
-    		$output["aaData"][] = $aRow;
-    	}
+        foreach ($result as $aRow) {
+            $output["aaData"][] = $aRow;
+        }
     }
 
     header('Content-type: application/json');

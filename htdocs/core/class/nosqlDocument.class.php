@@ -24,15 +24,16 @@ require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
 abstract class nosqlDocument extends CommonObject {
 
     protected $couchdb; // TODO must to be private !!!!!
+    public $mongodb;
     public $id;
     public $error;
     public $errors;
     public $canvas; // Contains canvas name if it is
     public $fk_extrafields;
-    public $no_save = array("no_save", "global", "token", "id", "fk_extrafields", "couchdb", "db",
+    public $no_save = array("no_save", "global", "token", "id", "fk_extrafields", "couchdb", "mongodb", "db",
         "error", "errors", "childtables", "table_element", "element", "fk_element", "ismultientitymanaged",
         "dbversion", "oldcopy", "state", "country", "status", "statut", "import_key", "couchAdmin",
-        "all_permissions_are_loaded", "right", "type2label");
+        "all_permissions_are_loaded", "right", "type2label", "class");
 
     /**
      * 	class constructor
@@ -53,16 +54,19 @@ abstract class nosqlDocument extends CommonObject {
      *
      */
     public function useDatabase($dbname = "") {
-        global $conf, $couch;
+        global $conf, $couch, $mongo, $mongodb;
 
         if (empty($this->couchdb) && is_object($couch)) {
             $this->couchdb = clone $couch;
         }
 
-        if (!empty($dbname) && is_object($couch))
+        if (!empty($dbname) && is_object($couch)) {
             $this->couchdb->useDatabase($dbname);
-        //else
-        //	$this->couchdb->useDatabase($conf->Couchdb->name);
+            $mongodb = $mongo->$dbname;
+        }
+
+        $collection = get_class($this);
+        $this->mongodb = $mongodb->$collection;
     }
 
     /**
@@ -142,12 +146,15 @@ abstract class nosqlDocument extends CommonObject {
 
         $this->$key = $value;
 
-        $params = new stdClass();
+        if (is_string($this->_id)) {
+            $id = $this->_id;
+        } else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
+            $id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
+        }
 
-        $params->field = $key;
-        $params->value = $value;
+        return $this->mongodb->update(array('_id' => $id), array('$set' => array($key => $value)));
 
-        return $this->couchdb->updateDoc(get_class($this), "in-place", $params, $this->id);
+        //return $this->couchdb->updateDoc(get_class($this), "in-place", $params, $this->id);
     }
 
     /**
@@ -167,6 +174,8 @@ abstract class nosqlDocument extends CommonObject {
     public function load($id, $cache = false) {
         global $conf;
 
+        $cache = false; // disable cache
+
         require_once DOL_DOCUMENT_ROOT . '/core/lib/memory.lib.php';
 
         $values = array();
@@ -180,14 +189,20 @@ abstract class nosqlDocument extends CommonObject {
         }
 
         if (!$found) {
-            $values = $this->couchdb->getDoc($id); // load extrafields for class
+            //$values = $this->couchdb->getDoc($id); // load extrafields for class
+            $values = $this->mongodb->findOne(array('_id' => $id));
+
             if ($cache && !empty($conf->memcached)) {
                 dol_setcache($id, $values);
             }
         }
+        //print $id;
+        //print_r($values);
 
         if (!empty($values)) {
-            $this->id = $values->_id;
+            $values = json_decode(json_encode($values), FALSE); // convert Array to object
+
+            $this->id = $id;
 
             foreach (get_object_vars($values) as $key => $aRow)
                 $this->$key = $aRow;
@@ -219,14 +234,19 @@ abstract class nosqlDocument extends CommonObject {
                     $values->$key = $this->fk_extrafields->fields->$key->default;
             }
 
-        if (empty($values->_id) && !empty($this->id))
-            $values->_id = $this->id;
+        //$values->id = $this->id;
+        //print_r($this->_id->{'$id'});exit;
 
-        $values->class = get_class($this);
+        if (is_string($this->_id)) {
+            $values->_id = $this->_id;
+        } else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
+            $values->_id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
+        }
+
         $values->tms = dol_now();
 
         // Specific for users
-        if ($values->class == "User")
+        if (get_class($this) == "User")
             unset($values->rights);
         else
             $values->entity = $conf->Couchdb->name;
@@ -247,16 +267,18 @@ abstract class nosqlDocument extends CommonObject {
             $values->history[] = $history;
         }
 
-
         try {
             $this->couchdb->clean($values);
-            $result = $this->couchdb->storeDoc($values);
-            $this->id = $result->id;
-            $this->_id = $result->id;
-            $this->_rev = $result->rev;
-            $values->_id = $this->_id;
-            $values->id = $this->_id;
-            $values->_rev = $this->_rev;
+            $this->mongodb->save($values);
+
+            if (is_string($this->_id)) {
+                $result = $this->_id;
+                $this->_id = $this->_id;
+            } else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
+                $result = $values->_id->{'$id'};
+                $this->_id = $values->_id->{'$id'};
+            }
+
             if ($cache && !empty($conf->memcached)) {
                 dol_setcache($this->id, $values);
             }
@@ -329,7 +351,7 @@ abstract class nosqlDocument extends CommonObject {
             else {
                 $this->trash = true;
                 $this->record();
-            }   
+            }
         }
     }
 
@@ -1668,7 +1690,7 @@ abstract class nosqlDocument extends CommonObject {
      * 		@return		string		String with URL
      */
     function select_fk_extrafields($key, $htmlname, $value = null, $returnIndex = true, $lengh = 40, $cssClass = "") {
-        global $langs, $mysoc;
+        global $langs, $mysoc, $mongodb;
 
         $aRow = $this->fk_extrafields->fields->$key;
 
@@ -1689,19 +1711,22 @@ abstract class nosqlDocument extends CommonObject {
 
                 $rtr = "";
                 $rtr.= '<select data-placeholder="' . $title . '&hellip;" class="select ' . $aRow->validate->cssclass . '" id="' . $htmlname . '" name="' . $htmlname . '">';
-                if (isset($aRow->class)) { // Is an object
-                    $class = $aRow->class;
-                    $object = new $class($this->db);
+                if (isset($aRow->mongo)) { // Check collection
+                    $class = $aRow->mongo->collection;
+                    //$object = new $class($this->db);
 
-                    $params = array();
-                    if (count($aRow->params))
-                        foreach ($aRow->params as $idx => $row) {
-                            eval("\$row = $row;");
-                            if (!empty($row))
-                                $params[$idx] = $row;
-                        }
+                    /* $params = array();
+                      if (count($aRow->params))
+                      foreach ($aRow->params as $idx => $row) {
+                      eval("\$row = $row;");
+                      if (!empty($row))
+                      $params[$idx] = $row;
+                      } */
                     try {
-                        $result = $object->getView($aRow->view, $params);
+                        //$result = $object->getView($aRow->view, $params);
+                        $result = $mongodb->$class->{$aRow->mongo->method}();
+                        if ($aRow->mongo->order)
+                            $result->sort((array) $aRow->mongo->order);
                     } catch (Exception $e) {
                         $this->error = "Fetch : Something weird happened: " . $e->getMessage() . " (errcode=" . $e->getCode() . ")\n";
                         dol_print_error($this->db, $this->error);
@@ -1712,11 +1737,13 @@ abstract class nosqlDocument extends CommonObject {
                     $aRow->values[0]->label = "-";
                     $aRow->values[0]->enable = true;
 
-                    if (!empty($result->rows)) {
-                        foreach ($result->rows as $row) {
-                            $aRow->values[$row->value->_id] = new stdClass();
-                            $aRow->values[$row->value->_id]->label = $row->value->name;
-                            $aRow->values[$row->value->_id]->enable = true;
+                    if (!empty($result)) {
+                        while ($result->hasNext()) {
+                            $row = (object) $result->getNext();
+                            //print_r($row->name);
+                            $aRow->values[$row->_id] = new stdClass();
+                            $aRow->values[$row->_id]->label = $row->name;
+                            $aRow->values[$row->_id]->enable = true;
                         }
                     }
 

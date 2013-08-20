@@ -57,7 +57,7 @@ if ($json == "list") {
 	$listEntity = new stdClass();
 
 	try {
-		$result = $object->getView('listAll');
+		$result = $object->mongodb->find();
 		//$result_all = $object->getAllUsers(true);
 		//$admins = $object->getUserAdmins();
 
@@ -74,52 +74,26 @@ if ($json == "list") {
 
 	//print_r($result_all);
 
-	if (!empty($result->rows)) {
-		foreach ($result->rows as $aRow) {
+	if (!empty($result)) {
+		foreach ($result as $aRow) {
 			// To hide specific users for all normals users except superadmin
-			if (!empty($aRow->value->hide) && empty($user->superadmin))
+			if (!empty($aRow->hide) && empty($user->superadmin))
 				continue;
 
-			$name = substr($aRow->value->_id, 5);
+			$name = substr($aRow->_id, 5);
 			/*if (isset($admins->$name))
 				$aRow->value->admin = true;
 			else
 				$aRow->value->admin = false;
 */
-			$aRow->value->entityList = array();
+			$aRow->entityList = array();
 			foreach ($list_db as $db) {
 				if (is_array($listEntity->$db) && in_array($name, $listEntity->$db, true))
-					$aRow->value->entityList[] = $db;
+					$aRow->entityList[] = $db;
 			}
 
-			$output["aaData"][] = $aRow->value;
+			$output["aaData"][] = $aRow;
 			$user_in[] = $name;
-		}
-	}
-
-	if ($result_all) {
-		foreach ($result_all as $aRow) {
-			// To hide specific users for all normals users except superadmin
-			if (!empty($aRow->value->hide) && empty($user->superadmin))
-				continue;
-
-			$name = substr($aRow->doc->_id, 17);
-
-			if (in_array($name, $user_in))
-				continue;
-
-			if (isset($admins->$name))
-				$aRow->doc->admin = true;
-			else
-				$aRow->doc->admin = false;
-
-			$aRow->doc->entityList = array();
-			foreach ($list_db as $db) {
-				if (is_array($listEntity->$db) && in_array($name, $listEntity->$db, true))
-					$aRow->doc->entityList[] = $db;
-			}
-
-			$output["aaData"][] = $aRow->doc;
 		}
 	}
 

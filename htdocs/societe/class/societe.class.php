@@ -124,7 +124,7 @@ class Societe extends nosqlDocument {
 
 		$this->fk_extrafields = new ExtraFields($db);
 		$this->fk_extrafields->fetch(get_class($this));
-
+        
 		$this->commercial_id = new stdClass();
 
 		return 1;

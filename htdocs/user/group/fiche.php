@@ -82,13 +82,14 @@ if ($action == 'adduser' || $action == 'removeuser') {
 
             if ($action == 'adduser') {
                 $edituser->roles[] = $object->name;
-				//$edituser->addRoleToUser($object->name);
+                //$edituser->addRoleToUser($object->name);
             }
             if ($action == 'removeuser') {
                 unset($edituser->roles[array_search($object->name, $edituser->roles)]);
                 $edituser->roles = array_merge($edituser->roles);
-				//$edituser->removeRoleFromUser($object->name);
+                //$edituser->removeRoleFromUser($object->name);
             }
+
             $edituser->record($edituser->id == $user->id);
 
             header("Location: fiche.php?id=" . $object->id);
@@ -202,18 +203,19 @@ if ($action == 'create') {
              * Liste des utilisateurs dans le groupe
              */
 
-			print column_start();
+            print column_start();
             print start_box($langs->trans("ListOfUsersInGroup"), "16-User-2.png");
 
 // On selectionne les users qui ne sont pas deja dans le groupe
             $exclude = array();
 
             $userstatic = new User($db);
-            $result = $userstatic->getView("group", array('key' => $object->name));
+            $result = $userstatic->mongodb->find(array('roles' => $object->name));
 
-            if (count($result->rows)) {
-                foreach ($result->rows as $useringroup) {
-                    $exclude[] = $useringroup->value->_id;
+            if (count($result)) {
+                foreach ($result as $useringroup) {
+                    $useringroup = (object) $useringroup;
+                    $exclude[] = $useringroup->_id;
                 }
             }
 
@@ -266,14 +268,16 @@ if ($action == 'create') {
             print '</thead>';
 
             print '<tbody>';
-            if (count($result->rows)) {
+            if (count($result)) {
                 $var = True;
 
-                foreach ($result->rows as $aRow) {
+                foreach ($result as $aRow) {
+                    $aRow = (object) $aRow;
+
                     $var = !$var;
 
                     $useringroup = new User($db);
-                    $useringroup->values = $aRow->value;
+                    $useringroup->values = $aRow;
                     $useringroup->id = $useringroup->values->_id;
                     $useringroup->email = $useringroup->values->email;
 
@@ -283,8 +287,8 @@ if ($action == 'create') {
                     if ($useringroup->admin)
                         print img_picto($langs->trans("Administrator"), 'star');
                     print '</td>';
-                    print '<td>' . $useringroup->values->Lastname . '</td>';
-                    print '<td>' . $useringroup->values->Firstname . '</td>';
+                    print '<td>' . $useringroup->values->lastname . '</td>';
+                    print '<td>' . $useringroup->values->firstname . '</td>';
                     print '<td>' . $useringroup->LibStatus($useringroup->values->Status) . '</td>';
                     print '<td>';
                     if ($user->admin) {
@@ -304,10 +308,10 @@ if ($action == 'create') {
 
             $object->datatablesCreate($obj, "users");
 
-			print end_box();
+            print end_box();
             print column_end();
 
-			print column_start();
+            print column_start();
             print start_box($title, "16-Users-2.png");
 
             /*
@@ -453,7 +457,7 @@ if ($action == 'create') {
 
 
             print end_box();
-			print column_end();
+            print column_end();
         }
 
         /*

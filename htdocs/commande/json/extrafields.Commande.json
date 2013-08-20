@@ -1,6 +1,6 @@
 {
    "_id": "extrafields:Commande",
-   "_rev": "112-704c9b2c7473cd3038f751df5c57205b",
+   "_rev": "125-99a19a85c4f567d7aa8c2ce01f26d4d0",
    "class": "ExtraFields",
    "ico": "icon-object-order",
    "langs": [
@@ -33,7 +33,6 @@
    ],
    "longList": [
        "_id",
-       "Checkbox",
        "ref",
        "client",
        "ref_client",
