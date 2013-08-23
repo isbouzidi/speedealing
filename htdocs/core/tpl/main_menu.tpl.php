@@ -55,9 +55,9 @@
 				<?php if (!empty($countTODO)) : ?>
 					<a href="agenda/list.php?idmenu=menu:myagendaListTODO" title="<?php echo $langs->trans("Agenda"); ?>">
 						<span class="icon-calendar"></span>
-						<?php if ($countTODO->rows[0]->value) { ?>
-						<span class="count"><?php echo $countTODO->rows[0]->value; ?></span>
-						<?php $count_icon+=$countTODO->rows[0]->value; ?>
+						<?php if ($countTODO->results[0]['value']) { ?>
+						<span class="count"><?php echo $countTODO->results[0]['value']; ?></span>
+						<?php $count_icon+=$countTODO->results[0]['value']; ?>
 						<?php } ?>
 					</a>
 				<?php else: ?>
@@ -80,19 +80,19 @@
 
 			<?php $menu->showmenuTop(); ?>
 
-			<?php if (!empty($listMyTasks->rows)) : ?>
+			<?php if (!empty($listMyTasks)) : ?>
 				<ul class="unstyled-list">
 					<li class="title-menu">Today's event</li>
 					<li>
 						<ul class="calendar-menu">
-						<?php foreach ($listMyTasks->rows as $aRow) { ?>
+						<?php foreach ($listMyTasks as $aRow) { $aRow = (object)$aRow; ?>
 							<li>
-								<a href="agenda/fiche.php?id=<?php echo $aRow->value->_id; ?>" title="<?php echo $aRow->value->societe->name; ?>">
-									<time datetime="<?php echo dol_print_date($aRow->value->datep, "day"); ?>">
-										<b><?php echo date("d", $aRow->value->datep); ?></b><?php echo date("M", $aRow->value->datep); ?>
+								<a href="agenda/fiche.php?id=<?php echo $aRow->_id; ?>" title="<?php echo $aRow->societe['name']; ?>">
+									<time datetime="<?php echo dol_print_date(date("c",$aRow->datep->sec), "day"); ?>">
+										<b><?php echo date("d", $aRow->datep->sec); ?></b><?php echo date("M", $aRow->datep->sec); ?>
 									</time>
-									<small class="green"><?php echo dol_print_date($aRow->value->datep, "hour"); ?></small>
-									<?php echo $aRow->value->label; ?>
+                                    <small class="green"><?php echo dol_print_date(date("c", $aRow->datep->sec), "hour"); ?> [<?php echo $aRow->societe['name']; ?>]</small>
+									<?php echo $aRow->label; ?>
 								</a>
 							</li>
 						<?php } ?>

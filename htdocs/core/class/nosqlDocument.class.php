@@ -410,7 +410,10 @@ abstract class nosqlDocument extends CommonObject {
      * @return string
      */
     public function id() {
-        return $this->id;
+        if (is_object($this->id))
+            return $this->id->{'$id'};
+        else
+            return $this->id;
     }
 
     /** Call a view on couchdb
@@ -1710,7 +1713,7 @@ abstract class nosqlDocument extends CommonObject {
                     $selected = $this->$key;
 
                 $rtr = "";
-                $rtr.= '<select data-placeholder="' . $title . '&hellip;" class="select ' . $aRow->validate->cssclass . '" id="' . $htmlname . '" name="' . $htmlname . '">';
+                $rtr.= '<select data-placeholder="' . $title . '&hellip;" class="select auto-open ' . $aRow->validate->cssclass . '" id="' . $htmlname . '" name="' . $htmlname . '">';
                 if (isset($aRow->mongo)) { // Check collection
                     $class = $aRow->mongo->collection;
                     //$object = new $class($this->db);
@@ -1724,7 +1727,21 @@ abstract class nosqlDocument extends CommonObject {
                       } */
                     try {
                         //$result = $object->getView($aRow->view, $params);
-                        $result = $mongodb->$class->{$aRow->mongo->method}();
+                        /**
+                         * Execute Query for filter
+                         */
+                        $query = $aRow->mongo->query;
+
+                        if ($query)
+                            foreach ($query as $option => $v)
+                                if (is_string($v) && strpos($v, '$') !== false) {
+                                    eval("\$v = $v;");
+                                    if (is_object($v))
+                                        $v = new MongoId($v->{'$id'});
+                                    $query->$option = $v;
+                                }
+
+                        $result = $mongodb->$class->{$aRow->mongo->method}($query);
                         if ($aRow->mongo->order)
                             $result->sort((array) $aRow->mongo->order);
                     } catch (Exception $e) {
@@ -1740,6 +1757,9 @@ abstract class nosqlDocument extends CommonObject {
                     if (!empty($result)) {
                         while ($result->hasNext()) {
                             $row = (object) $result->getNext();
+                            if (is_object($row->_id))
+                                $row->_id = $row->_id->{'$id'};
+
                             //print_r($row->name);
                             $aRow->values[$row->_id] = new stdClass();
                             $aRow->values[$row->_id]->label = $row->name;
@@ -1748,6 +1768,9 @@ abstract class nosqlDocument extends CommonObject {
                     }
 
                     $selected = $this->$key->id; // Index of key
+
+                    if (is_object($selected))
+                        $selected = $selected->{'$id'};
                 }
 
                 if (empty($selected)) {
@@ -1843,8 +1866,8 @@ abstract class nosqlDocument extends CommonObject {
         if (is_object($this->$key) && empty($this->$key->id))
             return null;
 
-        if (isset($aRow->class) && empty($aRow->getkey)) { // Is an object
-            $class = $aRow->class;
+        if (isset($aRow->mongo) && empty($aRow->getkey)) { // Is an object
+            $class = $aRow->mongo->collection;
             dol_include_once("/" . strtolower($class) . "/class/" . strtolower($class) . ".class.php");
             $object = new $class($this->db);
             $object->name = $this->$key->name;
