@@ -377,6 +377,11 @@ class Agenda extends nosqlDocument {
 			unset($this->userdone->name);
 		}
 
+		$this->datec = new MongoDate(strtotime($this->datec));
+		$this->date = new MongoDate(strtotime($this->date));
+		$this->datef = new MongoDate(strtotime($this->datef));
+		$this->dateend = new MongoDate(strtotime($this->dateend));
+
 		$this->record();
 
 		dol_delcache(get_class($this) . ":countTODO"); //Reset stats cache for agenda
@@ -1155,14 +1160,14 @@ class Agenda extends nosqlDocument {
 	}
 
 	function print_week($date) {
-		global $db, $langs, $user;
+		global $db, $langs, $user, $mongodb;
 
 		//$timestamps = array();
-		$date = strtotime($date);
+		$datestart = strtotime($date);
 		//$dayOfWeek = date('w', $date);
-		/* for ($i = 0, $d = -$dayOfWeek; $i < 7; $i++, $d++) {
-		  $tmpTimestamp = strtotime($d . " day", $date);
-		  $timestamps[$i] = array(
+		// for ($i = 0, $d = -$dayOfWeek; $i < 7; $i++, $d++) {
+		  $dateend = strtotime("7 day", $date);
+		/*  $timestamps[$i] = array(
 		  'start' => mktime(0, 0, 0, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
 		  'end' => mktime(23, 59, 59, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
 		  );
@@ -1171,7 +1176,9 @@ class Agenda extends nosqlDocument {
 		//print date('j', strtotime(-date('w', $date)+1 . " day", $date));
 
 		$object = new Agenda($db);
-		$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+		//$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+		$events = $mongodb->Agenda->find(array("type_code" => "AC_RDV", '$or' =>array("usertodo.id" => $user->id,"author.id" => $user->id),"datep" => array('$gte'=> new MongoDate($datestart), '$lt' => new MongoDate($dateend)) ));
+
 		//print_r($events);
 		$styles = array(
 			0 => 'left: 0%; right: 85.7143%; margin-left: -1px;',
@@ -1193,7 +1200,7 @@ class Agenda extends nosqlDocument {
 			6 => 'Saturday'
 		);
 
-		$first = date('j', $date) - date('j', strtotime(-date('w', $date) . " day", $date));
+		$first = date('j', $datestart) - date('j', strtotime(-date('w', $datestart) . " day", $datestart));
 
 		print '<div class="block">
 				<div class="block-title">

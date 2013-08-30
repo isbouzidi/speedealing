@@ -68,6 +68,13 @@ if ($id)
 
 if ($user->societe_id)
     $socid = $user->societe_id;
+
+if ($socid)
+    $socid = new MongoId($socid);
+
+if ($contactid)
+    $contactid = new MongoId($contactid);
+
 $result = restrictedArea($user, 'agenda', $id, 'actioncomm', 'myactions', '', 'id');
 
 $error = GETPOST("error");
@@ -206,15 +213,11 @@ if ($action == 'add_action') {
         $object->userdone->id = GETPOST("doneby");
 
     $object->notes = trim($_POST["note"]);
-    if (isset($_POST["contactid"])) {
-        $object->contact->id = $contact->id;
-        $object->contact->name = $contact->name;
+    if (!empty($contactid)) {
+        $object->contact->id = $contactid;
     }
     if (!empty($socid)) {
-        $societe = new Societe($db);
-        $societe->fetch($socid);
-        $object->societe->id = $societe->id;
-        $object->societe->name = $societe->name;
+        $object->societe->id = $socid;
     }
 
     // Check parameters
@@ -364,11 +367,12 @@ if ($action == 'update') {
         $object->usertodo->id = $_POST["affectedto"];
         $object->userdone->id = $_POST["doneby"];
 
-        if (GETPOST("socid", "alpha")) {
-            $societe = new Societe($db);
-            $societe->fetch($_POST["socid"]);
-            $object->societe->id = $_POST["socid"];
-            $object->societe->name = $societe->ThirdPartyName;
+        if (!empty($contactid)) {
+            $object->contact->id = $contactid;
+        }
+
+        if (!empty($socid)) {
+            $object->societe->id = $socid;
         }
         else
             $object->societe = new stdClass();
@@ -924,7 +928,7 @@ if ($id) {
         print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
 
         // Date start
-        $datep = date("c",$object->datep->sec);
+        $datep = date("c", $object->datep->sec);
         if (GETPOST('datep', 'alpha'))
             $datep = GETPOST('datep', 'alpha');
         print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
@@ -937,7 +941,7 @@ if ($id) {
         print '</td></tr>';
 
         // Date end
-        $datef = date("c",$object->datef->sec);
+        $datef = date("c", $object->datef->sec);
         if (GETPOST('datef', 'alpha'))
             $datef = GETPOST('datef', 'alpha');
         print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';

@@ -138,25 +138,25 @@ if (!defined('NOREQUIREDB')) {
 		// For backward compatibility
 		$db = new stdClass();
 	}
-    
-    /**
-     * MongoDB
-     */
-    $dbhost = 'localhost';
-	$mongo = new Mongo("mongodb://$dbhost");
+
+	/**
+	 * MongoDB
+	 */
+	$dbhost = 'localhost';
+	$mongo = new MongoClient("mongodb://$dbhost");
 
 	// By default conf->entity is 1, but we change this if we ask another value
 	if ($conf->urlrewrite && GETPOST("db")) { // Value pass from url for the name of the database : need url rewrite
 		$conf->Couchdb->name = strtolower(GETPOST("db", 'alpha'));
-        $name = strtolower(GETPOST("db", 'alpha'));
-        $mongodb = $mongo->$name;
-    } else { //Query standard
+		$name = strtolower(GETPOST("db", 'alpha'));
+		$mongodb = $mongo->$name;
+	} else { //Query standard
 		if (session_id()) {   // Entity inside an opened session
 			$name = dol_getcache("dol_entity");
 			if (!is_int($name)) {
 				$conf->Couchdb->name = $name;
-                $mongodb = $mongo->$name;
-            }
+				$mongodb = $mongo->$name;
+			}
 		}
 		if (empty($conf->Couchdb->name) && !empty($_ENV["dol_entity"])) { // Entity inside a CLI script
 			$conf->Couchdb->name = strtolower($_ENV["dol_entity"]);
@@ -164,8 +164,8 @@ if (!defined('NOREQUIREDB')) {
 		}
 		if (GETPOST("entity", 'alpha')) { // Just after a login page
 			$conf->Couchdb->name = strtolower(GETPOST("entity", 'alpha'));
-            $name = strtolower(GETPOST("entity", 'alpha'));
-            $mongodb = $mongo->$name;
+			$name = strtolower(GETPOST("entity", 'alpha'));
+			$mongodb = $mongo->$name;
 			dol_setcache("dol_entity", $conf->Couchdb->name);
 			//} else if (defined('DOLENTITY') && is_int(DOLENTITY)) { // For public page with MultiCompany module
 			//    $conf->entity = DOLENTITY;
@@ -173,11 +173,11 @@ if (!defined('NOREQUIREDB')) {
 	}
 
 	if (empty($conf->Couchdb->name)) {
-        $name = substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")); // host domain
+		$name = substr($_SERVER["HTTP_HOST"], 0, strpos($_SERVER["HTTP_HOST"], ".")); // host domain
 		$conf->Couchdb->name = $name;
-        $mongodb = $mongo->$name;
-    }
-    
+		$mongodb = $mongo->$name;
+	}
+
 	if (!empty($dolibarr_main_resolver)) {
 		$conf->main_resolver = $dolibarr_main_resolver;
 		$conf->Couchdb->host = dol_getcache("couchdb_host");
