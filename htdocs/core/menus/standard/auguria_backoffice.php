@@ -36,23 +36,27 @@ class MenuAuguria extends nosqlDocument {
 	 */
 
 	function __construct($db = null) {
-		global $conf;
+		global $conf, $mongodb;
 
 		parent::__construct($db);
 
 		$tabMenu = array();
 
-		$topmenu = $this->getView("list", array(), true);
-		$submenu = $this->getView("submenu", array(), true);
-
-		$this->topmenu = $topmenu->rows;
+		//$topmenu = $this->getView("list", array(), true);
+		$topmenu = (object) $mongodb->view_listMenu->find();
+		$topmenu->sort(array("_id.position" => 1));
+		//$submenu = $this->getView("submenu", array(), true);
+		$submenu = (object) $mongodb->view_listSubmenu->find();
+		$submenu->sort(array("_id.position" => 1));
+		
+		$this->topmenu = $topmenu;
 
 		// Construct submenu
-		foreach ($submenu->rows as $key => $aRow) {
-			$menu = $aRow->value;
+		foreach ($submenu as $key => $aRow) {
+			$menu = (object)$aRow['value'];
 			$newTabMenu = $this->verifyMenu($menu);
 			if ($newTabMenu->enabled == true && $newTabMenu->perms == true) {
-				$this->submenu[$aRow->key[0]][] = $newTabMenu;
+				$this->submenu[$aRow['_id']['menu']][] = $newTabMenu;
 			}
 		}
 
@@ -93,7 +97,8 @@ class MenuAuguria extends nosqlDocument {
 		$i = 0;
 		$selectnav = array();
 		foreach ($this->topmenu AS $aRow) {
-			$newTabMenu = $aRow->value;
+			
+			$newTabMenu = (object) $aRow['value'];
 			$newTabMenu = $this->verifyMenu($newTabMenu);
 
 			if ($newTabMenu->enabled == true) {
