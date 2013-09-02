@@ -45,21 +45,24 @@ function upgrade() {
 	$mesg = $object->load_modules_files($filename, $modules, $orders, $categ, $dirmod, $modNameLoaded);
 
 	//Update extrafields && Update views
-	$result = $object->getView("list");
-	foreach ($result->rows as $aRow) {
-		if ($aRow->id == "module:User")
-			$aRow->value->numero = 0;
+	$result = $object->mongodb->find(); //getView("list");
+	//print_r($result);exit;
+	foreach ($result as $aRow) {
+		$aRow = (object) $aRow;
+		if ($aRow->_id == "module:User")
+			$aRow->numero = 0;
 
 		$object = new DolibarrModules($db);
-		if (!empty($modules[$aRow->value->numero]) && $aRow->value->enabled) { // Test if module is present and enabled
-			$objMod = $modules[$aRow->value->numero];
+		if (!empty($modules[$aRow->numero]) && $aRow->enabled) { // Test if module is present and enabled
+			$objMod = $modules[$aRow->numero];
 
 			foreach ($objMod as $key => $row)
 				$object->$key = $row;
 
 			$object->_id = "module:" . $objMod->name;
-			$object->_rev = $aRow->value->_rev;
+			unset($object->_rev);
 			$object->enabled = true;
+
 			$object->record();
 			$object->_load_documents();
 		}
@@ -67,16 +70,18 @@ function upgrade() {
 
 	//Update dict
 	$dict = new Dict($db);
-	$result = $dict->getView("list");
+	$result = $dict->mongodb->find(); //getView("list");
 
 	$dir = DOL_DOCUMENT_ROOT . "/install/couchdb/json/";
-	foreach ($result->rows as $aRow) {
+	foreach ($result as $aRow) {
+		$aRow = (object) $aRow;
+
 		try {
-			$dict->load($aRow->key);
+			$dict->load($aRow->_id);
 		} catch (Exception $e) {
 			// Dict not in db
 		}
-		$filename = str_replace(':', '.', $aRow->key);
+		$filename = str_replace(':', '.', $aRow->_id);
 		$fp = fopen($dir . $filename . ".json", "r");
 		if ($fp) {
 			$json = fread($fp, filesize($dir . $filename . ".json"));
@@ -97,9 +102,11 @@ function upgrade() {
 					$dict->values->$key->enable = $enable;
 				$found = false;
 			}
+			unset($dict->class);
+			unset($dict->entity);
 			$dict->record();
 		} else {
-
+			
 		}
 	}
 

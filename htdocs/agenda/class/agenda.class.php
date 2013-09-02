@@ -77,10 +77,10 @@ class Agenda extends nosqlDocument {
 		$this->fk_extrafields->fetch(get_class($this));
 
 		$this->Status = "TODO";
-		$this->author = null;
-		$this->usermod = null;
-		$this->usertodo = null;
-		$this->userdone = null;
+		$this->author = new stdClass();
+		$this->usermod = new stdClass();
+		$this->usertodo = new stdClass();
+		$this->userdone = new stdClass();
 		$this->societe = new stdClass();
 		$this->contact = new stdClass();
 	}
@@ -345,7 +345,7 @@ class Agenda extends nosqlDocument {
 			$this->percentage = 100;
 		elseif ($this->Status == "TODO")
 			$this->percentage = 0;
-
+		
 		if (!empty($this->societe->id)) {
 			$object = new Societe($this->db);
 			$object->load($this->societe->id);
@@ -376,11 +376,6 @@ class Agenda extends nosqlDocument {
 		} else {
 			unset($this->userdone->name);
 		}
-
-		$this->datec = new MongoDate(strtotime($this->datec));
-		$this->date = new MongoDate(strtotime($this->date));
-		$this->datef = new MongoDate(strtotime($this->datef));
-		$this->dateend = new MongoDate(strtotime($this->dateend));
 
 		$this->record();
 

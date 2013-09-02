@@ -2682,7 +2682,7 @@ class Form {
                     $formated_date = dol_print_date($set_time, "%d-%m-%Y");
                 //$formated_date = dol_print_date($set_time, $langs->trans("FormatDateShort"));  // FormatDateShort for dol_print_date/FormatDateShortJava that is same for javascript
             }
-
+			
             // Zone de saisie manuelle de la date
             $retstring.='<span class="input">';
             $retstring.='<span class="icon-calendar"></span>';

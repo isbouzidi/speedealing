@@ -481,11 +481,12 @@ class DolibarrModules extends nosqlDocument {
 		$var_dbuser = array("_design/_auth");
 
 		//$var_dbsystem = array("_design/User", "_design/UserGroup");
-
-		$list_db = $this->couchdb->listDatabases();
+		//$list_db = $this->couchdb->listDatabases();
 		$no_upgradeDB = array("_users", "_replicator", "mips", "i18next", "notify");
 
 		$error = 0;
+
+		$object = new ExtraFields();
 
 		$ok = 1;
 		foreach ($conf->file->dol_document_root as $dirroot) {
@@ -505,61 +506,64 @@ class DolibarrModules extends nosqlDocument {
 								unset($obj->_rev);
 
 								//Test if document go to _users base
-								$nbDB = 1;
-								if (in_array($obj->_id, $var_dbuser))
-									$this->couchdb->useDatabase("_users");
+								//$nbDB = 1;
+								//if (in_array($obj->_id, $var_dbuser))
+								//	$this->couchdb->useDatabase("_users");
 								//else if (in_array($obj->_id, $var_dbsystem))
 								//	$this->couchdb->useDatabase("system");
-								else /*if (substr($obj->_id, 0, 7) == "_design")*/
-									$nbDB = count($list_db);
+								//else /*if (substr($obj->_id, 0, 7) == "_design")*/
+								//	$nbDB = count($list_db);
 								//else
 								//	$this->couchdb->useDatabase("system");
+								//for ($i = 0; $i < $nbDB; $i++) {
+								/* if ($nbDB > 1) { //Upgrade all db
+								  if (in_array($list_db[$i], $no_upgradeDB))
+								  continue;
+								  else
+								  $this->couchdb->useDatabase($list_db[$i]);
+								  } */
 
-								for ($i = 0; $i < $nbDB; $i++) {
-									if ($nbDB > 1) { //Upgrade all db
-										if (in_array($list_db[$i], $no_upgradeDB))
-											continue;
-										else
-											$this->couchdb->useDatabase($list_db[$i]);
-									}
+								// Test if exist document in database : upgrade
+								/* try {
+								  $result = $this->couchdb->getDoc($obj->_id);
+								  $obj->_rev = $result->_rev;
+								  } catch (Exception $e) {
+								  unset($obj->_rev);
+								  } */
 
-									// Test if exist document in database : upgrade
-									try {
-										$result = $this->couchdb->getDoc($obj->_id);
-										$obj->_rev = $result->_rev;
-									} catch (Exception $e) {
-										unset($obj->_rev);
-									}
+								$result = (object) $object->load($obj->_id);
 
-									if (!empty($result)) {
-										if ($result->class == "extrafields") {
-											/*if (isset($obj->shortList))
-												$obj->shortList = $result->shortList;
-											if (isset($obj->longList))
-												$obj->longList = $result->longList;*/
-
-											foreach ($result->fields as $key => $aRow) {
-												if ($aRow->optional) //specific extrafields
-													$obj->fields->$key = clone $aRow;
-
-												if ($aRow->enable) // Test if fields was enable or disable
-													$obj->fields->$key->enable = true;
-												else
-													$obj->fields->$key->enable = false;
-											}
-										}
-									}
-
-									try {
-										$this->couchdb->storeDoc($obj);
-										//$this->couchdb->useDatabase("system");
-									} catch (Exception $e) {
-										dol_print_error("", $e->getMessage());
-										$error++;
-									}
+								if (!empty($result)) {
+									if (isset($obj->shortList))
+										$obj->shortList = $result->shortList;
+									if (isset($obj->longList))
+										$obj->longList = $result->longList;
 								}
-								fclose($fp);
+
+								foreach ($result->fields as $key => $aRow) {
+									if ($aRow->optional) //specific extrafields
+										$obj->fields->$key = clone $aRow;
+
+									if ($aRow->enable) // Test if fields was enable or disable
+										$obj->fields->$key->enable = true;
+									else
+										$obj->fields->$key->enable = false;
+								}
+								//}
+								//}//
+
+								try {
+									unset($obj->class);
+									if (strpos($obj->_id, "_design") === false) // not an old view
+										$object->mongodb->save($obj);
+									//$this->couchdb->useDatabase("system");
+								} catch (Exception $e) {
+									dol_print_error("", $e->getMessage());
+									$error++;
+								}
 							}
+							fclose($fp);
+							//}
 						}
 					}
 					closedir($handle);
@@ -1014,7 +1018,7 @@ class DolibarrModules extends nosqlDocument {
 				$obj = $this->couchdb->getDoc($id);
 				$menu[$id]->_rev = $obj->_rev;
 			} catch (Exception $e) {
-
+				
 			}
 		}
 
@@ -1050,7 +1054,7 @@ class DolibarrModules extends nosqlDocument {
 				$menu->enabled = false;
 				$this->couchdb->storeDoc($menu);
 			} catch (Exception $e) {
-
+				
 			}
 		}
 
@@ -1263,34 +1267,34 @@ class DolibarrModules extends nosqlDocument {
 									//print "$i ".$file."\n<br>";
 									if (is_readable($dir . $file) && substr($file, 0, 3) == 'mod' && substr($file, dol_strlen($file) - 10) == '.class.php') {
 										$modName = substr($file, 0, dol_strlen($file) - 10);
-							
+
 										if ($modName) {
 											if (!empty($modNameLoaded[$modName])) {
 												$mesg = "Error: Module " . $modName . " was found twice: Into " . $modNameLoaded[$modName] . " and " . $dir . ". You probably have an old file on your disk.<br>";
 												error_log($mesg);
 												continue;
 											}
-							
+
 											try {
 												$res = include_once($dir . $file);
 												$objMod = new $modName($this->db); // TODO remove $this->db
 												$modNameLoaded[$modName] = $dir;
-							
+
 												if ($objMod->numero >= 0) {
 													$j = $objMod->numero;
 												} else {
 													$j = 1000 + $i;
 												}
-							
+
 												$modulequalified = 1;
-							
+
 												// We discard modules according to features level (PS: if module is activated we always show it)
 												$const_name = 'MAIN_MODULE_' . strtoupper(preg_replace('/^mod/i', '', get_class($objMod)));
 												if ($objMod->version == 'development' && $conf->global->MAIN_FEATURES_LEVEL < 2 && !$conf->global->$const_name)
 													$modulequalified = 0;
 												if ($objMod->version == 'experimental' && $conf->global->MAIN_FEATURES_LEVEL < 1 && !$conf->global->$const_name)
 													$modulequalified = 0;
-							
+
 												if ($modulequalified) {
 													$modules[$j] = $objMod;
 													$filename[$j] = $modName;
@@ -1300,9 +1304,9 @@ class DolibarrModules extends nosqlDocument {
 														$categ[$objMod->special]++;  // Array of all different modules categories
 													else
 														$categ[$objMod->special] = 1;
-														$dirmod[$j] = $dir;
-														$j++;
-														$i++;
+													$dirmod[$j] = $dir;
+													$j++;
+													$i++;
 												}
 												else
 													error_log("Module " . get_class($objMod) . " not qualified");
@@ -1322,7 +1326,7 @@ class DolibarrModules extends nosqlDocument {
 				closedir($handle);
 			}
 		}
-		
+
 		asort($orders);
 
 		return $mesg;
@@ -1350,7 +1354,7 @@ class DolibarrModules extends nosqlDocument {
 				$result = $this->couchdb->getDoc($obj->_id);
 				$obj->_rev = $result->_rev;
 			} catch (Exception $e) {
-
+				
 			}
 
 			try {

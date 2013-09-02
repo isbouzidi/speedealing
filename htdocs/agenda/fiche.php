@@ -213,10 +213,14 @@ if ($action == 'add_action') {
         $object->userdone->id = GETPOST("doneby");
 
     $object->notes = trim($_POST["note"]);
-    if (!empty($contactid)) {
+	
+	$object->contact = new stdClass();
+    if ($contactid) {
         $object->contact->id = $contactid;
     }
-    if (!empty($socid)) {
+	
+	$object->societe = new stdClass();
+    if ($socid) {
         $object->societe->id = $socid;
     }
 
@@ -339,7 +343,6 @@ if ($action == 'update') {
         $object->percentage = $_POST["percentage"];
         $object->fulldayevent = $_POST["fullday"] ? 1 : 0;
         $object->location = isset($_POST["location"]) ? $_POST["location"] : '';
-        $object->contact->id = $_POST["contactid"];
         $object->fk_project = $_POST["projectid"];
         $object->fk_lead = $_POST["leadid"];
         $object->propalrowid = $_POST["propalid"];
@@ -364,19 +367,24 @@ if ($action == 'update') {
           }
          */
         // Users
+		$object->usertodo = new stdClass();
         $object->usertodo->id = $_POST["affectedto"];
+		
+		$object->userdone = new stdClass();
         $object->userdone->id = $_POST["doneby"];
 
-        if (!empty($contactid)) {
+		$object->contact = new stdClass();
+        if ($contactid) {
+			
             $object->contact->id = $contactid;
         }
 
-        if (!empty($socid)) {
+		$object->societe = new stdClass();
+		
+        if ($socid) {
             $object->societe->id = $socid;
         }
-        else
-            $object->societe = new stdClass();
-
+        
         //debug($object);
         //die();
 
@@ -1099,10 +1107,10 @@ if ($id) {
         // Date start
         print '<tr><td width="30%">' . $langs->trans("DateActionStart") . '</td><td colspan="2">';
         if (!$object->fulldayevent)
-            print dol_print_date($object->datep, 'dayhour');
+            print dol_print_date(date("c", $object->datep->sec), 'dayhour');
         else
-            print dol_print_date($object->datep, 'day');
-        if ($object->percentage == 0 && $object->datep && $object->datep < ($now - $delay_warning))
+            print dol_print_date(date("c", $object->datep->sec), 'day');
+        if ($object->percentage == 0 && date("c", $object->datep->sec) && date("c", $object->datep->sec) < ($now - $delay_warning))
             print img_warning($langs->trans("Late"));
         print '</td>';
         //if($object->type==1) //RDV
@@ -1111,27 +1119,27 @@ if ($id) {
         print '<form name="listactionsfiltermonth" action="' . DOL_URL_ROOT . '/comm/action/index.php" method="POST">';
         print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
         print '<input type="hidden" name="action" value="show_month">';
-        print '<input type="hidden" name="year" value="' . dol_print_date($object->datep, '%Y') . '">';
-        print '<input type="hidden" name="month" value="' . dol_print_date($object->datep, '%m') . '">';
-        print '<input type="hidden" name="day" value="' . dol_print_date($object->datep, '%d') . '">';
+        print '<input type="hidden" name="year" value="' . dol_print_date(date("c", $object->datep->sec), '%Y') . '">';
+        print '<input type="hidden" name="month" value="' . dol_print_date(date("c", $object->datep->sec), '%m') . '">';
+        print '<input type="hidden" name="day" value="' . dol_print_date(date("c", $object->datep->sec), '%d') . '">';
         //print '<input type="hidden" name="day" value="'.dol_print_date($object->datep,'%d').'">';
         print img_picto($langs->trans("ViewCal"), 'object_calendar') . ' <input type="submit" style="width: 120px" class="button" name="viewcal" value="' . $langs->trans("ViewCal") . '">';
         print '</form>' . "\n";
         print '<form name="listactionsfilterweek" action="' . DOL_URL_ROOT . '/comm/action/index.php" method="POST">';
         print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
         print '<input type="hidden" name="action" value="show_week">';
-        print '<input type="hidden" name="year" value="' . dol_print_date($object->datep, '%Y') . '">';
-        print '<input type="hidden" name="month" value="' . dol_print_date($object->datep, '%m') . '">';
-        print '<input type="hidden" name="day" value="' . dol_print_date($object->datep, '%d') . '">';
+        print '<input type="hidden" name="year" value="' . dol_print_date(date("c", $object->datep->sec), '%Y') . '">';
+        print '<input type="hidden" name="month" value="' . dol_print_date(date("c", $object->datep->sec), '%m') . '">';
+        print '<input type="hidden" name="day" value="' . dol_print_date(date("c", $object->datep->sec), '%d') . '">';
         //print '<input type="hidden" name="day" value="'.dol_print_date($object->datep,'%d').'">';
         print img_picto($langs->trans("ViewCal"), 'object_calendarweek') . ' <input type="submit" style="width: 120px" class="button" name="viewweek" value="' . $langs->trans("ViewWeek") . '">';
         print '</form>' . "\n";
         print '<form name="listactionsfilterday" action="' . DOL_URL_ROOT . '/comm/action/index.php" method="POST">';
         print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
         print '<input type="hidden" name="action" value="show_day">';
-        print '<input type="hidden" name="year" value="' . dol_print_date($object->datep, '%Y') . '">';
-        print '<input type="hidden" name="month" value="' . dol_print_date($object->datep, '%m') . '">';
-        print '<input type="hidden" name="day" value="' . dol_print_date($object->datep, '%d') . '">';
+        print '<input type="hidden" name="year" value="' . dol_print_date(date("c", $object->datep->sec), '%Y') . '">';
+        print '<input type="hidden" name="month" value="' . dol_print_date(date("c", $object->datep->sec), '%m') . '">';
+        print '<input type="hidden" name="day" value="' . dol_print_date(date("c", $object->datep->sec), '%d') . '">';
         //print '<input type="hidden" name="day" value="'.dol_print_date($object->datep,'%d').'">';
         print img_picto($langs->trans("ViewCal"), 'object_calendarday') . ' <input type="submit" style="width: 120px" class="button" name="viewday" value="' . $langs->trans("ViewDay") . '">';
         print '</form>' . "\n";
@@ -1142,9 +1150,9 @@ if ($id) {
         // Date end
         print '<tr><td>' . $langs->trans("DateActionEnd") . '</td><td colspan="2">';
         if (!$object->fulldayevent)
-            print dol_print_date($object->datef, 'dayhour');
+            print dol_print_date(date("c", $object->datef->sec), 'dayhour');
         else
-            print dol_print_date($object->datef, 'day');
+            print dol_print_date(date("c", $object->datef->sec), 'day');
         if ($object->percentage > 0 && $object->percentage < 100 && $object->datef && $object->datef < ($now - $delay_warning))
             print img_warning($langs->trans("Late"));
         print '</td></tr>';

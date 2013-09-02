@@ -494,8 +494,10 @@ if (!function_exists("llxHeader")) {
 		if (empty($conf->global->MAIN_VERSION) || ($conf->global->MAIN_VERSION != DOL_VERSION)) {
 			$langs->load("install");
 			error_log("upgrade started");
-			if (!empty($user->admin) && (empty($conf->global->MAIN_VERSION) || DOL_VERSION > $conf->global->MAIN_VERSION)) {
+
+			if ($user->admin && (empty($conf->global->MAIN_VERSION) || DOL_VERSION > $conf->global->MAIN_VERSION)) {
 				include_once DOL_DOCUMENT_ROOT . '/install/upgrade.php';
+			
 				upgrade(); // Auto-upgrade
 			} else { // Need manual upgrade source code Speedealing
 				$log = dol_getcache("warnings");

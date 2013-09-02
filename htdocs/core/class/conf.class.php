@@ -493,7 +493,8 @@ class Conf extends nosqlDocument {
 		foreach ($this->global as $key => $value)
 			$result->values->$key = $value; // Write New Value
 
-		$this->couchdb->storeDoc($result); // record new values
+		$this->mongodb->save($result);
+		//$this->couchdb->storeDoc($result); // record new values
 		dol_delcache("const"); //reset cache
 		return 1;
 	}
