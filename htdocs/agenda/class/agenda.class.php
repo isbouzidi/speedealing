@@ -367,7 +367,8 @@ class Agenda extends nosqlDocument {
 			$object->load($this->usertodo->id);
 			$this->usertodo->name = $object->name;
 		} else {
-			unset($this->usertodo->name);
+			$this->usertodo->id = $user->id;
+			$this->usertodo->name = $user->name;
 		}
 
 		if (!empty($this->userdone->id)) {
@@ -378,7 +379,7 @@ class Agenda extends nosqlDocument {
 			unset($this->userdone->name);
 		}
 
-		$this->record();
+		$id = $this->record();
 
 		dol_delcache(get_class($this) . ":countTODO"); //Reset stats cache for agenda
 
@@ -394,7 +395,7 @@ class Agenda extends nosqlDocument {
 			// Fin appel triggers
 		}
 
-		return 1;
+		return $id;
 	}
 
 	/**

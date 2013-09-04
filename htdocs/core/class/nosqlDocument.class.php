@@ -243,11 +243,12 @@ abstract class nosqlDocument extends CommonObject {
 		//$values->id = $this->id;
 		//print_r($this->_id->{'$id'});exit;
 
-		if (is_string($this->_id)) {
-			$values->_id = $this->_id;
-		} else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
-			$values->_id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
-		}
+		if (!empty($this->_id))
+			if (is_string($this->_id)) {
+				$values->_id = $this->_id;
+			} else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
+				$values->_id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
+			}
 
 		$values->tms = new MongoDate(strtotime(dol_now()));
 
@@ -275,12 +276,15 @@ abstract class nosqlDocument extends CommonObject {
 
 		try {
 			$this->couchdb->clean($values);
-			$this->mongodb->save($values);
+			if (empty($values->_id))
+				$this->mongodb->insert($values);
+			else
+				$this->mongodb->save($values);
 
-			if (is_string($this->_id)) {
-				$result = $this->_id;
+			if (is_string($values->_id)) {
+				$result = $values->_id;
 				$this->_id = $this->_id;
-			} else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
+			} else if (is_object($values->_id) && isset($values->_id->{'$id'})) {
 				$result = $values->_id->{'$id'};
 				$this->_id = $values->_id->{'$id'};
 			}
@@ -341,13 +345,13 @@ abstract class nosqlDocument extends CommonObject {
 	public function deleteDoc($obj = null) {
 		if (empty($obj)) {
 			$obj = new stdClass();
-			if(is_object($this->_id))
+			if (is_object($this->_id))
 				$obj->_id = new MongoId($this->id());
 			else
 				$obj->_id = $this->id();
 		}
-		
-		return $this->mongodb->remove(array("_id" => $obj->_id)/*, array("safe"=>true)*/);
+
+		return $this->mongodb->remove(array("_id" => $obj->_id)/* , array("safe"=>true) */);
 	}
 
 	/**

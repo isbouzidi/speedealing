@@ -328,7 +328,7 @@ class modAgenda extends DolibarrModules {
 		$this->menus[$r]->position = 101;
 		$this->menus[$r]->url = "/agenda/fiche.php?action=create";
 		$this->menus[$r]->langs = "agenda";
-		$this->menus[$r]->perms = '($user->rights->agenda->myactions->create||$user->rights->agenda->allactions->create)';
+		$this->menus[$r]->perms = '$user->rights->agenda->myactions->write';
 		$this->menus[$r]->enabled = '$conf->agenda->enabled';
 		$this->menus[$r]->usertype = 2;
 		$this->menus[$r]->title = "NewAction";

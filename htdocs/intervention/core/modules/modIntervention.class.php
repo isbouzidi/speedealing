@@ -104,18 +104,21 @@ class modIntervention extends DolibarrModules
         $this->rights[$r]->perm = array('lire');
 
         $r++;
+		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 62;
         $this->rights[$r]->desc = 'Creer/modifier les fiches d\'intervention';
         $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('creer');
 
         $r++;
+		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 64;
         $this->rights[$r]->desc = 'Supprimer les fiches d\'intervention';
         $this->rights[$r]->default = 0;
         $this->rights[$r]->perm = array('supprimer');
 
         $r++;
+		$this->rights[$r] = new stdClass();
         $this->rights[$r]->id = 67;
         $this->rights[$r]->desc = 'Exporter les fiches interventions';
         $this->rights[$r]->default = 0;

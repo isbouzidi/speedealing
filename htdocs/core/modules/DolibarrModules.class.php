@@ -538,18 +538,19 @@ class DolibarrModules extends nosqlDocument {
 										$obj->shortList = $result->shortList;
 									if (isset($obj->longList))
 										$obj->longList = $result->longList;
-								}
 
-								foreach ($result->fields as $key => $aRow) {
-									if ($aRow->optional) //specific extrafields
-										$obj->fields->$key = clone $aRow;
 
-									if ($aRow->enable) // Test if fields was enable or disable
-										$obj->fields->$key->enable = true;
-									else
-										$obj->fields->$key->enable = false;
+									if (!empty($result->fields))
+										foreach ($result->fields as $key => $aRow) {
+											if ($aRow->optional) //specific extrafields
+												$obj->fields->$key = clone $aRow;
+
+											if ($aRow->enable) // Test if fields was enable or disable
+												$obj->fields->$key->enable = true;
+											else
+												$obj->fields->$key->enable = false;
+										}
 								}
-								//}
 								//}//
 
 								try {
@@ -679,7 +680,8 @@ class DolibarrModules extends nosqlDocument {
 					dol_syslog(get_class($this) . "::delete_boxes " . $this->error, LOG_ERR);
 					$err++;
 				}
-
+				error_log("toto");
+				exit;
 				$sql = "DELETE FROM " . MAIN_DB_PREFIX . "boxes_def";
 				$sql.= " WHERE file = '" . $this->db->escape($file) . "'";
 				$sql.= " AND entity = " . $conf->entity;

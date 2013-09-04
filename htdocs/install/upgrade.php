@@ -57,7 +57,8 @@ function upgrade() {
 			$objMod = $modules[$aRow->numero];
 
 			foreach ($objMod as $key => $row)
-				$object->$key = $row;
+				if ($key != "mongodb")
+					$object->$key = $row;
 
 			$object->_id = "module:" . $objMod->name;
 			unset($object->_rev);

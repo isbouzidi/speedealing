@@ -91,13 +91,9 @@ $contact = new Contact($db);
 if ($action == 'add_action') {
 	$error = 0;
 
-	if (empty($backtopage)) {
+/*	if (empty($backtopage)) {
 		$backtopage = DOL_URL_ROOT . '/agenda/index.php';
-	}
-
-	if ($contactid) {
-		$result = $contact->fetch($contactid);
-	}
+	}*/
 
 	if ($cancel) {
 		header("Location: " . $backtopage);
@@ -195,7 +191,7 @@ if ($action == 'add_action') {
 	  $object->duree = (($_POST["dureehour"] * 60) + $_POST["dureemin"]) * 60;
 	 */
 	$object->author->id = $user->id;
-	$object->author->name = $user->login;
+	$object->author->name = $user->name;
 	$object->usermod = null;
 
 	if (strlen($_POST["affectedto"]) > 0)
@@ -215,9 +211,6 @@ if ($action == 'add_action') {
 	$object->notes = trim($_POST["note"]);
 
 	$object->contact = new stdClass();
-	if ($contactid) {
-		$object->contact->id = $contactid;
-	}
 
 	$object->societe = new stdClass();
 	if ($socid) {
@@ -250,18 +243,17 @@ if ($action == 'add_action') {
 	if (!$error) {
 
 		// On cree l'action
-		$idaction = $object->add($user);
+		$idaction = $object->update($user);
 
-		if ($idaction > 0) {
+		if (!empty($idaction)) {
 			if (!$object->error) {
 				if (!empty($backtopage)) {
 					dol_syslog("Back to " . $backtopage);
 					Header("Location: " . $backtopage);
-				} elseif ($idaction) {
-					Header("Location: " . DOL_URL_ROOT . '/agenda/fiche.php?id=' . $idaction);
-				} else {
-					Header("Location: " . DOL_URL_ROOT . '/agenda/index.php');
 				}
+				else
+					Header("Location: " . DOL_URL_ROOT . '/agenda/fiche.php?id=' . $idaction);
+
 				exit;
 			} else {
 				// Si erreur
@@ -269,10 +261,6 @@ if ($action == 'add_action') {
 				$langs->load("errors");
 				$error = $langs->trans($object->error);
 			}
-		} else {
-			$id = $idaction;
-			$langs->load("errors");
-			$error = $langs->trans($object->error);
 		}
 	}
 }
@@ -288,7 +276,7 @@ if (GETPOST("action") == 'close') {
 		$object->percentage = 100;
 		$object->set("Status", "DONE");
 		$object->set("percentage", 100);
-		$object->set("userdone", array('id'=> $user->id, 'name' => $user->name));
+		$object->set("userdone", array('id' => $user->id, 'name' => $user->name));
 
 		Header("Location: " . DOL_URL_ROOT . '/agenda/fiche.php?id=' . $id);
 		exit;
