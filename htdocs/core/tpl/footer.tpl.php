@@ -52,8 +52,8 @@
 		var placeholderInPlace = '<?php echo $langs->trans('ClickToEdit'); ?>';
 		var cancelInPlace = '<?php echo $langs->trans('Cancel'); ?>';
 		var submitInPlace = '<?php echo $langs->trans('Ok'); ?>';
-		var indicatorInPlace = '<img src="theme/<?php echo $conf->theme; ?>/img/working.gif">';
-		var ckeditorConfig = '<?php echo dol_buildpath('/theme/' . $conf->theme . '/ckeditor/config.js', 1); ?>';
+		var indicatorInPlace = '<img src="img/standard/loaders/loading16.gif">';
+		var ckeditorConfig = '/js/libs/ckeditor/config.js';
 	</script>
 	<script type="text/javascript" src="js/editinplace.js" defer></script>
 	<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.ckeditor.js" defer></script>
