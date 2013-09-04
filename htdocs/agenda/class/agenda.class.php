@@ -337,6 +337,7 @@ class Agenda extends nosqlDocument {
 			unset($this->userdone->name);
 		}
 		if ($this->Status == "DONE" && !$this->userdone->id) {
+			$this->userdone = new stdClass();
 			$this->userdone->id = $user->id;
 			$this->userdone->name = $user->name;
 		}
@@ -345,7 +346,7 @@ class Agenda extends nosqlDocument {
 			$this->percentage = 100;
 		elseif ($this->Status == "TODO")
 			$this->percentage = 0;
-		
+
 		if (!empty($this->societe->id)) {
 			$object = new Societe($this->db);
 			$object->load($this->societe->id);
@@ -1161,7 +1162,7 @@ class Agenda extends nosqlDocument {
 		$datestart = strtotime($date);
 		//$dayOfWeek = date('w', $date);
 		// for ($i = 0, $d = -$dayOfWeek; $i < 7; $i++, $d++) {
-		  $dateend = strtotime("7 day", $date);
+		$dateend = strtotime("7 day", $date);
 		/*  $timestamps[$i] = array(
 		  'start' => mktime(0, 0, 0, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
 		  'end' => mktime(23, 59, 59, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
@@ -1172,7 +1173,7 @@ class Agenda extends nosqlDocument {
 
 		$object = new Agenda($db);
 		//$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
-		$events = $mongodb->Agenda->find(array("type_code" => "AC_RDV", '$or' =>array("usertodo.id" => $user->id,"author.id" => $user->id),"datep" => array('$gte'=> new MongoDate($datestart), '$lt' => new MongoDate($dateend)) ));
+		$events = $mongodb->Agenda->find(array("type_code" => "AC_RDV", '$or' => array("usertodo.id" => $user->id, "author.id" => $user->id), "datep" => array('$gte' => new MongoDate($datestart), '$lt' => new MongoDate($dateend))));
 
 		//print_r($events);
 		$styles = array(

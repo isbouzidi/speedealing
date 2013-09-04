@@ -665,11 +665,11 @@ class Contact extends nosqlDocument {
 
 		$result = '';
 
-		$lien = '<a href="' . DOL_URL_ROOT . '/contact/fiche.php?id=' . $this->id . '">';
+		$lien = '<a href="' . DOL_URL_ROOT . '/contact/fiche.php?id=' . $this->id() . '">';
 		$lienfin = '</a>';
 
 		if ($option == 'xxx') {
-			$lien = '<a href="' . DOL_URL_ROOT . '/contact/fiche.php?id=' . $this->id . '">';
+			$lien = '<a href="' . DOL_URL_ROOT . '/contact/fiche.php?id=' . $this->id() . '">';
 			$lienfin = '</a>';
 		}
 
