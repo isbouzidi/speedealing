@@ -26,7 +26,7 @@ require_once(DOL_DOCUMENT_ROOT . "/agenda/class/agenda.class.php");
 require_once(DOL_DOCUMENT_ROOT . "/core/lib/date.lib.php");
 require_once(DOL_DOCUMENT_ROOT . "/agenda/lib/agenda.lib.php");
 if (!empty($conf->projet->enabled))
-    require_once(DOL_DOCUMENT_ROOT . "/core/lib/project.lib.php");
+	require_once(DOL_DOCUMENT_ROOT . "/core/lib/project.lib.php");
 
 $langs->load("companies");
 $langs->load("agenda");
@@ -37,18 +37,18 @@ $showbirthday = empty($conf->use_javascript_ajax) ? GETPOST("showbirthday", "int
 // Security check
 $socid = GETPOST("socid", 'alpha');
 if ($user->societe_id)
-    $socid = $user->societe_id;
+	$socid = $user->societe_id;
 $result = restrictedArea($user, 'agenda', 0, '', 'myactions');
 
 $canedit = 1;
 if (!$user->rights->agenda->myactions->read)
-    accessforbidden();
+	accessforbidden();
 if (!$user->rights->agenda->allactions->read)
-    $canedit = 0;
+	$canedit = 0;
 if (!$user->rights->agenda->allactions->read || $filter == 'mine') { // If no permission to see all, we show only affected to me
-    $filtera = $user->id;
-    $filtert = $user->id;
-    $filterd = $user->id;
+	$filtera = $user->id;
+	$filtert = $user->id;
+	$filterd = $user->id;
 }
 
 $type = GETPOST('type');
@@ -57,37 +57,37 @@ $all = (GETPOST('all') && $user->rights->agenda->allactions->read);
 $object = new Agenda($db);
 
 if (!empty($_GET['json'])) {
-    $output = array(
-        "sEcho" => intval($_GET['sEcho']),
-        "iTotalRecords" => 0,
-        "iTotalDisplayRecords" => 0,
-        "aaData" => array()
-    );
+	$output = array(
+		"sEcho" => intval($_GET['sEcho']),
+		"iTotalRecords" => 0,
+		"iTotalDisplayRecords" => 0,
+		"aaData" => array()
+	);
 
-    $keystart[0] = $user->id;
-    $keyend[0] = $user->id;
-    $keyend[1] = new stdClass();
+	$keystart[0] = $user->id;
+	$keyend[0] = $user->id;
+	$keyend[1] = new stdClass();
 
-    /* $params = array('startkey' => array($user->id, mktime(0, 0, 0, date("m") - 1, date("d"), date("Y"))),
-      'endkey' => array($user->id, mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")))); */
+	/* $params = array('startkey' => array($user->id, mktime(0, 0, 0, date("m") - 1, date("d"), date("Y"))),
+	  'endkey' => array($user->id, mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")))); */
 
-    try {
-        $result = $object->getView($_GET["json"], array('startkey' => $keystart, 'endkey' => $keyend));
-    } catch (Exception $exc) {
-        print $exc->getMessage();
-    }
+	try {
+		$result = $object->getView($_GET["json"], array('startkey' => $keystart, 'endkey' => $keyend));
+	} catch (Exception $exc) {
+		print $exc->getMessage();
+	}
 
-    $iTotal = count($result->rows);
-    $output["iTotalRecords"] = $iTotal;
-    $output["iTotalDisplayRecords"] = $iTotal;
-    $i = 0;
-    foreach ($result->rows as $aRow) {
-        $output["aaData"][] = $aRow->value;
-    }
+	$iTotal = count($result->rows);
+	$output["iTotalRecords"] = $iTotal;
+	$output["iTotalDisplayRecords"] = $iTotal;
+	$i = 0;
+	foreach ($result->rows as $aRow) {
+		$output["aaData"][] = $aRow->value;
+	}
 
-    header('Content-type: application/json');
-    echo json_encode($output);
-    exit;
+	header('Content-type: application/json');
+	echo json_encode($output);
+	exit;
 }
 
 $contact = new Contact($db);
@@ -110,16 +110,16 @@ llxHeader('', $langs->trans("Agenda"));
 
 $title = $langs->trans("DoneAndToDoActions");
 if ($type == 'DONE')
-    $title = $langs->trans("DoneActions");
+	$title = $langs->trans("DoneActions");
 if ($type == 'TOTO')
-    $title = $langs->trans("ToDoActions");
+	$title = $langs->trans("ToDoActions");
 
 if ($socid) {
-    $societe = new Societe($db);
-    $societe->fetch($socid);
-    $newtitle = $langs->trans($title) . ' ' . $langs->trans("For") . ' ' . $societe->name;
+	$societe = new Societe($db);
+	$societe->fetch($socid);
+	$newtitle = $langs->trans($title) . ' ' . $langs->trans("For") . ' ' . $societe->name;
 } else {
-    $newtitle = $langs->trans($title);
+	$newtitle = $langs->trans($title);
 }
 
 print_fiche_titre($newtitle);
@@ -127,38 +127,38 @@ print_fiche_titre($newtitle);
 <div class="dashboard">
     <div class="columns">
         <div class="nine-columns twelve-columns-mobile graph">
-            <?php echo $object->graphEisenhower(); ?>
+			<?php echo $object->graphEisenhower(); ?>
         </div>
 
         <div class="three-columns twelve-columns-mobile new-row-mobile">
             <ul class="stats split-on-mobile">
                 <li>
-                    <?php
-                    $agenda = new Agenda($db);
-                    $result = $agenda->getView("countTODO", array("group" => true, "key" => $user->id));
-                    print '<strong>' . (int) $result->rows[0]->value . '</strong>';
-                    print $langs->trans('NewActions');
-                    ?>
+					<?php
+					$agenda = new Agenda($db);
+					$result = $agenda->mongodb->count(array("Status" => "TODO", "usertodo.id" => $user->id));
+					print '<strong>' . (int) $result . '</strong>';
+					print $langs->trans('NewActions');
+					?>
                 </li>
                 <li>
-                    <?php
-                    $result = $agenda->getView("countON", array("group" => true, "key" => $user->id));
-                    print '<strong>' . (int) $result->rows[0]->value . '</strong>';
-                    print $langs->trans('DoActions');
-                    ?>
+					<?php
+					$result = $agenda->mongodb->count(array("Status" => "ON", "userdone.id" => $user->id));
+					print '<strong>' . (int) $result . '</strong>';
+					print $langs->trans('DoActions');
+					?>
                 </li>
                 <li><?php
-                    $result = $agenda->getView("countByUser", array("group" => true, "group_level" => "none", "startkey" => array($user->id, date("c",mktime(0, 0, 0, 1, 1, date(Y)))), "endkey" => array($user->id, new stdClass())));
-                    print '<strong>' . (int) $result->rows[0]->value . '</strong>';
-                    print $langs->trans('SumMyActions');
-                    ?>
+					$result = $agenda->mongodb->count(array("Status" => "DONE", "userdone.id" => $user->id, "datep" => array('$gte' => new MongoDate(date("c", mktime(0, 0, 0, 1, 1, date(Y)))))));
+					print '<strong>' . (int) $result . '</strong>';
+					print $langs->trans('SumMyActions');
+					?>
                 </li>
                 <li>
-                    <?php
-                    $result = $agenda->getView("count", array("group" => true, "group_level" => "none", "startkey" => date("c",mktime(0, 0, 0, 1, 1, date(Y))), "endkey" => new stdClass()));
-                    print '<strong>' . (int) $result->rows[0]->value . '</strong>';
-                    print $langs->trans('SumActions');
-                    ?>
+					<?php
+					$result = $agenda->mongodb->count(array("Status" => "DONE", "datep" => array('$gte' => new MongoDate(date("c", mktime(0, 0, 0, 1, 1, date(Y)))))));
+					print '<strong>' . (int) $result . '</strong>';
+					print $langs->trans('SumActions');
+					?>
                 </li>
             </ul>
         </div>
@@ -173,11 +173,11 @@ print '<div class="with-padding">';
  */
 
 if ($user->rights->agenda->myactions->create || $user->rights->agenda->allactions->create) {
-    print '<p class="button-height right">';
-    print '<span class="button-group">';
-    print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create">' . $langs->trans("NewAction") . '</a>';
-    print "</span>";
-    print "</p>";
+	print '<p class="button-height right">';
+	print '<span class="button-group">';
+	print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create">' . $langs->trans("NewAction") . '</a>';
+	print "</span>";
+	print "</p>";
 }
 
 $i = 0;
@@ -323,15 +323,19 @@ $obj->aaSorting = array(array(2, 'asc'));
 //$obj->bServerSide = true;
 
 if ($all) {
-    if ($type == "DONE")
-        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDONEByUser&class=" . get_class($object);
-    else
-        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=listTODOByUser&class=" . get_class($object);
+	if ($type == "DONE")
+		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDONEByUser&class=" . get_class($object);
+	else {
+		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listTODOByUser";
+		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{name: "query", value: [{Status:{"$ne":"DONE"}]}';
+	}
 } else {
-    if ($type == "DONE")
-        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
-    else
-        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
+	if ($type == "DONE")
+		$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
+	else {
+		$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
+	}//{"$or":[{"usertodo.id":},{}]]
 }
 
 $object->datatablesCreate($obj, "listactions", true, true);

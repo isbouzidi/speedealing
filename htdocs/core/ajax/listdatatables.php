@@ -42,6 +42,8 @@ top_httphead('json'); // true for json header format
 
 //print '<!-- Ajax page called with url '.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].' -->'."\n";
 
+error_log(print_r($_POST, true));
+
 if (!empty($json) && !empty($class)) {
 
     $result = dol_include_once("/" . $class . "/class/" . strtolower($class) . ".class.php", $class);

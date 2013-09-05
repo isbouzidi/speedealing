@@ -651,10 +651,22 @@ abstract class nosqlDocument extends CommonObject {
 				"aaSorting" : <?php echo json_encode($obj->aaSorting); ?>,
 		<?php endif; ?>
 		<?php if ($json) : ?>
+				"sServerMethod": 'POST',
 			<?php if (!empty($obj->sAjaxSource)): ?>
 					"sAjaxSource": "<?php echo $obj->sAjaxSource; ?>",
 			<?php else : ?>
 					"sAjaxSource" : "<?php echo DOL_URL_ROOT . '/core/ajax/listdatatables.php'; ?>?json=list&bServerSide=<?php echo $obj->bServerSide; ?>&class=<?php echo get_class($this); ?>",
+			<?php endif; ?>
+			<?php if (!empty($obj->aoAjaxData)): ?>
+					"fnServerData": function (sSource, aoData, fnCallback) {
+					$.ajax({
+					"dataType": 'json',
+							"type": "POST",
+							"url": sSource,
+							"data": <?php echo $obj->aoAjaxData; ?>,
+							"success": fnCallback
+					})
+					},
 			<?php endif; ?>
 		<?php endif; ?>
 		<?php if (!empty($obj->iDisplayLength)): ?>
