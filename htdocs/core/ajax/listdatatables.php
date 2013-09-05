@@ -46,6 +46,8 @@ error_log(print_r($_POST, true));
 
 if (!empty($json) && !empty($class)) {
 
+	$query = $_POST["query"];
+	
     $result = dol_include_once("/" . $class . "/class/" . strtolower($class) . ".class.php", $class);
     if (empty($result)) {
         dol_include_once("/" . strtolower($class) . "/class/" . strtolower($class) . ".class.php", $class); // Old version
@@ -77,7 +79,15 @@ if (!empty($json) && !empty($class)) {
         $params['skip'] = intval($_GET['iDisplayStart']);
         //'stale'=> "update_after"
 
-        $result = $object->getView($json, $params);
+        //$result = $object->getView($json, $params);
+		
+		$result = $object->mongodb->find(json_decode($query));
+		foreach ($result as $row) {
+			error_log(print_r($row, true));
+		}
+		
+		
+		
         dol_setcache("total_rows", $result->total_rows);
     }
 

@@ -328,7 +328,7 @@ if ($all) {
 	else {
 		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listTODOByUser";
 		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
-			{name: "query", value: [{Status:{"$ne":"DONE"}]}';
+			{"name": "query", "value": "{\"Status\":{\"$ne\":\"DONE\"}}"}]';
 	}
 } else {
 	if ($type == "DONE")
