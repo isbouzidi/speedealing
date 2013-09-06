@@ -172,7 +172,7 @@ print '<div class="with-padding">';
  *
  */
 
-if ($user->rights->agenda->myactions->create || $user->rights->agenda->allactions->create) {
+if ($user->rights->agenda->myactions->write || $user->rights->agenda->allactions->write) {
 	print '<p class="button-height right">';
 	print '<span class="button-group">';
 	print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create">' . $langs->trans("NewAction") . '</a>';
@@ -222,7 +222,7 @@ print'</th>';
 $obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "societe.name";
 $obj->aoColumns[$i]->sDefaultContent = "";
-$obj->aoColumns[$i]->fnRender = $societe->datatablesFnRender("societe.name", "url", array('id' => "societe.id"));
+$obj->aoColumns[$i]->fnRender = $societe->datatablesFnRender("societe.name", "url", array('id' => 'societe.id'));
 $i++;
 print'<th class="essential">';
 print $langs->trans('Contact');
@@ -324,17 +324,21 @@ $obj->aaSorting = array(array(2, 'asc'));
 
 if ($all) {
 	if ($type == "DONE")
-		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDONEByUser&class=" . get_class($object);
+		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{"name": "query", "value": "{\"Status\":\"DONE\"}"}]';
 	else {
-		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listTODOByUser";
 		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
 			{"name": "query", "value": "{\"Status\":{\"$ne\":\"DONE\"}}"}]';
 	}
 } else {
 	if ($type == "DONE")
-		$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
+		//$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
+		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{"name": "query", "value": "{\"Status\":\"DONE\",\"$or\":[{\"usertodo.id\":\"'.$user->id.'\"},{\"author.id\":\"'.$user->id.'\"},{\"userdone.id\":\"'.$user->id.'\"}]}"}]';
 	else {
-		$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
+		//$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
+		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{"name": "query", "value": "{\"Status\":{\"$ne\":\"DONE\"},\"$or\":[{\"usertodo.id\":\"'.$user->id.'\"},{\"author.id\":\"'.$user->id.'\"}]}"}]';
 	}//{"$or":[{"usertodo.id":},{}]]
 }
 

@@ -40,7 +40,7 @@ $id = GETPOST('id', 'alpha');
 top_httphead('json');
 
 //print '<!-- Ajax page called with url '.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].' -->'."\n";
-//print_r($_POST);
+//error_log(print_r($_POST, true));
 //error_log(print_r($_GET, true));
 
 if (!empty($json) && !empty($id) && !empty($class)) {
@@ -62,29 +62,29 @@ if (!empty($json) && !empty($id) && !empty($class)) {
 				$object->record();
 				$object->update_price();
 				exit;
-			}
-			else {
-				$object->load($id);
-				$res = $object->deleteDoc();
+			} else {
+				if (isset($object->fk_extrafields->fields->_id->settype) && $object->fk_extrafields->fields->_id->settype == "MongoId") {
+					$id = new MongoId($id);
+				}
+				$object->mongodb->remove(array("_id" => $id));
 			}
 			exit;
 		} catch (Exception $exc) {
 			error_log($exc->getMessage());
 			exit;
 		}
-		
 	} else if ($json == "trash") {
 		try {
 			$object->load($id);
-			
+
 			$object->trash = true;
 			$object->trashed_by = new stdClass();
 			$object->trashed_by->id = $user->id;
 			$object->trashed_by->name = $user->name;
 			$object->trashed_by->date = dol_now();
-			
+
 			$res = $object->record();
-			
+
 			exit;
 		} catch (Exception $exc) {
 			error_log($exc->getMessage());

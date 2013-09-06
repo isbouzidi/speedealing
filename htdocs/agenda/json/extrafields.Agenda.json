@@ -8,6 +8,9 @@
 		"commercial"
 	],
 	"fields": {
+		"_id": {
+			"settype": "MongoId"
+		},
 		"label": {
 			"type": "text",
 			"enable": true
