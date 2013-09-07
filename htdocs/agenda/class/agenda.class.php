@@ -1338,26 +1338,31 @@ class Agenda extends nosqlDocument {
 			// For Data see viewgraph.php
 			$params = array('startkey' => array($user->id, date("c", mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")))),
 				'endkey' => array($user->id, date("c", mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")))));
-			$result = $this->getView("list" . $_GET["name"], $params);
 
+			if ($_GET['name'] == "MyDelegatedTasks")
+				$result = $this->mongodb->find(json_decode('{"Status":{"$ne":"DONE"},"author.id":"' . $user->id . '","usertodo.id":{"$ne":"' . $user->id . '"}}'));
+			else
+				$result = $this->mongodb->find(json_decode('{"Status":{"$ne":"DONE"},"usertodo.id":"' . $user->id . '"}'));
+			//$result = $this->getView("list" . $_GET["name"], $params);
 			//error_log(print_r($result,true));
 			$output = array();
 
-			if (count($result->rows))
-				foreach ($result->rows as $aRow) {
-					$type_code = $aRow->value->type_code;
+			if (count($result))
+				foreach ($result as $aRow) {
+					$aRow = json_decode(json_encode($aRow));
+					$type_code = $aRow->type_code;
 					$priority = $this->fk_extrafields->fields->type_code->values->$type_code->priority;
 
 					$obj = new stdClass();
-					$obj->x = strtotime($aRow->value->datep) * 1000;
+					$obj->x = $aRow->datep->sec * 1000;
 					$obj->y = $priority;
-					$obj->name = $aRow->value->label;
-					$obj->id = $aRow->value->_id;
-					if (!isset($aRow->value->societe->name))
+					$obj->name = $aRow->label;
+					$obj->id = $aRow->_id->{'$id'};
+					if (!isset($aRow->societe->name))
 						$obj->soc = $langs->trans("None");
 					else
-						$obj->soc = $aRow->value->societe->name;
-					$obj->usertodo = $aRow->value->usertodo->name;
+						$obj->soc = $aRow->societe->name;
+					$obj->usertodo = $aRow->usertodo->name;
 
 					$output[] = clone $obj;
 				}
