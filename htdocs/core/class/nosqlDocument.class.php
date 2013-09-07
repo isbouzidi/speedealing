@@ -196,7 +196,7 @@ abstract class nosqlDocument extends CommonObject {
 				$id = new MongoId($id->{'$id'});
 			elseif (isset($this->extrafields->fields->_id->settype) && $this->extrafields->fields->_id->settype == "MongoId")
 				$id = new MongoId($id);
-				
+
 			$values = $this->mongodb->findOne(array('_id' => $id));
 
 			if ($cache && !empty($conf->memcached)) {
@@ -235,6 +235,13 @@ abstract class nosqlDocument extends CommonObject {
 				if (isset($this->fk_extrafields->fields->$key->settype))
 					if ($this->fk_extrafields->fields->$key->settype == "date") // transtypage
 						$values->$key = new MongoDate(strtotime($values->$key));
+					elseif ($this->fk_extrafields->fields->$key->settype == "MongoId") {
+						if (is_string($values->$key)) {
+							$values->$key = new MongoId($values->$key);
+						} else {
+							$values->_id = new MongoId($values->$key->{'$id'}); // re-encode mongoId
+						}
+					}
 					else
 						settype($values->$key, $this->fk_extrafields->fields->$key->settype);
 
