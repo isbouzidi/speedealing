@@ -1087,9 +1087,13 @@ class Agenda extends nosqlDocument {
 		$object = new Agenda($db);
 		//if($user->right->)
 		if ($user->rights->agenda->allactions->read)
-			$events = $object->getView("calendarTasks", array("startkey" => array(intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array(intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+		//$events = $object->getView("calendarTasks", array("startkey" => array(intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array(intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+			$events = $this->mongodb->find(array("type_code" => "AC_RDV", "datep" => array('$gte' => new MongoDate(mktime(0, 0, 0, date('n', $date), 1, date('Y', $date))), '$lt' => new MongoDate(mktime(0, 0, 0, date('n', $date) + 1, 1, date('Y', $date))))));
 		else
-			$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+			$events = $this->mongodb->find(array("type_code" => "AC_RDV", "datep" => array('$gte' => new MongoDate(mktime(0, 0, 0, date('n', $date), 1, date('Y', $date)))), "datep" => array('$lt' => new MongoDate(mktime(0, 0, 0, date('n', $date) + 1, 1, date('Y', $date)))), "usertodo.id" => $user->id));
+		//$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
+
+		$events->sort(array("datep" => 1));
 
 		print '<table class="calendar fluid with-events large-margin-bottom with-events">';
 
@@ -1130,12 +1134,17 @@ class Agenda extends nosqlDocument {
 			print '<ul class="cal-events">';
 
 			//if (!empty($events->rows[$cursor])) {
-			for ($j = 0; $j < count($events->rows); $j++) {
-				if ($events->rows[$j]->key[3 - $user->rights->agenda->allactions->read] == $i) {
+			foreach ($events as $row) {
+				$row = json_decode(json_encode($row));
+				//print_r($row);
+				$day = date("j", $row->datep->sec);
+				//print_r($date);exit;
+				if ($day == $i) {
+					//if ($row->key[3 - $user->rights->agenda->allactions->read] == $i) {
 					$user_tmp = new User();
-					$user_tmp->id = $events->rows[$j]->value->usertodo->id;
-					$user_tmp->name = $events->rows[$j]->value->usertodo->name;
-					print '<li ' . ($events->rows[$j]->value->usertodo->id == $user->id ? 'class="important"' : "") . '><a href="agenda/fiche.php?id=' . $events->rows[$j]->id . '" >' . "[" . $events->rows[$j]->value->societe->name . "] " . $events->rows[$j]->value->label . ($events->rows[$j]->value->usertodo->id != $user->id ? '<br><i>' . $user_tmp->getNomUrl(1) . '</i>' : '') . '</a></li>';
+					$user_tmp->id = $row->usertodo->id;
+					$user_tmp->name = $row->usertodo->name;
+					print '<li ' . ($row->usertodo->id == $user->id ? 'class="important"' : "") . '><a href="agenda/fiche.php?id=' . $row->_id->{'$id'} . '" >' . "[" . $row->societe->name . "] " . $row->label . ($row->usertodo->id != $user->id ? '<br><i>' . $user_tmp->getNomUrl(1) . '</i>' : '') . '</a></li>';
 				}
 			}
 			//}

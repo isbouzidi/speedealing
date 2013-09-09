@@ -208,10 +208,12 @@ class Conf extends nosqlDocument {
 		// load configuration module
 		$object = new DolibarrModules($this->db);
 
-		$result = $object->getView("list", array(), true);
-		foreach ($result->rows as $aRow) {
-			$modulename = strtolower($aRow->key);
-			$this->$modulename = $aRow->value;
+		//$result = $object->getView("list", array(), true);
+		$result = $object->mongodb->find(array("enabled"=>true));
+		foreach ($result as $aRow) {
+			$aRow = json_decode(json_encode($aRow));
+			$modulename = strtolower($aRow->name);
+			$this->$modulename = $aRow;
 			$this->modules[] = $modulename;
 		}
 
