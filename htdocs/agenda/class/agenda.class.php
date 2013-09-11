@@ -1168,24 +1168,14 @@ class Agenda extends nosqlDocument {
 	function print_week($date) {
 		global $db, $langs, $user, $mongodb;
 
-		//$timestamps = array();
-		$datestart = strtotime($date);
-		//$dayOfWeek = date('w', $date);
-		// for ($i = 0, $d = -$dayOfWeek; $i < 7; $i++, $d++) {
-		$dateend = strtotime("7 day", $date);
-		/*  $timestamps[$i] = array(
-		  'start' => mktime(0, 0, 0, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
-		  'end' => mktime(23, 59, 59, date('n', $tmpTimestamp), date('j', $tmpTimestamp), date('Y', $tmpTimestamp)),
-		  );
-		  } */
-
-		//print date('j', strtotime(-date('w', $date)+1 . " day", $date));
+		$datestart = strtotime('this week', strtotime($date));
+		$dateend = strtotime("+7 day", $datestart);
 
 		$object = new Agenda($db);
-		//$events = $object->getView("calendarMyTasks", array("startkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 0, 0, 0), "endkey" => array($user->id, intval(date('Y', $date)), intval(date('m', $date)), 100, 100, 100)));
-		$events = $mongodb->Agenda->find(array("type_code" => "AC_RDV", '$or' => array("usertodo.id" => $user->id, "author.id" => $user->id), "datep" => array('$gte' => new MongoDate($datestart), '$lt' => new MongoDate($dateend))));
+		$events = $mongodb->Agenda->find(array("type_code" => "AC_RDV", '$or' => array(array("usertodo.id" => $user->id), array("author.id" => $user->id)), "datep" => array('$gte' => new MongoDate($datestart), '$lt' => new MongoDate($dateend))));
+		$events->sort(array("datep" => 1));
 
-		//print_r($events);
+		$count = $mongodb->Agenda->count(array("type_code" => "AC_RDV", '$or' => array(array("usertodo.id" => $user->id), array("author.id" => $user->id)), "datep" => array('$gte' => new MongoDate($datestart), '$lt' => new MongoDate($dateend))));
 		$styles = array(
 			0 => 'left: 0%; right: 85.7143%; margin-left: -1px;',
 			1 => 'left: 14.2857%; right: 71.4286%; margin-left: 0px;',
@@ -1197,16 +1187,16 @@ class Agenda extends nosqlDocument {
 		);
 
 		$days = array(
-			0 => 'Sunday',
-			1 => 'Monday',
-			2 => 'Tuesday',
-			3 => 'Wednesday',
-			4 => 'Thursday',
-			5 => 'Friday',
-			6 => 'Saturday'
+			0 => 'Monday',
+			1 => 'Tuesday',
+			2 => 'Wednesday',
+			3 => 'Thursday',
+			4 => 'Friday',
+			5 => 'Saturday',
+			6 => 'Sunday',
 		);
 
-		$first = date('j', $datestart) - date('j', strtotime(-date('w', $datestart) . " day", $datestart));
+		$first = date('w', strtotime($date)) - 1;
 
 		print '<div class="block">
 				<div class="block-title">
@@ -1238,7 +1228,6 @@ class Agenda extends nosqlDocument {
 
 		print '<div class="agenda-wrapper">';
 
-		//$cursor = 0;
 		for ($i = 0; $i < 7; $i++) {
 			$extraClass = '';
 			//if ($i == 0)
@@ -1250,39 +1239,32 @@ class Agenda extends nosqlDocument {
 			print $langs->trans($days[$i]);
 			print '</div>';
 
-			//if (!empty($events->rows[$cursor])) {
-			for ($j = 0; $j < count($events->rows); $j++) {
-				if ($events->rows[$j]->key[3] == date('j', strtotime(-date('w', $date) . " day", $date)) + $i) {
-					//$dateStart = $events->rows[$j]->value->datep;
-					//$dateEnd = $events->rows[$j]->value->datef;
-					//if ($events->rows[$j]->value->type_code != 'AC_RDV')
-					//	$dateEnd = $dateStart + $events->rows[$j]->value->durationp;
-					$hourStart = $events->rows[$j]->key[4];
-					if ($events->rows[$j]->value->type_code != 'AC_RDV')
-						$hourEnd = $events->rows[$j]->key[4] + $events->rows[$j]->value->durationp / 3600;
-					else
-						$hourEnd = date('G', strtotime($events->rows[$j]->value->datef) + 1);
+			if ($count)
+				foreach ($events as $aRow) {
+					$aRow = json_decode(json_encode($aRow));
 
-					print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ($events->rows[$j]->value->usertodo->id == $user->id ? ' red-gradient' : '') . '" href="agenda/fiche.php?id=' . $events->rows[$j]->id . '">';
+					if (date('j', $aRow->datep->sec) == date('j', strtotime("+" . $i . " day", $datestart))) {
+						$hourStart = date('G', $aRow->datep->sec);
+						if ($aRow->type_code != 'AC_RDV')
+							$hourEnd = $hourStart + $aRow->durationp / 3600;
+						else
+							$hourEnd = date('G', $aRow->datef->sec) + 1;
 
-					print '<time>' . $hourStart . 'h - ' . $hourEnd . 'h</time>';
-					if (isset($events->rows[$j]->value->societe->name))
-						print "[" . $events->rows[$j]->value->societe->name . "] ";
-					print $events->rows[$j]->value->label;
+						print '<a class="agenda-event from-' . $hourStart . ' to-' . $hourEnd . ($aRow->usertodo->id == $user->id ? ' red-gradient' : '') . '" href="agenda/fiche.php?id=' . $aRow->_id->{'$id'} . '">';
 
-					if ($events->rows[$j]->value->usertodo->id != $user->id) {
-						$user_tmp = new User();
-						$user_tmp->id = $events->rows[$j]->value->usertodo->id;
-						$user_tmp->name = $events->rows[$j]->value->usertodo->name;
+						print '<time>' . $hourStart . 'h - ' . $hourEnd . 'h';
+						if ($aRow->usertodo->id != $user->id) {
+							print ' <b><i>' . $aRow->usertodo->name . '</i></b>';
+						}
+						print '</time>';
+						if (isset($aRow->societe->name))
+							print "[" . $aRow->societe->name . "] ";
+						print $aRow->label;
 
-						print '<br><i>' . $user_tmp->getNomUrl(1, 'span') . '</i>';
+
+						print '</a>';
 					}
-					print '</a>';
 				}
-				//else
-				//	break;
-			}
-			//}
 
 			print '</div>';
 		}
@@ -1293,7 +1275,7 @@ class Agenda extends nosqlDocument {
 		<script>
 			$(document).ready(function() {
 				// Days
-				var daysName = ['<?php echo $langs->trans('Sunday'); ?>', '<?php echo $langs->trans('Monday'); ?>', '<?php echo $langs->trans('Tuesday'); ?>', '<?php echo $langs->trans('Wednesday'); ?>', '<?php echo $langs->trans('Thursday'); ?>', '<?php echo $langs->trans('Friday'); ?>', '<?php echo $langs->trans('Saturday'); ?>'],
+				var daysName = ['<?php echo $langs->trans('Monday'); ?>', '<?php echo $langs->trans('Tuesday'); ?>', '<?php echo $langs->trans('Wednesday'); ?>', '<?php echo $langs->trans('Thursday'); ?>', '<?php echo $langs->trans('Friday'); ?>', '<?php echo $langs->trans('Saturday'); ?>', '<?php echo $langs->trans('Sunday'); ?>'],
 						// Name display
 						agendaDay = $('#agenda-day'),
 						// Agenda scrolling
