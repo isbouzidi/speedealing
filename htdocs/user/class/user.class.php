@@ -28,6 +28,7 @@ require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/db/couchdb/lib/couchAdmin.php';
 require_once DOL_DOCUMENT_ROOT . '/user/class/userdatabase.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/modules/DolibarrModules.class.php';
+require_once DOL_DOCUMENT_ROOT . '/user/class/usergroup.class.php';
 
 /**
  * 	Class to manage Dolibarr users
@@ -428,62 +429,65 @@ class User extends nosqlDocument {
 
 			$result = $object->mongodb->find(array("enabled" => true, "rights" => array('$exists' => true)));
 
-			if (count($this->roles) > 0)
+			if (count($this->roles) > 0) {
+				$group = new UserGroup($this->db);
 				foreach ($this->roles as $aRow) // load groups
-					$groups[] = $object->load("group:" . $aRow, $cache);
+					$groups[] = $group->mongodb->findOne(array("_id" => "group:" . $aRow));
+			}
 		} catch (Exception $exc) {
 			print $exc->getMessage();
 		}
 
 		//if (count($result)) {
-			foreach ($result as $rows) {
-				foreach ($rows['rights'] as $aRow) {
+		foreach ($result as $rows) {
+			foreach ($rows['rights'] as $aRow) {
 
-					$aRow = json_decode(json_encode($aRow));
+				$aRow = json_decode(json_encode($aRow));
 
-					//$object->name = $aRow->value->name;
-					//$object->numero = $aRow->value->numero;
-					$rights_class = $rows['rights_class'];
-					//$object->id = $aRow->value->id;
-					$perm = $aRow->perm;
+				//$object->name = $aRow->value->name;
+				//$object->numero = $aRow->value->numero;
+				$rights_class = $rows['rights_class'];
+				//$object->id = $aRow->value->id;
+				$perm = $aRow->perm;
 
-					// Add default rights
-					if (!is_object($this->rights->$rights_class))
-						$this->rights->$rights_class = new stdClass();
+				// Add default rights
+				if (!is_object($this->rights->$rights_class))
+					$this->rights->$rights_class = new stdClass();
+				if (count($perm) == 1)
+					$this->rights->$rights_class->$perm[0] = $aRow->Status;
+				elseif (count($perm) == 2) {
+					if (!is_object($this->rights->$rights_class->$perm[0]))
+						$this->rights->$rights_class->$perm[0] = new stdClass();
+					if (isset($this->rights->$rights_class->$perm[0]))
+						$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
+					else
+						$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
+				}
+
+				// Add user rights
+
+				if ((is_array($this->rights) && isset($this->rights->$key)) || (is_array($this->own_rights) && isset($this->own_rights->$key)) || $this->admin) {
 					if (count($perm) == 1)
-						$this->rights->$rights_class->$perm[0] = $aRow->Status;
-					elseif (count($perm) == 2) {
-						if (!is_object($this->rights->$rights_class->$perm[0]))
-							$this->rights->$rights_class->$perm[0] = new stdClass();
-						if (isset($this->rights->$rights_class->$perm[0]))
-							$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
-						else
-							$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
-					}
+						$this->rights->$rights_class->$perm[0] = true;
+					elseif (count($perm) == 2)
+						$this->rights->$rights_class->$perm[0]->$perm[1] = true;
+				}
 
-					// Add user rights
-
-					if ((is_array($this->rights) && isset($this->rights->$key)) || (is_array($this->own_rights) && isset($this->own_rights->$key)) || $this->admin) {
+				// Add groups rights
+				for ($i = 0; $i < count($groups); $i++) {
+					$key = $aRow->id;
+					//print_r($groups[$i]['rights']->$key);
+					//exit;
+					if (isset($groups[$i]['rights'][$key])) {
 						if (count($perm) == 1)
 							$this->rights->$rights_class->$perm[0] = true;
 						elseif (count($perm) == 2)
 							$this->rights->$rights_class->$perm[0]->$perm[1] = true;
 					}
-
-					// Add groups rights
-					for ($i = 0; $i < count($groups); $i++) {
-						$key = $aRow->id;
-						if (isset($groups[$i]->rights->$key)) {
-							if (count($perm) == 1)
-								$this->rights->$rights_class->$perm[0] = true;
-							elseif (count($perm) == 2)
-								$this->rights->$rights_class->$perm[0]->$perm[1] = true;
-						}
-					}
 				}
 			}
+		}
 		//}
-
 		//print_r($this->rights);
 		// Convert for old right definition
 		if (!empty($this->rights->societe->creer))
@@ -519,6 +523,9 @@ class User extends nosqlDocument {
 			// Si module defini, on le marque comme charge en cache
 			$this->_tab_loaded[$moduletag] = 1;
 		}
+
+		//print_r($this->rights);
+		//exit;
 	}
 
 	/**

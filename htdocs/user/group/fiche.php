@@ -109,7 +109,7 @@ if ($action == 'add_right' && $caneditperms) {
         // For avoid error in strict mode
         if (!is_object($editgroup->rights))
             $editgroup->rights = new stdClass();
-
+		
         $editgroup->rights->$_GET['pid'] = true;
         $editgroup->record();
     } catch (Exception $e) {
@@ -401,40 +401,42 @@ if ($action == 'create') {
             $objectM = new DolibarrModules($db);
 
             try {
-                $result = $objectM->getView("default_right");
+                $result = $objectM->mongodb->find(array("enabled" => true, "rights" => array('$exists' => true)));
             } catch (Exception $exc) {
                 print $exc->getMessage();
             }
 
-            if (count($result->rows)) {
+            foreach ($result as $rows) {
+			foreach ($rows['rights'] as $aRow) {
 
-                foreach ($result->rows as $aRow) {
+				$aRow = json_decode(json_encode($aRow));
+				//print_r($aRow);exit;
                     print'<tr>';
 
-                    $objectM->name = $aRow->value->name;
-                    $objectM->numero = $aRow->value->numero;
-                    $objectM->rights_class = $aRow->value->rights_class;
-                    $objectM->id = $aRow->value->id;
-                    $objectM->perm = $aRow->value->perm;
-                    $objectM->desc = $aRow->value->desc;
-                    $objectM->Status = ($aRow->value->Status == true ? "true" : "false");
+                    $objectM->name = $rows['name'];
+                    $objectM->numero = $rows['numero'];
+                    $objectM->rights_class = $rows['rights_class'];
+                    $objectM->id = $aRow->id;
+                    $objectM->perm = $aRow->perm;
+                    $objectM->desc = $aRow->desc;
+                    $objectM->Status = ($rows['Status'] == true ? "true" : "false");
 
-                    print '<td>' . $aRow->value->id . '</td>';
-                    print '<td>' . img_object('', $aRow->value->picto) . " " . $objectM->getName() . '</td>';
-                    print '<td>' . $objectM->getPermDesc() . '<a name="' . $aRow->value->id . '">&nbsp;</a></td>';
+                    print '<td>' . $aRow->id . '</td>';
+                    print '<td>' . img_object('', $rows['picto']) . " " . $objectM->getName() . '</td>';
+                    print '<td>' . $objectM->getPermDesc() . '<a name="' . $aRow->id . '">&nbsp;</a></td>';
                     print '<td>';
 
-                    $perm = $aRow->value->id;
+                    $perm = $aRow->id;
 
                     if ($caneditperms) {
-                        if ($aRow->value->Status)
+                        if ($aRow->Status)
                             print $objectM->getLibStatus(); // Enable by default
                         elseif ($object->rights->$perm) {
-                            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->value->id . '&amp;action=remove_right#' . $aRow->value->id . '">';
+                            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->id . '&amp;action=remove_right#' . $aRow->id . '">';
                             print img_picto($langs->trans("Activated"), 'switch_on');
                             print '</a>';
                         } else {
-                            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->value->id . '&amp;action=add_right#' . $aRow->value->id . '">';
+                            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->id . '&amp;action=add_right#' . $aRow->id . '">';
                             print img_picto($langs->trans("Disabled"), 'switch_off');
                             print '</a>';
                         }
