@@ -1,4 +1,5 @@
 <?php
+
 /* Copyright (C) 2013	Regis Houssin	<regis.houssin@capnetworks.com>
  * Copyright (C) 2013	Herve Prot		<herve.prot@symeos.com>
  *
@@ -32,31 +33,30 @@ class Datatables {
 	protected $chain = array();
 	protected $method = array();
 	protected $params = array(
-			'bProcessing'       => true,
-			'bServerSide'       => false,
-			'sAjaxSource'       => null,
-			'bPaginate'         => true,
-			'sPaginationType'   => 'full_numbers',
-			'bLengthChange'     => true,
-			'bFilter'           => true,
-			'bSort'             => true,
-			'bInfo'             => false,
-			'bAutoWidth'        => false,
-			'bStateSave'        => false,
-			'bDeferRender'		=> true,
-			'aLengthMenu'       => array(5, 10, 20, 50, 100, 500, 'All'),
-			'aaSorting'         => array(array(2, 'asc')),
-			//'sScrollY'          => '400px',
-			//'sScrollX'          => '100%',
-			//'sScrollXInner'     => '100%',
-			'bScrollCollapse'   => false,
-			'bScrollInfinite'   => false,
-			'bJQueryUI'         => true,
-			'iDisplayLength'    => 20,
-			'oLanguage'         => array(),
-			'sDom'              => '<"dataTables_header"lfr>t<"dataTables_footer"p><"dataTables_actions">'
+		'bProcessing' => true,
+		'bServerSide' => false,
+		'sAjaxSource' => null,
+		'bPaginate' => true,
+		'sPaginationType' => 'full_numbers',
+		'bLengthChange' => true,
+		'bFilter' => true,
+		'bSort' => true,
+		'bInfo' => false,
+		'bAutoWidth' => false,
+		'bStateSave' => false,
+		'bDeferRender' => true,
+		'aLengthMenu' => array(5, 10, 20, 50, 100, 500, 'All'),
+		'aaSorting' => array(array(2, 'asc')),
+		//'sScrollY'          => '400px',
+		//'sScrollX'          => '100%',
+		//'sScrollXInner'     => '100%',
+		'bScrollCollapse' => false,
+		'bScrollInfinite' => false,
+		'bJQueryUI' => true,
+		'iDisplayLength' => 20,
+		'oLanguage' => array(),
+		'sDom' => '<"dataTables_header"lfr>t<"dataTables_footer"p><"dataTables_actions">'
 	);
-
 	protected $htmlTemplate = "
 			<table class=\"{:container_class}\" id=\"{:container_id}\">
 				<thead>
@@ -73,7 +73,6 @@ class Datatables {
 				</tfoot>
 			</table>
 			";
-
 	protected $jsTemplate = "
 			<script type=\"text/javascript\">
 				$(document).ready(function() {
@@ -89,12 +88,12 @@ class Datatables {
 
 	public function __construct(array $config = array()) {
 		$defaults = array(
-				'request_method'	=> self::REQUEST_GET,
-				'object_class'		=> null,
-				'data_source'		=> null,
-				'var_name'			=> 'oTable',
-				'container_id'		=> 'datatableTable',
-				'container_class'	=> 'display dt_act'
+			'request_method' => self::REQUEST_POST,
+			'object_class' => null,
+			'data_source' => null,
+			'var_name' => 'oTable',
+			'container_id' => 'datatableTable',
+			'container_class' => 'display dt_act'
 		);
 		$this->config = $config + $defaults;
 	}
@@ -105,7 +104,7 @@ class Datatables {
 		$table = '';
 		try {
 			$table = (string) $this->render();
-		} catch(\Exception $e) {
+		} catch (\Exception $e) {
 			$table = 'Could not render table, possibly caused by wrong configuration';
 			$table = $e->getMessage();
 		}
@@ -133,13 +132,13 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function setParam($name, $value = '') {
-		if($name == 'fnDrawCallback') {
+		if ($name == 'fnDrawCallback') {
 			$this->params['fnDrawCallback'] = '{:callback}';
 			return $this->callbacks[] = $value;
-		} else if($name == 'oTableTools') {
+		} else if ($name == 'oTableTools') {
 			$this->params['oTableTools'] = '{:tabletools}';
 			return $this->tabletools[] = $value;
-		} else if($name == 'oColVis') {
+		} else if ($name == 'oColVis') {
 			$this->params['oColVis'] = '{:colvis}';
 			return $this->colvis[] = $value;
 		}
@@ -149,11 +148,11 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function unsetParam($name) {
-		if($name == 'fnDrawCallback') {
+		if ($name == 'fnDrawCallback') {
 			$this->callbacks = array();
-		} else if($name == 'oTableTools') {
+		} else if ($name == 'oTableTools') {
 			$this->tabletools = array();
-		} else if($name == 'oColVis') {
+		} else if ($name == 'oColVis') {
 			$this->colvis = array();
 		}
 		unset($this->params[$name]);
@@ -162,11 +161,11 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function getParam($name) {
-		if($name == 'fnDrawCallback') {
+		if ($name == 'fnDrawCallback') {
 			return $this->callbacks;
-		} else if($name == 'oTableTools') {
+		} else if ($name == 'oTableTools') {
 			return $this->tabletools;
-		} else if($name == 'oColVis') {
+		} else if ($name == 'oColVis') {
 			return $this->colvis;
 		}
 		return (isset($this->params[$name])) ? $this->params[$name] : null;
@@ -233,7 +232,7 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function getSchema() {
-		if( ! ($this->schema instanceof Schema)) {
+		if (!($this->schema instanceof Schema)) {
 			throw new \RuntimeException("Datatables schema is not set.");
 		}
 		return $this->schema;
@@ -242,7 +241,7 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function getFieldType() {
-		if( ! ($this->schema instanceof Schema)) {
+		if (!($this->schema instanceof Schema)) {
 			throw new \RuntimeException("Datatables schema is not set.");
 		}
 		return $this->schema->getType();
@@ -251,7 +250,7 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function getFieldEditable() {
-		if( ! ($this->schema instanceof Schema)) {
+		if (!($this->schema instanceof Schema)) {
 			throw new \RuntimeException("Datatables schema is not set.");
 		}
 		return $this->schema->getEditable();
@@ -260,13 +259,13 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function formatJsonOutput(array $data, $totalRecords = null) {
-		if(is_null($totalRecords)) {
+		if (is_null($totalRecords)) {
 			$totalRecords = count($data);
 		}
 		$data = array(
-				'iTotalRecords'			=> $totalRecords,
-				'iTotalDisplayRecords'	=> $totalRecords,
-				'aaData'				=> $data
+			'iTotalRecords' => $totalRecords,
+			'iTotalDisplayRecords' => $totalRecords,
+			'aaData' => $data
 		);
 		return json_encode($data);
 	}
@@ -274,15 +273,15 @@ class Datatables {
 	/* ______________________________________________________________________ */
 
 	public function render() {
-		if($this->getParam('bServerSide') == true) {
-			if( ! $this->getParam('sAjaxSource')) {
-				if( ! $this->getConfig('data_source')) {
+		if ($this->getParam('bServerSide') == true) {
+			if (!$this->getParam('sAjaxSource')) {
+				if (!$this->getConfig('data_source')) {
 					throw new \RuntimeException('Data source is not set.');
 				}
 				$this->setParam('sAjaxSource', $this->getConfig('data_source'));
 			}
 		} else {
-			if( ! $this->getParam('aaData')) {
+			if (!$this->getParam('aaData')) {
 				$this->setParam('aaData', array());
 				// throw new \RuntimeException('Datatables: `aaData` is not set.');
 			}
@@ -290,7 +289,21 @@ class Datatables {
 
 		$this->setParam('sAjaxSource', $this->getConfig('data_source'));
 
-		if( ! ($this->schema instanceof Schema)) {
+		if ($this->getConfig('aoAjaxData')) {
+			$aoAjaxData = 'function (sSource, aoData, fnCallback) {
+					$.ajax({
+					"dataType": "json",
+							"type": "POST",
+							"url": sSource,
+							"data": ' . $this->getConfig('aoAjaxData') . ',
+							"success": fnCallback
+					});
+					}';
+
+			$this->setParam("fnServerData", '{:fnServerData}');
+		}
+
+		if (!($this->schema instanceof Schema)) {
 			throw new \RuntimeException("Datatables schema is not set.");
 		}
 
@@ -310,19 +323,19 @@ class Datatables {
 		$headers = '';
 		$editable = '';
 		$footers = '';
-		foreach($this->schema->data() as $key => $config) {
+		foreach ($this->schema->data() as $key => $config) {
 			/*
-			$cols[] = $config['aoColumns'] + array(
-					'mData'				=> $key,
-					'mRender'			=> (!empty($config['render']) ? '{:render_'.$key.'}' : ''),
-					'sDefaultContent'	=> $config['default'] ? $config['default'] : '',
-					'sWidth'			=> $config['width'] ? intval($config['width']) . 'px' : '',
-					'sClass'			=> $config['class'] ? $config['class'] : '',
-					'bSortable'			=> (bool) $config['sortable'],
-					'bSearchable'		=> (bool) $config['searchable'],
-					'bVisible'			=> (bool) $config['visible']
-					//'sType'				=> 'html'
-			);*/
+			  $cols[] = $config['aoColumns'] + array(
+			  'mData'				=> $key,
+			  'mRender'			=> (!empty($config['render']) ? '{:render_'.$key.'}' : ''),
+			  'sDefaultContent'	=> $config['default'] ? $config['default'] : '',
+			  'sWidth'			=> $config['width'] ? intval($config['width']) . 'px' : '',
+			  'sClass'			=> $config['class'] ? $config['class'] : '',
+			  'bSortable'			=> (bool) $config['sortable'],
+			  'bSearchable'		=> (bool) $config['searchable'],
+			  'bVisible'			=> (bool) $config['visible']
+			  //'sType'				=> 'html'
+			  ); */
 
 			$def['mData'][$key][] = $i;
 			$def['sName'][$key][] = $i;
@@ -347,26 +360,26 @@ class Datatables {
 				$def['bVisible'][] = $i;
 
 			if (!empty($config['render']))
-				$def['mRender'][$i] = '{:render_'.$key.'}';
+				$def['mRender'][$i] = '{:render_' . $key . '}';
 
 			// display header label
 			$headers .= "<th>{$config['label']}</th>\n";
 
 			// build editable
 			/*
-			if(!empty($config['visible']) && !empty($config['editable'])) {
-				$editable .= self::insert($config['editable'], $config);
-			} else if(!empty($config['visible'])) {
-				$editable .= self::insert('null,', $config);
-			}*/
+			  if(!empty($config['visible']) && !empty($config['editable'])) {
+			  $editable .= self::insert($config['editable'], $config);
+			  } else if(!empty($config['visible'])) {
+			  $editable .= self::insert('null,', $config);
+			  } */
 
 			// display mRender
 			if (!empty($config['render']))
-				$render['render_'.$key] = self::insert($config['render'], $config);
+				$render['render_' . $key] = self::insert($config['render'], $config);
 
 			// display footer
 			$footer = '';
-			if(!empty($config['footer'])) {
+			if (!empty($config['footer'])) {
 				$footer = self::insert($config['footer'], $config);
 			}
 			$footers .= "<th id=\"{$i}\">{$footer}</th>\n";
@@ -374,55 +387,53 @@ class Datatables {
 			$i++;
 		}
 		//$this->params['aoColumns'] = $cols;
-
 		// start
 
-		foreach($def['mData'] as $key => $value) {
+		foreach ($def['mData'] as $key => $value) {
 			$this->params['aoColumnDefs'][] = array('mData' => $key, 'aTargets' => $value);
 		}
 
 		unset($def['mData']);
 
-		foreach($def['sName'] as $key => $value) {
+		foreach ($def['sName'] as $key => $value) {
 			$this->params['aoColumnDefs'][] = array('sName' => $key, 'aTargets' => $value);
 		}
 
 		unset($def['sName']);
 
-		foreach($def['sDefaultContent'] as $key => $value) {
+		foreach ($def['sDefaultContent'] as $key => $value) {
 			$this->params['aoColumnDefs'][] = array('sDefaultContent' => $key, 'aTargets' => $value);
 		}
 
 		unset($def['sDefaultContent']);
 
-		foreach($def['sWidth'] as $key => $value) {
+		foreach ($def['sWidth'] as $key => $value) {
 			$this->params['aoColumnDefs'][] = array('sWidth' => $key, 'aTargets' => $value);
 		}
 
 		unset($def['sWidth']);
 
-		foreach($def['sClass'] as $key => $value) {
+		foreach ($def['sClass'] as $key => $value) {
 			$this->params['aoColumnDefs'][] = array('sClass' => $key, 'aTargets' => $value);
 		}
 
 		unset($def['sClass']);
 
-		foreach($def['mRender'] as $key => $value) {
+		foreach ($def['mRender'] as $key => $value) {
 			$this->params['aoColumnDefs'][] = array('mRender' => $value, 'aTargets' => array($key));
 		}
 
 		unset($def['mRender']);
 
-		foreach($def as $key => $value) {
+		foreach ($def as $key => $value) {
 			$this->params['aoColumnDefs'][] = array($key => false, 'aTargets' => $value);
 		}
 
-		/*echo json_encode($this->params['aoColumns']);
-		echo '<br><br>';
-		echo json_encode($this->params['aoColumnDefs']);*/
+		/* echo json_encode($this->params['aoColumns']);
+		  echo '<br><br>';
+		  echo json_encode($this->params['aoColumnDefs']); */
 
 		// end
-
 		// convert 'oLanguage' to object
 		$this->params['oLanguage'] = (object) $this->params['oLanguage'];
 
@@ -434,17 +445,21 @@ class Datatables {
 		// params json encode
 		$config = json_encode($this->params);
 
+
+
 		// display callback
 		$config = preg_replace('/"\{:callback\}"/', $callback, $config);
 		// display tabletools
 		$config = preg_replace('/"\{:tabletools\}"/', $tabletools, $config);
 		// display colvis
 		$config = preg_replace('/"\{:colvis\}"/', $colvis, $config);
+		$config = preg_replace('/"\{:fnServerData\}"/', $aoAjaxData, $config);
 
+		//print_r($config);exit;
 		// display render
 		if (!empty($render)) {
-			foreach($render as $key => $value) {
-				$config = preg_replace('/"\{:'.$key.'\}"/', $value, $config);
+			foreach ($render as $key => $value) {
+				$config = preg_replace('/"\{:' . $key . '\}"/', $value, $config);
 			}
 		}
 
@@ -463,4 +478,5 @@ class Datatables {
 		}
 		return strtr($str, $replace);
 	}
+
 }

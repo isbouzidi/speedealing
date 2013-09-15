@@ -1598,15 +1598,16 @@ abstract class nosqlDocument extends CommonObject {
 	 *
 	 * 	@param	string	$view	Requested view
 	 */
-	public function showList($view = 'list') {
+	public function showList($query) {
 
 		require DOL_DOCUMENT_ROOT . '/core/class/autoloader.php';
 
 		//$data_source = "core/ajax/listdatatables.php?json=list&class=" . get_class($this) . "&bServerSide=true";
-		$data_source = "core/ajax/listdatatables.php?json=" . $view . "&class=" . get_class($this);
+		$data_source = "core/ajax/listdatatables.php?json=list";
 		$table = new datatables\Datatables(compact('data_source'));
 		$table->setSchema(new datatables\schemas\DefaultSchema);
 		$table->setConfig('object_class', get_class($this));
+		$table->setConfig('aoAjaxData', $query);
 
 		// Add default plugins
 		$table->plug(new datatables\plugins\Localization);

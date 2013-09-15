@@ -62,11 +62,11 @@ print_fiche_titre($titre);
 <div class="dashboard">
     <div class="columns">
         <div class="four-columns twelve-columns-mobile graph">
-<?php $object->graphPieStatus(); ?>
+			<?php $object->graphPieStatus(); ?>
         </div>
 
         <div class="eight-columns twelve-columns-mobile new-row-mobile graph">
-<?php $object->graphBarStatus(); ?>
+			<?php $object->graphBarStatus(); ?>
         </div>
     </div>
 </div>
@@ -84,198 +84,208 @@ print '<p class="button-height right">';
 print '<a class="button icon-star" href="' . strtolower(get_class($object)) . '/fiche.php?action=create">' . $langs->trans("NewThirdParty") . '</a>';
 print "</p>";
 
-/*if (empty($builder)) {
+/* if (empty($builder)) {
 
-	print $object->datatablesEdit("societe", $langs->trans("NewThirdParty"));
+  print $object->datatablesEdit("societe", $langs->trans("NewThirdParty"));
 
-	$i = 0;
-	$obj = new stdClass();
-	print '<table class="display dt_act" id="societe" >';
-// Ligne des titres
-	print'<thead>';
-	print'<tr>';
-	print'<th>';
-	print'</th>';
-	$obj->aoColumns[$i] = new stdClass();
-	$obj->aoColumns[$i]->mDataProp = "_id";
-	$obj->aoColumns[$i]->bUseRendered = false;
-	$obj->aoColumns[$i]->bSearchable = false;
-	$obj->aoColumns[$i]->bVisible = false;
-	$i++;
-	print'<th class="essential">';
-	print $langs->trans("Company");
-	print'</th>';
-	$obj->aoColumns[$i] = new stdClass();
-	$obj->aoColumns[$i]->mDataProp = "name";
-	$obj->aoColumns[$i]->bUseRendered = false;
-	$obj->aoColumns[$i]->bSearchable = true;
-	$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("name", "url");
-	$i++;
-	if ($user->rights->societe->client->voir) {
-		print'<th class="essential">';
-		print $langs->trans("SalesRepresentatives");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "commercial_id";
-		$obj->aoColumns[$i]->bUseRendered = true;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->sDefaultContent = "";
-		$obj->aoColumns[$i]->editable = true;
-		$user_tmp = new User($db);
-		$obj->aoColumns[$i]->fnRender = $user_tmp->datatablesFnRender("commercial_id.name", "url", array('id' => "commercial_id.id"));
-		$i++;
-	}
-	foreach ($object->fk_extrafields->oldList as $aRow) {
-		print'<th class="essential">';
-		if (isset($object->fk_extrafields->fields->$aRow->label))
-			print $langs->transcountry($object->fk_extrafields->fields->$aRow->label, $mysoc->country_id);
-		else
-			print $langs->trans($aRow);
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i] = $object->fk_extrafields->fields->$aRow->list;
-		if (isset($object->fk_extrafields->$aRow->default))
-			$obj->aoColumns[$i]->sDefaultContent = $object->fk_extrafields->$aRow->default;
-		else {
-			if (!is_object($obj->aoColumns[$i]))
-				$obj->aoColumns[$i] = new stdClass(); // to avoid strict mode warning
-			$obj->aoColumns[$i]->sDefaultContent = "";
-		}
-		$obj->aoColumns[$i]->mDataProp = $aRow;
-		$i++;
-	}
-	print'<th class="essential">';
-	print $langs->trans('Categories');
-	print'</th>';
-	$obj->aoColumns[$i] = new stdClass();
-	$obj->aoColumns[$i]->mDataProp = "Tag";
-	$obj->aoColumns[$i]->sClass = "center";
-	$obj->aoColumns[$i]->sDefaultContent = "";
-	$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("Tag", "tag");
-	$i++;
-	/* print'<th class="essential">';
-	  print $langs->trans("Date");
-	  print'</th>';
-	  $obj->aoColumns[$i]->mDataProp = "tms";
-	  $obj->aoColumns[$i]->sClass = "center";
-	  $obj->aoColumns[$i]->bUseRendered = false;
-	  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("tms", "date");
-	  $i++; */
+  $i = 0;
+  $obj = new stdClass();
+  print '<table class="display dt_act" id="societe" >';
+  // Ligne des titres
+  print'<thead>';
+  print'<tr>';
+  print'<th>';
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "_id";
+  $obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->bSearchable = false;
+  $obj->aoColumns[$i]->bVisible = false;
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans("Company");
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "name";
+  $obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->bSearchable = true;
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("name", "url");
+  $i++;
+  if ($user->rights->societe->client->voir) {
+  print'<th class="essential">';
+  print $langs->trans("SalesRepresentatives");
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "commercial_id";
+  $obj->aoColumns[$i]->bUseRendered = true;
+  $obj->aoColumns[$i]->bSearchable = true;
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  $obj->aoColumns[$i]->editable = true;
+  $user_tmp = new User($db);
+  $obj->aoColumns[$i]->fnRender = $user_tmp->datatablesFnRender("commercial_id.name", "url", array('id' => "commercial_id.id"));
+  $i++;
+  }
+  foreach ($object->fk_extrafields->oldList as $aRow) {
+  print'<th class="essential">';
+  if (isset($object->fk_extrafields->fields->$aRow->label))
+  print $langs->transcountry($object->fk_extrafields->fields->$aRow->label, $mysoc->country_id);
+  else
+  print $langs->trans($aRow);
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i] = $object->fk_extrafields->fields->$aRow->list;
+  if (isset($object->fk_extrafields->$aRow->default))
+  $obj->aoColumns[$i]->sDefaultContent = $object->fk_extrafields->$aRow->default;
+  else {
+  if (!is_object($obj->aoColumns[$i]))
+  $obj->aoColumns[$i] = new stdClass(); // to avoid strict mode warning
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  }
+  $obj->aoColumns[$i]->mDataProp = $aRow;
+  $i++;
+  }
+  print'<th class="essential">';
+  print $langs->trans('Categories');
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "Tag";
+  $obj->aoColumns[$i]->sClass = "center";
+  $obj->aoColumns[$i]->sDefaultContent = "";
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("Tag", "tag");
+  $i++;
+  /* print'<th class="essential">';
+  print $langs->trans("Date");
+  print'</th>';
+  $obj->aoColumns[$i]->mDataProp = "tms";
+  $obj->aoColumns[$i]->sClass = "center";
+  $obj->aoColumns[$i]->bUseRendered = false;
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("tms", "date");
+  $i++; */
 
-	/*print'<th class="essential">';
-	print $langs->trans("Status");
-	print'</th>';
-	$obj->aoColumns[$i] = new stdClass();
-	$obj->aoColumns[$i]->mDataProp = "Status";
-	$obj->aoColumns[$i]->sClass = "center";
-	$obj->aoColumns[$i]->sWidth = "100px";
-	$obj->aoColumns[$i]->sDefaultContent = "ST_NEVER";
-	$obj->aoColumns[$i]->editable = true;
-	$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("Status", "status");
-	$i++;
-	print'<th class="essential">';
-	print $langs->trans("ProspectLevelShort");
-	print'</th>';
-	$obj->aoColumns[$i] = new stdClass();
-	$obj->aoColumns[$i]->mDataProp = "prospectlevel";
-	$obj->aoColumns[$i]->sClass = "center";
-	$obj->aoColumns[$i]->sDefaultContent = "PL_NONE";
-	$obj->aoColumns[$i]->editable = true;
-	$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("prospectlevel", "status");
-	$i++;
-	print'<th class="essential">';
-	print $langs->trans('Action');
-	print'</th>';
-	$obj->aoColumns[$i] = new stdClass();
-	$obj->aoColumns[$i]->mDataProp = "";
-	$obj->aoColumns[$i]->sClass = "center content_actions";
-	$obj->aoColumns[$i]->sWidth = "60px";
-	$obj->aoColumns[$i]->bSortable = false;
-	$obj->aoColumns[$i]->sDefaultContent = "";
+/* print'<th class="essential">';
+  print $langs->trans("Status");
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "Status";
+  $obj->aoColumns[$i]->sClass = "center";
+  $obj->aoColumns[$i]->sWidth = "100px";
+  $obj->aoColumns[$i]->sDefaultContent = "ST_NEVER";
+  $obj->aoColumns[$i]->editable = true;
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("Status", "status");
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans("ProspectLevelShort");
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "prospectlevel";
+  $obj->aoColumns[$i]->sClass = "center";
+  $obj->aoColumns[$i]->sDefaultContent = "PL_NONE";
+  $obj->aoColumns[$i]->editable = true;
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("prospectlevel", "status");
+  $i++;
+  print'<th class="essential">';
+  print $langs->trans('Action');
+  print'</th>';
+  $obj->aoColumns[$i] = new stdClass();
+  $obj->aoColumns[$i]->mDataProp = "";
+  $obj->aoColumns[$i]->sClass = "center content_actions";
+  $obj->aoColumns[$i]->sWidth = "60px";
+  $obj->aoColumns[$i]->bSortable = false;
+  $obj->aoColumns[$i]->sDefaultContent = "";
 
-	$url = "societe/fiche.php";
-	if ($user->rights->societe->creer && $user->rights->societe->supprimer) {
-		$obj->aoColumns[$i]->fnRender = 'function(obj) {
-	var ar = [];
-	ar[ar.length] = "<a href=\"' . $url . '?id=";
-	ar[ar.length] = obj.aData._id.toString();
-	ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
-	ar[ar.length] = "<a href=\"\"";
-	ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
-	var str = ar.join("");
-	return str;
-}';
-	} elseif ($user->rights->societe->creer) {
-		$obj->aoColumns[$i]->fnRender = 'function(obj) {
-	var ar = [];
-	ar[ar.length] = "<a href=\"' . $url . '?id=";
-	ar[ar.length] = obj.aData._id.toString();
-	ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
-	var str = ar.join("");
-	return str;
-}';
-	}
-	print'</tr>';
-	print'</thead>';
-	print'<tfoot>';
-	/* input search view */
+  $url = "societe/fiche.php";
+  if ($user->rights->societe->creer && $user->rights->societe->supprimer) {
+  $obj->aoColumns[$i]->fnRender = 'function(obj) {
+  var ar = [];
+  ar[ar.length] = "<a href=\"' . $url . '?id=";
+  ar[ar.length] = obj.aData._id.toString();
+  ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
+  ar[ar.length] = "<a href=\"\"";
+  ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
+  var str = ar.join("");
+  return str;
+  }';
+  } elseif ($user->rights->societe->creer) {
+  $obj->aoColumns[$i]->fnRender = 'function(obj) {
+  var ar = [];
+  ar[ar.length] = "<a href=\"' . $url . '?id=";
+  ar[ar.length] = obj.aData._id.toString();
+  ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
+  var str = ar.join("");
+  return str;
+  }';
+  }
+  print'</tr>';
+  print'</thead>';
+  print'<tfoot>';
+  /* input search view */
 
-/*	$i = 0; //Doesn't work with bServerSide
-	print'<tr>';
-	print'<th id="' . $i . '"></th>';
-	$i++;
-	print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Company") . '" /></th>';
-	$i++;
-	if ($user->rights->societe->client->voir) {
-		print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Commercial") . '" /></th>';
-		$i++;
-	}
-	foreach ($object->fk_extrafields->oldList as $aRow) {
-		if (is_bool($object->fk_extrafields->fields->$aRow->list->searchable) === true && $object->fk_extrafields->fields->$aRow->list->searchable === false)
-			print '<th id="' . $i . '"></th>';
-		else
-			print '<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search " . $aRow) . '" /></th>';
-		$i++;
-	}
-	print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search category") . '" /></th>';
-	$i++;
-	print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search status") . '" /></th>';
-	$i++;
-	print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search potential") . '" /></th>';
-	$i++;
-	print'<th id="' . $i . '"></th>';
-	$i++;
-	print'</tr>';
-	print'</tfoot>';
-	print'<tbody>';
-	print'</tbody>';
-	print "</table>";
+/* 	$i = 0; //Doesn't work with bServerSide
+  print'<tr>';
+  print'<th id="' . $i . '"></th>';
+  $i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Company") . '" /></th>';
+  $i++;
+  if ($user->rights->societe->client->voir) {
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search Commercial") . '" /></th>';
+  $i++;
+  }
+  foreach ($object->fk_extrafields->oldList as $aRow) {
+  if (is_bool($object->fk_extrafields->fields->$aRow->list->searchable) === true && $object->fk_extrafields->fields->$aRow->list->searchable === false)
+  print '<th id="' . $i . '"></th>';
+  else
+  print '<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search " . $aRow) . '" /></th>';
+  $i++;
+  }
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search category") . '" /></th>';
+  $i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search status") . '" /></th>';
+  $i++;
+  print'<th id="' . $i . '"><input type="text" placeholder="' . $langs->trans("Search potential") . '" /></th>';
+  $i++;
+  print'<th id="' . $i . '"></th>';
+  $i++;
+  print'</tr>';
+  print'</tfoot>';
+  print'<tbody>';
+  print'</tbody>';
+  print "</table>";
 
-//$obj->bServerSide = true;
-//$obj->sDom = 'C<\"clear\">lfrtip';
-	if ($_GET["disable"])
-		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
+  //$obj->bServerSide = true;
+  //$obj->sDom = 'C<\"clear\">lfrtip';
+  if ($_GET["disable"])
+  $obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
+  else
+  $obj->sAjaxSource = "core/ajax/listdatatables.php?json=listEnable&class=" . get_class($object);
+
+  if (!$user->rights->societe->client->voir)
+  if ($_GET["disable"])
+  $obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisableByCommercial&key=" . $user->id . "&class=" . get_class($object);
+  else
+  $obj->sAjaxSource = "core/ajax/listdatatables.php?json=listByCommercial&key=" . $user->id . "&class=" . get_class($object);
+
+  $object->datatablesCreate($obj, "societe", true, true);
+  }
+
+  echo '<br>'; */
+$query = "";
+if ($user->rights->societe->client->voir)
+	$query = $obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}]}"}]';
+else
+	$query = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}, {\"commercial_id.id\":\"'.$user->id.'\"}]}"}]';
+
+if (GETPOST('disable')) {
+	if ($user->rights->societe->client->voir)
+		$query = $obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_NO\"},{\"Status\": \"ST_NEVER\"}]}"}]';
 	else
-		$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listEnable&class=" . get_class($object);
-
-	if (!$user->rights->societe->client->voir)
-		if ($_GET["disable"])
-			$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisableByCommercial&key=" . $user->id . "&class=" . get_class($object);
-		else
-			$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listByCommercial&key=" . $user->id . "&class=" . get_class($object);
-
-	$object->datatablesCreate($obj, "societe", true, true);
+		$query = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_NO\"},{\"Status\": \"ST_NEVER\"}], \"commercial_id.id\":\"'.$user->id.'\"}"}]';
 }
-
-echo '<br>';*/
-
-//if (!empty($builder)) {
-	$view = 'listEnable';
-	if (GETPOST('disable'))
-		$view = 'listDisable';
-	echo $object->showList($view);
+echo $object->showList($query);
 //}
-
 //print end_box();
 print '</div>'; // end
 

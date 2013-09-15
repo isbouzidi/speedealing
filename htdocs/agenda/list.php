@@ -331,11 +331,9 @@ if ($all) {
 	}
 } else {
 	if ($type == "DONE")
-		//$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
 		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
 			{"name": "query", "value": "{\"Status\":\"DONE\",\"$or\":[{\"usertodo.id\":\"'.$user->id.'\"},{\"author.id\":\"'.$user->id.'\"},{\"userdone.id\":\"'.$user->id.'\"}]}"}]';
 	else {
-		//$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
 		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
 			{"name": "query", "value": "{\"Status\":{\"$ne\":\"DONE\"},\"$or\":[{\"usertodo.id\":\"'.$user->id.'\"},{\"author.id\":\"'.$user->id.'\"}]}"}]';
 	}//{"$or":[{"usertodo.id":},{}]]
