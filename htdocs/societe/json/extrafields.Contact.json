@@ -1,195 +1,198 @@
 {
-   "_id": "extrafields:Contact",
-   "_rev": "50-7397f45ea63dc18b477a12d395177f67",
-   "class": "extrafields",
-   "ico": "icon-object-contact",
-   "langs": [
-       "companies"
-   ],
-   "fields": {
-       "name": {
-           "type": "input",
-           "length": 60,
-           "enable": true
-       },
-       "firstname": {
-           "type": "input",
-           "length": 60,
-           "enable": true
-       },
-       "lastname": {
-           "type": "input",
-           "length": 60,
-           "enable": true,
-           "validate": {
-               "required": true,
-               "minlength": 3
-           }
-       },
-       "poste": {
-           "type": "input",
-           "length": 60,
-           "enable": true
-       },
-       "societe": {
-           "type": "select",
-           "enable": true,
-           "class": "Societe",
-           "view": "list",
-           "params": {
-           }
-       },
-       "Status": {
-           "type": "select",
-           "enable": true,
-           "default": "ST_NEVER",
-           "status": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "values": {
-               "ST_NEVER": {
-                   "label": "Non déterminé",
-                   "enable": true,
-                   "cssClass": "grey-gradient"
-               },
-               "ST_ENABLE": {
-                   "label": "Actif",
-                   "enable": true,
-                   "cssClass": "green-gradient"
-               },
-               "ST_DISABLE": {
-                   "label": "Inactif",
-                   "enable": true,
-                   "cssClass": "blue-gradient"
-               },
-               "ST_NO": {
-                   "label": "Ne pas contacter",
-                   "enable": true,
-                   "cssClass": "red-gradient"
-               }
-           }
-       },
-       "address": {
-           "type": "textarea",
-           "cols": 40,
-           "rows": 3,
-           "enable": true,
-           "aoColumns": {
-               "sClass": "",
-               "bSearchable": true,
-               "bVisible": false
-           }
-       },
-       "zip": {
-           "type": "text",
-           "label": "Zip",
-           "length": 15,
-           "enable": true,
-           "javascript": null,
-           "aoColumns": {
-               "sClass": "center edit",
-               "bSearchable": true,
-               "bVisible": true
-           }
-       },
-       "town": {
-           "type": "text",
-           "label": "Town",
-           "length": 15,
-           "enable": true,
-           "javascript": null,
-           "aoColumns": {
-               "sClass": "edit",
-               "bSearchable": true,
-               "bVisible": true
-           }
-       },
-       "country_id": {
-           "type": "select",
-           "enable": true,
-           "dict": "dict:fk_country",
-           "default": "substr($langs->defaultlang,3,5)"
-       },
-       "state_id": {
-           "type": "select",
-           "enable": true,
-           "dict": "dict:fk_departements"
-       },
-       "DefaultLang": {
-           "type": "select",
-           "enable": false,
-           "dict": null
-       },
-       "photo": {
-           "type": "uploadfile",
-           "enable": true
-       },
-       "phone": {
-           "type": "AC_TEL",
-           "ico": "AC_TEL",
-           "enable": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": false
-           },
-           "mask": "+99 9 99 99 99 99"
-       },
-       "phone_perso": {
-           "type": "AC_TEL",
-           "ico": "AC_TEL",
-           "enable": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": false
-           },
-           "mask": "+99 9 99 99 99 99"
-       },
-       "phone_mobile": {
-           "type": "AC_TEL",
-           "ico": "AC_TEL",
-           "enable": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": false
-           },
-           "mask": "+99 9 99 99 99 99"
-       },
-       "fax": {
-           "type": "AC_FAX",
-           "ico": "AC_FAX",
-           "enable": true,
-           "mask": "+99 9 99 99 99 99"
-       },
-       "email": {
-           "type": "AC_EMAIL",
-           "ico": "AC_EMAIL",
-           "enable": true,
-           "validate": {
-               "email": true
-           }
-       },
-       "civilite_id": {
-           "type": "select",
-           "label": "UserTitle",
-           "default": "NO",
-           "dict": "dict:fk_civilite",
-           "enable": true
-       },
-       "Tag": {
-           "type": "tag",
-           "label": "Categories",
-           "enable": true,
-           "isarray": true
-       },
-       "notes": {
-           "type": "textarea",
-           "enable": true
-       }
-   }
+	"_id": "extrafields:Contact",
+	"_rev": "50-7397f45ea63dc18b477a12d395177f67",
+	"class": "extrafields",
+	"ico": "icon-object-contact",
+	"langs": [
+		"companies"
+	],
+	"fields": {
+		"_id": {
+			"settype": "MongoId"
+		},
+		"name": {
+			"type": "input",
+			"length": 60,
+			"enable": true
+		},
+		"firstname": {
+			"type": "input",
+			"length": 60,
+			"enable": true
+		},
+		"lastname": {
+			"type": "input",
+			"length": 60,
+			"enable": true,
+			"validate": {
+				"required": true,
+				"minlength": 3
+			}
+		},
+		"poste": {
+			"type": "input",
+			"length": 60,
+			"enable": true
+		},
+		"societe": {
+			"type": "select",
+			"enable": true,
+			"class": "Societe",
+			"view": "list",
+			"params": {
+			}
+		},
+		"Status": {
+			"type": "select",
+			"enable": true,
+			"default": "ST_NEVER",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"values": {
+				"ST_NEVER": {
+					"label": "Non déterminé",
+					"enable": true,
+					"cssClass": "grey-gradient"
+				},
+				"ST_ENABLE": {
+					"label": "Actif",
+					"enable": true,
+					"cssClass": "green-gradient"
+				},
+				"ST_DISABLE": {
+					"label": "Inactif",
+					"enable": true,
+					"cssClass": "blue-gradient"
+				},
+				"ST_NO": {
+					"label": "Ne pas contacter",
+					"enable": true,
+					"cssClass": "red-gradient"
+				}
+			}
+		},
+		"address": {
+			"type": "textarea",
+			"cols": 40,
+			"rows": 3,
+			"enable": true,
+			"aoColumns": {
+				"sClass": "",
+				"bSearchable": true,
+				"bVisible": false
+			}
+		},
+		"zip": {
+			"type": "text",
+			"label": "Zip",
+			"length": 15,
+			"enable": true,
+			"javascript": null,
+			"aoColumns": {
+				"sClass": "center edit",
+				"bSearchable": true,
+				"bVisible": true
+			}
+		},
+		"town": {
+			"type": "text",
+			"label": "Town",
+			"length": 15,
+			"enable": true,
+			"javascript": null,
+			"aoColumns": {
+				"sClass": "edit",
+				"bSearchable": true,
+				"bVisible": true
+			}
+		},
+		"country_id": {
+			"type": "select",
+			"enable": true,
+			"dict": "dict:fk_country",
+			"default": "substr($langs->defaultlang,3,5)"
+		},
+		"state_id": {
+			"type": "select",
+			"enable": true,
+			"dict": "dict:fk_departements"
+		},
+		"DefaultLang": {
+			"type": "select",
+			"enable": false,
+			"dict": null
+		},
+		"photo": {
+			"type": "uploadfile",
+			"enable": true
+		},
+		"phone": {
+			"type": "AC_TEL",
+			"ico": "AC_TEL",
+			"enable": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": false
+			},
+			"mask": "+99 9 99 99 99 99"
+		},
+		"phone_perso": {
+			"type": "AC_TEL",
+			"ico": "AC_TEL",
+			"enable": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": false
+			},
+			"mask": "+99 9 99 99 99 99"
+		},
+		"phone_mobile": {
+			"type": "AC_TEL",
+			"ico": "AC_TEL",
+			"enable": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": false
+			},
+			"mask": "+99 9 99 99 99 99"
+		},
+		"fax": {
+			"type": "AC_FAX",
+			"ico": "AC_FAX",
+			"enable": true,
+			"mask": "+99 9 99 99 99 99"
+		},
+		"email": {
+			"type": "AC_EMAIL",
+			"ico": "AC_EMAIL",
+			"enable": true,
+			"validate": {
+				"email": true
+			}
+		},
+		"civilite_id": {
+			"type": "select",
+			"label": "UserTitle",
+			"default": "NO",
+			"dict": "dict:fk_civilite",
+			"enable": true
+		},
+		"Tag": {
+			"type": "tag",
+			"label": "Categories",
+			"enable": true,
+			"isarray": true
+		},
+		"notes": {
+			"type": "textarea",
+			"enable": true
+		}
+	}
 }

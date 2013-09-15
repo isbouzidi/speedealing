@@ -453,6 +453,7 @@ class Datatables {
 		$config = preg_replace('/"\{:tabletools\}"/', $tabletools, $config);
 		// display colvis
 		$config = preg_replace('/"\{:colvis\}"/', $colvis, $config);
+		// display Ajax Input Data
 		$config = preg_replace('/"\{:fnServerData\}"/', $aoAjaxData, $config);
 
 		//print_r($config);exit;

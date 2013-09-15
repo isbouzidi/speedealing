@@ -289,13 +289,18 @@ print "</table>";
 
 //$obj->bServerSide = true;
 if ($_GET["disable"])
-	$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
+	//$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
+	$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_DISABLE\"},{\"Status\": \"ST_NEVER\"}]}"}]';
 else
-	$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listEnable&class=" . get_class($object);
+	$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{"name": "query", "value": "{\"Status\": \"ST_ENABLE\"}"}]';
 
-if (!$user->rights->societe->client->voir)
+/*if (!$user->rights->societe->client->voir)
+	$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{"name": "query", "value": "{\"Status\":{\"$ne\":\"DONE\"},\"$or\":[{\"usertodo.id\":\"'.$user->id.'\"},{\"author.id\":\"'.$user->id.'\"}]}"}]';
 	$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list&class=" . get_class($object) . "&key=" . $user->id . "&disable=" . ($_GET["disable"] ? "true" : "false");
-
+*/
 $object->datatablesCreate($obj, "list_contacts", true, true);
 
 print '</div>'; // end

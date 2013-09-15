@@ -40,7 +40,7 @@ $id = GETPOST('id', 'alpha');
 top_httphead('json');
 
 //print '<!-- Ajax page called with url '.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].' -->'."\n";
-//error_log(print_r($_POST, true));
+error_log(print_r($_POST, true));
 //error_log(print_r($_GET, true));
 
 if (!empty($json) && !empty($id) && !empty($class)) {

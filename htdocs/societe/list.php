@@ -269,6 +269,7 @@ print "</p>";
 
   echo '<br>'; */
 $query = "";
+$obj = new stdClass();
 if ($user->rights->societe->client->voir)
 	$query = $obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
 			{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}]}"}]';

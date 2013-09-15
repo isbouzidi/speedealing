@@ -45,7 +45,7 @@ class TrashNotification implements PluginInterface {
 						$.ajax({
 							type: 'POST',
 							url: '/core/ajax/deleteinplace.php',
-							data: 'json=trash&class={$object_class}&id=' + aData['_id'],
+							data: 'json=delete&class={$object_class}&id=' + aData['_id'],
 							success: function(msg){
 								// delete row
 								{$var_name}.fnDeleteRow(aPos[0]);

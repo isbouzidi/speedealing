@@ -1,418 +1,419 @@
 {
-   "_id": "extrafields:Societe",
-   "class": "extrafields",
-   "ico": "icon-object-company",
-   "langs": [
-       "companies",
-       "bills",
-       "compta"
-   ],
-   "pluginsList": [
-       "RowAction",
-       "TrashNotification",
-       "RowShowHide",
-       "FieldEditable",
-       "ColFilter"
-   ],
-   "createList": [
-       "name",
-       "Status",
-       "commercial_id",
-       "address",
-       "zip",
-       "town"
-   ],
-   "oldList": [
-       "code_client",
-       "zip",
-       "town",
-       "address",
-       "zonegeo",
-       "phone",
-       "idprof3"
-   ],
-   "longList": [
-       "_id",
-       "Checkbox",
-       "name",
-       "code_client",
-       "commercial_id",
-       "zip",
-       "town",
-       "address",
-       "zonegeo",
-       "phone",
-       "email",
-       "idprof3",
-       "Tag",
-       "Status",
-       "prospectlevel",
-       "Action"
-   ],
-   "shortList": [
-       "town",
-       "phone"
-   ],
-   "fields": {
-       "_id": {
-           "type": "text",
-           "enable": true,
-           "list": {
-               "visible": false,
-               "static": true
-           }
-       },
-       "name": {
-           "type": "text",
-           "label": "Company",
-           "length": 60,
-           "enable": true,
-           "list": {
-               "static": true
-           },
-           "render": {
-               "type": "url",
-               "ico": "icon-object-company"
-           },
-           "validate": {
-               "cssclass": "required",
-               "minlength": 3
-           }
-       },
-       "prefix": {
-           "type": "text",
-           "length": 5,
-           "enable": false,
-           "edit": true
-       },
-       "code_client": {
-           "type": "text",
-           "label": "CustomerCode",
-           "length": 15,
-           "enable": true,
-           "list": {
-               "cssclass": "center",
-               "visible": false
-           }
-       },
-       "code_fournisseur": {
-           "type": "text",
-           "length": 15,
-           "enable": false
-       },
-       "barcode": {
-           "type": "text",
-           "enable": false
-       },
-       "Status": {
-           "type": "select",
-           "label": "Status",
-           "enable": true,
-           "default": "ST_NEVER",
-           "status": true,
-           "dict": "dict:fk_stcomm",
-           "list": {
-               "cssclass": "center",
-               "editable": true
-           },
-           "render": {
-               "type": "status"
-           }
-       },
-       "address": {
-           "type": "textarea",
-           "label": "Address",
-           "cols": 40,
-           "rows": 3,
-           "enable": true,
-           "list": {
-               "visible": false
-           }
-       },
-       "zip": {
-           "type": "text",
-           "label": "Zip",
-           "length": 15,
-           "enable": true,
-           "javascript": null,
-           "list": {
-               "cssclass": "center dol_edit",
-               "editable": true
-           }
-       },
-       "town": {
-           "type": "text",
-           "label": "Town",
-           "length": 15,
-           "enable": true,
-           "javascript": null,
-           "list": {
-               "cssclass": "dol_edit",
-               "editable": true
-           }
-       },
-       "country_id": {
-           "type": "select",
-           "enable": true,
-           "dict": "dict:fk_country",
-           "default": "substr($langs->defaultlang,3,5)",
-           "sort": true
-       },
-       "state_id": {
-           "type": "select",
-           "enable": true,
-           "settype": "int",
-           "dict": "dict:fk_departements",
-           "filters": {
-               "pays_code": "country_id"
-           },
-           "sort": true
-       },
-       "DefaultLang": {
-           "type": "select",
-           "enable": false,
-           "dict": null
-       },
-       "logo": {
-           "type": "image",
-           "width": "130px",
-           "alt": "Logo",
-           "enable": true
-       },
-       "phone": {
-           "type": "text",
-           "ico": "AC_TEL",
-           "label": "Phone",
-           "enable": true,
-           "list": {
-               "cssclass": "center",
-               "editable": true,
-               "visible": false
-           },
-           "mask": "+99 9 99 99 99 99"
-       },
-       "fax": {
-           "type": "text",
-           "label": "Fax",
-           "ico": "AC_FAX",
-           "enable": true,
-           "mask": "+99 9 99 99 99 99"
-       },
-       "email": {
-           "type": "email",
-           "ico": "AC_EMAIL",
-           "enable": true,
-           "label": "EMail",
-           "validate": {
-               "cssclass": "email"
-           },
-           "list": {
-               "cssclass": "center",
-               "editable": true,
-               "visible": false
-           },
-           "render": {
-               "type": "email"
-           }
-       },
-       "url": {
-           "type": "text",
-           "ico": "AC_URL",
-           "site": "www",
-           "enable": true,
-           "validate": {
-               "cssclass": "url"
-           }
-       },
-       "idprof1": {
-           "type": "text",
-           "label": "ProfId1",
-           "length": "25",
-           "enable": true,
-           "list": {
-               "visible": false
-           }
-       },
-       "idprof3": {
-           "type": "text",
-           "label": "ProfId3FR",
-           "length": "12",
-           "enable": true,
-           "list": {
-           }
-       },
-       "typent_id": {
-           "type": "select",
-           "default": "TE_UNKNOWN",
-           "enable": true,
-           "dict": "dict:fk_typent"
-       },
-       "effectif_id": {
-           "type": "select",
-           "enable": true,
-           "default": "EF0",
-           "dict": "dict:fk_effectif"
-       },
-       "capital": {
-           "type": "text",
-           "settype": "int",
-           "length": "20",
-           "label": "Capital",
-           "enable": true,
-           "spinner": "min: 0"
-       },
-       "VATIsUsed": {
-           "type": "checkbox",
-           "settype": "bool",
-           "enable": true,
-           "default": true
-       },
-       "VATIntra": {
-           "type": "text",
-           "length": 25,
-           "javascript": null,
-           "enable": true
-       },
-       "forme_juridique_code": {
-           "type": "select",
-           "label": "JuridicalStatus",
-           "dict": "dict:fk_forme_juridique",
-           "enable": true
-       },
-       "commercial_id": {
-           "type": "select",
-           "label": "SalesRepresentatives",
-           "class": "User",
-           "view": "list",
-           "enable": true,
-           "list": {
-               "editable": true
-           },
-           "render": {
-               "type": "url",
-               "ico": "icon-object-user"
-           }
-       },
-       "civilite_id": {
-           "type": "select",
-           "label": "UserTitle",
-           "default": "NO",
-           "dict": "dict:fk_civilite",
-           "enable": true
-       },
-       "price_level": {
-           "type": "select",
-           "enable": true,
-           "settype": "string",
-           "default": "base",
-           "label": "PriceLevel",
-           "class": "Product",
-           "view": "listPriceLevel",
-           "getkey": true,
-           "params": {
-               "group": true
-           }
-       },
-       "prospectlevel": {
-           "type": "select",
-           "label": "ProspectLevelShort",
-           "enable": true,
-           "default": "PL_NONE",
-           "status": true,
-           "dict": "dict:fk_prospectlevel",
-           "list": {
-               "cssclass": "center",
-               "editable": true
-           },
-           "render": {
-               "type": "status"
-           }
-       },
-       "cond_reglement": {
-           "type": "select",
-           "label": "PaymentConditions",
-           "dict": "dict:fk_payment_term",
-           "enable": true
-       },
-       "mode_reglement": {
-           "type": "select",
-           "label": "PaymentMode",
-           "dict": "dict:fk_paiement",
-           "enable": true
-       },
-       "currency": {
-           "type": "select",
-           "label": "CompanyCurrency",
-           "dict": "dict:fk_currencies",
-           "enable": true
-       },
-       "zonegeo": {
-           "type": "select",
-           "label": "ZoneGeo",
-           "enable": true,
-           "settype": "string",
-           "list": {
-               "cssclass": "center",
-               "editable": true
-           },
-           "view": "listZoneGeo",
-           "getkey": true,
-           "params": {
-               "group": true
-           }
-       },
-       "Tag": {
-           "type": "tag",
-           "label": "Categories",
-           "enable": true,
-           "isarray": true,
-           "list": {
-           },
-           "render": {
-               "cssclass": "tag anthracite-gradient glossy"
-           }
-       },
-       "notes": {
-           "type": "textarea",
-           "enable": true
-       },
-	   "public_notes": {
-           "type": "textarea",
-           "enable": true
-       },
-       "Action": {
-           "type": "action",
-           "enable": true,
-           "list": {
-               "width": 45,
-               "cssclass": "center",
-               "sortable": false,
-               "searchable": false,
-               "static": true
-           },
-           "action": {
-               "edit": {
-                   "label": "Edit",
-                   "cssclass": "icon-action-edit action-edit"
-               },
-               "trash": {
-                   "label": "Delete",
-                   "cssclass": "icon-action-trash action-trash"
-               }
-           }
-       },
-       "Checkbox": {
-           "type": "checkbox",
-           "label": false,
-           "enable": true,
-           "list": {
-               "width": 8,
-               "sortable": false,
-               "searchable": false,
-               "static": true
-           },
-           "render": {
-           }
-       }
-   }
+	"_id": "extrafields:Societe",
+	"class": "extrafields",
+	"ico": "icon-object-company",
+	"langs": [
+		"companies",
+		"bills",
+		"compta"
+	],
+	"pluginsList": [
+		"RowAction",
+		"TrashNotification",
+		"RowShowHide",
+		"FieldEditable",
+		"ColFilter"
+	],
+	"createList": [
+		"name",
+		"Status",
+		"commercial_id",
+		"address",
+		"zip",
+		"town"
+	],
+	"oldList": [
+		"code_client",
+		"zip",
+		"town",
+		"address",
+		"zonegeo",
+		"phone",
+		"idprof3"
+	],
+	"longList": [
+		"_id",
+		"Checkbox",
+		"name",
+		"code_client",
+		"commercial_id",
+		"zip",
+		"town",
+		"address",
+		"zonegeo",
+		"phone",
+		"email",
+		"idprof3",
+		"Tag",
+		"Status",
+		"prospectlevel",
+		"Action"
+	],
+	"shortList": [
+		"town",
+		"phone"
+	],
+	"fields": {
+		"_id": {
+			"settype": "MongoId",
+			"type": "text",
+			"enable": true,
+			"list": {
+				"visible": false,
+				"static": true
+			}
+		},
+		"name": {
+			"type": "text",
+			"label": "Company",
+			"length": 60,
+			"enable": true,
+			"list": {
+				"static": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-company"
+			},
+			"validate": {
+				"cssclass": "required",
+				"minlength": 3
+			}
+		},
+		"prefix": {
+			"type": "text",
+			"length": 5,
+			"enable": false,
+			"edit": true
+		},
+		"code_client": {
+			"type": "text",
+			"label": "CustomerCode",
+			"length": 15,
+			"enable": true,
+			"list": {
+				"cssclass": "center",
+				"visible": false
+			}
+		},
+		"code_fournisseur": {
+			"type": "text",
+			"length": 15,
+			"enable": false
+		},
+		"barcode": {
+			"type": "text",
+			"enable": false
+		},
+		"Status": {
+			"type": "select",
+			"label": "Status",
+			"enable": true,
+			"default": "ST_NEVER",
+			"status": true,
+			"dict": "dict:fk_stcomm",
+			"list": {
+				"cssclass": "center",
+				"editable": true
+			},
+			"render": {
+				"type": "status"
+			}
+		},
+		"address": {
+			"type": "textarea",
+			"label": "Address",
+			"cols": 40,
+			"rows": 3,
+			"enable": true,
+			"list": {
+				"visible": false
+			}
+		},
+		"zip": {
+			"type": "text",
+			"label": "Zip",
+			"length": 15,
+			"enable": true,
+			"javascript": null,
+			"list": {
+				"cssclass": "center dol_edit",
+				"editable": true
+			}
+		},
+		"town": {
+			"type": "text",
+			"label": "Town",
+			"length": 15,
+			"enable": true,
+			"javascript": null,
+			"list": {
+				"cssclass": "dol_edit",
+				"editable": true
+			}
+		},
+		"country_id": {
+			"type": "select",
+			"enable": true,
+			"dict": "dict:fk_country",
+			"default": "substr($langs->defaultlang,3,5)",
+			"sort": true
+		},
+		"state_id": {
+			"type": "select",
+			"enable": true,
+			"settype": "int",
+			"dict": "dict:fk_departements",
+			"filters": {
+				"pays_code": "country_id"
+			},
+			"sort": true
+		},
+		"DefaultLang": {
+			"type": "select",
+			"enable": false,
+			"dict": null
+		},
+		"logo": {
+			"type": "image",
+			"width": "130px",
+			"alt": "Logo",
+			"enable": true
+		},
+		"phone": {
+			"type": "text",
+			"ico": "AC_TEL",
+			"label": "Phone",
+			"enable": true,
+			"list": {
+				"cssclass": "center",
+				"editable": true,
+				"visible": false
+			},
+			"mask": "+99 9 99 99 99 99"
+		},
+		"fax": {
+			"type": "text",
+			"label": "Fax",
+			"ico": "AC_FAX",
+			"enable": true,
+			"mask": "+99 9 99 99 99 99"
+		},
+		"email": {
+			"type": "email",
+			"ico": "AC_EMAIL",
+			"enable": true,
+			"label": "EMail",
+			"validate": {
+				"cssclass": "email"
+			},
+			"list": {
+				"cssclass": "center",
+				"editable": true,
+				"visible": false
+			},
+			"render": {
+				"type": "email"
+			}
+		},
+		"url": {
+			"type": "text",
+			"ico": "AC_URL",
+			"site": "www",
+			"enable": true,
+			"validate": {
+				"cssclass": "url"
+			}
+		},
+		"idprof1": {
+			"type": "text",
+			"label": "ProfId1",
+			"length": "25",
+			"enable": true,
+			"list": {
+				"visible": false
+			}
+		},
+		"idprof3": {
+			"type": "text",
+			"label": "ProfId3FR",
+			"length": "12",
+			"enable": true,
+			"list": {
+			}
+		},
+		"typent_id": {
+			"type": "select",
+			"default": "TE_UNKNOWN",
+			"enable": true,
+			"dict": "dict:fk_typent"
+		},
+		"effectif_id": {
+			"type": "select",
+			"enable": true,
+			"default": "EF0",
+			"dict": "dict:fk_effectif"
+		},
+		"capital": {
+			"type": "text",
+			"settype": "int",
+			"length": "20",
+			"label": "Capital",
+			"enable": true,
+			"spinner": "min: 0"
+		},
+		"VATIsUsed": {
+			"type": "checkbox",
+			"settype": "bool",
+			"enable": true,
+			"default": true
+		},
+		"VATIntra": {
+			"type": "text",
+			"length": 25,
+			"javascript": null,
+			"enable": true
+		},
+		"forme_juridique_code": {
+			"type": "select",
+			"label": "JuridicalStatus",
+			"dict": "dict:fk_forme_juridique",
+			"enable": true
+		},
+		"commercial_id": {
+			"type": "select",
+			"label": "SalesRepresentatives",
+			"class": "User",
+			"view": "list",
+			"enable": true,
+			"list": {
+				"editable": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-user"
+			}
+		},
+		"civilite_id": {
+			"type": "select",
+			"label": "UserTitle",
+			"default": "NO",
+			"dict": "dict:fk_civilite",
+			"enable": true
+		},
+		"price_level": {
+			"type": "select",
+			"enable": true,
+			"settype": "string",
+			"default": "base",
+			"label": "PriceLevel",
+			"class": "Product",
+			"view": "listPriceLevel",
+			"getkey": true,
+			"params": {
+				"group": true
+			}
+		},
+		"prospectlevel": {
+			"type": "select",
+			"label": "ProspectLevelShort",
+			"enable": true,
+			"default": "PL_NONE",
+			"status": true,
+			"dict": "dict:fk_prospectlevel",
+			"list": {
+				"cssclass": "center",
+				"editable": true
+			},
+			"render": {
+				"type": "status"
+			}
+		},
+		"cond_reglement": {
+			"type": "select",
+			"label": "PaymentConditions",
+			"dict": "dict:fk_payment_term",
+			"enable": true
+		},
+		"mode_reglement": {
+			"type": "select",
+			"label": "PaymentMode",
+			"dict": "dict:fk_paiement",
+			"enable": true
+		},
+		"currency": {
+			"type": "select",
+			"label": "CompanyCurrency",
+			"dict": "dict:fk_currencies",
+			"enable": true
+		},
+		"zonegeo": {
+			"type": "select",
+			"label": "ZoneGeo",
+			"enable": true,
+			"settype": "string",
+			"list": {
+				"cssclass": "center",
+				"editable": true
+			},
+			"view": "listZoneGeo",
+			"getkey": true,
+			"params": {
+				"group": true
+			}
+		},
+		"Tag": {
+			"type": "tag",
+			"label": "Categories",
+			"enable": true,
+			"isarray": true,
+			"list": {
+			},
+			"render": {
+				"cssclass": "tag anthracite-gradient glossy"
+			}
+		},
+		"notes": {
+			"type": "textarea",
+			"enable": true
+		},
+		"public_notes": {
+			"type": "textarea",
+			"enable": true
+		},
+		"Action": {
+			"type": "action",
+			"enable": true,
+			"list": {
+				"width": 45,
+				"cssclass": "center",
+				"sortable": false,
+				"searchable": false,
+				"static": true
+			},
+			"action": {
+				"edit": {
+					"label": "Edit",
+					"cssclass": "icon-action-edit action-edit"
+				},
+				"trash": {
+					"label": "Delete",
+					"cssclass": "icon-action-trash action-trash"
+				}
+			}
+		},
+		"Checkbox": {
+			"type": "checkbox",
+			"label": false,
+			"enable": true,
+			"list": {
+				"width": 8,
+				"sortable": false,
+				"searchable": false,
+				"static": true
+			},
+			"render": {
+			}
+		}
+	}
 }
