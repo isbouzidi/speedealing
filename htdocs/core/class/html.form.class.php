@@ -223,7 +223,7 @@ class Form {
             $out.= '<input id="element_id_' . $htmlname . '" type="hidden" value="' . $object->id . '"/>';
             $out.= '<input id="element_class_' . $htmlname . '" type="hidden" value="' . get_class($object) . '"/>';
 
-            if (!empty($loadmethod))
+			if (!empty($loadmethod))
                 $out.= '<input id="loadmethod_' . $htmlname . '" value="' . $loadmethod . '" type="hidden"/>' . "\n";
             if (!empty($savemethod))
                 $out.= '<input id="savemethod_' . $htmlname . '" value="' . $savemethod . '" type="hidden"/>' . "\n";

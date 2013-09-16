@@ -115,7 +115,7 @@ if (!empty($key) && !empty($id) && !empty($class)) {
 					$object->update_price();
 				$object->record();
 			} else {
-				$object->id = $id;
+				$object->_id = $id;
 				$res = $object->set($key, $value);
 			}
 

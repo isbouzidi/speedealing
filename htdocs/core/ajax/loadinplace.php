@@ -66,13 +66,15 @@ if (!empty($key) && !empty($class) && !empty($id)) {
     if (count($object->fk_extrafields->langs))
         foreach ($object->fk_extrafields->langs as $row)
             $langs->load($row);
-
+	error_log($object->_id);
     if ($type == "select") {
         if (!empty($object->$key))
             $return['selected'] = $object->$key;
         else
             $return['selected'] = $object->fk_extrafields->fields->$key->default;
     }
+	
+	error_log(print_r($object->fk_extrafields->fields,true));
 
     $aRow = $object->fk_extrafields->fields->$key;
     if (isset($aRow->view)) { // Is a view

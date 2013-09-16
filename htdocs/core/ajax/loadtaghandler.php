@@ -17,14 +17,14 @@
  */
 
 if (!defined('NOTOKENRENEWAL'))
-    define('NOTOKENRENEWAL', '1'); // Disables token renewal
+	define('NOTOKENRENEWAL', '1'); // Disables token renewal
 if (!defined('NOREQUIREMENU'))
-    define('NOREQUIREMENU', '1');
+	define('NOREQUIREMENU', '1');
 //if (! defined('NOREQUIREHTML'))  define('NOREQUIREHTML','1');
 if (!defined('NOREQUIREAJAX'))
-    define('NOREQUIREAJAX', '1');
+	define('NOREQUIREAJAX', '1');
 if (!defined('NOREQUIRESOC'))
-    define('NOREQUIRESOC', '1');
+	define('NOREQUIRESOC', '1');
 //if (! defined('NOREQUIRETRAN'))  define('NOREQUIRETRAN','1');
 
 require '../../main.inc.php';
@@ -37,38 +37,42 @@ $key = substr($key, 8); // remove prefix editval_
 /*
  * View
  */
-/*$error = var_export($_GET, true);
-error_log($error);*/
+/* $error = var_export($_GET, true);
+  error_log($error); */
 
 top_httphead('json'); // true for json header format
-
 //print '<!-- Ajax page called with url '.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].' -->'."\n";
 
 if (!empty($id) && !empty($class)) {
-    $res = dol_include_once("/" . $class . "/class/" . strtolower($class) . ".class.php", $class);
-    if (!$res) // old dolibarr
-        dol_include_once("/" . strtolower($class) . "/class/" . strtolower($class) . ".class.php", $class);
+	$res = dol_include_once("/" . $class . "/class/" . strtolower($class) . ".class.php", $class);
+	if (!$res) // old dolibarr
+		dol_include_once("/" . strtolower($class) . "/class/" . strtolower($class) . ".class.php", $class);
 
-    $return = array();
+	$return = array();
 
-    $object = new $class($db);
-    $object->load($id);
+	$object = new $class($db);
+	$object->load($id);
 
-    $return = new stdClass();
+	$return = new stdClass();
 
-    if (!empty($object->$key))
-        $return->assignedTags = $object->$key;
-    else
-        $return->assignedTags = array();
+	if (!empty($object->$key))
+		$return->assignedTags = $object->$key;
+	else
+		$return->assignedTags = array();
 
-    $return->availableTags = array();
+	$return->availableTags = array();
 
-    $result = $object->getView("tag", array("group" => true));
-    if (count($result->rows))
-        foreach ($result->rows as $aRow) {
-            $return->availableTags[] = $aRow->key;
-        }
+	$result = $object->mongodb->aggregate(array(array('$project' => array("Tag" => 1)),
+		array('$unwind' => '$Tag'),
+		array('$group' => array(
+				"_id" => array("Tag" => '$Tag')
+	))));
+	if (count($result["result"]))
+		foreach ($result["result"] as $aRow) {
+			//error_log(print_r($aRow, true));
+			$return->availableTags[] = $aRow['_id']['Tag'];
+		}
 
-    echo json_encode($return);
+	echo json_encode($return);
 }
 ?>

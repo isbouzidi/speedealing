@@ -2114,12 +2114,12 @@ cursor:pointer;
 /* ============================================================================== */
 
 .editkey_textarea, .editkey_text, .editkey_ckeditor, .editkey_string, .editkey_email, .editkey_numeric, .editkey_select, .editkey_autocomplete {
-background: url(<?php echo dol_buildpath($path . '/img/action_edit.png', 1) ?>) right top no-repeat;
+background: url('/img/action_edit.png') right top no-repeat;
 cursor: pointer;
 }
 
 .editkey_datepicker {
-background: url(<?php echo dol_buildpath($path . '/img/calendar.png', 1) ?>) right center no-repeat;
+background: url('/img/calendar.png') right center no-repeat;
 cursor: pointer;
 }
 

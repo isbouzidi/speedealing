@@ -124,7 +124,7 @@ class Societe extends nosqlDocument {
 
 		$this->fk_extrafields = new ExtraFields($db);
 		$this->fk_extrafields->fetch(get_class($this));
-        
+
 		$this->commercial_id = new stdClass();
 
 		return 1;
@@ -249,8 +249,9 @@ class Societe extends nosqlDocument {
 
 		/* Verify code_client must be unique */
 		if (!empty($this->code_client)) {
-			$rescode = $this->getView("code_client", array("key" => $this->code_client));
-			if (count($rescode->rows) && $rescode->rows[0]->id != $this->id) {
+			$rescode = $this->mongodb->findOne(array("code_client" => $this->code_client), array("_id" => 1));
+			//print_r($rescode['_id']->{'$id'});exit;
+			if ($rescode && $rescode['_id']->{'$id'} != $this->_id->{'$id'}) {
 				$this->errors[] = 'ErrorCustomerCodeAlreadyUsed';
 				$result = -3;
 			}

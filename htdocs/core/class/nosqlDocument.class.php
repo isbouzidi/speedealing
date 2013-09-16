@@ -146,11 +146,10 @@ abstract class nosqlDocument extends CommonObject {
 
 		$this->$key = $value;
 
-		if (is_string($this->_id)) {
-			$id = $this->_id;
-		} else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
-			$id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
-		}
+		if (is_object($this->_id))
+				$id = new MongoId($this->_id->{'$id'});
+			elseif (strlen($this->_id) == 24 && isset($this->fk_extrafields->fields->_id->settype) && $this->fk_extrafields->fields->_id->settype == "MongoId")
+				$id = new MongoId($this->_id);
 
 		return $this->mongodb->update(array('_id' => $id), array('$set' => array($key => $value)));
 
@@ -188,15 +187,17 @@ abstract class nosqlDocument extends CommonObject {
 			}
 		}
 
-		if (!$found) {
+		if (!$found && !empty($id)) {
 			//$values = $this->couchdb->getDoc($id); // load extrafields for class
 			//if($this->Extrafields->fields->_id->settype == "ObjectId")
 			//	$id = new MongoId($id);
 			if (is_object($id))
 				$id = new MongoId($id->{'$id'});
-			elseif (isset($this->extrafields->fields->_id->settype) && $this->extrafields->fields->_id->settype == "MongoId")
+			elseif (strlen($id) == 24 && isset($this->fk_extrafields->fields->_id->settype) && $this->fk_extrafields->fields->_id->settype == "MongoId")
 				$id = new MongoId($id);
 
+			//error_log(print_r($this->fk_extrafields->fields, true));
+			//error_log(print_r($id, true));
 			$values = $this->mongodb->findOne(array('_id' => $id));
 
 			if ($cache && !empty($conf->memcached)) {
@@ -1914,15 +1915,15 @@ abstract class nosqlDocument extends CommonObject {
 		} elseif (isset($aRow->status)) { // Is a status
 			return $this->LibStatus($value, array("key" => $key));
 		}
-
+		$out = "";
 		switch ($aRow->type) {
 			case "select":
 				if (isset($aRow->values->$value->label)) {
 					$out.= $langs->trans($aRow->values->$value->label);
 				} else {
 					if (!is_array($value))
-						print_r($value);
-					$out.= $langs->trans($value);
+					//print_r($value);
+						$out.= $langs->trans($value);
 				}
 				break;
 			case "text":

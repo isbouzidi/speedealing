@@ -34,11 +34,12 @@
 							}
 						}
 					]
+				},
+				"order": {
+					"name": 1
 				}
-			},
-			"order": {
-				"name": 1
 			}
+			
 		},
 		"contact": {
 			"type": "select",

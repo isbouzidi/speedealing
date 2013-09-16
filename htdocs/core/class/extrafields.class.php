@@ -174,7 +174,7 @@ class ExtraFields extends nosqlDocument {
 
         try {
             $this->load("extrafields:" . $class, true); // load and cache
-            //print_r($this->fields->Status);
+            //print_r($this->fields->Status);exit;
         } catch (Exception $e) {
             error_log("Extrafield not found : $class");
         }

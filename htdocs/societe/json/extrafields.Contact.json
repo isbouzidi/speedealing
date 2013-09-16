@@ -37,9 +37,26 @@
 		"societe": {
 			"type": "select",
 			"enable": true,
-			"class": "Societe",
-			"view": "list",
-			"params": {
+			"mongo": {
+				"collection": "Societe",
+				"method": "find",
+				"query": {
+					"$or": [
+						{
+							"Status": {
+								"$ne": "ST_NEVER"
+							}
+						},
+						{
+							"Status": {
+								"$ne": "ST_NO"
+							}
+						}
+					]
+				},
+				"order": {
+					"name": 1
+				}
 			}
 		},
 		"Status": {
