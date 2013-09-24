@@ -147,9 +147,11 @@ abstract class nosqlDocument extends CommonObject {
 		$this->$key = $value;
 
 		if (is_object($this->_id))
-				$id = new MongoId($this->_id->{'$id'});
-			elseif (strlen($this->_id) == 24 && isset($this->fk_extrafields->fields->_id->settype) && $this->fk_extrafields->fields->_id->settype == "MongoId")
-				$id = new MongoId($this->_id);
+			$id = new MongoId($this->_id->{'$id'});
+		elseif (strlen($this->_id) == 24 && isset($this->fk_extrafields->fields->_id->settype) && $this->fk_extrafields->fields->_id->settype == "MongoId")
+			$id = new MongoId($this->_id);
+		else
+			$id = $this->_id;
 
 		return $this->mongodb->update(array('_id' => $id), array('$set' => array($key => $value)));
 
