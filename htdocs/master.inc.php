@@ -44,6 +44,9 @@ $conf->Couchdb->port = $dolibarr_main_couchdb_port;
 $conf->Couchdb->user = $dolibarr_main_couchdb_user;
 $conf->Couchdb->passwd = $dolibarr_main_couchdb_passwd;
 $conf->Couchdb->name = $dolibarr_main_couchdb_name;
+// For MongoDB
+$conf->mongodb->host = $dolibarr_main_mongodb_host;
+
 // Identifiant pour le serveur memcached
 $conf->memcached->host = $dolibarr_main_memcached_host;
 $conf->memcached->port = $dolibarr_main_memcached_port;
@@ -142,7 +145,7 @@ if (!defined('NOREQUIREDB')) {
 	/**
 	 * MongoDB
 	 */
-	$dbhost = 'localhost';
+	$dbhost = $conf->mongodb->host;
 	$mongo = new MongoClient("mongodb://$dbhost");
 
 	// By default conf->entity is 1, but we change this if we ask another value
