@@ -157,18 +157,19 @@ if (!defined('NOREQUIREDB')) {
 				$conf->Couchdb->name = $name;
 				$mongodb = $mongo->$name;
 			}
-		}
-		if (empty($conf->Couchdb->name) && !empty($_ENV["dol_entity"])) { // Entity inside a CLI script
+		} else if (empty($conf->Couchdb->name) && !empty($_ENV["dol_entity"])) { // Entity inside a CLI script
 			$conf->Couchdb->name = strtolower($_ENV["dol_entity"]);
 			dol_setcache("dol_entity", $conf->Couchdb->name);
-		}
-		if (GETPOST("entity", 'alpha')) { // Just after a login page
+		} else if (GETPOST("entity", 'alpha')) { // Just after a login page
 			$conf->Couchdb->name = strtolower(GETPOST("entity", 'alpha'));
 			$name = strtolower(GETPOST("entity", 'alpha'));
 			$mongodb = $mongo->$name;
 			dol_setcache("dol_entity", $conf->Couchdb->name);
 			//} else if (defined('DOLENTITY') && is_int(DOLENTITY)) { // For public page with MultiCompany module
 			//    $conf->entity = DOLENTITY;
+		} else if (!empty($conf->Couchdb->name)) {
+			$name = $conf->Couchdb->name;
+			$mongodb = $mongo->$name;
 		}
 	}
 
