@@ -167,7 +167,10 @@ if (!defined('NOREQUIREDB')) {
 			dol_setcache("dol_entity", $conf->Couchdb->name);
 			//} else if (defined('DOLENTITY') && is_int(DOLENTITY)) { // For public page with MultiCompany module
 			//    $conf->entity = DOLENTITY;
-		} else if (!empty($conf->Couchdb->name)) {
+		}
+		
+		// default value
+		if (empty($mongodb) && !empty($conf->Couchdb->name)) {
 			$name = $conf->Couchdb->name;
 			$mongodb = $mongo->$name;
 		}
