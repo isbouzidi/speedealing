@@ -1890,7 +1890,7 @@ class Societe extends nosqlDocument {
 			}
 
 			$result = json_decode(json_encode($result));
-			print_r($result);
+			//print_r($result);
 			$i = 0;
 
 			foreach ($result->result as $aRow) {
