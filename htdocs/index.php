@@ -68,7 +68,8 @@ print_fiche_titre($langs->trans("Dashboard"), true);
 <div class="dashboard">
 	<div class="columns">
 		<div class="nine-columns twelve-columns-mobile chart">
-			<div id="demo-chart" style="height: 280px; min-width: 100px"></div>
+			<!--id="demo-chart"-->
+			<div style="height: 280px; min-width: 100px"></div>
 		</div>
 
 		<div class="three-columns twelve-columns-mobile new-row-mobile">
