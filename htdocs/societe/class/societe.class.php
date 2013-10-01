@@ -2012,12 +2012,19 @@ class Societe extends nosqlDocument {
 		$langs->load("companies");
 
 		if ($json) { // For Data see viewgraph.php
-			$keystart[0] = $_GET["name"];
-			$keyend[0] = $_GET["name"];
-			$keyend[1] = new stdClass();
+			//$keystart[0] = $_GET["name"];
+			//$keyend[0] = $_GET["name"];
+			//$keyend[1] = new stdClass();
 
-			$params = array('group' => true, 'group_level' => 2, 'startkey' => $keystart, 'endkey' => $keyend);
-			$result = $this->getView("commercial_status", $params);
+			//$params = array('group' => true, 'group_level' => 2, 'startkey' => $keystart, 'endkey' => $keyend);
+			//$result = $this->getView("commercial_status", $params);
+			
+			$result = $this->mongodb->aggregate(array(
+					array('$match' => array('commercial_id.name'=> $_GET["name"])),
+					array('$project' => array(
+						"Status" => 1
+					)),
+					array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
 
 			foreach ($this->fk_extrafields->fields->Status->values as $key => $aRow) {
 				//print_r($aRow);exit;
@@ -2028,13 +2035,17 @@ class Societe extends nosqlDocument {
 					$tab[$key]->value = 0;
 				}
 			}
+			
+			$result = json_decode(json_encode($result));
+			
+			//print_r($result);
 
-			foreach ($result->rows as $aRow) { // Update counters from view
-				if (!is_object($tab[$aRow->key[1]]))
-					$tab[$aRow->key[1]] = new stdClass();
-				if (isset($tab[$aRow->key[1]]->value))
-					$tab[$aRow->key[1]]->value = 0;
-				$tab[$aRow->key[1]]->value+=$aRow->value;
+			foreach ($result->result as $aRow) { // Update counters from view
+				if (!is_object($tab[$aRow->_id]))
+					$tab[$aRow->_id] = new stdClass();
+				if (isset($tab[$aRow->_id]->value))
+					$tab[$aRow->_id]->value = 0;
+				$tab[$aRow->_id]->value+=$aRow->count;
 			}
 
 			foreach ($tab as $aRow)
@@ -2057,19 +2068,30 @@ class Societe extends nosqlDocument {
 									seriesCounter = 0,
 									names = [<?php
 			if ($user->rights->societe->client->voir) { // See ALL
-				$params = array('group' => true, 'group_level' => 1);
-				$result = $this->getView("commercial_status", $params);
+				//$params = array('group' => true, 'group_level' => 1);
+				//$result = $this->getView("commercial_status", $params);
+				$result = $this->mongodb->aggregate(array(
+					array('$project' => array(
+						"commercial_id.name" => 1
+					)),
+					array('$group' => array('_id' => '$commercial_id.name', 'count' => array('$sum' => 1)))));
+				$result = json_decode(json_encode($result));
 			} else {
-				$result->rows[0]->key = array($user->name);
+				$result->result[0]->_id = array($user->name);
 			}
 
+			//print_r($result);
 
-			if (count($result->rows)) {
-				foreach ($result->rows as $aRow) {
+			if (count($result->result)) {
+				foreach ($result->result as $aRow) {
+					if(empty($aRow->_id))
+						//$aRow->_id = "Non assigne";
+						continue;
+					
 					if ($i == 0)
-						echo "'" . $aRow->key[0] . "'";
+						echo "'" . $aRow->_id . "'";
 					else
-						echo ",'" . $aRow->key[0] . "'";
+						echo ",'" . $aRow->_id . "'";
 					$i++;
 				}
 			}
