@@ -1870,35 +1870,49 @@ class Societe extends nosqlDocument {
 			$params = array('group' => true);
 			if ($user->rights->societe->client->voir) { // See ALL
 				$params = array('group' => true);
-				$result = $this->getView("count_status", $params);
-				$filter = false;
+				//$result = $this->getView("count_status", $params);
+				$result = $this->mongodb->aggregate(array(
+					array('$project' => array(
+						"Status" => 1
+					)),
+					array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
+				//$filter = false;
 			} else {
-				$params = array('group' => true, "startkey" => array($user->name), "endkey" => array($user->name, new stdClass()));
-				$result = $this->getView("commercial_status", $params);
-				$filter = true;
+				//$params = array('group' => true, "startkey" => array($user->name), "endkey" => array($user->name, new stdClass()));
+				//$result = $this->getView("commercial_status", $params);
+				$result = $this->mongodb->aggregate(array(
+					array('$match' => array('commercial_id.id'=> $user->login)),
+					array('$project' => array(
+						"Status" => 1
+					)),
+					array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
+				//$filter = true;
 			}
 
+			$result = json_decode(json_encode($result));
 			//print_r($result);
 			$i = 0;
 
-			foreach ($result->rows as $aRow) {
-				if ($filter)
-					$key = $aRow->key[1];
-				else
-					$key = $aRow->key;
+			foreach ($result->result as $aRow) {
+				//if ($filter)
+				//	$key = $aRow->key[1];
+				//else
+				
+				$key = $aRow->_id;
+				//print_r($aRow);
 				$label = $langs->trans($this->fk_extrafields->fields->Status->values->$key->label);
 				if (empty($label))
-					$label = $langs->trans($aRow->key);
+					$label = $langs->trans($aRow->_id);
 
 				if ($i == 0) { // first element
 					$output[$i] = new stdClass();
 					$output[$i]->name = $label;
-					$output[$i]->y = $aRow->value;
+					$output[$i]->y = $aRow->count;
 					$output[$i]->sliced = true;
 					$output[$i]->selected = true;
 				}
 				else
-					$output[$i] = array($label, $aRow->value);
+					$output[$i] = array($label, $aRow->count);
 				$i++;
 			}
 			return $output;
