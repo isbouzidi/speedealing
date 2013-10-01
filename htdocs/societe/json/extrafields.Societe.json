@@ -283,6 +283,7 @@
 		"commercial_id": {
 			"type": "select",
 			"label": "SalesRepresentatives",
+			"class":"User",
 			"mongo": {
 				"collection": "User",
 				"method": "find",

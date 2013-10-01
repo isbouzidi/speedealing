@@ -77,7 +77,7 @@ if (!empty($key) && !empty($class) && !empty($id)) {
 	error_log(print_r($object->fk_extrafields->fields,true));
 
     $aRow = $object->fk_extrafields->fields->$key;
-    if (isset($aRow->view)) { // Is a view
+    if (isset($aRow->mongo)) { // Is a view
         if (isset($aRow->class)) { // Is another class
             $class_obj = $aRow->class;
             dol_include_once("/" . strtolower($class_obj) . "/class/" . strtolower($class_obj) . ".class.php");
@@ -92,9 +92,14 @@ if (!empty($key) && !empty($class) && !empty($id)) {
                     $params[$idx] = $row;
             }
         try {
-            if (isset($aRow->class)) // Is view is an other class
-                $result = $object_tmp->getView($aRow->view, $params);
-            else
+            if (isset($aRow->class)) { // Is view is an other class
+				$method = $aRow->mongo->method;
+				$query = $aRow->mongo->query;
+				
+                $result = $object_tmp->mongodb->$method($query);
+				if($aRow->mongo->order)
+					$result->sort($aRow->mongo->order);
+			} else
                 $result = $object->getView($aRow->view, $params);
         } catch (Exception $e) {
             $error = "Fetch : Something weird happened: " . $e->getMessage() . " (errcode=" . $e->getCode() . ")\n";
@@ -108,15 +113,18 @@ if (!empty($key) && !empty($class) && !empty($id)) {
             $aRow->values[0]->enable = true;
         }
 
-        foreach ($result->rows as $row) {
+        foreach ($result as $row) {
+			//error_log(print_r($row,true));
+			$row = json_decode(json_encode($row));
+			
             if (empty($aRow->getkey)) {
-				$aRow->values[$row->value->_id] = new stdClass();
-                $aRow->values[$row->value->_id]->label = $row->value->name;
-                $aRow->values[$row->value->_id]->enable = true;
+				$aRow->values[$row->_id] = new stdClass();
+                $aRow->values[$row->_id]->label = $row->name;
+                $aRow->values[$row->_id]->enable = true;
             } else { // For getkey
-				$aRow->values[$row->key] = new stdClass();
-                $aRow->values[$row->key]->label = $row->key;
-                $aRow->values[$row->key]->enable = true;
+				$aRow->values[$row->name] = new stdClass();
+                $aRow->values[$row->name]->label = $row->name;
+                $aRow->values[$row->name]->enable = true;
             }
         }
 
