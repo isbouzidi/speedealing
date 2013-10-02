@@ -1802,7 +1802,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         //$result = show_subsidiaries($conf, $langs, $db, $object);
         // Contacts list
         print column_start("six");
-        $contact->show(25, $object->id);
+		$contact->show(25, $object->_id->{'$id'});
         print column_end();
         //$result = show_contacts($conf, $langs, $db, $object, $_SERVER["PHP_SELF"] . '?id=' . $object->id);
         // Show actions

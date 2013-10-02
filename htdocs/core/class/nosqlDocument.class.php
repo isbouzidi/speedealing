@@ -256,12 +256,12 @@ abstract class nosqlDocument extends CommonObject {
 		//$values->id = $this->id;
 		//print_r($this->_id->{'$id'});exit;
 
-		if (!empty($this->_id))
+		/*if (!empty($this->_id))
 			if (is_string($this->_id)) {
 				$values->_id = $this->_id;
 			} else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
 				$values->_id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
-			}
+			}*/
 
 		$values->tms = new MongoDate(strtotime(dol_now()));
 

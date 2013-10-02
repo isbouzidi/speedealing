@@ -79,8 +79,13 @@ if (!empty($class)) {
 		//'stale'=> "update_after"
 		//$result = $object->getView($json, $params);
 
-		$result = $object->mongodb->find(json_decode($query));
-		$count = $object->mongodb->count(json_decode($query));
+		if($query) {
+			$result = $object->mongodb->find(json_decode($query));
+			$count = $object->mongodb->count(json_decode($query));
+		} else {
+			$result = $object->mongodb->find();
+			$count = $object->mongodb->count();
+		}
 
 		dol_setcache("total_rows", $count);
 	}

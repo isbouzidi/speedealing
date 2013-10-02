@@ -45,7 +45,7 @@ class Contact extends nosqlDocument {
 	var $address;
 	var $zip;
 	var $town;
-	var $state_id;	// Id of department
+	var $state_id; // Id of department
 	var $country_id;   // Id of country
 	var $societe;  // fk_soc
 	var $status; // 0=brouillon, 1=4=actif, 5=inactif
@@ -53,11 +53,11 @@ class Contact extends nosqlDocument {
 	var $email;
 	var $birthday;
 	var $default_lang;
-	var $notes;	  // Private note
+	var $notes;   // Private note
 	var $no_email; // 1=Don't send e-mail to this contact, 0=do
-	var $ref_facturation;	// Nb de reference facture pour lequel il est contact
-	var $ref_contrat;	 // Nb de reference contrat pour lequel il est contact
-	var $ref_commande;	// Nb de reference commande pour lequel il est contact
+	var $ref_facturation; // Nb de reference facture pour lequel il est contact
+	var $ref_contrat;  // Nb de reference contrat pour lequel il est contact
+	var $ref_commande; // Nb de reference commande pour lequel il est contact
 	var $ref_propal;   // Nb de reference propal pour lequel il est contact
 	var $user_login;
 	var $import_key;
@@ -101,8 +101,10 @@ class Contact extends nosqlDocument {
 			$this->lastname = ucwords($this->lastname);
 		if (!empty($conf->global->MAIN_FIRST_TO_UPPER))
 			$this->firstname = ucwords($this->firstname);
+		
+		$this->Status = "ST_ENABLE";
 
-		$result = $this->update($this->id, $user, 1);
+		$result = $this->update(null, $user, 1);
 		if ($result < 0) {
 			$error++;
 			$this->error = $this->db->lasterror();
@@ -122,7 +124,7 @@ class Contact extends nosqlDocument {
 			// Fin appel triggers
 		}
 
-		return $this->id;
+		return $this->_id;
 	}
 
 	/**
@@ -138,7 +140,8 @@ class Contact extends nosqlDocument {
 
 		$error = 0;
 
-		$this->id = $id;
+		if ($id)
+			$this->_id = $id;
 
 		// Clean parameters
 		$this->lastname = trim($this->lastname) ? trim($this->lastname) : trim($this->name);
@@ -350,7 +353,7 @@ class Contact extends nosqlDocument {
 				$this->ref = $obj->rowid;
 				$this->civilite_id = $obj->civilite_id;
 				$this->lastname = $obj->lastname;
-				$this->name = $obj->lastname;	// TODO deprecated
+				$this->name = $obj->lastname; // TODO deprecated
 				$this->firstname = $obj->firstname;
 				$this->nom = $obj->lastname;  // TODO deprecated
 				$this->prenom = $obj->firstname;  // TODO deprecated
@@ -904,7 +907,11 @@ class Contact extends nosqlDocument {
 		print "</table>";
 
 		$obj->iDisplayLength = $max;
-		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listSociete&class=" . get_class($this) . "&key=" . $id;
+		
+		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+			{"name": "query", "value": "{\"societe.id\": \"'.$id.'\"}"}]';
+		
+		//$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listSociete&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "contacts_datatable", true);
 
 		print end_box();

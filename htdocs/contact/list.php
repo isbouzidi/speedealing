@@ -62,55 +62,6 @@ if ($type == "c") {
 $object = new Contact($db);
 $soc = new Societe($db);
 
-if ($_GET['json'] == "list") {
-	$output = array(
-		"sEcho" => intval($_GET['sEcho']),
-		"iTotalRecords" => 0,
-		"iTotalDisplayRecords" => 0,
-		"aaData" => array()
-	);
-
-	$keystart[0] = $viewname;
-	$keyend[0] = $viewname;
-	$keyend[1] = new stdClass();
-
-	$result = array();
-	try {
-		if ($_GET["disable"] == "true")
-			$resultsoc = $soc->getView("listDisableByCommercial", array("key" => $user->id));
-		else
-			$resultsoc = $soc->getView("listEnableByCommercial", array("key" => $user->id));
-	} catch (Exception $exc) {
-		print $exc->getMessage();
-	}
-
-	if (count($resultsoc->rows)) {
-		foreach ($resultsoc->rows as $aRow) {
-			$resultcontact = $object->getView("listSociete", array("key" => $aRow->id));
-			if (count($resultcontact->rows)) {
-				foreach ($resultcontact->rows as $row) {
-					$result[] = $row;
-				}
-			}
-		}
-	}
-	//print_r($result);
-	//exit;
-
-	$iTotal = count($result);
-	$output["iTotalRecords"] = $iTotal;
-	$output["iTotalDisplayRecords"] = $iTotal;
-	$i = 0;
-	foreach ($result as $aRow) {
-		$output["aaData"][] = $aRow->value;
-		unset($element);
-	}
-
-	header('Content-type: application/json');
-	echo json_encode($output);
-	exit;
-}
-
 /*
  * View
  */
