@@ -172,12 +172,15 @@ if (empty($reshook)) {
 	}
 
 	if ($action == 'confirm_delete' && $confirm == 'yes' && $user->rights->societe->contact->supprimer) {
-		$result = $object->fetch($_GET["id"]);
+		$result = $object->load($_GET["id"]);
 
 		$object->old_name = $_POST["old_name"];
 		$object->old_firstname = $_POST["old_firstname"];
 
-		$result = $object->delete();
+		$result = $object->delete(true);
+		
+		$result = $result['ok'];
+		
 		if ($result > 0) {
 			header("Location: " . DOL_URL_ROOT . '/contact/list.php');
 			exit;

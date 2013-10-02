@@ -361,9 +361,14 @@ abstract class nosqlDocument extends CommonObject {
 				$obj->_id = new MongoId($this->id());
 			else
 				$obj->_id = $this->id();
+		} else {
+			if (is_object($obj->_id))
+				$obj->_id = new MongoId($obj->id());
+			else
+				$obj->_id = $obj->id();
 		}
-
-		return $this->mongodb->remove(array("_id" => $obj->_id)/* , array("safe"=>true) */);
+		
+		return $this->mongodb->remove(array("_id" => $obj->_id));
 	}
 
 	/**
@@ -372,9 +377,9 @@ abstract class nosqlDocument extends CommonObject {
 	public function delete($force = false) {
 		if (!empty($this->_id)) {
 			if ($force)
-				$this->deleteDoc($this);
+				return $this->deleteDoc($this);
 			else {
-				$this->set("trash", true);
+				return $this->set("trash", true);
 			}
 		}
 	}
@@ -434,10 +439,10 @@ abstract class nosqlDocument extends CommonObject {
 	 * @return string
 	 */
 	public function id() {
-		if (is_object($this->id))
-			return $this->id->{'$id'};
+		if (is_object($this->_id))
+			return $this->_id->{'$id'};
 		else
-			return $this->id;
+			return $this->_id;
 	}
 
 	/** Call a view on couchdb
