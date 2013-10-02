@@ -1641,7 +1641,7 @@ function img_edit_add($alt = 'default') {
 	if ($alt == 'default')
 		$alt = $langs->trans('Add');
 
-	return img_picto($alt, 'edit_add.png');
+	return img_picto($alt, 'switch_off.png');
 }
 
 /**
@@ -1656,7 +1656,7 @@ function img_edit_remove($alt = 'default') {
 	if ($alt == 'default')
 		$alt = $langs->trans('Remove');
 
-	return img_picto($alt, 'edit_remove.png');
+	return img_picto($alt, 'switch_on.png');
 }
 
 /**

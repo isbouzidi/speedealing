@@ -35,7 +35,7 @@ $langs->load("other");
 $action = GETPOST('action');
 
 if (!$user->admin)
-    accessforbidden();
+	accessforbidden();
 
 $object = new DolibarrModules($db);
 
@@ -45,25 +45,25 @@ $object = new DolibarrModules($db);
 
 if ($action == 'add') {
 
-    try {
-        $object->load($_GET['id']);
-        $object->rights[$_GET['pid']]->default = true;
-        $object->record();
-        dol_delcache("DolibarrModules:default_right");
-    } catch (Exception $e) {
-        dol_print_error('', $e->getMessage());
-    }
+	try {
+		$object->load($_GET['id']);
+		$object->rights[$_GET['pid']]->default = true;
+		$object->record();
+		dol_delcache("DolibarrModules:default_right");
+	} catch (Exception $e) {
+		dol_print_error('', $e->getMessage());
+	}
 }
 
 if ($action == 'remove') {
-    try {
-        $object->load($_GET['id']);
-        $object->rights[$_GET['pid']]->default = false;
-        $object->record();
-        dol_delcache("DolibarrModules:default_right");
-    } catch (Exception $e) {
-        dol_print_error('', $e->getMessage());
-    }
+	try {
+		$object->load($_GET['id']);
+		$object->rights[$_GET['pid']]->default = false;
+		$object->record();
+		dol_delcache("DolibarrModules:default_right");
+	} catch (Exception $e) {
+		dol_print_error('', $e->getMessage());
+	}
 }
 
 $langs->load("admin");
@@ -164,37 +164,37 @@ print'</tfoot>';
 print'<tbody>';
 
 try {
-    $result = $object->getView("default_right");
+	$result = $object->getView("default_right");
 } catch (Exception $exc) {
-    print $exc->getMessage();
+	print $exc->getMessage();
 }
 
 if (count($result->rows)) {
 
-    foreach ($result->rows as $aRow) {
-        print'<tr>';
+	foreach ($result->rows as $aRow) {
+		print'<tr>';
 
-        $object->name = $aRow->value->name;
-        $object->numero = $aRow->value->numero;
-        $object->rights_class = $aRow->value->rights_class;
-        $object->id = $aRow->value->id;
-        $object->perm = $aRow->value->perm;
-        $object->desc = $aRow->value->desc;
-        $object->Status = ($aRow->value->Status == true ? "true" : "false");
+		$object->name = $aRow->value->name;
+		$object->numero = $aRow->value->numero;
+		$object->rights_class = $aRow->value->rights_class;
+		$object->id = $aRow->value->id;
+		$object->perm = $aRow->value->perm;
+		$object->desc = $aRow->value->desc;
+		$object->Status = ($aRow->value->Status == true ? "true" : "false");
 
-        print '<td>' . $aRow->value->id . '</td>';
-        print '<td>' . img_object('', $aRow->value->picto) . " " . $object->getName() . '</td>';
-        print '<td>' . $object->getPermDesc() . '<a name="' . $aRow->value->id . '">&nbsp;</a></td>';
-        print '<td>';
-        if ($aRow->value->Status) {
-            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $aRow->value->_id . '&pid=' . $aRow->value->idx . '&amp;action=remove#' . $aRow->value->id . '">' . img_edit_remove() . '</a>';
-        } else {
-            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $aRow->value->_id . '&pid=' . $aRow->value->idx . '&amp;action=add#' . $aRow->value->id . '">' . img_edit_add() . '</a>';
-        }
-        print '</td>';
+		print '<td>' . $aRow->value->id . '</td>';
+		print '<td>' . img_object('', $aRow->value->picto) . " " . $object->getName() . '</td>';
+		print '<td>' . $object->getPermDesc() . '<a name="' . $aRow->value->id . '">&nbsp;</a></td>';
+		print '<td>';
+		if ($aRow->value->Status) {
+			print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $aRow->value->_id . '&pid=' . $aRow->value->idx . '&amp;action=remove#' . $aRow->value->id . '">' . img_edit_remove() . '</a>';
+		} else {
+			print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $aRow->value->_id . '&pid=' . $aRow->value->idx . '&amp;action=add#' . $aRow->value->id . '">' . img_edit_add() . '</a>';
+		}
+		print '</td>';
 
-        print'</tr>';
-    }
+		print'</tr>';
+	}
 }
 print'</tbody>';
 print'</table>';
