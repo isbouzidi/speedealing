@@ -635,7 +635,7 @@ class User extends nosqlDocument {
 				if (empty($this->Status))
 					$this->Status = "DISABLE";
 				$this->CreateDate = dol_now();
-				$this->id = "user:" . $this->name;
+				$this->_id = "user:" . $this->name;
 			}
 
 			$pass = null;
@@ -669,27 +669,19 @@ class User extends nosqlDocument {
 			return -3;
 		}
 
-		if ($result) {
-			$this->id = $this->name;
-			//$this->_id = $result->id;
-
-			if (!$notrigger && !empty($user)) {
-				// Appel des triggers
-				include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
-				$interface = new Interfaces($this->db);
-				$result = $interface->run_triggers('USER_CREATE', $this, $user, $langs, $conf);
-				if ($result < 0) {
-					$error++;
-					$this->errors = $interface->errors;
-				}
-				// Fin appel triggers
+		if (!$notrigger && !empty($user)) {
+			// Appel des triggers
+			include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
+			$interface = new Interfaces($this->db);
+			$result = $interface->run_triggers('USER_CREATE', $this, $user, $langs, $conf);
+			if ($result < 0) {
+				$error++;
+				$this->errors = $interface->errors;
 			}
-		} else {
-			$this->error = $this->db->lasterror();
-			return -2;
+			// Fin appel triggers
 		}
 
-		return $this->id;
+		return $this->name;
 	}
 
 	/**

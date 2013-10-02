@@ -224,7 +224,7 @@ if ((($action == 'add' && $canadduser) || ($action == 'update' && $canedituser))
 
 		//print $id;
 
-		if ($id == $edituser->id) {
+		if ($id == $edituser->name) {
 			$file_OK = is_uploaded_file($_FILES['photo']['tmp_name']);
 
 			if (GETPOST('deletephoto') && !empty($del_photo)) {

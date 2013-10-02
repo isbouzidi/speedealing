@@ -296,7 +296,6 @@ abstract class nosqlDocument extends CommonObject {
 
 			if (is_string($values->_id)) {
 				$result = $values->_id;
-				$this->_id = $this->_id;
 			} else if (is_object($values->_id) && isset($values->_id->{'$id'})) {
 				$result = $values->_id->{'$id'};
 				$this->_id = $values->_id->{'$id'};

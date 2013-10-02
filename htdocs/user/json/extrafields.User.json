@@ -7,6 +7,14 @@
        "admin"
    ],
    "fields": {
+		"_id": {
+			"type": "text",
+			"enable": true,
+			"list": {
+				"visible": false,
+				"static": true
+			}
+		},
        "Status": {
            "type": "select",
            "enable": true,
