@@ -1775,13 +1775,14 @@ abstract class nosqlDocument extends CommonObject {
 									eval("\$v = $v;");
 									if (is_object($v))
 										$v = new MongoId($v->{'$id'});
+										
 									$query->$option = $v;
 								}
 							$result = $mongodb->$class->{$aRow->mongo->method}($query);
 						}
 						else
 							$result = $mongodb->$class->{$aRow->mongo->method}();
-
+							
 						if ($aRow->mongo->order)
 							$result->sort((array) $aRow->mongo->order);
 					} catch (Exception $e) {
@@ -1800,7 +1801,7 @@ abstract class nosqlDocument extends CommonObject {
 							if (is_object($row->_id))
 								$row->_id = $row->_id->{'$id'};
 
-							//print($row->name);
+							print($row->name);
 							$aRow->values[$row->_id] = new stdClass();
 							$aRow->values[$row->_id]->label = $row->name;
 							$aRow->values[$row->_id]->enable = true;
