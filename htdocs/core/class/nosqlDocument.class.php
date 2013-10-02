@@ -1801,7 +1801,7 @@ abstract class nosqlDocument extends CommonObject {
 							if (is_object($row->_id))
 								$row->_id = $row->_id->{'$id'};
 
-							print($row->name);
+							//print($row->name);
 							$aRow->values[$row->_id] = new stdClass();
 							$aRow->values[$row->_id]->label = $row->name;
 							$aRow->values[$row->_id]->enable = true;
