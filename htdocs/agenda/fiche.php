@@ -737,9 +737,16 @@ if ($action == 'create') {
 
 	// Description
 	print '<tr><td valign="top">' . $langs->trans("Description") . '</td><td>';
-	require_once(DOL_DOCUMENT_ROOT . "/core/class/doleditor.class.php");
-	$doleditor = new DolEditor('note', (GETPOST('note') ? GETPOST('note') : $object->notes), '', 280, 'dolibarr_notes', 'In', true, true, $conf->fckeditor->enabled, ROWS_7, 90);
-	$doleditor->Create();
+	print '<textarea id="note" name="note">' . $object->notes . '</textarea>';
+	print '<script>
+		$(document).ready(function() {
+		CKEDITOR.replace( \'note\', {
+			height: 300
+		});
+		});</script>';
+	//require_once(DOL_DOCUMENT_ROOT . "/core/class/doleditor.class.php");
+	//$doleditor = new DolEditor('note', (GETPOST('note') ? GETPOST('note') : $object->notes), '', 280, 'dolibarr_notes', 'In', true, true, $conf->fckeditor->enabled, ROWS_7, 90);
+	//$doleditor->Create();
 	print '</td></tr>';
 
 	print '</table>';
@@ -1058,9 +1065,16 @@ if ($id) {
 		// Description
 		print '<tr><td valign="top">' . $langs->trans("Description") . '</td><td colspan="3">';
 		// Editeur wysiwyg
-		require_once(DOL_DOCUMENT_ROOT . "/core/class/doleditor.class.php");
-		$doleditor = new DolEditor('note', $object->notes, '', 240, 'dolibarr_notes', 'In', true, true, $conf->fckeditor->enabled, ROWS_5, 90);
-		$doleditor->Create();
+		//require_once(DOL_DOCUMENT_ROOT . "/core/class/doleditor.class.php");
+		//$doleditor = new DolEditor('note', $object->notes, '', 240, 'dolibarr_notes', 'In', true, true, $conf->fckeditor->enabled, ROWS_5, 90);
+		//$doleditor->Create();
+		print '<textarea id="note" name="note">' . $object->notes . '</textarea>';
+		print '<script>
+		$(document).ready(function() {
+		CKEDITOR.replace( \'note\', {
+			height: 300
+		});
+		});</script>';
 		print '</td></tr>';
 
 		print '</table><br>';

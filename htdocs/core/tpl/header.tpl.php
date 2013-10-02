@@ -147,5 +147,5 @@
 	<!--<link rel="stylesheet" href="theme/eldy/style.css" />-->
 
 	<!-- JQuery. Must be before other includes -->
-	<script type="text/javascript" src="js/libs/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="includes/jquery/js/jquery-1.8.3.min.js"></script>
 	<script type="text/javascript" src="includes/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>

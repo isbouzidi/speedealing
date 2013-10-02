@@ -41,7 +41,7 @@
 	<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.ui-datepicker.js" defer></script>
 	<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.ui-autocomplete.js" defer></script>
 	<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.wysiwyg.js" defer></script>
-	<script type="text/javascript" src="includes/jquery/plugins/wysiwyg/jquery.wysiwyg.min.js" defer></script>
+	<script type="text/javascript" src="includes/jquery/plugins/wysiwyg/jquery.wysiwyg.js" defer></script>
 	<script type="text/javascript">
 		var urlSaveInPlace = 'core/ajax/saveinplace.php';
 		var urlAddInPlace = 'core/ajax/addinplace.php';
@@ -97,8 +97,8 @@
 	<script type="text/javascript" src="includes/jquery/plugins/highcharts/js/themes/symeos.js" defer></script>
 
 	<!-- CKEditor -->
-	<script type="text/javascript">var CKEDITOR_BASEPATH = '<?php echo DOL_URL_ROOT; ?>/includes/ckeditor/';</script>
-	<script type="text/javascript" src="includes/ckeditor/ckeditor_basic.js" defer></script>
+	<!--<script type="text/javascript">var CKEDITOR_BASEPATH = '<?php echo DOL_URL_ROOT; ?>/includes/ckeditor/';</script>
+	<script type="text/javascript" src="includes/ckeditor/ckeditor_basic.js" defer></script>-->
 
 	<script type="text/javascript" src="js/setup.js"></script>
     
@@ -118,6 +118,9 @@
 	<script type="text/javascript" src="js/developr.content-panel.js"></script>
 	<script type="text/javascript" src="js/developr.agenda.js"></script>
 	<script type="text/javascript" src="js/developr.tabs.js"></script>		<!-- Must be loaded last -->
+	
+	<!-- CKEditor -->
+    <script type="text/javascript" src="js/libs/ckeditor/ckeditor.js"></script>
 	
 	<!-- Kendo library -->
 	<script type="text/javascript" src="includes/kendo/js/kendo.web.min.js"></script>
