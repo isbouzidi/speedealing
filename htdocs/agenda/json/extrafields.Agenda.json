@@ -22,7 +22,7 @@
 				"collection": "Societe",
 				"method": "find",
 				"query": {
-					"$or": [
+					"$and": [
 						{
 							"Status": {
 								"$ne": "ST_NEVER"

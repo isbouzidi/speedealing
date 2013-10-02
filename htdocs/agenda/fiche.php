@@ -91,9 +91,9 @@ $contact = new Contact($db);
 if ($action == 'add_action') {
 	$error = 0;
 
-/*	if (empty($backtopage)) {
-		$backtopage = DOL_URL_ROOT . '/agenda/index.php';
-	}*/
+	/* 	if (empty($backtopage)) {
+	  $backtopage = DOL_URL_ROOT . '/agenda/index.php';
+	  } */
 
 	if ($cancel) {
 		header("Location: " . $backtopage);
@@ -668,7 +668,7 @@ if ($action == 'create') {
 	if (!empty($socid)) {
 		$societe = new Societe($db);
 		$societe->load($socid);
-		if ($societe->class == "Societe")
+		if ($societe->_id)
 			print $societe->getNomUrl(1);
 		else { // Is a contact
 			$object->contact->id = $socid;
