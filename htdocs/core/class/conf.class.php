@@ -80,6 +80,7 @@ class Conf extends nosqlDocument {
 		$this->file = new stdClass();
 		$this->db = new stdClass();
 		$this->Couchdb = new stdClass();
+		$this->mongodb = new stdClass();
 		$this->memcached = new stdClass();
 		$this->nodejs = new stdClass();
 		$this->global = new stdClass();
