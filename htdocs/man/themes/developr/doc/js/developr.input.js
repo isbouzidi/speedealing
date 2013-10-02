@@ -142,6 +142,7 @@
 				title = (this.title && this.title.length > 0) ? ' title="'+this.title+'"' : '',
 				tabIndex = (this.tabIndex > 0) ? this.tabIndex : 0,
 				select, dropDown, text, isWatching, values;
+console.log(settings);
 
 			// If already set
 			if (replacement)
@@ -558,7 +559,7 @@
 	 */
 	function _unformatNumberValue(value, options)
 	{
-		if (typeof value !== 'number')
+		if (typeof value === 'string')
 		{
 			if (options.thousandsSep.length)
 			{
@@ -611,16 +612,22 @@
 			value = Math.min(value, options.max);
 		}
 
-		// Format value
-		parts = value.toString().split('.');
-
-		// Thousands separator
-		if (options.thousandsSep.length && parts[0].length > 3)
+		// If not standard
+		if (options.thousandsSep.length || options.decimalPoint !== '.')
 		{
-			parts[0] = parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, options.thousandsSep);
+			// Format value
+			parts = value.toString().split('.');
+
+			// Thousands separator
+			if (options.thousandsSep.length && parts[0].length > 3)
+			{
+				parts[0] = parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, options.thousandsSep);
+			}
+
+			return parts.join(options.decimalPoint);
 		}
 
-		return parts.join(options.decimalPoint);
+		return value;
 	}
 
 	/*
@@ -933,7 +940,13 @@
 
 		// Store reference
 		select.data('clone', clone);
-		select.addClass('select-cloned');
+
+		// Hide - need to add an internal marker as it makes the select lose focus in some browsers */
+		select.data('select-hiding', true).addClass('select-cloned')
+		setTimeout(function()
+		{
+			select.removeData('select-hiding');
+		}, 40);
 
 		// Refernce
 		list = clone.children('.drop-down');
@@ -1380,7 +1393,6 @@
 	{
 		var list = select.children('.drop-down'),
 			checkList = select.hasClass('check-list') ? '<span class="check"></span>' : '',
-			newItems = $(),
 			existing, isWatching;
 
 		// If valid
@@ -1403,7 +1415,8 @@
 					option = (this.nodeName.toLowerCase() === 'option'),
 					node = option ? 'span' : 'strong',
 					text = option ? $(this).text() : this.label,
-					found = false;
+					found = false,
+					newItem;
 
 				// Empty text
 				if (text.length === 0)
@@ -1470,9 +1483,16 @@
 					}
 				}
 
-				newItems = newItems.add($('<'+node+((classes.length > 0) ? ' class="'+classes.join(' ')+'"' : '')+'>'+checkList+text+'</'+node+'>')
-									.appendTo(list)
-									.data('select-value', this));
+				// Create
+				newItem = $('<'+node+((classes.length > 0) ? ' class="'+classes.join(' ')+'"' : '')+'>'+checkList+text+'</'+node+'>')
+							.appendTo(list)
+							.data('select-value', this);
+
+				// Set behavior if not disabled
+				if (option && !this.disabled)
+				{
+					newItem.on('touchend click', _clickSelectValue);
+				}
 			});
 
 			// Remove items not found
@@ -1480,9 +1500,6 @@
 			{
 				existing.remove();
 			}
-
-			// Set behavior for new items
-			newItems.not('.disabled').on('touchend click', _clickSelectValue);
 
 			// Re-enable DOM watching if required
 			if (isWatching)
@@ -2785,6 +2802,12 @@
 		{
 			var target = $(event.target),
 				clone = select.data('clone');
+
+			// If this is an internal operation, do not process
+			if (select.data('select-hiding'))
+			{
+				return;
+			}
 
 			// Validation for click/touchend event
 			if ((event.type === 'click' || event.type === 'touchend') && (target.closest(select).length || (clone && target.closest(clone).length)))

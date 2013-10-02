@@ -57,7 +57,7 @@
 				cells = table.children('tbody').children().children();
 
 			// Check if valid
-			if (table.length === 0 || thead.length === 0 || cells.length === 0)
+			if (table.length === 0 || thead.length === 0)
 			{
 				return;
 			}

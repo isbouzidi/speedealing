@@ -1714,11 +1714,11 @@
 				};
 
 			// Font-icons
-			this.findIn(self, children, '[class^="icon-"],[class*=" icon-"]').each(function(i)
+			this.findIn(self, children, '[class^="icon-"],[class*=" icon-"]').not('.old-icon').each(function(i)
 			{
 				// Icon class
 				var name = /icon-([^ ]+)/.exec(this.className)[1],
-					element = $(this);
+					element = $(this).addClass('old-icon');
 
 				// If valid icon name
 				if (iconMap[name])
@@ -2547,7 +2547,10 @@
 			$.each(target.data('tracking-elements') || [], function(i)
 			{
 				$(this.element).stop(true, true);
-				this.func.call(this.element, target);
+				if (this.func)
+				{
+					this.func.call(this.element, target);
+				}
 			});
 		});
 
@@ -2571,7 +2574,10 @@
 			$.each(target.data('tracking-elements') || [], function(i)
 			{
 				$(this.element).stop(true, true);
-				this.func.call(this.element, target);
+				if (this.func)
+				{
+					this.func.call(this.element, target);
+				}
 			});
 		});
 

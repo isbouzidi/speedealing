@@ -356,7 +356,10 @@ table.dataTable th:active {
 	-khtml-opacity: 0.3;
 	-moz-opacity: 0.3;
 	opacity: 0.3;
-}
+	}
+	.dataTables_scrollBody .sorting:before {
+		display: none;
+	}
 .sorting_asc:before,
 .sorting_desc:before {
 	font-size: 0.75em;

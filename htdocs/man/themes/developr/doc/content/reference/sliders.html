@@ -423,9 +423,44 @@ $(selector).slider();
 			<span class="icon-star black">Default:</span> true
 		</dd>
 
+		<dt>decimalPoint</dt>
+		<dd class="boxed margin-bottom">
+			Character used for decimal point<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> '.'
+		</dd>
+
+		<dt>thousandsSep</dt>
+		<dd class="boxed margin-bottom">
+			Character used for thousands separator<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> ''
+		</dd>
+
+		<dt>zerofill</dt>
+		<dd class="boxed margin-bottom">
+			Fill decimal part with zeros to match desired precision<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>onStartDrag</dt>
+		<dd class="boxed margin-bottom">
+			Callback when the user starts dragging the cursor, takes one param for value, two for ranges<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
 		<dt>onChange</dt>
 		<dd class="boxed margin-bottom">
 			Callback when the slider value is changed, takes one param for value, two for ranges<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>onEndDrag</dt>
+		<dd class="boxed margin-bottom">
+			Callback when the user stops dragging the cursor, takes one param for value, two for ranges<br>
 			<span class="icon-marker black">Type:</span> function<br>
 			<span class="icon-star black">Default:</span> null
 		</dd>

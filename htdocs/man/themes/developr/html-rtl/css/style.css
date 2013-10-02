@@ -1869,6 +1869,7 @@ li.message-menu {
 	font-style: normal;
 	font-family: 'EntypoRegular';
 	font-size: 2em;
+	text-transform: none !important;
 	line-height: 1em;
 	margin: -0.5em -0.077em -0.5em 0.115em;
 	}
@@ -2583,6 +2584,11 @@ li.message-menu {
 			span.shortcut-stats		{ background-position: 1px -355px; }
 			span.shortcut-settings	{ background-position: 1px -425px; }
 			span.shortcut-notes		{ background-position: 1px -495px; }
+
+	#shortcuts .count {
+		top: 18px;
+		left: 18px;
+	}
 
 /* Sidebar/drop-down menu */
 #menu {
@@ -3320,6 +3326,10 @@ li.message-menu {
 	border-radius: 4px;
 	-webkit-appearance: none;
 	background-position: center center !important; /* This is required for glossy gradients image fallbacck*/
+	}
+	.button::-moz-focus-inner {
+		padding: 0;
+		border: 0;
 	}
 	.ie7 button.button {
 		line-height: 24px;

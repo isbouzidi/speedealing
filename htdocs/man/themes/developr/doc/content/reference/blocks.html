@@ -70,10 +70,6 @@
 &lt;/div&gt;
 </pre>
 
-		</div>
-
-		<div class="six-columns twelve-columns-mobile">
-
 			<h3 class="thin">Details blocks</h3>
 
 			<div class="wrapped margin-bottom big-left-icon icon-gear">
@@ -101,6 +97,10 @@
 </pre>
 
 			<p class="left-icon icon-info-round">Add or remove the attribute <b>open</b> to change how the detail element is by default.</p>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
 
 			<h3 class="thin">Accordion</h3>
 
@@ -156,6 +156,43 @@
 </pre>
 
 			<p class="left-icon icon-info-round">The example shows an extra div inside each section with the padding class, instead of adding the class to the <b>dd</b> element itself: this is required for fluid transitions, jQuery has some issues animating blocks with padding sometimes.</p>
+
+			<h4>Toggle mode</h4>
+
+			<p>You can switch the toggle mode, in which panels open and close on click independently, on by adding the class <strong>toggle-mode</strong> to the accordion:</p>
+
+			<dl class="accordion toggle-mode">
+
+				<dt>First section</dt>
+				<dd>
+					<div class="with-padding">
+						<p>First section content</p>
+						<p>The accordion plugin may also equalize the sections' height, just by adding the class <b>same-height</b> - as for this example.</p>
+						<p>Give it a try!</p>
+					</div>
+				</dd>
+
+				<dt>Second section</dt>
+				<dd>
+					<div class="with-padding">
+						Second section content
+					</div>
+				</dd>
+
+				<dt>Third section</dt>
+				<dd>
+					<div class="with-padding">
+						Third section content
+					</div>
+				</dd>
+
+			</dl>
+
+			<pre class="prettyprint">
+&lt;dl class="accordion toggle-mode"&gt;
+	...
+&lt;/dl&gt;
+</pre>
 
 		</div>
 

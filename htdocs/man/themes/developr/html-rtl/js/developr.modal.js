@@ -700,7 +700,9 @@
 		// Custom scroll
 		if (!settings.useIframe && settings.scrolling && $.fn.customScroll)
 		{
-			contentBlock.customScroll();
+			contentBlock.customScroll({
+				horizontal: settings.horizontalScrolling
+			});
 		}
 
 		// If resizable
@@ -1498,6 +1500,12 @@
 		 * @var boolean|string
 		 */
 		scrolling: true,
+
+		/**
+		 * If true, enable horizontal scrolling when using the custom scroll plugin
+		 * @var boolean
+		 */
+		horizontalScrolling: false,
 
 		/**
 		 * Actions leds on top left corner, with text as key and function on click or config object as value

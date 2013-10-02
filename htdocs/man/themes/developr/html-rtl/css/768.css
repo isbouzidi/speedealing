@@ -224,6 +224,9 @@ h2 {
 		overflow: hidden;
 		position: relative;
 		}
+		#shortcuts.with-legend > li {
+			padding-bottom: 20px;
+		}
 		#shortcuts > li:first-child {
 			margin-top: -5px;
 		}
@@ -470,6 +473,23 @@ h2 {
 				right: 0;
 				bottom: 0;
 			}
+	#shortcuts .count {
+		text-indent: 0;
+		left: 74px;
+		}
+		#shortcuts .current .count {
+			left: 4px;
+		}
+		body.reversed #shortcuts .count {
+			left: auto;
+			right: 74px;
+			}
+			body.reversed #shortcuts .current .count {
+				right: 4px;
+				}
+				.no-generatedcontent body.reversed #shortcuts .current .count {
+					right: 142px;
+				}
 
 #menu {
 	position: fixed;

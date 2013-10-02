@@ -1755,7 +1755,7 @@ abstract class nosqlDocument extends CommonObject {
 					$selected = $this->$key;
 
 				$rtr = "";
-				$rtr.= '<select data-placeholder="' . $title . '&hellip;" class="select auto-open ' . $aRow->validate->cssclass . '" id="' . $htmlname . '" name="' . $htmlname . '">';
+				$rtr.= '<select data-placeholder="' . $title . '&hellip;" data-select-options=\'{"searchText":"Rechercher"}\' class="select compact expandable-list ' . $aRow->validate->cssclass . '" id="' . $htmlname . '" name="' . $htmlname . '">';
 				if (isset($aRow->mongo)) { // Check collection
 					$class = $aRow->mongo->collection;
 					//$object = new $class($this->db);

@@ -120,7 +120,6 @@
 			fieldsets.each(function(i)
 			{
 				var fieldset = $(this),
-					isCurrent = (this === current[0]),
 					classes = [],
 					title = fieldset.find('legend').text(),
 					controlsWrapper = fieldset.find('.wizard-controls'),
@@ -310,7 +309,7 @@
 				step = fieldset.data('wizard-step'),
 				form = fieldset.closest('.wizard-enabled'),
 				settings = form.data('wizard-options'),
-				previous, isCurrent, nextStep, newStep, validation, jqv, previousCallback;
+				previous, previousIsCurrent, nextStep, newStep, validation, jqv, previousCallback;
 
 			// If not valid
 			if (fieldset.length === 0 || !step)
@@ -332,18 +331,18 @@
 
 			// Previously active section
 			previous = fieldset.siblings('.active');
-			isCurrent = previous.hasClass('current');
+			previousIsCurrent = previous.hasClass('current');
 			nextStep = previous.nextAll('fieldset').filter(fieldset).length > 0;
-			newStep = (isCurrent && nextStep);
+			newStep = (previousIsCurrent && nextStep);
 
 			// If not reachable
-			if (!isCurrent && !fieldset.hasClass('completed') && !fieldset.hasClass('current') && !force)
+			if (!previousIsCurrent && !fieldset.hasClass('completed') && !fieldset.hasClass('current') && !force)
 			{
 				return;
 			}
 
 			// Validation
-			if (!force && settings.useValidation && $.validationEngine && (!isCurrent || newStep))
+			if (!force && settings.useValidation && $.validationEngine && (!previousIsCurrent || newStep))
 			{
 				// Run validation
 				validation = form.removeClass('validating').validationEngine('validate');
@@ -406,7 +405,12 @@
 		var event;
 
 		// Check if we can leave the current step
-		event = jQuery.Event('wizardleave');
+		event = $.Event('wizardleave');
+		event.wizard = {
+			current: previous[0],
+			target: step[0],
+			forward: (step.prevAll(previous).length > 0)
+		};
 		previous.trigger(event);
 		if (event.isDefaultPrevented())
 		{
@@ -416,8 +420,8 @@
 		// Update status
 		if (newStep)
 		{
-			previous.markWizardStepAsComplete();
-			previous.nextAll('fieldset').first().markWizardStepAsCurrent();
+			fieldset.prevAll('fieldset').not('.completed').markWizardStepAsComplete();
+			fieldset.markWizardStepAsCurrent();
 		}
 
 		// Set as active
@@ -546,13 +550,13 @@
 		 * Previous button markup - must use class 'wizard-prev'
 		 * @var string
 		 */
-		controlPrev: '<button type="button" class="button glossy mid-margin-right wizard-prev float-right"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>Back</button>',
+		controlPrev: '<button type="button" class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>Back</button>',
 
 		/**
 		 * Next button markup - must use class 'wizard-next'
 		 * @var string
 		 */
-		controlNext: '<button type="button" class="button glossy mid-margin-right wizard-next float-left">Next<span class="button-icon left-side"><span class="icon-forward"></span></span></button>',
+		controlNext: '<button type="button" class="button glossy mid-margin-right wizard-next float-right">Next<span class="button-icon right-side"><span class="icon-forward"></span></span></button>',
 
 		/**
 		 * Enable validation if the plugin is loaded

@@ -460,6 +460,30 @@ $('.wizard fieldset').on('wizardleave', function()
 
 	<p class="left-icon icon-info-round"><b>Note:</b> the wizardleave event will always be called before the wizardenter event</p>
 
+	<p>The wizardleave event receive a special object <strong>wizard</strong> with 3 elements to help identify what's going on:</p>
+
+	<ul>
+		<li><strong>current</strong>: the currently displayed step</li>
+		<li><strong>target</strong>: the step the user wants to reach</li>
+		<li><strong>forward</strong>: true if moving forward, false if backward</li>
+	</ul>
+
+	<p>For instance, if you want to perform different operations depending on if the wizard is going forward or backward:</p>
+
+	<pre class="prettyprint">
+$('fieldset').on('wizardleave', function(event)
+{
+	if (event.wizard.forward)
+	{
+    	...
+	}
+	else
+	{
+		...
+	}
+});
+</pre>
+
 	<h3 class="thin">Use without plugin</h3>
 
 	<p>If you want to use the wizard style above, but without the plugin (for instance, is you process steps server-side), use the same markup as above, replace the class <b>wizard</b> by <b>wizard-enabled</b> on the form (fieldsets have a special style when JS is disabled, this class removes it) and add the progress indicator below:</p>

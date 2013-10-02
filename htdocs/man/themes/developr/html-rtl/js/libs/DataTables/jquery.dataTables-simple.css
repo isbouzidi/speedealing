@@ -301,6 +301,10 @@ table.dataTable th:active {
 	padding-left: 2px;
 	vertical-align: 0.15em;
 	}
+	.dataTables_scrollBody .sorting_asc:before,
+	.dataTables_scrollBody .sorting_desc:before {
+		display: none;
+	}
 	.sorting_asc:before {
 		content: '▼';
 	}

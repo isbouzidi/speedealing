@@ -208,4 +208,20 @@ $('.navigable').navigableReset();
 
 	<p>If loading fails, a message is displayed using the notification plugin (if available).</p>
 
+	<h5 class="green">Load event</h5>
+
+	<p>You can listen to the custom event <strong>navigable-ajax-loaded</strong> to be notified when an AJAX menu is loaded:</p>
+
+	<pre class="prettyprint">
+$('.navigable').on('navigable-ajax-loaded', function()
+{
+	// The event is triggered on the option that was clicked
+	var clicked = $(this);
+
+	// To retrieve the new menu's UL, use:
+	var menu = clicked.closest('li').children('ul');
+	...
+});
+</pre>
+
 </div>

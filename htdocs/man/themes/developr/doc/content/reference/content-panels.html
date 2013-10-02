@@ -452,4 +452,36 @@ $(document).ready(function()
 });
 </pre>
 
+	<h5 class="green">Load event</h5>
+
+	<p>It is possible to listen to a special event fired every time an url is loaded in a panel:</p>
+
+<pre class="prettyprint">
+$('#some-panel').on('content-panel-load', function()
+{
+	var panel = $(this);
+	...
+});
+</pre>
+
+	<h3 class="thin">Injecting content</h3>
+
+	<p>You can now inject custom content in the panels by using the following methods:</p>
+
+	<dl class="definition">
+		<dt>$(selector).setPanelNavigation(content)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Set the content of the navigation panel</p>
+			<h6>Parameters</h6>
+			<p>@param string|jQuery|DOM content the content to insert</p>
+		</dd>
+
+		<dt>$(selector).setPanelContent(content)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Set the content of the navigation panel</p>
+			<h6>Parameters</h6>
+			<p>@param string|jQuery|DOM content the content to insert</p>
+		</dd>
+	</dl>
+
 </div>
