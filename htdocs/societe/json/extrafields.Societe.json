@@ -2,6 +2,12 @@
 	"_id": "extrafields:Societe",
 	"class": "extrafields",
 	"ico": "icon-object-company",
+	"schemaMongoose": {
+		"enabled": true,
+		"name": "societe",
+		"collection": "Societe",
+		"plugins": ["mongoose-timestamp"]
+	},
 	"langs": [
 		"companies",
 		"bills",
@@ -63,7 +69,13 @@
 				"static": true
 			}
 		},
+		"ref": {
+			"schema": "String",
+			"type": "text",
+			"enable": true
+		},
 		"name": {
+			"schema": {"type": "String", "require": true},
 			"type": "text",
 			"label": "Company",
 			"length": 60,
@@ -87,6 +99,7 @@
 			"edit": true
 		},
 		"code_client": {
+			"schema": "String",
 			"type": "text",
 			"label": "CustomerCode",
 			"length": 15,
@@ -97,6 +110,7 @@
 			}
 		},
 		"code_fournisseur": {
+			"schema": "String",
 			"type": "text",
 			"length": 15,
 			"enable": false
@@ -106,6 +120,7 @@
 			"enable": false
 		},
 		"Status": {
+			"schema": {"type": "Mixed", "default": "ST_NEVER"},
 			"type": "select",
 			"label": "Status",
 			"enable": true,
@@ -121,6 +136,7 @@
 			}
 		},
 		"address": {
+			"schema": "String",
 			"type": "textarea",
 			"label": "Address",
 			"cols": 40,
@@ -131,6 +147,7 @@
 			}
 		},
 		"zip": {
+			"schema": "String",
 			"type": "text",
 			"label": "Zip",
 			"length": 15,
@@ -142,6 +159,7 @@
 			}
 		},
 		"town": {
+			"schema": "String",
 			"type": "text",
 			"label": "Town",
 			"length": 15,
@@ -153,6 +171,7 @@
 			}
 		},
 		"country_id": {
+			"schema": {"type": "String", "default": "FR"},
 			"type": "select",
 			"enable": true,
 			"dict": "dict:fk_country",
@@ -160,6 +179,7 @@
 			"sort": true
 		},
 		"state_id": {
+			"schema": "Number",
 			"type": "select",
 			"enable": true,
 			"settype": "int",
@@ -181,6 +201,7 @@
 			"enable": true
 		},
 		"phone": {
+			"schema": "String",
 			"type": "text",
 			"ico": "AC_TEL",
 			"label": "Phone",
@@ -193,6 +214,7 @@
 			"mask": "+99 9 99 99 99 99"
 		},
 		"fax": {
+			"schema": "String",
 			"type": "text",
 			"label": "Fax",
 			"ico": "AC_FAX",
@@ -200,6 +222,7 @@
 			"mask": "+99 9 99 99 99 99"
 		},
 		"email": {
+			"schema": "String",
 			"type": "email",
 			"ico": "AC_EMAIL",
 			"enable": true,
@@ -217,6 +240,7 @@
 			}
 		},
 		"url": {
+			"schema": "String",
 			"type": "text",
 			"ico": "AC_URL",
 			"site": "www",
@@ -243,18 +267,21 @@
 			}
 		},
 		"typent_id": {
+			"schema": {"type": "String", "default": "TE_UNKNOWN"},
 			"type": "select",
 			"default": "TE_UNKNOWN",
 			"enable": true,
 			"dict": "dict:fk_typent"
 		},
 		"effectif_id": {
+			"schema": {"type": "String", "default": "EF0"},
 			"type": "select",
 			"enable": true,
 			"default": "EF0",
 			"dict": "dict:fk_effectif"
 		},
 		"capital": {
+			"schema": {"type": "Number", "default": 0},
 			"type": "text",
 			"settype": "int",
 			"length": "20",
@@ -263,6 +290,7 @@
 			"spinner": "min: 0"
 		},
 		"VATIsUsed": {
+			"schema": {"type": "Boolean", "default": true},
 			"type": "checkbox",
 			"settype": "bool",
 			"enable": true,
@@ -275,15 +303,20 @@
 			"enable": true
 		},
 		"forme_juridique_code": {
+			"schema": "String",
 			"type": "select",
 			"label": "JuridicalStatus",
 			"dict": "dict:fk_forme_juridique",
 			"enable": true
 		},
 		"commercial_id": {
+			"schema": {
+				"id": {"type": "ObjectId", "ref": "User"},
+				"name": "String"
+			},
 			"type": "select",
 			"label": "SalesRepresentatives",
-			"class":"User",
+			"class": "User",
 			"mongo": {
 				"collection": "User",
 				"method": "find",
@@ -304,6 +337,7 @@
 			}
 		},
 		"civilite_id": {
+			"schema": {"type": "String", "default": "NO"},
 			"type": "select",
 			"label": "UserTitle",
 			"default": "NO",
@@ -311,6 +345,7 @@
 			"enable": true
 		},
 		"price_level": {
+			"schema": {"type": "String", "default": "base"},
 			"type": "select",
 			"enable": true,
 			"settype": "string",
@@ -324,6 +359,7 @@
 			}
 		},
 		"prospectlevel": {
+			"schema": {"type": "String", "default": "PL_NONE"},
 			"type": "select",
 			"label": "ProspectLevelShort",
 			"enable": true,
@@ -339,12 +375,14 @@
 			}
 		},
 		"cond_reglement": {
+			"schema": "String",
 			"type": "select",
 			"label": "PaymentConditions",
 			"dict": "dict:fk_payment_term",
 			"enable": true
 		},
 		"mode_reglement": {
+			"schema": "String",
 			"type": "select",
 			"label": "PaymentMode",
 			"dict": "dict:fk_paiement",
@@ -357,6 +395,7 @@
 			"enable": true
 		},
 		"zonegeo": {
+			"schema": "String",
 			"type": "select",
 			"label": "ZoneGeo",
 			"enable": true,
@@ -372,6 +411,7 @@
 			}
 		},
 		"Tag": {
+			"schema": ["String"],
 			"type": "tag",
 			"label": "Categories",
 			"enable": true,
@@ -383,11 +423,59 @@
 			}
 		},
 		"notes": {
+			"schema": "String",
 			"type": "textarea",
 			"enable": true
 		},
 		"public_notes": {
+			"schema": "String",
 			"type": "textarea",
+			"enable": true
+		},
+		"code_compta": {
+			"schema": "String",
+			"type": "text",
+			"enable": true
+		},
+		"code_compta_fournisseur": {
+			"schema": "String",
+			"type": "text",
+			"enable": true
+		},
+		"user_creat": {
+			"schema": "String",
+			"type": "text",
+			"enable": true
+		},
+		"user_modif": {
+			"schema": "String",
+			"type": "text",
+			"enable": true
+		},
+		"remise_client": {
+			"schema": "String",
+			"type": "text",
+			"enable": true
+		},
+		"entity": {
+			"schema": "String",
+			"type": "text",
+			"enable": true
+		},
+		"fournisseur": {
+			"schema": {"type": "Boolean", "default": false},
+			"type": "text",
+			"enable": true
+		},
+		"gps": {
+			"schema": ["Number"],
+			"type": "text",
+			"enable": true
+		},
+		"ugap_ContractID": {
+			"optional":true,
+			"schema": "String",
+			"type": "text",
 			"enable": true
 		},
 		"Action": {
