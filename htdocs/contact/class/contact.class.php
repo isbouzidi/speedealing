@@ -101,7 +101,7 @@ class Contact extends nosqlDocument {
 			$this->lastname = ucwords($this->lastname);
 		if (!empty($conf->global->MAIN_FIRST_TO_UPPER))
 			$this->firstname = ucwords($this->firstname);
-		
+
 		$this->Status = "ST_ENABLE";
 
 		$result = $this->update(null, $user, 1);
@@ -820,10 +820,10 @@ class Contact extends nosqlDocument {
 		print "</table>";
 
 		$obj->iDisplayLength = $max;
-		
-		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
-			{"name": "query", "value": "{\"societe.id\": \"'.$id.'\"}"}]';
-		
+
+		$obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"societe.id\": \"' . $id . '\"}"}]';
+
 		//$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listSociete&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "contacts_datatable", true);
 

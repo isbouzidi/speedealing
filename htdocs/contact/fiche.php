@@ -773,7 +773,8 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 		// Address
 		print '<tr><td>' . $langs->trans("Address") . '</td><td colspan="3">';
-		dol_print_address($object->address, 'gmap', 'contact', $object->id);
+		//print $object->address;
+		print dol_print_address($object->address, 'gmap', 'contact', $object->id);
 		print '</td></tr>';
 
 		// Zip Town

@@ -256,12 +256,12 @@ abstract class nosqlDocument extends CommonObject {
 		//$values->id = $this->id;
 		//print_r($this->_id->{'$id'});exit;
 
-		/*if (!empty($this->_id))
-			if (is_string($this->_id)) {
-				$values->_id = $this->_id;
-			} else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
-				$values->_id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
-			}*/
+		/* if (!empty($this->_id))
+		  if (is_string($this->_id)) {
+		  $values->_id = $this->_id;
+		  } else if (is_object($this->_id) && isset($this->_id->{'$id'})) {
+		  $values->_id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
+		  } */
 
 		$values->tms = new MongoDate(strtotime(dol_now()));
 
@@ -367,7 +367,7 @@ abstract class nosqlDocument extends CommonObject {
 			else
 				$obj->_id = $obj->id();
 		}
-		
+
 		return $this->mongodb->remove(array("_id" => $obj->_id));
 	}
 
@@ -439,6 +439,9 @@ abstract class nosqlDocument extends CommonObject {
 	 * @return string
 	 */
 	public function id() {
+		if (empty($this->_id))
+			$this->_id = $this->id;
+
 		if (is_object($this->_id))
 			return $this->_id->{'$id'};
 		else
@@ -1780,14 +1783,14 @@ abstract class nosqlDocument extends CommonObject {
 									eval("\$v = $v;");
 									if (is_object($v))
 										$v = new MongoId($v->{'$id'});
-										
+
 									$query->$option = $v;
 								}
 							$result = $mongodb->$class->{$aRow->mongo->method}($query);
 						}
 						else
 							$result = $mongodb->$class->{$aRow->mongo->method}();
-							
+
 						if ($aRow->mongo->order)
 							$result->sort((array) $aRow->mongo->order);
 					} catch (Exception $e) {

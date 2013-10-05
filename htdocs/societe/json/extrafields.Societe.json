@@ -473,8 +473,9 @@
 			"enable": true
 		},
 		"ugap_ContractID": {
-			"optional":true,
+			"optional": true,
 			"schema": "String",
+			"label": "Numero de contrat UGAP",
 			"type": "text",
 			"enable": true
 		},
