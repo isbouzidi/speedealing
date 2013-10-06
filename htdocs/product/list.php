@@ -251,9 +251,9 @@ $obj->aoColumns[$i]->fnRender = 'function(obj) {
 			var ar = [];
 			ar[ar.length] = "<a href=\"' . $url . '?id=";
 						ar[ar.length] = obj.aData._id.toString();
-						ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
+						ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"img/action_edit.png\" alt=\"\" /></a>";
 	ar[ar.length] = "<a href=\"\"";
-						ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
+						ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"img/action_delete.png\" alt=\"\" /></a>";
 	var str = ar.join("");
 	return str;
 	}';
@@ -289,10 +289,15 @@ print'<tbody>';
 print'</tbody>';
 print "</table>";
 
-if (!empty($type))
-	$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listType&class=" . get_class($object) . "&key=" . $type;
+if (empty($type))
+	$type = "PRODUCT";
+//	$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listType&class=" . get_class($object) . "&key=" . $type;
 //$obj->bServerSide = true;
 //$obj->sDom = 'C<\"clear\">lfrtip';
+
+$obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"type\": \"' . $type . '\"}"}]';
+
 $object->datatablesCreate($obj, "product", true, true);
 
 //print end_box();

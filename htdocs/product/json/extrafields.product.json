@@ -9,6 +9,11 @@
    ],
    "defaultprice": "HT",
    "fields": {
+		"_id": {
+			"settype": "MongoId",
+			"type": "text",
+			"enable": true
+		},
        "label": {
            "type": "text",
            "label": "Label",

@@ -90,7 +90,7 @@ $errors = $hookmanager->errors;
 if (empty($reshook)) {
 	// Type
 	if ($action == 'setfk_product_type' && $user->rights->produit->creer) {
-		$object->fetch($id);
+		$object->load($id);
 		$result = $object->setValueFrom('fk_product_type', GETPOST('fk_product_type'));
 		header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $object->id);
 		exit;
@@ -98,7 +98,7 @@ if (empty($reshook)) {
 
 	// Barcode type
 	if ($action == 'setfk_barcode_type' && $user->rights->barcode->creer) {
-		$object->fetch($id);
+		$object->load($id);
 		$result = $object->setValueFrom('fk_barcode_type', GETPOST('fk_barcode_type'));
 		header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $object->id);
 		exit;
@@ -106,7 +106,7 @@ if (empty($reshook)) {
 
 	// Barcode value
 	if ($action == 'setbarcode' && $user->rights->barcode->creer) {
-		$object->fetch($id);
+		$object->load($id);
 		//Todo: ajout verification de la validite du code barre en fonction du type
 		$result = $object->setValueFrom('barcode', GETPOST('barcode'));
 		header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $object->id);
@@ -114,7 +114,7 @@ if (empty($reshook)) {
 	}
 
 	if ($action == 'setaccountancy_code_buy') {
-		$object->fetch($id, $ref);
+		$object->load($id, $ref);
 		$result = $object->setValueFrom('accountancy_code_buy', GETPOST('accountancy_code_buy'));
 		if ($result < 0) {
 			$mesg = join(',', $object->errors);
@@ -123,7 +123,7 @@ if (empty($reshook)) {
 	}
 
 	if ($action == 'setaccountancy_code_sell') {
-		$object->fetch($id, $ref);
+		$object->load($id, $ref);
 		$result = $object->setValueFrom('accountancy_code_sell', GETPOST('accountancy_code_sell'));
 		if ($result < 0) {
 			$mesg = join(',', $object->errors);
@@ -229,7 +229,7 @@ if (empty($reshook)) {
 		if (GETPOST('cancel')) {
 			$action = '';
 		} else {
-			if ($object->fetch($id)) {
+			if ($object->load($id)) {
 				$object->oldcopy = dol_clone($object);
 
 				$object->ref = $ref;
@@ -288,7 +288,7 @@ if (empty($reshook)) {
 			$db->begin();
 
 			$originalId = $id;
-			if ($object->fetch($id, $ref) > 0) {
+			if ($object->load($id, $ref) > 0) {
 				$object->ref = GETPOST('clone_ref');
 				$object->Status = "DISABLE";
 				$object->finished = "FINISHED";
@@ -382,7 +382,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 	// -----------------------------------------
 	if (empty($object->error) && ($id || $ref)) {
 		$object = new Product($db);
-		$object->fetch($id, $ref);
+		$object->load($id, $ref);
 	}
 	$objcanvas->assign_values($action, $object->id, $ref); // Set value for templates
 	$objcanvas->display_canvas($action); // Show template
@@ -565,7 +565,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 	/**
 	 * Product card
 	 */ else if ($id) {
-		$res = $object->fetch($id);
+		$res = $object->load($id);
 		if ($res < 0) {
 			dol_print_error($db, $object->error);
 			exit;
@@ -732,7 +732,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		} else {
 			// Fiche en mode visu
 			dol_htmloutput_mesg($mesg);
-
+			
 			$head = product_prepare_head($object, $user);
 			$title = $langs->trans("CardProduct" . $object->type);
 			$picto = ($object->type == "SERVICE" ? 'service' : 'product');

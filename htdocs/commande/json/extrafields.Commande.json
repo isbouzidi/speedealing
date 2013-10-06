@@ -1,483 +1,484 @@
 {
-   "_id": "extrafields:Commande",
-   "_rev": "125-99a19a85c4f567d7aa8c2ce01f26d4d0",
-   "class": "ExtraFields",
-   "ico": "icon-object-order",
-   "langs": [
-       "orders"
-   ],
-   "history": true,
-   "models": [
-       "einstein"
-   ],
-   "pluginsList": [
-       "RowAction",
-       "TrashNotification",
-       "FieldEditable",
-       "ColFilter"
-   ],
-   "createList": [
-       "client",
-       "date",
-       "ref_client",
-       "Status"
-   ],
-   "createLine": [
-       "product",
-       "product_type",
-       "description",
-       "pu_ht",
-       "qty",
-       "tva_tx",
-       "remise"
-   ],
-   "longList": [
-       "_id",
-       "ref",
-       "client",
-       "ref_client",
-       "contact",
-       "date",
-       "total_ht",
-       "Status",
-       "Action"
-   ],
-   "amountsBox": [
-       "shipping",
-       "total_ht",
-       "total_tva",
-       "total_ttc"
-   ],
-   "fields": {
-       "_id": {
-           "type": "text",
-           "enable": true,
-           "list": {
-               "visible": false,
-               "static": true
-           }
-       },
-       "ref": {
-           "type": "text",
-           "enable": true,
-           "label": "Ref",
-           "list": {
-               "static": true
-           },
-           "render": {
-               "type": "url",
-               "ico": "icon-object-order"
-           }
-       },
-       "Status": {
-           "type": "select",
-           "enable": true,
-           "default": "DRAFT",
-           "label": "Status",
-           "status": true,
-           "list": {
-               "cssclass": "center",
-               "editable": true
-           },
-           "render": {
-               "type": "status"
-           },
-           "dict": "dict:fk_order_status",
-           "values": {
-               "DRAFT": {
-                   "enable": true,
-                   "label": "StatusOrderDraft",
-                   "cssClass": "grey-gradient",
-                   "system": true
-               },
-               "QUOTES": {
-                   "label": "StatusOrderNeedQuotes",
-                   "cssClass": "red-gradient"
-               },
-               "NEW": {
-                   "enable": true,
-                   "label": "StatusOrderNew",
-                   "cssClass": "orange-gradient"
-               },
-               "VALIDATED": {
-                   "enable": true,
-                   "label": "StatusOrderApproved",
-                   "cssClass": "red-gradient"
-               },
-               "PROCESSING": {
-                   "enable": true,
-                   "label": "StatusOrderProcessing",
-                   "cssClass": "blue-gradient"
-               },
-               "SHIPPING": {
-                   "label": "StatusOrderSending",
-                   "enable": true,
-                   "cssClass": "green-gradient"
-               },
-               "CLOSED": {
-                   "enable": true,
-                   "label": "StatusOrderClosed",
-                   "cssClass": "green-gradient",
-                   "system": true
-               },
-               "CANCELED": {
-                   "enable": true,
-                   "label": "StatusOrderCanceled",
-                   "cssClass": "black-gradient",
-                   "system": true
-               },
-               "ERROR": {
-                   "label": "StatusOrderError",
-                   "cssClass": "red-gradient",
-                   "system": true
-               }
-           }
-       },
-       "cond_reglement_code": {
-           "type": "select",
-           "enable": true,
-           "default": "RECEP",
-           "aoColumns": {
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_payment_term",
-           "values": {
-               "RECEP": {
-                   "enable": true,
-                   "label": "A réception",
-                   "label_pdf": "Réception de facture"
-               },
-               "30D": {
-                   "enable": true,
-                   "label": "30 jours",
-                   "label_pdf": "Réglement à 30 jours",
-                   "nbjour": 30
-               },
-               "30DENDMONTH": {
-                   "enable": true,
-                   "label": "30 jours fin de mois",
-                   "label_pdf": "Réglement à 30 jours fin de mois",
-                   "fdm": true,
-                   "nbjour": 30
-               },
-               "60D": {
-                   "enable": true,
-                   "label": "60 jours",
-                   "label_pdf": "Réglement à 60 jours",
-                   "nbjour": 60
-               },
-               "60DENDMONTH": {
-                   "enable": true,
-                   "label": "60 jours fin de mois",
-                   "label_pdf": "Réglement à 60 jours fin de mois",
-                   "fdm": true,
-                   "nbjour": 60
-               }
-           }
-       },
-       "mode_reglement_code": {
-           "type": "select",
-           "enable": true,
-           "default": "TIP",
-           "aoColumns": {
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_paiement",
-           "values": {
-               "NONE": {
-                   "enable": true,
-                   "label": "-"
-               },
-               "CB": {
-                   "enable": true,
-                   "label": "Carte Bancaire"
-               },
-               "CHQ": {
-                   "enable": true,
-                   "label": "Chèque"
-               },
-               "FAC": {
-                   "label": "Factor"
-               },
-               "LCR": {
-                   "label": "LCR"
-               },
-               "LIQ": {
-                   "enable": true,
-                   "label": "Espèces"
-               },
-               "PRE": {
-                   "enable": true,
-                   "label": "Prélèvement"
-               },
-               "PRO": {
-                   "label": "Proforma"
-               },
-               "TIP": {
-                   "enable": true,
-                   "label": "TIP"
-               },
-               "TRA": {
-                   "label": "Traite"
-               },
-               "VAD": {
-                   "label": "Paiement en ligne"
-               },
-               "VIR": {
-                   "enable": true,
-                   "label": "Virement"
-               }
-           }
-       },
-       "availability_code": {
-           "type": "select",
-           "enable": true,
-           "default": "AV_NOW",
-           "aoColumns": {
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_availability",
-           "values": {
-               "AV_NOW": {
-                   "enable": true,
-                   "label": "Immediate"
-               },
-               "AV_1W": {
-                   "enable": true,
-                   "label": "1 week"
-               },
-               "AV_2W": {
-                   "enable": true,
-                   "label": "2 weeks"
-               },
-               "AV_3W": {
-                   "enable": true,
-                   "label": "3 weeks"
-               }
-           }
-       },
-       "demand_reason_code": {
-           "type": "select",
-           "enable": true,
-           "default": "SRC_CAMP_EMAIL",
-           "aoColumns": {
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "dict": "dict:fk_input_reason",
-           "values": {
-               "SRC_CAMP_EMAIL": {
-                   "enable": true,
-                   "label": "EMailing campaign"
-               },
-               "SRC_CAMP_FAX": {
-                   "enable": true,
-                   "label": "Fax campaign"
-               },
-               "SRC_CAMP_PHO": {
-                   "enable": true,
-                   "label": "Phone campaign"
-               },
-               "SRC_COMM": {
-                   "enable": true,
-                   "label": "Commercial contact"
-               },
-               "SRC_INTE": {
-                   "enable": true,
-                   "label": "Internet"
-               },
-               "SRC_SHOP": {
-                   "enable": true,
-                   "label": "Shop contact"
-               }
-           }
-       },
-       "client": {
-           "type": "select",
-           "enable": true,
-           "class": "Societe",
-           "view": "list",
-           "label": "Company",
-           "list": {
-               "editable": true
-           },
-           "render": {
-               "type": "url",
-               "ico": "icon-object-company"
-           }
-       },
-       "contact": {
-           "type": "select",
-           "enable": true,
-           "class": "Contact",
-           "view": "list",
-           "label": "Contact",
-           "list": {
-               "editable": true
-           },
-           "render": {
-               "type": "url",
-               "ico": "icon-object-user"
-           }
-       },
-       "ref_client": {
-           "type": "text",
-           "enable": true,
-           "label": "RefCustomer"
-       },
-       "date": {
-           "type": "date",
-           "enable": true,
-           "label": "Date",
-           "list": {
-               "editable": true
-           },
-           "render": {
-               "type": "date"
-           }
-       },
-       "date_livraison": {
-           "type": "date",
-           "enable": true,
-           "label": "DateEnd"
-       },
-       "notes": {
-           "enable": true
-       },
-       "description": {
-           "type": "text",
-           "enable": true,
-           "label": "Description"
-       },
-       "Action": {
-           "type": "action",
-           "label": "Action",
-           "enable": true,
-           "list": {
-               "width": 45,
-               "cssclass": "center",
-               "sortable": false,
-               "searchable": false,
-               "static": true
-           },
-           "action": {
-               "edit": {
-                   "label": "Edit",
-                   "cssclass": "icon-action-edit action-edit"
-               },
-               "trash": {
-                   "label": "Delete",
-                   "cssclass": "icon-action-trash action-trash"
-               }
-           }
-       },
-       "Checkbox": {
-           "type": "checkbox",
-           "label": false,
-           "enable": true,
-           "list": {
-               "width": 8,
-               "sortable": false,
-               "searchable": false,
-               "static": true
-           },
-           "render": {
-           }
-       },
-       "pu_ht": {
-           "type": "text",
-           "enable": true,
-           "label": "PriceUHT"
-       },
-       "qty": {
-           "type": "text",
-           "enable": true,
-           "label": "Qty"
-       },
-       "tva_tx": {
-           "type": "text",
-           "enable": true,
-           "label": "VAT"
-       },
-       "remise": {
-           "type": "text",
-           "enable": true,
-           "label": "ReductionShort"
-       },
-       "product": {
-           "type": "select",
-           "enable": true,
-           "class": "Product",
-           "view": "list",
-           "label": "Product"
-       },
-       "product_type": {
-           "type": "select",
-           "enable": true,
-           "default": "PRODUCT",
-           "status": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "values": {
-               "PRODUCT": {
-                   "enable": true,
-                   "label": "Product",
-                   "cssClass": "blue-gradient"
-               },
-               "SERVICE": {
-                   "label": "Service",
-                   "enable": true,
-                   "cssClass": "green-gradient"
-               }
-           }
-       },
-       "total_ht": {
-           "type": "text",
-           "settype": "float",
-           "price": true,
-           "cssClass": "red",
-           "enable": true,
-           "label": "AmountHT",
-           "mode": "absolute",
-           "render": {
-               "type": "price"
-           }
-       },
-       "total_tva": {
-           "type": "text",
-           "settype": "float",
-           "price": true,
-           "enable": true,
-           "label": "AmountVAT",
-           "mode": "absolute"
-       },
-       "total_ttc": {
-           "type": "text",
-           "settype": "float",
-           "price": true,
-           "enable": true,
-           "label": "AmountTTC",
-           "mode": "absolute"
-       },
-       "shipping": {
-           "type": "text",
-           "icon": "icon-plane",
-           "settype": "float",
-           "price": true,
-           "enable": true,
-           "label": "ShippingHT",
-           "mode": "absolute"
-       },
-       "subprice": {
-           "enable": true
-       }
-   },
-   "tms": "2013-04-09T18:51:31+02:00",
-   "entity": "clermont"
+	"_id": "extrafields:Commande",
+	"_rev": "125-99a19a85c4f567d7aa8c2ce01f26d4d0",
+	"class": "ExtraFields",
+	"ico": "icon-object-order",
+	"langs": [
+		"orders"
+	],
+	"history": true,
+	"models": [
+		"einstein"
+	],
+	"pluginsList": [
+		"RowAction",
+		"TrashNotification",
+		"FieldEditable",
+		"ColFilter"
+	],
+	"createList": [
+		"client",
+		"date",
+		"ref_client",
+		"Status"
+	],
+	"createLine": [
+		"product",
+		"product_type",
+		"description",
+		"pu_ht",
+		"qty",
+		"tva_tx",
+		"remise"
+	],
+	"longList": [
+		"_id",
+		"ref",
+		"client",
+		"ref_client",
+		"contact",
+		"date",
+		"total_ht",
+		"Status",
+		"Action"
+	],
+	"amountsBox": [
+		"shipping",
+		"total_ht",
+		"total_tva",
+		"total_ttc"
+	],
+	"fields": {
+		"_id": {
+			"settype": "MongoId",
+			"type": "text",
+			"enable": true,
+			"list": {
+				"visible": false,
+				"static": true
+			}
+		},
+		"ref": {
+			"type": "text",
+			"enable": true,
+			"label": "Ref",
+			"list": {
+				"static": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-order"
+			}
+		},
+		"Status": {
+			"type": "select",
+			"enable": true,
+			"default": "DRAFT",
+			"label": "Status",
+			"status": true,
+			"list": {
+				"cssclass": "center",
+				"editable": true
+			},
+			"render": {
+				"type": "status"
+			},
+			"dict": "dict:fk_order_status",
+			"values": {
+				"DRAFT": {
+					"enable": true,
+					"label": "StatusOrderDraft",
+					"cssClass": "grey-gradient",
+					"system": true
+				},
+				"QUOTES": {
+					"label": "StatusOrderNeedQuotes",
+					"cssClass": "red-gradient"
+				},
+				"NEW": {
+					"enable": true,
+					"label": "StatusOrderNew",
+					"cssClass": "orange-gradient"
+				},
+				"VALIDATED": {
+					"enable": true,
+					"label": "StatusOrderApproved",
+					"cssClass": "red-gradient"
+				},
+				"PROCESSING": {
+					"enable": true,
+					"label": "StatusOrderProcessing",
+					"cssClass": "blue-gradient"
+				},
+				"SHIPPING": {
+					"label": "StatusOrderSending",
+					"enable": true,
+					"cssClass": "green-gradient"
+				},
+				"CLOSED": {
+					"enable": true,
+					"label": "StatusOrderClosed",
+					"cssClass": "green-gradient",
+					"system": true
+				},
+				"CANCELED": {
+					"enable": true,
+					"label": "StatusOrderCanceled",
+					"cssClass": "black-gradient",
+					"system": true
+				},
+				"ERROR": {
+					"label": "StatusOrderError",
+					"cssClass": "red-gradient",
+					"system": true
+				}
+			}
+		},
+		"cond_reglement_code": {
+			"type": "select",
+			"enable": true,
+			"default": "RECEP",
+			"aoColumns": {
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_payment_term",
+			"values": {
+				"RECEP": {
+					"enable": true,
+					"label": "A réception",
+					"label_pdf": "Réception de facture"
+				},
+				"30D": {
+					"enable": true,
+					"label": "30 jours",
+					"label_pdf": "Réglement à 30 jours",
+					"nbjour": 30
+				},
+				"30DENDMONTH": {
+					"enable": true,
+					"label": "30 jours fin de mois",
+					"label_pdf": "Réglement à 30 jours fin de mois",
+					"fdm": true,
+					"nbjour": 30
+				},
+				"60D": {
+					"enable": true,
+					"label": "60 jours",
+					"label_pdf": "Réglement à 60 jours",
+					"nbjour": 60
+				},
+				"60DENDMONTH": {
+					"enable": true,
+					"label": "60 jours fin de mois",
+					"label_pdf": "Réglement à 60 jours fin de mois",
+					"fdm": true,
+					"nbjour": 60
+				}
+			}
+		},
+		"mode_reglement_code": {
+			"type": "select",
+			"enable": true,
+			"default": "TIP",
+			"aoColumns": {
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_paiement",
+			"values": {
+				"NONE": {
+					"enable": true,
+					"label": "-"
+				},
+				"CB": {
+					"enable": true,
+					"label": "Carte Bancaire"
+				},
+				"CHQ": {
+					"enable": true,
+					"label": "Chèque"
+				},
+				"FAC": {
+					"label": "Factor"
+				},
+				"LCR": {
+					"label": "LCR"
+				},
+				"LIQ": {
+					"enable": true,
+					"label": "Espèces"
+				},
+				"PRE": {
+					"enable": true,
+					"label": "Prélèvement"
+				},
+				"PRO": {
+					"label": "Proforma"
+				},
+				"TIP": {
+					"enable": true,
+					"label": "TIP"
+				},
+				"TRA": {
+					"label": "Traite"
+				},
+				"VAD": {
+					"label": "Paiement en ligne"
+				},
+				"VIR": {
+					"enable": true,
+					"label": "Virement"
+				}
+			}
+		},
+		"availability_code": {
+			"type": "select",
+			"enable": true,
+			"default": "AV_NOW",
+			"aoColumns": {
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_availability",
+			"values": {
+				"AV_NOW": {
+					"enable": true,
+					"label": "Immediate"
+				},
+				"AV_1W": {
+					"enable": true,
+					"label": "1 week"
+				},
+				"AV_2W": {
+					"enable": true,
+					"label": "2 weeks"
+				},
+				"AV_3W": {
+					"enable": true,
+					"label": "3 weeks"
+				}
+			}
+		},
+		"demand_reason_code": {
+			"type": "select",
+			"enable": true,
+			"default": "SRC_CAMP_EMAIL",
+			"aoColumns": {
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"dict": "dict:fk_input_reason",
+			"values": {
+				"SRC_CAMP_EMAIL": {
+					"enable": true,
+					"label": "EMailing campaign"
+				},
+				"SRC_CAMP_FAX": {
+					"enable": true,
+					"label": "Fax campaign"
+				},
+				"SRC_CAMP_PHO": {
+					"enable": true,
+					"label": "Phone campaign"
+				},
+				"SRC_COMM": {
+					"enable": true,
+					"label": "Commercial contact"
+				},
+				"SRC_INTE": {
+					"enable": true,
+					"label": "Internet"
+				},
+				"SRC_SHOP": {
+					"enable": true,
+					"label": "Shop contact"
+				}
+			}
+		},
+		"client": {
+			"type": "select",
+			"enable": true,
+			"class": "Societe",
+			"view": "list",
+			"label": "Company",
+			"list": {
+				"editable": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-company"
+			}
+		},
+		"contact": {
+			"type": "select",
+			"enable": true,
+			"class": "Contact",
+			"view": "list",
+			"label": "Contact",
+			"list": {
+				"editable": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-user"
+			}
+		},
+		"ref_client": {
+			"type": "text",
+			"enable": true,
+			"label": "RefCustomer"
+		},
+		"date": {
+			"type": "date",
+			"enable": true,
+			"label": "Date",
+			"list": {
+				"editable": true
+			},
+			"render": {
+				"type": "date"
+			}
+		},
+		"date_livraison": {
+			"type": "date",
+			"enable": true,
+			"label": "DateEnd"
+		},
+		"notes": {
+			"enable": true
+		},
+		"description": {
+			"type": "text",
+			"enable": true,
+			"label": "Description"
+		},
+		"Action": {
+			"type": "action",
+			"label": "Action",
+			"enable": true,
+			"list": {
+				"width": 45,
+				"cssclass": "center",
+				"sortable": false,
+				"searchable": false,
+				"static": true
+			},
+			"action": {
+				"edit": {
+					"label": "Edit",
+					"cssclass": "icon-action-edit action-edit"
+				},
+				"trash": {
+					"label": "Delete",
+					"cssclass": "icon-action-trash action-trash"
+				}
+			}
+		},
+		"Checkbox": {
+			"type": "checkbox",
+			"label": false,
+			"enable": true,
+			"list": {
+				"width": 8,
+				"sortable": false,
+				"searchable": false,
+				"static": true
+			},
+			"render": {
+			}
+		},
+		"pu_ht": {
+			"type": "text",
+			"enable": true,
+			"label": "PriceUHT"
+		},
+		"qty": {
+			"type": "text",
+			"enable": true,
+			"label": "Qty"
+		},
+		"tva_tx": {
+			"type": "text",
+			"enable": true,
+			"label": "VAT"
+		},
+		"remise": {
+			"type": "text",
+			"enable": true,
+			"label": "ReductionShort"
+		},
+		"product": {
+			"type": "select",
+			"enable": true,
+			"class": "Product",
+			"view": "list",
+			"label": "Product"
+		},
+		"product_type": {
+			"type": "select",
+			"enable": true,
+			"default": "PRODUCT",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"values": {
+				"PRODUCT": {
+					"enable": true,
+					"label": "Product",
+					"cssClass": "blue-gradient"
+				},
+				"SERVICE": {
+					"label": "Service",
+					"enable": true,
+					"cssClass": "green-gradient"
+				}
+			}
+		},
+		"total_ht": {
+			"type": "text",
+			"settype": "float",
+			"price": true,
+			"cssClass": "red",
+			"enable": true,
+			"label": "AmountHT",
+			"mode": "absolute",
+			"render": {
+				"type": "price"
+			}
+		},
+		"total_tva": {
+			"type": "text",
+			"settype": "float",
+			"price": true,
+			"enable": true,
+			"label": "AmountVAT",
+			"mode": "absolute"
+		},
+		"total_ttc": {
+			"type": "text",
+			"settype": "float",
+			"price": true,
+			"enable": true,
+			"label": "AmountTTC",
+			"mode": "absolute"
+		},
+		"shipping": {
+			"type": "text",
+			"icon": "icon-plane",
+			"settype": "float",
+			"price": true,
+			"enable": true,
+			"label": "ShippingHT",
+			"mode": "absolute"
+		},
+		"subprice": {
+			"enable": true
+		}
+	},
+	"tms": "2013-04-09T18:51:31+02:00",
+	"entity": "clermont"
 }

@@ -34,40 +34,6 @@ $langs->load('companies');
 $object = new Commande($db);
 $societe = new Societe($db);
 
-if (!empty($_GET['json'])) {
-	$output = array(
-		"sEcho" => intval($_GET['sEcho']),
-		"iTotalRecords" => 0,
-		"iTotalDisplayRecords" => 0,
-		"aaData" => array()
-	);
-
-//    $keystart[0] = $user->id;
-//    $keyend[0] = $user->id;
-//    $keyend[1] = new stdClass();
-
-	/* $params = array('startkey' => array($user->id, mktime(0, 0, 0, date("m") - 1, date("d"), date("Y"))),
-	  'endkey' => array($user->id, mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")))); */
-
-	try {
-		$result = $object->getView($_GET["json"]);
-	} catch (Exception $exc) {
-		print $exc->getMessage();
-	}
-
-	$iTotal = count($result->rows);
-	$output["iTotalRecords"] = $iTotal;
-	$output["iTotalDisplayRecords"] = $iTotal;
-	$i = 0;
-	foreach ($result->rows as $aRow) {
-		$output["aaData"][] = $aRow->value;
-	}
-
-	header('Content-type: application/json');
-	echo json_encode($output);
-	exit;
-}
-
 /*
  * View
  */
@@ -83,19 +49,19 @@ $companystatic = new Societe($db);
 $title = $langs->trans('Orders');
 llxHeader('', $title);
 print_fiche_titre($title);
-?>
+/*?>
 <div class="dashboard">
     <div class="columns">
         <div class="four-columns twelve-columns-mobile graph">
-			<?php $object->graphPieStatus(); ?>
+			<?php //$object->graphPieStatus(); ?>
         </div>
 
         <div class="eight-columns twelve-columns-mobile new-row-mobile graph">
-			<?php $object->graphBarStatus(); ?>
+			<?php //$object->graphBarStatus(); ?>
         </div>
     </div>
 </div>
-<?php
+<?php*/
 print '<div class="with-padding" >';
 
 /*
@@ -288,7 +254,12 @@ if ($user->rights->commande->creer) {
   $object->datatablesCreate($obj, "listorders", true, true);
  */
 
-echo $object->showList();
+$query = "";
+$obj = new stdClass();
+$query = '[{name :"class",value:"' . get_class($object) . '"}]';
+//	{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}]}"}]';
+
+echo $object->showList($query);
 
 llxFooter();
 ?>

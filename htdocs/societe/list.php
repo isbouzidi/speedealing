@@ -271,7 +271,7 @@ print "</p>";
 $query = "";
 $obj = new stdClass();
 if ($user->rights->societe->client->voir)
-	$query = $obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
+	$query = '[{name :"class",value:"' . get_class($object) . '"},
 			{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}]}"}]';
 else
 	$query = '[{name :"class",value:"' . get_class($object) . '"},
@@ -279,7 +279,7 @@ else
 
 if (GETPOST('disable')) {
 	if ($user->rights->societe->client->voir)
-		$query = $obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
+		$query = '[{name :"class",value:"' . get_class($object) . '"},
 			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_NO\"},{\"Status\": \"ST_NEVER\"}]}"}]';
 	else
 		$query = '[{name :"class",value:"' . get_class($object) . '"},
