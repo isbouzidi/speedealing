@@ -38,14 +38,6 @@ $societe = new Societe($db);
  * View
  */
 
-$now = dol_now();
-
-$form = new Form($db);
-$formother = new FormOther($db);
-$formfile = new FormFile($db);
-$companystatic = new Societe($db);
-
-
 $title = $langs->trans('Orders');
 llxHeader('', $title);
 print_fiche_titre($title);

@@ -288,7 +288,7 @@ abstract class nosqlDocument extends CommonObject {
 		}
 
 		try {
-			$this->couchdb->clean($values);
+			$this->clean($values);
 			if (empty($values->_id))
 				$this->mongodb->insert($values);
 			else
@@ -2148,6 +2148,23 @@ abstract class nosqlDocument extends CommonObject {
 
 		readfile($original_file);
 		unlink($original_file);
+	}
+	
+	/**
+	 *  Record fonction for clean empty value
+	 *
+	 *  @return int         		1 success
+	 */
+	public function clean(&$object) {
+		foreach ($object as $key => $aRow) {
+			if (is_object($aRow) || is_array($aRow))
+				$this->clean($aRow);
+
+			// Don't delete roles parameters for _user databases
+			if (!is_array($aRow) && empty($aRow) && $key != "roles") {
+				unset($object->$key);
+			}
+		}
 	}
 
 }

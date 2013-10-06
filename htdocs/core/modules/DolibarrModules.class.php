@@ -1352,7 +1352,7 @@ class DolibarrModules extends nosqlDocument {
 				exit;
 			}
 
-			try {
+		/*	try {
 				$result = $this->couchdb->getDoc($obj->_id);
 				$obj->_rev = $result->_rev;
 			} catch (Exception $e) {
@@ -1365,7 +1365,7 @@ class DolibarrModules extends nosqlDocument {
 				print $row;
 				print $e->getMessage();
 				exit;
-			}
+			}*/
 		}
 	}
 

@@ -88,7 +88,7 @@ class User extends nosqlDocument {
 		$this->fk_extrafields = new ExtraFields($db);
 		$this->fk_extrafields->fetch(get_class($this));
 
-		$this->couchAdmin = new couchAdmin($this->couchdb);
+		//$this->couchAdmin = new couchAdmin($this->couchdb);
 
 		// Preference utilisateur
 		$this->liste_limit = 0;

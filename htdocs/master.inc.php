@@ -98,10 +98,10 @@ if (!defined('NOREQUIREUSER')) {
 
 
 // For couchdb
-if (!class_exists('couch'))
-	require DOL_DOCUMENT_ROOT . '/core/db/couchdb/lib/couch.php';
-if (!class_exists('couchClient'))
-	require DOL_DOCUMENT_ROOT . '/core/db/couchdb/lib/couchClient.php';
+//if (!class_exists('couch'))
+//	require DOL_DOCUMENT_ROOT . '/core/db/couchdb/lib/couch.php';
+//if (!class_exists('couchClient'))
+//	require DOL_DOCUMENT_ROOT . '/core/db/couchdb/lib/couchClient.php';
 if (!class_exists('nosqlDocument'))
 	require DOL_DOCUMENT_ROOT . '/core/class/nosqlDocument.class.php';
 
@@ -202,13 +202,13 @@ if (!defined('NOREQUIREDB')) {
 	}
 
 
-	try {
+	/*try {
 		$couch = new couchClient("http://" . $conf->Couchdb->user . ":" . $conf->Couchdb->passwd . "@" . $conf->Couchdb->host . ':' . $conf->Couchdb->port . '/', $conf->Couchdb->name, array("cookie_auth" => TRUE));
 	} catch (Exception $e) {
 		print $langs->trans("Error Couchdb Auth : " . $conf->Couchdb->name);
 		error_log($e->getMessage());
 		exit;
-	}
+	}*/
 	unset($conf->Couchdb->user);
 	unset($conf->Couchdb->passwd);
 
