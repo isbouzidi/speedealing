@@ -45,6 +45,7 @@ if ($user->societe_id)
 	$socid = $user->societe_id;
 
 $object = new Contact($db);
+$objsoc = new Societe($db);
 
 // Get object canvas (By default, this is not defined, so standard usage of dolibarr)
 $object->getCanvas($id);
@@ -262,8 +263,7 @@ $formcompany = new FormCompany($db);
 $countrynotdefined = $langs->trans("ErrorSetACountryFirst") . ' (' . $langs->trans("SeeAbove") . ')';
 
 if (!empty($socid)) {
-	$objsoc = new Societe($db);
-	$objsoc->fetch($socid);
+	$objsoc->load($socid);
 }
 
 if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
@@ -520,6 +520,11 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			// Affiche les erreurs
 			dol_htmloutput_errors($error, $errors);
 
+			if($object->societe->id) {
+				$socid = $object->societe->id;
+				$objsoc->load($socid);
+			}
+			
 			print "\n" . '<script type="text/javascript" language="javascript">' . "\n";
 			print 'jQuery(document).ready(function () {
 							jQuery("#selectcountry_id").change(function() {
@@ -542,7 +547,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 			print '<input type="hidden" name="id" value="' . $id . '">';
 			print '<input type="hidden" name="action" value="update">';
-			print '<input type="hidden" name="contactid" value="' . $object->id . '">';
+			print '<input type="hidden" name="contactid" value="' . $object->id() . '">';
 			print '<input type="hidden" name="old_name" value="' . $object->name . '">';
 			print '<input type="hidden" name="old_firstname" value="' . $object->firstname . '">';
 			if (!empty($backtopage))
