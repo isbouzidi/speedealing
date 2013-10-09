@@ -269,7 +269,7 @@ if (($action == 'addgroup' || $action == 'removegroup') && $caneditfield) {
 			$edituser->roles = array_merge($edituser->roles);
 			//$edituser->removeRoleFromUser($group);
 		}
-       
+
 		$edituser->record($edituser->id == $user->id);
 
 		header("Location: fiche.php?id=" . $id);
@@ -435,7 +435,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 	if ($id) {
 		$fuser = new User($db);
 		$fuser->load($id);
-		$fuser->getrights('',false);
+		$fuser->getrights('', false);
 
 		// Show tabs
 		//$head = user_prepare_head($fuser);
@@ -482,7 +482,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 		if ($action != 'edit') {
 
 			print '<table class="border" width="100%">';
-            
+
 			// Ref
 			print '<tr><td width="25%" valign="top">' . $langs->trans("Ref") . '</td>';
 			print '<td colspan="2">';
@@ -856,56 +856,55 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 
 				$object = new DolibarrModules($db);
 
-				try {
-					$result = $object->getView("default_right");
-				} catch (Exception $exc) {
-					print $exc->getMessage();
-				}
+				$result = $object->getDefaultRight();
 
-				if (count($result->rows)) {
+				if (count($result)) {
 
-					foreach ($result->rows as $aRow) {
-						print'<tr>';
+					foreach ($result as $rows) {
+						foreach ($rows['rights'] as $aRow) {
+							$aRow = json_decode(json_encode($aRow));
+							print'<tr>';
+							
+							$object->name = $rows['name'];
+							$object->numero = $rows['numero'];
+							$object->rights_class = $rows['rights_class'];
+							$object->id = $aRow->id;
+							$object->perm = $aRow->perm;
+							$object->desc = $aRow->desc;
+							$object->Status = ($rows['Status'] == true ? "true" : "false");
 
-						$object->name = $aRow->value->name;
-						$object->numero = $aRow->value->numero;
-						$object->rights_class = $aRow->value->rights_class;
-						$object->id = $aRow->value->id;
-						$object->perm = $aRow->value->perm;
-						$object->desc = $aRow->value->desc;
-						$object->Status = ($aRow->value->Status == true ? "true" : "false");
+							print '<td>' . $aRow->id . '</td>';
+							print '<td>' . img_object('', $rows['picto']) . " " . $object->getName() . '</td>';
+							print '<td>' . $object->getPermDesc() . '<a name="' . $aRow->id . '">&nbsp;</a></td>';
+							print '<td>';
 
-						print '<td>' . $aRow->value->id . '</td>';
-						print '<td>' . img_object('', $aRow->value->picto) . " " . $object->getName() . '</td>';
-						print '<td>' . $object->getPermDesc() . '<a name="' . $aRow->value->id . '">&nbsp;</a></td>';
-						print '<td>';
+							$perm = $aRow->id;
+							$perm0 = (string) $object->perm[0];
+							$perm1 = $object->perm[1];
+							$right_class = $object->rights_class;
 
-						$perm = $aRow->value->id;
-						$perm0 = (string) $object->perm[0];
-						$perm1 = $object->perm[1];
-						$right_class = $object->rights_class;
+							/* if ($caneditperms) { */
+							if ($aRow->Status)
+								print $object->getLibStatus(); // Enable by default
+							elseif (count($object->perm) == 1 && $fuser->rights->$right_class->$perm0) {
+								$object->Status = "true";
+								print $object->getLibStatus();
+							} elseif (count($object->perm) == 2 && $fuser->rights->$right_class->$perm0->$perm1) {
+								$object->Status = "true";
+								print $object->getLibStatus();
+							}
 
-						/* if ($caneditperms) { */
-						if ($aRow->value->Status)
-							print $object->getLibStatus(); // Enable by default
-						elseif (count($object->perm) == 1 && $fuser->rights->$right_class->$perm0) {
-							$object->Status = "true";
-							print $object->getLibStatus();
-						} elseif (count($object->perm) == 2 && $fuser->rights->$right_class->$perm0->$perm1) {
-							$object->Status = "true";
-							print $object->getLibStatus();
+							//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $fuser->id . '&pid=' . $aRow->value->id . '&amp;action=remove_right#' . $aRow->value->id . '">' . img_edit_remove() . '</a>';
+							//else
+							//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $fuser->id . '&pid=' . $aRow->value->id . '&amp;action=add_right#' . $aRow->value->id . '">' . img_edit_add() . '</a>';
+							//}
+							else {
+								print $object->getLibStatus();
+							}
+							print '</td>';
+
+							print'</tr>';
 						}
-
-						//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $fuser->id . '&pid=' . $aRow->value->id . '&amp;action=remove_right#' . $aRow->value->id . '">' . img_edit_remove() . '</a>';
-						//else
-						//print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $fuser->id . '&pid=' . $aRow->value->id . '&amp;action=add_right#' . $aRow->value->id . '">' . img_edit_add() . '</a>';
-						//}
-						else {
-							print $object->getLibStatus();
-						}
-						print '</td>';
-
-						print'</tr>';
 					}
 				}
 				print'</tbody>';

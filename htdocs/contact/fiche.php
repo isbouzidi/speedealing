@@ -520,7 +520,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			// Affiche les erreurs
 			dol_htmloutput_errors($error, $errors);
 
-			if($object->societe->id) {
+			if ($object->societe->id) {
 				$socid = $object->societe->id;
 				$objsoc->load($socid);
 			}

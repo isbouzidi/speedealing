@@ -47,90 +47,90 @@ $object = new Usergroup($db);
  *  Action add group
  */
 if ($action == 'add') {
-    if ($caneditperms) {
-        $message = "";
-        if (!$_POST["nom"]) {
-            $message = '<div class="error">' . $langs->trans("NameNotDefined") . '</div>';
-            $action = "create"; // Go back to create page
-        }
+	if ($caneditperms) {
+		$message = "";
+		if (!$_POST["nom"]) {
+			$message = '<div class="error">' . $langs->trans("NameNotDefined") . '</div>';
+			$action = "create"; // Go back to create page
+		}
 
-        if (!$message) {
-            $object->name = strtolower(trim($_POST["nom"]));
-            $object->note = trim($_POST["note"]);
-            $object->_id = "group:" . $object->name;
+		if (!$message) {
+			$object->name = strtolower(trim($_POST["nom"]));
+			$object->note = trim($_POST["note"]);
+			$object->_id = "group:" . $object->name;
 
-            $object->record();
+			$object->record();
 
-            Header("Location: fiche.php?id=" . $object->id);
-            exit;
-        }
-    } else {
-        $langs->load("errors");
-        $message = '<div class="error">' . $langs->trans('ErrorForbidden') . '</div>';
-    }
+			Header("Location: fiche.php?id=" . $object->id);
+			exit;
+		}
+	} else {
+		$langs->load("errors");
+		$message = '<div class="error">' . $langs->trans('ErrorForbidden') . '</div>';
+	}
 }
 
 // Add/Remove user into group
 if ($action == 'adduser' || $action == 'removeuser') {
-    if ($caneditperms) {
-        if ($userid) {
+	if ($caneditperms) {
+		if ($userid) {
 
-            $object->load($id);
+			$object->load($id);
 
-            $edituser = new User($db);
-            $edituser->load($userid);
+			$edituser = new User($db);
+			$edituser->load($userid);
 
-            if ($action == 'adduser') {
-                $edituser->roles[] = $object->name;
-                //$edituser->addRoleToUser($object->name);
-            }
-            if ($action == 'removeuser') {
-                unset($edituser->roles[array_search($object->name, $edituser->roles)]);
-                $edituser->roles = array_merge($edituser->roles);
-                //$edituser->removeRoleFromUser($object->name);
-            }
+			if ($action == 'adduser') {
+				$edituser->roles[] = $object->name;
+				//$edituser->addRoleToUser($object->name);
+			}
+			if ($action == 'removeuser') {
+				unset($edituser->roles[array_search($object->name, $edituser->roles)]);
+				$edituser->roles = array_merge($edituser->roles);
+				//$edituser->removeRoleFromUser($object->name);
+			}
 
-            $edituser->record($edituser->id == $user->id);
+			$edituser->record($edituser->id == $user->id);
 
-            header("Location: fiche.php?id=" . $object->id);
-            exit;
-        }
-    } else {
-        $langs->load("errors");
-        $message = '<div class="error">' . $langs->trans('ErrorForbidden') . '</div>';
-    }
+			header("Location: fiche.php?id=" . $object->id);
+			exit;
+		}
+	} else {
+		$langs->load("errors");
+		$message = '<div class="error">' . $langs->trans('ErrorForbidden') . '</div>';
+	}
 }
 
 if ($action == 'add_right' && $caneditperms) {
-    $editgroup = new Usergroup($db);
-    try {
-        $editgroup->load($id);
+	$editgroup = new Usergroup($db);
+	try {
+		$editgroup->load($id);
 
-        // For avoid error in strict mode
-        if (!is_object($editgroup->rights))
-            $editgroup->rights = new stdClass();
-		
-        $editgroup->rights->$_GET['pid'] = true;
-        $editgroup->record();
-    } catch (Exception $e) {
-        $mesg = $e->getMessage();
-    }
-    Header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $id . "&mesg=" . urlencode($mesg));
-    exit;
+		// For avoid error in strict mode
+		if (!is_object($editgroup->rights))
+			$editgroup->rights = new stdClass();
+
+		$editgroup->rights->$_GET['pid'] = true;
+		$editgroup->record();
+	} catch (Exception $e) {
+		$mesg = $e->getMessage();
+	}
+	Header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $id . "&mesg=" . urlencode($mesg));
+	exit;
 }
 
 if ($action == 'remove_right' && $caneditperms) {
-    $editgroup = new Usergroup($db);
-    try {
-        $editgroup->load($id);
-        unset($editgroup->rights->$_GET['pid']);
+	$editgroup = new Usergroup($db);
+	try {
+		$editgroup->load($id);
+		unset($editgroup->rights->$_GET['pid']);
 
-        $editgroup->record();
-    } catch (Exception $e) {
-        $mesg = $e->getMessage();
-    }
-    Header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $id . "&mesg=" . urlencode($mesg));
-    exit;
+		$editgroup->record();
+	} catch (Exception $e) {
+		$mesg = $e->getMessage();
+	}
+	Header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $id . "&mesg=" . urlencode($mesg));
+	exit;
 }
 
 /*
@@ -143,229 +143,229 @@ $form = new Form($db);
 $fuserstatic = new User($db);
 
 if ($action == 'create') {
-    print_fiche_titre($langs->trans("NewGroup"));
+	print_fiche_titre($langs->trans("NewGroup"));
 
-    if ($message) {
-        print $message . "<br>";
-    }
+	if ($message) {
+		print $message . "<br>";
+	}
 
-    print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">';
-    print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
-    print '<input type="hidden" name="action" value="add">';
+	print '<form action="' . $_SERVER["PHP_SELF"] . '" method="post">';
+	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+	print '<input type="hidden" name="action" value="add">';
 
-    print '<table class="border" width="100%">';
+	print '<table class="border" width="100%">';
 
-    print "<tr>" . '<td valign="top" class="fieldrequired">' . $langs->trans("Name") . '</td>';
-    print '<td class="valeur"><input size="30" type="text" name="nom" value=""></td></tr>';
+	print "<tr>" . '<td valign="top" class="fieldrequired">' . $langs->trans("Name") . '</td>';
+	print '<td class="valeur"><input size="30" type="text" name="nom" value=""></td></tr>';
 
-    print "<tr>" . '<td valign="top">' . $langs->trans("Note") . '</td><td>';
-    if (!class_exists('DolEditor'))
-        require DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
-    $doleditor = new DolEditor('note', '', '', 240, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_8, 90);
-    $doleditor->Create();
-    print "</td></tr>\n";
-    print "</table>\n";
+	print "<tr>" . '<td valign="top">' . $langs->trans("Note") . '</td><td>';
+	if (!class_exists('DolEditor'))
+		require DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
+	$doleditor = new DolEditor('note', '', '', 240, 'dolibarr_notes', '', false, true, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_8, 90);
+	$doleditor->Create();
+	print "</td></tr>\n";
+	print "</table>\n";
 
-    print '<center><br><input class="button small nice" value="' . $langs->trans("CreateGroup") . '" type="submit"></center>';
+	print '<center><br><input class="button small nice" value="' . $langs->trans("CreateGroup") . '" type="submit"></center>';
 
-    print "</form>";
-    dol_fiche_end();
+	print "</form>";
+	dol_fiche_end();
 
 
-    /**
-     *
-     * Visu et edition
-     *
-     */
+	/**
+	 *
+	 * Visu et edition
+	 *
+	 */
 } else {
-    if ($id) {
-        $object->load($id);
+	if ($id) {
+		$object->load($id);
 
-        /*
-         * Affichage onglets
-         */
-        $title = $langs->trans("GroupCard") . " : " . $object->name;
+		/*
+		 * Affichage onglets
+		 */
+		$title = $langs->trans("GroupCard") . " : " . $object->name;
 
-        print_fiche_titre($title);
-        print '<div class="with-padding">';
-        print '<div class="columns">';
+		print_fiche_titre($title);
+		print '<div class="with-padding">';
+		print '<div class="columns">';
 
-        /*
-         * Fiche en mode visu
-         */
+		/*
+		 * Fiche en mode visu
+		 */
 
-        if ($action != 'edit') {
+		if ($action != 'edit') {
 
 
-            dol_htmloutput_mesg($message);
+			dol_htmloutput_mesg($message);
 
-            /*
-             * Liste des utilisateurs dans le groupe
-             */
+			/*
+			 * Liste des utilisateurs dans le groupe
+			 */
 
-            print column_start();
-            print start_box($langs->trans("ListOfUsersInGroup"), "16-User-2.png");
+			print column_start();
+			print start_box($langs->trans("ListOfUsersInGroup"), "16-User-2.png");
 
 // On selectionne les users qui ne sont pas deja dans le groupe
-            $exclude = array();
+			$exclude = array();
 
-            $userstatic = new User($db);
-            $result = $userstatic->mongodb->find(array('roles' => $object->name));
+			$userstatic = new User($db);
+			$result = $userstatic->mongodb->find(array('roles' => $object->name));
 
-            if (count($result)) {
-                foreach ($result as $useringroup) {
-                    $useringroup = (object) $useringroup;
-                    $exclude[] = $useringroup->_id;
-                }
-            }
+			if (count($result)) {
+				foreach ($result as $useringroup) {
+					$useringroup = (object) $useringroup;
+					$exclude[] = $useringroup->_id;
+				}
+			}
 
-            if ($caneditperms) {
-                print '<form action="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '" method="POST">' . "\n";
-                print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
-                print '<input type="hidden" name="action" value="adduser">';
-                print '<table class="noborder" width="100%">' . "\n";
-                print '<tr class="liste_titre"><td class="liste_titre" width="25%">' . $langs->trans("NonAffectedUsers") . '</td>' . "\n";
-                print '<td>';
-                print $object->select_fk_extrafields('user', 'user');
-                print '</td><td>';
-                print '<input type="submit" class="tiny nice button" value="' . $langs->trans("Add") . '">';
-                print '</td></tr>' . "\n";
-                print '</table></form>' . "\n";
-                print '<br>';
-            }
+			if ($caneditperms) {
+				print '<form action="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '" method="POST">' . "\n";
+				print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+				print '<input type="hidden" name="action" value="adduser">';
+				print '<table class="noborder" width="100%">' . "\n";
+				print '<tr class="liste_titre"><td class="liste_titre" width="25%">' . $langs->trans("NonAffectedUsers") . '</td>' . "\n";
+				print '<td>';
+				print $object->select_fk_extrafields('user', 'user');
+				print '</td><td>';
+				print '<input type="submit" class="tiny nice button" value="' . $langs->trans("Add") . '">';
+				print '</td></tr>' . "\n";
+				print '</table></form>' . "\n";
+				print '<br>';
+			}
 
-            /*
-             * Group members
-             */
-            $obj = new stdClass();
-            $i = 0;
-            print '<table class="display" id="users">';
-            print '<thead>';
-            print '<tr>';
-            print '<th>' . $langs->trans("Login") . '</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "";
-            $i++;
-            print '<th>' . $langs->trans("Lastname") . '</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "";
-            $i++;
-            print '<th>' . $langs->trans("Firstname") . '</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "";
-            $i++;
-            print '<th>' . $langs->trans("Status") . '</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "";
-            $obj->aoColumns[$i]->sClass = "center";
-            $i++;
-            print '<th>' . $langs->trans('Action') . '</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "";
-            $obj->aoColumns[$i]->sClass = "center content_actions";
-            $i++;
-            print "</tr>\n";
-            print '</thead>';
+			/*
+			 * Group members
+			 */
+			$obj = new stdClass();
+			$i = 0;
+			print '<table class="display" id="users">';
+			print '<thead>';
+			print '<tr>';
+			print '<th>' . $langs->trans("Login") . '</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "";
+			$i++;
+			print '<th>' . $langs->trans("Lastname") . '</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "";
+			$i++;
+			print '<th>' . $langs->trans("Firstname") . '</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "";
+			$i++;
+			print '<th>' . $langs->trans("Status") . '</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "";
+			$obj->aoColumns[$i]->sClass = "center";
+			$i++;
+			print '<th>' . $langs->trans('Action') . '</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "";
+			$obj->aoColumns[$i]->sClass = "center content_actions";
+			$i++;
+			print "</tr>\n";
+			print '</thead>';
 
-            print '<tbody>';
-            if (count($result)) {
-                $var = True;
+			print '<tbody>';
+			if (count($result)) {
+				$var = True;
 
-                foreach ($result as $aRow) {
-                    $aRow = (object) $aRow;
+				foreach ($result as $aRow) {
+					$aRow = (object) $aRow;
 
-                    $var = !$var;
+					$var = !$var;
 
-                    $useringroup = new User($db);
-                    $useringroup->values = $aRow;
-                    $useringroup->id = $useringroup->values->_id;
-                    $useringroup->email = $useringroup->values->email;
+					$useringroup = new User($db);
+					$useringroup->values = $aRow;
+					$useringroup->id = $useringroup->values->_id;
+					$useringroup->email = $useringroup->values->email;
 
-                    print "<tr $bc[$var]>";
-                    print '<td>';
-                    print '<a href="' . DOL_URL_ROOT . '/user/fiche.php?id=' . $useringroup->id . '">' . img_object($langs->trans("ShowUser"), "user") . ' ' . $useringroup->values->name . '</a>';
-                    if ($useringroup->admin)
-                        print img_picto($langs->trans("Administrator"), 'star');
-                    print '</td>';
-                    print '<td>' . $useringroup->values->lastname . '</td>';
-                    print '<td>' . $useringroup->values->firstname . '</td>';
-                    print '<td>' . $useringroup->LibStatus($useringroup->values->Status) . '</td>';
-                    print '<td>';
-                    if ($user->admin) {
-                        print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&amp;action=removeuser&amp;user=' . $useringroup->values->_id . '">';
-                        print img_delete($langs->trans("RemoveFromGroup"));
-                    } else {
-                        print "-";
-                    }
-                    print "</td></tr>\n";
-                }
-            }
-            print '<tbody>';
-            print "</table>";
+					print "<tr $bc[$var]>";
+					print '<td>';
+					print '<a href="' . DOL_URL_ROOT . '/user/fiche.php?id=' . $useringroup->id . '">' . img_object($langs->trans("ShowUser"), "user") . ' ' . $useringroup->values->name . '</a>';
+					if ($useringroup->admin)
+						print img_picto($langs->trans("Administrator"), 'star');
+					print '</td>';
+					print '<td>' . $useringroup->values->lastname . '</td>';
+					print '<td>' . $useringroup->values->firstname . '</td>';
+					print '<td>' . $useringroup->LibStatus($useringroup->values->Status) . '</td>';
+					print '<td>';
+					if ($user->admin) {
+						print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&amp;action=removeuser&amp;user=' . $useringroup->values->_id . '">';
+						print img_delete($langs->trans("RemoveFromGroup"));
+					} else {
+						print "-";
+					}
+					print "</td></tr>\n";
+				}
+			}
+			print '<tbody>';
+			print "</table>";
 
-            $obj->aaSorting = array(array(0, "asc"));
-            $obj->sDom = 'l<fr>t<\"clear\"rtip>';
+			$obj->aaSorting = array(array(0, "asc"));
+			$obj->sDom = 'l<fr>t<\"clear\"rtip>';
 
-            $object->datatablesCreate($obj, "users");
+			$object->datatablesCreate($obj, "users");
 
-            print end_box();
-            print column_end();
+			print end_box();
+			print column_end();
 
-            print column_start();
-            print start_box($title, "16-Users-2.png");
+			print column_start();
+			print start_box($title, "16-Users-2.png");
 
-            /*
-             * Ecran ajout/suppression permission
-             */
+			/*
+			 * Ecran ajout/suppression permission
+			 */
 
-            $i = 0;
-            $obj = new stdClass();
+			$i = 0;
+			$obj = new stdClass();
 
-            if ($user->admin)
-                print info_admin($langs->trans("WarningOnlyPermissionOfActivatedModules"));
+			if ($user->admin)
+				print info_admin($langs->trans("WarningOnlyPermissionOfActivatedModules"));
 
-            print '<table class="display dt_act" id="perms_rights">';
+			print '<table class="display dt_act" id="perms_rights">';
 
-            print'<thead>';
-            print'<tr>';
+			print'<thead>';
+			print'<tr>';
 
-            print'<th>';
-            print'</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "id";
-            $obj->aoColumns[$i]->sDefaultContent = "";
-            $obj->aoColumns[$i]->bVisible = false;
-            $i++;
+			print'<th>';
+			print'</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "id";
+			$obj->aoColumns[$i]->sDefaultContent = "";
+			$obj->aoColumns[$i]->bVisible = false;
+			$i++;
 
-            print'<th class="essential">';
-            print $langs->trans("Module");
-            print'</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "name";
-            $obj->aoColumns[$i]->sDefaultContent = "";
-            $obj->aoColumns[$i]->sWidth = "18em";
-            $i++;
+			print'<th class="essential">';
+			print $langs->trans("Module");
+			print'</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "name";
+			$obj->aoColumns[$i]->sDefaultContent = "";
+			$obj->aoColumns[$i]->sWidth = "18em";
+			$i++;
 
-            print'<th>';
-            print $langs->trans("Permission");
-            print'</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "desc";
-            $obj->aoColumns[$i]->sDefaultContent = "";
-            $obj->aoColumns[$i]->bVisible = true;
-            $i++;
+			print'<th>';
+			print $langs->trans("Permission");
+			print'</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "desc";
+			$obj->aoColumns[$i]->sDefaultContent = "";
+			$obj->aoColumns[$i]->bVisible = true;
+			$i++;
 
-            print'<th class="essential">';
-            print $langs->trans("Enabled");
-            print'</th>';
-            $obj->aoColumns[$i] = new stdClass();
-            $obj->aoColumns[$i]->mDataProp = "Status";
-            $obj->aoColumns[$i]->sDefaultContent = "false";
-            $obj->aoColumns[$i]->sClass = "center";
+			print'<th class="essential">';
+			print $langs->trans("Enabled");
+			print'</th>';
+			$obj->aoColumns[$i] = new stdClass();
+			$obj->aoColumns[$i]->mDataProp = "Status";
+			$obj->aoColumns[$i]->sDefaultContent = "false";
+			$obj->aoColumns[$i]->sClass = "center";
 
-            print'</tr>';
-            print'</thead>';
-            $obj->fnDrawCallback = "function(oSettings){
+			print'</tr>';
+			print'</thead>';
+			$obj->fnDrawCallback = "function(oSettings){
                 if ( oSettings.aiDisplay.length == 0 )
                 {
                     return;
@@ -393,105 +393,101 @@ if ($action == 'create') {
                 }
 	}";
 
-            $i = 0;
-            print'<tfoot>';
-            print'</tfoot>';
-            print'<tbody>';
+			$i = 0;
+			print'<tfoot>';
+			print'</tfoot>';
+			print'<tbody>';
 
-            $objectM = new DolibarrModules($db);
+			$objectM = new DolibarrModules($db);
 
-            try {
-                $result = $objectM->mongodb->find(array("enabled" => true, "rights" => array('$exists' => true)));
-            } catch (Exception $exc) {
-                print $exc->getMessage();
-            }
+			$result = $objectM->getDefaultRight();
 
-            foreach ($result as $rows) {
-			foreach ($rows['rights'] as $aRow) {
+			foreach ($result as $rows) {
+				foreach ($rows['rights'] as $aRow) {
 
-				$aRow = json_decode(json_encode($aRow));
-				//print_r($aRow);exit;
-                    print'<tr>';
+					$aRow = json_decode(json_encode($aRow));
+					//print_r($aRow);exit;
+					print'<tr>';
 
-                    $objectM->name = $rows['name'];
-                    $objectM->numero = $rows['numero'];
-                    $objectM->rights_class = $rows['rights_class'];
-                    $objectM->id = $aRow->id;
-                    $objectM->perm = $aRow->perm;
-                    $objectM->desc = $aRow->desc;
-                    $objectM->Status = ($rows['Status'] == true ? "true" : "false");
+					$objectM->name = $rows['name'];
+					$objectM->numero = $rows['numero'];
+					$objectM->rights_class = $rows['rights_class'];
+					$objectM->id = $aRow->id;
+					$objectM->perm = $aRow->perm;
+					$objectM->desc = $aRow->desc;
+					$objectM->Status = ($rows['Status'] == true ? "true" : "false");
 
-                    print '<td>' . $aRow->id . '</td>';
-                    print '<td>' . img_object('', $rows['picto']) . " " . $objectM->getName() . '</td>';
-                    print '<td>' . $objectM->getPermDesc() . '<a name="' . $aRow->id . '">&nbsp;</a></td>';
-                    print '<td>';
+					print '<td>' . $aRow->id . '</td>';
+					print '<td>' . img_object('', $rows['picto']) . " " . $objectM->getName() . '</td>';
+					print '<td>' . $objectM->getPermDesc() . '<a name="' . $aRow->id . '">&nbsp;</a></td>';
+					print '<td>';
 
-                    $perm = $aRow->id;
+					$perm = $aRow->id;
 
-                    if ($caneditperms) {
-                        if ($aRow->Status)
-                            print $objectM->getLibStatus(); // Enable by default
-                        elseif ($object->rights->$perm) {
-                            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->id . '&amp;action=remove_right#' . $aRow->id . '">';
-                            print img_picto($langs->trans("Activated"), 'switch_on');
-                            print '</a>';
-                        } else {
-                            print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->id . '&amp;action=add_right#' . $aRow->id . '">';
-                            print img_picto($langs->trans("Disabled"), 'switch_off');
-                            print '</a>';
-                        }
-                    } else {
-                        print $objectM->getLibStatus();
-                    }
-                    print '</td>';
+					if ($caneditperms) {
+						if ($aRow->Status)
+							print $objectM->getLibStatus(); // Enable by default
+						elseif ($object->rights->$perm) {
+							print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->id . '&amp;action=remove_right#' . $aRow->id . '">';
+							print img_picto($langs->trans("Activated"), 'switch_on');
+							print '</a>';
+						} else {
+							print '<a href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&pid=' . $aRow->id . '&amp;action=add_right#' . $aRow->id . '">';
+							print img_picto($langs->trans("Disabled"), 'switch_off');
+							print '</a>';
+						}
+					} else {
+						print $objectM->getLibStatus();
+					}
+					print '</td>';
 
-                    print'</tr>';
-                }
-            }
-            print'</tbody>';
-            print'</table>';
+					print'</tr>';
+				}
+			}
+			print'</tbody>';
+			print'</table>';
 
-            $obj->aaSorting = array(array(1, 'asc'));
-            $obj->sDom = 'l<fr>t<\"clear\"rtip>';
-            $obj->iDisplayLength = 50;
+			$obj->aaSorting = array(array(1, 'asc'));
+			$obj->sDom = 'l<fr>t<\"clear\"rtip>';
+			$obj->iDisplayLength = 50;
 
-            print $objectM->datatablesCreate($obj, "perms_rights");
+			print $objectM->datatablesCreate($obj, "perms_rights");
 
 
-            print end_box();
-            print column_end();
-        }
+			print end_box();
+			print column_end();
+		}
 
-        /*
-         * Fiche en mode edition
-         */
-        if ($action == 'edit' && $caneditperms) {
-            print '<form action="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '" method="post" name="updategroup" enctype="multipart/form-data">';
-            print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
-            print '<input type="hidden" name="action" value="update">';
+		/*
+		 * Fiche en mode edition
+		 */
+		if ($action == 'edit' && $caneditperms) {
+			print '<form action="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '" method="post" name="updategroup" enctype="multipart/form-data">';
+			print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+			print '<input type="hidden" name="action" value="update">';
 
-            print '<table class="border" width="100%">';
-            print '<tr><td width="25%" valign="top" class="fieldrequired">' . $langs->trans("Name") . '</td>';
-            print '<td width="75%" class="valeur"><input size="15" type="text" name="group" value="' . $object->name . '">';
-            print "</td></tr>\n";
+			print '<table class="border" width="100%">';
+			print '<tr><td width="25%" valign="top" class="fieldrequired">' . $langs->trans("Name") . '</td>';
+			print '<td width="75%" class="valeur"><input size="15" type="text" name="group" value="' . $object->name . '">';
+			print "</td></tr>\n";
 
-            print '<tr><td width="25%" valign="top">' . $langs->trans("Note") . '</td>';
-            print '<td class="valeur">';
-            if (!class_exists('DolEditor'))
-                require DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
-            $doleditor = new DolEditor('note', $object->note, '', 240, 'dolibarr_notes', '', true, false, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_8, 90);
-            $doleditor->Create();
-            print '</td>';
-            print "</tr>\n";
-            print "</table>\n";
+			print '<tr><td width="25%" valign="top">' . $langs->trans("Note") . '</td>';
+			print '<td class="valeur">';
+			if (!class_exists('DolEditor'))
+				require DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
+			$doleditor = new DolEditor('note', $object->note, '', 240, 'dolibarr_notes', '', true, false, $conf->global->FCKEDITOR_ENABLE_SOCIETE, ROWS_8, 90);
+			$doleditor->Create();
+			print '</td>';
+			print "</tr>\n";
+			print "</table>\n";
 
-            print '<center><br><input class="button" value="' . $langs->trans("Save") . '" type="submit"></center>';
+			print '<center><br><input class="button" value="' . $langs->trans("Save") . '" type="submit"></center>';
 
-            print '</form>';
+			print '</form>';
 
-            print '</div>';
-        }
-    }
+			print '</div>';
+		}
+	}
 }
 
 dol_fiche_end();

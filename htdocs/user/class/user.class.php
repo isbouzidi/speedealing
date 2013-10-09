@@ -426,8 +426,8 @@ class User extends nosqlDocument {
 
 		try {
 			//$result = $object->getView("default_right", '', $cache);
-
-			$result = $object->mongodb->find(array("enabled" => true, "rights" => array('$exists' => true)));
+			
+			$result = $object->getDefaultRight();
 
 			if (count($this->roles) > 0) {
 				$group = new UserGroup($this->db);

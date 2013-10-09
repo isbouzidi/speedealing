@@ -1368,7 +1368,13 @@ class DolibarrModules extends nosqlDocument {
 			}*/
 		}
 	}
-
+	
+	/**
+	 * Return list of default_right
+	 */
+	function getDefaultRight() {
+		return $this->mongodb->find(array("enabled" => true, "rights" => array('$exists' => true)));
+	}
 }
 
 ?>
