@@ -196,61 +196,70 @@ if ((($action == 'add' && $canadduser) || ($action == 'update' && $canedituser))
 	}
 
 	if (!$error) {
-		if ($action == "update")
+		//if ($action == "update")
+		if ($id)
 			$edituser->load($id);
+		else
+			$edituser->load("user:" . strtolower($_POST["login"]));
 
-		$edituser->lastname = $_POST["nom"];
-		$edituser->firstname = $_POST["prenom"];
-		$edituser->name = $_POST["login"];
-		$edituser->pass = $_POST["password"];
-		$edituser->admin = (bool) $_POST["admin"];
-		$edituser->phonePro = $_POST["PhonePro"];
-		$edituser->fax = $_POST["Fax"];
-		$edituser->phoneMobile = $_POST["phoneMobile"];
-		$edituser->email = $_POST["email"];
-		$edituser->signature = $_POST["signature"];
-		$edituser->entity = $_POST["default_entity"];
-
-		if (GETPOST('deletephoto')) {
-			$del_photo = $edituser->photo;
-			unset($edituser->photo);
-		} elseif (!empty($_FILES['photo']['name']))
-			$edituser->photo = dol_sanitizeFileName($_FILES['photo']['name']);
-
-		$id = $edituser->update($user, 0, $action);
-
-		if ($id == $user->name)
-			dol_delcache("user:" . $id);
-
-		//print $id;
-
-		if ($id == $edituser->name) {
-			$file_OK = is_uploaded_file($_FILES['photo']['tmp_name']);
-
-			if (GETPOST('deletephoto') && !empty($del_photo)) {
-				$edituser->deleteFile($del_photo);
-			}
-
-			if ($file_OK) {
-				if (image_format_supported($_FILES['photo']['name']) > 0) {
-					$edituser->storeFile('photo');
-				} else {
-					$errmsgs[] = "ErrorBadImageFormat";
-				}
-			}
-			Header("Location: " . $_SERVER['PHP_SELF'] . '?id=user:' . $id);
-			exit;
+		if ($action == "add" && $edituser->name) {
+			$edituser->error = 'ErrorLoginAlreadyExists';
+			setEventMessage($langs->trans($edituser->error), 'errors');
+			$action = "create";
 		} else {
-			$langs->load("errors");
-			if (is_array($edituser->errors) && count($edituser->errors))
-				setEventMessage(join('<br>', $langs->trans($edituser->errors)), 'errors');
-			else
-				setEventMessage($langs->trans($edituser->error), 'errors');
-			//print $edituser->error;
-			if ($action == "add")
-				$action = "create"; // Go back to create page
-			if ($action == "update")
-				$action = "edit"; // Go back to create page
+			$edituser->lastname = $_POST["nom"];
+			$edituser->firstname = $_POST["prenom"];
+			$edituser->name = $_POST["login"];
+			$edituser->pass = $_POST["password"];
+			$edituser->admin = (bool) $_POST["admin"];
+			$edituser->phonePro = $_POST["PhonePro"];
+			$edituser->fax = $_POST["Fax"];
+			$edituser->phoneMobile = $_POST["phoneMobile"];
+			$edituser->email = $_POST["email"];
+			$edituser->signature = $_POST["signature"];
+			$edituser->entity = $_POST["default_entity"];
+
+			if (GETPOST('deletephoto')) {
+				$del_photo = $edituser->photo;
+				unset($edituser->photo);
+			} elseif (!empty($_FILES['photo']['name']))
+				$edituser->photo = dol_sanitizeFileName($_FILES['photo']['name']);
+
+			$id = $edituser->update($user, 0, $action);
+
+			if ($id == $user->name)
+				dol_delcache("user:" . $id);
+
+			//print $id;
+
+			if ($id == $edituser->name) {
+				$file_OK = is_uploaded_file($_FILES['photo']['tmp_name']);
+
+				if (GETPOST('deletephoto') && !empty($del_photo)) {
+					$edituser->deleteFile($del_photo);
+				}
+
+				if ($file_OK) {
+					if (image_format_supported($_FILES['photo']['name']) > 0) {
+						$edituser->storeFile('photo');
+					} else {
+						$errmsgs[] = "ErrorBadImageFormat";
+					}
+				}
+				Header("Location: " . $_SERVER['PHP_SELF'] . '?id=user:' . $id);
+				exit;
+			} else {
+				$langs->load("errors");
+				if (is_array($edituser->errors) && count($edituser->errors))
+					setEventMessage(join('<br>', $langs->trans($edituser->errors)), 'errors');
+				else
+					setEventMessage($langs->trans($edituser->error), 'errors');
+				//print $edituser->error;
+				if ($action == "add")
+					$action = "create"; // Go back to create page
+				if ($action == "update")
+					$action = "edit"; // Go back to create page
+			}
 		}
 	}
 }
@@ -864,7 +873,7 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 						foreach ($rows['rights'] as $aRow) {
 							$aRow = json_decode(json_encode($aRow));
 							print'<tr>';
-							
+
 							$object->name = $rows['name'];
 							$object->numero = $rows['numero'];
 							$object->rights_class = $rows['rights_class'];
