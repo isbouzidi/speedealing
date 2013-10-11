@@ -1815,7 +1815,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         if ($conf->agenda->enabled) {
             $cal = new Agenda($db);
             print column_start("six");
-            $cal->show($object->id, 25);
+            $cal->show($object->id(), 25);
             print column_end();
         }
 

@@ -79,9 +79,19 @@ if (!empty($class)) {
 		//'stale'=> "update_after"
 		//$result = $object->getView($json, $params);
 
+		//error_log($query);
+		
 		if($query) {
-			$result = $object->mongodb->find(json_decode($query));
-			$count = $object->mongodb->count(json_decode($query));
+			
+			$qry = json_decode($query);
+			//error_log(print_r($qry,true));
+			foreach ($qry as $key => $row) {
+				if(substr($key, -3) == ".id")
+					$qry->$key = new MongoId($row);
+			}
+			
+			$result = $object->mongodb->find($qry);
+			$count = $object->mongodb->count($qry);
 		} else {
 			$result = $object->mongodb->find();
 			$count = $object->mongodb->count();

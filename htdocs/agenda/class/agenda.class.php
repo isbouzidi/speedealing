@@ -934,7 +934,7 @@ class Agenda extends nosqlDocument {
 			$head[$h]->icon = "icon-pencil";
 			$h++;
 		}
-		$head[$h] = new stdClass();
+		/*$head[$h] = new stdClass();
 		$head[$h]->title = $langs->trans("StatusActionToDo");
 		$head[$h]->id = "TODO";
 		$head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=Agenda&key=" . $id . "'); return false;";
@@ -945,7 +945,7 @@ class Agenda extends nosqlDocument {
 		$head[$h]->id = "DONE";
 		$head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsDONE&class=Agenda&key=" . $id . "'); return false;";
 		$head[$h]->icon = "icon-calendar";
-		$h++;
+		$h++;*/
 
 		print start_box($titre, "icon-calendar", $head);
 
@@ -1026,7 +1026,9 @@ class Agenda extends nosqlDocument {
 
 		$obj->iDisplayLength = $max;
 		$obj->aaSorting = array(array(2, 'desc'));
-		$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=" . get_class($this) . "&key=" . $id;
+		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($this).'"},
+			{"name": "query", "value": "{\"societe.id\": \"'.$id.'\"}"}]';
+		//$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "actions_datatable", true);
 
 		/* foreach ($head as $aRow) {

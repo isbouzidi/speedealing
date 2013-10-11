@@ -44,6 +44,9 @@ $socid = GETPOST('socid', 'alpha');
 if ($user->societe_id)
 	$socid = $user->societe_id;
 
+if ($socid)
+	$socid = new MongoId($socid);
+
 $object = new Contact($db);
 $objsoc = new Societe($db);
 
@@ -117,7 +120,7 @@ if (empty($reshook)) {
 		if ($canvas)
 			$object->canvas = $canvas;
 
-		$object->societe->id = $_POST["socid"];
+		$object->societe->id = $socid;
 		$object->lastname = $_POST["lastname"];
 		$object->firstname = $_POST["firstname"];
 		$object->civilite_id = $_POST["civilite_id"];
@@ -206,7 +209,7 @@ if (empty($reshook)) {
 			$object->old_name = $_POST["old_name"];
 			$object->old_firstname = $_POST["old_firstname"];
 
-			$object->societe->id = $_POST["socid"];
+			$object->societe->id = $socid;
 			$object->lastname = $_POST["lastname"];
 			$object->firstname = $_POST["firstname"];
 			$object->civilite_id = $_POST["civilite_id"];

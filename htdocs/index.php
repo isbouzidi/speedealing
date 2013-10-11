@@ -99,8 +99,8 @@ print '<tr ' . $bc[false] . '>';
 print '<td nowrap="nowrap">' . $langs->trans("User") . '</td><td>' . $user->getNomUrl(0) . '</td></tr>';
 print '<tr ' . $bc[true] . '>';
 print '<td nowrap="nowrap">' . $langs->trans("PreviousConnexion") . '</td><td>';
-if ($user->LastConnection)
-	print dol_print_date($user->LastConnection, "dayhour");
+if ($user->LastConnection->sec)
+	print dol_print_date(date("c",$user->LastConnection->sec), "dayhour");
 else
 	print $langs->trans("Unknown");
 print '</td>';

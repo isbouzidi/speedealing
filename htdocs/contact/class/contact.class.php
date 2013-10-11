@@ -821,7 +821,7 @@ class Contact extends nosqlDocument {
 
 		$obj->iDisplayLength = $max;
 
-		$obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
+		$obj->aoAjaxData = '[{name :"class",value:"' . get_class($this) . '"},
 			{"name": "query", "value": "{\"societe.id\": \"' . $id . '\"}"}]';
 
 		//$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=listSociete&class=" . get_class($this) . "&key=" . $id;
