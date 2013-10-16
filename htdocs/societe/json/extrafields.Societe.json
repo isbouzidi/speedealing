@@ -512,6 +512,9 @@
 			},
 			"render": {
 			}
+		},
+		"datec": {
+			"schema": {"type": "Date"}
 		}
 	}
 }
