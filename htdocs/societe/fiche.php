@@ -679,7 +679,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
         $tmpcode = $object->code_client;
         if ($modCodeClient->code_auto)
             $tmpcode = $modCodeClient->getNextValue($object, 0);
-        print '<input type="text" name="code_client" size="16" value="' . $tmpcode . '" maxlength="15">';
+        print '<input type="text" name="code_client" size="16" value="' . $tmpcode . '" >';
         print '</td><td>';
         $s = $modCodeClient->getToolTip($langs, $object, 0);
         print $form->textwithpicto('', $s, 1);
@@ -1073,10 +1073,10 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
                 $tmpcode = $object->code_client;
                 if (empty($tmpcode) && $modCodeClient->code_auto)
                     $tmpcode = $modCodeClient->getNextValue($object, 0);
-                print '<input type="text" name="code_client" size="16" value="' . $tmpcode . '" maxlength="15">';
+                print '<input type="text" name="code_client" size="16" value="' . $tmpcode . '">';
             }
             else if ($object->codeclient_modifiable()) {
-                print '<input type="text" name="code_client" size="16" value="' . $object->code_client . '" maxlength="15">';
+                print '<input type="text" name="code_client" size="16" value="' . $object->code_client . '">';
             } else {
                 print $object->code_client;
                 print '<input type="hidden" name="code_client" value="' . $object->code_client . '">';
