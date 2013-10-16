@@ -1166,7 +1166,7 @@ abstract class nosqlDocument extends CommonObject {
 					$rtr.= 'if(obj.aData.' . $params["dateEnd"] . ' === undefined)
 				obj.aData.' . $params["dateEnd"] . ' = "";';
 					$rtr.= 'if(obj.aData.' . $params["dateEnd"] . ' != ""){';
-					$rtr.= 'var dateEnd = new Date(obj.aData.' . $params["dateEnd"] . '.sec).getTime();';
+					$rtr.= 'var dateEnd = new Date(obj.aData.' . $params["dateEnd"] . '.sec*1000).getTime();';
 					$rtr.= 'if(dateEnd < now)';
 					$rtr.= 'if(expire[stat] !== undefined)
 				stat = expire[stat];';
