@@ -122,9 +122,9 @@ if (!empty($class)) {
 					$aRow->$idx->id = $key->id->{'$id'};
 				}
 				// convert Date
-				if (is_object($key) && isset($key->sec)) {
-					$aRow->$idx = date("c", $key->sec);
-				}
+				//if (is_object($key) && isset($key->sec)) {
+				//	$aRow->$idx = date("c", $key->sec);
+				//}
 			}
 
 			$output["aaData"][] = $aRow;

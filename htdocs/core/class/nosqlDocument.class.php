@@ -1119,7 +1119,7 @@ abstract class nosqlDocument extends CommonObject {
 				$rtr = 'function(obj) {
 					if(obj.aData.' . $key . ')
 					{
-					var date = new Date(Date.parse(obj.aData.' . $key . '));
+					var date = new Date(obj.aData.' . $key . '.sec * 1000);
 			return date.toLocaleDateString();
 			}
 	 		else
@@ -1131,7 +1131,7 @@ abstract class nosqlDocument extends CommonObject {
 				$rtr = 'function(obj) {
 			if(obj.aData.' . $key . ')
 			{
-				var date = new Date(obj.aData.' . $key . ');
+				var date = new Date(obj.aData.' . $key . '.sec * 1000);
 	 		return date.toLocaleDateString() +" "+date.toLocaleTimeString();
 			}
 	 		else
@@ -1166,7 +1166,7 @@ abstract class nosqlDocument extends CommonObject {
 					$rtr.= 'if(obj.aData.' . $params["dateEnd"] . ' === undefined)
 				obj.aData.' . $params["dateEnd"] . ' = "";';
 					$rtr.= 'if(obj.aData.' . $params["dateEnd"] . ' != ""){';
-					$rtr.= 'var dateEnd = new Date(obj.aData.' . $params["dateEnd"] . ').getTime();';
+					$rtr.= 'var dateEnd = new Date(obj.aData.' . $params["dateEnd"] . '.sec).getTime();';
 					$rtr.= 'if(dateEnd < now)';
 					$rtr.= 'if(expire[stat] !== undefined)
 				stat = expire[stat];';
