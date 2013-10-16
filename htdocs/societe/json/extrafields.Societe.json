@@ -311,7 +311,7 @@
 		},
 		"commercial_id": {
 			"schema": {
-				"id": {"type": "ObjectId", "ref": "User"},
+				"id": {"type": "String"},
 				"name": "String"
 			},
 			"type": "select",
