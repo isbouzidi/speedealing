@@ -1,13 +1,20 @@
 {
-   "_id": "extrafields:User",
-   "class": "extrafields",
-   "ico": "icon-object-user",
-   "langs": [
-       "users",
-       "admin"
-   ],
-   "fields": {
+	"_id": "extrafields:User",
+	"class": "extrafields",
+	"ico": "icon-object-user",
+	"schemaMongoose": {
+		"enabled": true,
+		"name": "user",
+		"collection": "User",
+		"plugins": ["mongoose-timestamp"]
+	},
+	"langs": [
+		"users",
+		"admin"
+	],
+	"fields": {
 		"_id": {
+			"schema": "ObjectId",
 			"type": "text",
 			"enable": true,
 			"list": {
@@ -15,28 +22,59 @@
 				"static": true
 			}
 		},
-       "Status": {
-           "type": "select",
-           "enable": true,
-           "default": "DISABLE",
-           "status": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "values": {
-               "DISABLE": {
-                   "enable": true,
-                   "label": "Bloqué",
-                   "cssClass": "red-gradient"
-               },
-               "ENABLE": {
-                   "enable": true,
-                   "label": "Actif",
-                   "cssClass": "green-gradient"
-               }
-           }
-       }
-   }
+		"Status": {
+			"schema": "Mixed",
+			"type": "select",
+			"enable": true,
+			"default": "DISABLE",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"values": {
+				"DISABLE": {
+					"enable": true,
+					"label": "Bloqué",
+					"cssClass": "red-gradient"
+				},
+				"ENABLE": {
+					"enable": true,
+					"label": "Actif",
+					"cssClass": "green-gradient"
+				}
+			}
+		},
+		"email": {
+			"schema": "String"
+		},
+		"admin": {
+			"schema": "Boolean"
+		},
+		"lastname": {
+			"schema": "String"
+		},
+		"firstname": {
+			"schema": "String"
+		},
+		"password": {
+			"schema": "String"
+		},
+		"name": {
+			"schema": {"type": "String", "require": true}
+		},
+		"roles": {
+			"schema": ["String"]
+		},
+		"email": {
+			"_createdAt": {"type": "Date", "default": "Date.now()"}
+		},
+		"LastConnection": {
+			"schema": "Date"
+		},
+		"NewConnection": {
+			"schema": "Date"
+		}
+	}
 }

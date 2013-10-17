@@ -6,6 +6,12 @@
 	"langs": [
 		"orders"
 	],
+	"schemaMongoose": {
+		"enabled": true,
+		"name": "commande",
+		"collection": "Commande",
+		"plugins": ["mongoose-timestamp"]
+	},
 	"history": true,
 	"models": [
 		"einstein"
@@ -37,7 +43,7 @@
 		"client",
 		"ref_client",
 		"contact",
-		"date",
+		"date_livraison",
 		"total_ht",
 		"Status",
 		"Action"
@@ -50,7 +56,7 @@
 	],
 	"fields": {
 		"_id": {
-			"settype": "MongoId",
+			"schema": "ObjectId",
 			"type": "text",
 			"enable": true,
 			"list": {
@@ -59,6 +65,7 @@
 			}
 		},
 		"ref": {
+			"schema": "String",
 			"type": "text",
 			"enable": true,
 			"label": "Ref",
@@ -71,6 +78,7 @@
 			}
 		},
 		"Status": {
+			"schema": {"type": "Mixed", "default": "DRAFT"},
 			"type": "select",
 			"enable": true,
 			"default": "DRAFT",
@@ -135,6 +143,7 @@
 			}
 		},
 		"cond_reglement_code": {
+			"schema": {"type": "String", "default": "RECEP"},
 			"type": "select",
 			"enable": true,
 			"default": "RECEP",
@@ -178,6 +187,7 @@
 			}
 		},
 		"mode_reglement_code": {
+			"schema": {"type": "String", "default": "TIP"},
 			"type": "select",
 			"enable": true,
 			"default": "TIP",
@@ -233,6 +243,7 @@
 			}
 		},
 		"availability_code": {
+			"schema": {"type": "String", "default": "AV_NOW"},
 			"type": "select",
 			"enable": true,
 			"default": "AV_NOW",
@@ -261,6 +272,7 @@
 			}
 		},
 		"demand_reason_code": {
+			"schema": {"type": "String", "default": "SRC_CAMP_EMAIL"},
 			"type": "select",
 			"enable": true,
 			"default": "SRC_CAMP_EMAIL",
@@ -297,6 +309,10 @@
 			}
 		},
 		"client": {
+			"schema": {
+				"id": {"type": "ObjectId", "ref": "Societe"},
+				"name": "String"
+			},
 			"type": "select",
 			"enable": true,
 			"class": "Societe",
@@ -311,6 +327,10 @@
 			}
 		},
 		"contact": {
+			"schema": {
+				"id": {"type": "ObjectId", "ref": "Contact"},
+				"name": "String"
+			},
 			"type": "select",
 			"enable": true,
 			"class": "Contact",
@@ -325,11 +345,13 @@
 			}
 		},
 		"ref_client": {
+			"schema": {"type": "String"},
 			"type": "text",
 			"enable": true,
 			"label": "RefCustomer"
 		},
-		"date": {
+		"date_commande": {
+			"schema": "Date",
 			"type": "date",
 			"enable": true,
 			"label": "Date",
@@ -341,11 +363,13 @@
 			}
 		},
 		"date_livraison": {
+			"schema": "Date",
 			"type": "date",
 			"enable": true,
 			"label": "DateEnd"
 		},
 		"notes": {
+			"schema": "String",
 			"enable": true
 		},
 		"description": {
@@ -439,6 +463,7 @@
 			}
 		},
 		"total_ht": {
+			"schema": "Number",
 			"type": "text",
 			"settype": "float",
 			"price": true,
@@ -451,6 +476,7 @@
 			}
 		},
 		"total_tva": {
+			"schema": "Number",
 			"type": "text",
 			"settype": "float",
 			"price": true,
@@ -459,6 +485,7 @@
 			"mode": "absolute"
 		},
 		"total_ttc": {
+			"schema": "Number",
 			"type": "text",
 			"settype": "float",
 			"price": true,
@@ -467,6 +494,7 @@
 			"mode": "absolute"
 		},
 		"shipping": {
+			"schema": "Number",
 			"type": "text",
 			"icon": "icon-plane",
 			"settype": "float",
@@ -474,6 +502,66 @@
 			"enable": true,
 			"label": "ShippingHT",
 			"mode": "absolute"
+		},
+		"author": {
+			"schema": {
+				"id": "String",
+				"name": "String"
+			}
+		},
+		"entity": {
+			"schema": "String"
+		},
+		"facility": {
+			"schema": "String"
+		},
+		"modelpdf": {
+			"schema": "String"
+		},
+		"linked_objects": {
+			"schema": [{"id": "ObjectId", "name": "String"}]
+		},
+		"datec": {
+			"schema": {"type": "Date"}
+		},
+		"lines": {
+			"schema": [
+				{
+					"pu": "Number",
+					"qty": "Number",
+					"tva_tx": "Number",
+					"price_base_type": "String",
+					"group": "String",
+					"title": "String",
+					"pu_ht": "Number",
+					"description": "String",
+					"product_type": "String",
+					"product": {
+						"id": {"type": "ObjectId", "ref": "Product"},
+						"name": "String"
+					},
+					"total_tva": "Number",
+					"total_ttc": "Number",
+					"total_ht_without_discount": "Number",
+					"total_ttc_without_discount": "Number",
+					"total_vat_without_discount": "Number",
+					"total_ht": "Number",
+					"pu_ttc": "Number",
+					"pu_tva": "Number"
+				}
+			]
+		},
+		"history": {
+			"schema": [
+				{
+					"date": "Date",
+					"author": {
+						"id": "String",
+						"name": "String"
+					},
+					"Status": "Mixed"
+				}
+			]
 		},
 		"subprice": {
 			"enable": true

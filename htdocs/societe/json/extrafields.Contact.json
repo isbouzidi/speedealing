@@ -3,24 +3,36 @@
 	"_rev": "50-7397f45ea63dc18b477a12d395177f67",
 	"class": "extrafields",
 	"ico": "icon-object-contact",
+	"schemaMongoose": {
+		"enabled": true,
+		"name": "contact",
+		"collection": "Contact",
+		"plugins": ["mongoose-timestamp"]
+	},
 	"langs": [
 		"companies"
 	],
 	"fields": {
 		"_id": {
-			"settype": "MongoId"
+			"schema": "ObjectId"
+		},
+		"ref": {
+			"schema": "String"
 		},
 		"name": {
+			"schema": {"type": "String", "require": true},
 			"type": "input",
 			"length": 60,
 			"enable": true
 		},
 		"firstname": {
+			"schema": "String",
 			"type": "input",
 			"length": 60,
 			"enable": true
 		},
 		"lastname": {
+			"schema": "String",
 			"type": "input",
 			"length": 60,
 			"enable": true,
@@ -30,11 +42,16 @@
 			}
 		},
 		"poste": {
+			"schema": "String",
 			"type": "input",
 			"length": 60,
 			"enable": true
 		},
 		"societe": {
+			"schema": {
+				"id": {"type": "ObjectId", "ref": "Societe"},
+				"name": "String"
+			},
 			"type": "select",
 			"enable": true,
 			"mongo": {
@@ -60,6 +77,7 @@
 			}
 		},
 		"Status": {
+			"schema": "Mixed",
 			"type": "select",
 			"enable": true,
 			"default": "ST_NEVER",
@@ -93,6 +111,7 @@
 			}
 		},
 		"address": {
+			"schema": "String",
 			"type": "textarea",
 			"cols": 40,
 			"rows": 3,
@@ -104,6 +123,7 @@
 			}
 		},
 		"zip": {
+			"schema": "String",
 			"type": "text",
 			"label": "Zip",
 			"length": 15,
@@ -116,6 +136,7 @@
 			}
 		},
 		"town": {
+			"schema": "String",
 			"type": "text",
 			"label": "Town",
 			"length": 15,
@@ -128,17 +149,20 @@
 			}
 		},
 		"country_id": {
+			"schema": "String",
 			"type": "select",
 			"enable": true,
 			"dict": "dict:fk_country",
 			"default": "substr($langs->defaultlang,3,5)"
 		},
 		"state_id": {
+			"schema": "String",
 			"type": "select",
 			"enable": true,
 			"dict": "dict:fk_departements"
 		},
 		"DefaultLang": {
+			"schema": "String",
 			"type": "select",
 			"enable": false,
 			"dict": null
@@ -148,6 +172,7 @@
 			"enable": true
 		},
 		"phone": {
+			"schema": "String",
 			"type": "AC_TEL",
 			"ico": "AC_TEL",
 			"enable": true,
@@ -159,6 +184,7 @@
 			"mask": "+99 9 99 99 99 99"
 		},
 		"phone_perso": {
+			"schema": "String",
 			"type": "AC_TEL",
 			"ico": "AC_TEL",
 			"enable": true,
@@ -170,6 +196,7 @@
 			"mask": "+99 9 99 99 99 99"
 		},
 		"phone_mobile": {
+			"schema": "String",
 			"type": "AC_TEL",
 			"ico": "AC_TEL",
 			"enable": true,
@@ -181,12 +208,14 @@
 			"mask": "+99 9 99 99 99 99"
 		},
 		"fax": {
+			"schema": "String",
 			"type": "AC_FAX",
 			"ico": "AC_FAX",
 			"enable": true,
 			"mask": "+99 9 99 99 99 99"
 		},
 		"email": {
+			"schema": "String",
 			"type": "AC_EMAIL",
 			"ico": "AC_EMAIL",
 			"enable": true,
@@ -194,7 +223,8 @@
 				"email": true
 			}
 		},
-		"civilite_id": {
+		"civilite": {
+			"schema": "String",
 			"type": "select",
 			"label": "UserTitle",
 			"default": "NO",
@@ -202,14 +232,34 @@
 			"enable": true
 		},
 		"Tag": {
+			"schema": ["String"],
 			"type": "tag",
 			"label": "Categories",
 			"enable": true,
 			"isarray": true
 		},
 		"notes": {
+			"schema": "String",
 			"type": "textarea",
 			"enable": true
+		},
+		"entity": {
+			"schema": "String"
+		},
+		"birthday": {
+			"schema": "Date"
+		},
+		"datec": {
+			"schema": {"type": "Date"}
+		},
+		"user_creat": {
+			"schema": "String"
+		},
+		"user_modif": {
+			"schema": "String"
+		},
+		"gps": {
+			"schema": ["Number"]
 		}
 	}
 }

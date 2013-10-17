@@ -61,7 +61,7 @@
 	],
 	"fields": {
 		"_id": {
-			"settype": "MongoId",
+			"schema": "ObjectId",
 			"type": "text",
 			"enable": true,
 			"list": {

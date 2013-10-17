@@ -108,16 +108,16 @@ if (!empty($key) && !empty($id) && !empty($class)) {
 			echo $value;
 		} else {
 
-			if (is_object($value) || is_array($value)) {
+			/*if (is_object($value) || is_array($value)) {
 				$object->load($id);
 				$object->$key = $value;
 				if ($update_price)
 					$object->update_price();
 				$object->record();
-			} else {
+			} else {*/
 				$object->_id = $id;
 				$res = $object->set($key, $value);
-			}
+			//}
 
 			if ($type == 'numeric')
 				$value = price($value);

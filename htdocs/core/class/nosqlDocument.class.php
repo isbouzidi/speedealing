@@ -236,9 +236,9 @@ abstract class nosqlDocument extends CommonObject {
 			if (!in_array($key, $this->no_save)) {
 				$values->$key = $aRow;
 				if (isset($this->fk_extrafields->fields->$key->settype))
-					if ($this->fk_extrafields->fields->$key->settype == "date") // transtypage
+					if ($key == "updatedAt" || $this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "Date" || $this->fk_extrafields->fields->$key->schema->type == "Date")) // transtypage
 						$values->$key = new MongoDate(strtotime($values->$key));
-					elseif ($this->fk_extrafields->fields->$key->settype == "MongoId") {
+					elseif ($this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "ObjectId" || $this->fk_extrafields->fields->$key->schema->type == "ObjectId" )) {
 						if (is_string($values->$key)) {
 							$values->$key = new MongoId($values->$key);
 						} else {
@@ -2149,7 +2149,7 @@ abstract class nosqlDocument extends CommonObject {
 		readfile($original_file);
 		unlink($original_file);
 	}
-	
+
 	/**
 	 *  Record fonction for clean empty value
 	 *

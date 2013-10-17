@@ -1,263 +1,330 @@
 {
-   "_id": "extrafields:Product",
-   "_rev": "57-4d362b6fe994b15df4ce2539543574b7",
-   "class": "extrafields",
-   "ico": "icon-object-product",
-   "langs": [
-       "products",
-       "bills"
-   ],
-   "defaultprice": "HT",
-   "fields": {
+	"_id": "extrafields:Product",
+	"_rev": "57-4d362b6fe994b15df4ce2539543574b7",
+	"class": "extrafields",
+	"ico": "icon-object-product",
+	"schemaMongoose": {
+		"enabled": true,
+		"name": "product",
+		"collection": "Product",
+		"plugins": ["mongoose-timestamp"]
+	},
+	"langs": [
+		"products",
+		"bills"
+	],
+	"defaultprice": "HT",
+	"fields": {
 		"_id": {
-			"settype": "MongoId",
+			"schema": "ObjectId",
 			"type": "text",
 			"enable": true
 		},
-       "label": {
-           "type": "text",
-           "label": "Label",
-           "length": 60,
-           "enable": true
-       },
-       "type": {
-           "type": "select",
-           "enable": true,
-           "default": "PRODUCT",
-           "status": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "values": {
-               "PRODUCT": {
-                   "enable": true,
-                   "label": "Product",
-                   "cssClass": "blue-gradient"
-               },
-               "SERVICE": {
-                   "label": "Service",
-                   "enable": true,
-                   "cssClass": "green-gradient"
-               }
-           }
-       },
-       "Status": {
-           "type": "select",
-           "enable": true,
-           "default": "DISABLE",
-           "status": true,
-           "aoColumns": {
-               "sClass": "center",
-               "bSearchable": true,
-               "bVisible": true
-           },
-           "values": {
-               "DISABLE": {
-                   "enable": true,
-                   "label": "NotOnSell",
-                   "cssClass": "red-gradient"
-               },
-               "BUY": {
-                   "label": "OnBuy",
-                   "enable": true,
-                   "cssClass": "orange-gradient"
-               },
-               "SELL": {
-                   "enable": true,
-                   "label": "OnSell",
-                   "cssClass": "green-gradient"
-               },
-               "SELLBUY": {
-                   "label": "OnBuySell",
-                   "enable": true,
-                   "cssClass": "blue-gradient"
-               }
-           }
-       },
-       "country_id": {
-           "type": "select",
-           "enable": true,
-           "dict": "dict:fk_country",
-           "default": "substr($langs->defaultlang,3,5)",
-           "sort": true
-       },
-       "tva_tx": {
-           "type": "select",
-           "settype": "float",
-           "enable": true,
-           "dict": "dict:fk_tva",
-           "default": 19.6
-       },
-       "weight_units": {
-           "type": "select",
-           "enable": true,
-           "default": "kg",
-           "values": {
-               "ton": {
-                   "enable": true,
-                   "label": "WeightUnitton"
-               },
-               "kg": {
-                   "enable": true,
-                   "label": "WeightUnitkg"
-               },
-               "g": {
-                   "enable": true,
-                   "label": "WeightUnitg"
-               },
-               "mg": {
-                   "enable": true,
-                   "label": "WeightUnitmg"
-               },
-               "pound": {
-                   "enable": true,
-                   "label": "WeightUnitpound"
-               }
-           }
-       },
-       "size_units": {
-           "type": "select",
-           "enable": true,
-           "default": "m",
-           "values": {
-               "m": {
-                   "enable": true,
-                   "label": "SizeUnitm"
-               },
-               "dm": {
-                   "enable": true,
-                   "label": "SizeUnitdm"
-               },
-               "cm": {
-                   "enable": true,
-                   "label": "SizeUnitcm"
-               },
-               "mm": {
-                   "enable": true,
-                   "label": "SizeUnitmm"
-               },
-               "foot": {
-                   "enable": true,
-                   "label": "SizeUnitfoot"
-               },
-               "inch": {
-                   "enable": true,
-                   "label": "SizeUnitinch"
-               }
-           }
-       },
-       "surface_units": {
-           "type": "select",
-           "enable": true,
-           "default": "m2",
-           "values": {
-               "m2": {
-                   "enable": true,
-                   "label": "SurfaceUnitm2"
-               },
-               "dm2": {
-                   "enable": true,
-                   "label": "SurfaceUnitdm2"
-               },
-               "cm2": {
-                   "enable": true,
-                   "label": "SurfaceUnitcm2"
-               },
-               "mm2": {
-                   "enable": true,
-                   "label": "SurfaceUnitmm2"
-               },
-               "foot2": {
-                   "enable": true,
-                   "label": "SurfaceUnitfoot2"
-               },
-               "inch2": {
-                   "enable": true,
-                   "label": "SurfaceUnitinch2"
-               }
-           }
-       },
-       "volume_units": {
-           "type": "select",
-           "enable": true,
-           "default": "m3",
-           "values": {
-               "m3": {
-                   "enable": true,
-                   "label": "VolumeUnitm3"
-               },
-               "dm3": {
-                   "enable": true,
-                   "label": "VolumeUnitdm3"
-               },
-               "cm3": {
-                   "enable": true,
-                   "label": "VolumeUnitcm3"
-               },
-               "mm3": {
-                   "enable": true,
-                   "label": "VolumeUnitmm3"
-               },
-               "foot3": {
-                   "enable": true,
-                   "label": "VolumeUnitfoot3"
-               },
-               "inch3": {
-                   "enable": true,
-                   "label": "VolumeUnitinch3"
-               },
-               "ounce": {
-                   "enable": true,
-                   "label": "VolumeUnitounce"
-               },
-               "l": {
-                   "enable": true,
-                   "label": "VolumeUnitlitre"
-               },
-               "gallon": {
-                   "enable": true,
-                   "label": "VolumeUnitgallon"
-               }
-           }
-       },
-       "finished": {
-           "type": "select",
-           "enable": true,
-           "default": "finished",
-           "values": {
-               "finished": {
-                   "enable": true,
-                   "label": "Finished"
-               },
-               "rowmaterial": {
-                   "enable": true,
-                   "label": "RowMaterial"
-               }
-           }
-       },
-       "price_base_type": {
-           "type": "select",
-           "enable": true,
-           "default": "HT",
-           "values": {
-               "HT": {
-                   "enable": true
-               },
-               "TTC": {
-                   "enable": true
-               }
-           }
-       },
-       "pu_ht": {
-           "type": "input",
-           "settype": "float",
-           "enable": true
-       },
-       "tms": {
-           "settype": "date",
-           "enable": false
-       }
-   }
+		"label": {
+			"schema": "String",
+			"type": "text",
+			"label": "Label",
+			"length": 60,
+			"enable": true
+		},
+		"type": {
+			"schema": "Mixed",
+			"type": "select",
+			"enable": true,
+			"default": "PRODUCT",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"values": {
+				"PRODUCT": {
+					"enable": true,
+					"label": "Product",
+					"cssClass": "blue-gradient"
+				},
+				"SERVICE": {
+					"label": "Service",
+					"enable": true,
+					"cssClass": "green-gradient"
+				}
+			}
+		},
+		"Status": {
+			"schema": "Mixed",
+			"type": "select",
+			"enable": true,
+			"default": "DISABLE",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"values": {
+				"DISABLE": {
+					"enable": true,
+					"label": "NotOnSell",
+					"cssClass": "red-gradient"
+				},
+				"BUY": {
+					"label": "OnBuy",
+					"enable": true,
+					"cssClass": "orange-gradient"
+				},
+				"SELL": {
+					"enable": true,
+					"label": "OnSell",
+					"cssClass": "green-gradient"
+				},
+				"SELLBUY": {
+					"label": "OnBuySell",
+					"enable": true,
+					"cssClass": "blue-gradient"
+				}
+			}
+		},
+		"country_id": {
+			"schema": "String",
+			"type": "select",
+			"enable": true,
+			"dict": "dict:fk_country",
+			"default": "substr($langs->defaultlang,3,5)",
+			"sort": true
+		},
+		"tva_tx": {
+			"schema": "Number",
+			"type": "select",
+			"settype": "float",
+			"enable": true,
+			"dict": "dict:fk_tva",
+			"default": 19.6
+		},
+		"weight_units": {
+			"schema": "String",
+			"type": "select",
+			"enable": true,
+			"default": "kg",
+			"values": {
+				"ton": {
+					"enable": true,
+					"label": "WeightUnitton"
+				},
+				"kg": {
+					"enable": true,
+					"label": "WeightUnitkg"
+				},
+				"g": {
+					"enable": true,
+					"label": "WeightUnitg"
+				},
+				"mg": {
+					"enable": true,
+					"label": "WeightUnitmg"
+				},
+				"pound": {
+					"enable": true,
+					"label": "WeightUnitpound"
+				}
+			}
+		},
+		"size_units": {
+			"schema": "String",
+			"type": "select",
+			"enable": true,
+			"default": "m",
+			"values": {
+				"m": {
+					"enable": true,
+					"label": "SizeUnitm"
+				},
+				"dm": {
+					"enable": true,
+					"label": "SizeUnitdm"
+				},
+				"cm": {
+					"enable": true,
+					"label": "SizeUnitcm"
+				},
+				"mm": {
+					"enable": true,
+					"label": "SizeUnitmm"
+				},
+				"foot": {
+					"enable": true,
+					"label": "SizeUnitfoot"
+				},
+				"inch": {
+					"enable": true,
+					"label": "SizeUnitinch"
+				}
+			}
+		},
+		"surface_units": {
+			"schema": "String",
+			"type": "select",
+			"enable": true,
+			"default": "m2",
+			"values": {
+				"m2": {
+					"enable": true,
+					"label": "SurfaceUnitm2"
+				},
+				"dm2": {
+					"enable": true,
+					"label": "SurfaceUnitdm2"
+				},
+				"cm2": {
+					"enable": true,
+					"label": "SurfaceUnitcm2"
+				},
+				"mm2": {
+					"enable": true,
+					"label": "SurfaceUnitmm2"
+				},
+				"foot2": {
+					"enable": true,
+					"label": "SurfaceUnitfoot2"
+				},
+				"inch2": {
+					"enable": true,
+					"label": "SurfaceUnitinch2"
+				}
+			}
+		},
+		"volume_units": {
+			"schema": "String",
+			"type": "select",
+			"enable": true,
+			"default": "m3",
+			"values": {
+				"m3": {
+					"enable": true,
+					"label": "VolumeUnitm3"
+				},
+				"dm3": {
+					"enable": true,
+					"label": "VolumeUnitdm3"
+				},
+				"cm3": {
+					"enable": true,
+					"label": "VolumeUnitcm3"
+				},
+				"mm3": {
+					"enable": true,
+					"label": "VolumeUnitmm3"
+				},
+				"foot3": {
+					"enable": true,
+					"label": "VolumeUnitfoot3"
+				},
+				"inch3": {
+					"enable": true,
+					"label": "VolumeUnitinch3"
+				},
+				"ounce": {
+					"enable": true,
+					"label": "VolumeUnitounce"
+				},
+				"l": {
+					"enable": true,
+					"label": "VolumeUnitlitre"
+				},
+				"gallon": {
+					"enable": true,
+					"label": "VolumeUnitgallon"
+				}
+			}
+		},
+		"finished": {
+			"schema": "String",
+			"type": "select",
+			"enable": true,
+			"default": "finished",
+			"values": {
+				"finished": {
+					"enable": true,
+					"label": "Finished"
+				},
+				"rowmaterial": {
+					"enable": true,
+					"label": "RowMaterial"
+				}
+			}
+		},
+		"price_base_type": {
+			"schema": "String",
+			"type": "select",
+			"enable": true,
+			"default": "HT",
+			"values": {
+				"HT": {
+					"enable": true
+				},
+				"TTC": {
+					"enable": true
+				}
+			}
+		},
+		"pu_ht": {
+			"schema": "Number",
+			"type": "input",
+			"settype": "float",
+			"enable": true
+		},
+		"tms": {
+			"schema": "Date",
+			"enable": false
+		},
+		"datec": {
+			"schema": "Date",
+			"enable": false
+		},
+		"Tag": {
+			"schema": ["String"]
+		},
+		"entity": {
+			"schema": "String"
+		},
+		"price": {
+			"schema": [{
+					"price_base_type": "String",
+					"tms": "Date",
+					"tva_tx": "Number",
+					"pu_ht": "Number",
+					"ref_customer_code": "String",
+					"user_mod": {
+						"id": "String",
+						"name": "String"
+					}
+				}]
+		},
+		"ref_customer_code": {
+			"schema": "String"
+		},
+		"ref": {
+			"schema": "String"
+		},
+		"user_mod": {
+			"schema": {
+				"id": "String",
+				"name": "String"
+			}
+		},
+		"history": {
+			"schema": [{
+					"tms": "Date",
+					"user_mod": {
+						"id": "String",
+						"name": "String"
+					},
+					"price_base_type": "String",
+					"tva_tx": "Number",
+					"price": "Number",
+					"ref_customer_code": "String",
+					"price_level": "String"
+				}]
+		}
+	}
 }
