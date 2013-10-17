@@ -9,7 +9,7 @@
 	],
 	"fields": {
 		"_id": {
-			"settype": "MongoId"
+			"schema": "ObjectId"
 		},
 		"label": {
 			"type": "text",
@@ -115,12 +115,12 @@
 		"datep": {
 			"type": "datetime",
 			"enable": true,
-			"settype": "date"
+			"schema": "Date"
 		},
 		"datef": {
 			"type": "datetime",
 			"enable": true,
-			"settype": "date"
+			"schema": "Date"
 		},
 		"durationp": {
 			"type": "input",
