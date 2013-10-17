@@ -245,9 +245,8 @@ abstract class nosqlDocument extends CommonObject {
 							$values->_id = new MongoId($values->$key->{'$id'}); // re-encode mongoId
 						}
 					}
-					//else
-					//	settype($values->$key, $this->fk_extrafields->fields->$key->settype);
-
+				//else
+				//	settype($values->$key, $this->fk_extrafields->fields->$key->settype);
 				// If empty set default value
 				if (empty($values->$key) && isset($this->fk_extrafields->fields->$key->default))
 					$values->$key = $this->fk_extrafields->fields->$key->default;
@@ -1912,7 +1911,8 @@ abstract class nosqlDocument extends CommonObject {
 		$value = $this->$key;
 		if (empty($this->$key))
 			return null;
-		if (is_object($this->$key) && empty($this->$key->id))
+		
+		if ($aRow->type != "date" && is_object($this->$key) && empty($this->$key->id))
 			return null;
 
 		if (isset($aRow->mongo) && empty($aRow->getkey)) { // Is an object
@@ -1946,10 +1946,10 @@ abstract class nosqlDocument extends CommonObject {
 				$out.= '<a href="mailto:' . $value . '">' . $value . '</a>';
 				break;
 			case "date":
-				$out .= dol_print_date($value, "%d/%m/%Y");
+				$out .= dol_print_date(date("c", $value->sec), "%d/%m/%Y");
 				break;
 			case "datetime":
-				$out .= dol_print_date($value, "%d/%m/%Y");
+				$out .= dol_print_date(date("c", $value->sec), "%d/%m/%Y");
 				break;
 			case "image":
 				if (!empty($value))

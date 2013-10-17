@@ -880,7 +880,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 //    print '<tr><td>' . $langs->trans('Date') . '</td>';
 //    print '<td colspan="3">' . ($object->date ? dol_print_date($object->date, 'daytext') : '&nbsp;') . '</td>';
 //    print '</tr>';
-	$object->date_commande = date("c", $object->date_commande->sec);
+	//$object->date_commande = date("c", $object->date_commande->sec);
 	print '<tr><td>' . $form->editfieldkey("Date", 'date_commande', $object->date_commande, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker") . '</td>';
 	print '<td td colspan="5">';
 	print $form->editfieldval("Date", 'date_commande', $object->date_commande, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker");
@@ -892,7 +892,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 //    print '<td colspan="3">' . ($object->date_livraison ? dol_print_date($object->date_livraison, 'daytext') : '&nbsp;') . '</td>';
 //    print '</tr>';
 	
-	$object->date_livraison = date("c", $object->date_livraison->sec);
+	//$object->date_livraison = date("c", $object->date_livraison->sec);
 	print '<tr><td>' . $form->editfieldkey("DateDeliveryPlanned", 'date_livraison', $object->date_livraison, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker") . '</td>';
 	print '<td td colspan="5">';
 	print $form->editfieldval("DateDeliveryPlanned", 'date_livraison', $object->date_livraison, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker");

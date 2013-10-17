@@ -83,7 +83,7 @@ if (!empty($key) && !empty($id) && !empty($class)) {
 	}
 
 	if ($type == "date" || $type == "datepicker") {
-		$value = date("c",strtotime($value)); //Convert time to ISO
+		$value = new MongoDate(strtotime($value)); //Convert time to ISO
 	}
 
 	if ($type == "wysiwyg") { // HTML Code
@@ -108,23 +108,25 @@ if (!empty($key) && !empty($id) && !empty($class)) {
 			echo $value;
 		} else {
 
-			/*if (is_object($value) || is_array($value)) {
-				$object->load($id);
-				$object->$key = $value;
-				if ($update_price)
-					$object->update_price();
-				$object->record();
-			} else {*/
-				$object->_id = $id;
-				$res = $object->set($key, $value);
+			/* if (is_object($value) || is_array($value)) {
+			  $object->load($id);
+			  $object->$key = $value;
+			  if ($update_price)
+			  $object->update_price();
+			  $object->record();
+			  } else { */
+			$object->_id = $id;
+			$res = $object->set($key, $value);
 			//}
 
 			if ($type == 'numeric')
 				$value = price($value);
 			elseif ($type == 'textarea')
 				$value = dol_nl2br($value);
+				
 
-			//error_log($object->print_fk_extrafields($key));
+				
+//error_log($object->print_fk_extrafields($key));
 			echo $object->print_fk_extrafields($key);
 		}
 	} catch (Exception $exc) {
