@@ -141,14 +141,14 @@ abstract class nosqlDocument extends CommonObject {
 	 */
 	public function set($key, $value) {
 
-		if (isset($this->fk_extrafields->fields->$key->settype))
-			settype($value, $this->fk_extrafields->fields->$key->settype);
+		//if (isset($this->fk_extrafields->fields->$key->schema))
+		//	settype($value, $this->fk_extrafields->fields->$key->settype);
 
 		$this->$key = $value;
 
 		if (is_object($this->_id))
 			$id = new MongoId($this->_id->{'$id'});
-		elseif (strlen($this->_id) == 24 && isset($this->fk_extrafields->fields->_id->settype) && $this->fk_extrafields->fields->_id->settype == "MongoId")
+		elseif (strlen($this->_id) == 24 && isset($this->fk_extrafields->fields->_id->schema) && ($this->fk_extrafields->fields->_id->schema == "ObjectId" || $this->fk_extrafields->fields->_id->schema->type == "ObjectId"))
 			$id = new MongoId($this->_id);
 		else
 			$id = $this->_id;
@@ -195,7 +195,7 @@ abstract class nosqlDocument extends CommonObject {
 			//	$id = new MongoId($id);
 			if (is_object($id))
 				$id = new MongoId($id->{'$id'});
-			elseif (strlen($id) == 24 && isset($this->fk_extrafields->fields->_id->settype) && $this->fk_extrafields->fields->_id->settype == "MongoId")
+			elseif (strlen($id) == 24 && isset($this->fk_extrafields->fields->_id->schema) && ($this->fk_extrafields->fields->_id->schema == "ObjectId" || $this->fk_extrafields->fields->_id->schema->type == "ObjectId"))
 				$id = new MongoId($id);
 
 			//error_log(print_r($this->fk_extrafields->fields, true));
@@ -235,7 +235,7 @@ abstract class nosqlDocument extends CommonObject {
 		foreach (get_object_vars($this) as $key => $aRow)
 			if (!in_array($key, $this->no_save)) {
 				$values->$key = $aRow;
-				if (isset($this->fk_extrafields->fields->$key->settype))
+				if (isset($this->fk_extrafields->fields->$key->schema))
 					if ($key == "updatedAt" || $this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "Date" || $this->fk_extrafields->fields->$key->schema->type == "Date")) // transtypage
 						$values->$key = new MongoDate(strtotime($values->$key));
 					elseif ($this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "ObjectId" || $this->fk_extrafields->fields->$key->schema->type == "ObjectId" )) {
@@ -245,8 +245,8 @@ abstract class nosqlDocument extends CommonObject {
 							$values->_id = new MongoId($values->$key->{'$id'}); // re-encode mongoId
 						}
 					}
-					else
-						settype($values->$key, $this->fk_extrafields->fields->$key->settype);
+					//else
+					//	settype($values->$key, $this->fk_extrafields->fields->$key->settype);
 
 				// If empty set default value
 				if (empty($values->$key) && isset($this->fk_extrafields->fields->$key->default))
