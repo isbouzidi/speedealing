@@ -63,7 +63,7 @@ if (!empty($json) && !empty($id) && !empty($class)) {
 				$object->update_price();
 				exit;
 			} else {
-				if (isset($object->fk_extrafields->fields->_id->settype) && $object->fk_extrafields->fields->_id->settype == "MongoId") {
+				if (isset($object->fk_extrafields->fields->_id->schema) && ($object->fk_extrafields->fields->_id->schema == "ObjectId" || $object->fk_extrafields->fields->_id->schema->type == "ObjectId")) {
 					$id = new MongoId($id);
 				}
 				$object->mongodb->remove(array("_id" => $id));
