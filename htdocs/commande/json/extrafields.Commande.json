@@ -24,7 +24,7 @@
 	],
 	"createList": [
 		"client",
-		"date",
+		"date_livraison",
 		"ref_client",
 		"Status"
 	],
@@ -366,7 +366,13 @@
 			"schema": "Date",
 			"type": "date",
 			"enable": true,
-			"label": "DateEnd"
+			"label": "DateEnd",
+			"list": {
+				"editable": true
+			},
+			"render": {
+				"type": "date"
+			}
 		},
 		"notes": {
 			"schema": "String",
