@@ -315,7 +315,7 @@
 					"user_mod": "Mixed",
 					"price_base_type": "String",
 					"tva_tx": "Number",
-					"price": "Number",
+					"pu_ht": "Number",
 					"ref_customer_code": "String",
 					"price_level": "String"
 				}]
