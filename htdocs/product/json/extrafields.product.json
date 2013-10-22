@@ -293,6 +293,7 @@
 					"tms": "Date",
 					"tva_tx": "Number",
 					"pu_ht": "Number",
+					"pu": "Number",
 					"ref_customer_code": "String",
 					"user_mod": {
 						"id": "String",
