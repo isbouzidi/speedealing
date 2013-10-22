@@ -2733,8 +2733,8 @@ class Form {
 		if ($iSecond) {
 			require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
 
-			$hourSelected = convertSecondToTime($iSecond, 'hour');
-			$minSelected = convertSecondToTime($iSecond, 'min');
+			$hourSelected = round($iSecond / 3600,0);
+			$minSelected = $iSecond % 3600 / 60;
 		}
 
 		print '<select class="flat" name="' . $prefix . 'hour"' . ($disabled ? ' disabled="disabled"' : '') . '>';

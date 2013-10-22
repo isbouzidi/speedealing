@@ -174,7 +174,7 @@ if ($action == 'add_action') {
 		$object->durationp = $object->datef - $object->datep;
 	else {
 		$object->durationp = $_POST["durationhour"] * 3600 + $_POST["durationmin"] * 60;
-		$object->datef = $object->datep + $object->durationp;
+		$object->datef = date("c", strtotime($object->datep) + $object->durationp);
 	}
 
 	/*
@@ -932,7 +932,7 @@ if ($id) {
 		print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
 
 		// Date start
-		$datep = date("c", $object->datep->sec);
+		//$datep = date("c", $object->datep->sec);
 		if (GETPOST('datep', 'alpha'))
 			$datep = GETPOST('datep', 'alpha');
 		print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
@@ -945,7 +945,7 @@ if ($id) {
 		print '</td></tr>';
 
 		// Date end
-		$datef = date("c", $object->datef->sec);
+		//$datef = date("c", $object->datef->sec);
 		if (GETPOST('datef', 'alpha'))
 			$datef = GETPOST('datef', 'alpha');
 		print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';

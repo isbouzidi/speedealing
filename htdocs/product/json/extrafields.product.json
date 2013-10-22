@@ -94,7 +94,7 @@
 			"sort": true
 		},
 		"tva_tx": {
-			"schema": "Number",
+			"schema": {"type": "Number", "default": 19.6},
 			"type": "select",
 			"settype": "float",
 			"enable": true,
