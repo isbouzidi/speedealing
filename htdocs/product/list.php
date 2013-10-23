@@ -209,10 +209,10 @@ print'<th class="essential">';
 print $langs->trans("Date");
 print'</th>';
 $obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "tms";
+$obj->aoColumns[$i]->mDataProp = "updatedAt";
 $obj->aoColumns[$i]->sClass = "center";
 $obj->aoColumns[$i]->bUseRendered = false;
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("tms", "date");
+$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("updatedAt", "date");
 $i++;
 if (empty($type)) {
 	print'<th class="essential">';
