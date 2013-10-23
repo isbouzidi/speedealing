@@ -155,182 +155,97 @@ class AbstractInvoice extends nosqlDocument {
 				break;
 		}
 		
-		//print start_box(, "twelve", $object->fk_extrafields->ico, false);
-		//print show_title($title);
-		$head = $this->datatablesEditLine("listlines", $langs->trans("Lines"));
-		print start_box($title, "icon-bag", $head);
-
-		$i = 0;
-		print '<table class="display dt_act" id="listlines" >';
-		// Ligne des titres
-		print'<thead>';
-		print'<tr>';
-		print'<th>';
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "_id";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = false;
-		$obj->aoColumns[$i]->bVisible = false;
-		$i++;
-
-		print'<th class="essential">';
-		print $langs->trans("Group");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "group";
-		$obj->aoColumns[$i]->sDefaultContent = "";
-		$obj->aoColumns[$i]->bVisible = false;
-		$i++;
-
-		print'<th class="essential">';
-		$product = new Product($this->db);
-		print $langs->trans("Product");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "product.label";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->sDefaultContent = "";
-		$obj->aoColumns[$i]->fnRender = $product->datatablesFnRender("product.label", "url", array("id" => "product.id", "title" => "product.ref"));
-		$i++;
-
-		print'<th class="essential">';
-		print $langs->trans("Description");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "description";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->editable = true;
-		$obj->aoColumns[$i]->sDefaultContent = "";
-		$i++;
-
-		print'<th class="essential">';
-		print $langs->trans("VAT");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "tva_tx";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->editable = true;
-		$obj->aoColumns[$i]->sDefaultContent = 0;
-		$i++;
-		print'<th class="essential">';
-		print $langs->trans("PriceUHT");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "pu_ht";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->editable = true;
-		$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("pu_ht", "price");
-		$obj->aoColumns[$i]->sDefaultContent = 0;
-		$i++;
-		print'<th class="essential">';
-		print $langs->trans("Qty");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "qty";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->editable = true;
-		$obj->aoColumns[$i]->sDefaultContent = 0;
-		$i++;
-		print'<th class="essential">';
-		print $langs->trans("ReductionShort");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "remise";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->editable = true;
-		$obj->aoColumns[$i]->sDefaultContent = "0";
-		$i++;
-		print'<th class="essential">';
-		print $langs->trans("TotalHTShort");
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "total_ht";
-		$obj->aoColumns[$i]->bUseRendered = false;
-		$obj->aoColumns[$i]->bSearchable = true;
-		$obj->aoColumns[$i]->editable = true;
-		$obj->aoColumns[$i]->fnRender = $this->datatablesFnRender("total_ht", "price");
-		$obj->aoColumns[$i]->sDefaultContent = 0;
-		$i++;
-
-		print'<th class="essential">';
-		print $langs->trans('Action');
-		print'</th>';
-		$obj->aoColumns[$i] = new stdClass();
-		$obj->aoColumns[$i]->mDataProp = "";
-		$obj->aoColumns[$i]->sClass = "center content_actions";
-		$obj->aoColumns[$i]->sWidth = "60px";
-		$obj->aoColumns[$i]->bSortable = false;
-		$obj->aoColumns[$i]->sDefaultContent = "";
-
-		$obj->aoColumns[$i]->fnRender = 'function(obj) {
-	var ar = [];
-	ar[ar.length] = "<a href=\"\"";
-	ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"img/action_delete.png\" alt=\"\" /></a>";
-	var str = ar.join("");
-	return str;
-}';
-		print'</tr>';
-		print'</thead>';
-		print'<tfoot>';
-		print'</tfoot>';
-		print'<tbody>';
-		print'</tbody>';
-
-		print "</table>";
-
-		$obj->fnDrawCallback = "function(oSettings){
-                if ( oSettings.aiDisplay.length == 0 )
-                {
-                    return;
-                }
-                var nTrs = jQuery('#listlines tbody tr');
-                var iColspan = nTrs[0].getElementsByTagName('td').length;
-                var sLastGroup = '';
-                for ( var i=0 ; i<nTrs.length ; i++ )
-                {
-                    var iDisplayIndex = oSettings._iDisplayStart + i;
-                     var sGroup = oSettings.aoData[ oSettings.aiDisplay[iDisplayIndex] ]._aData['group'];
-                         if (sGroup!=null && sGroup!='' && sGroup != sLastGroup)
-                            {
-                                var nGroup = document.createElement('tr');
-                                var nCell = document.createElement('td');
-                                nCell.colSpan = iColspan;
-                                nCell.className = 'group';
-                                nCell.innerHTML = sGroup;
-                                nGroup.appendChild( nCell );
-                                nTrs[i].parentNode.insertBefore( nGroup, nTrs[i] );
-                                sLastGroup = sGroup;
-                            }
-
-
-                }
-	}";
-		$obj->aaSorting = array(array(1, 'asc'));
-//$obj->bServerSide = true;
-//if ($all) {
-//    if ($type == "DONE")
-//        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=actionsDONE&class=" . get_class($object);
-//    else
-//        $obj->sAjaxSource = "core/ajax/listdatatables.php?json=actionsTODO&class=" . get_class($object);
-//} else {
-//    if ($type == "DONE")
-//        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listDONEByUser";
-//    else
-//        $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=listTODOByUser";
-//
-//}
-		$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=lines&id=" . $this->id;
-
-		$this->datatablesCreate($obj, "listlines", true, true);
-
-		print end_box();
+	?><div id="listLines"></div>
+	<script>
+		$(document).ready(function() {
+			var crudServiceBaseUrl = "api/commande/lines/list?id=<?php echo $this->id;?>",
+					dataSource = new kendo.data.DataSource({
+				transport: {
+					read: {
+						url: crudServiceBaseUrl,
+						type: "GET",
+						dataType: "json"
+					},
+					update: {
+						url: crudServiceBaseUrl,
+						type: "PUT",
+						dataType: "json"
+					},
+					destroy: {
+						url: crudServiceBaseUrl,
+						type: "DELETE",
+						dataType: "json"
+					},
+					create: {
+						url: crudServiceBaseUrl,
+						type: "POST",
+						dataType: "json",
+						complete: function(e) {
+							$("#grid").data("kendoGrid").dataSource.read();
+						}
+					},
+					parameterMap: function(options, operation) {
+						if (operation !== "read" && options.models) {
+							return {models: kendo.stringify(options.models)};
+						}
+					}
+				},
+				error: function(e) {
+					// log error
+					alert(e.xhr.responseText);
+				},
+				batch: true,
+				pageSize: 50,
+				schema: {
+					model: {
+						id: "_id",
+						fields: {
+							_id: {editable: false, nullable: true},
+							qty: {type: "text", defaultValue: 1, validation: {required: true}},
+							
+						}
+					}
+				},
+				sort: {field: "datec", dir: "desc"}
+			});
+			$("#listLines").kendoGrid({
+				dataSource: dataSource,
+				pageable: {
+					refresh: true,
+					pageSize: 50,
+					pageSizes: [5, 10, 20, 50],
+					buttonCount: 5
+				},
+				filterable: {
+					extra: false
+				},
+				//scrollable: {
+				//	virtual: true
+				//},
+				scrollable: false,
+				groupable: false,
+				sortable: true,
+				//height: 430,
+				toolbar: [
+					{
+						name: "create",
+						text: "Nouvelle ligne",
+						className: "k-button k-button-icontext k-grid-add button",
+					}
+				],
+				columns: [
+					{field: "product", title: "Produit", template: "#=product.name#"},
+					{field: "description", title: "Description"},
+					{field: "tva_tx", title: "TVA"},
+					{field: "pu_ht", title: "PU HT"},
+					{field: "qty", title: "Qte"},
+					{field: "remise", title: "Reduc."},
+					{field: "total_ht", title: "Total HT"},
+					{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}, {name: "destroy", text: "Supp."}], title: "&nbsp;", width: "160px"}],
+				editable: "popup"
+			});
+		});
+	</script><?php
 	}
 
 	/**

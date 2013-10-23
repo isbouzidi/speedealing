@@ -132,7 +132,7 @@ if ($action == 'add' && $user->rights->commande->creer) {
 	$datelivraison = dol_mktime(12, 0, 0, GETPOST('liv_month'), GETPOST('liv_day'), GETPOST('liv_year'));
 
 	$object->socid = GETPOST('socid');
-	$object->date_commande = $datecommande;
+	$object->datec = $datecommande;
 	$object->note = GETPOST('note');
 	$object->note_public = GETPOST('note_public');
 	$object->source = GETPOST('source_id');
@@ -218,7 +218,7 @@ if ($action == 'add' && $user->rights->commande->creer) {
 	$datelivraison = dol_mktime(12, 0, 0, GETPOST('liv_month'), GETPOST('liv_day'), GETPOST('liv_year'));
 
 	$object->socid = GETPOST('socid');
-	$object->date_commande = $datecommande;
+	$object->datec = $datecommande;
 	$object->note = GETPOST('note');
 	$object->note_public = GETPOST('note_public');
 	$object->source = GETPOST('source_id');
@@ -880,10 +880,9 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 //    print '<tr><td>' . $langs->trans('Date') . '</td>';
 //    print '<td colspan="3">' . ($object->date ? dol_print_date($object->date, 'daytext') : '&nbsp;') . '</td>';
 //    print '</tr>';
-	//$object->date_commande = date("c", $object->date_commande->sec);
-	print '<tr><td>' . $form->editfieldkey("Date", 'date_commande', $object->date_commande, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker") . '</td>';
+	print '<tr><td>' . $form->editfieldkey("Date", 'datec', $object->datec, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker") . '</td>';
 	print '<td td colspan="5">';
-	print $form->editfieldval("Date", 'date_commande', $object->date_commande, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker");
+	print $form->editfieldval("Date", 'datec', $object->datec, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker");
 	print '</td>';
 	print '</tr>';
 

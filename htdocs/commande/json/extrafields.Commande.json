@@ -350,8 +350,8 @@
 			"enable": true,
 			"label": "RefCustomer"
 		},
-		"date_commande": {
-			"schema": "Date",
+		"datec": {
+			"schema": {"type": "Date"},
 			"type": "date",
 			"enable": true,
 			"label": "Date",
@@ -375,7 +375,12 @@
 			}
 		},
 		"notes": {
-			"schema": "String",
+			"schema": [
+				{
+					"title": "String",
+					"note": "String",
+					"public": {"type": "Boolean", "default": false}
+				}],
 			"enable": true
 		},
 		"description": {
@@ -526,9 +531,6 @@
 		},
 		"linked_objects": {
 			"schema": [{"id": "ObjectId", "name": "String"}]
-		},
-		"datec": {
-			"schema": {"type": "Date"}
 		},
 		"lines": {
 			"schema": [
