@@ -2603,7 +2603,7 @@ class Product extends nosqlDocument {
 						$price->$key = $record[$key];
 				}
 
-				$price->updatedAt = new MongoDate(strtotime($price->tms));
+				$price->tms = new MongoDate(strtotime($price->tms));
 
 				$price->user_mod = new stdClass();
 				$price->user_mod->id = $user->id;

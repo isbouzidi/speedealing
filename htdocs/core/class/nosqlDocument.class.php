@@ -265,7 +265,7 @@ abstract class nosqlDocument extends CommonObject {
 		  $values->_id = new MongoId($this->_id->{'$id'}); // re-encode mongoId
 		  } */
 
-		$values->tms = new MongoDate(strtotime(dol_now()));
+		$values->updatedAt = new MongoDate(strtotime(dol_now()));
 
 		// Specific for users
 		/* if (get_class($this) == "User")
