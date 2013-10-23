@@ -204,7 +204,8 @@ class AbstractInvoice extends nosqlDocument {
 							}
 						}
 					},
-					sort: {field: "datec", dir: "desc"}
+					sort: {field: "group", dir: "asc"},
+					group: {field: "group"}
 				});
 				$("#listLines").kendoGrid({
 					dataSource: dataSource,
@@ -232,6 +233,7 @@ class AbstractInvoice extends nosqlDocument {
 						}
 					],
 					columns: [
+						{field: "group", title: "Groupe", encoded: false, hidden: true},
 						{field: "product", title: "Produit", template: "#if (product) {# #=product.name# #}#"},
 						{field: "description", title: "Description"},
 						{field: "tva_tx", title: "TVA"},
