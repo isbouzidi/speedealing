@@ -208,7 +208,11 @@ if ($action == 'add_action') {
 	if (strlen($_POST["doneby"]) > 0)
 		$object->userdone->id = GETPOST("doneby");
 
-	$object->notes = trim($_POST["note"]);
+	$object->notes = array();
+	$object->notes[0] = new stdClass();
+	$object->notes[0]->title = "Notes";
+	$object->notes[0]->edit = true;
+	$object->notes[0]->note = trim($_POST["note"]);
 
 	$object->contact = new stdClass();
 
@@ -336,7 +340,11 @@ if ($action == 'update') {
 		$object->fk_project = $_POST["projectid"];
 		$object->fk_lead = $_POST["leadid"];
 		$object->propalrowid = $_POST["propalid"];
-		$object->notes = $_POST["note"];
+		$object->notes = array();
+		$object->notes[0] = new stdClass();
+		$object->notes[0]->title = "Notes";
+		$object->notes[0]->edit = true;
+		$object->notes[0]->note = trim($_POST["note"]);
 		$object->fk_task = $_POST["fk_task"];
 		//$object->type = $cactioncomm->type;
 		$object->Status = $_POST["status"];
@@ -737,12 +745,33 @@ if ($action == 'create') {
 
 	// Description
 	print '<tr><td valign="top">' . $langs->trans("Description") . '</td><td>';
-	print '<textarea id="note" name="note">' . $object->notes . '</textarea>';
+	print '<textarea id="note" name="note">' . $object->notes[0]->note . '</textarea>';
 	print '<script>
 		$(document).ready(function() {
-		CKEDITOR.replace( \'note\', {
-			height: 300
-		});
+        $("#note").kendoEditor({
+		encoded: false,
+            tools: [
+               "bold",
+                            "italic",
+                            "underline",
+                            "strikethrough",
+                            "justifyLeft",
+                            "justifyCenter",
+                            "justifyRight",
+                            "justifyFull",
+                            "createLink",
+                            "unlink",
+                            "createTable",
+                            "addColumnLeft",
+                            "addColumnRight",
+                            "addRowAbove",
+                            "addRowBelow",
+                            "deleteRow",
+                            "deleteColumn",
+                            "foreColor",
+                            "backColor"
+            ]
+        });
 		});</script>';
 	//require_once(DOL_DOCUMENT_ROOT . "/core/class/doleditor.class.php");
 	//$doleditor = new DolEditor('note', (GETPOST('note') ? GETPOST('note') : $object->notes), '', 280, 'dolibarr_notes', 'In', true, true, $conf->fckeditor->enabled, ROWS_7, 90);
@@ -1064,16 +1093,33 @@ if ($id) {
 
 		// Description
 		print '<tr><td valign="top">' . $langs->trans("Description") . '</td><td colspan="3">';
-		// Editeur wysiwyg
-		//require_once(DOL_DOCUMENT_ROOT . "/core/class/doleditor.class.php");
-		//$doleditor = new DolEditor('note', $object->notes, '', 240, 'dolibarr_notes', 'In', true, true, $conf->fckeditor->enabled, ROWS_5, 90);
-		//$doleditor->Create();
-		print '<textarea id="note" name="note">' . $object->notes . '</textarea>';
+		print '<textarea id="note" name="note">' . $object->notes[0]->note . '</textarea>';
 		print '<script>
 		$(document).ready(function() {
-		CKEDITOR.replace( \'note\', {
-			height: 300
-		});
+		$("#note").kendoEditor({
+		encoded: false,
+            tools: [
+                "bold",
+                            "italic",
+                            "underline",
+                            "strikethrough",
+                            "justifyLeft",
+                            "justifyCenter",
+                            "justifyRight",
+                            "justifyFull",
+                            "createLink",
+                            "unlink",
+                            "createTable",
+                            "addColumnLeft",
+                            "addColumnRight",
+                            "addRowAbove",
+                            "addRowBelow",
+                            "deleteRow",
+                            "deleteColumn",
+                            "foreColor",
+                            "backColor"
+            ]
+        });
 		});</script>';
 		print '</td></tr>';
 

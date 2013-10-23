@@ -287,7 +287,6 @@ class Agenda extends nosqlDocument {
 
 		// Clean parameters
 		$this->label = trim($this->label);
-		$this->notes = trim($this->notes);
 		if (empty($this->percentage))
 			$this->percentage = 0;
 

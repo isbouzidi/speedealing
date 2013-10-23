@@ -381,7 +381,8 @@
 					"note": "String",
 					"public": {"type": "Boolean", "default": false},
 					"edit": {"type": "Boolean", "default": false}
-				}],
+				}
+			],
 			"enable": true
 		},
 		"description": {

@@ -45,7 +45,7 @@ class RenderDatetime implements ElementInterface {
 	public function render() {
 		return 'function(data, type, row) {
 					if(data) {
-						var date = new Date(data.sec * 1000);
+						var date = new Date(data * 1000);
 						//var date = new Date(Date.parse(data));
 						return date.toLocaleDateString() + " " + date.toLocaleTimeString();
 					}

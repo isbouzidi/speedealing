@@ -210,9 +210,9 @@ $obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "datep";
 $obj->aoColumns[$i]->sClass = "center";
 $obj->aoColumns[$i]->sDefaultContent = "";
-$obj->aoColumns[$i]->sType = "date";
+//$obj->aoColumns[$i]->sType = "date";
 $obj->aoColumns[$i]->bUseRendered = false;
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("datep", "datetime");
+$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("datep", "date");
 //$obj->aoColumns[$i]->sClass = "edit";
 $i++;
 print'<th class="essential">';
@@ -318,7 +318,7 @@ print'</tbody>';
 
 print "</table>";
 
-$obj->aaSorting = array(array(2, 'asc'));
+$obj->aaSorting = array(array(2, 'desc'));
 //$obj->bServerSide = true;
 
 if ($all) {

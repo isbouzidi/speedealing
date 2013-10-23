@@ -69,11 +69,11 @@ if ($user->rights->commande->creer) {
 	print "</p>";
 }
 
-/*
+
   $i = 0;
   $obj = new stdClass();
 
-  print $object->datatablesEdit("listorders", $langs->trans("NewOrder"));
+  //print $object->datatablesEdit("listorders", $langs->trans("NewOrder"));
 
   print '<table class="display dt_act" id="listorders" >';
   // Ligne des titres
@@ -128,12 +128,12 @@ if ($user->rights->commande->creer) {
   print $langs->trans('Date');
   print'</th>';
   $obj->aoColumns[$i] = new stdClass();
-  $obj->aoColumns[$i]->mDataProp = "date";
+  $obj->aoColumns[$i]->mDataProp = "date_livraison";
   $obj->aoColumns[$i]->sClass = "center";
   $obj->aoColumns[$i]->sDefaultContent = "";
-  $obj->aoColumns[$i]->sType = "date";
+  //$obj->aoColumns[$i]->sType = "date";
   $obj->aoColumns[$i]->bUseRendered = false;
-  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("date", "date");
+  $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("date_livraison", "datetime");
   $obj->aoColumns[$i]->editable = true;
   $i++;
   print'<th class="essential">';
@@ -187,9 +187,9 @@ if ($user->rights->commande->creer) {
   var ar = [];
   ar[ar.length] = "<a href=\"' . $url . '?id=";
   ar[ar.length] = obj.aData._id.toString();
-  ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/edit.png\" alt=\"\" /></a>";
+  ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"img/action_edit.png\" alt=\"\" /></a>";
   ar[ar.length] = "<a href=\"\"";
-  ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/delete.png\" alt=\"\" /></a>";
+  ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"/img/action_delete.png\" alt=\"\" /></a>";
   var str = ar.join("");
   return str;
   }';
@@ -197,7 +197,7 @@ if ($user->rights->commande->creer) {
   print'</thead>';
   print'<tfoot>';
   /* input search view */
-/* $i = 0; //Doesn't work with bServerSide
+ $i = 0; //Doesn't work with bServerSide
   print'<tr>';
   print'<th id="' . $i . '"></th>';
   $i++;
@@ -224,7 +224,7 @@ if ($user->rights->commande->creer) {
 
   print "</table>";
 
-  $obj->aaSorting = array(array(1, 'asc'));
+  $obj->aaSorting = array(array(5, 'desc'));
   //$obj->bServerSide = true;
   //if ($all) {
   //    if ($type == "DONE")
@@ -239,19 +239,17 @@ if ($user->rights->commande->creer) {
   //
   //}
   //$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list";
-
-  if ($_GET["planning"])
-  $obj->sAjaxSource = "core/ajax/listdatatables.php?json=planning&class=" . get_class($object);
-
-  $object->datatablesCreate($obj, "listorders", true, true);
- */
+   
 
 $query = "";
-$obj = new stdClass();
 $query = '[{name :"class",value:"' . get_class($object) . '"}]';
 //	{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}]}"}]';
 
-echo $object->showList($query);
+$obj->aoAjaxData = $query;
+
+$object->datatablesCreate($obj, "listorders", true, true);
+
+//echo $object->showList($query, array(5,'desc'));
 
 llxFooter();
 ?>

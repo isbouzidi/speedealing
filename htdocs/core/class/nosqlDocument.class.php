@@ -236,9 +236,12 @@ abstract class nosqlDocument extends CommonObject {
 			if (!in_array($key, $this->no_save)) {
 				$values->$key = $aRow;
 				if (isset($this->fk_extrafields->fields->$key->schema))
-					if ($key == "updatedAt" || $this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "Date" || $this->fk_extrafields->fields->$key->schema->type == "Date")) // transtypage
-						$values->$key = new MongoDate(strtotime($values->$key));
-					elseif ($this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "ObjectId" || $this->fk_extrafields->fields->$key->schema->type == "ObjectId" )) {
+					if ($key == "updatedAt" || $this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "Date" || $this->fk_extrafields->fields->$key->schema->type == "Date")) { // transtypage
+						if(is_string($values->$key))
+							$values->$key = new MongoDate(strtotime($values->$key));
+						else
+							$values->$key = new MongoDate($values->$key->sec);
+					} elseif ($this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "ObjectId" || $this->fk_extrafields->fields->$key->schema->type == "ObjectId" )) {
 						if (is_string($values->$key)) {
 							$values->$key = new MongoId($values->$key);
 						} else {
@@ -287,7 +290,7 @@ abstract class nosqlDocument extends CommonObject {
 		}
 
 		try {
-			$this->clean($values);
+			//$this->clean($values);
 			if (empty($values->_id))
 				$this->mongodb->insert($values);
 			else
@@ -1118,7 +1121,7 @@ abstract class nosqlDocument extends CommonObject {
 				$rtr = 'function(obj) {
 					if(obj.aData.' . $key . ')
 					{
-					var date = new Date(obj.aData.' . $key . '.sec * 1000);
+					var date = new Date(obj.aData.' . $key . ' * 1000);
 			return date.toLocaleDateString();
 			}
 	 		else
@@ -1130,7 +1133,7 @@ abstract class nosqlDocument extends CommonObject {
 				$rtr = 'function(obj) {
 			if(obj.aData.' . $key . ')
 			{
-				var date = new Date(obj.aData.' . $key . '.sec * 1000);
+				var date = new Date(obj.aData.' . $key . ' * 1000);
 	 		return date.toLocaleDateString() +" "+date.toLocaleTimeString();
 			}
 	 		else
@@ -1607,7 +1610,7 @@ abstract class nosqlDocument extends CommonObject {
 	 *
 	 * 	@param	string	$view	Requested view
 	 */
-	public function showList($query) {
+	public function showList($query, $aaSorting = array(1,'asc') ) {
 
 		require DOL_DOCUMENT_ROOT . '/core/class/autoloader.php';
 
@@ -1617,6 +1620,7 @@ abstract class nosqlDocument extends CommonObject {
 		$table->setSchema(new datatables\schemas\DefaultSchema);
 		$table->setConfig('object_class', get_class($this));
 		$table->setConfig('aoAjaxData', $query);
+		$table->setParam('aaSorting', array($aaSorting));
 
 		// Add default plugins
 		$table->plug(new datatables\plugins\Localization);
@@ -1631,7 +1635,7 @@ abstract class nosqlDocument extends CommonObject {
 		}
 
 		// render view
-		//var_dump(compact('table'));
+		var_dump(compact('table'));
 		return $table->render();
 	}
 
@@ -1911,7 +1915,7 @@ abstract class nosqlDocument extends CommonObject {
 		$value = $this->$key;
 		if (empty($this->$key))
 			return null;
-		
+
 		if ($aRow->type != "date" && is_object($this->$key) && empty($this->$key->id))
 			return null;
 
@@ -1972,36 +1976,39 @@ abstract class nosqlDocument extends CommonObject {
 
 		//$out = start_box($langs->trans("Notes"), "icon-info-round");
 
+		if (count($this->notes) == 0)
+			return "";
+
 		$out.= '<div class="standard-tabs">';
 
 		// Tabs
 		$out.= '<ul class="tabs">';
-		for($i =0; $i<count($this->notes);$i++) {
-			$out.= '<li class="active"><a href="#tab-notes-'.$i.'">' . $langs->trans($this->notes[$i]->title) . '</a></li>';
+		for ($i = 0; $i < count($this->notes); $i++) {
+			$out.= '<li class="active"><a href="#tab-notes-' . $i . '">' . $langs->trans($this->notes[$i]->title) . '</a></li>';
 		}
 		$out.= '</ul>';
 
 		// Contents
 		$out.= '<div class="tabs-content">';
-		for($i =0; $i<count($this->notes);$i++) {
-		$out.= '<div id="tab-notes-'.$i.'" class="with-padding">';
+		for ($i = 0; $i < count($this->notes); $i++) {
+			$out.= '<div id="tab-notes-' . $i . '" class="with-padding">';
 
-		// Notes
-		if ($this->notes->edit) {
-			$out.= '<input id="element_id_notes" type="hidden" value="' . $this->id . '"/>';
-			$out.= '<input id="element_id_notes_line" type="hidden" value="' . $this->notes[$i]->_id->{'$id'} . '"/>';
-			$out.= '<input id="element_class_notes" type="hidden" value="' . get_class($this) . '"/>';
-			$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
-			$out.= '<div id="editval_notes" class="edit_wysiwyg with-tooltip">';
-			$out.= $this->notes[$i]->note . '</div>';
-			$out.= '</div>';
-		} else {
-			$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
-			$out.= $this->notes[$i]->note;
-			$out.= '</div>';
-		}
+			// Notes
+			if ($this->notes[$i]->edit) {
+				$out.= '<input id="element_id_notes" type="hidden" value="' . $this->id . '"/>';
+				$out.= '<input id="element_idx_notes" type="hidden" value="' . $this->notes[$i]->title . '"/>';
+				$out.= '<input id="element_class_notes" type="hidden" value="' . get_class($this) . '"/>';
+				$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
+				$out.= '<div id="editval_notes" class="edit_wysiwyg with-tooltip">';
+				$out.= $this->notes[$i]->note . '</div>';
+				$out.= '</div>';
+			} else {
+				$out.= '<div class="wrapped no-margin-bottom left-icon icon-info-round">';
+				$out.= $this->notes[$i]->note;
+				$out.= '</div>';
+			}
 
-		$out.= '</div>';
+			$out.= '</div>';
 		}
 
 		$out.= '</div>';

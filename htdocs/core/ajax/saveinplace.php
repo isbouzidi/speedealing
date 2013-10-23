@@ -41,6 +41,8 @@ $element = GETPOST('element', 'alpha', 2);
 $table_element = GETPOST('table_element', 'alpha', 2);
 $fk_element = GETPOST('fk_element', 'alpha', 2);
 
+$element_idx = GETPOST('element_idx', 'alpha', 2);
+
 $key = substr($key, 8); // remove prefix editval_
 
 /*
@@ -105,6 +107,14 @@ if (!empty($key) && !empty($id) && !empty($class)) {
 			$object->updateline($idLine, $line);
 			$object->record();
 
+			echo $value;
+		} else if($type == "wysiwyg") {
+			//$object->load($id);
+			//$object->$key[intval($element_idx)]->note = $value;
+			//error_log(print_r($object,true));
+			
+			$object->mongodb->update(array('_id' => new MongoId($id), $key.'.title' => $element_idx), array('$set' => array($key.'.$.note' => $value)));
+			
 			echo $value;
 		} else {
 
