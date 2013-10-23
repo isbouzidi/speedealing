@@ -290,7 +290,7 @@ abstract class nosqlDocument extends CommonObject {
 		}
 
 		try {
-			//$this->clean($values);
+			$this->clean($values);
 			if (empty($values->_id))
 				$this->mongodb->insert($values);
 			else

@@ -2513,7 +2513,8 @@ class Product extends nosqlDocument {
 
 		// Load source fields in input file
 		$fieldssource = array();
-		$result = $obj->import_open_file($conf->import->dir_temp . '/' . $filetoimport, $langs);
+		$result = $obj->import_open_file(DOL_DATA_ROOT . '/' . $filetoimport, $langs);
+
 		if ($result >= 0) {
 			// Read first line
 			$arrayrecord = $obj->import_read_record();
@@ -2524,8 +2525,9 @@ class Product extends nosqlDocument {
 				$i++;
 			}
 
-			$nboflines = dol_count_nb_of_line($conf->import->dir_temp . '/' . $filetoimport);
+			$nboflines = dol_count_nb_of_line(DOL_DATA_ROOT . '/' . $filetoimport);
 			$sourcelinenb = 1;
+
 			while ($sourcelinenb < $nboflines) {
 				$sourcelinenb++;
 				// Read line and stor it into $arrayrecord
@@ -2540,9 +2542,13 @@ class Product extends nosqlDocument {
 
 				//find if product exist
 				$product = new Product($this->db);
-				$result = $product->getView("list", array("key" => $record['ref']));
-				if (count($result->rows))
-					$product->load($result->rows[0]->id);
+
+				$result = $product->mongodb->findOne(array('ref' => $record['ref']));
+				if (is_array($result))
+					$result = json_decode(json_encode($result));
+
+				if ($result)
+					$product->load($result->_id->{'$id'});
 				else {
 					// create a new product
 					$product->label = $record['label'];
@@ -2557,13 +2563,23 @@ class Product extends nosqlDocument {
 				}
 
 				$price_level = $record['price_level'];
+				$idx_price = -1;
+				for ($i = 0; $i < count($product->price); $i++) { // recherche la bonne liste de prix
+					if ($product->price[$i]->price_level == $price_level) {
+						// found
+						$idx_price = $i;
+						break; // found but need update
+					}
+				}
 
 				// Price TMS is the same	
-				if (strtotime($record['tms']) <= strtotime($product->price->$price_level->tms)) {
-					continue;
+				if ($idx_price >= 0 && strtotime($record['tms']) <= $product->price[$i]->tms->sec) {
+					continue; // no change
 				}
 
 				$price = new stdClass();
+				$price->price_level = $price_level;
+
 				for ($i = 4; $i < count($fieldssource); $i++) {
 					$key = $fieldssource[$i];
 
@@ -2579,7 +2595,7 @@ class Product extends nosqlDocument {
 								settype($price->$key, $product->fk_extrafields->fields->$key->settype);
 								break;
 							case "date" :
-								$price->$key = date("c", strtotime($record[$key]));
+								$price->$key = new MongoDate(strtotime($record[$key]));
 								break;
 						}
 					}
@@ -2587,20 +2603,19 @@ class Product extends nosqlDocument {
 						$price->$key = $record[$key];
 				}
 
+				$price->tms = new MongoDate(strtotime($price->tms));
+
 				$price->user_mod = new stdClass();
 				$price->user_mod->id = $user->id;
 				$price->user_mod->name = $user->name;
 
-				if (is_array($product->price))
-					$product->price = new stdClass();
+				if ($idx_price < 0)
+					$product->price[] = clone $price;
+				else
+					$product->price[$idx_price] = clone $price;
 
-				$product->price->$price_level = clone $price;
-
-				$price->price_level = $price_level;
 				$product->history[] = clone $price;
 
-				//print_r($product);
-				//exit;
 				$result = $product->record();
 			}
 
