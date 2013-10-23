@@ -379,7 +379,8 @@
 				{
 					"title": "String",
 					"note": "String",
-					"public": {"type": "Boolean", "default": false}
+					"public": {"type": "Boolean", "default": false},
+					"edit": {"type": "Boolean", "default": false}
 				}],
 			"enable": true
 		},
