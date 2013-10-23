@@ -1635,7 +1635,7 @@ abstract class nosqlDocument extends CommonObject {
 		}
 
 		// render view
-		var_dump(compact('table'));
+		//var_dump(compact('table'));
 		return $table->render();
 	}
 
