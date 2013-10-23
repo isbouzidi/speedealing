@@ -2572,7 +2572,7 @@ class Product extends nosqlDocument {
 					}
 				}
 
-				// Price TMS is the same	
+				// Price TMS is the same
 				if ($idx_price >= 0 && strtotime($record['tms']) <= $product->price[$i]->tms->sec) {
 					continue; // no change
 				}

@@ -1,5 +1,4 @@
 <?php
-
 require_once DOL_DOCUMENT_ROOT . '/core/class/nosqlDocument.class.php';
 
 class AbstractInvoice extends nosqlDocument {
@@ -154,98 +153,97 @@ class AbstractInvoice extends nosqlDocument {
 				$url = 'facture/fiche.php';
 				break;
 		}
-		
-	?><div id="listLines"></div>
-	<script>
-		$(document).ready(function() {
-			var crudServiceBaseUrl = "api/commande/lines/list?id=<?php echo $this->id;?>",
-					dataSource = new kendo.data.DataSource({
-				transport: {
-					read: {
-						url: crudServiceBaseUrl,
-						type: "GET",
-						dataType: "json"
-					},
-					update: {
-						url: crudServiceBaseUrl,
-						type: "PUT",
-						dataType: "json"
-					},
-					destroy: {
-						url: crudServiceBaseUrl,
-						type: "DELETE",
-						dataType: "json"
-					},
-					create: {
-						url: crudServiceBaseUrl,
-						type: "POST",
-						dataType: "json",
-						complete: function(e) {
-							$("#grid").data("kendoGrid").dataSource.read();
+		?><div id="listLines"></div>
+		<script>
+			$(document).ready(function() {
+				var crudServiceBaseUrl = "api/commande/lines/list?id=<?php echo $this->id; ?>",
+						dataSource = new kendo.data.DataSource({
+					transport: {
+						read: {
+							url: crudServiceBaseUrl,
+							type: "GET",
+							dataType: "json"
+						},
+						update: {
+							url: crudServiceBaseUrl,
+							type: "PUT",
+							dataType: "json"
+						},
+						destroy: {
+							url: crudServiceBaseUrl,
+							type: "DELETE",
+							dataType: "json"
+						},
+						create: {
+							url: crudServiceBaseUrl,
+							type: "POST",
+							dataType: "json",
+							complete: function(e) {
+								$("#grid").data("kendoGrid").dataSource.read();
+							}
+						},
+						parameterMap: function(options, operation) {
+							if (operation !== "read" && options.models) {
+								return {models: kendo.stringify(options.models)};
+							}
 						}
 					},
-					parameterMap: function(options, operation) {
-						if (operation !== "read" && options.models) {
-							return {models: kendo.stringify(options.models)};
-						}
-					}
-				},
-				error: function(e) {
-					// log error
-					alert(e.xhr.responseText);
-				},
-				batch: true,
-				pageSize: 50,
-				schema: {
-					model: {
-						id: "_id",
-						fields: {
-							_id: {editable: false, nullable: true},
-							qty: {type: "text", defaultValue: 1, validation: {required: true}},
-							
-						}
-					}
-				},
-				sort: {field: "datec", dir: "desc"}
-			});
-			$("#listLines").kendoGrid({
-				dataSource: dataSource,
-				pageable: {
-					refresh: true,
+					error: function(e) {
+						// log error
+						alert(e.xhr.responseText);
+					},
+					batch: true,
 					pageSize: 50,
-					pageSizes: [5, 10, 20, 50],
-					buttonCount: 5
-				},
-				filterable: {
-					extra: false
-				},
-				//scrollable: {
-				//	virtual: true
-				//},
-				scrollable: false,
-				groupable: false,
-				sortable: true,
-				//height: 430,
-				toolbar: [
-					{
-						name: "create",
-						text: "Nouvelle ligne",
-						className: "k-button k-button-icontext k-grid-add button",
-					}
-				],
-				columns: [
-					{field: "product", title: "Produit", template: "#=product.name#"},
-					{field: "description", title: "Description"},
-					{field: "tva_tx", title: "TVA"},
-					{field: "pu_ht", title: "PU HT"},
-					{field: "qty", title: "Qte"},
-					{field: "remise", title: "Reduc."},
-					{field: "total_ht", title: "Total HT"},
-					{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}, {name: "destroy", text: "Supp."}], title: "&nbsp;", width: "160px"}],
-				editable: "popup"
+					schema: {
+						model: {
+							id: "_id",
+							fields: {
+								_id: {editable: false, nullable: true},
+								qty: {type: "text", defaultValue: 1, validation: {required: true}},
+								product: {defaultValue: {id: null, name: ""}}
+							}
+						}
+					},
+					sort: {field: "datec", dir: "desc"}
+				});
+				$("#listLines").kendoGrid({
+					dataSource: dataSource,
+					pageable: {
+						refresh: true,
+						pageSize: 50,
+						pageSizes: [5, 10, 20, 50],
+						buttonCount: 5
+					},
+					filterable: {
+						extra: false
+					},
+					//scrollable: {
+					//	virtual: true
+					//},
+					scrollable: false,
+					groupable: false,
+					sortable: true,
+					//height: 430,
+					toolbar: [
+						{
+							name: "create",
+							text: "Nouvelle ligne",
+							className: "k-button k-button-icontext k-grid-add button",
+						}
+					],
+					columns: [
+						{field: "product", title: "Produit", template: "#if (product) {# #=product.name# #}#"},
+						{field: "description", title: "Description"},
+						{field: "tva_tx", title: "TVA"},
+						{field: "pu_ht", title: "PU HT"},
+						{field: "qty", title: "Qte"},
+						{field: "remise", title: "Reduc."},
+						{field: "total_ht", title: "Total HT"},
+						{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}, {name: "destroy", text: "Supp."}], title: "&nbsp;", width: "160px"}],
+					editable: "popup"
+				});
 			});
-		});
-	</script><?php
+		</script><?php
 	}
 
 	/**
@@ -471,5 +469,4 @@ class Line {
 	}
 
 }
-
 ?>
