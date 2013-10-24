@@ -35,7 +35,7 @@ include_once DOL_DOCUMENT_ROOT .'/core/modules/DolibarrModules.class.php';
 /**
  *	Classe de description et activation du module Ficheinter
  */
-class modIntervention extends DolibarrModules
+class modChaumeil extends DolibarrModules
 {
 
     /**
@@ -53,7 +53,7 @@ class modIntervention extends DolibarrModules
         $this->family = "crm";
         // Module label (no space allowed), used if translation string 'ModuleXXXName' not found (where XXX is value of numeric property 'numero' of module)
         $this->name = preg_replace('/^mod/i','',get_class($this));
-        $this->description = "Gestion des fiches d'intervention";
+        $this->description = "Modules Chaumeil";
 
         // Possible values for version are: 'development', 'experimental', 'dolibarr' or version
         $this->version = 'speedealing';
@@ -93,7 +93,7 @@ class modIntervention extends DolibarrModules
 
         // Permissions
         $this->rights = array();
-        $this->rights_class = 'intervention';
+        $this->rights_class = 'chaumeil';
         
 		
 		$r=0;
@@ -129,14 +129,14 @@ class modIntervention extends DolibarrModules
 		$r = 0;
 		
 		$this->menus[$r] = new stdClass();
-        $this->menus[$r]->_id = "menu:intevention";
+        $this->menus[$r]->_id = "menu:planning";
         $this->menus[$r]->position = 10;
-        $this->menus[$r]->url = "/intervention/list.php";
+        $this->menus[$r]->url = "/chaumeil/list.php";
         $this->menus[$r]->langs = "agenda";
-        $this->menus[$r]->perms = '$user->rights->intervention->lire';
-        $this->menus[$r]->enabled = '$conf->intervention->enabled';
+        $this->menus[$r]->perms = '$user->rights->chaumeil->lire';
+        $this->menus[$r]->enabled = '$conf->chaumeil->enabled';
         $this->menus[$r]->usertype = 2;
-        $this->menus[$r]->title = "Intervention";
+        $this->menus[$r]->title = "Planning";
 		$this->menus[$r]->fk_menu = "menu:commandes";
         $r++;
 

@@ -724,11 +724,10 @@ function main_menu() {
 					"out" => array("inline" => 1)));
 
 		$params = array(
-			'startkey' => array($user->id, mktime(0, 0, 0, date("m"), date("d"), date("Y"))),
-			'endkey' => array($user->id, mktime(23, 59, 59, date("m"), date("d"), date("Y")))
+			'start' => new MongoDate(mktime(0, 0, 0, date("m"), date("d"), date("Y"))),
+			'end' => new MongoDate(mktime(23, 59, 59, date("m"), date("d"), date("Y")))
 		);
-		$listMyTasks = $mongodb->Agenda->find(array("Status" => array('$ne' => "DONE"), "usertodo.id" => $user->id));
-		//$listMyTasks = $agenda->getView("listMyTasks", $params);
+		$listMyTasks = $mongodb->Agenda->find(array("Status" => array('$ne' => "DONE"), "usertodo.id" => $user->id, "datep" => array('$gt' => $params['start'], '$lte' => $params['end'])));
 	}
 
 	include 'core/tpl/main_menu.tpl.php';
