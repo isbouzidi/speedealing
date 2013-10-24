@@ -106,8 +106,8 @@ if ($action == 'add_action') {
 	//$datep = dol_mktime($fulldayevent ? '00' : $_POST["aphour"], $fulldayevent ? '00' : $_POST["apmin"], 0, $_POST["apmonth"], $_POST["apday"], $_POST["apyear"]);
 	//$datef = dol_mktime($fulldayevent ? '23' : $_POST["p2hour"], $fulldayevent ? '59' : $_POST["p2min"], $fulldayevent ? '59' : '0', $_POST["p2month"], $_POST["p2day"], $_POST["p2year"]);
 
-	$datep = date("c", strtotime($_POST["datep"])); // iso format
-	$datef = date("c", strtotime($_POST["datef"])); // iso format
+	$datep = date("c", strtotime(str_replace("/","-",$_POST["datep"])));
+	$datef = date("c", strtotime(str_replace("/","-",$_POST["datef"])));
 
 	/*
 	  echo '<pre>'.print_r($datep, true).'</pre>';
@@ -173,7 +173,7 @@ if ($action == 'add_action') {
 	if ($object->type_code == "AC_RDV") //ACTION
 		$object->durationp = $object->datef - $object->datep;
 	else {
-		$object->durationp = $_POST["durationhour"] * 3600 + $_POST["durationmin"] * 60;
+		$object->durationp = strtotime('1970-01-01 '.$_POST["durationp"].":00" . 'GMT');
 		$object->datef = date("c", strtotime($object->datep) + $object->durationp);
 	}
 
@@ -330,8 +330,9 @@ if ($action == 'update') {
 		//$datef = dol_mktime($fulldayevent ? '23' : $_POST["p2hour"], $fulldayevent ? '59' : $_POST["p2min"], $fulldayevent ? '59' : '0', $_POST["p2month"], $_POST["p2day"], $_POST["p2year"]);
 
 		$object->label = $_POST["label"];
-		$object->datep = date("c", strtotime($_POST["datep"]));
-		$object->datef = date("c", strtotime($_POST["datef"]));
+		
+		$object->datep = date("c", strtotime(str_replace("/","-",$_POST["datep"])));
+		$object->datef = date("c", strtotime(str_replace("/","-",$_POST["datef"])));
 		//$object->date        = $datea;
 		//$object->dateend     = $datea2;
 		$object->percentage = $_POST["percentage"];
@@ -351,7 +352,7 @@ if ($action == 'update') {
 		if ($object->type_code == "AC_RDV") //ACTION
 			$object->durationp = $object->datef - $object->datep;
 		else {
-			$object->durationp = $_POST["durationhour"] * 3600 + $_POST["durationmin"] * 60;
+			$object->durationp = strtotime('1970-01-01 '.$_POST["durationp"].":00" . 'GMT');
 			$object->datef = date("c", strtotime($object->datep) + $object->durationp);
 		}
 
@@ -594,39 +595,58 @@ if ($action == 'create') {
 	print '<tr id="jqtitle"><td>' . $langs->trans("Title") . '</td><td><input type="text" name="label" size="60" value="' . GETPOST('label') . '"></td></tr>';
 
 	// Full day
-	print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
+	//print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
 
 	// Date start
-	$datep = $object->datep;
-	if (GETPOST('datep', 'alpha'))
-		$datep = GETPOST('datep', 'alpha');
-	print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
-	if (GETPOST("afaire") == 1)
-		$form->select_date($datep, 'datep', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-	else if (GETPOST("afaire") == 2)
-		$form->select_date($datep, 'datep', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-	//  $html->select_date($datep,'datep',0,0,1,"action",1,1,0,0,'fulldaystart');
-	$form->select_date($datep, 'datep', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldaystart', array('stepMinutes' => 30));
-	print '</td></tr>';
+	//print $object->datep;
+		$datep = date("c", $object->datep->sec);
+		//$datep = $object->datep->sec;
+		if (GETPOST('datep', 'alpha'))
+			$datep = GETPOST('datep', 'alpha');
+		print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
+		
+		print '<input id="dateptimepicker" name="datep" />';
+		print '</td></tr>';
+		print  '<script>
+            $(document).ready(function () {
+                // create DateTimePicker from input HTML element
+                $("#dateptimepicker").kendoDateTimePicker({
+                    value:new Date()
+                });
+            });
+        </script>';
+		
 	// Date end
+	$datef = date("c", $object->datef->sec);
+		//$datep = $object->datep->sec;
+		if (GETPOST('datef', 'alpha'))
+			$datef = GETPOST('datef', 'alpha');
+		print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';
+		
+		print '<input id="dateftimepicker" name="datef" />';
+		print '</td></tr>';
+		print  '<script>
+            $(document).ready(function () {
+                // create DateTimePicker from input HTML element
+                $("#dateftimepicker").kendoDateTimePicker({
+                    value:new Date()
+                });
+            });
+        </script>';
 
-	$datef = $object->datef;
-	if (GETPOST('datef', 'alpha'))
-		$datef = GETPOST('datef', 'alpha');
-	print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';
-	if (GETPOST("afaire") == 1)
-		$form->select_date($datef, 'datef', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-	else if (GETPOST("afaire") == 2)
-		$form->select_date($datef, 'datef', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-	else
-		$form->select_date($datef, 'datef', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-	print '</td></tr>';
-
-	// duration task
 	print '<tr id="jqduration"><td>' . $langs->trans("Duration") . '</td><td colspan="3">';
-	//<input type="text" name="duration" size="3" value="' . (empty($object->durationp) ? 1 : $object->durationp / 3600) . '">
-	$form->select_duration('duration', '', 0, array('stepMinutes' => 30));
-	print '</td></tr>';
+		//<input type="text" name="duration" size="3" value="' . (empty($object->durationp) ? 1 : $object->durationp / 3600) . '">
+		//$form->select_duration('duration', $object->durationp, 0, array('stepMinutes' => 30));
+		
+		print '<input id="durationp" name="durationp" value="01:00" />';
+		print '<script>
+                $(document).ready(function() {
+                    // create TimePicker from input HTML element
+                    $("#durationp").kendoTimePicker();
+                });
+            </script>';
+		
+		print '</td></tr>';
 
 
 	// Status
@@ -662,10 +682,9 @@ if ($action == 'create') {
 	print '</td></tr>';
 
 	// Realised by
-	print '<tr><td nowrap>' . $langs->trans("ActionDoneBy") . '</td><td>';
-	print $object->select_fk_extrafields("userdone", 'doneby');
-	//$form->select_users(GETPOST("doneby") ? GETPOST("doneby") : (!empty($object->userdone->id) && $percent == 100 ? $object->userdone->id : 0), 'doneby', 1);
-	print '</td></tr>';
+	//print '<tr><td nowrap>' . $langs->trans("ActionDoneBy") . '</td><td>';
+	//print $object->select_fk_extrafields("userdone", 'doneby');
+	//print '</td></tr>';
 
 	print '</table>';
 	print '<br><br>';
@@ -958,33 +977,68 @@ if ($id) {
 		print '<tr><td>' . $langs->trans("Title") . '</td><td colspan="3"><input type="text" name="label" size="50" value="' . $object->label . '"></td></tr>';
 
 		// Full day
-		print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
+		//print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
 
 		// Date start
-		//$datep = date("c", $object->datep->sec);
+		
+		
+		//print $object->datep;
+		$datep = date("c", $object->datep->sec);
+		//$datep = $object->datep->sec;
 		if (GETPOST('datep', 'alpha'))
 			$datep = GETPOST('datep', 'alpha');
 		print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
-		if (GETPOST("afaire") == 1)
-			$form->select_date($datep, 'datep', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-		else if (GETPOST("afaire") == 2)
-			$form->select_date($datep, 'datep', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
+		
+		print '<input id="dateptimepicker" name="datep" />';
+		
+		print  '<script>
+            $(document).ready(function () {
+                // create DateTimePicker from input HTML element
+                $("#dateptimepicker").kendoDateTimePicker({
+                    value:new Date("'.$datep.'")
+                });
+            });
+        </script>';
+		
+		
+		//if (GETPOST("afaire") == 1)
+		//	$form->select_date($datep, 'datep', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
+		//else if (GETPOST("afaire") == 2)
+		//	$form->select_date($datep, 'datep', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
 		//  $html->select_date($datep,'datep',0,0,1,"action",1,1,0,0,'fulldaystart');
-		$form->select_date($datep, 'datep', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldaystart', array('stepMinutes' => 30));
+		//$form->select_date($datep, 'datep', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldaystart', array('stepMinutes' => 30));
 		print '</td></tr>';
 
 		// Date end
 		//$datef = date("c", $object->datef->sec);
+		
+		
+		$datef = date("c", $object->datef->sec);
+		//$datep = $object->datep->sec;
 		if (GETPOST('datef', 'alpha'))
 			$datef = GETPOST('datef', 'alpha');
 		print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';
-		if (GETPOST("afaire") == 1)
-			$form->select_date($datef, 'datef', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-		else if (GETPOST("afaire") == 2)
-			$form->select_date($datef, 'datef', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
-		else
-			$form->select_date($datef, 'datef', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
+		
+		print '<input id="dateftimepicker" name="datef" />';
 		print '</td></tr>';
+		print  '<script>
+            $(document).ready(function () {
+                // create DateTimePicker from input HTML element
+                $("#dateftimepicker").kendoDateTimePicker({
+                    value:new Date("'.$datef.'")
+                });
+            });
+        </script>';
+		
+		
+		
+		//if (GETPOST("afaire") == 1)
+		//	$form->select_date($datef, 'datef', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
+		//else if (GETPOST("afaire") == 2)
+		//	$form->select_date($datef, 'datef', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
+		//else
+		//	$form->select_date($datef, 'datef', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
+		//print '</td></tr>';
 
 		/* print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';
 		  print $object->select_fk_extrafields('datef', 'datef');
@@ -993,7 +1047,16 @@ if ($id) {
 		// duration task
 		print '<tr id="jqduration"><td>' . $langs->trans("Duration") . '</td><td colspan="3">';
 		//<input type="text" name="duration" size="3" value="' . (empty($object->durationp) ? 1 : $object->durationp / 3600) . '">
-		$form->select_duration('duration', $object->durationp, 0, array('stepMinutes' => 30));
+		//$form->select_duration('duration', $object->durationp, 0, array('stepMinutes' => 30));
+		
+		print '<input id="durationp" name="durationp" value="'.gmdate("H:i",$object->durationp).'" />';
+		print '<script>
+                $(document).ready(function() {
+                    // create TimePicker from input HTML element
+                    $("#durationp").kendoTimePicker();
+                });
+            </script>';
+		
 		print '</td></tr>';
 
 		// Status
@@ -1039,9 +1102,9 @@ if ($id) {
 		print '</td></tr>';
 
 		// Realised by
-		print '<tr><td nowrap="nowrap">' . $langs->trans("ActionDoneBy") . '</td><td colspan="3">';
-		print $object->select_fk_extrafields("userdone", 'doneby');
-		print '</td></tr>';
+		//print '<tr><td nowrap="nowrap">' . $langs->trans("ActionDoneBy") . '</td><td colspan="3">';
+		//print $object->select_fk_extrafields("userdone", 'doneby');
+		//print '</td></tr>';
 
 		print '</table><br><br>';
 
