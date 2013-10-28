@@ -773,7 +773,7 @@ function pdf_writelinedesc(&$pdf, $object, $i, $outputlangs, $w, $h, $posx, $pos
         $labelproductservice = pdf_getlinedesc($object, $i, $outputlangs, $hideref, $hidedesc, $issupplierline);
         // Description
 		
-		$labelproductservice = $object->groups[$i]->title;
+		$labelproductservice = $object->groups[$i]->name;
 		
         $pdf->writeHTMLCell($w, $h, $posx, $posy, $outputlangs->convToOutputCharset($labelproductservice), 0, 1);
 
