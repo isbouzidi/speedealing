@@ -32,7 +32,7 @@ class DeleteNotification implements PluginInterface {
 		$object_class = $table->getConfig('object_class');
 
 		$table->method("
-			$('tbody tr td .action-delete').live('click', function(){
+			$('tbody tr td .action-delete').on('click', function(){
 				var aPos = {$var_name}.fnGetPosition(this.parentNode);
 				var aData = {$var_name}.fnGetData(aPos[0]);
 				var objClass = '{$object_class}';

@@ -148,16 +148,16 @@ print '<div class="with-padding">';
 //$object->print_week($now);
 //print '</div>';
 ?><div id="example" class="k-content">
-    <div id="people">
+   <!-- <div id="people">
 		<input checked type="checkbox" id="alex" value="user:admin"> Fred 
 		<input checked type="checkbox" id="bob" value="user:demo"> Marcel 
-		<input type="checkbox" id="charlie" value="3"> John 
-    </div>
+		<input type="checkbox" id="charlie" value="user:admin"> John 
+    </div>-->
     <div id="scheduler"></div>
 </div>
 <script id="event-template" type="text/x-kendo-template">
-	<div class="agenda-event movie-template children-tooltip">
-	<a href="" title="bla">
+	<div class="agenda-event movie-template children-tooltip" data-tooltip-options='{"classes":["anthracite-gradient"],"position":"bottom"}'>
+	<a href="agenda/fiche.php?id=#=_id#" title="#if(typeof societe !=='undefined') {# <it>#: societe.name#</it> #}# <br>#if (usertodo.length) {#<ul>#for (var i=0,len=usertodo.length; i<len; i++){#<li>${ usertodo[i] }</li># } #</ul>#}#">
 		#: title#
 		<time>#: kendo.toString(start, "HH:mm") # - #: kendo.toString(end, "HH:mm") #</time>
 		#if (description.notes) {# #:description# #}#
@@ -175,8 +175,7 @@ print '<div class="with-padding">';
 			views: [
 				"day",
 				{type: "week", selected: true},
-				"month",
-				"agenda"
+				"month"
 			],
 			editable: false,
 			eventTemplate: $("#event-template").html(),
@@ -230,20 +229,20 @@ print '<div class="with-padding">';
 					}
 				}
 				/*filter: {
-				 logic: "or",
-				 filters: [
-				 {field: "usertodo", operator: "eq", value: "user:admin"},
-				 {field: "usertodo", operator: "eq", value: "user:demo"}
-				 ]
-				 }*/
+					logic: "or",
+					filters: [
+						{field: "usertodo", operator: "eq", value: "user:admin"},
+						{field: "usertodo", operator: "eq", value: "user:demo"}
+					]
+				}*/
 			},
 			resources: [
 				{
 					field: "usertodo",
 					title: "Utilisateur",
 					dataSource: [
-						{text: "Alex", value: "user:demo", color: "#f8a398"},
-						{text: "Bob", value: "user:admin", color: "#51a0ed"},
+						{text: "Alex", value: "user:admin", color: "#f8a398"},
+						{text: "Bob", value: "user:demo", color: "#51a0ed"},
 						{text: "Charlie", value: "user:toto", color: "#56ca85"}
 					],
 					multiple: true
@@ -261,7 +260,7 @@ print '<div class="with-padding">';
 				filters: $.map(checked, function(value) {
 					return {
 						operator: "eq",
-						field: "ownerId",
+						field: "usertodo",
 						value: value
 					};
 				})

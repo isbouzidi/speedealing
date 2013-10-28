@@ -112,7 +112,7 @@
 
 	</section>
 	<!-- End sidebar/drop-down menu -->
-	<script type="text/javascript">
+	<!--<script type="text/javascript">
 		$(document).ready(function() {
 			$('#query').sautocomplete('search/data.php', {
 				delay: 10,
@@ -150,5 +150,5 @@
 				return false;
 			});
 		});
-	</script>
+	</script>-->
 	<!--Begin left area - menu <?php echo $left_menu; ?> -->

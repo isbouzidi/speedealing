@@ -14,7 +14,7 @@
 	],
 	"fields": {
 		"_id": {
-			"schema": "ObjectId",
+			"schema": "String",
 			"type": "text",
 			"enable": true,
 			"list": {
@@ -43,6 +43,11 @@
 					"enable": true,
 					"label": "Actif",
 					"cssClass": "green-gradient"
+				},
+				"NOCONNECT": {
+					"enable": true,
+					"label": "Actif/Sans conex.",
+					"cssClass": "blue-gradient"
 				}
 			}
 		},

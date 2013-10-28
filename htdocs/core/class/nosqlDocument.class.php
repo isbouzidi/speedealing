@@ -237,7 +237,7 @@ abstract class nosqlDocument extends CommonObject {
 				$values->$key = $aRow;
 				if (isset($this->fk_extrafields->fields->$key->schema))
 					if ($key == "updatedAt" || $this->fk_extrafields->fields->$key->schema && ($this->fk_extrafields->fields->$key->schema == "Date" || $this->fk_extrafields->fields->$key->schema->type == "Date")) { // transtypage
-						if(is_string($values->$key))
+						if (is_string($values->$key))
 							$values->$key = new MongoDate(strtotime($values->$key));
 						else
 							$values->$key = new MongoDate($values->$key->sec);
@@ -904,7 +904,7 @@ abstract class nosqlDocument extends CommonObject {
 			$('.chSel_all').click(function () {
 			$(this).closest('table').find('input[name=row_sel]').attr('checked', this.checked);
 			});
-					$("tbody tr td .delEnqBtn").live('click', function(){
+					$("tbody tr td .delEnqBtn").on('click', function(){
 			var aPos = oTable.fnGetPosition(this.parentNode);
 					var aData = oTable.fnGetData(aPos[0]);
 					if (aData["name"] === undefined)
@@ -1289,6 +1289,21 @@ abstract class nosqlDocument extends CommonObject {
 					return str;
 			}';
 				break;
+			
+			case "array":
+				$rtr = 'function(obj) {
+					var ar = [];
+
+					for (var i=0; i<obj.aData.' . $key . '.length; i++) {
+							ar[ar.length] = "<small class=\"tag grey-gradient glossy";
+							ar[ar.length] = " \">";
+							ar[ar.length] = obj.aData.' . $key . '[i].name.toString();
+							ar[ar.length] = "</small> ";
+                        }
+					var str = ar.join("");
+					return str;
+			}';
+				break;
 
 			default :
 				dol_print_error($db, "Type of fnRender must be url, date, datetime, attachment or status");
@@ -1610,7 +1625,7 @@ abstract class nosqlDocument extends CommonObject {
 	 *
 	 * 	@param	string	$view	Requested view
 	 */
-	public function showList($query, $aaSorting = array(1,'asc') ) {
+	public function showList($query, $aaSorting = array(1, 'asc')) {
 
 		require DOL_DOCUMENT_ROOT . '/core/class/autoloader.php';
 
@@ -1761,7 +1776,7 @@ abstract class nosqlDocument extends CommonObject {
 					$selected = $this->$key;
 
 				$rtr = "";
-				$rtr.= '<select data-placeholder="' . $title . '&hellip;" data-select-options=\'{"searchText":"Rechercher"}\' class="select compact expandable-list ' . $aRow->validate->cssclass . '" id="' . $htmlname . '" name="' . $htmlname . '">';
+				$rtr.= '<select data-placeholder="' . $title . '&hellip;" data-select-options=\'{"searchText":"Rechercher"}\' class="select compact expandable-list ' . $aRow->validate->cssclass . ' ' . $aRow->cssClass . '" id="' . $htmlname . '" name="' . $htmlname . '" '.($aRow->multiple?'multiple':'').'>';
 				if (isset($aRow->mongo)) { // Check collection
 					$class = $aRow->mongo->collection;
 					//$object = new $class($this->db);

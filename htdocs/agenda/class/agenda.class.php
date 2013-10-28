@@ -329,12 +329,20 @@ class Agenda extends nosqlDocument {
 		}
 
 		// Check parameters
-		if ($this->Status == "TODO" && $this->userdone->id) {
-			//$this->error="ErrorCantSaveADoneUserWithZeroPercentage";
-			//return -1;
-			unset($this->userdone->id);
-			unset($this->userdone->name);
+		
+		if (strlen($this->usertodo) > 0 || strpos($this->usertodo, ",") !== false) {
+			$usertodo = explode(",", $this->usertodo);
+			$this->usertodo = array();
+			foreach ($usertodo as $aRow) {
+				$fuser = new User();
+				$fuser->load($aRow);
+				if($fuser->name)
+					$this->usertodo[] = array("id" => $aRow, "name" => $fuser->name);
+			}
+		} else {
+			$this->usertodo = array(array("id" => $user->id, "name" => $user->name));
 		}
+
 		if ($this->Status == "DONE" && !$this->userdone->id) {
 			$this->userdone = new stdClass();
 			$this->userdone->id = $user->id;
@@ -359,15 +367,6 @@ class Agenda extends nosqlDocument {
 			$this->contact->name = $object->name;
 		} else {
 			unset($this->contact->name);
-		}
-
-		if (!empty($this->usertodo->id)) {
-			$object = new User($this->db);
-			$object->load($this->usertodo->id);
-			$this->usertodo->name = $object->name;
-		} else {
-			$this->usertodo->id = $user->id;
-			$this->usertodo->name = $user->name;
 		}
 
 		if (!empty($this->userdone->id)) {
@@ -933,18 +932,18 @@ class Agenda extends nosqlDocument {
 			$head[$h]->icon = "icon-pencil";
 			$h++;
 		}
-		/*$head[$h] = new stdClass();
-		$head[$h]->title = $langs->trans("StatusActionToDo");
-		$head[$h]->id = "TODO";
-		$head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=Agenda&key=" . $id . "'); return false;";
-		$head[$h]->icon = "icon-clock";
-		$h++;
-		$head[$h] = new stdClass();
-		$head[$h]->title = $langs->trans("StatusActionDone");
-		$head[$h]->id = "DONE";
-		$head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsDONE&class=Agenda&key=" . $id . "'); return false;";
-		$head[$h]->icon = "icon-calendar";
-		$h++;*/
+		/* $head[$h] = new stdClass();
+		  $head[$h]->title = $langs->trans("StatusActionToDo");
+		  $head[$h]->id = "TODO";
+		  $head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=Agenda&key=" . $id . "'); return false;";
+		  $head[$h]->icon = "icon-clock";
+		  $h++;
+		  $head[$h] = new stdClass();
+		  $head[$h]->title = $langs->trans("StatusActionDone");
+		  $head[$h]->id = "DONE";
+		  $head[$h]->onclick = "var oTable = $('#actions_datatable').dataTable(); oTable.fnReloadAjax('" . DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsDONE&class=Agenda&key=" . $id . "'); return false;";
+		  $head[$h]->icon = "icon-calendar";
+		  $h++; */
 
 		print start_box($titre, "icon-calendar", $head);
 
@@ -1025,8 +1024,8 @@ class Agenda extends nosqlDocument {
 
 		$obj->iDisplayLength = $max;
 		$obj->aaSorting = array(array(2, 'desc'));
-		$obj->aoAjaxData = '[{name :"class",value:"'. get_class($this).'"},
-			{"name": "query", "value": "{\"societe.id\": \"'.$id.'\"}"}]';
+		$obj->aoAjaxData = '[{name :"class",value:"' . get_class($this) . '"},
+			{"name": "query", "value": "{\"societe.id\": \"' . $id . '\"}"}]';
 		//$obj->sAjaxSource = DOL_URL_ROOT . "/core/ajax/listdatatables.php?json=actionsTODO&class=" . get_class($this) . "&key=" . $id;
 		$this->datatablesCreate($obj, "actions_datatable", true);
 

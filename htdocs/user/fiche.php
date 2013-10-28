@@ -588,11 +588,12 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			print "</tr>\n";
 
 			// Statut
-			print '<tr><td valign="top">' . $langs->trans("Status") . '</td>';
+			$status = $fuser->Status;
+			print '<tr><td>' . $form->editfieldkey("Status", 'Status', $fuser->Status, $fuser, $user->admin && !$fuser->fk_extrafields->fields->Status->values->$status->notEditable, "select") . '</td>';
 			print '<td>';
-			print $fuser->getLibStatus();
+			print $form->editfieldval("Status", 'Status', $fuser->Status, $fuser, $user->admin && !$fuser->fk_extrafields->fields->Status->values->$status->notEditable, "select");
 			print '</td>';
-			print '</tr>' . "\n";
+			print '</tr>';
 
 			print '<tr><td valign="top">' . $langs->trans("LastConnexion") . '</td>';
 			print '<td>' . dol_print_date($fuser->datelastlogin, "dayhour") . '</td>';

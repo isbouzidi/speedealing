@@ -83,7 +83,7 @@
 <!-- <script type="text/javascript" src="includes/jquery/plugins/datatables/extras/TableTools/media/js/TableTools.min.js" defer></script> -->
 <!-- <script type="text/javascript" src="includes/jquery/plugins/datatables/extras/AutoFill/media/js/AutoFill.min.js" defer></script> -->
 <script type="text/javascript" src="includes/jquery/plugins/datatables/extras/AjaxReload/media/js/fnReloadAjax.js" defer></script>
-<script type="text/javascript" src="includes/jquery/plugins/datatables/extras/DataTables-Editable/media/js/jquery.dataTables.editable.min.js" defer></script>
+<script type="text/javascript" src="includes/jquery/plugins/datatables/extras/DataTables-Editable/media/js/jquery.dataTables.editable.js" defer></script>
 <!-- <script type="text/javascript" src="includes/jquery/plugins/datatables/js/initXHR.js"></script> -->
 <!-- <script type="text/javascript" src="includes/jquery/plugins/datatables/js/searchColumns.js"></script> -->
 <!-- <script type="text/javascript" src="includes/jquery/plugins/datatables/js/ZeroClipboard.js"></script> -->

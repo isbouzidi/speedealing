@@ -1,5 +1,4 @@
 <?php
-
 /* Copyright (C) 2001-2005 Rodolphe Quiedeville <rodolphe@quiedeville.org>
  * Copyright (C) 2004-2012 Laurent Destailleur  <eldy@users.sourceforge.net>
  * Copyright (C) 2005      Simon TOSSER         <simon@kornog-computing.com>
@@ -106,8 +105,8 @@ if ($action == 'add_action') {
 	//$datep = dol_mktime($fulldayevent ? '00' : $_POST["aphour"], $fulldayevent ? '00' : $_POST["apmin"], 0, $_POST["apmonth"], $_POST["apday"], $_POST["apyear"]);
 	//$datef = dol_mktime($fulldayevent ? '23' : $_POST["p2hour"], $fulldayevent ? '59' : $_POST["p2min"], $fulldayevent ? '59' : '0', $_POST["p2month"], $_POST["p2day"], $_POST["p2year"]);
 
-	$datep = date("c", strtotime(str_replace("/","-",$_POST["datep"])));
-	$datef = date("c", strtotime(str_replace("/","-",$_POST["datef"])));
+	$datep = date("c", strtotime(str_replace("/", "-", $_POST["datep"])));
+	$datef = date("c", strtotime(str_replace("/", "-", $_POST["datef"])));
 
 	/*
 	  echo '<pre>'.print_r($datep, true).'</pre>';
@@ -173,7 +172,7 @@ if ($action == 'add_action') {
 	if ($object->type_code == "AC_RDV") //ACTION
 		$object->durationp = $object->datef - $object->datep;
 	else {
-		$object->durationp = strtotime('1970-01-01 '.$_POST["durationp"].":00" . 'GMT');
+		$object->durationp = strtotime('1970-01-01 ' . $_POST["durationp"] . ":00" . 'GMT');
 		$object->datef = date("c", strtotime($object->datep) + $object->durationp);
 	}
 
@@ -194,8 +193,8 @@ if ($action == 'add_action') {
 	$object->author->name = $user->name;
 	$object->usermod = null;
 
-	if (strlen($_POST["affectedto"]) > 0)
-		$object->usertodo->id = GETPOST("affectedto");
+	$object->usertodo = $_POST["affectedto"];
+
 	/*
 	  $userdone = new User($db);
 	  if ($_POST["doneby"] > 0) {
@@ -330,9 +329,9 @@ if ($action == 'update') {
 		//$datef = dol_mktime($fulldayevent ? '23' : $_POST["p2hour"], $fulldayevent ? '59' : $_POST["p2min"], $fulldayevent ? '59' : '0', $_POST["p2month"], $_POST["p2day"], $_POST["p2year"]);
 
 		$object->label = $_POST["label"];
-		
-		$object->datep = date("c", strtotime(str_replace("/","-",$_POST["datep"])));
-		$object->datef = date("c", strtotime(str_replace("/","-",$_POST["datef"])));
+
+		$object->datep = date("c", strtotime(str_replace("/", "-", $_POST["datep"])));
+		$object->datef = date("c", strtotime(str_replace("/", "-", $_POST["datef"])));
 		//$object->date        = $datea;
 		//$object->dateend     = $datea2;
 		$object->percentage = $_POST["percentage"];
@@ -352,7 +351,7 @@ if ($action == 'update') {
 		if ($object->type_code == "AC_RDV") //ACTION
 			$object->durationp = $object->datef - $object->datep;
 		else {
-			$object->durationp = strtotime('1970-01-01 '.$_POST["durationp"].":00" . 'GMT');
+			$object->durationp = strtotime('1970-01-01 ' . $_POST["durationp"] . ":00" . 'GMT');
 			$object->datef = date("c", strtotime($object->datep) + $object->durationp);
 		}
 
@@ -366,8 +365,7 @@ if ($action == 'update') {
 		  }
 		 */
 		// Users
-		$object->usertodo = new stdClass();
-		$object->usertodo->id = $_POST["affectedto"];
+		$object->usertodo = $_POST["affectedto"];
 
 		$object->userdone = new stdClass();
 		$object->userdone->id = $_POST["doneby"];
@@ -596,18 +594,17 @@ if ($action == 'create') {
 
 	// Full day
 	//print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
-
 	// Date start
 	//print $object->datep;
-		$datep = date("c", $object->datep->sec);
-		//$datep = $object->datep->sec;
-		if (GETPOST('datep', 'alpha'))
-			$datep = GETPOST('datep', 'alpha');
-		print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
-		
-		print '<input id="dateptimepicker" name="datep" />';
-		print '</td></tr>';
-		print  '<script>
+	$datep = date("c", $object->datep->sec);
+	//$datep = $object->datep->sec;
+	if (GETPOST('datep', 'alpha'))
+		$datep = GETPOST('datep', 'alpha');
+	print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
+
+	print '<input id="dateptimepicker" name="datep" />';
+	print '</td></tr>';
+	print '<script>
             $(document).ready(function () {
                 // create DateTimePicker from input HTML element
                 $("#dateptimepicker").kendoDateTimePicker({
@@ -615,17 +612,17 @@ if ($action == 'create') {
                 });
             });
         </script>';
-		
+
 	// Date end
 	$datef = date("c", $object->datef->sec);
-		//$datep = $object->datep->sec;
-		if (GETPOST('datef', 'alpha'))
-			$datef = GETPOST('datef', 'alpha');
-		print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';
-		
-		print '<input id="dateftimepicker" name="datef" />';
-		print '</td></tr>';
-		print  '<script>
+	//$datep = $object->datep->sec;
+	if (GETPOST('datef', 'alpha'))
+		$datef = GETPOST('datef', 'alpha');
+	print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';
+
+	print '<input id="dateftimepicker" name="datef" />';
+	print '</td></tr>';
+	print '<script>
             $(document).ready(function () {
                 // create DateTimePicker from input HTML element
                 $("#dateftimepicker").kendoDateTimePicker({
@@ -635,18 +632,18 @@ if ($action == 'create') {
         </script>';
 
 	print '<tr id="jqduration"><td>' . $langs->trans("Duration") . '</td><td colspan="3">';
-		//<input type="text" name="duration" size="3" value="' . (empty($object->durationp) ? 1 : $object->durationp / 3600) . '">
-		//$form->select_duration('duration', $object->durationp, 0, array('stepMinutes' => 30));
-		
-		print '<input id="durationp" name="durationp" value="01:00" />';
-		print '<script>
+	//<input type="text" name="duration" size="3" value="' . (empty($object->durationp) ? 1 : $object->durationp / 3600) . '">
+	//$form->select_duration('duration', $object->durationp, 0, array('stepMinutes' => 30));
+
+	print '<input id="durationp" name="durationp" value="01:00" />';
+	print '<script>
                 $(document).ready(function() {
                     // create TimePicker from input HTML element
                     $("#durationp").kendoTimePicker();
                 });
             </script>';
-		
-		print '</td></tr>';
+
+	print '</td></tr>';
 
 
 	// Status
@@ -677,7 +674,33 @@ if ($action == 'create') {
 	// Affected by
 	$var = false;
 	print '<tr><td width="30%" nowrap="nowrap">' . $langs->trans("ActionAffectedTo") . '</td><td>';
-	print $object->select_fk_extrafields("usertodo", 'affectedto');
+	//print $object->select_fk_extrafields("usertodo", 'affectedto');
+	print '<input id="usertodo" name="affectedto">';
+	?><script>
+		$(document).ready(function() {
+			var multiselect = $("#usertodo").kendoMultiSelect({
+				placeholder: "Utilisateurs...",
+				dataTextField: "name",
+				dataValueField: "id",
+				autoBind: false,
+				dataSource: {
+					type: "json",
+					serverFiltering: true,
+					transport: {
+						read: {
+							url: "api/user/select",
+						}
+					}
+				}
+			}).data("kendoMultiSelect");
+
+			$("#button").on("click", function() {
+				this.form.elements["affectedto"].value = multiselect.value();
+			});
+		});
+	</script><?php
+	//
+	//
 	//$form->select_users(GETPOST("affectedto") ? GETPOST("affectedto") : ($object->usertodo->id > 0 ? $object->usertodo : $user), 'affectedto', 1);
 	print '</td></tr>';
 
@@ -800,7 +823,7 @@ if ($action == 'create') {
 	print '</table>';
 
 	print '<br><center>';
-	print '<input type="submit" class="button" value="' . $langs->trans("Add") . '">';
+	print '<input type="submit" class="button" id="button" value="' . $langs->trans("Add") . '">';
 	print ' &nbsp; &nbsp; ';
 	print '<input type="submit" class="button" name="cancel" value="' . $langs->trans("Cancel") . '">';
 	print "</center>";
@@ -978,29 +1001,26 @@ if ($id) {
 
 		// Full day
 		//print '<tr id="jqfullday"><td>' . $langs->trans("EventOnFullDay") . '</td><td><input type="checkbox" id="fullday" name="fullday" ' . (GETPOST('fullday') ? ' checked="checked"' : '') . '></td></tr>';
-
 		// Date start
-		
-		
 		//print $object->datep;
 		$datep = date("c", $object->datep->sec);
 		//$datep = $object->datep->sec;
 		if (GETPOST('datep', 'alpha'))
 			$datep = GETPOST('datep', 'alpha');
 		print '<tr><td width="30%" nowrap="nowrap"><span class="fieldrequired" id="jqech">' . $langs->trans("DateEchAction") . '</span><span class="fieldrequired" id="jqstart">' . $langs->trans("DateActionStart") . '</span></td><td>';
-		
+
 		print '<input id="dateptimepicker" name="datep" />';
-		
-		print  '<script>
+
+		print '<script>
             $(document).ready(function () {
                 // create DateTimePicker from input HTML element
                 $("#dateptimepicker").kendoDateTimePicker({
-                    value:new Date("'.$datep.'")
+                    value:new Date("' . $datep . '")
                 });
             });
         </script>';
-		
-		
+
+
 		//if (GETPOST("afaire") == 1)
 		//	$form->select_date($datep, 'datep', 1, 1, 0, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
 		//else if (GETPOST("afaire") == 2)
@@ -1011,27 +1031,27 @@ if ($id) {
 
 		// Date end
 		//$datef = date("c", $object->datef->sec);
-		
-		
+
+
 		$datef = date("c", $object->datef->sec);
 		//$datep = $object->datep->sec;
 		if (GETPOST('datef', 'alpha'))
 			$datef = GETPOST('datef', 'alpha');
 		print '<tr id="jqend"><td>' . $langs->trans("DateActionEnd") . '</td><td>';
-		
+
 		print '<input id="dateftimepicker" name="datef" />';
 		print '</td></tr>';
-		print  '<script>
+		print '<script>
             $(document).ready(function () {
                 // create DateTimePicker from input HTML element
                 $("#dateftimepicker").kendoDateTimePicker({
-                    value:new Date("'.$datef.'")
+                    value:new Date("' . $datef . '")
                 });
             });
         </script>';
-		
-		
-		
+
+
+
 		//if (GETPOST("afaire") == 1)
 		//	$form->select_date($datef, 'datef', 1, 1, 1, "action", 1, 1, 0, 0, 'fulldayend', array('stepMinutes' => 30));
 		//else if (GETPOST("afaire") == 2)
@@ -1048,15 +1068,15 @@ if ($id) {
 		print '<tr id="jqduration"><td>' . $langs->trans("Duration") . '</td><td colspan="3">';
 		//<input type="text" name="duration" size="3" value="' . (empty($object->durationp) ? 1 : $object->durationp / 3600) . '">
 		//$form->select_duration('duration', $object->durationp, 0, array('stepMinutes' => 30));
-		
-		print '<input id="durationp" name="durationp" value="'.gmdate("H:i",$object->durationp).'" />';
+
+		print '<input id="durationp" name="durationp" value="' . gmdate("H:i", $object->durationp) . '" />';
 		print '<script>
                 $(document).ready(function() {
                     // create TimePicker from input HTML element
                     $("#durationp").kendoTimePicker();
                 });
             </script>';
-		
+
 		print '</td></tr>';
 
 		// Status
@@ -1098,7 +1118,35 @@ if ($id) {
 
 		// Affected to
 		print '<tr><td nowrap="nowrap">' . $langs->trans("ActionAffectedTo") . '</td><td colspan="3">';
-		print $object->select_fk_extrafields("usertodo", 'affectedto');
+		//print $object->select_fk_extrafields("usertodo", 'affectedto');
+		print '<input id="usertodo" name="affectedto">';
+		?><script>
+			$(document).ready(function() {
+				var multiselect = $("#usertodo").kendoMultiSelect({
+					placeholder: "Utilisateurs...",
+					dataTextField: "name",
+					dataValueField: "id",
+					autoBind: false,
+					dataSource: {
+						type: "json",
+						serverFiltering: true,
+						transport: {
+							read: {
+								url: "api/user/select",
+							}
+						}
+					},
+					value: <?php echo json_encode($object->usertodo);?>
+					 //{name: "admin", id: "user:admin"},
+					 //{name: "demo", id: "user:demo"}
+					 
+				}).data("kendoMultiSelect");
+
+				$("#button").on("click", function() {
+					this.form.elements["affectedto"].value = multiselect.value();
+				});
+			});
+		</script><?php
 		print '</td></tr>';
 
 		// Realised by
@@ -1188,7 +1236,7 @@ if ($id) {
 
 		print '</table><br>';
 
-		print '<center><input type="submit" class="button" name="edit" value="' . $langs->trans("Save") . '">';
+		print '<center><input type="submit" class="button" id="button" name="edit" value="' . $langs->trans("Save") . '">';
 		print ' &nbsp; &nbsp; <input type="submit" class="button" name="cancel" value="' . $langs->trans("Cancel") . '">';
 		print '</center>';
 
@@ -1484,5 +1532,4 @@ function add_row_for_calendar_link() {
 
 	return $nbtr;
 }
-
 ?>
