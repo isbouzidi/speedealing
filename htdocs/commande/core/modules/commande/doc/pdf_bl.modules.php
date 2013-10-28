@@ -852,9 +852,9 @@ class pdf_bl extends ModelePDFCommandes {
 
 		// Logo
 		$this->emetteur->name = "Chaumeil";
-		$this->emetteur->address = "146-176 avenue de Stalingrad \nParc Technologique des Corvettes";
-		$this->emetteur->zip = "92700";
-		$this->emetteur->town = "Colombes";
+		$this->emetteur->address = "128 bis avenue Jean Jaurès \nParc Mure";
+		$this->emetteur->zip = "94200";
+		$this->emetteur->town = "Ivry Sur Seine";
 		$this->emetteur->logo = "logo.jpg";
 
 		$object->thirdparty->name = $object->client->name . "\nFrédéric Le Pennuisic";
