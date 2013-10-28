@@ -857,7 +857,7 @@ class pdf_bl extends ModelePDFCommandes {
 		$this->emetteur->town = "Colombes";
 		$this->emetteur->logo = "logo.jpg";
 
-		$object->thirdparty->name = $object->client->name;
+		$object->thirdparty->name = $object->client->name . "\nFrédéric Le Pennuisic";
 		//print $this->emetteur->logo;exit;
 		$logo = $conf->mycompany->dir_output . '/logos/' . $this->emetteur->logo;
 		if ($this->emetteur->logo) {
