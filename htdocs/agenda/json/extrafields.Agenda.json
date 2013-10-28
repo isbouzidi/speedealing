@@ -7,15 +7,26 @@
 		"agenda",
 		"commercial"
 	],
+	"schemaMongoose": {
+		"enabled": true,
+		"name": "agenda",
+		"collection": "Agenda",
+		"plugins": ["mongoose-timestamp"]
+	},
 	"fields": {
 		"_id": {
 			"schema": "ObjectId"
 		},
 		"label": {
+			"schema": "String",
 			"type": "text",
 			"enable": true
 		},
 		"societe": {
+			"schema": {
+				"id": "ObjectId",
+				"name": "String"
+			},
 			"type": "select",
 			"enable": true,
 			"mongo": {
@@ -39,9 +50,13 @@
 					"name": 1
 				}
 			}
-			
+
 		},
 		"contact": {
+			"schema": {
+				"id": "ObjectId",
+				"name": "String"
+			},
 			"type": "select",
 			"enable": true,
 			"mongo": {
@@ -68,6 +83,7 @@
 			}
 		},
 		"Status": {
+			"schema": "Mixed",
 			"type": "select",
 			"enable": true,
 			"default": "TODO",
@@ -108,21 +124,28 @@
 			}
 		},
 		"percentage": {
+			"schema": "Number",
 			"type": "input",
 			"enable": true,
 			"settype": "int"
 		},
-		"datep": {
+		"datec": {
+			"schema": "Date",
 			"type": "datetime",
-			"enable": true,
-			"schema": "Date"
+			"enable": true
+		},
+		"datep": {
+			"schema": "Date",
+			"type": "datetime",
+			"enable": true
 		},
 		"datef": {
+			"schema": "Date",
 			"type": "datetime",
-			"enable": true,
-			"schema": "Date"
+			"enable": true
 		},
 		"durationp": {
+			"schema": "Number",
 			"type": "input",
 			"enable": true,
 			"settype": "int"
@@ -137,6 +160,7 @@
 			"enable": true
 		},
 		"type_code": {
+			"schema": "Mixed",
 			"type": "select",
 			"enable": true,
 			"default": "AC_RDV",
@@ -148,6 +172,10 @@
 			"dict": "dict:fk_actioncomm"
 		},
 		"author": {
+			"schema": {
+				"id": "String",
+				"name": "String"
+			},
 			"enable": true,
 			"type": "select",
 			"label": "ActionAskedBy",
@@ -163,6 +191,10 @@
 			}
 		},
 		"usertodo": {
+			"schema": [{
+					"id": "String",
+					"name": "String"
+				}],
 			"enable": true,
 			"type": "select",
 			"label": "ActionAffectedTo",
@@ -178,6 +210,10 @@
 			}
 		},
 		"userdone": {
+			"schema": {
+				"id": "String",
+				"name": "String"
+			},
 			"enable": true,
 			"type": "select",
 			"label": "ActionDoneBy",
@@ -193,6 +229,11 @@
 			}
 		},
 		"notes": {
+			"schema": [{
+					"edit": "Boolean",
+					"title": "String",
+					"note": "String"
+				}],
 			"type": "textarea",
 			"enable": true
 		}

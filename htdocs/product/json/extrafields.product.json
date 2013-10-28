@@ -274,6 +274,7 @@
 			"enable": true
 		},
 		"tms": {
+			"settype":"date",
 			"schema": "Date",
 			"enable": false
 		},

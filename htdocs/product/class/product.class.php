@@ -2573,6 +2573,7 @@ class Product extends nosqlDocument {
 				}
 
 				// Price TMS is the same
+//				print(strtotime($record['tms']));exit;
 				if ($idx_price >= 0 && strtotime($record['tms']) <= $product->price[$i]->tms->sec) {
 					continue; // no change
 				}
@@ -2603,7 +2604,8 @@ class Product extends nosqlDocument {
 						$price->$key = $record[$key];
 				}
 
-				$price->tms = new MongoDate(strtotime($price->tms));
+				//$price->tms = new MongoDate(strtotime($price->tms));
+				$price->tms = new MongoDate(strtotime(dol_now()));
 
 				$price->user_mod = new stdClass();
 				$price->user_mod->id = $user->id;

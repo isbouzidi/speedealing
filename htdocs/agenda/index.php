@@ -1,5 +1,4 @@
 <?php
-
 /* Copyright (C) 2012-2013	Regis Houssin	<regis.houssin@capnetworks.com>
  * Copyright (C) 2012-2013	Herve Prot		<herve.prot@symeos.com>
  *
@@ -144,17 +143,147 @@ llxHeader('', $langs->trans("Calendar"));
 
 print_fiche_titre($langs->trans("Calendar"), true);
 print '<div class="with-padding">';
-print '<div class="columns">';
-
+//print '<div class="columns">';
 //print '<div class="twelve-columns">';
 //$object->print_week($now);
 //print '</div>';
+?><div id="example" class="k-content">
+    <div id="people">
+		<input checked type="checkbox" id="alex" value="user:admin"> Fred 
+		<input checked type="checkbox" id="bob" value="user:demo"> Marcel 
+		<input type="checkbox" id="charlie" value="3"> John 
+    </div>
+    <div id="scheduler"></div>
+</div>
+<script id="event-template" type="text/x-kendo-template">
+	<div class="agenda-event movie-template children-tooltip">
+	<a href="" title="bla">
+		#: title#
+		<time>#: kendo.toString(start, "HH:mm") # - #: kendo.toString(end, "HH:mm") #</time>
+		#if (description.notes) {# #:description# #}#
+	</a>
+	</div>
+</script>
+<script>
+	$(document).ready(function() {
+		var crudServiceBaseUrl = "api/agenda";
+		$("#scheduler").kendoScheduler({
+			date: new Date(),
+			startTime: new Date("2013/6/13 07:00 AM"),
+			endTime: new Date("2013/6/13 10:00 PM"),
+			height: 600,
+			views: [
+				"day",
+				{type: "week", selected: true},
+				"month",
+				"agenda"
+			],
+			editable: false,
+			eventTemplate: $("#event-template").html(),
+			//timezone: "Etc/UTC",
+			dataSource: {
+				batch: true,
+				transport: {
+					read: {
+						url: crudServiceBaseUrl,
+						type: "GET",
+						dataType: "json"
+					},
+					update: {
+						url: crudServiceBaseUrl,
+						type: "PUT",
+						dataType: "json"
+					},
+					destroy: {
+						url: crudServiceBaseUrl,
+						type: "DELETE",
+						dataType: "json"
+					},
+					create: {
+						url: crudServiceBaseUrl,
+						type: "POST",
+						dataType: "json",
+					},
+					parameterMap: function(options, operation) {
+						if (operation !== "read" && options.models) {
+							return {models: kendo.stringify(options.models)};
+						}
+					}
+				},
+				schema: {
+					model: {
+						id: "_id",
+						fields: {
+							_id: {from: "_id", type: "String"},
+							title: {from: "label", defaultValue: "No title", validation: {required: true}},
+							start: {type: "date", from: "datep"},
+							end: {type: "date", from: "datef"},
+							startTimezone: {from: "StartTimezone"},
+							endTimezone: {from: "EndTimezone"},
+							recurrenceId: {from: "RecurrenceID"},
+							recurrenceRule: {from: "RecurrenceRule"},
+							recurrenceException: {from: "RecurrenceException"},
+							description: {from: "notes"},
+							usertodo: {from: "usertodo", defaultValue: ["<?php echo $user->id; ?>"], nullable: true},
+							isAllDay: {type: "boolean", from: "IsAllDay"}
+						}
+					}
+				}
+				/*filter: {
+				 logic: "or",
+				 filters: [
+				 {field: "usertodo", operator: "eq", value: "user:admin"},
+				 {field: "usertodo", operator: "eq", value: "user:demo"}
+				 ]
+				 }*/
+			},
+			resources: [
+				{
+					field: "usertodo",
+					title: "Utilisateur",
+					dataSource: [
+						{text: "Alex", value: "user:demo", color: "#f8a398"},
+						{text: "Bob", value: "user:admin", color: "#51a0ed"},
+						{text: "Charlie", value: "user:toto", color: "#56ca85"}
+					],
+					multiple: true
+				}
+			]
+		});
 
-print '<div class="twelve-columns">';
-$object->print_calendar($date);
+		$("#people :checkbox").change(function(e) {
+			var checked = $.map($("#people :checked"), function(checkbox) {
+				return parseInt($(checkbox).val());
+			});
+
+			var filter = {
+				logic: "or",
+				filters: $.map(checked, function(value) {
+					return {
+						operator: "eq",
+						field: "ownerId",
+						value: value
+					};
+				})
+			};
+
+			var scheduler = $("#scheduler").data("kendoScheduler");
+
+			scheduler.dataSource.filter(filter);
+		});
+	});
+</script>
+<style scoped>
+	#people {
+		height: 25px;
+		position: relative;
+	}
+</style><?php
+//print '<div class="twelve-columns">';
+//$object->print_calendar($date);
+//print '</div>';
+
 print '</div>';
-
-print '</div></div>';
 
 llxFooter();
 ?>
