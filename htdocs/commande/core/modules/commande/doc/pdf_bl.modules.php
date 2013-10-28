@@ -857,7 +857,11 @@ class pdf_bl extends ModelePDFCommandes {
 		$this->emetteur->town = "Ivry Sur Seine";
 		$this->emetteur->logo = "logo.jpg";
 
-		$object->thirdparty->name = $object->client->name . "\nFrédéric Le Pennuisic";
+		$object->thirdparty->name = $object->groups[0]->shipments[0]->societe . "\n". $object->groups[0]->shipments[0]->firstname . " " . $object->groups[0]->shipments[0]->lastname;
+		$object->thirdparty->address = $object->groups[0]->shipments[0]->address;
+		$object->thirdparty->town = $object->groups[0]->shipments[0]->town;
+		$object->thirdparty->zip = $object->groups[0]->shipments[0]->zip;
+		
 		//print $this->emetteur->logo;exit;
 		$logo = $conf->mycompany->dir_output . '/logos/' . $this->emetteur->logo;
 		if ($this->emetteur->logo) {
