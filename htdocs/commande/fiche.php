@@ -273,6 +273,8 @@ if ($action == 'add' && $user->rights->commande->creer) {
 		$outputlangs = new Translate();
 		$outputlangs->setDefaultLang($newlang);
 	}
+	
+	$object->modelpdf = "bl"; // TODO Automatic mode
 	$result = commande_pdf_create($db, $object, $object->modelpdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
 
 	if ($result <= 0) {

@@ -772,6 +772,9 @@ function pdf_writelinedesc(&$pdf, $object, $i, $outputlangs, $w, $h, $posx, $pos
     else {
         $labelproductservice = pdf_getlinedesc($object, $i, $outputlangs, $hideref, $hidedesc, $issupplierline);
         // Description
+		
+		$labelproductservice = $object->groups[$i]->title;
+		
         $pdf->writeHTMLCell($w, $h, $posx, $posy, $outputlangs->convToOutputCharset($labelproductservice), 0, 1);
 
         return $labelproductservice;
@@ -1076,7 +1079,7 @@ function pdf_getlineqty($object, $i, $outputlangs, $hidedetails = 0) {
         }
         else {
             if (empty($hidedetails) || $hidedetails > 1) {
-                $qty = price2num($object->lines[$i]->qty, 'MT');
+                $qty = price2num($object->groups[$i]->qty, 'MT');
 				$qty = price($qty, 0, '', 0, 0);
 				return $qty;
 			}

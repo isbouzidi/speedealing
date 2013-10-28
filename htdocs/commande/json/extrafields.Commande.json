@@ -534,6 +534,9 @@
 		"linked_objects": {
 			"schema": [{"id": "ObjectId", "name": "String"}]
 		},
+		"groups": {
+			"schema": ["Mixed"]
+		},
 		"lines": {
 			"schema": [
 				{

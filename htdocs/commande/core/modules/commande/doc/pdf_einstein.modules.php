@@ -142,7 +142,7 @@ class pdf_einstein extends ModelePDFCommandes
 		$outputlangs->load("orders");
 
 		$default_font_size = pdf_getPDFFontSize($outputlangs);
-
+		
 		if ($conf->commande->dir_output)
 		{
             $object->fetch_thirdparty();
@@ -219,7 +219,9 @@ class pdf_einstein extends ModelePDFCommandes
 				$pdf->AddPage();
 				if (! empty($tplidx)) $pdf->useTemplate($tplidx);
 				$pagenb++;
+				
 				$this->_pagehead($pdf, $object, 1, $outputlangs);
+				print "toto";
 				$pdf->SetFont('','', $default_font_size - 1);
 				$pdf->MultiCell(0, 3, '');		// Set interline to 3
 				$pdf->SetTextColor(0,0,0);
@@ -974,9 +976,9 @@ class pdf_einstein extends ModelePDFCommandes
 		$pdf->MultiCell(100, 3, $outputlangs->transnoentities("OrderDate")." : " . dol_print_date($object->date,"%d %b %Y",false,$outputlangs,true), '', 'R');
 
 		$posy+=2;
-
+print "toto";
 		// Show list of linked objects
-		$posy = pdf_writeLinkedObjects($pdf, $object, $outputlangs, $posx, $posy, 100, 3, 'R', $default_font_size);
+		//$posy = pdf_writeLinkedObjects($pdf, $object, $outputlangs, $posx, $posy, 100, 3, 'R', $default_font_size);
 
 		if ($showaddress)
 		{
