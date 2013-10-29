@@ -400,7 +400,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 			print '<td valign="middle" align="center" rowspan="' . $rowspan . '">';
 			if ($conf->use_javascript_ajax && $socid)
-				print '<a href="#" id="copyaddressfromsoc">' . $langs->trans('CopyAddressFromSoc') . '</a>';
+				print '<a  id="copyaddressfromsoc">' . $langs->trans('CopyAddressFromSoc') . '</a>';
 			print '</td>';
 			print '</tr>';
 
