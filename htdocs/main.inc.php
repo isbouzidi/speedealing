@@ -718,10 +718,14 @@ function main_menu() {
 
 		$countTODO = (object) $mongodb->command(array(
 					"mapreduce" => "Agenda",
-					"map" => 'function() { if(this.Status=="TODO" && this.usertodo.id) emit(this.usertodo.id, 1); }',
+					"map" => 'function() { if(this.Status=="TODO" && this.usertodo.length) for(var i=0; i<this.usertodo.length; i++)emit(this.usertodo[i].id, 1); }',
 					"reduce" => 'function(user, cpt) {return Array.sum(cpt);}',
 					"query" => array("usertodo.id" => $user->id),
 					"out" => array("inline" => 1)));
+		
+		foreach ($countTODO->results as $key => $aRow)
+			if($aRow['_id'] == $user->id)
+				$countTODO->results[0]['value'] = $countTODO->results[$key]['value'];
 
 		$params = array(
 			'start' => new MongoDate(mktime(0, 0, 0, date("m"), date("d"), date("Y"))),
