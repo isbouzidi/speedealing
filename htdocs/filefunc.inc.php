@@ -24,7 +24,7 @@
  */
 
 if (!defined('DOL_VERSION'))
-    define('DOL_VERSION', '0.3.62');
+    define('DOL_VERSION', '0.3.63');
 if (!defined('EURO'))
     define('EURO', chr(128));
 

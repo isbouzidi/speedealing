@@ -525,9 +525,6 @@
 		"entity": {
 			"schema": "String"
 		},
-		"facility": {
-			"schema": "String"
-		},
 		"modelpdf": {
 			"schema": "String"
 		},
