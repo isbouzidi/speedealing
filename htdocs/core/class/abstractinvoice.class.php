@@ -225,13 +225,13 @@ class AbstractInvoice extends nosqlDocument {
 					groupable: false,
 					sortable: true,
 					//height: 430,
-					toolbar: [
-						{
-							name: "create",
-							text: "Nouvelle ligne",
-							className: "k-button k-button-icontext k-grid-add button",
-						}
-					],
+		//			toolbar: [
+		//				{
+		//					name: "create",
+		//					text: "Nouvelle ligne",
+		//					className: "k-button k-button-icontext k-grid-add button",
+		//				}
+		//			],
 					columns: [
 						{field: "group", title: "Groupe", encoded: false, hidden: true},
 						{field: "product", title: "Produit", template: "#if (product) {# #=product.name# #}#"},
@@ -241,7 +241,8 @@ class AbstractInvoice extends nosqlDocument {
 						{field: "qty", title: "Qte"},
 						{field: "remise", title: "Reduc."},
 						{field: "total_ht", title: "Total HT"},
-						{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}, {name: "destroy", text: "Supp."}], title: "&nbsp;", width: "160px"}],
+						//{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}, {name: "destroy", text: "Supp."}], title: "&nbsp;", width: "160px"}
+					],
 					editable: "popup"
 				});
 			});
