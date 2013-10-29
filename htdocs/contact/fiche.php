@@ -209,6 +209,7 @@ if (empty($reshook)) {
 			$object->old_name = $_POST["old_name"];
 			$object->old_firstname = $_POST["old_firstname"];
 
+			$object->societe = new stdClass();
 			$object->societe->id = $socid;
 			$object->lastname = $_POST["lastname"];
 			$object->firstname = $_POST["firstname"];
