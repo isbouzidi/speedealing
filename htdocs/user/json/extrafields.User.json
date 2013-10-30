@@ -73,7 +73,10 @@
 			"schema": ["String"]
 		},
 		"email": {
-			"_createdAt": {"type": "Date", "default": "Date.now()"}
+			"schema": "String"
+		},
+		"_createdAt": {
+			"schema": {"type": "Date"}
 		},
 		"LastConnection": {
 			"schema": "Date"

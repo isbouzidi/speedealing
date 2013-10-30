@@ -122,15 +122,6 @@
 <!-- CKEditor -->
 <script type="text/javascript" src="js/libs/ckeditor/ckeditor.js"></script>
 
-<!-- Kendo library -->
-<script type="text/javascript" src="includes/kendo/js/kendo.web.min.js"></script>
-<script type="text/javascript" src="includes/kendo/js/kendo.timezones.min.js"></script>
-<script type="text/javascript" src="includes/kendo/js/cultures/kendo.culture.fr-FR.min.js"></script>
-
-<script type="text/javascript">
-	kendo.culture("fr-FR");
-</script>
-
 <!-- Includes specific JS of Speedealing -->
 <script type="text/javascript" src="js/lib_head.js" defer></script>
 

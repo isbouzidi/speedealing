@@ -76,6 +76,8 @@ if ($json == "list") {
 
 	if (!empty($result)) {
 		foreach ($result as $aRow) {
+			$aRow = json_decode(json_encode($aRow));
+			
 			// To hide specific users for all normals users except superadmin
 			if (!empty($aRow->hide) && empty($user->superadmin))
 				continue;
@@ -86,6 +88,19 @@ if ($json == "list") {
 			else
 				$aRow->value->admin = false;
 */
+
+
+			foreach ($aRow as $idx => $key) {
+				// retire ObjectId
+				if (is_object($key) && is_object($key->id)) {
+					$aRow->$idx->id = $key->id->{'$id'};
+				}
+				// convert Date
+				if (is_object($key) && isset($key->sec)) {
+					$aRow->$idx = $key->sec;
+				}
+			}
+			
 			$aRow->entityList = array();
 			foreach ($list_db as $db) {
 				if (is_array($listEntity->$db) && in_array($name, $listEntity->$db, true))

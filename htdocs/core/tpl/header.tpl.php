@@ -142,10 +142,19 @@
 	<link rel="stylesheet" href="includes/kendo/css/kendo.common.min.css" media="all" />
 	<link rel="stylesheet" href="includes/kendo/css/kendo.default.min.css" media="all" />
 	<link rel="stylesheet" href="includes/kendo/css/kendo.speedealing.css" media="all" />
-	
+
 	<!-- main styles -->
 	<!--<link rel="stylesheet" href="theme/eldy/style.css" />-->
 
 	<!-- JQuery. Must be before other includes -->
 	<script type="text/javascript" src="includes/jquery/js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="includes/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
+
+	<!-- Kendo library -->
+	<script type="text/javascript" src="includes/kendo/js/kendo.web.min.js"></script>
+	<script type="text/javascript" src="includes/kendo/js/kendo.timezones.min.js"></script>
+	<script type="text/javascript" src="includes/kendo/js/cultures/kendo.culture.fr-FR.min.js"></script>
+
+	<script type="text/javascript">
+		kendo.culture("fr-FR");
+	</script>

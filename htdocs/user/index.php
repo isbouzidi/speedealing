@@ -155,7 +155,7 @@ print $langs->trans('LastConnexion');
 print'</th>';
 $obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "NewConnection";
-$obj->aoColumns[$i]->sType = "date";
+//$obj->aoColumns[$i]->sType = "date";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $obj->aoColumns[$i]->sClass = "center";
 $obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("NewConnection", "datetime");
