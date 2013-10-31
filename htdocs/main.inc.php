@@ -196,7 +196,7 @@ if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_
 	Header("Location: " . DOL_URL_ROOT . "/install/index.php");
 	exit;
 }
-
+/*
 // Creation of a token against CSRF vulnerabilities
 if (!defined('NOTOKENRENEWAL')) {
 	$token = dol_hash(uniqid(mt_rand(), TRUE)); // Genere un hash d'un nombre aleatoire
@@ -212,7 +212,7 @@ if (isset($_POST['token']) && isset($_SESSION['token'])) {
 		error_log("Token ERROR : DELETED POST");
 		unset($_POST);
 	}
-}
+}*/
 
 // Disable modules (this must be after session_start and after conf has been loaded)
 if (GETPOST('disablemodules'))
