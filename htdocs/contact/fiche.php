@@ -158,14 +158,14 @@ if (empty($reshook)) {
 
 		if (!$error) {
 			$id = $object->create($user);
-			if (is_numeric($id) && $id <= 0) {
+			if (empty($id)) {
 				$error++;
 				$errors = array_merge($errors, ($object->error ? array($object->error) : $object->errors));
 				$action = 'create';
 			}
 		}
 
-		if (!$error && is_nan($id)) {
+		if (!$error) {
 			if (!empty($backtopage))
 				$url = $backtopage;
 			else

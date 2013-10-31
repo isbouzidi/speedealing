@@ -756,7 +756,7 @@ class Contact extends nosqlDocument {
 		if ($user->rights->societe->contact->creer) {
 			$h = 0;
 			$head[$h] = new stdClass();
-			$head[$h]->href = 'contact/fiche.php?action=create&socid=' . $id;
+			$head[$h]->href = 'contact/fiche.php?action=create&socid=' . $id . '&backtopage=' . $_SERVER["PHP_SELF"] . '?id=' . $id;
 			$head[$h]->title = $langs->trans("NewContact");
 			$head[$h]->icon = "icon-pencil";
 			print start_box($titre, "icon-users", $head);
