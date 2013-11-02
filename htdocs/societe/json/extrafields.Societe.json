@@ -463,9 +463,28 @@
 			"enable": true
 		},
 		"fournisseur": {
-			"schema": {"type": "Boolean", "default": false},
-			"type": "text",
-			"enable": true
+			"schema": {"type": "String", "default": "NO"},
+			"type": "select",
+			"enable": true,
+			"label": "Fournisseur",
+			"status": true,
+			"values": {
+				"NO": {
+					"enable": true,
+					"label": "Client seulement",
+					"cssClass": "anthracite-gradient"
+				},
+				"SUPPLIER": {
+					"enable": true,
+					"label": "Fournisseur",
+					"cssClass": "anthracite-gradient"
+				},
+				"SUBCONTRACTOR": {
+					"enable": true,
+					"label": "Sous-traitant",
+					"cssClass": "anthracite-gradient"
+				}
+			}
 		},
 		"gps": {
 			"schema": ["Number"],

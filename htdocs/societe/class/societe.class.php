@@ -399,11 +399,11 @@ class Societe extends nosqlDocument {
 			$this->error = $langs->trans("ErrorBadEMail", $this->email);
 			return -1;
 		}
-		if (!is_numeric($this->client) && !is_numeric($this->fournisseur)) {
+		/*if (!is_numeric($this->client) && !is_numeric($this->fournisseur)) {
 			$langs->load("errors");
 			$this->error = $langs->trans("BadValueForParameterClientOrSupplier");
 			return -1;
-		}
+		}*/
 
 		$customer = false;
 		if (!empty($allowmodcodeclient) && !empty($this->client)) {
@@ -492,130 +492,6 @@ class Societe extends nosqlDocument {
 			}
 		} else {
 			return -3;
-		}
-	}
-
-	/**
-	 *    Delete a third party from database and all its dependencies (contacts, rib...)
-	 *
-	 *    @param	int		$id     Id of third party to delete
-	 *    @return	int				<0 if KO, 0 if nothing done, >0 if OK
-	 */
-	function delete($id) {
-		global $user, $langs, $conf, $hookmanager;
-
-		require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
-
-		$error = 0;
-
-		// Test if child exists
-		$objectisused = $this->isObjectUsed($id);
-		if (empty($objectisused)) {
-
-			require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
-			$static_cat = new Categorie($this->db);
-			$toute_categs = array();
-
-			// Fill $toute_categs array with an array of (type => array of ("Categorie" instance))
-			if ($this->client || $this->prospect) {
-				$toute_categs ['societe'] = $static_cat->containing($this->id, 2);
-			}
-			if ($this->fournisseur) {
-				$toute_categs ['fournisseur'] = $static_cat->containing($this->id, 1);
-			}
-
-			// Remove each "Categorie"
-			foreach ($toute_categs as $type => $categs_type) {
-				foreach ($categs_type as $cat) {
-					$cat->del_type($this, $type);
-				}
-			}
-
-			return parent::delete();
-			/*
-			  // TODO Supprimer les contacts
-			  // Remove contacts
-			  if (!$error) {
-			  $sql = "DELETE FROM " . MAIN_DB_PREFIX . "socpeople";
-			  $sql.= " WHERE fk_soc = " . $id;
-			  if (!$this->db->query($sql)) {
-			  $error++;
-			  $this->error .= $this->db->lasterror();
-			  }
-			  }
-
-			  // Update link in member table
-			  if (!$error) {
-			  $sql = "UPDATE " . MAIN_DB_PREFIX . "adherent";
-			  $sql.= " SET fk_soc = NULL WHERE fk_soc = " . $id;
-			  if (!$this->db->query($sql)) {
-			  $error++;
-			  $this->error .= $this->db->lasterror();
-			  }
-			  }
-
-			  // Remove ban
-			  if (!$error) {
-			  $sql = "DELETE FROM " . MAIN_DB_PREFIX . "societe_rib";
-			  $sql.= " WHERE fk_soc = " . $id;
-			  if (!$this->db->query($sql)) {
-			  $error++;
-			  $this->error = $this->db->lasterror();
-			  }
-			  }
-			 */
-			// Removed extrafields
-			//$result=$this->deleteExtraFields($this);
-			//if ($result < 0) $error++;
-
-			if (!$error) {
-				// Additionnal action by hooks
-				$hookmanager->initHooks(array('thirdpartydao'));
-				$parameters = array();
-				$action = 'delete';
-				$reshook = $hookmanager->executeHooks('deleteThirdparty', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
-				if (!empty($hookmanager->error)) {
-					$error++;
-					$this->error = $hookmanager->error;
-				}
-			}
-			/*
-			  // Remove third party
-			  if (!$error) {
-			  $sql = "DELETE FROM " . MAIN_DB_PREFIX . "societe";
-			  $sql.= " WHERE rowid = " . $id;
-			  if (!$this->db->query($sql)) {
-			  $error++;
-			  $this->error = $this->db->lasterror();
-			  }
-			  }
-			 */
-			if (!$error) {
-				// Appel des triggers
-				include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-				$interface = new Interfaces($this->db);
-				$result = $interface->run_triggers('COMPANY_DELETE', $this, $user, $langs, $conf);
-				if ($result < 0) {
-					$error++;
-					$this->errors = $interface->errors;
-				}
-				// Fin appel triggers
-			}
-
-			if (!$error) {
-				$this->db->commit();
-
-				// Delete directory
-				$docdir = $conf->societe->multidir_output[$this->entity] . "/" . $id;
-				if (file_exists($docdir)) {
-					dol_delete_dir_recursive($docdir);
-				}
-
-				return 1;
-			} else {
-				$this->db->rollback();
-				return -1;
-			}
 		}
 	}
 
