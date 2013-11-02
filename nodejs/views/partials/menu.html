@@ -1,0 +1,84 @@
+<section id="menu" role='complementary'>
+	<div id="menu-content">
+		<header>
+			<form id="search_box" action='search.php' method='post'>
+				<input class="ac_input focus" id="query" name='query' type='text' size='40' placeholder="{{t 'main.SearchOf'}}" autocomplete="off">
+			</form>
+		</header>
+
+		<div id="profile">
+			<img class="user-icon" src='img/user.png' width='64' alt='User name'>
+			<p> {{t 'main.Hello'}}
+				<span class="name">{{everyauth.user.firstname}} 
+					<b> {{everyauth.user.lastname}}</b>
+				</span>
+			</p>
+		</div>
+
+		<ul class="children-tooltip" id="access">
+			<li style="width: 20%;">
+				<a href='index.php?idmenu=menu:home' title="{{t 'main.Home'}}" target="_self">
+					<span class="icon-home"></span>
+				</a>
+			</li>
+			<li style="width: 20%;">
+				<span href="inbox.html" title="{{t 'main.Messages'}}" target="_self">
+					<span class="icon-inbox"></span>
+				</span>
+			</li>
+			<li style="width: 20%;">
+				<a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t 'main.Agenda'}}" target="_self">
+					<span class="icon-calendar"></span>
+					{{#if agenda.count}}
+					<span class="count">{{agenda.count}}</span>
+					{{/if}}
+				</a>
+			</li>
+			<li style="width: 20%;">
+				<a href="user/fiche.php?id={{user.id}}"  title="{{t 'main.Profile'}}" target="_self">
+					<span class="icon-gear"></span>
+				</a>
+			</li>
+			<li style="width: 20%;">
+				<a href="logout" title="{{t 'Log out'}}" target="_self">
+					<span class="icon-unlock"></span>
+				</a>
+			</li>
+		</ul>
+
+		<ul class="big-menu collapsible as-accordion">
+			{{{menuHTML}}}
+		</ul>
+
+		<ul class="unstyled-list">
+			<li class="title-menu">{{t 'Today\'s event'}}</li>
+			{{#each agenda.task}}
+			<li>
+				<ul class="calendar-menu">
+					<li>
+						<a href="agenda/fiche.php?id={{this._id}}", title="{{t 'main.Open'}}">
+							<time datetime="{{this.event.datetime}}">
+								<b>{{this.event.day}}</b>
+								<p>{{this.event.month}}</p>
+							</time>
+							<small class="green">{{this.event.hour}}</small>
+							<p>{{this.label}} 
+								<i>({{this.societe}})</i>
+							</p>
+						</a>
+					</li>
+				</ul>
+			</li>
+			{{else}}
+			<p>Aucun rendez-vous</p>
+			{{/each}}
+		</ul>
+	</div>
+
+	<footer id="menu-footer">
+		<div>
+			<p>Speedealing v.</p>
+		</div>
+	</footer>
+
+</section>

@@ -1,0 +1,9 @@
+/nbproject/private/
+default.properties
+.settings/
+.buildpath
+.project
+.DS_Store
+/node_modules/
+config.json
+wsdl/

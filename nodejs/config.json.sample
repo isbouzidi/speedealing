@@ -1,0 +1,26 @@
+{
+    "nodejs_server": "127.0.0.1",
+    "nodejs_port": 3000,
+    "secret": "1234qwerty",
+    "urlrewrite": false,
+    "mongo": {
+        "host": "127.0.0.1",
+        "port": 27017,
+        "database": "mybd"
+    },
+    "couchdb": {
+        "host": "127.0.0.1",
+        "port": 5984,
+        "user": "admin",
+        "passwd": "admin",
+        "db": "mybd"
+    },
+	"transport": {
+		"host": "smtp.symeos.net",
+		"secureConnection": false,
+		"auth": {
+			"user": "gmail.user@gmail.com",
+			"pass": "userpass"
+		}
+	}
+}

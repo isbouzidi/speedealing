@@ -1,0 +1,32 @@
+.k-state-selected, .k-list>.k-state-selected {
+	color: white;
+	background: #6ead12 url(../img/old-browsers/colors/bg_big-menu.png) repeat-x;
+	-webkit-background-size: 100% 100%;
+	-moz-background-size: 100% 100%;
+	-o-background-size: 100% 100%;
+	background-size: 100% 100%;
+	background: -webkit-gradient(linear, left top, left bottom, from(#b1d322), to(#6ead12));
+	background: -webkit-linear-gradient(top, #b1d322, #6ead12);
+	background: -moz-linear-gradient(top, #b1d322, #6ead12);
+	background: -ms-linear-gradient(top, #b1d322, #6ead12);
+	background: -o-linear-gradient(top, #b1d322, #6ead12);
+	background: linear-gradient(top, #b1d322, #6ead12);
+	border-color: #6ead12;
+}
+
+.k-autocomplete .k-input {
+	height: auto;
+	line-height: 16px;
+	padding: 7px 9px 7px 9px;
+	text-indent: 0px;
+	width: initial !important;
+	color: #666666;
+}
+
+.k-autocomplete {
+	width: initial;
+}
+
+.k-edit-form-container {
+	width: 100%;
+}

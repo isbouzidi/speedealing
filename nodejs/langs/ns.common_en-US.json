@@ -1,0 +1,11 @@
+{
+    "resources" : {
+        "login" : {
+            "User" : "Username",
+            "Password" : "Password"
+        }
+    },
+    "_id" : "ns.common_en-US",
+    "lng" : "en-US",
+    "namespace" : "ns.common"
+}
