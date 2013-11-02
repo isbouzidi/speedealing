@@ -133,7 +133,7 @@ print'<th class="essential">';
 print $langs->trans('Phone');
 print'</th>';
 $obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "phone";
+$obj->aoColumns[$i]->mDataProp = "phone_pro";
 $obj->aoColumns[$i]->sDefaultContent = "";
 $i++;
 print'<th class="essential">';

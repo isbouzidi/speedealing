@@ -95,7 +95,10 @@ if ($action == 'add_action') {
 	  } */
 
 	if ($cancel) {
-		header("Location: " . $backtopage);
+		if ($backtopage)
+			header("Location: " . $backtopage);
+		else
+			Header("Location: " . DOL_URL_ROOT . '/agenda/list.php?idmenu=menu:myagendaListTODO');
 		exit;
 	}
 
@@ -255,8 +258,8 @@ if ($action == 'add_action') {
 					Header("Location: " . $backtopage);
 				}
 				else
-					Header("Location: " . DOL_URL_ROOT . '/agenda/fiche.php?id=' . $idaction);
-
+				//Header("Location: " . DOL_URL_ROOT . '/agenda/fiche.php?id=' . $idaction);
+					Header("Location: " . DOL_URL_ROOT . '/agenda/list.php?idmenu=menu:myagendaListTODO');
 				exit;
 			} else {
 				// Si erreur
@@ -399,10 +402,11 @@ if ($action == 'update') {
 		$langs->load("errors");
 		$mesg = '<div class="error">' . $langs->trans($object->error) . '</div>';
 	} else {
-		if (!empty($backtopage)) {
+		if (!empty($backtopage))
 			header("Location: " . $backtopage);
-			exit;
-		}
+		else
+			Header("Location: " . DOL_URL_ROOT . '/agenda/list.php?idmenu=menu:myagendaListTODO');
+		exit;
 	}
 }
 
@@ -678,25 +682,25 @@ if ($action == 'create') {
 	print '<input id="usertodo" name="affectedto">';
 	?><script>
 		$(document).ready(function() {
-			var multiselect = $("#usertodo").kendoMultiSelect({
-				placeholder: "Utilisateurs...",
-				dataTextField: "name",
-				dataValueField: "id",
-				autoBind: false,
-				dataSource: {
-					type: "json",
-					serverFiltering: true,
-					transport: {
-						read: {
-							url: "api/user/select",
-						}
-					}
-				}
-			}).data("kendoMultiSelect");
+		var multiselect = $("#usertodo").kendoMultiSelect({
+		placeholder: "Utilisateurs...",
+		dataTextField: "name",
+		dataValueField: "id",
+		autoBind: false,
+		dataSource: {
+		type: "json",
+		serverFiltering: true,
+		transport: {
+		read: {
+		url: "api/user/select",
+		}
+		}
+		}
+		}).data("kendoMultiSelect");
 
-			$("#button").on("click", function() {
-				this.form.elements["affectedto"].value = multiselect.value();
-			});
+		$("#button").on("click", function() {
+		this.form.elements["affectedto"].value = multiselect.value();
+		});
 		});
 	</script><?php
 	//
@@ -1122,29 +1126,29 @@ if ($id) {
 		print '<input id="usertodo" name="affectedto">';
 		?><script>
 			$(document).ready(function() {
-				var multiselect = $("#usertodo").kendoMultiSelect({
-					placeholder: "Utilisateurs...",
-					dataTextField: "name",
-					dataValueField: "id",
-					autoBind: false,
-					dataSource: {
-						type: "json",
-						serverFiltering: true,
-						transport: {
-							read: {
-								url: "api/user/select",
-							}
-						}
-					},
-					value: <?php echo json_encode($object->usertodo);?>
-					 //{name: "admin", id: "user:admin"},
-					 //{name: "demo", id: "user:demo"}
-					 
-				}).data("kendoMultiSelect");
+			var multiselect = $("#usertodo").kendoMultiSelect({
+			placeholder: "Utilisateurs...",
+			dataTextField: "name",
+			dataValueField: "id",
+			autoBind: false,
+			dataSource: {
+			type: "json",
+			serverFiltering: true,
+			transport: {
+			read: {
+			url: "api/user/select",
+			}
+			}
+			},
+			value: <?php echo json_encode($object->usertodo); ?>
+			//{name: "admin", id: "user:admin"},
+			//{name: "demo", id: "user:demo"}
 
-				$("#button").on("click", function() {
-					this.form.elements["affectedto"].value = multiselect.value();
-				});
+			}).data("kendoMultiSelect");
+
+			$("#button").on("click", function() {
+			this.form.elements["affectedto"].value = multiselect.value();
+			});
 			});
 		</script><?php
 		print '</td></tr>';
