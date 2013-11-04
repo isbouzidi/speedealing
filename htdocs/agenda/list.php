@@ -318,7 +318,7 @@ print'</tbody>';
 
 print "</table>";
 
-$obj->aaSorting = array(array(2, 'desc'));
+$obj->aaSorting = array(array(2, 'asc'));
 //$obj->bServerSide = true;
 
 if ($all) {
