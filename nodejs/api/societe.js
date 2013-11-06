@@ -4,6 +4,7 @@ var fs = require('fs'),
 		csv = require('csv');
 
 var SocieteModel = mongoose.model('societe');
+var ContactModel = mongoose.model('contact');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
@@ -46,11 +47,11 @@ module.exports = function(app, ensureAuthenticated) {
 				{ref: new RegExp(req.body.filter.filters[0].value, "i")}
 			]
 		};
-		
-		if(req.query.fournisseur) {
+
+		if (req.query.fournisseur) {
 			query.fournisseur = req.query.fournisseur;
 		} else // customer Only
-			query.Status = {"$nin" : ["ST_NO","ST_NEVER"]};
+			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
 		console.log(query);
 		SocieteModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
@@ -159,6 +160,55 @@ module.exports = function(app, ensureAuthenticated) {
 				});
 			}
 		}
+	});
+
+	app.get('/api/societe/contact/select', ensureAuthenticated, function(req, res) {
+		//console.log(req.query);
+		var result = [];
+
+		if (req.query.societe)
+			SocieteModel.findOne({name: req.query.societe}, "_id", function(err, societe) {
+				if (err)
+					console.log(err);
+
+				if (societe === null)
+					return res.send(200, []);
+
+				ContactModel.find({"societe.id": societe._id}, "_id name", function(err, docs) {
+					if (err)
+						console.log(err);
+
+					if (docs === null)
+						return res.send(200, []);
+
+					for (var i in docs) {
+						var contact = {};
+						contact.id = docs[i]._id;
+						contact.name = docs[i].name;
+
+						result.push(contact);
+					}
+					res.send(200, result);
+				});
+
+			});
+		else
+			ContactModel.find({}, "_id name", function(err, docs) {
+				if (err)
+					console.log(err);
+
+				if (docs === null)
+					return res.send(200, []);
+
+				for (var i in docs) {
+					var contact = {};
+					contact.id = docs[i]._id;
+					contact.name = docs[i].name;
+
+					result.push(contact);
+				}
+				res.send(200, result);
+			});
 	});
 
 	//other routes..
