@@ -83,6 +83,9 @@
 		},
 		"NewConnection": {
 			"schema": "Date"
-		}
+		},
+		"photo": {
+			"schema": {"type": "String"}
+		},
 	}
 }

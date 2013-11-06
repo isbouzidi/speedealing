@@ -1190,6 +1190,8 @@ class Form {
 
 
 
+
+
 					
 // Multiprice
 //                if ($price_level >= 1) {  // If we need a particular price level (from 1 to 6)
@@ -2733,7 +2735,7 @@ class Form {
 		if ($iSecond) {
 			require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
 
-			$hourSelected = round($iSecond / 3600,0);
+			$hourSelected = round($iSecond / 3600, 0);
 			$minSelected = $iSecond % 3600 / 60;
 		}
 
@@ -3063,8 +3065,8 @@ class Form {
 				$file = $object->id . '/logos/thumbs/' . $smallfile;
 		}
 		else if ($modulepart == 'userphoto') {
-			if ($object->Photo)
-				$file = $object->Photo;
+			if ($object->photo)
+				$file = $object->photo;
 			$email = $object->email;
 		}
 		else if ($modulepart == 'memberphoto') {
@@ -3073,34 +3075,22 @@ class Form {
 			$email = $object->email;
 		}
 
-		if ($object->class) { // Photo in the database
-			if ($file)
-				$ret.='<img alt="Photo" id="photologo' . (preg_replace('/[^a-z]/i', '_', $file)) . '" class="photologo" border="0" width="' . $width . '" src="' . $object->getFile($file) . '">';
-			else
-				$ret.='<img alt="No photo" border="0" width="' . $width . '" src="img/nophoto.jpg">';
-		} elseif ($dir) {
-			$cache = '0';
-			if ($file && file_exists($dir . "/" . $file)) {
-				// TODO Link to large image
-				$ret.='<a href="' . DOL_URL_ROOT . '/viewimage.php?modulepart=' . $modulepart . '&entity=' . $object->entity . '&file=' . urlencode($file) . '&cache=' . $cache . '">';
-				$ret.='<img alt="Photo" id="photologo' . (preg_replace('/[^a-z]/i', '_', $file)) . '" class="photologo" border="0" width="' . $width . '" src="' . DOL_URL_ROOT . '/viewimage.php?modulepart=' . $modulepart . '&entity=' . $object->entity . '&file=' . urlencode($file) . '&cache=' . $cache . '">';
-				$ret.='</a>';
-			} elseif ($altfile && file_exists($dir . "/" . $altfile)) {
-				$ret.='<a href="' . DOL_URL_ROOT . '/viewimage.php?modulepart=' . $modulepart . '&entity=' . $object->entity . '&file=' . urlencode($file) . '&cache=' . $cache . '">';
-				$ret.='<img alt="Photo alt" id="photologo' . (preg_replace('/[^a-z]/i', '_', $file)) . '" class="photologo" border="0" width="' . $width . '" src="' . DOL_URL_ROOT . '/viewimage.php?modulepart=' . $modulepart . '&entity=' . $object->entity . '&file=' . urlencode($altfile) . '&cache=' . $cache . '">';
-				$ret.='</a>';
+		$cache = '0';
+		if ($file) {
+			// TODO Link to large image
+			$ret.='<a href="' . DOL_URL_ROOT . '/viewimage.php?modulepart=' . $modulepart . '&entity=' . $object->entity . '&file=' . urlencode($file) . '&cache=' . $cache . '&id=' . $object->id() . '">';
+			$ret.='<img alt="Photo" id="photologo' . (preg_replace('/[^a-z]/i', '_', $file)) . '" class="photologo" border="0" width="' . $width . '" src="viewimage.php?modulepart=' . $modulepart . '&entity=' . $object->entity . '&file=' . urlencode($file) . '&cache=' . $cache . '&id=' . $object->id() . '">';
+			$ret.='</a>';
+		} else {
+			if (!empty($conf->gravatar->enabled) && $email) {
+				global $dolibarr_main_url_root;
+				$ret.='<!-- Put link to gravatar -->';
+				$ret.='<img alt="Photo found on Gravatar" title="Photo Gravatar.com - email ' . $email . '" border="0" width="' . $width . '" src="http://www.gravatar.com/avatar/' . dol_hash($email) . '?s=' . $width . '&d=' . urlencode(dol_buildpath('/theme/common/nophoto.jpg', 2)) . '">';
 			} else {
-				if (!empty($conf->gravatar->enabled) && $email) {
-					global $dolibarr_main_url_root;
-					$ret.='<!-- Put link to gravatar -->';
-					$ret.='<img alt="Photo found on Gravatar" title="Photo Gravatar.com - email ' . $email . '" border="0" width="' . $width . '" src="http://www.gravatar.com/avatar/' . dol_hash($email) . '?s=' . $width . '&d=' . urlencode(dol_buildpath('/theme/common/nophoto.jpg', 2)) . '">';
-				} else {
-					$ret.='<img alt="No photo" border="0" width="' . $width . '" src="' . DOL_URL_ROOT . '/theme/common/nophoto.jpg">';
-				}
+				$ret.='<img alt="No photo" border="0" width="' . $width . '" src="img/nophoto.jpg">';
 			}
 		}
-		else
-			dol_print_error('', 'Call of showphoto with wrong parameters');
+
 
 		/* Disabled. lightbox seems to not work. I don't know why.
 		  $ret.="\n<script type=\"text/javascript\">
@@ -3158,13 +3148,13 @@ class Form {
 
 			foreach ($result as $obj) {
 				$obj = json_decode(json_encode($obj));
-			
-				if(is_array($exclude)) {
+
+				if (is_array($exclude)) {
 					if (in_array($obj->name, $exclude, true)) {
 						continue;
 					}
 				}
-				
+
 				$disableline = 0;
 				if (is_array($enableonly) && count($enableonly) && !in_array($obj->name, $enableonly))
 					$disableline = 1;

@@ -392,11 +392,27 @@ abstract class nosqlDocument extends CommonObject {
 	 *  @return value of storeAttachment
 	 */
 	public function storeFile($name = 'addedfile', $cache = false) {
-		global $_FILES;
+		global $_FILES, $mongo;
 
-		$result = $this->couchdb->storeAttachment($this, $_FILES[$name]['tmp_name'], $_FILES[$name]['type'], $_FILES[$name]['name']);
-		$this->_rev = $result->rev;
+		$db = $mongo->files;
 
+		// GridFS
+		$grid = $db->getGridFS();
+
+		$image = $grid->findOne(
+				array("metadata" => array("filename" => $_FILES[$name]['name'], "class" => get_class($this), "id" => $this->id()))
+		);
+
+		//print_r($image->file['_id']->{'$id'});
+
+		if (!empty($image)) // remove old image
+			$grid->remove(
+					array("_id" => new MongoId($image->file['_id']->{'$id'}))
+			);
+
+		$result = $grid->storeFile($_FILES[$name]['tmp_name'], array("metadata" => array("filename" => $_FILES[$name]['name'], "class" => get_class($this), "id" => $this->id()), "contentType" => $_FILES[$name]['type'], "filename" => $_FILES[$name]['name']));
+		//print $result;
+		//exit;
 		if ($cache)
 			dol_delcache($this->id);
 
@@ -428,8 +444,22 @@ abstract class nosqlDocument extends CommonObject {
 	 *  @return value of storeAttachment
 	 */
 	public function deleteFile($filename, $cache = false) {
-		$result = $this->couchdb->deleteAttachment($this, $filename);
-		$this->_rev = $result->rev;
+		global $mongo;
+
+		$db = $mongo->files;
+
+		// GridFS
+		$grid = $db->getGridFS();
+
+		$image = $grid->findOne(
+				array("metadata" => array("filename" => $filename, "class" => get_class($this), "id" => $this->id()))
+		);
+
+		if (!empty($image)) // remove old image
+			$grid->remove(
+					array("_id" => new MongoId($image->file['_id']->{'$id'}))
+			);
+
 		if ($cache)
 			dol_delcache($this->id);
 
@@ -1289,7 +1319,7 @@ abstract class nosqlDocument extends CommonObject {
 					return str;
 			}';
 				break;
-			
+
 			case "array":
 				$rtr = 'function(obj) {
 					var ar = [];
@@ -1776,7 +1806,7 @@ abstract class nosqlDocument extends CommonObject {
 					$selected = $this->$key;
 
 				$rtr = "";
-				$rtr.= '<select data-placeholder="' . $title . '&hellip;" data-select-options=\'{"searchText":"Rechercher"}\' class="select compact expandable-list ' . $aRow->validate->cssclass . ' ' . $aRow->cssClass . '" id="' . $htmlname . '" name="' . $htmlname . '" '.($aRow->multiple?'multiple':'').'>';
+				$rtr.= '<select data-placeholder="' . $title . '&hellip;" data-select-options=\'{"searchText":"Rechercher"}\' class="select compact expandable-list ' . $aRow->validate->cssclass . ' ' . $aRow->cssClass . '" id="' . $htmlname . '" name="' . $htmlname . '" ' . ($aRow->multiple ? 'multiple' : '') . '>';
 				if (isset($aRow->mongo)) { // Check collection
 					$class = $aRow->mongo->collection;
 					//$object = new $class($this->db);

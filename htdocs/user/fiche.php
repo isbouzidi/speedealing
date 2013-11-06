@@ -230,8 +230,6 @@ if ((($action == 'add' && $canadduser) || ($action == 'update' && $canedituser))
 			if ($id == $user->name)
 				dol_delcache("user:" . $id);
 
-			//print $id;
-
 			if ($id == $edituser->name) {
 				$file_OK = is_uploaded_file($_FILES['photo']['tmp_name']);
 
@@ -241,6 +239,7 @@ if ((($action == 'add' && $canadduser) || ($action == 'update' && $canedituser))
 
 				if ($file_OK) {
 					if (image_format_supported($_FILES['photo']['name']) > 0) {
+						
 						$edituser->storeFile('photo');
 					} else {
 						$errmsgs[] = "ErrorBadImageFormat";
@@ -972,10 +971,10 @@ if (($action == 'create') || ($action == 'adduserldap')) {
 			print '<td align="center" valign="middle" width="25%" rowspan="' . $rowspan . '">';
 			print $form->showphoto('userphoto', $fuser);
 			if ($caneditfield) {
-				if ($fuser->Photo)
+				if ($fuser->photo)
 					print "<br>\n";
 				print '<table class="nobordernopadding">';
-				if ($fuser->Photo)
+				if ($fuser->photo)
 					print '<tr><td align="center"><input type="checkbox" class="flat" name="deletephoto" id="photodelete"> ' . $langs->trans("Delete") . '<br><br></td></tr>';
 				print '<tr><td>' . $langs->trans("PhotoFile") . '</td></tr>';
 				print '<tr><td><input type="file" class="flat" name="photo" id="photoinput"></td></tr>';
