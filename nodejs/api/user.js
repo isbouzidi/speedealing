@@ -7,6 +7,9 @@ var ExtrafieldModel = mongoose.model('extrafields');
 module.exports = function(app, ensureAuthenticated) {
 
 	var object = new Object();
+	
+	object.colors = ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
+    "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"];
 
 	ExtrafieldModel.findById('extrafields:User', function(err, doc) {
 		if (err) {
@@ -35,11 +38,18 @@ module.exports = function(app, ensureAuthenticated) {
 
 			if (docs !== null)
 				for (var i in docs) {
-					console.log(docs[i]);
+					//console.log(docs[i]);
+					if(req.query.agenda) { // for calendar
+						result[i] = {};
+						result[i].text = docs[i].firstname + " " + docs[i].lastname;
+						result[i].value = docs[i]._id;
+						result[i].color = object.colors[i];
+					} else {
 					result[i] = {};
 					result[i].name = docs[i].firstname + " " + docs[i].lastname;
 					result[i].id = docs[i]._id;
-					console.log(result[i]);
+					//console.log(result[i]);
+					}
 				}
 
 			return res.send(200, result);
@@ -62,6 +72,7 @@ module.exports = function(app, ensureAuthenticated) {
 			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
+					
 					result[i] = {};
 					result[i].name = docs[i].firstname + " " + docs[i].lastname;
 					result[i].id = docs[i]._id;

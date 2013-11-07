@@ -10,7 +10,7 @@ module.exports = function(app, ensureAuthenticated) {
 
 	var agenda = new Agenda();
 
-	ExtrafieldModel.findById('extrafields:EuropExpress', function(err, doc) {
+	ExtrafieldModel.findById('extrafields:Agenda', function(err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -45,7 +45,23 @@ Agenda.prototype = {
 		//var typeMove_list = this.fk_extrafields.fields.typeMoveStock;
 
 		var result = [];
-		AgendaModel.find({type_code: "AC_RDV"}, function(err, doc) {
+		
+		var query = {type_code: "AC_RDV"};
+		
+		if(req.query.filters) {
+			if(req.query.filters.filters) {
+			var list = [];
+			for(var i=0; i<req.query.filters.filters.length; i++)
+				list.push(req.query.filters.filters[i].value);
+			query['usertodo.id'] = {'$in' : list};
+			} else {
+				res.send(200, []);
+			}
+		}
+		
+		console.log(req.query.filters.filters);
+		
+		AgendaModel.find(query, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);

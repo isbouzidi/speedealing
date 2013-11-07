@@ -148,19 +148,28 @@ print '<div class="with-padding">';
 //$object->print_week($now);
 //print '</div>';
 ?><div id="example" class="k-content">
-   <!-- <div id="people">
-		<input checked type="checkbox" id="alex" value="user:admin"> Fred 
-		<input checked type="checkbox" id="bob" value="user:demo"> Marcel 
-		<input type="checkbox" id="charlie" value="user:admin"> John 
-    </div>-->
+	<div id="people"><?php
+		$result = $user->mongodb->find(array("Status" => "ENABLE"));
+
+		foreach ($result as $aRow) {
+			if ($aRow['_id'] === $user->id())
+				echo ' <input checked type="checkbox" id="' . $aRow['_id'] . '" value="' . $aRow['_id'] . '"> ' . $aRow['name'];
+			else
+				echo ' <input type="checkbox" id="' . $aRow['_id'] . '" value="' . $aRow['_id'] . '"> ' . $aRow['name'];
+		}
+
+		// <input checked type="checkbox" id="alex" value="user:admin"> Fred 
+		// <input checked type="checkbox" id="bob" value="user:demo"> Marcel 
+		// <input type="checkbox" id="charlie" value="user:admin"> John 
+		?></div>
     <div id="scheduler"></div>
 </div>
 <script id="event-template" type="text/x-kendo-template">
 	<div class="agenda-event movie-template children-tooltip" data-tooltip-options='{"classes":["anthracite-gradient"],"position":"bottom"}'>
 	<a href="agenda/fiche.php?id=#=_id#" title="#if(typeof societe !=='undefined') {# <it>#: societe.name#</it> #}# <br>#if (usertodo.length) {#<ul>#for (var i=0,len=usertodo.length; i<len; i++){#<li>${ usertodo[i] }</li># } #</ul>#}#">
-		#: title#
-		<time>#: kendo.toString(start, "HH:mm") # - #: kendo.toString(end, "HH:mm") #</time>
-		#if (description.notes) {# #:description# #}#
+	#: title#
+	<time>#: kendo.toString(start, "HH:mm") # - #: kendo.toString(end, "HH:mm") #</time>
+	#if (description.notes) {# #:description# #}#
 	</a>
 	</div>
 </script>
@@ -182,6 +191,7 @@ print '<div class="with-padding">';
 			//timezone: "Etc/UTC",
 			dataSource: {
 				batch: true,
+				serverFiltering: true,
 				transport: {
 					read: {
 						url: crudServiceBaseUrl,
@@ -207,6 +217,11 @@ print '<div class="with-padding">';
 						if (operation !== "read" && options.models) {
 							return {models: kendo.stringify(options.models)};
 						}
+						if (operation === "read") {
+							return {
+								filters: options.filter
+							}
+						}
 					}
 				},
 				schema: {
@@ -223,28 +238,31 @@ print '<div class="with-padding">';
 							recurrenceRule: {from: "RecurrenceRule"},
 							recurrenceException: {from: "RecurrenceException"},
 							description: {from: "notes"},
-							usertodo: {from: "usertodo", defaultValue: ["<?php echo $user->id; ?>"], nullable: true},
+							usertodo: {from: "usertodo", defaultValue: ["<?php echo $user->id(); ?>"], nullable: true},
 							isAllDay: {type: "boolean", from: "IsAllDay"}
 						}
 					}
-				}
-				/*filter: {
+				},
+				filter: {
 					logic: "or",
 					filters: [
-						{field: "usertodo", operator: "eq", value: "user:admin"},
-						{field: "usertodo", operator: "eq", value: "user:demo"}
+						{field: "usertodo.id", operator: "eq", value: "user:admin"}
 					]
-				}*/
+				}
 			},
 			resources: [
 				{
 					field: "usertodo",
 					title: "Utilisateur",
-					dataSource: [
-						{text: "Alex", value: "user:admin", color: "#f8a398"},
-						{text: "Bob", value: "user:demo", color: "#51a0ed"},
-						{text: "Charlie", value: "user:toto", color: "#56ca85"}
-					],
+					dataSource: {
+						transport: {
+							read: {
+								url: 'api/user/select?agenda=1',
+								type: "GET",
+								dataType: "json"
+							}
+						}
+					},
 					multiple: true
 				}
 			]
@@ -252,7 +270,7 @@ print '<div class="with-padding">';
 
 		$("#people :checkbox").change(function(e) {
 			var checked = $.map($("#people :checked"), function(checkbox) {
-				return parseInt($(checkbox).val());
+				return $(checkbox).val();
 			});
 
 			var filter = {
@@ -260,7 +278,7 @@ print '<div class="with-padding">';
 				filters: $.map(checked, function(value) {
 					return {
 						operator: "eq",
-						field: "usertodo",
+						field: "usertodo.id",
 						value: value
 					};
 				})
