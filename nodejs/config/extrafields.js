@@ -1,6 +1,36 @@
 "use strict";
 
-var timestamps = require('mongoose-timestamp');
+var mongoose = require('mongoose'),
+		timestamps = require('mongoose-timestamp');
+
+var moduleSchema = new mongoose.Schema({
+	_id: {type: String},
+	numero: Number,
+	family: String,
+	name: String,
+	description: String,
+	version: String,
+	const_name: String,
+	picto: String,
+	dirs: [String],
+	boxes: [mongoose.Schema.Types.Mixed],
+	module_parts: [],
+	const: [],
+	tabs: [],
+	langfiles: [],
+	depends: [],
+	requiredby: [],
+	config_page_url: [],
+	rights_class: {type: String},
+	rights: [mongoose.Schema.Types.Mixed],
+	menus: [mongoose.Schema.Types.Mixed],
+	enabled: {type: Boolean},
+	import: [mongoose.Schema.Types.Mixed],
+	expport: [mongoose.Schema.Types.Mixed],
+	_createdAt: {type: Date, default: Date.now}
+});
+
+var ModuleModel = mongoose.model('module', moduleSchema, 'DolibarrModules');
 
 var extrafieldSchema = new mongoose.Schema({
 	_id: String,
@@ -16,6 +46,23 @@ var extrafieldSchema = new mongoose.Schema({
 });
 
 var ExtrafieldModel = mongoose.model('extrafields', extrafieldSchema, 'ExtraFields');
+
+/*
+
+//ExtrafieldModel.collection.findOne({_id: "test"}, function(err, doc) {
+	var args = test.substr(test.indexOf("(") +1 ,(test.indexOf(")") - test.indexOf("(") -1) );
+	console.log(args);
+	
+	var body = test.substr(test.indexOf("{"), test.length - test.indexOf("{"));
+	console.log(body);
+
+	
+	var myfun = new Function(args,body);
+	console.log(myfun('psssa'));
+	//console.dir(mongoose.mongo.BSON.deserialize(doc.encryptPassword.code));
+//});
+*/
+
 
 module.exports = exports = function(callback) {
 // Load All schema in extrafields
@@ -34,7 +81,7 @@ module.exports = exports = function(callback) {
 							attributes[j] = docs[i].fields[j].schema;
 					}
 				}
-				//console.log(attributes);
+				console.log(attributes);
 				var loadSchema = new mongoose.Schema(attributes);
 				if (docs[i].schemaMongoose.plugins)
 					for (var y = 0; y < docs[i].schemaMongoose.plugins.length; y++) {
@@ -54,3 +101,7 @@ module.exports = exports = function(callback) {
 		callback();
 	});
 };
+
+function funct(string) {
+	
+}

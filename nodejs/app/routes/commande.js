@@ -1,5 +1,7 @@
 "use strict";
 
+var mongoose = require('mongoose');
+
 var CommandeModel = mongoose.model('commande');
 var ExtrafieldModel = mongoose.model('extrafields');
 

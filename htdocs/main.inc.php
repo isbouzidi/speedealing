@@ -190,6 +190,7 @@ if (!defined('NOREQUIREAJAX'))
 
 
 
+
 	
 // If install or upgrade process not done or not completely finished, we call the install page.
 if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_UPGRADED)) {
@@ -197,22 +198,22 @@ if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_
 	exit;
 }
 /*
-// Creation of a token against CSRF vulnerabilities
-if (!defined('NOTOKENRENEWAL')) {
-	$token = dol_hash(uniqid(mt_rand(), TRUE)); // Genere un hash d'un nombre aleatoire
-	// roulement des jetons car cree a chaque appel
-	if (isset($_SESSION['newtoken']))
-		$_SESSION['token'] = $_SESSION['newtoken'];
-	$_SESSION['newtoken'] = $token;
-}
+  // Creation of a token against CSRF vulnerabilities
+  if (!defined('NOTOKENRENEWAL')) {
+  $token = dol_hash(uniqid(mt_rand(), TRUE)); // Genere un hash d'un nombre aleatoire
+  // roulement des jetons car cree a chaque appel
+  if (isset($_SESSION['newtoken']))
+  $_SESSION['token'] = $_SESSION['newtoken'];
+  $_SESSION['newtoken'] = $token;
+  }
 
-// Check validity of token, only if option enabled (this option breaks some features sometimes)
-if (isset($_POST['token']) && isset($_SESSION['token'])) {
-	if (($_POST['token'] != $_SESSION['token'])) {
-		error_log("Token ERROR : DELETED POST");
-		unset($_POST);
-	}
-}*/
+  // Check validity of token, only if option enabled (this option breaks some features sometimes)
+  if (isset($_POST['token']) && isset($_SESSION['token'])) {
+  if (($_POST['token'] != $_SESSION['token'])) {
+  error_log("Token ERROR : DELETED POST");
+  unset($_POST);
+  }
+  } */
 
 // Disable modules (this must be after session_start and after conf has been loaded)
 if (GETPOST('disablemodules'))
@@ -286,7 +287,10 @@ if (!defined('NOLOGIN')) {
 			$langs->load('errors');
 
 			$user->trigger_mesg = 'SessionExpire - login=' . $login;
-			$_SESSION["dol_loginmesg"] = $langs->trans("Session expired", $login); // TODO Session Expire
+			if ($user->error)
+				$_SESSION["dol_loginmesg"] = $user->error;
+			else
+				$_SESSION["dol_loginmesg"] = $langs->trans("Session expired", $login); // TODO Session Expire
 			setcookie('SpeedSession', '', 1, '/'); // Reset auth cookie
 			// Call triggers
 			if (!class_exists('Interfaces'))
@@ -497,7 +501,7 @@ if (!function_exists("llxHeader")) {
 
 			if ($user->admin && (empty($conf->global->MAIN_VERSION) || DOL_VERSION > $conf->global->MAIN_VERSION)) {
 				include_once DOL_DOCUMENT_ROOT . '/install/upgrade.php';
-			
+
 				upgrade(); // Auto-upgrade
 			} else { // Need manual upgrade source code Speedealing
 				$log = dol_getcache("warnings");
@@ -581,6 +585,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 
 	if (empty($conf->css))
 		$conf->css = '/theme/eldy/style.css.php'; // If not defined, eldy by default
+
 
 
 
@@ -722,9 +727,9 @@ function main_menu() {
 					"reduce" => 'function(user, cpt) {return Array.sum(cpt);}',
 					"query" => array("usertodo.id" => $user->id),
 					"out" => array("inline" => 1)));
-		
+
 		foreach ($countTODO->results as $key => $aRow)
-			if($aRow['_id'] == $user->id)
+			if ($aRow['_id'] == $user->id)
 				$countTODO->results[0]['value'] = $countTODO->results[$key]['value'];
 
 		$params = array(
@@ -765,12 +770,12 @@ if (!function_exists("llxFooter")) {
 	function llxFooter() {
 		global $conf, $langs, $dolibarr_auto_user, $micro_start_time, $memcache, $count_icon, $mongo;
 
-		/*$connections = $mongo->getConnections();
+		/* $connections = $mongo->getConnections();
 
-		foreach ($connections as $con) {
+		  foreach ($connections as $con) {
 
-			$closed = $mongo->close($con['hash']);
-		}*/
+		  $closed = $mongo->close($con['hash']);
+		  } */
 
 		// Global html output events ($mesgs, $errors, $warnings)
 		dol_htmloutput_events();

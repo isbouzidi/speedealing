@@ -1,6 +1,7 @@
 "use strict";
 
-var timestamps = require('mongoose-timestamp');
+var mongoose = require('mongoose'),
+		timestamps = require('mongoose-timestamp');
 
 var AgendaModel = mongoose.model('agenda');
 
@@ -45,22 +46,22 @@ Agenda.prototype = {
 		//var typeMove_list = this.fk_extrafields.fields.typeMoveStock;
 
 		var result = [];
-		
+
 		var query = {type_code: "AC_RDV"};
-		
-		if(req.query.filters) {
-			if(req.query.filters.filters) {
-			var list = [];
-			for(var i=0; i<req.query.filters.filters.length; i++)
-				list.push(req.query.filters.filters[i].value);
-			query['usertodo.id'] = {'$in' : list};
+
+		if (req.query.filters) {
+			if (req.query.filters.filters) {
+				var list = [];
+				for (var i = 0; i < req.query.filters.filters.length; i++)
+					list.push(req.query.filters.filters[i].value);
+				query['usertodo.id'] = {'$in': list};
 			} else {
 				res.send(200, []);
 			}
 		}
-		
+
 		console.log(req.query.filters.filters);
-		
+
 		AgendaModel.find(query, function(err, doc) {
 			if (err) {
 				console.log(err);
@@ -73,11 +74,11 @@ Agenda.prototype = {
 				result[i] = JSON.parse(JSON.stringify(doc[i]));
 
 				var usertodo = [];
-				 for (var j = 0; j < result[i].usertodo.length; j++)
-				 usertodo[j] = result[i].usertodo[j].id;
-				 
-				 result[i].usertodo = [];
-				 result[i].usertodo = usertodo;
+				for (var j = 0; j < result[i].usertodo.length; j++)
+					usertodo[j] = result[i].usertodo[j].id;
+
+				result[i].usertodo = [];
+				result[i].usertodo = usertodo;
 
 				if (result[i].notes.length)
 					result[i].notes = result[i].notes[0];

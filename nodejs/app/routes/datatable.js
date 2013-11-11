@@ -4,7 +4,7 @@
  */
 
 "use strict";
-
+var mongoose = require('mongoose');
 
 /**
  * Schema
@@ -37,14 +37,14 @@ Object.prototype = {
 		//var toto = JSON.parse(this.req.body.query);
 		var tmp = this.req.body.query;
 		console.log(JSON.parse(tmp));
-		this.send(null,{});
+		this.send(null, {});
 	},
 	acl: function() {
 		/** 
 		 * Users Rights
 		 */
 
-		
+
 	},
 	send: function(err, data) {
 		if (err)

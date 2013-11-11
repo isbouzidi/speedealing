@@ -1,5 +1,7 @@
 "use strict";
 
+var mongoose = require('mongoose');
+
 var UserModel = mongoose.model('user');
 
 var ExtrafieldModel = mongoose.model('extrafields');

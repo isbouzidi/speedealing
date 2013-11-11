@@ -6,9 +6,11 @@
 "use strict";
 
 var cradle = require('cradle'),
+		mongoose = require('mongoose'),
 		mongodb = require('mongodb'),
 		acl = require('mongoose-acl'),
-		timestamps = require('mongoose-timestamp');
+		timestamps = require('mongoose-timestamp'),
+		config = require('../../config');
 
 var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
 	secure: false,

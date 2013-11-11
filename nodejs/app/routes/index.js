@@ -1,7 +1,8 @@
 "use strict";
 
 var async = require('async'),
-		timestamps = require('mongoose-timestamp');
+		mongoose = require('mongoose'),
+		fs = require('fs');
 
 var conf = {}; // for conf data const
 
@@ -80,11 +81,11 @@ map_reduce.countTODO.out = {inline: 1};
 
 exports.index = function(req, res) {
 	var url = "/";
-	
+
 	/**
 	 * Redirect to PHP
 	 */
-	
+
 	res.redirect('index.php');
 	return;
 
@@ -174,12 +175,12 @@ exports.index = function(req, res) {
 								callback();
 								return;
 							}
-							
-							if(doc.length === 0)
+
+							if (doc.length === 0)
 								countTodo = 0;
 							else
 								countTodo = doc[0].value;
-								
+
 							callback();
 						});
 					},
@@ -341,7 +342,11 @@ function verifyMenu(newTabMenu, req) {
 	return newTabMenu;
 }
 
-exports.partials = function(req, res) {
-	var name = req.params.name;
-	res.render('partials/' + name);
+module.exports = function(app, ensureAuthenticated) {
+	fs.readdirSync(__dirname).forEach(function(file) {
+		if (file === "index.js")
+			return;
+		var name = file.substr(0, file.indexOf('.'));
+		require('./' + name)(app, ensureAuthenticated);
+	});
 };

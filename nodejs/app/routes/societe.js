@@ -1,6 +1,7 @@
 "use strict";
 
-var fs = require('fs'),
+var mongoose = require('mongoose'),
+		fs = require('fs'),
 		csv = require('csv');
 
 var SocieteModel = mongoose.model('societe');

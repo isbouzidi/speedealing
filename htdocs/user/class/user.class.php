@@ -136,6 +136,10 @@ class User extends nosqlDocument {
 			$session = json_decode(file_get_contents(
 							'http://' . $conf->nodejs->host . ":" . $conf->nodejs->port . '/api/session', false, $context));
 			//$login = $this->couchAdmin->getLoginSession();
+			
+			if($session->message)
+				$this->error = $session->message;
+			
 			if ($session->user)
 				$login = $session->user;
 			else
