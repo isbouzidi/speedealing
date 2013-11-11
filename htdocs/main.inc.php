@@ -768,7 +768,7 @@ if (!function_exists("llxFooter")) {
 	 * @return	void
 	 */
 	function llxFooter() {
-		global $conf, $langs, $dolibarr_auto_user, $micro_start_time, $memcache, $count_icon, $mongo;
+		global $conf, $user, $langs, $dolibarr_auto_user, $micro_start_time, $memcache, $count_icon, $mongo;
 
 		/* $connections = $mongo->getConnections();
 
@@ -779,6 +779,9 @@ if (!function_exists("llxFooter")) {
 
 		// Global html output events ($mesgs, $errors, $warnings)
 		dol_htmloutput_events();
+
+		if($user->error)
+			dol_htmloutput_errors($user->error);
 		?>
 		</section>
 

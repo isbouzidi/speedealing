@@ -40,18 +40,27 @@ module.exports = function(app, passport, auth) {
 	 });*/
 
 	app.get('/api/session', function(req, res) {
-		if (req.session.flash.error) {
-			console.log(req.session);
-			res.send(200, {message: req.session.flash.error[0]});
-			return req.logout();
-		}
-		
+		if (typeof req.session.nb === 'undefined')
+			req.session.nb = 0;
+
+		var nb = req.session.nb; // for counting flash error to only send new error
+
 		if (req.user) {
 			//console.log('session : ' + req.user.name);
-			return res.send(200, {'user': req.user.name, 'email': req.user.email});
+			if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
+				req.session.nb++;
+				res.send(200, {'user': req.user.name, 'email': req.user.email, message: req.session.flash.error[nb]});
+			} else
+				res.send(200, {'user': req.user.name, 'email': req.user.email});
+			return;
+		} else if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
+			//console.log(req.session);
+			req.session.nb++;
+			res.send(200, {message: req.session.flash.error[nb]});	
+			return;
 		} else {
 			req.logout();
-			return res.send(200, { message: 'Session expired'}); // no session
+			return res.send(200, {message: 'Session expired'}); // no session
 		}
 
 	});
@@ -113,4 +122,8 @@ module.exports = function(app, passport, auth) {
 
 	//Finish with setting up the articleId param
 	app.param('articleId', articles.article);
+
+	//latex Routes
+	var latex = require('../app/models/latex');
+	app.get('/servepdf/:pdfId', latex.servePDF);
 };

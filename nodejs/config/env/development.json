@@ -36,11 +36,16 @@
 			"pass": "userpass"
 		}
 	},
-"couchdb": {
-        "host": "127.0.0.1",
-        "port": 5984,
-        "user": "admin",
-        "passwd": "admin",
-        "db": "chaumeil"
-    }
+	"couchdb": {
+		"host": "127.0.0.1",
+		"port": 5984,
+		"user": "admin",
+		"passwd": "admin",
+		"db": "chaumeil"
+	},
+	"latex": {
+		"pdfs": "/pdfs/",
+		"models": "/config/latex/",
+		"includes": "/config/latex/texpackages/"
+	}
 }
