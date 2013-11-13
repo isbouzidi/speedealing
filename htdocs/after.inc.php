@@ -88,12 +88,12 @@ if (!defined('NOREQUIRETRAN')) {
  */
 if (!defined('NOREQUIREDB') && !defined('NOREQUIRESOC')) {
 	require_once(DOL_DOCUMENT_ROOT . "/societe/class/societe.class.php");
-	$mysoc = new Societe($db);
+	$mysoc = new Mysoc($db);
 
 	if ($_SERVER["PHP_SELF"] != '/admin/company.php')
-		try {
-			$mysoc->load("societe:mysoc", true);
-		} catch (Exception $e) {
+		$result = $mysoc->load($user->entity);
+		
+		if(empty($result)) {
 			// First install
 			if ($conf->urlrewrite) {
 				$tmp_db = $conf->Couchdb->name; // First connecte using $user->entity for default

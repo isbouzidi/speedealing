@@ -41,7 +41,7 @@ if (!$user->admin)
 $message = '';
 
 try {
-	$mysoc->load("societe:mysoc"); // Refresh load
+	$mysoc->load($user->entity); // Refresh load
 } catch (Exception $e) {
 	error_log("CreateMySocCompany");
 }
@@ -56,8 +56,7 @@ if (($action == 'update' && empty($_POST["cancel"]))
 
 	$object = $mysoc;
 
-	$object->_id = "societe:mysoc";
-	$object->_rev = $mysoc->_rev;
+	$object->_id = $user->entity;
 	$object->country_id = GETPOST('country_id');
 	$object->name = $_POST["nom"];
 	$object->address = $_POST["address"];
@@ -228,8 +227,9 @@ $title = $langs->trans("CompanyFoundation");
 print_fiche_titre($title);
 print '<div class="with-padding">';
 print '<div class="columns">';
+print column_start();
 
-print start_box($title, "twelve", $mysoc->fk_extrafields->ico, false);
+//print start_box($title, "twelve", $mysoc->fk_extrafields->ico, false);
 
 print $langs->trans("CompanyFundationDesc") . "<br>\n";
 print "<br>\n";
@@ -329,7 +329,8 @@ if ($action == 'edit' || $action == 'updateedit') {
 	print '</td><td valign="middle" align="right">';
 	if (!empty($mysoc->logo))
 		print '<a href="' . $_SERVER["PHP_SELF"] . '?action=removelogo">' . img_delete($langs->trans("Delete")) . '</a>';
-	print $mysoc->print_fk_extrafields('logo');
+	//print $mysoc->print_fk_extrafields('logo');
+	print $form->showphoto('companylogo', $mysoc, 100);
 	print '</td></tr></table>';
 	print '</td></tr>';
 
@@ -646,7 +647,8 @@ if ($action == 'edit' || $action == 'updateedit') {
 	print '<table width="100%" class="nocellnopadd"><tr class="nocellnopadd"><td valign="middle" class="nocellnopadd">';
 	print $mysoc->logo;
 	print '</td><td valign="center" align="right">';
-	print $mysoc->print_fk_extrafields('logo');
+	print $form->showphoto('companylogo', $mysoc, 100);
+	//print $mysoc->print_fk_extrafields('logo');
 	print '</td></tr></table>';
 
 	print '</td></tr>';
@@ -879,7 +881,8 @@ if ($action == 'edit' || $action == 'updateedit') {
 	print '</div>';
 }
 
-print end_box();
+//print end_box();
+print column_end();
 print '</div></div>';
 
 llxFooter();

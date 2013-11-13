@@ -117,7 +117,8 @@ if ($modulepart) {
 	// Wrapping for company logo
 	if ($modulepart == 'companylogo') {
 		$accessallowed = 1;
-		$original_file = $conf->mycompany->dir_output . '/logos/' . $original_file;
+		//$original_file = $conf->mycompany->dir_output . '/logos/' . $original_file;
+		$class = "Mysoc";
 	}
 	// Wrapping for users photos
 	elseif ($modulepart == 'userphoto') {
@@ -137,7 +138,8 @@ if ($modulepart) {
 	// Wrapping pour les images des societes
 	elseif ($modulepart == 'societe') {
 		$accessallowed = 1;
-		$original_file = $conf->societe->multidir_output[$entity] . '/' . $original_file;
+		//$original_file = $conf->societe->multidir_output[$entity] . '/' . $original_file;
+		$class = "Societe";
 	}
 	// Wrapping pour les apercu factures
 	elseif ($modulepart == 'apercufacture') {

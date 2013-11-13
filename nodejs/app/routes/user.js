@@ -62,7 +62,7 @@ module.exports = function(app, ensureAuthenticated) {
 	app.post('/api/user/name/autocomplete', ensureAuthenticated, function(req, res) {
 		//console.dir(req.body);
 
-		UserModel.find({name: new RegExp(req.body.filter.filters[0].value,"i")}, {}, {limit: req.body.take}, function(err, docs) {
+		UserModel.find({'$or':[{firstname: new RegExp(req.body.filter.filters[0].value,"i")},{lastname: new RegExp(req.body.filter.filters[0].value,"i")}]}, {}, {limit: req.body.take}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/user/name/autocomplete");
 				console.log(err);
@@ -76,7 +76,7 @@ module.exports = function(app, ensureAuthenticated) {
 					//console.log(docs[i]);
 					
 					result[i] = {};
-					result[i].name = docs[i].firstname + " " + docs[i].lastname;
+					result[i].name = docs[i].name;
 					result[i].id = docs[i]._id;
 				}
 

@@ -3057,12 +3057,15 @@ class Form {
 		$altfile = '';
 		$email = '';
 
-		if ($modulepart == 'societe') {
-			$dir = $conf->societe->multidir_output[$object->entity];
+		if ($modulepart == 'societe' || $modulepart == 'companylogo') {
+			/*$dir = $conf->societe->multidir_output[$object->entity];
 			$smallfile = $object->logo;
 			$smallfile = preg_replace('/(\.png|\.gif|\.jpg|\.jpeg|\.bmp)/i', '_small\\1', $smallfile);
 			if ($object->logo)
-				$file = $object->id . '/logos/thumbs/' . $smallfile;
+				$file = $object->id . '/logos/thumbs/' . $smallfile;*/
+			if ($object->logo)
+				$file = $object->logo;
+			$email = $object->email;
 		}
 		else if ($modulepart == 'userphoto') {
 			if ($object->photo)

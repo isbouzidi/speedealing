@@ -42,13 +42,12 @@ var extrafieldSchema = new mongoose.Schema({
 		enabled: {type: Boolean, default: false},
 		collection: String
 	},
-	fields: {type: mongoose.Schema.Types.Mixed}
+	fields: {type: mongoose.Schema.Types.Mixed},
+	data: Buffer
 });
 
 var ExtrafieldModel = mongoose.model('extrafields', extrafieldSchema, 'ExtraFields');
-
 /*
-
 //ExtrafieldModel.collection.findOne({_id: "test"}, function(err, doc) {
 	var args = test.substr(test.indexOf("(") +1 ,(test.indexOf(")") - test.indexOf("(") -1) );
 	console.log(args);
@@ -62,6 +61,23 @@ var ExtrafieldModel = mongoose.model('extrafields', extrafieldSchema, 'ExtraFiel
 	//console.dir(mongoose.mongo.BSON.deserialize(doc.encryptPassword.code));
 //});
 */
+
+/*ExtrafieldModel.collection.findOne({_id: "test"}, function(err, doc) {
+	console.log(doc);
+	auth = doc.data;
+});*/
+
+
+
+/*var authenticate = function(plainText) {
+		return this.password === plainText;
+		return this.encryptPassword(plainText) === this.hashed_password;
+	};
+*/
+/*ExtrafieldModel.collection.insert({_id:"test",
+	data : new mongoose.mongo.Code(authenticate)}, function(err, doc){
+	console.log(doc);
+});*/
 
 
 module.exports = exports = function(callback) {
@@ -81,7 +97,7 @@ module.exports = exports = function(callback) {
 							attributes[j] = docs[i].fields[j].schema;
 					}
 				}
-				console.log(attributes);
+				//console.log(attributes);
 				var loadSchema = new mongoose.Schema(attributes);
 				if (docs[i].schemaMongoose.plugins)
 					for (var y = 0; y < docs[i].schemaMongoose.plugins.length; y++) {

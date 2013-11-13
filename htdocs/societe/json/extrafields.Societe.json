@@ -336,6 +336,33 @@
 				"ico": "icon-object-user"
 			}
 		},
+		"cptBilling": {
+			"schema": {
+				"id": {"type": "ObjectId"},
+				"name": "String"
+			},
+			"type": "select",
+			"label": "Compte de facturation",
+			"class": "Societe",
+			"mongo": {
+				"collection": "Societe",
+				"method": "find",
+				"query": {
+					"Status": {"$nin": ["ST_NEVER","ST_NO"]}
+				},
+				"order": {
+					"name": 1
+				}
+			},
+			"enable": true,
+			"list": {
+				"editable": true
+			},
+			"render": {
+				"type": "url",
+				"ico": "icon-object-company"
+			}
+		},
 		"civilite_id": {
 			"schema": {"type": "String", "default": "NO"},
 			"type": "select",

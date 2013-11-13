@@ -420,25 +420,6 @@ abstract class nosqlDocument extends CommonObject {
 	}
 
 	/**
-	 * 	get an attachement file in base64
-	 *  @param	$filename		Name of the file
-	 *  @return value of storeAttachment
-	 */
-	public function getFileBase64($filename) {
-		return $this->couchdb->getAttachment($this, $filename);
-	}
-
-	/**
-	 * 	get URL a of file in document
-	 *  @return value URL of storeAttachment
-	 */
-	public function getFile($filename) {
-		$url_server = "db/" . $this->couchdb->getDatabaseName();
-
-		return $url_server . "/" . $this->id . "/" . $filename;
-	}
-
-	/**
 	 * 	delete a file in document
 	 *  @param	$filename		name of the file
 	 *  @return value of storeAttachment

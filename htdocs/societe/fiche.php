@@ -1327,7 +1327,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 		dol_htmloutput_errors($error, $errors);
 
-		$showlogo = $object->logo;
+		//$showlogo = $object->logo;
 		$showbarcode = (!empty($conf->barcode->enabled) && $user->rights->barcode->lire);
 
 		print '<table class="border" width="100%">';
@@ -1680,6 +1680,11 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		// Sales representative
 		print '<tr><td>' . $form->editfieldkey("SalesRepresentatives", 'commercial_id', $object->commercial_id->name, $object, $user->rights->societe->creer, "select") . '</td><td colspan="' . (2 + (($showlogo || $showbarcode) ? 0 : 1)) . '">';
 		print $form->editfieldval("SalesRepresentatives", 'commercial_id', $object->commercial_id->name, $object, $user->rights->societe->creer, "select");
+		print "</td></tr>";
+		
+		// Compte de facturation
+		print '<tr><td>' . $form->editfieldkey("Compte de facturation", 'cptBilling', $object->cptBilling->name, $object, $user->rights->societe->creer, "select") . '</td><td colspan="' . (2 + (($showlogo || $showbarcode) ? 0 : 1)) . '">';
+		print $form->editfieldval("Compte de facturation", 'cptBilling', $object->cptBilling->name, $object, $user->rights->societe->creer, "select");
 		print "</td></tr>";
 
 

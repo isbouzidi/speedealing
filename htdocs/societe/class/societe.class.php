@@ -1748,6 +1748,7 @@ class Societe extends nosqlDocument {
 				$params = array('group' => true);
 				//$result = $this->getView("count_status", $params);
 				$result = $this->mongodb->aggregate(array(
+					array('$match' => array('Status' => array('$ne'=> 'ST_NEVER'))),
 					array('$project' => array(
 						"Status" => 1
 					)),
@@ -1757,7 +1758,7 @@ class Societe extends nosqlDocument {
 				//$params = array('group' => true, "startkey" => array($user->name), "endkey" => array($user->name, new stdClass()));
 				//$result = $this->getView("commercial_status", $params);
 				$result = $this->mongodb->aggregate(array(
-					array('$match' => array('commercial_id.id'=> $user->login)),
+					array('$match' => array('commercial_id.id'=> $user->login, 'Status' => array('$ne'=> 'ST_NEVER'))),
 					array('$project' => array(
 						"Status" => 1
 					)),
@@ -2067,5 +2068,19 @@ class Societe extends nosqlDocument {
 		}
 	}
 
+}
+
+class Mysoc extends Societe {
+	
+	public function __construct($db = null) {
+		parent::__construct($db);
+
+		$this->fk_extrafields = new ExtraFields($db);
+		$this->fk_extrafields->fetch('Societe');
+		
+		$this->fk_extrafields->fields->_id->schema ='String';
+
+		return 1;
+	}
 }
 ?>

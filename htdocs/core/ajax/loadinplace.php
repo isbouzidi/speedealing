@@ -66,7 +66,7 @@ if (!empty($key) && !empty($class) && !empty($id)) {
     if (count($object->fk_extrafields->langs))
         foreach ($object->fk_extrafields->langs as $row)
             $langs->load($row);
-	error_log($object->_id);
+	//error_log($object->_id);
     if ($type == "select") {
         if (!empty($object->$key))
             $return['selected'] = $object->$key;
@@ -74,7 +74,7 @@ if (!empty($key) && !empty($class) && !empty($id)) {
             $return['selected'] = $object->fk_extrafields->fields->$key->default;
     }
 	
-	error_log(print_r($object->fk_extrafields->fields,true));
+	//error_log(print_r($object->fk_extrafields->fields,true));
 
     $aRow = $object->fk_extrafields->fields->$key;
     if (isset($aRow->mongo)) { // Is a view
@@ -114,8 +114,11 @@ if (!empty($key) && !empty($class) && !empty($id)) {
         }
 
         foreach ($result as $row) {
-			//error_log(print_r($row,true));
+			error_log(print_r($row,true));
 			$row = json_decode(json_encode($row));
+			
+			if(!is_string($row->_id))
+				$row->_id = $row->_id->{'$id'};
 			
             if (empty($aRow->getkey)) {
 				$aRow->values[$row->_id] = new stdClass();

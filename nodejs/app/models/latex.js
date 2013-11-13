@@ -89,7 +89,10 @@ exports.compileDoc = function(id, doc, callback) {
 
 				// compile the document (or at least try) 
 				exec("pdflatex -interaction=nonstopmode " + inputPath + " > /dev/null 2>&1"
-						, afterCompile);
+						, function() {
+					exec("pdflatex -interaction=nonstopmode " + inputPath + " > /dev/null 2>&1"
+							, afterCompile);
+				});
 			});
 		});
 	});
@@ -116,5 +119,20 @@ exports.servePDF = function(req, res) {
 			res.attachment(id + ".pdf");
 			res.sendfile(pdfPath);
 		}
+	});
+};
+
+/**
+ * Replace --MYSOC-- and create FOOTER
+ */
+exports.headfoot = function(entity, tex, callback) { //\textsc{Symeos} 158 av. Leon Blum F-63000 Clermont-Ferrand. Tél.: +33 (0) 4 27 46 39 60 - R.C.S. Clermont-Ferrand  483 278 842
+	mongoose.connection.db.collection('Mysoc', function(err, collection) {
+		collection.findOne({_id: entity}, function(err, doc) {
+
+			tex = tex.replace(/--MYSOC--/g, doc.name + "\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town);
+			tex = tex.replace(/--FOOT--/g, "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town + " T\\'el.: " + doc.phone + " R.C.S. " + doc.idprof1);
+
+			callback(tex);
+		});
 	});
 };

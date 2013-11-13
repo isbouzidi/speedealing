@@ -56,7 +56,7 @@ module.exports = function(app, passport, auth) {
 		} else if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 			//console.log(req.session);
 			req.session.nb++;
-			res.send(200, {message: req.session.flash.error[nb]});	
+			res.send(200, {message: req.session.flash.error[nb]});
 			return;
 		} else {
 			req.logout();
@@ -126,4 +126,10 @@ module.exports = function(app, passport, auth) {
 	//latex Routes
 	var latex = require('../app/models/latex');
 	app.get('/servepdf/:pdfId', latex.servePDF);
+
+	app.get('/partials/:name', auth.requiresLogin, function(req, res) {
+		var name = req.params.name;
+		console.log("toto");
+		res.render('partials/' + name);
+	});
 };
