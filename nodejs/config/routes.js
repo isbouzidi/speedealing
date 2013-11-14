@@ -10,34 +10,28 @@ module.exports = function(app, passport, auth) {
 	//Setting up the users api
 	app.post('/users', users.create);
 
-	/*app.post('/login', function(req, res, next) {
-	 passport.authenticate('local', function(err, user, info) {
-	 if (err) {
-	 return next(err)
-	 }
-	 if (!user) {
-	 req.session.messages = [info.message];
-	 return res.redirect('/login')
-	 }
-	 req.logIn(user, function(err) {
-	 if (err) {
-	 return next(err);
-	 }
-	 return res.redirect('/');
-	 });
-	 })(req, res, next);
-	 });*/
+	app.post('/login', function(req, res, next) {
+		passport.authenticate('local', function(err, user, info) {
+			if (err) {
+				return next(err)
+			}
+			if (!user) {
+				req.session.messages = [info.message];
+				return res.json({success: false, errors: info.message}, 401);
+			}
+			req.logIn(user, function(err) {
+				if (err) {
+					return next(err);
+				}
+				return res.json({success: true}, 200);
+			});
+		})(req, res, next);
+	});
 
-
-	app.post('/login', passport.authenticate('local', {
-		failureRedirect: '/index.php',
-		failureFlash: 'Invalid login or password.'
-	}), users.session);
-
-	/*app.post('/login', function(req, res){
-	 console.log(req.session);
-	 console.log(req.body);
-	 });*/
+	/*app.post('/login', passport.authenticate('local', {
+	 failureRedirect: '/index.php',
+	 failureFlash: 'Invalid login or password.'
+	 }), users.session);*/
 
 	app.get('/api/session', function(req, res) {
 		if (typeof req.session.nb === 'undefined')

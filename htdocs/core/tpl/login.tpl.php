@@ -201,7 +201,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					// If layout is centered
 					centered;
 
-	/*		formLogin.submit(function(event) {
+			formLogin.submit(function(event) {
 				// Values
 				var login = $.trim($('#login').val()).toLowerCase(),
 						pass = $.trim($('#pass').val());
@@ -233,8 +233,8 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 					//	 base = "";
 
 					// Stop normal behavior
-				/*	$.ajax({
-						type: "POST", url: "users/session", dataType: "json",
+					$.ajax({
+						type: "POST", url: "login", dataType: "json",
 						data: {name: login, password: pass},
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader('Accept', 'application/json');
@@ -254,7 +254,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 						}
 					});
 				}
-			});*/
+			});
 
 			// Handle resizing (mostly for debugging)
 			function handleLoginResize() {
