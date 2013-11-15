@@ -67,7 +67,10 @@ require('./config/extrafields')(function() {
 	
 	//Home route
 	var index = require('./app/controllers/index');
-	app.get('*', auth.requiresLogin, index.render);
+	//app.get('*', auth.requiresLogin, index.render);
+	app.get('*', function(req, res){
+		return res.redirect('index.php');
+	});
 
 
 	//Start the app by listening on <port>
