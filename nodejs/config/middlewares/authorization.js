@@ -3,7 +3,8 @@
  */
 exports.requiresLogin = function(req, res, next) {
     if (!req.isAuthenticated()) {
-        return res.send(401, 'User is not authorized');
+        //return res.send(401, 'User is not authorized');
+		return res.redirect('index.php');
     }
     next();
 };
