@@ -728,9 +728,13 @@ function main_menu() {
 					"query" => array("usertodo.id" => $user->id),
 					"out" => array("inline" => 1)));
 
-		foreach ($countTODO->results as $key => $aRow)
+		//print_r($countTODO);
+		
+		foreach ($countTODO->results as $key => $aRow) {
+			//print $countTODO->results[$key]['value'];
 			if ($aRow['_id'] == $user->id)
 				$countTODO->results[0]['value'] = $countTODO->results[$key]['value'];
+		}
 
 		$params = array(
 			'start' => new MongoDate(mktime(0, 0, 0, date("m"), date("d"), date("Y"))),

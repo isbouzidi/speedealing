@@ -248,15 +248,15 @@ $obj->aoColumns[$i]->sDefaultContent = "";
 
 $url = "product/fiche.php";
 $obj->aoColumns[$i]->fnRender = 'function(obj) {
-			var ar = [];
-			ar[ar.length] = "<a href=\"' . $url . '?id=";
-						ar[ar.length] = obj.aData._id.toString();
-						ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"img/action_edit.png\" alt=\"\" /></a>";
-	ar[ar.length] = "<a href=\"\"";
-						ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"img/action_delete.png\" alt=\"\" /></a>";
+	var ar = [];
+	ar[ar.length] = "<a href=\"' . $url . '?id=";
+	ar[ar.length] = obj.aData._id.toString();
+	ar[ar.length] = "&action=edit&backtopage=' . $_SERVER['PHP_SELF'] . '\" class=\"sepV_a\" title=\"' . $langs->trans("Edit") . '\"><img src=\"img/action_edit.png\" alt=\"\" /></a>";
 	var str = ar.join("");
 	return str;
 	}';
+//ar[ar.length] = "<a href=\"\"";
+//ar[ar.length] = " class=\"delEnqBtn\" title=\"' . $langs->trans("Delete") . '\"><img src=\"img/action_delete.png\" alt=\"\" /></a>";
 print'</tr>';
 print'</thead>';
 print'<tfoot>';

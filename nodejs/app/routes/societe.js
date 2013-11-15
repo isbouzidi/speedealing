@@ -40,7 +40,10 @@ module.exports = function(app, ensureAuthenticated) {
 
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', ensureAuthenticated, function(req, res) {
-		//console.dir(req.query);
+		console.dir(req.body);
+		
+		if(req.body.filter == null)
+			return res.send(200, {});
 
 		var query = {
 			"$or": [

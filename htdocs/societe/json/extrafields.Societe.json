@@ -539,10 +539,6 @@
 				"edit": {
 					"label": "Edit",
 					"cssclass": "icon-action-edit action-edit"
-				},
-				"trash": {
-					"label": "Delete",
-					"cssclass": "icon-action-trash action-trash"
 				}
 			}
 		},

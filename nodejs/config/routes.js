@@ -3,12 +3,12 @@ var async = require('async');
 module.exports = function(app, passport, auth) {
 	//User Routes
 	var users = require('../app/controllers/users');
-	app.get('/signin', users.signin);
-	app.get('/signup', users.signup);
-	app.get('/signout', users.signout);
+	//app.get('/signin', users.signin);
+	//app.get('/signup', users.signup);
+	app.get('/logout', users.signout);
 
 	//Setting up the users api
-	app.post('/users', users.create);
+	//app.post('/users', users.create);
 
 	app.post('/login', function(req, res, next) {
 		passport.authenticate('local', function(err, user, info) {
