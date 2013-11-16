@@ -147,7 +147,7 @@
 	<!--<link rel="stylesheet" href="theme/eldy/style.css" />-->
 
 	<!-- JQuery. Must be before other includes -->
-	<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="includes/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
 
 	<!-- Kendo library -->
