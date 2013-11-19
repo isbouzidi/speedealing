@@ -169,6 +169,7 @@ module.exports = function(app, ensureAuthenticated) {
 	app.get('/api/societe/contact/select', ensureAuthenticated, function(req, res) {
 		//console.log(req.query);
 		var result = [];
+		result.push({id:"", name:""});
 
 		if (req.query.societe)
 			SocieteModel.findOne({name: req.query.societe}, "_id", function(err, societe) {

@@ -2,13 +2,13 @@
 	<div id="menu-content">
 		<header>
 			<form id="search_box" action='search.php' method='post'>
-				<input class="ac_input focus" id="query" name='query' type='text' size='40' placeholder="{{t 'main.SearchOf'}}" autocomplete="off">
+				<input class="ac_input focus" id="query" name='query' type='text' size='40' placeholder="{{t 'SearchOf'}}" autocomplete="off">
 			</form>
 		</header>
 
 		<div id="profile">
 			<img class="user-icon" src='img/user.png' width='64' alt='User name'>
-			<p> {{t 'main.Hello'}}
+			<p> {{t 'Hello'}}
 				<span class="name">\{{global.user.firstname}} 
 					<b> \{{global.user.lastname}}</b>
 				</span>
@@ -17,17 +17,17 @@
 
 		<ul class="children-tooltip" id="access">
 			<li style="width: 20%;">
-				<a href='index.php?idmenu=menu:home' title="{{t 'main.Home'}}" target="_self">
+				<a href='index.php?idmenu=menu:home' title="{{t 'Home'}}" target="_self">
 					<span class="icon-home"></span>
 				</a>
 			</li>
 			<li style="width: 20%;">
-				<span href="inbox.html" title="{{t 'main.Messages'}}" target="_self">
+				<span href="inbox.html" title="{{t 'IM'}}" target="_self">
 					<span class="icon-inbox"></span>
 				</span>
 			</li>
 			<li style="width: 20%;">
-				<a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t 'main.Agenda'}}" target="_self">
+				<a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t 'Agenda'}}" target="_self">
 					<span class="icon-calendar"></span>
 					{{#if agenda.count}}
 					<span class="count">{{agenda.count}}</span>
@@ -35,12 +35,12 @@
 				</a>
 			</li>
 			<li style="width: 20%;">
-				<a href="user/fiche.php?id={{user.id}}"  title="{{t 'main.Profile'}}" target="_self">
+				<a href="user/fiche.php?id={{user.id}}"  title="{{t 'Parameters'}}" target="_self">
 					<span class="icon-gear"></span>
 				</a>
 			</li>
 			<li style="width: 20%;">
-				<a href="logout" title="{{t 'Log out'}}" target="_self">
+				<a href="logout" title="{{t 'Logout'}}" target="_self">
 					<span class="icon-unlock"></span>
 				</a>
 			</li>
@@ -51,12 +51,12 @@
 		</ul>
 
 		<ul class="unstyled-list">
-			<li class="title-menu">{{t 'Today\'s event'}}</li>
+			<li class="title-menu">{{t 'agenda:EventOnFullDay'}}</li>
 			{{#each agenda.task}}
 			<li>
 				<ul class="calendar-menu">
 					<li>
-						<a href="agenda/fiche.php?id={{this._id}}", title="{{t 'main.Open'}}">
+						<a href="agenda/fiche.php?id={{this._id}}", title="{{t 'Open'}}">
 							<time datetime="{{this.event.datetime}}">
 								<b>{{this.event.day}}</b>
 								<p>{{this.event.month}}</p>
@@ -70,14 +70,14 @@
 				</ul>
 			</li>
 			{{else}}
-			<p>Aucun rendez-vous</p>
+			<p>{{t 'agenda:NoMeeting'}}</p>
 			{{/each}}
 		</ul>
 	</div>
 
 	<footer id="menu-footer">
 		<div>
-			<p>Speedealing v.</p>
+			<p>Speedealing v.{{version}}</p>
 		</div>
 	</footer>
 </div>

@@ -45,7 +45,7 @@
 						fields: {
 							_id: {editable: false, nullable: true},
 							ref: {editable: true, validation: {required: true}},
-							qtyMax: {type: "number", validation: {required: true, min: 1}, defaultValue: 999999},
+							qtyMin: {type: "number", validation: {required: true, min: 1}, defaultValue: 0},
 							tms: {type: "date"},
 							entity: {type: "string", defaultValue: ""},
 							Status_ID: {from: "Status.id"},
@@ -103,7 +103,7 @@
 					},
 					{field: "price_level", title: "Liste de prix"},
 					{field: "pu_ht", filterable: true, title: "Prix HT", format: "{0:c3}", width: "60px"},
-					{field: "qtyMax", filterable: true, title: "Qte Max", format: "{0:n0}", width: "60px"},
+					{field: "qtyMin", filterable: true, title: "Qte Min", format: "{0:n0}", width: "60px"},
 					{field: "Status_ID", title: "Etat", width: "100px",
 						editor: statusDropDownEditor, template: "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
 					//{field: "entity", filterable: false, title: "Atelier", hidden: true, width: "100px", editor: entityDropDownEditor},

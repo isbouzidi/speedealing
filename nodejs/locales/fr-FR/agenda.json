@@ -83,5 +83,7 @@
     "ExtSitesNbOfAgenda": "Nombre de calendriers",
     "AgendaExtNb": "Calendrier no %s",
     "ExtSiteUrlAgenda": "Url d'accès au fichier ical",
-    "ExtSiteNoLabel": "Aucune description"
+    "ExtSiteNoLabel": "Aucune description",
+	"NoMeeting":"Aucun rendez-vous",
+	"NewAction":"Nouvelle action"
 }

@@ -67,10 +67,13 @@ ModuleModel.mapReduce(map_reduce.submenuList, function(err) {
 });
 
 map_reduce.countTODO = {};
+
 map_reduce.countTODO.map = function() {
-	if (this.Status == "TODO" && this.usertodo.id)
-		emit(this.usertodo.id, 1);
+	if (this.Status == "TODO" && this.usertodo.length)
+		for (var i = 0; i < this.usertodo.length; i++)
+			emit(this.usertodo[i].id, 1);
 };
+
 map_reduce.countTODO.map = map_reduce.countTODO.map.toString();
 map_reduce.countTODO.reduce = function(user, cpt) {
 	return Array.sum(cpt);
@@ -80,11 +83,11 @@ map_reduce.countTODO.out = {inline: 1};
 
 exports.render = function(req, res) {
 	var url = "/";
-	
+
 	/*return res.render('index', {
-        user: req.user ? JSON.stringify(req.user) : "null",
-		title: "toto"
-    });*/
+	 user: req.user ? JSON.stringify(req.user) : "null",
+	 title: "toto"
+	 });*/
 
 	/**
 	 * Redirect to PHP
@@ -180,6 +183,8 @@ exports.render = function(req, res) {
 								return;
 							}
 
+							console.log(doc);
+
 							if (doc.length === 0)
 								countTodo = 0;
 							else
@@ -191,19 +196,21 @@ exports.render = function(req, res) {
 					// Get Count task todo
 					function(callback) {
 						// Get All task list for menu
-						var d = new Date();
-						d.setHours(0);
-						d.setMinutes(0);
-						d.setSeconds(0);
-						d.setMilliseconds(0);
-						var dateStart = d.toJSON();
-						d.setHours(23);
-						d.setMinutes(59);
-						d.setSeconds(59);
-						d.setMilliseconds(999);
-						var dateEnd = d.toJSON();
+						var datep = new Date();
+						datep.setHours(0);
+						datep.setMinutes(0);
+						datep.setSeconds(0);
+						datep.setMilliseconds(0);
+						//console.log(datep);
 
-						AgendaModel.find({Status: {$ne: "DONE"}, "usertodo.id": req.user._id}, function(err, docs) {
+						var datef = new Date();
+						datef.setHours(23);
+						datef.setMinutes(59);
+						datef.setSeconds(59);
+						datef.setMilliseconds(999);
+						//console.log(datef);
+
+						AgendaModel.find({Status: {$ne: "DONE"}, "usertodo.id": req.user._id, datep: {'$gt': datep, '$lte': datef}}, function(err, docs) {
 							if (err) {
 								console.log(err);
 								callback();
@@ -224,7 +231,7 @@ exports.render = function(req, res) {
 								data.event = {};
 								data.event.datetime = d.toString();
 								data.event.day = d.getDate();
-								data.event.month = req.i18n.t("main.date.dayShort." + d.getDay());
+								data.event.month = req.i18n.t("date.dayShort." + d.getDay());
 								data.event.hour = d.getHours() + ":" + (d.getMinutes() <= 9 ? ('0' + d.getMinutes()) : d.getMinutes());
 
 								eventTodo.push(data);
@@ -269,7 +276,7 @@ exports.render = function(req, res) {
 						menuFather.position = 0;
 
 					menu.classname = "";
-					menu.url = "";
+					menu.url = menuFather.url;
 					menu.title = menuFather.title;
 
 					menuHTML += '<a class="' + menu.classname + '" href="' + menu.url + '" target="_self">';
@@ -285,11 +292,14 @@ exports.render = function(req, res) {
 
 				menu.count = result.length;
 				menu.url = "";
-				menu.title = menuFather.title;
+				if(menuFather.type === 'top')
+					menu.title = req.i18n.t((menuFather.langs ? menuFather.langs + ":" : "") + menuFather.title);
+				else
+					menu.title = menuFather.title;
 
 				menuHTML += '<li class="with-right-arrow">';
 				//menuHTML+='<span><span class="list-count">' + result.length + '</span>' + menuFather.title + '</span>';
-				menuHTML += '<span>' + menuFather.title + '</span>';
+				menuHTML += '<span>' + menu.title + '</span>';
 				menuHTML += '<ul class="big-menu ';
 				if (level == 1)
 					menuHTML += 'grey-gradient">';
@@ -311,7 +321,7 @@ exports.render = function(req, res) {
 
 				return selectnow;
 			}
-			
+
 			res.render('index', {title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML});
 		});
 	});
@@ -339,8 +349,10 @@ function verifyMenu(newTabMenu, req) {
 			eval("enabled = " + newTabMenu.enabled);
 	}
 
+	//console.log(newTabMenu);
+
 	newTabMenu.enabled = enabled;
-	newTabMenu.title = req.i18n.t("menu." + newTabMenu.title);
+	newTabMenu.title = req.i18n.t((newTabMenu.langs ? newTabMenu.langs + ":" : "") + newTabMenu.title);
 	newTabMenu.perms = perms;
 
 	return newTabMenu;

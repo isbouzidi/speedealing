@@ -29,7 +29,7 @@ module.exports = function(app, passport, db) {
 	 i18n.backend(i18nextMongoSync);*/
 
 	i18n.init({
-		ns: {namespaces: ['core', 'products'], defaultNs: 'core'},
+		ns: {namespaces: ['main', 'errors', 'agenda','admin', 'companies', 'products'], defaultNs: 'main'},
 		supportedLngs: ['en-US', 'fr-FR'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
 		load: 'current',
@@ -42,6 +42,16 @@ module.exports = function(app, passport, db) {
 
 	hbs.registerHelper('t', function(i18n_key) {
 		var result = i18n.t(i18n_key);
+
+		return new hbs.SafeString(result);
+	});
+
+	hbs.registerHelper('tr', function(context, options) {
+		var opts = i18n.functions.extend(options.hash, context);
+		if (options.fn)
+			opts.defaultValue = options.fn(context);
+
+		var result = i18n.t(opts.key, opts);
 
 		return new hbs.SafeString(result);
 	});

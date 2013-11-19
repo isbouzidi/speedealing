@@ -31,7 +31,7 @@ var productSchema = new Schema({
 			price_level: String,
 			tms: Date,
 			pu_ht: Number,
-			qtyMax: Number,
+			qtyMin: Number,
 			ref_customer_code: String,
 			user_mod: Schema.Types.Mixed
 		}],

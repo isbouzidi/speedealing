@@ -98,14 +98,14 @@
 						<!-- The autocomplete="off" attributes is the only way to prevent webkit browsers from filling the inputs with yellow -->
 						<li>
 							<span class="icon-user mid-margin-right"></span>
-							<input type="text" name="username" id="login" value="" class="input-unstyled" placeholder="{{t 'login.User'}}" autocomplete="off" />
+							<input type="text" name="username" id="login" value="" class="input-unstyled" placeholder="{{t 'User'}}" autocomplete="off" />
 						</li>
 						<li>
 							<span class="icon-lock mid-margin-right"></span>
-							<input type="password" name="password" id="pass" value="" class="input-unstyled" placeholder="{{t 'login.Password'}}" autocomplete="off" />
+							<input type="password" name="password" id="pass" value="" class="input-unstyled" placeholder="{{t 'Password'}}" autocomplete="off" />
 						</li>
 					</ul>
-					<button type="submit" class="button glossy full-width huge">Connection</button>
+					<button type="submit" class="button glossy full-width huge">{{t 'Connection'}}</button>
 				</div>
 			</form>
 		</div>
@@ -137,19 +137,19 @@
 					// Check inputs
 					if (login.length === 0) {
 						// Display message
-						displayError('Please check your login');
+						displayError("{{t 'errors:ErrorEnterYourLogin'}}");
 						return false;
 					} else if (pass.length === 0) {
 						// Remove empty login message if displayed
 						formLogin.clearMessages();
 						// Display message
-						displayError('Please fill in your password');
+						displayError("{{t 'errors:ErrorEnterYourPassword'}}");
 						return false;
 					} else {
 						// Remove previous messages
 						formLogin.clearMessages();
 						// Show progress
-						displayLoading('Checking credentials...');
+						displayLoading("{{t 'ControllingPassword'}}");
 						event.preventDefault();
 
 						//var base="";
@@ -174,12 +174,12 @@
 									document.location.href = 'index.php';
 								} else {
 									formLogin.clearMessages();
-									displayError('Invalid user/password, please try again');
+									displayError("{{t 'errors:ErrorBadLoginPassword'}}");
 								}
 							},
 							error: function() {
 								formLogin.clearMessages();
-								displayError('Error while contacting server, contact the support');
+								displayError("{{t 'ErrorServiceUnavailableTryLater'}}");
 							}
 						});
 					}
