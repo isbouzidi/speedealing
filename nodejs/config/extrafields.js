@@ -79,7 +79,7 @@ var ExtrafieldModel = mongoose.model('extrafields', extrafieldSchema, 'ExtraFiel
 	console.log(doc);
 });*/
 
-
+/*
 module.exports = exports = function(callback) {
 // Load All schema in extrafields
 	ExtrafieldModel.find({"schemaMongoose.enabled": true}, function(err, docs) {
@@ -97,7 +97,7 @@ module.exports = exports = function(callback) {
 							attributes[j] = docs[i].fields[j].schema;
 					}
 				}
-				//console.log(attributes);
+				console.log(attributes);
 				var loadSchema = new mongoose.Schema(attributes);
 				if (docs[i].schemaMongoose.plugins)
 					for (var y = 0; y < docs[i].schemaMongoose.plugins.length; y++) {
@@ -116,8 +116,4 @@ module.exports = exports = function(callback) {
 		}
 		callback();
 	});
-};
-
-function funct(string) {
-	
-}
+};*/

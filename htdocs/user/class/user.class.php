@@ -140,8 +140,8 @@ class User extends nosqlDocument {
 			if($session->message)
 				$this->error = $session->message;
 			
-			if ($session->user)
-				$login = $session->user;
+			if ($session->name)
+				$login = $session->name;
 			else
 				$login = null;
 

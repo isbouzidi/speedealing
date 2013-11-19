@@ -10,7 +10,8 @@ var cradle = require('cradle'),
 		mongodb = require('mongodb'),
 		acl = require('mongoose-acl'),
 		timestamps = require('mongoose-timestamp'),
-		config = require('../../config');
+		config = require('../../config'),
+		fs = require('fs');
 
 var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
 	secure: false,
@@ -113,23 +114,50 @@ module.exports = function(app, ensureAuthenticated) {
 
 				for (var i = 0; i < doc.length; i++) {
 					if (typeof doc[i].usertodo.id !== 'undefined') {
-						
+
 						var usertodo = [];
 						usertodo.push(doc[i].usertodo);
 
-						db.collection("Agenda").update({_id: doc[i]._id}, {$set: {usertodo : usertodo}}, function(err) {
+						db.collection("Agenda").update({_id: doc[i]._id}, {$set: {usertodo: usertodo}}, function(err) {
 							if (err)
 								console.warn(err.message);
 						});
 
 					}
 				}
-				
+
 				res.send(200, "ok");
 			});
 		});
 
 		return;
+	});
+
+	app.post('/migrate/langs', function(req, res) {
+		var data = req.body;
+
+		var file = req.query.file;
+		var dir = req.query.lang;
+
+		var outputFilename = '/tmp/locales/' + dir + '/' + file + '.json';
+		//console.log(outputFilename);
+
+		var dir_lang = '/tmp/locales/' + dir;
+
+		fs.mkdir(dir_lang, parseInt('0755', 8), function(e) {
+			if (e)
+				console.log(e);
+
+			fs.writeFile(outputFilename, JSON.stringify(data, null, 4), function(err) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log("JSON langs saved");
+				}
+			});
+		});
+
+		res.send(200, {});
 	});
 };
 

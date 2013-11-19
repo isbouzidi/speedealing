@@ -1,0 +1,7 @@
+{
+    "Status": {
+        "NotOnSell": "product:Status.NotOnSell",
+        "OnBuy": "product:Status.OnBuy",
+        "OnBuySell": "product:Status.OnBuySell"
+    }
+}

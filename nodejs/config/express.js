@@ -15,33 +15,29 @@ module.exports = function(app, passport, db) {
 	 * config translate
 	 */
 
-	var i18nextMongoSync = require('i18next/backends/mongoDb/index');
-	i18nextMongoSync.connect({
-		db: db.connection.db,
-		//host: config.mongo.host,
-		//port: config.mongo.port,
-		//dbName: config.mongo.database,
-		resCollectionName: "i18next"
-				/*username: "usr",
-				 password: "pwd",
-				 options: {
-				 auto_reconnect: true, // default true
-				 ssl: false // default false
-				 }
-				 */
-	}, function() {
-		i18n.backend(i18nextMongoSync);
+	/*var i18nextMongoSync = require('i18next/backends/mongoDb/index');
+	 i18nextMongoSync.connect({
+	 db: db.connection.db,
+	 resCollectionName: "i18next"
+	 username: "usr",
+	 password: "pwd",
+	 options: {
+	 auto_reconnect: true, // default true
+	 ssl: false // default false
+	 }
+	 }, function() {
+	 i18n.backend(i18nextMongoSync);*/
 
-		i18n.init({
-			ns: {namespaces: ['ns.common'], defaultNs: 'ns.common'},
-			supportedLngs: ['en-US', 'fr-FR'],
-			preload: ['fr-FR'],
-			cookie: 'speedealingLang',
-			resSetPath: 'locales/__lng__/new.__ns__.json',
-			saveMissing: true,
-			debug: false,
-			sendMissingTo: 'fallback'
-		});
+	i18n.init({
+		ns: {namespaces: ['core', 'products'], defaultNs: 'core'},
+		supportedLngs: ['en-US', 'fr-FR'],
+		resSetPath: 'locales/__lng__/new.__ns__.json',
+		load: 'current',
+		preload: ['fr-FR', 'en-US'],
+		cookie: 'speedealingLang',
+		saveMissing: true,
+		debug: false,
+		sendMissingTo: 'fallback'
 	});
 
 	hbs.registerHelper('t', function(i18n_key) {
@@ -69,7 +65,7 @@ module.exports = function(app, passport, db) {
 		}));
 
 		//Setting the fav icon and static folder
-		app.use(express.favicon());
+		//app.use(express.favicon());
 		app.use(express.static(config.root + '/public'));
 
 		//Don't use logger for test env

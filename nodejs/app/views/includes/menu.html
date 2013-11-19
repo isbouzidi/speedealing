@@ -1,4 +1,4 @@
-<section id="menu" role='complementary'>
+<div data-ng-controller="MenuController">
 	<div id="menu-content">
 		<header>
 			<form id="search_box" action='search.php' method='post'>
@@ -9,8 +9,8 @@
 		<div id="profile">
 			<img class="user-icon" src='img/user.png' width='64' alt='User name'>
 			<p> {{t 'main.Hello'}}
-				<span class="name">{{everyauth.user.firstname}} 
-					<b> {{everyauth.user.lastname}}</b>
+				<span class="name">\{{global.user.firstname}} 
+					<b> \{{global.user.lastname}}</b>
 				</span>
 			</p>
 		</div>
@@ -80,5 +80,4 @@
 			<p>Speedealing v.</p>
 		</div>
 	</footer>
-
-</section>
+</div>

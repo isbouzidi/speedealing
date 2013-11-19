@@ -50,43 +50,36 @@ walk(models_path);
 var app;
 
 // Speedealing Schema
-require('./config/extrafields')(function() {
-	//bootstrap passport config
-	require('./config/passport')(passport);
+require('./config/extrafields');
+//bootstrap passport config
+require('./config/passport')(passport);
 
-	app = express();
+app = express();
 
-	//express settings
-	require('./config/express')(app, passport, db);
+//express settings
+require('./config/express')(app, passport, db);
 
-	//Bootstrap routes
-	require('./config/routes')(app, passport, auth);
+//Bootstrap routes
+require('./config/routes')(app, passport, auth);
 
-	// Speedealing routes
-	require('./app/routes')(app, ensureAuthenticated);
-	
-	//Home route
-	var index = require('./app/controllers/index');
-	//app.get('*', auth.requiresLogin, index.render);
-	app.get('*', function(req, res){
-		return res.redirect('index.php');
-	});
+// Speedealing routes
+require('./app/routes')(app, ensureAuthenticated);
+
+/*app.get('*', function(req, res){
+ return res.redirect('index.php');
+ });*/
 
 
-	//Start the app by listening on <port>
-	var server = http.createServer(app).listen(app.get('port'), function() {
-		console.log('Express server listening on port ' + app.get('port'));
-	});
-
-	// Start socket.io
-	require('./config/socket.io')(server);
-
-	//Initializing logger
-	logger.init(app, passport, mongoose);
-
+//Start the app by listening on <port>
+var server = http.createServer(app).listen(app.get('port'), function() {
+	console.log('Express server listening on port ' + app.get('port'));
 });
 
+// Start socket.io
+require('./config/socket.io')(server);
 
+//Initializing logger
+logger.init(app, passport, mongoose);
 
 //expose app
 exports = module.exports = app;

@@ -18,6 +18,7 @@ module.exports = function(passport) {
         User.findOne({
             _id: id
         }, function(err, user) {
+			user.password = "";
             done(err, user);
         });
     });

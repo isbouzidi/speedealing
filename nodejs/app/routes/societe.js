@@ -228,7 +228,7 @@ Object.prototype = {
 	read: function(req, res) {
 		var status_list = this.fk_extrafields.fields.Status;
 
-		StockModel.find({}, function(err, doc) {
+		SocieteModel.find({}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);

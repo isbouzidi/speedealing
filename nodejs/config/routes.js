@@ -3,6 +3,9 @@ var async = require('async');
 module.exports = function(app, passport, auth) {
 	//User Routes
 	var users = require('../app/controllers/users');
+	app.get('/login', function(req, res) {
+		res.render('login');
+	});
 	//app.get('/signin', users.signin);
 	//app.get('/signup', users.signup);
 	app.get('/logout', users.signout);
@@ -43,9 +46,9 @@ module.exports = function(app, passport, auth) {
 			//console.log('session : ' + req.user.name);
 			if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 				req.session.nb++;
-				res.send(200, {'user': req.user.name, 'email': req.user.email, message: req.session.flash.error[nb]});
+				res.send(200, {name: req.user.name, firstname: req.user.firstname, lastname: req.user.lastname, email: req.user.email, message: req.session.flash.error[nb]});
 			} else
-				res.send(200, {'user': req.user.name, 'email': req.user.email});
+				res.send(200, {name: req.user.name, firstname: req.user.firstname, lastname: req.user.lastname, email: req.user.email});
 			return;
 		} else if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 			//console.log(req.session);
@@ -123,7 +126,10 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/partials/:name', auth.requiresLogin, function(req, res) {
 		var name = req.params.name;
-		console.log("toto");
 		res.render('partials/' + name);
 	});
+
+	//Home route
+	var index = require('../app/controllers/index');
+	app.get('/', auth.requiresLogin, index.render);
 };
