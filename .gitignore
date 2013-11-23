@@ -15,3 +15,4 @@ doxygen_warnings.log
 couchdb.stderr
 couchdb.stdout
 *.map
+nodejs/locales/dev/

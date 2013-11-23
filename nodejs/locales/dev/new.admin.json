@@ -1,9 +1,0 @@
-{
-    "Infos": "admin:Infos",
-    "Memcached": "admin:Memcached",
-    "PHPinfo": "admin:PHPinfo",
-    "Triggers": "admin:Triggers",
-    "Purge": "admin:Purge",
-    "About": "admin:About",
-    "Sms": "admin:Sms"
-}
