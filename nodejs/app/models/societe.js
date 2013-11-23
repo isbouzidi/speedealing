@@ -3,7 +3,8 @@
  */
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
-		Schema = mongoose.Schema;
+		Schema = mongoose.Schema,
+		timestamps = require('mongoose-timestamp');
 
 
 /**
@@ -49,7 +50,10 @@ var societeSchema = new Schema({
 	fournisseur: {type: String, default: 'NO'},
 	gps: [Number],
 	contractID: String,
+	UGAP_Ref_Client : String,
 	datec: Date
 });
+
+societeSchema.plugin(timestamps);
 
 mongoose.model('societe', societeSchema, 'Societe');

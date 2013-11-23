@@ -525,6 +525,13 @@
 			"type": "text",
 			"enable": true
 		},
+		"UGAP_Ref_Client": {
+			"optional": true,
+			"schema": "String",
+			"label": "Numero de client UGAP",
+			"type": "text",
+			"enable": true
+		},
 		"Action": {
 			"type": "action",
 			"enable": true,

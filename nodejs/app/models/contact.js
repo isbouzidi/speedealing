@@ -3,7 +3,8 @@
  */
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
-		Schema = mongoose.Schema;
+		Schema = mongoose.Schema,
+		timestamps = require('mongoose-timestamp');
 
 
 /**
@@ -38,5 +39,7 @@ var contactSchema = new Schema({
 	user_modif: String,
 	gps: [Number]
 });
+
+contactSchema.plugin(timestamps);
 
 mongoose.model('contact', contactSchema, 'Contact');

@@ -151,7 +151,7 @@
 	<script type="text/javascript" src="includes/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
 
 	<!-- Kendo library -->
-	<script type="text/javascript" src="includes/kendo/js/kendo.all.min.js"></script>
+	<script type="text/javascript" src="includes/kendo/js/kendo.web.min.js"></script>
 	<script type="text/javascript" src="includes/kendo/js/kendo.timezones.min.js"></script>
 	<script type="text/javascript" src="includes/kendo/js/cultures/kendo.culture.fr-FR.min.js"></script>
 

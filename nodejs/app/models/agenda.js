@@ -3,7 +3,8 @@
  */
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
-		Schema = mongoose.Schema;
+		Schema = mongoose.Schema,
+		timestamps = require('mongoose-timestamp');
 
 
 /**
@@ -25,5 +26,7 @@ var agendaSchema = new Schema({
 	userdone: {id: String, name: String},
 	notes: [{edit: Boolean, title: String, note: String}]
 });
+
+agendaSchema.plugin(timestamps);
 
 mongoose.model('agenda', agendaSchema, 'Agenda');

@@ -3,7 +3,8 @@
  */
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
-		Schema = mongoose.Schema;
+		Schema = mongoose.Schema,
+		timestamps = require('mongoose-timestamp');
 
 
 /**
@@ -44,5 +45,7 @@ var productSchema = new Schema({
 			price_level: String
 		}]
 });
+
+productSchema.plugin(timestamps);
 
 mongoose.model('product', productSchema, 'Product');

@@ -6,22 +6,20 @@ var mongoose = require('mongoose'),
 		Schema = mongoose.Schema,
 		timestamps = require('mongoose-timestamp');
 
+var SeqModel = mongoose.model('Sequence');
 
 /**
  * Article Schema
  */
-var orderSchema = new Schema({
-	ref: String,
+var billSchema = new Schema({
+	ref: {type: String, unique: true},
 	Status: {type: Schema.Types.Mixed, default: 'DRAFT'},
 	cond_reglement_code: {type: String, default: 'RECEP'},
 	mode_reglement_code: {type: String, default: 'TIP'},
-	availability_code: {type: String, default: 'AV_NOW'},
-	demand_reason_code: {type: String, default: 'SRC_CAMP_EMAIL'},
 	client: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
 	contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
 	ref_client: {type: String},
 	datec: {type: Date},
-	date_livraison: Date,
 	notes: [{
 			title: String,
 			note: String,
@@ -39,10 +37,9 @@ var orderSchema = new Schema({
 	total_ttc: Number,
 	shipping: Number,
 	author: {id: String, name: String},
-	entity: String,
+	entity: {type: String},
 	modelpdf: String,
-	linked_objects: [{id: Schema.Types.ObjectId, name: String}],
-	bills: [Schema.Types.ObjectId],
+	orders: [Schema.Types.ObjectId],
 	groups: [Schema.Types.Mixed],
 	lines: [{
 			pu: Number,
@@ -70,21 +67,46 @@ var orderSchema = new Schema({
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}]
 });
 
-orderSchema.plugin(timestamps);
+billSchema.plugin(timestamps);
 
 /**
  * Pre-save hook
  */
-orderSchema.pre('save', function(next) {
-	var self = this;
-	if (this.isNew && this.ref == null) {
-		SeqModel.inc("CO", function(seq) {
-			console.log(seq);
-			self.ref = seq;
-			next();
-		});
-	} else
-		next();
+billSchema.pre('save', function(next) {
+	this.total_ht = 0;
+	this.total_tva = 0;
+	this.total_ttc = 0;
+
+	for (var i = 0; i < this.lines.length; i++) {
+		//console.log(object.lines[i].total_ht);
+		this.total_ht += this.lines[i].total_ht;
+		this.total_tva += this.lines[i].total_tva;
+		this.total_ttc += this.lines[i].total_ttc;
+	}
+
+	this.total_ht = Math.round(this.total_ht * 100) / 100;
+	this.total_tva = Math.round(this.total_tva * 100) / 100;
+	this.total_ttc = Math.round(this.total_ttc * 100) / 100;
+
+	next();
 });
 
-mongoose.model('commande', orderSchema, 'Commande');
+/**
+ * Methods
+ */
+billSchema.methods = {
+	/**
+	 * inc - increment bill Number
+	 *
+	 * @param {function} callback
+	 * @api public
+	 */
+	inc: function(callback) {
+		SeqModel.inc("FA", function(seq) {
+			//console.log(seq);
+			callback(seq);
+		});
+	}
+}
+
+mongoose.model('bill', billSchema, 'Facture');

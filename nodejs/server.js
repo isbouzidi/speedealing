@@ -28,6 +28,8 @@ mongoose_connect.once('open', function callback() {
 	console.log("mongoose mongoDB connected");
 });
 
+require('./config/sequence'); // load the sequence ID First
+
 //Bootstrap models
 var models_path = __dirname + '/app/models';
 var walk = function(path) {
@@ -44,8 +46,6 @@ var walk = function(path) {
 	});
 };
 walk(models_path);
-
-
 
 var app;
 
