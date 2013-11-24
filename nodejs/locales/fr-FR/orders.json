@@ -49,7 +49,7 @@
     "StatusOrderOnProcess": "Attente réception",
     "StatusOrderSending": "Envoi en cours",
     "StatusOrderClosed": "Terminée (expédiée)",
-    "StatusOrderToBill": "Délivrée",
+    "StatusOrderToBill": "Facturée",
     "StatusOrderToBill2": "A facturer",
     "StatusOrderApproved": "Approuvée",
     "StatusOrderRefused": "Refusée",

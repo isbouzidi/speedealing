@@ -52,8 +52,8 @@
 		},
 		"BILLING": {
 			"enable": false,
-			"label": "StatusOrderBilling",
-			"cssClass": "anthracite-gradient"
+			"label": "StatusOrderToBill",
+			"cssClass": "anthracite-gradien"
 		},
 	}
 }
