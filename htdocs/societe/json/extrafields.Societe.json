@@ -528,7 +528,7 @@
 		"UGAP_Ref_Client": {
 			"optional": true,
 			"schema": "String",
-			"label": "Numero de client UGAP",
+			"label": "Ref. de client UGAP",
 			"type": "text",
 			"enable": true
 		},
