@@ -26,8 +26,11 @@ sequenceSchema.statics = {
 				console.log(err);
 
 			var date = new Date();
-
-			return cb(name + (date.getMonth() + 1) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 5));
+			
+			if(name === "PROV")
+				return cb(name + doc.seq); // format PROV440
+			else
+				return cb(name + (date.getMonth() + 1) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 5));
 		});
 	}
 };

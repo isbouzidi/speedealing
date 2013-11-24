@@ -88,7 +88,15 @@ billSchema.pre('save', function(next) {
 	this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = Math.round(this.total_ttc * 100) / 100;
 
-	next();
+	var self = this;
+	if (this.isNew) {
+		SeqModel.inc("PROV", function(seq) {
+			//console.log(seq);
+			self.ref = seq;
+			next();
+		});
+	} else
+		next();
 });
 
 /**
