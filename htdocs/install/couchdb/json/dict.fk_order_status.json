@@ -53,7 +53,7 @@
 		"BILLING": {
 			"enable": false,
 			"label": "StatusOrderToBill",
-			"cssClass": "anthracite-gradien"
+			"cssClass": "anthracite-gradient"
 		}
 	}
 }
