@@ -54,6 +54,6 @@
 			"enable": false,
 			"label": "StatusOrderToBill",
 			"cssClass": "anthracite-gradien"
-		},
+		}
 	}
 }
