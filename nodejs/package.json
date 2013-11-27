@@ -46,7 +46,8 @@
 		"grunt-cli": "latest",
 		"grunt-env": "latest",
 		"temp": ">=0.6.0",
-		"fs-extra": ">=0.8.1"
+		"fs-extra": ">=0.8.1",
+		"accounting": ">=0.3.2"
 	},
 	"devDependencies": {
 		"supertest": "latest",

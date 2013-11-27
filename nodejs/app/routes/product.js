@@ -189,22 +189,15 @@ module.exports = function(app, ensureAuthenticated) {
 		var query;
 
 		if (req.query.type)
-			query = [
-				{'$match': {Status: req.query.type}},
-				{'$group': {_id: '$ref'}},
-				{'$project': {ref: 1}},
-				{'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}},
-				{'$limit': parseInt(req.body.take)}
-			];
+			query = {'$and':
+						[{Status: req.query.type},
+							{ref: new RegExp(req.body.filter.filters[0].value, "i")}
+						]
+			};
 		else
-			query = [
-				{'$group': {_id: '$ref'}},
-				{'$project': {ref: 1}},
-				{'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}},
-				{'$limit': parseInt(req.body.take)}
-			];
+			query = {ref: new RegExp(req.body.filter.filters[0].value, "i")};
 
-		ProductModel.aggregate(query, function(err, docs) {
+		ProductModel.find(query, "_id ref", {limit: parseInt(req.body.take)}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/ref/autocomplete");
 				console.log(err);
@@ -217,8 +210,8 @@ module.exports = function(app, ensureAuthenticated) {
 				for (var i in docs) {
 					//console.log(docs[i]);
 					result[i] = {};
-					result[i].name = docs[i]._id;
-					//result[i].id = docs[i]._id;
+					result[i].name = docs[i].ref;
+					result[i].id = docs[i]._id;
 				}
 
 			return res.send(200, result);

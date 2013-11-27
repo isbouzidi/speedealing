@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 		fs = require("fs-extra"),
 		temp = require("temp"),
 		path = require("path"),
+		accounting = require("accounting"),
 		exec = require("child_process").exec,
 		config = require('../../config/config');
 
@@ -129,10 +130,17 @@ exports.headfoot = function(entity, tex, callback) { //\textsc{Symeos} 158 av. L
 	mongoose.connection.db.collection('Mysoc', function(err, collection) {
 		collection.findOne({_id: entity}, function(err, doc) {
 
-			tex = tex.replace(/--MYSOC--/g, doc.name + "\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town);
+			tex = tex.replace(/--MYSOC--/g, "\\textbf{\\large "+doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town + "\\\\Tel : " + doc.phone + "\\\\ Fax : " + doc.fax );
 			tex = tex.replace(/--FOOT--/g, "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town + " T\\'el.: " + doc.phone + " R.C.S. " + doc.idprof1);
 
 			callback(tex);
 		});
 	});
 };
+
+/**
+ * Number price Format
+ */
+exports.price = function(price) {
+	return accounting.formatMoney(price, { symbol: "€",  format: "%v %s",decimal : ",", thousand: " ", precision : 2   });
+}
