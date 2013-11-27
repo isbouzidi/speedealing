@@ -1,13 +1,19 @@
 
+<section data-ng-controller="IndexController">
+	<hgroup id="main-title" class="thin">
+		<h1>Liste des produits et services</h1>
+	</hgroup>
 
-<hgroup id="main-title" class="thin">
-	<h1>Liste des produits et services</h1>
-</hgroup>
+	<div class="with-padding">
+		<div class="margin-bottom">
+			<p class="button-height block-label">
+				<label class="label" for="ref">{{t 'Search'}} : </label>
+				<input class="input" type="text" id="ref" />
+			</p>
+		</div>
 
-<div class="with-padding">
-	<div id="grid"></div>
-	<script>
-		$(document).ready(function() {
+		<div id="grid"></div>
+		<script>
 			var crudServiceBaseUrl = "api/product",
 					dataSource = new kendo.data.DataSource({
 				transport: {
@@ -38,6 +44,7 @@
 					}
 				},
 				batch: true,
+				autoSync: true,
 				pageSize: 50,
 				schema: {
 					model: {
@@ -45,19 +52,25 @@
 						fields: {
 							_id: {editable: false, nullable: true},
 							ref: {editable: true, validation: {required: true}},
-							qtyMin: {type: "number", validation: {required: true, min: 1}, defaultValue: 0},
-							tms: {type: "date"},
+							qtyMin: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
+							pu_ht: {type: "string", validation: {required: true, min: 0}, defaultValue: null},
+							tms: {type: "date", editable: false, defaultValue: Date().now},
 							entity: {type: "string", defaultValue: ""},
-							Status_ID: {from: "Status.id"},
+							label: {type: "string", defaultValue: ""},
+							Status_ID: {from: "Status.id", defaultValue: "SELL"},
 							price_level: {type: "string", defaultValue: "BASE"},
+							ref_customer_code: {type: "string"},
 							author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
-							Status: {defaultValue: {id: "NEW", name: "Nouveau", css: "grey-gradient"}}
+							Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
+							tva_tx: {type: "string", defaultValue: 19.6},
+							type: {defaultValue: {id: "PRODUCT", name: "Produit", css: "blue-gradient"}}
 						}
 					}
 				},
 				error: function(e) {
 					// log error
-					alert(e.xhr.responseText);
+					if (e.xhr.status === 500)
+						alert(e.xhr.responseText);
 				},
 				/*group: [{
 				 field: "ref",
@@ -66,10 +79,10 @@
 				 field: "price_level",
 				 dir: "asc"
 				 }]*/
-				sort: {field: "ref", dir: "asc"}
+				sort: {field: "tms", dir: "desc"}
 			});
 
-			$("#grid").kendoGrid({
+			var grid = $("#grid").kendoGrid({
 				dataSource: dataSource,
 				pageable: {
 					refresh: true,
@@ -92,70 +105,165 @@
 						name: "create",
 						text: "Nouveau produit/service",
 						className: "k-button k-button-icontext k-grid-add button"
+					},
+					{
+						name: "cancel",
+						text: "Annuler",
+						className: "k-button k-button-icontext k-grid-cancel-changes button"
 					}
 				],
 				columns: [
-					{field: "ref", reorderable: true, filterable: true, title: "reference"},
-					{field: "label", reorderable: true, filterable: true, title: "Designation", editor: textareaEditor},
+					{field: "ref", reorderable: true, filterable: true, title: "reference", editor: refDropDownEditor},
+					{field: "label", reorderable: false, filterable: false, title: "Designation", editor: textareaEditor},
+					{field: "type", reorderable: false, filterable: false, title: "Type", editor: typeDropDownEditor, template: "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
 					{field: "tms", title: "Date de modification", hidden: false, format: "{0:dd/MM/yyyy}", filterable: {
 							ui: "datepicker"
 						}
 					},
-					{field: "price_level", title: "Liste de prix"},
+					{field: "price_level", title: "Liste de prix", editor: priceLevelDropDownEditor},
 					{field: "pu_ht", filterable: true, title: "Prix HT", format: "{0:c3}", width: "60px"},
 					{field: "qtyMin", filterable: true, title: "Qte Min", format: "{0:n0}", width: "60px"},
+					{field: "tva_tx", title: "TVA", format: "{0:p2}", template: "#=tva_tx# %"},
 					{field: "Status_ID", title: "Etat", width: "100px",
 						editor: statusDropDownEditor, template: "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
+					{field: "ref_customer_code", title: "Ref Fact."}
 					//{field: "entity", filterable: false, title: "Atelier", hidden: true, width: "100px", editor: entityDropDownEditor},
 					//{field: "notes", filterable: false, title: "Notes", hidden: true, editor: textareaEditor},
-					{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], title: "&nbsp;", width: "90px"}
+					//	{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], title: "&nbsp;", width: "90px"}
 				],
 				editable: {
-					mode: "popup",
+					mode: "incell",
 					window: {
 						width: "400px"
 					}
 				}
 			});
-		});
 
-		function statusDropDownEditor(container, options) {
-			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoDropDownList({
-				autoBind: false,
+			var autocompleteSymbol = $("#ref").kendoAutoComplete({
+				dataTextField: "name",
+				//dataValueField: "ValueField",
 				dataSource: {
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
 					transport: {
 						read: {
-							url: "api/product/status/select",
-							type: "GET",
+							url: "api/product/ref/autocomplete",
+							type: "POST",
 							dataType: "json"
 						}
 					}
-				}
-			});
-		}
+				},
+				change: function() {
+					var value = this.value();
 
-		function entityDropDownEditor(container, options) {
-			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoDropDownList({
-				autoBind: false,
-				dataSource: {
-					transport: {
-						read: {
-							url: "api/user/entity/select",
-							type: "GET",
-							dataType: "json"
-						}
+					if (value) {
+						grid.data("kendoGrid").dataSource.filter({field: "ref", operator: "contains", value: value});
+					} else {
+						grid.data("kendoGrid").dataSource.filter({});
 					}
 				}
 			});
-		}
 
-		function textareaEditor(container, options) {
-			$('<textarea rows="3" cols="25" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
-		}
-	</script>
+			function statusDropDownEditor(container, options) {
+				$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoDropDownList({
+					autoBind: false,
+					dataSource: {
+						transport: {
+							read: {
+								url: "api/product/status/select",
+								type: "GET",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
 
-</div>
+			function typeDropDownEditor(container, options) {
+				$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoDropDownList({
+					autoBind: false,
+					dataSource: {
+						data: [{id: "PRODUCT", name: "Produit", css: "blue-gradient"},
+							{id: "SERVICE", name: "Service", css: "green-gradient"}]
+					}
+				});
+			}
+
+			function entityDropDownEditor(container, options) {
+				$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoDropDownList({
+					autoBind: false,
+					dataSource: {
+						transport: {
+							read: {
+								url: "api/user/entity/select",
+								type: "GET",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
+
+			function priceLevelDropDownEditor(container, options) {
+				$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoAutoComplete({
+					minLength: 1,
+					dataTextField: "name",
+					filter: "contains",
+					autoBind: false,
+					suggest: true,
+					dataSource: {
+						serverFiltering: true,
+						serverPaging: true,
+						pageSize: 5,
+						transport: {
+							read: {
+								url: "api/product/price_level/autocomplete",
+								type: "POST",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
+
+			function refDropDownEditor(container, options) {
+				$('<input data-text-field="name" required data-value-field="name" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoAutoComplete({
+					minLength: 1,
+					dataTextField: "name",
+					filter: "contains",
+					autoBind: false,
+					suggest: true,
+					dataSource: {
+						serverFiltering: true,
+						serverPaging: true,
+						pageSize: 5,
+						transport: {
+							read: {
+								url: "api/product/ref/autocomplete",
+								type: "POST",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
+
+			function textareaEditor(container, options) {
+				$('<textarea rows="3" cols="25" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
+			}
+
+		</script>
+
+	</div>
+</section>

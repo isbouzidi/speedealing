@@ -253,7 +253,7 @@ class MenuAuguria extends nosqlDocument {
 		global $user;
 
 		// Define url
-		if (preg_match("/^(http:\/\/|https:\/\/)/i", $newTabMenu->url)) {
+		if (preg_match("/^(http:\/\/|https:\/\/|#)/i", $newTabMenu->url)) {
 			$url = $newTabMenu->url;
 		} else {
 			$url = dol_buildpath($newTabMenu->url, 1);

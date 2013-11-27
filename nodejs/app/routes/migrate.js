@@ -13,6 +13,8 @@ var cradle = require('cradle'),
 		config = require('../../config'),
 		fs = require('fs');
 
+var ProductModel = mongoose.model('product');
+
 var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
 	secure: false,
 	cache: true,
@@ -158,6 +160,45 @@ module.exports = function(app, ensureAuthenticated) {
 		});
 
 		res.send(200, {});
+	});
+
+	app.get('/migrate/product/id', function(req, res) {
+		ProductModel.find({}, function(err, doc) {
+			if (err)
+				console.log(err);
+
+			for (var i in doc) {
+
+				var update = function(product) {
+					var history = product.history;
+
+					var price = product.price;
+
+					ProductModel.update({_id: product._id}, {$set: {history: [], price: []}}, function(err) {
+						if (err)
+							console.log(err);
+
+						for (var j in price)
+							ProductModel.update({_id: product._id}, {$push: {price: price[j]}}, function(err) {
+								if (err)
+									console.log(err);
+							});
+
+						for (var j in history)
+							ProductModel.update({_id: product._id}, {$push: {history: history[j]}}, function(err) {
+								if (err)
+									console.log(err);
+							});
+					});
+				};
+
+				update(doc[i]);
+
+			}
+
+			res.send(200, {});
+
+		});
 	});
 };
 

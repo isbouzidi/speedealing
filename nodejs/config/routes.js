@@ -126,9 +126,9 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/partials/:name', auth.requiresLogin, function(req, res) {
 		var name = req.params.name;
-		res.render('partials/' + name);
+		res.render('partials/' + name, {user: req.user});
 	});
-
+	
 	//Home route
 	var index = require('../app/controllers/index');
 	app.get('/', auth.requiresLogin, index.render);

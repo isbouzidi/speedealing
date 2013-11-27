@@ -55,7 +55,7 @@
 			"schema": "Mixed",
 			"type": "select",
 			"enable": true,
-			"default": "DISABLE",
+			"default": "SELL",
 			"status": true,
 			"aoColumns": {
 				"sClass": "center",
@@ -63,20 +63,20 @@
 				"bVisible": true
 			},
 			"values": {
-				"DISABLE": {
+				"NONE": {
 					"enable": true,
-					"label": "NotOnSell",
+					"label": "None",
 					"cssClass": "red-gradient"
-				},
-				"BUY": {
-					"label": "OnBuy",
-					"enable": true,
-					"cssClass": "orange-gradient"
 				},
 				"SELL": {
 					"enable": true,
 					"label": "OnSell",
 					"cssClass": "green-gradient"
+				},
+				"BUY": {
+					"label": "OnBuy",
+					"enable": true,
+					"cssClass": "orange-gradient"
 				},
 				"SELLBUY": {
 					"label": "OnBuySell",
@@ -274,7 +274,7 @@
 			"enable": true
 		},
 		"tms": {
-			"settype":"date",
+			"settype": "date",
 			"schema": "Date",
 			"enable": false
 		},

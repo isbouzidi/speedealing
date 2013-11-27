@@ -3,7 +3,7 @@
 	"Products/Services": "Produits/Services",
 	"Status": {
 		"OnSell": "En vente",
-		"NotOnSell": "Pas en vente",
+		"None": "Inactif",
 		"OnBuy": "En achat",
 		"OnBuySell": "Achat et vente"
 	},

@@ -2580,6 +2580,7 @@ class Product extends nosqlDocument {
 
 				$price = new stdClass();
 				$price->price_level = $price_level;
+				$price->_id = new MongoId();
 
 				for ($i = 4; $i < count($fieldssource); $i++) {
 					$key = $fieldssource[$i];

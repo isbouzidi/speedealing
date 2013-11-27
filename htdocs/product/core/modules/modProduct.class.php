@@ -141,7 +141,7 @@ class modProduct extends DolibarrModules {
 
 		$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:productlist";
-        $this->menus[$r]->url = "/product/list.php?type=PRODUCT";
+        $this->menus[$r]->url = "#!/product";	///product/list.php?type=PRODUCT";
         $this->menus[$r]->langs = "products";
         $this->menus[$r]->position = 1;
         $this->menus[$r]->usertype = 2;
@@ -151,7 +151,7 @@ class modProduct extends DolibarrModules {
         $this->menus[$r]->fk_menu = "menu:products";
         $r++;
 		
-        $this->menus[$r] = new stdClass();
+   /*     $this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:prodservlistall";
         $this->menus[$r]->url = "/product/list.php";
         $this->menus[$r]->langs = "products";
@@ -162,7 +162,7 @@ class modProduct extends DolibarrModules {
         $this->menus[$r]->title = "ListAll";
         $this->menus[$r]->fk_menu = "menu:products";
         $r++;
-
+*/
 
         // Exports
         //--------

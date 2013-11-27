@@ -1,5 +1,5 @@
 {
-	"db": "mongodb://localhost/chaumeil-new",
+	"db": "mongodb://localhost/chaumeil",
 	"app": {
 		"name": "Speedealing",
 		"port": 3000,

@@ -47,6 +47,7 @@
 		"town",
 		"address",
 		"zonegeo",
+		"fournisseur",
 		"phone",
 		"email",
 		"idprof3",
@@ -348,7 +349,7 @@
 				"collection": "Societe",
 				"method": "find",
 				"query": {
-					"Status": {"$nin": ["ST_NEVER","ST_NO"]}
+					"Status": {"$nin": ["ST_NEVER", "ST_NO"]}
 				},
 				"order": {
 					"name": 1
@@ -429,7 +430,8 @@
 			"settype": "string",
 			"list": {
 				"cssclass": "center",
-				"editable": true
+				"editable": true,
+				"visible": false
 			},
 			"view": "listZoneGeo",
 			"getkey": true,
@@ -511,6 +513,13 @@
 					"label": "Sous-traitant",
 					"cssClass": "anthracite-gradient"
 				}
+			},
+			"list": {
+				"editable": true,
+				"cssclass": "center"
+			},
+			"render": {
+				"cssclass": "tag anthracite-gradient glossy"
 			}
 		},
 		"gps": {
@@ -519,8 +528,7 @@
 			"enable": true
 		},
 		"contractID": {
-			"optional": true,
-			"schema": "String",
+			"optional": true, "schema": "String",
 			"label": "Numero de contrat UGAP",
 			"type": "text",
 			"enable": true
@@ -534,8 +542,7 @@
 		},
 		"Action": {
 			"type": "action",
-			"enable": true,
-			"list": {
+			"enable": true, "list": {
 				"width": 45,
 				"cssclass": "center",
 				"sortable": false,
@@ -549,8 +556,7 @@
 				}
 			}
 		},
-		"Checkbox": {
-			"type": "checkbox",
+		"Checkbox": {"type": "checkbox",
 			"label": false,
 			"enable": true,
 			"list": {

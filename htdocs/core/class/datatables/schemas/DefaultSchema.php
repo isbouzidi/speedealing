@@ -31,6 +31,8 @@ class DefaultSchema extends Schema {
         $schema = $this;
 
         foreach ($object->fk_extrafields->longList as $key => $aRow) {
+			
+			//print $aRow;
 
             $field = $object->fk_extrafields->fields->$aRow;
 

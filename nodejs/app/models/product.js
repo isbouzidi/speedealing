@@ -11,8 +11,8 @@ var mongoose = require('mongoose'),
  * Article Schema
  */
 var productSchema = new Schema({
-	ref: {type: String, require: true, unique: true},
-	label: String,
+	ref: {type: String, require: true, unique: true, upper: true},
+	label: {type: String, default: ""},
 	type: Schema.Types.Mixed,
 	Status: Schema.Types.Mixed,
 	country_id: String,
@@ -28,13 +28,14 @@ var productSchema = new Schema({
 	Tag: [String],
 	entity: String,
 	price: [{
-			_id : Schema.Types.ObjectId,
+			_id: {type: Schema.Types.ObjectId, require: true},
 			price_level: String,
 			tms: Date,
 			pu_ht: Number,
-			qtyMin: Number,
+			qtyMin: {type: Number, default: 0},
 			ref_customer_code: String,
-			user_mod: Schema.Types.Mixed
+			user_mod: Schema.Types.Mixed,
+			tva_tx: Number
 		}],
 	user_mod: {id: String, name: String},
 	history: [{
