@@ -97,6 +97,8 @@ if (!empty($key) && !empty($class) && !empty($id)) {
 				$query = $aRow->mongo->query;
 				
                 $result = $object_tmp->mongodb->$method($query);
+				if($method == 'aggregate')
+					$result = $result['result'];
 				if($aRow->mongo->order)
 					$result->sort($aRow->mongo->order);
 			} else
@@ -113,10 +115,13 @@ if (!empty($key) && !empty($class) && !empty($id)) {
             $aRow->values[0]->enable = true;
         }
 
+		//error_log(print_r($result,true));
+		
         foreach ($result as $row) {
 			error_log(print_r($row,true));
 			$row = json_decode(json_encode($row));
 			
+			//error_log(print_r($row,true));
 			if(!is_string($row->_id))
 				$row->_id = $row->_id->{'$id'};
 			
@@ -125,9 +130,9 @@ if (!empty($key) && !empty($class) && !empty($id)) {
                 $aRow->values[$row->_id]->label = $row->name;
                 $aRow->values[$row->_id]->enable = true;
             } else { // For getkey
-				$aRow->values[$row->name] = new stdClass();
-                $aRow->values[$row->name]->label = $row->name;
-                $aRow->values[$row->name]->enable = true;
+				$aRow->values[$row->_id] = new stdClass();
+                $aRow->values[$row->_id]->label = $row->_id;
+                $aRow->values[$row->_id]->enable = true;
             }
         }
 

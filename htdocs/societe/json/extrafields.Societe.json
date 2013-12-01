@@ -382,6 +382,15 @@
 			"class": "Product",
 			"view": "listPriceLevel",
 			"getkey": true,
+			"mongo": {
+				"collection": "Product",
+				"method": "aggregate",
+				"query": [
+					{"$unwind": "$price"},
+					{"$group": {"_id": "$price.price_level"}},
+					{"$project": {"price_level": "$price.price_level"}}
+				]
+			},
 			"params": {
 				"group": true
 			}

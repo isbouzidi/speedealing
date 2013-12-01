@@ -39,6 +39,8 @@ if ($user->societe_id)
 	$socid = $user->societe_id;
 $result = restrictedArea($user, 'societe', $socid, '');
 
+$type = GETPOST("type");
+
 $object = new Societe($db);
 /*
  * View
@@ -47,30 +49,29 @@ $object = new Societe($db);
 llxHeader('', $langs->trans("ThirdParty"), '', '', '', '');
 
 if ($type != '') {
-	if ($type == 0)
-		$titre = $langs->trans("ListOfSuspects");
-	elseif ($type == 1)
-		$titre = $langs->trans("ListOfProspects");
-	else
-		$titre = $langs->trans("ListOfCustomers");
+	$titre = $langs->trans("ListOfSuppliers");
 }
 else
 	$titre = $langs->trans("ListOfAll");
 
 print_fiche_titre($titre);
-?>
-<div class="dashboard">
-    <div class="columns">
-        <div class="four-columns twelve-columns-mobile graph">
-			<?php $object->graphPieStatus(); ?>
-        </div>
 
-        <div class="eight-columns twelve-columns-mobile new-row-mobile graph">
-			<?php $object->graphBarStatus(); ?>
-        </div>
-    </div>
-</div>
-<?php
+
+if (!$type) {
+	?>
+	<div class="dashboard">
+	    <div class="columns">
+	        <div class="four-columns twelve-columns-mobile graph">
+				<?php $object->graphPieStatus(); ?>
+	        </div>
+
+	        <div class="eight-columns twelve-columns-mobile new-row-mobile graph">
+				<?php $object->graphBarStatus(); ?>
+	        </div>
+	    </div>
+	</div>
+	<?php
+}
 print '<div class="with-padding">';
 //print '<div class="columns">';
 //print start_box($titre,"twelve","16-Companies.png",false);
@@ -275,7 +276,7 @@ if ($user->rights->societe->client->voir)
 			{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}]}"}]';
 else
 	$query = '[{name :"class",value:"' . get_class($object) . '"},
-			{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}, {\"commercial_id.id\":\"'.$user->id.'\"}]}"}]';
+			{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}, {\"commercial_id.id\":\"' . $user->id . '\"}]}"}]';
 
 if (GETPOST('disable')) {
 	if ($user->rights->societe->client->voir)
@@ -283,8 +284,18 @@ if (GETPOST('disable')) {
 			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_NO\"},{\"Status\": \"ST_NEVER\"}]}"}]';
 	else
 		$query = '[{name :"class",value:"' . get_class($object) . '"},
-			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_NO\"},{\"Status\": \"ST_NEVER\"}], \"commercial_id.id\":\"'.$user->id.'\"}"}]';
+			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_NO\"},{\"Status\": \"ST_NEVER\"}], \"commercial_id.id\":\"' . $user->id . '\"}"}]';
 }
+
+if (GETPOST('type')) {
+	if ($user->rights->societe->client->voir)
+		$query = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"fournisseur\":{\"$nin\": [\"NO\",null]}}"}]';
+	else
+		$query = '[{name :"class",value:"' . get_class($object) . '"},
+			{"name": "query", "value": "{\"fournisseur\":{\"$nin\": [\"NO\",null]}}, \"commercial_id.id\":\"' . $user->id . '\"}"}]';
+}
+
 echo $object->showList($query);
 //}
 //print end_box();

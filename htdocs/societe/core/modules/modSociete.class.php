@@ -265,8 +265,20 @@ class modSociete extends DolibarrModules {
         $r++;
 		
 		$this->menus[$r] = new stdClass();
-        $this->menus[$r]->_id = "menu:thirdpartydisable";
+        $this->menus[$r]->_id = "menu:thirdpartysupplier";
         $this->menus[$r]->position = 3;
+        $this->menus[$r]->url = "/societe/list.php?type=supplier";
+        $this->menus[$r]->langs = "companies";
+        $this->menus[$r]->perms = '$user->rights->societe->lire';
+        $this->menus[$r]->enabled = '$conf->societe->enabled';
+        $this->menus[$r]->usertype = 2;
+        $this->menus[$r]->title = "Liste des fournisseurs";
+        $this->menus[$r]->fk_menu = "menu:companies";
+        $r++;
+		
+		$this->menus[$r] = new stdClass();
+        $this->menus[$r]->_id = "menu:thirdpartydisable";
+        $this->menus[$r]->position = 4;
         $this->menus[$r]->url = "/societe/list.php?disable=true";
         $this->menus[$r]->langs = "companies";
         $this->menus[$r]->perms = '$user->rights->societe->lire';
