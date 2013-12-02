@@ -30,3 +30,7 @@
 .k-edit-form-container {
 	width: 100%;
 }
+
+.k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+	min-width: 24px;
+}
