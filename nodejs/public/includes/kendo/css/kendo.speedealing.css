@@ -34,3 +34,7 @@
 .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
 	min-width: 24px;
 }
+
+.k-grid td {
+	padding: .2em .4em;
+}

@@ -44,12 +44,23 @@ module.exports = function(app, passport, auth) {
 
 		if (req.user) {
 			//console.log('session : ' + req.user.name);
+
+			var user = {name: req.user.name,
+				firstname: req.user.firstname,
+				lastname: req.user.lastname,
+				email: req.user.email,
+				_id: req.user._id,
+				entity: req.user.entity,
+				photo: req.user.photo};
+			
+			//console.log(req.user.photo);
+
 			if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 				req.session.nb++;
-				res.send(200, {name: req.user.name, firstname: req.user.firstname, lastname: req.user.lastname, email: req.user.email, message: req.session.flash.error[nb]});
-			} else
-				res.send(200, {name: req.user.name, firstname: req.user.firstname, lastname: req.user.lastname, email: req.user.email});
-			return;
+				user.message = req.session.flash.error[nb];
+			}
+
+			return res.send(200, user);
 		} else if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 			//console.log(req.session);
 			req.session.nb++;
@@ -124,11 +135,17 @@ module.exports = function(app, passport, auth) {
 	var latex = require('../app/models/latex');
 	app.get('/servepdf/:pdfId', latex.servePDF);
 
-	app.get('/partials/:name', auth.requiresLogin, function(req, res) {
-		var name = req.params.name;
-		res.render('partials/' + name, {user: req.user});
+	app.get('/partials/:view', auth.requiresLogin, function(req, res) {
+		var view = req.params.view;
+		res.render('partials/' + view, {user: req.user});
 	});
-	
+
+	app.get('/partials/:module/:view', auth.requiresLogin, function(req, res) {
+		var module = req.params.module;
+		var view = req.params.view;
+		res.render('partials/' + module + "/" + view, {user: req.user});
+	});
+
 	//Home route
 	var index = require('../app/controllers/index');
 	app.get('/', auth.requiresLogin, index.render);

@@ -7,7 +7,13 @@
 		</header>
 
 		<div id="profile">
-			<img class="user-icon" src='img/user.png' width='64' alt='User name'>
+			<div ng-if="global.user.photo">
+				<img alt="User name" ng-src="viewimage.php?modulepart=userphoto&entity=\{{global.user.entity}}&file=\{{global.user.photo}}&cache=1&id=\{{global.user._id}}" width="64" class="user-icon">
+			</div>
+			<div ng-if="!global.user.photo">
+				<img src="img/user.png" width="64" class="user-icon" alt="User name">
+			</div>
+			
 			<p> {{t 'Hello'}}
 				<span class="name">\{{global.user.firstname}} 
 					<b> \{{global.user.lastname}}</b>
@@ -77,7 +83,7 @@
 
 	<footer id="menu-footer">
 		<div>
-			<p>Speedealing v.{{version}}</p>
+			<p>Speedealing v{{version}}</p>
 		</div>
 	</footer>
 </div>

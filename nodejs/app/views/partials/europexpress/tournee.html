@@ -1,0 +1,215 @@
+
+<section data-ng-controller="IndexController">
+	<hgroup id="main-title" class="thin">
+		<h1>Liste des tournées</h1>
+	</hgroup>
+
+	<div class="with-padding">
+
+		<div id="grid"></div>
+		<script>
+			$(document).ready(function() {
+				var crudServiceBaseUrl = "api/europexpress/regulier",
+						dataSource = new kendo.data.DataSource({
+					transport: {
+						read: {
+							url: crudServiceBaseUrl,
+							type: "GET",
+							dataType: "json"
+						},
+						update: {
+							url: crudServiceBaseUrl,
+							type: "PUT",
+							dataType: "json"
+						},
+						destroy: {
+							url: crudServiceBaseUrl,
+							type: "DELETE",
+							dataType: "json"
+						},
+						create: {
+							url: crudServiceBaseUrl,
+							type: "POST",
+							dataType: "json",
+							complete: function(e) {
+								$("#grid").data("kendoGrid").dataSource.read();
+							}
+						},
+						parameterMap: function(options, operation) {
+							if (operation !== "read" && options.models) {
+								return {models: kendo.stringify(options.models)};
+							}
+						}
+					},
+					error: function(e) {
+						// log error
+						alert(e.xhr.responseText);
+					},
+					batch: true,
+					pageSize: 50,
+					schema: {
+						model: {
+							id: "_id",
+							fields: {
+								_id: {editable: false, nullable: true},
+								qty: {type: "text", defaultValue: 1, validation: {required: true}},
+								datec: {type: "date", editable: true},
+								typeQty: {editable: true, defaultValue: {id: "IMPORT", name: "Non defini", css: "grey-gradient"}},
+								driver: {editable: true, validation: {required: true}, defaultValue: {id: null, name: ""}},
+								bill: {editable: false, type: "boolean", defaultValue: true},
+								typeCourse: {editable: false, defaultValue: {id: "REGULIER", name: "Regulier", css: "grey-gradient"}},
+								storehouse: {editable: true},
+								immatriculation: {editable: true},
+								author: {editable: false, defaultValue: {id: "<?php echo $user->id; ?>", name: "<?php echo $user->name; ?>"}},
+								societe: {editable: false, defaultValue: {id: null, name: "Aucun"}}
+							}
+						}
+					},
+					sort: {field: "datec", dir: "desc"}
+				});
+				$("#grid").kendoGrid({
+					dataSource: dataSource,
+					pageable: {
+						refresh: true,
+						pageSize: 50,
+						pageSizes: [5, 10, 20, 50],
+						buttonCount: 5
+					},
+					filterable: {
+						extra: false
+					},
+					//scrollable: {
+					//	virtual: true
+					//},
+					scrollable: false,
+					groupable: true,
+					sortable: true,
+					//height: 430,
+					toolbar: [
+						{
+							name: "create",
+							text: "Nouvelle ligne",
+							className: "k-button k-button-icontext k-grid-add button",
+						}
+					],
+					columns: [
+						{field: "driver", editor: driverDropDownEditor, title: "Chauffeur", template: "#=driver.name#"},
+						{field: "datec", title: "Date", format: "{0:dd/MM/yyyy HH:mm}", filterable: {
+								ui: "datepicker"
+							},
+							//template: \'#= kendo.toString(date_livraison, "dd/MM/yyyy") #\'';
+							//print $object->kendoTemplateJS("date_commande", "date");						
+						},
+						{field: "storehouse", editor: storehouseDropDownEditor, title: "Tournée"},
+						{field: "immatriculation", editor: immatriculationDropDownEditor, title: "Véhicule"},
+						//{field: "societe", title: "Client", template: "#=societe.name#"},
+						{field: "typeQty", title: "Type", width: "160px",
+							editor: typeDropDownEditor, template: "<small class=\"tag #=typeQty.css# glossy \">#=typeQty.name#</small>"},
+						{field: "qty", title: "Qté", width: "60px"},
+						//{field: "penality", title: "Astreinte", template: "#if (penality) {# <div align=center><input type=\"checkbox\" disabled=\"disabled\" checked></div>#} else {# <div align=center><input type=\"checkbox\" disabled=\"disabled\"></div> #}#", width: "60px"},
+						{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], title: "&nbsp;", width: "90px"}],
+					editable: {
+						mode: "popup",
+						window: {
+							width: "400px"
+						}
+					}
+				});
+			});
+			function typeDropDownEditor(container, options) {
+				$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoDropDownList({
+					autoBind: false,
+					dataSource: {
+						transport: {
+							read: {
+								url: "api/europexpress/regulier/type/select",
+								type: "GET",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
+
+
+			function dateTimeEditor(container, options) {
+				$('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+						.appendTo(container)
+						.kendoDateTimePicker({});
+			}
+
+			function driverDropDownEditor(container, options) {
+				$('<input required id="id"/>')
+						.attr("name", options.field)
+						.appendTo(container)
+						.kendoAutoComplete({
+					minLength: 2,
+					dataTextField: "name",
+					filter: "contains",
+					dataSource: {
+						serverFiltering: true,
+						serverPaging: true,
+						pageSize: 5,
+						transport: {
+							read: {
+								url: "api/user/name/autocomplete",
+								type: "POST",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
+
+			function storehouseDropDownEditor(container, options) {
+				$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoAutoComplete({
+					minLength: 1,
+					dataTextField: "name",
+					filter: "contains",
+					autoBind: false,
+					suggest: true,
+					dataSource: {
+						serverFiltering: true,
+						serverPaging: true,
+						pageSize: 10,
+						transport: {
+							read: {
+								url: "api/europexpress/regulier/storehouse/autocomplete",
+								type: "POST",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
+
+			function immatriculationDropDownEditor(container, options) {
+				$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
+						.appendTo(container)
+						.kendoAutoComplete({
+					minLength: 1,
+					dataTextField: "name",
+					filter: "contains",
+					autoBind: false,
+					suggest: true,
+					dataSource: {
+						serverFiltering: true,
+						serverPaging: true,
+						pageSize: 10,
+						transport: {
+							read: {
+								url: "api/europexpress/vehicules/immat/autocomplete",
+								type: "POST",
+								dataType: "json"
+							}
+						}
+					}
+				});
+			}
+		</script>
+	</div>
+</section>

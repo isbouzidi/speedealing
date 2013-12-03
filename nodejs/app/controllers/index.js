@@ -1,7 +1,8 @@
 "use strict";
 
 var async = require('async'),
-		mongoose = require('mongoose');
+		mongoose = require('mongoose'),
+		 config = require('../../package.json');
 
 var conf = {}; // for conf data const
 
@@ -292,7 +293,7 @@ exports.render = function(req, res) {
 
 				menu.count = result.length;
 				menu.url = "";
-				if(menuFather.type === 'top')
+				if (menuFather.type === 'top')
 					menu.title = req.i18n.t((menuFather.langs ? menuFather.langs + ":" : "") + menuFather.title);
 				else
 					menu.title = menuFather.title;
@@ -322,7 +323,7 @@ exports.render = function(req, res) {
 				return selectnow;
 			}
 
-			res.render('index', {title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML});
+			res.render('index', {title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, version: config.version});
 		});
 	});
 

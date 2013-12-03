@@ -17,3 +17,4 @@ couchdb.stdout
 *.map
 nodejs/locales/dev/
 nodejs/uploads/
+nodejs/public/js/lib
