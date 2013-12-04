@@ -34,7 +34,7 @@ var WidgetSchema = new mongoose.Schema({
 WidgetSchema.plugin(acl.object);
 WidgetSchema.plugin(timestamps);
 
-module.exports = function(app, ensureAuthenticated) {
+module.exports = function(app, passport, auth) {
 
 	app.get('/migrate/couchdb', function(req, res) {
 		var migrate = new Migrate(req, res);

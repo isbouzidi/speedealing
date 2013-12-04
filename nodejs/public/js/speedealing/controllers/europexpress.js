@@ -1,38 +1,35 @@
-angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', 'Global', 'Articles', function($scope, $routeParams, $location, Global, Articles) {
+angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', 'Global', 'EEPlanning', function($scope, $routeParams, $location, Global, Object) {
 		$scope.global = Global;
 		$scope.showEdit = {};
+		
+		$scope.cpt = 0;
 
-		$scope.phones = [
-			{'_id': 1,
-				'name': 'Nexus S',
-				'snippet': 'Fast just got faster with Nexus S.'},
-			{'_id': 2,
-				'name': 'Motorola XOOM™ with Wi-Fi',
-				'snippet': 'The Next, Next Generation tablet.'},
-			{'_id': 3,
-				'name': 'MOTOROLA XOOM™',
-				'snippet': 'The Next, Next Generation tablet.'}
-		];
-
-		$scope.cpt = $scope.phones.length;
+		$scope.find = function() {
+			//console.log($routeParams);
+			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
+				$scope.tournees = tournees;
+				$scope.cpt = $scope.tournees.length;
+			});
+		};
 
 		$scope.enableEdit = function(id) {
 			$scope.showEdit[id] = true;
 		};
-		
+
 		$scope.isCollapsed = false;
 
-		$scope.week = week();
-				
-		function week() {
+		/*$scope.week = function() {
 			var d = new Date();
 			d.setHours(0, 0, 0);
 			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-			return Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7);
-		};
+			return Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7).toString() + '/' + d.getFullYear();
+		};*/
+		
+		$scope.week = $routeParams.id1 + '/' + $routeParams.id2;
 
-		$scope.disableEdit = function(id) {
-			$scope.showEdit[id] = false;
+		$scope.disableEdit = function() {
+			for(var i in $scope.showEdit)
+				$scope.showEdit[i] = false;
 		};
 
 		/* $scope.create = function() {

@@ -2,7 +2,8 @@
 
 var async = require('async'),
 		mongoose = require('mongoose'),
-		 config = require('../../package.json');
+		fs = require('fs'),
+		config = require('../../package.json');
 
 var conf = {}; // for conf data const
 
@@ -112,6 +113,22 @@ exports.render = function(req, res) {
 	var eventTodo = [];
 
 	var menuHTML = "";
+
+	/**
+	 * List Services and Angular Controllers
+	 */
+
+	var angular = {};
+	angular.services = [];
+	angular.controllers = [];
+
+	fs.readdirSync('public/js/speedealing/services').forEach(function(file) {
+		angular.services.push(file);
+	});
+	
+	fs.readdirSync('public/js/speedealing/controllers').forEach(function(file) {
+		angular.controllers.push(file);
+	});
 
 	// load conf and const
 	ModuleModel.find({}, "name numero enabled always_enabled family version picto moddir dirs depends requireby need_dolibarr_version const langfiles boxes", function(err, docs) {
@@ -323,7 +340,7 @@ exports.render = function(req, res) {
 				return selectnow;
 			}
 
-			res.render('index', {title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, version: config.version});
+			res.render('index', {title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, version: config.version, angular: angular});
 		});
 	});
 

@@ -24,6 +24,10 @@ window.app.config(['$routeProvider',
 			templateUrl: function(params) {
 				return 'partials/' + params.module + '/' + params.view;
 			}
+		}).when('/:module/:view/:id1/:id2', {
+			templateUrl: function(params) {
+				return 'partials/' + params.module + '/' + params.view;
+			}
 		}).when('/', {
 			templateUrl: 'partials/home'
 		}).otherwise({

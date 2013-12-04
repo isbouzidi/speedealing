@@ -7,7 +7,7 @@ var AgendaModel = mongoose.model('agenda');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
-module.exports = function(app, ensureAuthenticated) {
+module.exports = function(app, passport, auth) {
 
 	var agenda = new Agenda();
 
@@ -20,20 +20,20 @@ module.exports = function(app, ensureAuthenticated) {
 		agenda.fk_extrafields = doc;
 	});
 
-	app.get('/api/agenda', ensureAuthenticated, function(req, res) {
+	app.get('/api/agenda', auth.requiresLogin, function(req, res) {
 		agenda.read(req, res);
 		return;
 	});
 
-	app.post('/api/agenda', ensureAuthenticated, function(req, res) {
+	app.post('/api/agenda', auth.requiresLogin, function(req, res) {
 		agenda.create(req, res);
 	});
 
-	app.put('/api/agenda', ensureAuthenticated, function(req, res) {
+	app.put('/api/agenda', auth.requiresLogin, function(req, res) {
 		agenda.update(req, res);
 	});
 
-	app.del('/api/agenda', ensureAuthenticated, function(req, res) {
+	app.del('/api/agenda', auth.requiresLogin, function(req, res) {
 		agenda.del(req, res);
 	});
 };

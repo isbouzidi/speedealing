@@ -9,7 +9,7 @@ var ContactModel = mongoose.model('contact');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
-module.exports = function(app, ensureAuthenticated) {
+module.exports = function(app, passport, auth) {
 
 	var object = new Object();
 
@@ -22,13 +22,13 @@ module.exports = function(app, ensureAuthenticated) {
 		object.fk_extrafields = doc;
 	});
 
-	app.get('/api/societe', ensureAuthenticated, function(req, res) {
+	app.get('/api/societe', auth.requiresLogin, function(req, res) {
 		object.read(req, res);
 		return;
 	});
 
 	// Specific for autocomplete
-	app.get('/api/societe/select', ensureAuthenticated, function(req, res) {
+	app.get('/api/societe/select', auth.requiresLogin, function(req, res) {
 		if (config.couchdb_name)
 			object.db = config.couchdb_name;
 		else
@@ -39,7 +39,7 @@ module.exports = function(app, ensureAuthenticated) {
 	});
 
 	// list for autocomplete
-	app.post('/api/societe/autocomplete', ensureAuthenticated, function(req, res) {
+	app.post('/api/societe/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body);
 		
 		if(req.body.filter == null)
@@ -79,17 +79,17 @@ module.exports = function(app, ensureAuthenticated) {
 		});
 	});
 
-	app.post('/api/societe', ensureAuthenticated, function(req, res) {
+	app.post('/api/societe', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.create(req));
 	});
 
-	app.put('/api/societe', ensureAuthenticated, function(req, res) {
+	app.put('/api/societe', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
 	});
 
-	app.del('/api/societe', ensureAuthenticated, function(req, res) {
+	app.del('/api/societe', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
 	});
@@ -166,7 +166,7 @@ module.exports = function(app, ensureAuthenticated) {
 		}
 	});
 
-	app.get('/api/societe/contact/select', ensureAuthenticated, function(req, res) {
+	app.get('/api/societe/contact/select', auth.requiresLogin, function(req, res) {
 		//console.log(req.query);
 		var result = [];
 		result.push({id:"", name:""});

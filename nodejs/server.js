@@ -63,7 +63,7 @@ require('./config/express')(app, passport, db);
 require('./config/routes')(app, passport, auth);
 
 // Speedealing routes
-require('./app/routes')(app, ensureAuthenticated);
+require('./app/routes')(app, passport, auth);
 
 /*app.get('*', function(req, res){
  return res.redirect('index.php');
@@ -84,7 +84,7 @@ logger.init(app, passport, mongoose);
 //expose app
 exports = module.exports = app;
 
-function ensureAuthenticated(req, res, next) {
+/*function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
@@ -100,7 +100,7 @@ function ensureAuthenticated(req, res, next) {
 	 return next();
 	 }*/
 
-	if (config.urlrewrite) {
+	/*if (config.urlrewrite) {
 		if (req.query.db)
 			res.redirect(req.query.db + '/login');
 		else
@@ -109,4 +109,4 @@ function ensureAuthenticated(req, res, next) {
 	} else
 		res.redirect('/index.php');
 
-}
+}*/

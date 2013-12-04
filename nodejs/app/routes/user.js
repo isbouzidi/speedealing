@@ -6,7 +6,7 @@ var UserModel = mongoose.model('user');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
-module.exports = function(app, ensureAuthenticated) {
+module.exports = function(app, passport, auth) {
 
 	var object = new Object();
 	
@@ -22,13 +22,13 @@ module.exports = function(app, ensureAuthenticated) {
 		object.fk_extrafields = doc;
 	});
 
-	app.get('/api/user', ensureAuthenticated, function(req, res) {
+	app.get('/api/user', auth.requiresLogin, function(req, res) {
 		object.read(req, res);
 		return;
 	});
 
 	// Specific for autocomplete
-	app.get('/api/user/select', ensureAuthenticated, function(req, res) {
+	app.get('/api/user/select', auth.requiresLogin, function(req, res) {
 		UserModel.find({Status:"ENABLE"}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/user/select");
@@ -59,7 +59,7 @@ module.exports = function(app, ensureAuthenticated) {
 	});
 
 	// list for autocomplete
-	app.post('/api/user/name/autocomplete', ensureAuthenticated, function(req, res) {
+	app.post('/api/user/name/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
 
 		UserModel.find({'$or':[{firstname: new RegExp(req.body.filter.filters[0].value,"i")},{lastname: new RegExp(req.body.filter.filters[0].value,"i")}]}, {}, {limit: req.body.take}, function(err, docs) {
@@ -84,17 +84,17 @@ module.exports = function(app, ensureAuthenticated) {
 		});
 	});
 
-	app.post('/api/user', ensureAuthenticated, function(req, res) {
+	app.post('/api/user', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.create(req));
 	});
 
-	app.put('/api/user', ensureAuthenticated, function(req, res) {
+	app.put('/api/user', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
 	});
 
-	app.del('/api/user', ensureAuthenticated, function(req, res) {
+	app.del('/api/user', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
 	});

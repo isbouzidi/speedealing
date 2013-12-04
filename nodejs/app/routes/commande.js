@@ -8,7 +8,7 @@ var ExtrafieldModel = mongoose.model('extrafields');
 var PDFDocument = require('pdfkit');
 var dateFormat = require('dateformat');
 
-module.exports = function(app, ensureAuthenticated) {
+module.exports = function(app, passport, auth) {
 
 	var object = new Object();
 
@@ -21,12 +21,12 @@ module.exports = function(app, ensureAuthenticated) {
 		object.fk_extrafields = doc;
 	});
 
-	app.get('/api/commande/lines/list', ensureAuthenticated, function(req, res) {
+	app.get('/api/commande/lines/list', auth.requiresLogin, function(req, res) {
 		object.listLines(req, res);
 		return;
 	});
 
-	app.get('/api/commande/BL/pdf', ensureAuthenticated, function(req, res) {
+	app.get('/api/commande/BL/pdf', auth.requiresLogin, function(req, res) {
 		object.genBlPDF(req, res);
 		return;
 	});

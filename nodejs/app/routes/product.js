@@ -9,7 +9,7 @@ var ProductModel = mongoose.model('product');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
-module.exports = function(app, ensureAuthenticated) {
+module.exports = function(app, passport, auth) {
 
 	var object = new Object();
 
@@ -22,13 +22,13 @@ module.exports = function(app, ensureAuthenticated) {
 		object.fk_extrafields = doc;
 	});
 
-	app.get('/api/product', ensureAuthenticated, function(req, res) {
+	app.get('/api/product', auth.requiresLogin, function(req, res) {
 		object.read(req, res);
 		return;
 	});
 
 	// list for autocomplete
-	app.post('/api/product/autocomplete', ensureAuthenticated, function(req, res) {
+	app.post('/api/product/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
 
 		if (req.body.filter == null)
@@ -68,15 +68,15 @@ module.exports = function(app, ensureAuthenticated) {
 		});
 	});
 
-	app.post('/api/product', ensureAuthenticated, function(req, res) {
+	app.post('/api/product', auth.requiresLogin, function(req, res) {
 		object.create(req, res);
 	});
 
-	app.put('/api/product', ensureAuthenticated, function(req, res) {
+	app.put('/api/product', auth.requiresLogin, function(req, res) {
 		object.update(req, res);
 	});
 
-	app.del('/api/product', ensureAuthenticated, function(req, res) {
+	app.del('/api/product', auth.requiresLogin, function(req, res) {
 		object.del(req, res);
 	});
 
@@ -152,13 +152,13 @@ module.exports = function(app, ensureAuthenticated) {
 		}
 	});
 
-	app.get('/api/product/status/select', ensureAuthenticated, function(req, res) {
+	app.get('/api/product/status/select', auth.requiresLogin, function(req, res) {
 		//console.dir(req.query);
 		object.StatusSelect(req, res);
 	});
 
 	// list for autocomplete
-	app.post('/api/product/price_level/autocomplete', ensureAuthenticated, function(req, res) {
+	app.post('/api/product/price_level/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
 
 		ProductModel.aggregate([{$unwind: "$price"}, {'$group': {_id: '$price.price_level'}}, {'$project': {price_level: '$price.price_level'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
@@ -183,7 +183,7 @@ module.exports = function(app, ensureAuthenticated) {
 	});
 
 	// list for autocomplete
-	app.post('/api/product/ref/autocomplete', ensureAuthenticated, function(req, res) {
+	app.post('/api/product/ref/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
 
 		var query;
