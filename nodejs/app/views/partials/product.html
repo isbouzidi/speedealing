@@ -1,147 +1,76 @@
-<section data-ng-controller="IndexController">
+<section data-ng-controller="ProductController">
 	<hgroup id="main-title" class="thin">
-		<h1>Liste des produits et services</h1>
+			<h1>Liste des produits et services</h1>
 	</hgroup>
 
 	<div class="with-padding">
 		<div class="margin-bottom">
-			<p class="button-height block-label">
+			<!--<p class="button-height block-label">
 				<label class="label" for="ref">{{t 'Search'}} : </label>
 				<input class="input" type="text" id="ref" />
-			</p>
+			</p>-->
 		</div>
 
-		<div id="grid"></div>
-		<script>
+		<div kendo-grid k-data-source="dataSource" k-columns='[
+			{"field": "ref", "filterable": true, "title": "reference", "editor": refDropDownEditor},
+			{"field": "label", "filterable": false, "title": "Designation", "editor": textareaEditor},
+			{"field": "type", "filterable": false, "title": "Type", "editor": typeDropDownEditor, "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
+			{"field": "tms", "title": "Date de modification", "hidden": false, "format": "{0:dd/MM/yyyy}", "filterable": {
+			"ui": "datepicker"
+			}
+			},
+			{"field": "price_level", "title": "Liste de prix", "editor": priceLevelDropDownEditor},
+			{"field": "pu_ht", "filterable": true, "title": "Prix HT", "format": "{0:c3}", "width": "60px"},
+			{"field": "qtyMin", "filterable": true, "title": "Qte Min", "format": "{0:n0}", "width": "60px"},
+			{"field": "tva_tx", "title": "TVA", "format": "{0:p2}", "template": "#=tva_tx# %"},
+			{"field": "Status_ID", "title": "Etat", "width": "100px",
+					"editor": statusDropDownEditor, "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
+			{"field": "ref_customer_code", "title": "Ref Fact."}]'
+			 k-pageable='{ "refresh": true, "pageSizes": [5, 10, 20, 50], "buttonCount": 5}'
+			 k-sortable="true" k-"filterable"="true" k-groupable="true" k-scrollable="false"
+			 k-toolbar='[{
+			 "name": "create",
+			 "text": "Nouveau produit/service",
+			 "className": "k-button k-button-icontext k-grid-add button"
+			 },{
+			 "name": "cancel",
+			 "text": "Annuler",
+			 "className": "k-button k-button-icontext k-grid-cancel-changes button"
+			 }]'
+			 k-editable='{
+			 "mode": "incell"
+			 }'
+			 ></div>
+		<!--<script>
 			$(document).ready(function() {
-				var crudServiceBaseUrl = "api/product",
-						dataSource = new kendo.data.DataSource({
-					transport: {
-						read: {
-							url: crudServiceBaseUrl,
-							type: "GET",
-							dataType: "json"
-						},
-						update: {
-							url: crudServiceBaseUrl,
-							type: "PUT",
-							dataType: "json"
-						},
-						destroy: {
-							url: crudServiceBaseUrl,
-							type: "DELETE",
-							dataType: "json"
-						},
-						create: {
-							url: crudServiceBaseUrl,
-							type: "POST",
-							dataType: "json"
-						},
-						parameterMap: function(options, operation) {
-							if (operation !== "read" && options.models) {
-								return {models: kendo.stringify(options.models)};
-							}
-						}
-					},
-					batch: true,
-					autoSync: true,
-					pageSize: 50,
-					schema: {
-						model: {
-							id: "_id",
-							fields: {
-								_id: {editable: false, nullable: true},
-								ref: {editable: true, validation: {required: true}},
-								qtyMin: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-								pu_ht: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-								tms: {type: "date", editable: false, defaultValue: Date().now},
-								entity: {type: "string", defaultValue: ""},
-								label: {type: "string", defaultValue: ""},
-								Status_ID: {from: "Status.id", defaultValue: "SELL"},
-								price_level: {type: "string", defaultValue: "BASE"},
-								ref_customer_code: {type: "string"},
-								author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
-								Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
-								tva_tx: {type: "string", defaultValue: 19.6},
-								type: {defaultValue: {id: "PRODUCT", name: "Produit", css: "blue-gradient"}}
-							}
-						}
-					},
-					error: function(e) {
-						// log error
-						if (e.xhr.status === 500)
-							alert(e.xhr.responseText);
-					},
-					/*group: [{
-					 field: "ref",
-					 dir: "asc"
-					 }, {
-					 field: "price_level",
-					 dir: "asc"
-					 }]*/
-					sort: {field: "tms", dir: "desc"}
-				});
+
 
 				var grid = $("#grid").kendoGrid({
-					dataSource: dataSource,
-					pageable: {
-						refresh: true,
-						pageSize: 50,
-						pageSizes: [5, 10, 20, 50],
-						buttonCount: 5
-					},
-					filterable: {
-						extra: false
-					},
-					//scrollable: {
-					//	virtual: true
-					//},
-					scrollable: false,
-					groupable: true,
-					sortable: true,
-					//height: 430,
-					toolbar: [
-						{
-							name: "create",
-							text: "Nouveau produit/service",
-							className: "k-button k-button-icontext k-grid-add button"
-						},
-						{
-							name: "cancel",
-							text: "Annuler",
-							className: "k-button k-button-icontext k-grid-cancel-changes button"
-						}
-					],
+					
 					columns: [
-						{field: "ref", reorderable: true, filterable: true, title: "reference", editor: refDropDownEditor},
-						{field: "label", reorderable: false, filterable: false, title: "Designation", editor: textareaEditor},
-						{field: "type", reorderable: false, filterable: false, title: "Type", editor: typeDropDownEditor, template: "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
-						{field: "tms", title: "Date de modification", hidden: false, format: "{0:dd/MM/yyyy}", filterable: {
+						{"field": "ref", reorderable: true, "filterable": true, "title": "reference", "editor": refDropDown"editor"},
+						{"field": "label", reorderable: false, "filterable": false, "title": "Designation", "editor": textarea"editor"},
+						{"field": "type", reorderable: false, "filterable": false, "title": "Type", "editor": typeDropDown"editor", "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
+						{"field": "tms", "title": "Date de modification", hidden: false, "format": "{0:dd/MM/yyyy}", "filterable": {
 								ui: "datepicker"
 							}
 						},
-						{field: "price_level", title: "Liste de prix", editor: priceLevelDropDownEditor},
-						{field: "pu_ht", filterable: true, title: "Prix HT", format: "{0:c3}", width: "60px"},
-						{field: "qtyMin", filterable: true, title: "Qte Min", format: "{0:n0}", width: "60px"},
-						{field: "tva_tx", title: "TVA", format: "{0:p2}", template: "#=tva_tx# %"},
-						{field: "Status_ID", title: "Etat", width: "100px",
-							editor: statusDropDownEditor, template: "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
-						{field: "ref_customer_code", title: "Ref Fact."}
-						//{field: "entity", filterable: false, title: "Atelier", hidden: true, width: "100px", editor: entityDropDownEditor},
-						//{field: "notes", filterable: false, title: "Notes", hidden: true, editor: textareaEditor},
-						//	{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], title: "&nbsp;", width: "90px"}
-					],
-					editable: {
-						mode: "incell",
-						window: {
-							width: "400px"
-						}
-					}
+						{"field": "price_level", "title": "Liste de prix", "editor": priceLevelDropDown"editor"},
+						{"field": "pu_ht", "filterable": true, "title": "Prix HT", "format": "{0:c3}", "width": "60px"},
+						{"field": "qtyMin", "filterable": true, "title": "Qte Min", "format": "{0:n0}", "width": "60px"},
+						{"field": "tva_tx", "title": "TVA", "format": "{0:p2}", "template": "#=tva_tx# %"},
+						{"field": "Status_ID", "title": "Etat", "width": "100px",
+							"editor": statusDropDown"editor", "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
+						{"field": "ref_customer_code", "title": "Ref Fact."}
+						//{"field": "entity", "filterable": false, "title": "Atelier", hidden: true, "width": "100px", "editor": entityDropDown"editor"},
+						//{"field": "notes", "filterable": false, "title": "Notes", hidden: true, "editor": textarea"editor"},
+						//	{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], "title": "&nbsp;", "width": "90px"}
+					]
 				});
 
 				var autocompleteSymbol = $("#ref").kendoAutoComplete({
-					dataTextField: "name",
-					//dataValueField: "ValueField",
+					dataText"field": "name",
+					//dataValue"field": "Value"field"",
 					dataSource: {
 						serverFiltering: true,
 						serverPaging: true,
@@ -158,112 +87,14 @@
 						var value = this.value();
 
 						if (value) {
-							grid.data("kendoGrid").dataSource.filter({field: "ref", operator: "contains", value: value});
+							grid.data("kendoGrid").dataSource.filter({"field": "ref", operator: "contains", value: value});
 						} else {
 							grid.data("kendoGrid").dataSource.filter({});
 						}
 					}
 				});
-
-				function statusDropDownEditor(container, options) {
-					$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-							.appendTo(container)
-							.kendoDropDownList({
-						autoBind: false,
-						dataSource: {
-							transport: {
-								read: {
-									url: "api/product/status/select",
-									type: "GET",
-									dataType: "json"
-								}
-							}
-						}
-					});
-				}
-
-				function typeDropDownEditor(container, options) {
-					$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-							.appendTo(container)
-							.kendoDropDownList({
-						autoBind: false,
-						dataSource: {
-							data: [{id: "PRODUCT", name: "Produit", css: "blue-gradient"},
-								{id: "SERVICE", name: "Service", css: "green-gradient"}]
-						}
-					});
-				}
-
-				function entityDropDownEditor(container, options) {
-					$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-							.appendTo(container)
-							.kendoDropDownList({
-						autoBind: false,
-						dataSource: {
-							transport: {
-								read: {
-									url: "api/user/entity/select",
-									type: "GET",
-									dataType: "json"
-								}
-							}
-						}
-					});
-				}
-
-				function priceLevelDropDownEditor(container, options) {
-					$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
-							.appendTo(container)
-							.kendoAutoComplete({
-						minLength: 1,
-						dataTextField: "name",
-						filter: "contains",
-						autoBind: false,
-						suggest: true,
-						dataSource: {
-							serverFiltering: true,
-							serverPaging: true,
-							pageSize: 5,
-							transport: {
-								read: {
-									url: "api/product/price_level/autocomplete",
-									type: "POST",
-									dataType: "json"
-								}
-							}
-						}
-					});
-				}
-
-				function refDropDownEditor(container, options) {
-					$('<input data-text-field="name" required data-value-field="name" data-bind="value:' + options.field + '"/>')
-							.appendTo(container)
-							.kendoAutoComplete({
-						minLength: 1,
-						dataTextField: "name",
-						filter: "contains",
-						autoBind: false,
-						suggest: true,
-						dataSource: {
-							serverFiltering: true,
-							serverPaging: true,
-							pageSize: 5,
-							transport: {
-								read: {
-									url: "api/product/ref/autocomplete",
-									type: "POST",
-									dataType: "json"
-								}
-							}
-						}
-					});
-				}
-
-				function textareaEditor(container, options) {
-					$('<textarea rows="3" cols="25" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
-				}
 			});
-		</script>
+		</script>-->
 
 	</div>
 </section>

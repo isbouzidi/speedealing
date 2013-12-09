@@ -304,7 +304,7 @@ Object.prototype = {
 		var result = [];
 		var query;
 
-		console.log(req.query);
+		//console.log(req.query);
 
 		if (req.query.type)
 			query = [{$match: {type: req.query.type}}, {$unwind: "$price"}];
