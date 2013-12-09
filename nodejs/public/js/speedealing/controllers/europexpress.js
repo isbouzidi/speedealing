@@ -5,9 +5,9 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		$scope.cpt = 0;
 
 		$scope.find = function() {
-			if($routeParams.id1 == null)
+			if ($routeParams.id1 == null)
 				return $scope.today();
-			
+
 			//console.log($routeParams);
 			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
 				$scope.tournees = tournees;
@@ -35,12 +35,12 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				week = 0;
 			}
 			week++;
-			
+
 			console.log('europexpress/planning/' + week + '/' + year);
 
 			$location.path('europexpress/planning/' + week + '/' + year);
 		};
-		
+
 		$scope.previous = function() {
 			var year = parseInt($routeParams.id2);
 			var week = parseInt($routeParams.id1)
@@ -150,4 +150,140 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		 $scope.article = article;
 		 });
 		 };*/
+	}]);
+
+angular.module('mean.europexpress').controller('EETourneeController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, Object) {
+		$scope.global = Global;
+
+		var crudServiceBaseUrl = "api/europexpress/tournee";
+
+		$scope.dataSource = new kendo.data.DataSource({
+			transport: {
+				read: {
+					url: crudServiceBaseUrl,
+					type: "GET",
+					dataType: "json"
+				},
+				update: {
+					url: crudServiceBaseUrl,
+					type: "PUT",
+					dataType: "json"
+				},
+				destroy: {
+					url: crudServiceBaseUrl,
+					type: "DELETE",
+					dataType: "json"
+				},
+				create: {
+					url: crudServiceBaseUrl,
+					type: "POST",
+					dataType: "json"
+				},
+				parameterMap: function(options, operation) {
+					if (operation !== "read" && options.models) {
+						return {models: kendo.stringify(options.models)};
+					}
+				}
+			},
+			error: function(e) {
+				// log error
+				alert(e.xhr.responseText);
+			},
+			batch: true,
+			pageSize: 50,
+			schema: {
+				model: {
+					id: "_id",
+					fields: {
+						_id: {editable: false, nullable: true},
+						storehouse: {editable: true, validation: {required: true}},
+						datec: {type: "date", editable: true},
+						client: {editable: true, defaultValue: {id: null, name: ""}},
+						forfait: {editable: true, type: "boolean", defaultValue: false},
+						Mond_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Mond_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
+						Mond_panier: {editable: true, defaultValue: []},
+						Tues_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Tues_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
+						Tues_panier: {editable: true, defaultValue: []},
+						Wedn_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Wedn_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
+						Wedn_panier: {editable: true, defaultValue: []},
+						Thur_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Thur_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
+						Thur_panier: {editable: true, defaultValue: []},
+						Frid_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Frid_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
+						Frid_panier:{editable: true, defaultValue: []},
+						Satu_mode:{editable: true, defaultValue: {id:"NONE", name:""}},
+						Satu_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
+						Satu_panier:{editable: true, defaultValue: []}
+					}
+				}
+			},
+			sort: {field: "storehouse", dir: "asc"}
+		});
+
+		$scope.clientDropDownEditor = function(container, options) {
+			$('<input id="id"/>')
+					.attr("name", options.field)
+					.appendTo(container)
+					.kendoAutoComplete({
+				minLength: 1,
+				dataTextField: "name",
+				filter: "contains",
+				dataSource: {
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
+					transport: {
+						read: {
+							url: "api/societe/autocomplete",
+							type: "POST",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		}
+
+		$scope.modeDropDownEditor = function(container, options) {
+			$('<input data-ng-model="name" data-bind="value:' + options.field + '"/>')
+					.appendTo(container)
+					.kendoDropDownList({
+				autoBind: true,
+				dataTextField: "name",
+				dataValueField: "id",
+				dataSource: [
+					{id: "NONE", name: ""},
+					{id: "AM", name: "AM"},
+					{id: "PM", name: "PM"},
+					{id: "DAY", name: "En journée"}
+				]
+			});
+		}
+
+		$scope.panierMultiSelect = function(container, options) {
+			$('<input data-bind="value:' + options.field + ', source: ' + options.field + '" />')
+					.appendTo(container)
+					.kendoMultiSelect({
+				minLength : 1,
+				placeholder: "Sélectionner les paniers...",
+				autoBind: true,
+				//dataTextField: "name",
+				//dataValueField: "id",
+				dataSource:{
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
+					transport: {
+						read: {
+							url: "api/europexpress/tournee/select/panier",
+							type: "POST",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		}
 	}]);

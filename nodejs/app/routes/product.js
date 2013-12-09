@@ -213,7 +213,7 @@ module.exports = function(app, passport, auth) {
 					result[i].name = docs[i].ref;
 					result[i].id = docs[i]._id;
 				}
-
+			console.log(result);
 			return res.send(200, result);
 		});
 	});
