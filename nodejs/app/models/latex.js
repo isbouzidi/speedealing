@@ -116,8 +116,8 @@ exports.servePDF = function(req, res) {
 			res.redirect("back");
 			return;
 		} else {
-			res.type('pdf');
-			res.attachment(id + ".pdf");
+			res.type('application/pdf');
+			//res.attachment(id + ".pdf"); // for douwnloading
 			res.sendfile(pdfPath);
 		}
 	});

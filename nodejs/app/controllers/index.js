@@ -83,6 +83,22 @@ map_reduce.countTODO.reduce = function(user, cpt) {
 map_reduce.countTODO.reduce = map_reduce.countTODO.reduce.toString();
 map_reduce.countTODO.out = {inline: 1};
 
+/**
+ * List Services and Angular Controllers
+ */
+
+var angular = {};
+angular.services = [];
+angular.controllers = [];
+
+fs.readdirSync(__dirname + '/../../public/js/speedealing/services').forEach(function(file) {
+	angular.services.push(file);
+});
+
+fs.readdirSync(__dirname + '/../../public/js/speedealing/controllers').forEach(function(file) {
+	angular.controllers.push(file);
+});
+
 exports.render = function(req, res) {
 	var url = "/";
 
@@ -113,22 +129,6 @@ exports.render = function(req, res) {
 	var eventTodo = [];
 
 	var menuHTML = "";
-
-	/**
-	 * List Services and Angular Controllers
-	 */
-
-	var angular = {};
-	angular.services = [];
-	angular.controllers = [];
-
-	fs.readdirSync('public/js/speedealing/services').forEach(function(file) {
-		angular.services.push(file);
-	});
-	
-	fs.readdirSync('public/js/speedealing/controllers').forEach(function(file) {
-		angular.controllers.push(file);
-	});
 
 	// load conf and const
 	ModuleModel.find({}, "name numero enabled always_enabled family version picto moddir dirs depends requireby need_dolibarr_version const langfiles boxes", function(err, docs) {

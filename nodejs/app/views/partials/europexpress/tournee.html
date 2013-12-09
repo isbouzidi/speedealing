@@ -1,5 +1,4 @@
-
-<section data-ng-controller="IndexController">
+<section data-ng-controller="EEPlanningController">
 	<hgroup id="main-title" class="thin">
 		<h1>Liste des tournées</h1>
 	</hgroup>
@@ -9,8 +8,7 @@
 		<div id="grid"></div>
 		<script>
 			$(document).ready(function() {
-				var crudServiceBaseUrl = "api/europexpress/tournee"
-						,
+				var crudServiceBaseUrl = "api/europexpress/tournee",
 						dataSource = new kendo.data.DataSource({
 					transport: {
 						read: {
@@ -110,7 +108,6 @@
 						{field: "Frid_AM", filterable: false, title: "{{t 'date.dayShort.5'}} AM", template: "#if (Frid_AM) {# <div align=center><input type=\"checkbox\" disabled=\"disabled\" checked></div>#} else {# <div align=center><input type=\"checkbox\" disabled=\"disabled\"></div> #}#"},
 						{field: "Frid_PM", filterable: false, title: "{{t 'date.dayShort.5'}} PM", template: "#if (Frid_PM) {# <div align=center><input type=\"checkbox\" disabled=\"disabled\" checked></div>#} else {# <div align=center><input type=\"checkbox\" disabled=\"disabled\"></div> #}#"},
 						{field: "Satu_AM", filterable: false, title: "{{t 'date.dayShort.6'}} AM", template: "#if (Satu_AM) {# <div align=center><input type=\"checkbox\" disabled=\"disabled\" checked></div>#} else {# <div align=center><input type=\"checkbox\" disabled=\"disabled\"></div> #}#"},
-
 						{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], title: "&nbsp;", width: "90px"}],
 					editable: {
 						mode: "popup",
