@@ -1,5 +1,4 @@
 <?php
-
 /* Copyright (C) 2001-2007	Rodolphe Quiedeville	<rodolphe@quiedeville.org>
  * Copyright (C) 2003		Brian Fraval			<brian@fraval.org>
  * Copyright (C) 2004-2012	Laurent Destailleur		<eldy@users.sourceforge.net>
@@ -1297,8 +1296,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 
 			print '</div></div>';
 		}
-	}
-	else {
+	} else {
 		/*
 		 * View
 		 */
@@ -1681,7 +1679,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		print '<tr><td>' . $form->editfieldkey("SalesRepresentatives", 'commercial_id', $object->commercial_id->name, $object, $user->rights->societe->creer, "select") . '</td><td colspan="' . (2 + (($showlogo || $showbarcode) ? 0 : 1)) . '">';
 		print $form->editfieldval("SalesRepresentatives", 'commercial_id', $object->commercial_id->name, $object, $user->rights->societe->creer, "select");
 		print "</td></tr>";
-		
+
 		// Compte de facturation
 		print '<tr><td>' . $form->editfieldkey("Compte de facturation", 'cptBilling', $object->cptBilling->name, $object, $user->rights->societe->creer, "select") . '</td><td colspan="' . (2 + (($showlogo || $showbarcode) ? 0 : 1)) . '">';
 		print $form->editfieldval("Compte de facturation", 'cptBilling', $object->cptBilling->name, $object, $user->rights->societe->creer, "select");
@@ -1738,6 +1736,57 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		print $object->show_notes();
 		print column_end();
 
+		print column_start("six");
+		$titre = $langs->trans("Documents");
+		print start_box($titre, "icon-object-documents");
+		?><input type="file" name="files" id="files" />
+		<script>
+			$(document).ready(function () {
+			$("#files").kendoUpload({
+			multiple: true,
+			async: {
+			saveUrl: "api/societe/file/<?php echo $object->id; ?>",
+			removeUrl: "api/societe/file/<?php echo $object->id; ?>",
+			removeVerb: "DELETE",
+			autoUpload: true
+			},
+			error: function(e) {
+			// log error
+			console.log(e);
+			},
+			complete: function() {
+				document.location.reload();
+			},
+			localization: {
+			select: "Ajouter fichiers"
+			}
+			});
+
+			});
+		</script>	
+		<?php
+		
+		print '<h5 class="green">Fichiers</h5>
+					<ul class="files-icons">';
+
+		foreach($object->files as $aRow) {
+			print '<li>';
+			print '<span class="icon file-'.substr($aRow->name,strpos($aRow->name,".")+1).'"></span>';
+			print '<div class="controls">
+					<span class="button-group compact children-tooltip">
+						<a href="api/societe/file/'.$object->id.'/'.$aRow->name.'" class="button icon-download" title="Télécharger"></a>
+						<a href="api/societe/file/remove/'.$object->id.'/'.$aRow->name.'" class="button icon-trash confirm" title="Supprimer"></a>
+					</span>
+					</div>';
+			print '<a href="api/societe/file/'.$object->id.'/'.$aRow->name.'">'.$aRow->name.'</a>';
+			print '</li>';
+		}
+		
+		print '</ul>';
+		
+		print end_box();
+		print column_end();
+
 		if ($conf->propal->enabled) {
 			require_once(DOL_DOCUMENT_ROOT . '/propal/class/propal.class.php');
 			$propal = new Propal($db);
@@ -1759,19 +1808,6 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			$facture = new Facture($db);
 			print column_start("six");
 			$facture->show($object->id);
-			print column_end();
-		}
-
-		if ($conf->ecm->enabled) {
-			// Generated documents
-			$filedir = $conf->societe->multidir_output[$object->entity] . '/' . $object->id;
-			$urlsource = $_SERVER["PHP_SELF"] . "?id=" . $object->id;
-			$genallowed = $user->rights->societe->creer;
-			$delallowed = $user->rights->societe->supprimer;
-
-			$var = true;
-			print column_start("six");
-			$somethingshown = $formfile->show_documents('company', $object->id, $filedir, $urlsource, $genallowed, $delallowed, '', 0, 0, 0, 28, 0, '', 0, '', $object->default_lang);
 			print column_end();
 		}
 

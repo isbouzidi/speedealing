@@ -289,6 +289,9 @@
 
 .file-aac			{ background-image: url(../../img/fineFiles/64/aac.png); }
 .file-access		{ background-image: url(../../img/fineFiles/64/access.png); }
+
+
+
 .file-avi			{ background-image: url(../../img/fineFiles/64/avi.png); }
 .file-bat			{ background-image: url(../../img/fineFiles/64/bat.png); }
 .file-bmp			{ background-image: url(../../img/fineFiles/64/bmp.png); }
@@ -298,7 +301,8 @@
 .file-default		{ background-image: url(../../img/fineFiles/64/default.png); }
 .file-desktop		{ background-image: url(../../img/fineFiles/64/desktop.png); }
 .file-dll			{ background-image: url(../../img/fineFiles/64/dll.png); }
-.file-excel			{ background-image: url(../../img/fineFiles/64/excel.png); }
+.file-xls			{ background-image: url(../../img/fineFiles/64/excel.png); }
+.file-xlsx			{ background-image: url(../../img/fineFiles/64/excel.png); }
 .file-exe			{ background-image: url(../../img/fineFiles/64/exe.png); }
 .file-fon			{ background-image: url(../../img/fineFiles/64/fon.png); }
 .file-gif			{ background-image: url(../../img/fineFiles/64/gif.png); }
@@ -325,13 +329,15 @@
 .file-swf			{ background-image: url(../../img/fineFiles/64/swf.png); }
 .file-sys			{ background-image: url(../../img/fineFiles/64/sys.png); }
 .file-txt			{ background-image: url(../../img/fineFiles/64/text.png); }
+.file-csv			{ background-image: url(../../img/fineFiles/64/text.png); }
 .file-ttc			{ background-image: url(../../img/fineFiles/64/ttc.png); }
 .file-ttf			{ background-image: url(../../img/fineFiles/64/ttf.png); }
 .file-vbs			{ background-image: url(../../img/fineFiles/64/vbs.png); }
 .file-wav			{ background-image: url(../../img/fineFiles/64/wav.png); }
 .file-wma			{ background-image: url(../../img/fineFiles/64/wma.png); }
 .file-wmv			{ background-image: url(../../img/fineFiles/64/wmv.png); }
-.file-word			{ background-image: url(../../img/fineFiles/64/word.png); }
+.file-doc			{ background-image: url(../../img/fineFiles/64/word.png); }
+.file-docx			{ background-image: url(../../img/fineFiles/64/word.png); }
 .file-xml			{ background-image: url(../../img/fineFiles/64/xml.png); }
 .file-xsl			{ background-image: url(../../img/fineFiles/64/xsl.png); }
 

@@ -288,7 +288,7 @@ class modSociete extends DolibarrModules {
         $this->menus[$r]->fk_menu = "menu:companies";
         $r++;
         
-		$this->menus[$r] = new stdClass();
+		/*$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:newcontact";
         $this->menus[$r]->position = 10;
         $this->menus[$r]->url = "/contact/fiche.php?action=create";
@@ -298,7 +298,7 @@ class modSociete extends DolibarrModules {
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->title = "NewContact";
         $this->menus[$r]->fk_menu = "menu:companies";
-        $r++;
+        $r++;*/
 		
 		$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:contactsenable";

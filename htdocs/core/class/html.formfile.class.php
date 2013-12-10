@@ -1,5 +1,4 @@
 <?php
-
 /* Copyright (c) 2008-2011 Laurent Destailleur	<eldy@users.sourceforge.net>
  * Copyright (C) 2010-2012 Regis Houssin		<regis.houssin@capnetworks.com>
  * Copyright (c) 2010      Juanjo Menent		<jmenent@2byte.es>
@@ -161,7 +160,7 @@ class FormFile {
 		$this->numoffiles = 0;
 		$titre = $langs->trans("Documents");
 		print start_box($titre, "icon-object-documents");
-		print '<a name="builddoc"></a>';
+		//print '<a name="builddoc"></a>';
 		print $this->showdocuments($modulepart, $filename, $filedir, $urlsource, $genallowed, $delallowed, $modelselected, $allowgenifempty, $forcenomultilang, $iconPDF, $maxfilenamelength, $noform, $param, $title, $buttonlabel, $codelang);
 		print end_box();
 		return $this->numoffiles;
@@ -349,7 +348,7 @@ class FormFile {
 			if (!empty($modellist)) {
 				$out.= '<th align="center" class="formdoc liste_titre">';
 				$out.= $langs->trans('Model') . ' ';
-				if (is_array($modellist) && count($modellist) == 1) {	// If there is only one element
+				if (is_array($modellist) && count($modellist) == 1) { // If there is only one element
 					$arraykeys = array_keys($modellist);
 					$modelselected = $arraykeys[0];
 				}
@@ -412,9 +411,10 @@ class FormFile {
 					$var = !$var;
 
 					// Define relative path for download link (depends on module)
-					$relativepath = $file["name"];		// Cas general
+					$relativepath = $file["name"];  // Cas general
 					if ($filename)
 						$relativepath = $filename . "/" . $file["name"]; // Cas propal, facture...
+
 						
 // Autre cas
 					if ($modulepart == 'donation') {
@@ -447,7 +447,7 @@ class FormFile {
 
 					if ($delallowed) {
 						$out.= '<td align="right">';
-						$out.= '<a href="' . $urlsource . (strpos($urlsource, '?') ? '&' : '?') . 'action=remove_file&file=' . urlencode($relativepath) .'#builddoc';
+						$out.= '<a href="' . $urlsource . (strpos($urlsource, '?') ? '&' : '?') . 'action=remove_file&file=' . urlencode($relativepath) . '#builddoc';
 						$out.= ($param ? '&' . $param : '');
 						//$out.= '&modulepart='.$modulepart; // TODO obsolete ?
 						//$out.= '&urlsource='.urlencode($urlsource); // TODO obsolete ?
@@ -500,9 +500,10 @@ class FormFile {
 			// Loop on each file found
 			foreach ($file_list as $file) {
 				// Define relative path for download link (depends on module)
-				$relativepath = $file["name"];		// Cas general
+				$relativepath = $file["name"];  // Cas general
 				if ($filename)
 					$relativepath = $filename . "/" . $file["name"]; // Cas propal, facture...
+
 					
 // Autre cas
 				if ($modulepart == 'donation') {
@@ -600,7 +601,7 @@ class FormFile {
 				include_once DOL_DOCUMENT_ROOT . '/core/lib/images.lib.php';
 
 			$var = true;
-			foreach ($filearray as $key => $file) {	  // filearray must be only files here
+			foreach ($filearray as $key => $file) {   // filearray must be only files here
 				if ($file['name'] != '.' && $file['name'] != '..' && !preg_match('/\.meta$/i', $file['name'])) {
 					// Define relative path used to store the file
 					if (empty($relativepath))
@@ -691,7 +692,7 @@ class FormFile {
 		print '<tr class="liste_titre">';
 		$sortref = "fullname";
 		if ($modulepart == 'invoice_supplier')
-			$sortref = '';	// No sort for supplier invoices as path name is not
+			$sortref = ''; // No sort for supplier invoices as path name is not
 		print_liste_field_titre($langs->trans("Ref"), $url, $sortref, "", $param, 'align="left"', $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Documents2"), $url, "name", "", $param, 'align="left"', $sortfield, $sortorder);
 		print_liste_field_titre($langs->trans("Size"), $url, "size", "", $param, 'align="right"', $sortfield, $sortorder);
@@ -790,7 +791,7 @@ class FormFile {
 					if ($result > 0) {
 						$found = 1;
 						$this->cache_objects[$modulepart . '_' . $id . '_' . $ref] = dol_clone($object_instance);
-					}	// Save object into a cache
+					} // Save object into a cache
 					if ($result == 0) {
 						$found = 1;
 						$this->cache_objects[$modulepart . '_' . $id . '_' . $ref] = 'notfound';
@@ -798,7 +799,7 @@ class FormFile {
 				}
 
 				if (!$found > 0 || !is_object($this->cache_objects[$modulepart . '_' . $id . '_' . $ref]))
-					continue;	// We do not show orphelins files
+					continue; // We do not show orphelins files
 
 				$var = !$var;
 				print '<tr ' . $bc[$var] . '>';
@@ -875,5 +876,4 @@ class FormFile {
 	}
 
 }
-
 ?>

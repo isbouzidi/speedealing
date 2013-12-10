@@ -2,7 +2,8 @@
 
 var mongoose = require('mongoose'),
 		fs = require('fs'),
-		csv = require('csv');
+		csv = require('csv'),
+		config = require('../.././config/config');
 
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
@@ -41,8 +42,8 @@ module.exports = function(app, passport, auth) {
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body);
-		
-		if(req.body.filter == null)
+
+		if (req.body.filter == null)
 			return res.send(200, {});
 
 		var query = {
@@ -166,10 +167,119 @@ module.exports = function(app, passport, auth) {
 		}
 	});
 
+	app.post('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
+		var id = req.params.Id;
+		//console.log(id);
+
+		if (req.files && id) {
+			//console.log(req.files);
+			var filename = req.files.files.path;
+			if (fs.existsSync(filename)) {
+				//console.log(filename);
+				SocieteModel.findOne({_id: id}, function(err, societe) {
+
+					if (err) {
+						console.log(err);
+						return res.send(500, {status: "Id not found"});
+					}
+
+					var opts;
+					opts = {
+						content_type: req.files.files.type,
+						metadata: {
+							_id: id
+						}
+					};
+
+					return societe.addFile(req.files.files, opts, function(err, result) {
+						if (err)
+							console.log(err);
+
+						//console.log(result);
+
+						return res.send(200, {status: "ok"});
+					});
+				});
+			} else
+				res.send(500, {foo: "bar", status: "failed"});
+		}
+	});
+	
+	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function(req, res) {
+		var id = req.params.Id;
+		//console.log(id);
+		
+		if(id && req.params.fileName) {
+			SocieteModel.findOne({_id: id}, function(err, societe) {
+
+				if (err) {
+					console.log(err);
+					return res.send(500, {status: "Id not found"});
+				}
+				societe.removeFile(req.params.fileName, function(err, result) {
+					if (err)
+						console.log(err);
+
+					res.redirect('/societe/fiche.php?id='+id);
+				});
+			});
+		} else
+			res.send(500, "File not found");
+		
+	});
+	
+	app.get('/api/societe/file/:Id/:fileName', auth.requiresLogin, function(req, res) {
+		var id = req.params.Id;
+		
+		if(id && req.params.fileName) {
+			SocieteModel.findOne({_id: id}, function(err, societe) {
+
+				if (err) {
+					console.log(err);
+					return res.send(500, {status: "Id not found"});
+				}
+				
+				societe.getFile(req.params.fileName, function(err, store){
+					if(err)
+						console.log(err);
+					
+					//console.log(store);
+					res.type(store.contentType);
+					res.attachment(store.filename); // for douwnloading
+					store.stream(true).pipe(res);
+					
+				});
+			});
+		}
+	});
+	
+	app.del('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
+		//console.log(req.body);
+		var id = req.params.Id;
+		//console.log(id);
+
+		if (req.body.fileNames && id) {
+			SocieteModel.findOne({_id: id}, function(err, societe) {
+
+				if (err) {
+					console.log(err);
+					return res.send(500, {status: "Id not found"});
+				}
+				societe.removeFile(req.body.fileNames, function(err, result) {
+					if (err)
+						console.log(err);
+
+					res.send(200, {status: "ok"});
+				});
+			});
+		} else
+			res.send(500, "File not found");
+	});
+
 	app.get('/api/societe/contact/select', auth.requiresLogin, function(req, res) {
 		//console.log(req.query);
 		var result = [];
-		result.push({id:"", name:""});
+		result.push({id: "", name: ""});
 
 		if (req.query.societe)
 			SocieteModel.findOne({name: req.query.societe}, "_id", function(err, societe) {
