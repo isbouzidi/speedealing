@@ -1741,49 +1741,48 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 		print start_box($titre, "icon-object-documents");
 		?><input type="file" name="files" id="files" />
 		<script>
-			$(document).ready(function () {
-			$("#files").kendoUpload({
-			multiple: true,
-			async: {
-			saveUrl: "api/societe/file/<?php echo $object->id; ?>",
-			removeUrl: "api/societe/file/<?php echo $object->id; ?>",
-			removeVerb: "DELETE",
-			autoUpload: true
-			},
-			error: function(e) {
-			// log error
-			console.log(e);
-			},
-			complete: function() {
-				document.location.reload();
-			},
-			localization: {
-			select: "Ajouter fichiers"
-			}
-			});
+			$(document).ready(function() {
+				$("#files").kendoUpload({
+					multiple: true,
+					async: {
+						saveUrl: "api/societe/file/<?php echo $object->id; ?>",
+						removeUrl: "api/societe/file/<?php echo $object->id; ?>",
+						removeVerb: "DELETE",
+						autoUpload: true
+					},
+					error: function(e) {
+						// log error
+						console.log(e);
+					},
+					complete: function() {
+						document.location.reload();
+					},
+					localization: {
+						select: "Ajouter fichiers"
+					}
+				});
 
 			});
 		</script>	
 		<?php
-		
 		print '<h5 class="green">Fichiers</h5>
 					<ul class="files-icons">';
 
-		foreach($object->files as $aRow) {
+		foreach ($object->files as $aRow) {
 			print '<li>';
-			print '<span class="icon file-'.substr($aRow->name,strpos($aRow->name,".")+1).'"></span>';
+			print '<span class="icon file-' . substr($aRow->name, strpos($aRow->name, ".") + 1) . '"></span>';
 			print '<div class="controls">
 					<span class="button-group compact children-tooltip">
-						<a href="api/societe/file/'.$object->id.'/'.$aRow->name.'" class="button icon-download" title="Télécharger"></a>
-						<a href="api/societe/file/remove/'.$object->id.'/'.$aRow->name.'" class="button icon-trash confirm" title="Supprimer"></a>
+						<a href="api/societe/file/' . $object->id . '/' . $aRow->name . '" class="button icon-download" title="Télécharger"></a>
+						<a href="api/societe/file/remove/' . $object->id . '/' . $aRow->name . '" class="button icon-trash confirm" title="Supprimer"></a>
 					</span>
 					</div>';
-			print '<a href="api/societe/file/'.$object->id.'/'.$aRow->name.'">'.$aRow->name.'</a>';
+			print '<a href="api/societe/file/' . $object->id . '/' . $aRow->name . '">' . $aRow->name . '</a>';
 			print '</li>';
 		}
-		
+
 		print '</ul>';
-		
+
 		print end_box();
 		print column_end();
 

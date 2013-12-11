@@ -45,7 +45,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						tms: {type: "date", editable: false, defaultValue: Date().now},
 						entity: {type: "string", defaultValue: ""},
 						label: {type: "string", defaultValue: ""},
-						Status_ID: {from: "Status.id", defaultValue: "SELL"},
+						//Status_ID: {from: "Status.id", defaultValue: "SELL"},
 						price_level: {type: "string", defaultValue: "BASE"},
 						ref_customer_code: {type: "string"},
 						author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
@@ -166,6 +166,23 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 		
 		$scope.textareaEditor = function(container, options) {
 			$('<textarea rows="3" cols="25" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
+		};
+		
+		$scope.statusFilter = function(element) {
+			element.kendoDropDownList({
+				dataTextField: "name",
+				dataValueField: "id",
+				dataSource: {
+					transport: {
+						read: {
+							url: "api/chaumeil/planning/status/select",
+							type: "GET",
+							dataType: "json"
+						}
+					}
+				},
+				optionLabel: "--Status--"
+			});
 		};
 
 		/*		$scope.clientDropDownEditor = function(container, options) {

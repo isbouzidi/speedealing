@@ -229,7 +229,7 @@ Object.prototype = {
 		var obj = JSON.parse(req.body.models);
 		obj = obj[0];
 
-		console.log(obj);
+		//console.log(obj);
 		delete obj._id; //Just for create
 
 		return res.send(200, obj);
@@ -253,7 +253,7 @@ Object.prototype = {
 					obj._id = doc._id;
 
 					obj.Status = {};
-					obj.Status.id = obj['Status.id'];
+					//obj.Status.id = obj['Status.id'];
 					obj.Status.css = this.fk_extrafields.fields.Status.values[obj.Status.id].cssClass;
 					obj.Status.name = req.i18n.t("products:Status." + this.fk_extrafields.fields.Status.values[obj.Status.id].label);
 
@@ -270,7 +270,7 @@ Object.prototype = {
 
 
 				obj.tms = new Date();
-				obj.Status.id = obj['Status.id'];
+				//obj.Status.id = obj['Status.id'];
 
 				obj.Status.css = this.fk_extrafields.fields.Status.values[obj.Status.id].cssClass;
 				obj.Status.name = req.i18n.t("products:Status." + this.fk_extrafields.fields.Status.values[obj.Status.id].label);
@@ -416,14 +416,15 @@ Object.prototype = {
 		}
 
 		obj.tms = new Date();
-		obj.Status.id = obj['Status.id'];
+		//console.log(obj);
+		//obj.Status.id = obj['Status.id'];
 
 		obj.Status.css = this.fk_extrafields.fields.Status.values[obj.Status.id].cssClass;
 		obj.Status.name = req.i18n.t("products:Status." + this.fk_extrafields.fields.Status.values[obj.Status.id].label);
 
 		res.send(200, obj);
 
-		console.log(obj);
+		//console.log(obj);
 
 		ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id}, $push: {history: obj}}, function(err) {
 			if (err)
