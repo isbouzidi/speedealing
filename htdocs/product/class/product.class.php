@@ -2615,7 +2615,7 @@ class Product extends nosqlDocument {
 				for ($j = 0; $j < count($product->price); $j++) {
 					$product->price[$j]->_id = new MongoId($product->price[$j]->_id->{'$id'});
 					$product->price[$j]->tms = new MongoDate(strtotime($product->price[$j]->tms->sec));
-					error_log($product->price[$j]->tms->sec);
+					error_log(print_r($product->price[$j]->tms, true));
 				}
 
 				if ($idx_price < 0)
