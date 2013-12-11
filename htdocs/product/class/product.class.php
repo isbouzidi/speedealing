@@ -2611,6 +2611,10 @@ class Product extends nosqlDocument {
 				$price->user_mod = new stdClass();
 				$price->user_mod->id = $user->id;
 				$price->user_mod->name = $user->name;
+				
+				for($j=0; $j<count($product->price);$j++) {
+					$product->price[$j]->_id = new MongoId($product->price[$j]->_id->{'$id'});
+				}
 
 				if ($idx_price < 0)
 					$product->price[] = clone $price;
