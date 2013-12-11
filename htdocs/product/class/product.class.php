@@ -2615,13 +2615,19 @@ class Product extends nosqlDocument {
 				for ($j = 0; $j < count($product->price); $j++) {
 					$product->price[$j]->_id = new MongoId($product->price[$j]->_id->{'$id'});
 					$product->price[$j]->tms = new MongoDate(strtotime($product->price[$j]->tms->sec));
-					error_log($product->price[$j]->_id);
+					//error_log($product->price[$j]->_id);
 				}
 
 				if ($idx_price < 0)
 					$product->price[] = clone $price;
 				else
 					$product->price[$idx_price] = clone $price;
+				
+				for ($j = 0; $j < count($product->history); $j++) {
+					$product->history[$j]->_id = new MongoId($product->history[$j]->_id->{'$id'});
+					$product->history[$j]->tms = new MongoDate(strtotime($product->history[$j]->tms->sec));
+					error_log($product->history[$j]->_id);
+				}
 
 				$product->history[] = clone $price;
 
