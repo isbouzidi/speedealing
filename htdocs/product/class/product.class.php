@@ -2611,9 +2611,11 @@ class Product extends nosqlDocument {
 				$price->user_mod = new stdClass();
 				$price->user_mod->id = $user->id;
 				$price->user_mod->name = $user->name;
-				
-				for($j=0; $j<count($product->price);$j++) {
+
+				for ($j = 0; $j < count($product->price); $j++) {
 					$product->price[$j]->_id = new MongoId($product->price[$j]->_id->{'$id'});
+					$product->price[$j]->tms = new MongoDate(strtotime($product->price[$j]->tms));
+					error_log($product->price[$j]->_id);
 				}
 
 				if ($idx_price < 0)
