@@ -2614,8 +2614,8 @@ class Product extends nosqlDocument {
 
 				for ($j = 0; $j < count($product->price); $j++) {
 					$product->price[$j]->_id = new MongoId($product->price[$j]->_id->{'$id'});
-					error_log(print_r($product->price[$j]->tms, true));
-					$product->price[$j]->tms = new MongoDate(strtotime($product->price[$j]->tms->sec));
+					//error_log(print_r($product->price[$j]->tms, true));
+					$product->price[$j]->tms = new MongoDate($product->price[$j]->tms->sec);
 				}
 
 				if ($idx_price < 0)
@@ -2625,7 +2625,7 @@ class Product extends nosqlDocument {
 				
 				for ($j = 0; $j < count($product->history); $j++) {
 					$product->history[$j]->_id = new MongoId($product->history[$j]->_id->{'$id'});
-					$product->history[$j]->tms = new MongoDate(strtotime($product->history[$j]->tms->sec));
+					$product->history[$j]->tms = new MongoDate($product->history[$j]->tms->sec);
 					//error_log($product->history[$j]->_id);
 				}
 
