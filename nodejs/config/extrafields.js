@@ -3,35 +3,6 @@
 var mongoose = require('mongoose'),
 		timestamps = require('mongoose-timestamp');
 
-var moduleSchema = new mongoose.Schema({
-	_id: {type: String},
-	numero: Number,
-	family: String,
-	name: String,
-	description: String,
-	version: String,
-	const_name: String,
-	picto: String,
-	dirs: [String],
-	boxes: [mongoose.Schema.Types.Mixed],
-	module_parts: [],
-	const: [],
-	tabs: [],
-	langfiles: [],
-	depends: [],
-	requiredby: [],
-	config_page_url: [],
-	rights_class: {type: String},
-	rights: [mongoose.Schema.Types.Mixed],
-	menus: [mongoose.Schema.Types.Mixed],
-	enabled: {type: Boolean},
-	import: [mongoose.Schema.Types.Mixed],
-	expport: [mongoose.Schema.Types.Mixed],
-	_createdAt: {type: Date, default: Date.now}
-});
-
-var ModuleModel = mongoose.model('module', moduleSchema, 'DolibarrModules');
-
 var extrafieldSchema = new mongoose.Schema({
 	_id: String,
 	ico: String,

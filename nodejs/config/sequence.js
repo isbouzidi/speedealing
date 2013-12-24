@@ -26,11 +26,18 @@ sequenceSchema.statics = {
 				console.log(err);
 
 			var date = new Date();
-			
-			if(name === "PROV")
-				return cb(name + doc.seq); // format PROV440
-			else
-				return cb(name + (date.getMonth() + 1) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 5));
+
+			return cb(name + (date.getMonth() + 1) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 5));
+		});
+	},
+	incNumber: function(name, cb) {
+		this.findByIdAndUpdate(name, {$inc: {seq: 1}}, {upsert: true}, function(err, doc) {
+			if (err)
+				console.log(err);
+
+			var date = new Date();
+
+			return cb(name + doc.seq); // format PROV440
 		});
 	}
 };

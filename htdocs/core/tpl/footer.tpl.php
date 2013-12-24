@@ -128,6 +128,22 @@
 <!-- Tinycon -->
 <script src="includes/js/tinycon.min.js"></script>
 
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	$(document).ready(function() {
+		var socket = io.connect();
+		socket.on('news', function(data) {
+			notify('<span class="icon-info-round"> </span><i>Philippe</i> : Appeler DHL', data.hello, {
+				autoClose: false,
+				delay: 500,
+				classes: ["orange-gradient"],
+				icon: 'img/emotes/face-smile.png'
+			});
+			socket.emit('my other event', {my: 'data'});
+		});
+	});
+</script>
+
 <script>
 	// Call template init (optional, but faster if called manually)
 	$.template.init();

@@ -55,6 +55,10 @@ html {overflow-y:scroll}
     margin-bottom: 40px;
 }
 
+.valign-top {
+	vertical-align: top !important;
+}
+
 /* Custom buttom : pour gérer le back button, home button, etc... */
 .back-button {
     display: inline-block; 

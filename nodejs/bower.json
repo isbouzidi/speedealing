@@ -1,15 +1,20 @@
 {
-    "name": "Speedealing",
-    "version": "0.3.0",
-	"main":"public/lib",
-    "dependencies": {
-        "bootstrap": ">=2.3.2",
-        "angular": ">=1.2.0",
-        "angular-resource": ">=1.0.6",
-        "angular-cookies": ">=1.0.6",
-		"angular-route": ">=1.0.6",
-        "angular-bootstrap": ">=0.6.0",
-        "angular-ui-utils": ">=0.0.4",
-		"angular-animate" :">=1.2.0"
-    }
+	"name": "Speedealing",
+	"version": "0.3.0",
+	"main": "public/lib",
+	"dependencies": {
+		"angular": "latest",
+		"angular-resource": "latest",
+		"angular-cookies": "latest",
+		"angular-mocks": "latest",
+		"angular-route": "latest",
+		"angular-animate": "latest",
+		"bootstrap": "2.3.2",
+		"angular-bootstrap": "0.7.0",
+		"angular-ui-utils": "0.0.4",
+		"kendo-ui": "2013.3.1119",
+		"jquery": "1.10.2",
+		"ui-autocomplete": "https://github.com/zensh/ui-autocomplete.git",
+		"angular-kendo":"https://github.com/kendo-labs/angular-kendo.git"
+	}
 }

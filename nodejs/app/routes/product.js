@@ -367,6 +367,7 @@ Object.prototype = {
 		});
 	},
 	update: function(req, res) {
+		console.log(req.body);
 		var obj = JSON.parse(req.body.models);
 		obj = obj[0];
 

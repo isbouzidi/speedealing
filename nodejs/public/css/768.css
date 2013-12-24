@@ -86,14 +86,14 @@
 /* Content panels */
 .content-panel {
 	overflow: visible;
-	padding-left: 250px;
+	padding-left: 280px;
 }
 .panel-navigation {
 	position: absolute;
 	top: 0;
 	left: 0;
 	bottom: 0;
-	width: 249px;
+	width: 279px;
 	border-right: 1px solid #cccccc;
 }
 

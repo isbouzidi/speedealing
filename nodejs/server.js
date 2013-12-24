@@ -5,7 +5,7 @@ var express = require('express'),
 		http = require('http'),
 		fs = require('fs'),
 		passport = require('passport'),
-		logger = require('mean-logger');
+		winston = require('winston');
 
 /**
  * Main application entry file.
@@ -20,12 +20,47 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
 		mongoose = require('mongoose');
 
 //Bootstrap db connection
-var db = mongoose.connect(config.db, {server: {auto_reconnect: true}});
+var db = mongoose.connect(config.db, {server: {auto_reconnect: true},  replset: { rs_name: config.replset }});
 
 var mongoose_connect = mongoose.connection;
 mongoose_connect.on('error', console.error.bind(console, 'connection mongodb error native :'));
 mongoose_connect.once('open', function callback() {
 	console.log("mongoose mongoDB connected");
+});
+
+//
+// Logging levels
+//
+var configs = {
+	levels: {
+		silly: 0,
+		verbose: 1,
+		info: 2,
+		data: 3,
+		warn: 4,
+		debug: 5,
+		error: 6
+	},
+	colors: {
+		silly: 'magenta',
+		verbose: 'cyan',
+		info: 'green',
+		data: 'grey',
+		warn: 'yellow',
+		debug: 'blue',
+		error: 'red'
+	}
+};
+
+var logger = new (winston.Logger)({
+	transports: [
+		new (winston.transports.Console)({
+			colorize: true
+		}),
+		new (winston.transports.File)({filename: 'somefile.log'})
+	],
+	levels: configs.levels,
+	colors: configs.colors
 });
 
 require('./config/sequence'); // load the sequence ID First
@@ -72,41 +107,38 @@ require('./app/routes')(app, passport, auth);
 
 //Start the app by listening on <port>
 var server = http.createServer(app).listen(app.get('port'), function() {
-	console.log('Express server listening on port ' + app.get('port'));
+	logger.info('Express server listening on port ' + app.get('port'));
 });
 
 // Start socket.io
-require('./config/socket.io')(server);
-
-//Initializing logger
-logger.init(app, passport, mongoose);
+require('./config/socket.io')(server, db);
 
 //expose app
 exports = module.exports = app;
 
 /*function ensureAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) {
-		return next();
-	}
+ if (req.isAuthenticated()) {
+ return next();
+ }
+ 
+ /*if(config.autologin && req.query && req.query.user && req.query.key === config.autologin.key) {
+ console.log("auto_login");
+ req.session.auth = {};
+ req.session.auth.userId = "user:"+req.query.user;
+ req.session.auth.loggedIn = true;
+ if(req.query.backto)
+ return res.redirect(req.query.backto);
+ else
+ return next();
+ }*/
 
-	/*if(config.autologin && req.query && req.query.user && req.query.key === config.autologin.key) {
-	 console.log("auto_login");
-	 req.session.auth = {};
-	 req.session.auth.userId = "user:"+req.query.user;
-	 req.session.auth.loggedIn = true;
-	 if(req.query.backto)
-	 return res.redirect(req.query.backto);
-	 else
-	 return next();
-	 }*/
-
-	/*if (config.urlrewrite) {
-		if (req.query.db)
-			res.redirect(req.query.db + '/login');
-		else
-			// use the default database
-			res.redirect(config.mongo.database + '/login');
-	} else
-		res.redirect('/index.php');
-
-}*/
+/*if (config.urlrewrite) {
+ if (req.query.db)
+ res.redirect(req.query.db + '/login');
+ else
+ // use the default database
+ res.redirect(config.mongo.database + '/login');
+ } else
+ res.redirect('/index.php');
+ 
+ }*/

@@ -9,9 +9,9 @@ var ExtrafieldModel = mongoose.model('extrafields');
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();
-	
+
 	object.colors = ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
-    "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"];
+		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"];
 
 	ExtrafieldModel.findById('extrafields:User', function(err, doc) {
 		if (err) {
@@ -29,7 +29,7 @@ module.exports = function(app, passport, auth) {
 
 	// Specific for autocomplete
 	app.get('/api/user/select', auth.requiresLogin, function(req, res) {
-		UserModel.find({Status:"ENABLE"}, function(err, docs) {
+		UserModel.find({Status: "ENABLE"}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/user/select");
 				console.log(err);
@@ -41,16 +41,16 @@ module.exports = function(app, passport, auth) {
 			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
-					if(req.query.agenda) { // for calendar
+					if (req.query.agenda) { // for calendar
 						result[i] = {};
 						result[i].text = docs[i].firstname + " " + docs[i].lastname;
 						result[i].value = docs[i]._id;
 						result[i].color = object.colors[i];
 					} else {
-					result[i] = {};
-					result[i].name = docs[i].firstname + " " + docs[i].lastname;
-					result[i].id = docs[i]._id;
-					//console.log(result[i]);
+						result[i] = {};
+						result[i].name = docs[i].firstname + " " + docs[i].lastname;
+						result[i].id = docs[i]._id;
+						//console.log(result[i]);
 					}
 				}
 
@@ -60,9 +60,21 @@ module.exports = function(app, passport, auth) {
 
 	// list for autocomplete
 	app.post('/api/user/name/autocomplete', auth.requiresLogin, function(req, res) {
-		//console.dir(req.body);
+		console.dir(req.body);
 
-		UserModel.find({'$or':[{firstname: new RegExp(req.body.filter.filters[0].value,"i")},{lastname: new RegExp(req.body.filter.filters[0].value,"i")}]}, {}, {limit: req.body.take}, function(err, docs) {
+		var query = {};
+
+		if (req.body.filter)
+			query = {'$or': [
+					{firstname: new RegExp(req.body.filter.filters[0].value, "i")},
+					{lastname: new RegExp(req.body.filter.filters[0].value, "i")}
+				]};
+
+		if (req.query.status) {
+			query.Status = req.query.status;
+		}
+
+		UserModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/user/name/autocomplete");
 				console.log(err);
@@ -74,9 +86,10 @@ module.exports = function(app, passport, auth) {
 			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
-					
+
 					result[i] = {};
-					result[i].name = docs[i].name;
+					//result[i].name = docs[i].name;
+					result[i].name = docs[i].firstname + " " + docs[i].lastname;
 					result[i].id = docs[i]._id;
 				}
 

@@ -96,6 +96,22 @@
 	.icon-blue:before {
 		color: #0059a0;
 	}
+.violet,
+.violet-color .color {
+	color: #cc317c !important;
+	}
+	.icon-violet:before {
+		color: #cc317c;
+	}
+.yellow,
+.yellow-color .color {
+	color: #fad922 !important;
+	}
+	.icon-yellow:before {
+		color: #fad922;
+	}
+
+
 
 /********************************************************/
 /*                2. Generic backgrounds                */

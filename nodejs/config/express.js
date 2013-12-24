@@ -2,6 +2,8 @@
  * Module dependencies.
  */
 var express = require('express'),
+		expressWinston = require('express-winston'),
+		winston = require('winston'),
 		i18n = require("i18next"),
 		hbs = require("hbs"),
 		mongoStore = require('connect-mongo')(express),
@@ -29,7 +31,7 @@ module.exports = function(app, passport, db) {
 	 i18n.backend(i18nextMongoSync);*/
 
 	i18n.init({
-		ns: {namespaces: ['main', 'errors', 'agenda','admin', 'companies', 'products'], defaultNs: 'main'},
+		ns: {namespaces: ['main', 'errors', 'agenda', 'admin', 'companies', 'products'], defaultNs: 'main'},
 		supportedLngs: ['en-US', 'fr-FR'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
 		load: 'current',
@@ -142,9 +144,33 @@ module.exports = function(app, passport, db) {
 		app.use(passport.initialize());
 		app.use(passport.session());
 
+		/*app.use(expressWinston.logger({
+			transports: [
+				new winston.transports.Console({
+					json: true,
+					colorize: true
+				})
+			]
+		}));*/
+
 		//routes should be at the last
 		app.use(app.router);
 //		app.use(express.csrf());
+
+		app.use(expressWinston.errorLogger({
+			transports: [
+				new winston.transports.Console({
+					json: true,
+					colorize: true
+				})
+			]
+		}));
+
+		// Optionally you can include your custom error handler after the logging.
+		//app.use(express.errorLogger({
+		//	dumpExceptions: true,
+		//	showStack: true
+		//}));
 
 		//Assume "not found" in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
 		app.use(function(err, req, res, next) {

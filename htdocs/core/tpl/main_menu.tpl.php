@@ -47,9 +47,9 @@
 				</a>
 			</li>
 			<li style="width: 20%;">
-				<span href="inbox.html" title="Messages">
+				<a href='#!/ticket' title="Gestion des tickets" target="_self">
 					<span class="icon-inbox"></span>
-				</span>
+				</a>
 			</li>
 			<li style="width: 20%;">
 				<?php if (!empty($countTODO)) : ?>
@@ -73,7 +73,7 @@
 			</li>
 			<li style="width: 20%;">
 				<a href="user/logout.php" title="Log out">
-					<span class="icon-unlock"></span>
+					<span class="icon-logout"></span>
 				</a>
 			</li>
 		</ul>

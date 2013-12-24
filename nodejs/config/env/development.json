@@ -1,5 +1,6 @@
 {
 	"db": "mongodb://localhost/chaumeil",
+	"replset":"symeos",
 	"app": {
 		"name": "Speedealing",
 		"port": 3000,
@@ -48,5 +49,14 @@
 		"pdfs": "/pdfs/",
 		"models": "/config/latex/",
 		"includes": "/config/latex/texpackages/"
+	},
+	"elasticsearch": {
+		"hosts": [
+			{
+				"host": "localhost",
+				"port": 9200
+			}
+		],
+		"secure": false
 	}
 }

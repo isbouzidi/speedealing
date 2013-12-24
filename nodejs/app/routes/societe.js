@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
-		config = require('../.././config/config');
+		config = require('../../config/config');
 
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
