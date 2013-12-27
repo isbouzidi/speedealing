@@ -12,21 +12,25 @@ window.app.config(['$routeProvider',
 			templateUrl: 'views/articles/view.html'
 		}).when('/view1', {
 			templateUrl: 'partials/partial1'
+		}).when('/module/:module/:view/:id1/:id2', {
+			templateUrl: function(params) {
+				return 'partials/' + params.module + '/' + params.view;
+			}
+		}).when('/module/:module/:view/:id', {
+			templateUrl: function(params) {
+				return 'partials/' + params.module + '/' + params.view;
+			}
+		}).when('/module/:module/:view', {
+			templateUrl: function(params) {
+				return 'partials/' + params.module + '/' + params.view;
+			}
 		}).when('/:view', {
 			templateUrl: function(params) {
 				return 'partials/' + params.view;
 			}
-		}).when('/:module/:view', {
+		}).when('/:view/:id', {
 			templateUrl: function(params) {
-				return 'partials/' + params.module + '/' + params.view;
-			}
-		}).when('/:module/:view/:id', {
-			templateUrl: function(params) {
-				return 'partials/' + params.module + '/' + params.view;
-			}
-		}).when('/:module/:view/:id1/:id2', {
-			templateUrl: function(params) {
-				return 'partials/' + params.module + '/' + params.view;
+				return 'partials/' + params.view;
 			}
 		}).when('/', {
 			templateUrl: 'partials/home'

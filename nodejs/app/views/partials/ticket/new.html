@@ -1,0 +1,88 @@
+<form data-ng-submit="create()" data-ng-controller="TicketController">
+	<h2 class="thin mid-margin-bottom">\{{ticket.name}}<span data-ng-hide="ticket.name">{{t 'ticket.NewTicket'}}</span> <small class="valign-top tag grey-bg ">{{t 'New'}}</small></h2>
+	<h4 class="no-margin-top">{{t 'ticket.From'}}: \{{ticket.controlledBy.name}}</h4>
+	<div class="large-box-shadow white-gradient with-border margin-top">
+		<div class="with-mid-padding silver-gradient no-margin-top">
+			<span class="icon-speech"><strong>{{t 'ticket.CreateTicket'}}</strong></span>
+			<div class="float-right">\{{today()}}</div>
+		</div>
+		<div class="with-padding">
+			<p class="button-height inline-label required">
+				<label for="ticket_name" class="label">{{t 'ticket.Title'}}</label>
+				<input type="text" data-ng-model="ticket.name" required id="ticket_name" class="input full-width">
+			</p>
+			
+			<p class="button-height inline-label">
+				<label for="ticket_controlledBy" class="label">{{t 'ticket.ControlledBy'}}</label>
+				<input type="text" id="ticket_controlledBy" data-ng-model="ticket.controlledBy.name" ng-change="ticket.affectedTo[0]=ticket.controlledBy" ui-autocomplete="searchUser()" ui-event="{autocompletecreate:'changeClass(searchUser)'}" class="input"/>
+				<small class="input-info">{{t 'ticket.ClosedTicket'}}</small>
+			</p>
+
+			<p class="button-height inline-label">
+				<label for="ticket_affectedTo" class="label">{{t 'ticket.AffectedTo'}}</label>
+				<span  data-ng-repeat="user in ticket.affectedTo">
+					<span class="tag anthracite-gradient glossy">\{{user.name}} <a href="" data-ng-hide="$index==0" data-ng-click="deleteAffected($index)" class="icon-trash"></a></span>
+				</span>
+				<input type="text" id="ticket_affectedTo" data-ng-model="affected" ui-autocomplete="searchUserAffected()" ui-event="{autocompletecreate:'changeClass(searchUserAffected)'}" class="input"/>
+				<!--<select kendo-multi-select id="ticket_affectedTo" k-options="userAutoCompleteEditor" data-ng-model="ticket.affectedTo" class="input"></select>-->
+				<small class="input-info">{{t 'ticket.RecievedNotification'}}</small>
+			</p>
+
+			<p class="button-height inline-label required">
+				<label for="expire" class="label">{{t 'ticket.Expire'}}</label>
+				<input id="expire" data-ng-model="dateString" kendo-date-time-picker required/>
+			</p>
+
+			<p class="button-height inline-label">
+				<label for="important" class="label">{{t 'ticket.Important'}}</label>
+				<input type="checkbox" class="switch red-active medium" id="important" data-ng-model="ticket.important"/>
+			</p>
+
+			<p class="button-height inline-label">
+				<label for="object_include" class="label">{{t 'ticket.linkTo'}}</label>
+				<span class="input">
+					<label for="object_include" class="button orange-gradient">
+						<span class="icon-paperclip small-margin-right"></span>
+					</label>
+					<select id="link-input-select" data-ng-options="s.name for s in modules" class="select compact expandable-list" data-ng-model="module" title="{{t 'Category'}}"></select>
+					<input type="text" placeholder="{{t 'Search'}}..." data-ng-model="item.title" ui-autocomplete="searchLink()" ui-event="{autocompletecreate:'changeClass(searchLink)'}" class="input-unstyled input-sep"/>
+					<!--<input type="range" kendo-auto-complete placeholder="{{t 'Search'}}..." id="object_include" k-options="searchAutoCompleteEditor" data-ng-model="linked" class="input-unstyled input-sep"/>-->
+					<button type="button" data-ng-click="addLink(item)" class="button compact">{{t 'Add'}}</button>
+				</span>
+			</p>
+
+			<p>
+				\{{ticket}}
+			</p>
+
+			<div class="columns">
+				<div class="eight-columns">
+
+					<textarea kendo-editor id="note" k-options="noteKendoEditor" data-ng-model="ticket.task"></textarea>
+
+					<div class="button-height align-center margin-top">
+						<button type="submit" class="button glossy mid-margin-right">
+							<span class="button-icon green-gradient"><span class="icon-tick"></span></span>
+							{{t 'Create'}}
+						</button>
+
+						<button type="button" class="button glossy" data-ng-click="disableNew();">
+							<span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
+							{{t 'Cancel'}}
+						</button>
+					</div>
+				</div>
+
+				<div class="four-columns">
+					<h5 class="green underline">{{t 'ticket.LinkTo'}}</h5>
+					<div class="boxed left-border">
+						<dl class="definition">
+							<dt data-ng-repeat-start="item in ticket.linked" data-ng-class="icon(item)">\{{item.title}}</dt>
+							<dd data-ng-repeat-end>\{{item.name || item.ref}} <a href="" data-ng-click="deleteLink($index)" class="red icon-trash"></a></dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,108 @@
+<div data-ng-init="findOne()">
+	<h2 class="thin mid-margin-bottom">\{{ticket.ref}} : \{{ticket.name}} <small class="valign-top tag orange-bg ">En cours</small></h2>
+	<h4 class="no-margin-top">{{t 'ticket.From'}}: \{{ticket.controlledBy.name}}</h4>
+
+	<div class="block large-box-shadow white-gradient with-border">
+		<div class="block-title button-height with-mid-padding">
+			<!--<a href="" class="button red-gradient float-right with-tooltip" title="Mark as spam">Spam</a>-->
+			<div class="float-right">
+				<input type="text" name="demo-slider2" id="demo-slider2" data-ng-model="ticket.percentage" class="input demo-slider" data-slider-options='{"size": 150, "innerMarks":20,"step":20,"stickToStep":false,"autoSpacing":true,"topLabel":"[value]%", "topMarks":20,"bottomMarks":20,"barClasses":["anthracite-gradient","glossy"]}'>
+			</div>
+			<span class="button-group children-tooltip">
+				<a href="" data-ng-click="enableComment()" class="button blue-gradient icon-speech" title="Add comment">Comment</a>
+				<a href="" data-ng-click="enableReply()" class="button" title="Reply to this message"><span class="icon-reply"></span></a>
+				<a href="" data-ng-click="enableForward()" class="button" title="Forward"><span class="icon-extract"></span></a>
+			</span>
+			<span class="button-group children-tooltip">
+				<button ng-disabled='ticket.important' data-ng-click="setImportant()" class="button" title="Mark as important"><span class="icon-new"></span></button>
+				<button data-ng-click="setClosed()" ng-disabled='ticket.controlledBy.id != global.user._id' class="button" title="Closed"><span class="icon-cross-round"></span></button>
+			</span>
+			<span class="large-margin-left">Expire : 
+				<input ng-model="dateString" kendo-date-time-picker k-on-change="updateExpire(kendoEvent)"/>
+			</span>
+			<!--<span class="button-group children-tooltip">
+				<a href="" class="button green-gradient" title="Move to trash"><span class="icon-tick"></span></a>
+				<a href="" class="button red-gradient" title="Mark as important"><span class="icon-cross-round"></span></a>
+			</span>-->
+		</div>
+		<script>
+			// Slider
+			$('.demo-slider').slider();
+		</script>
+
+		<div class="with-padding">
+			<div class="columns">
+				<div class="eight-columns">
+					<div data-ng-hide="editMode">
+						<div data-ng-bind-html="ticket.task"></div>
+						<!--<div class="button-height align-center">
+							<button type="submit" class="button glossy mid-margin-right">
+								<span class="button-icon green-gradient"><span class="icon-tick"></span></span>
+								{{t 'Yes'}}
+							</button>
+
+							<button type="button" class="button glossy" data-ng-click="disableEdit();">
+								<span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
+								{{t 'No'}}
+							</button>
+						</div>-->
+					</div>
+					<form data-ng-show="editMode" data-ng-submit="addComment()">
+						<div data-ng-show="editMode == 'reply'"><h5 class="green underline">{{t 'Reply'}}</h5></div>
+						<div data-ng-show="editMode == 'comment'"><h5 class="green underline">{{t 'Comment'}}</h5></div>
+						<div data-ng-show="editMode == 'forward'"><h5 class="green underline">{{t 'Forward'}}</h5></div>
+
+						<p data-ng-show="editMode == 'forward'" class="button-height inline-label">
+							<label for="ticket_addUser" class="label">{{t 'ticket.ForwardTo'}}</label>
+							<input type="text" id="ticket_addUser" data-ng-model="ticket.addUser.name" ui-autocomplete="searchUser()" ui-event="{autocompletecreate:'changeClass(searchUser)'}" class="input"/>
+						</p>
+
+						<textarea kendo-editor k-options="noteKendoEditor" data-ng-model="ticket.newNote"></textarea>
+
+						<div class="button-height align-center margin-top">
+							<button type="submit" class="button glossy mid-margin-right">
+								<span class="button-icon green-gradient"><span class="icon-tick"></span></span>
+								{{t 'Add'}}
+							</button>
+
+							<button type="button" class="button glossy" data-ng-click="ficheCancel();">
+								<span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
+								{{t 'Cancel'}}
+							</button>
+						</div>
+					</form>
+				</div>
+				<div class="four-columns">
+					<h5 class="green underline">Infos</h5>
+					<div class="boxed left-border">
+						<dl class="definition">
+							<dt data-ng-repeat-start="item in ticket.linked" data-ng-class="icon(item)">\{{item.title}}</dt>
+							<dd data-ng-repeat-end><a data-ng-href="\{{url(item)}}">\{{item.name || item.ref}} </a></dd>
+							<dt class="icon-paperclip">Fichiers</dt><dd>
+								<a href="" class="icon-download">commande_ip.doc</a><br/>
+								<a href="" class="icon-download">commande_ip.xls</a></dd>
+						</dl>
+						<input type="file" name="files" class="button compact" id="files" kendo-upload k-options="kendoUpload" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div data-ng-repeat="comment in ticket.comments | orderBy:'-datec'">
+		<div class="large-box-shadow white-gradient with-border margin-top">
+			<div class="with-mid-padding silver-gradient no-margin-top">
+				<span class="\{{comment.icon}}" data-ng-bind-html="comment.title"></span>
+				<div class="float-right" title="{{t 'ticket.TimeCreate'}}" data-ng-init='time=countDown(comment.datef, false)'><span data-ng-show="time.days > 0">\{{time.days}}j</span><span data-ng-hide="time.days > 0">{{t 'Today'}}</span></div>
+			</div>
+			<div class="with-padding" data-ng-if="comment.note" data-ng-bind-html="comment.note"></div>
+		</div>
+	</div>
+	
+	<div class="large-box-shadow white-gradient with-border margin-top">
+		<div class="with-mid-padding silver-gradient no-margin-top">
+			<span class="icon-gauge"><strong>David</strong> changed to </span><strong>40%</strong>
+			<div class="float-right">7 days</div>
+		</div>
+	</div>
+	
+</div>

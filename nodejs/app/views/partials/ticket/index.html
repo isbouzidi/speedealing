@@ -1,4 +1,4 @@
-<section data-ng-controller="TicketController">
+<section data-ng-controller="TicketController" data-ng-init="find()">
 	<noscript class="message black-gradient simpler">Your browser does not support JavaScript! Some features won't work as expected...</noscript>
 
 	<div class="content-panel">
@@ -7,28 +7,31 @@
 
 			<div class="panel-control">
 				<button data-ng-click="enableNew();" class="button icon-star">New ticket</button>
+				<div class="float-right">
+					<button data-ng-click="find()" class="button" title="Reload"><span class="icon-redo"></span></button>
+				</div>
 			</div>
 
 			<div id="panel-nav" class="panel-load-target scrollable" style="height:490px">
 
-				<div class="navigable" data-ng-controller="MenuTicketController" data-ng-init="find()">
+				<div class="navigable">
 					<ul class="unstyled-list">						
-						<li class="message-menu" data-ng-repeat="ticket in tickets | orderBy:'datef'">
-							<a data-ng-href="#!/ticket/\{{ticket._id}}" title="{{t 'ticket.OpenMessage'}}">
+						<li class="message-menu" data-ng-repeat="menuTicket in menuTickets | orderBy:'datef'">
+							<a href="#!/ticket/\{{menuTicket._id}}" title="{{t 'ticket.OpenMessage'}}">
 								<span class="message-status">
-									<span class="icon-chat grey" data-ng-hide="ticket.important"></span>
-									<span class="icon-new red" data-ng-show="ticket.important"></span>
-									<span class="new-message" data-ng-hide="ticketRead($index)" title="{{t 'NewMessage'}}"></span>
+									<span class="grey" data-ng-class="menuTicket.comments[menuTicket.comments.length - 1].icon" data-ng-hide="menuTicket.important"></span>
+									<span class="icon-new red" data-ng-show="menuTicket.important"></span>
+									<span class="new-message" data-ng-hide="ticketRead(menuTicket.read)" title="{{t 'NewMessage'}}"></span>
 								</span>
 								<span class="message-info">
-									<span title="{{t 'TimeLeft'}}" data-ng-init='time=countDown(ticket.datef)'><span class="blue" data-ng-show="time.days > 0">\{{time.days}}j</span><span class="red" data-ng-hide="time.days > 0"><span data-ng-show="time.hours > 0">\{{time.hours}}:</span><span ng-show="time.minutes > 0">\{{time.minutes}}</span><span ng-show="time.minutes < 0  || time.hours < 0 || time.days < 0">{{t 'Timeout'}}</span></span></span><br>
+									<span title="{{t 'TimeLeft'}}" data-ng-init='time=countDown(menuTicket.datef, true)'><span class="blue" data-ng-show="time.days < 0">\{{time.days}}j</span><span class="red" data-ng-hide="time.days < 0 || (time.hours == 0 && time.minutes == 0)">\{{time.hours}}:\{{time.minutes}}</span><span  class="red" data-ng-show="time.minutes == 0  && time.hours == 0 && time.days == 0">{{t 'Timeout'}}</span></span><br>
 									<br />
-									<span class="grey">\{{ticket.ref}}</span>
+									<span class="grey">\{{menuTicket.ref}}</span>
 								</span>
-								<strong class="blue">\{{ticket.name}}</strong><br>
-								<small class="grey">{{t 'OpenedBy'}} <strong class="black">\{{ticket.from.name}} </strong>\{{countDown(ticket.datec).days}} {{t 'DayAgo'}}</small><br/>
+								<strong class="blue">\{{menuTicket.name}}</strong><br>
+								<small class="grey" data-ng-init="timec=countDown(menuTicket.comments[menuTicket.comments.length - 1].datec, false)"><strong class="black">\{{menuTicket.comments[menuTicket.comments.length - 1].author.name}} </strong><span data-ng-show="timec.days > 0">\{{timec.days}} {{t 'Day'}}</span><span data-ng-hide="timec.days > 0">\{{timec.hours}}:\{{timec.minutes}}</span> {{t 'Ago'}}</small><br/>
 								<span class="progress anthracite thin" style="width: 100px">
-									<span class="progress-bar green-bg" style="width: \{{ticket.percentage}}%"></span>
+									<span class="progress-bar green-bg" style="width: \{{menuTicket.percentage}}%"></span>
 								</span>
 							</a>
 						</li>
@@ -46,289 +49,19 @@
 			</div>
 
 			<div id="panel-content" class="panel-load-target scrollable with-padding" style="height:450px">
-				<div data-ng-hide="new">
-					<h2 class="thin mid-margin-bottom">#11 : Ticket subject <small class="valign-top tag orange-bg ">En cours</small></h2>
-					<h4 class="no-margin-top">From: Philippe Ghys</h4>
-
-					<div class="block large-box-shadow white-gradient with-border">
-						<div class="block-title button-height with-mid-padding">
-							<!--<a href="" class="button red-gradient float-right with-tooltip" title="Mark as spam">Spam</a>-->
-							<div class="float-right">
-								<input type="text" name="demo-slider2" id="demo-slider2" value="35" class="input demo-slider" data-slider-options='{"size": 150, "innerMarks":20,"step":20,"stickToStep":false,"autoSpacing":true,"topLabel":"[value]%", "topMarks":20,"bottomMarks":20,"barClasses":["anthracite-gradient","glossy"]}'>
-							</div>
-							<span class="button-group children-tooltip">
-								<a href="" class="button blue-gradient icon-speech" title="Add comment">Comment</a>
-								<a href="" class="button" title="Reply to this message"><span class="icon-reply"></span></a>
-								<a href="" class="button" title="Forward"><span class="icon-extract"></span></a>
-							</span>
-							<span class="button-group children-tooltip">
-								<a href="" class="button" title="Mark as important"><span class="icon-new"></span></a>
-								<a href="" class="button" title="Closed"><span class="icon-cross-round"></span></a>
-							</span>
-
-							<span class="large-margin-left">Expire : <input id="dateftimepicker" name="datef"/></span>
-							<script>
-								$(document).ready(function() {
-									// create DateTimePicker from input HTML element
-									$("#dateftimepicker").kendoDateTimePicker({
-										value: new Date("2013-12-25T15:00:00+02:00")
-									});
-								});
-							</script>
-							<!--<span class="button-group children-tooltip">
-								<a href="" class="button green-gradient" title="Move to trash"><span class="icon-tick"></span></a>
-								<a href="" class="button red-gradient" title="Mark as important"><span class="icon-cross-round"></span></a>
-							</span>-->
-						</div>
-						<script>
-							// Slider
-							$('.demo-slider').slider();
-						</script>
-
-						<div class="with-padding">
-							<div class="columns">
-								<div class="eight-columns">
-									<p>Hello,</p>
-
-									<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-
-									<p>Best regards,</p>
-
-									<p>Philippe</p>
-
-									<div class="button-height align-center">
-										<button type="submit" class="button glossy mid-margin-right">
-											<span class="button-icon green-gradient"><span class="icon-tick"></span></span>
-											Oui
-										</button>
-
-										<button type="button" class="button glossy" data-ng-click="disableEdit();">
-											<span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
-											Non
-										</button>
-									</div>
-
-								</div>
-								<div class="four-columns">
-									<h5 class="green underline">Infos</h5>
-									<div class="boxed left-border">
-										<dl class="definition">
-											<dt class="icon-plane">Transport</dt><dd><a href="">CF1311-0003</a></dd>
-											<dt class="icon-users">Client</dt><dd><a href="" >Societe Michelin</a></dd>
-											<dt class="icon-users">Sous-traitant</dt><dd><a href="">Igloo</a></dd>
-											<dt class="icon-paperclip">Fichiers</dt><dd>
-												<a href="" class="icon-download">commande_ip.doc</a><br/>
-												<a href="" class="icon-download">commande_ip.xls</a></dd>
-										</dl>
-										<input type="file" name="files" class="button compact" id="files" />
-										<script>
-											$(document).ready(function() {
-												$("#files").kendoUpload({
-													multiple: true,
-													async: {
-														saveUrl: "api/ticket/file/<?php echo $object->id; ?>",
-														removeUrl: "api/ticket/file/<?php echo $object->id; ?>",
-														removeVerb: "DELETE",
-														autoUpload: true
-													},
-													error: function(e) {
-														// log error
-														console.log(e);
-													},
-													complete: function() {
-														document.location.reload();
-													},
-													localization: {
-														select: "Ajouter fichiers"
-													}
-												});
-
-											});
-										</script>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="large-box-shadow white-gradient with-border margin-top">
-						<div class="with-mid-padding silver-gradient no-margin-top">
-							<span class="icon-clock"><strong>David</strong> change expire date to </span><strong>25/12/2014 14:00</strong>
-							<div class="float-right">1 day</div>
-						</div>
-					</div>
-
-					<div class="large-box-shadow white-gradient with-border margin-top">
-						<div class="with-mid-padding silver-gradient no-margin-top">
-							<span class="icon-reply"><strong>Dider</strong> reply to </span><strong>David</strong>
-							<div class="float-right">2 days</div>
-						</div>
-						<div class="with-padding">
-							<p>Hello,</p>
-
-							<p>Sed ut m voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia nisi ut aliquid ex ea commodi consequatur?</p>
-
-							<p>Quis autem vel eum iure reprehenderit qui inquatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-
-							<p>Regards,</p>
-
-							<p>James</p>
-						</div>
-					</div>
-					<div class="large-box-shadow white-gradient with-border margin-top">
-						<div class="with-mid-padding silver-gradient no-margin-top">
-							<span class="icon-eye"><strong>Didier</strong> read this ticket</span>
-							<div class="float-right">4 days</div>
-						</div>
-					</div>
-					<div class="large-box-shadow white-gradient with-border margin-top">
-						<div class="with-mid-padding silver-gradient no-margin-top">
-							<span class="icon-extract"><strong>David</strong> forward to </span><strong>Didier</strong>
-							<div class="float-right">5 days</div>
-						</div>
-						<div class="with-padding">
-							<p>Hello,</p>
-
-							<p>Sed ut m voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia nisi ut aliquid ex ea commodi consequatur?</p>
-
-							<p>Quis autem vel eum iure reprehenderit qui inquatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-
-							<p>Regards,</p>
-
-							<p>James</p>
-						</div>
-					</div>
-					<div class="large-box-shadow white-gradient with-border margin-top">
-						<div class="with-mid-padding silver-gradient no-margin-top">
-							<span class="icon-gauge"><strong>David</strong> changed to </span><strong>40%</strong>
-							<div class="float-right">7 days</div>
-						</div>
-					</div>
-					<div class="large-box-shadow white-gradient with-border margin-top">
-						<div class="with-mid-padding silver-gradient no-margin-top">
-							<span class="icon-eye"><strong>David</strong> read this ticket</span>
-							<div class="float-right">7 days</div>
-						</div>
+				<div data-ng-if="!new && selected()">
+					<div data-ng-include data-src="'partials/ticket/fiche.html'"></div>
+				</div> 
+				<div data-ng-hide="selected() || new">
+					<div class="with-padding align-center">
+						<img src="img/sadpanda.png" alt="Sad Panda" title="Sad Panda">
+						<p>Nothing selected.</p>
 					</div>
 				</div>
-				<form data-ng-show="new" data-ng-submit="create()">
-					<h2 class="thin mid-margin-bottom">\{{ticket.name}}<span data-ng-hide="ticket.name">{{t 'ticket.NewTicket'}}</span> <small class="valign-top tag grey-bg ">New</small></h2>
-					<h4 class="no-margin-top">{{t 'ticket.From'}}: {{user.firstname}} {{user.lastname}}</h4>
-					<div class="large-box-shadow white-gradient with-border margin-top">
-						<div class="with-mid-padding silver-gradient no-margin-top">
-							<span class="icon-speech"><strong>{{t 'ticket.CreateTicket'}}</strong></span>
-							<div class="float-right">\{{today()}}</div>
-						</div>
-						<div class="with-padding">
-							<p class="button-height inline-label required">
-								<label for="ticket_name" class="label">{{t 'ticket.Title'}}</label>
-								<input type="text" data-ng-model="ticket.name" required id="ticket_name" class="input full-width">
-							</p>
-
-							<p class="button-height inline-label">
-								<label for="ticket_affectedTo" class="label">{{t 'ticket.AffectedTo'}}</label>
-								<span  data-ng-repeat="user in ticket.to">
-									<span class="tag anthracite-gradient glossy">\{{user.name}} <a href="" data-ng-click="deleteAffected($index)" class="icon-trash"></a></span>
-								</span>
-								<input type="text" id="ticket_affectedTo" data-ng-model="affected" ui-autocomplete="searchUserAffected()" ui-event="{autocompletecreate:'changeClass(searchUserAffected)'}" class="input"/>
-								<!--<select kendo-multi-select id="ticket_affectedTo" k-options="userAutoCompleteEditor" data-ng-model="ticket.affectedTo" class="input"></select>-->
-								<small class="input-info">{{t 'ticket.RecievedNotification'}}</small>
-							</p>
-
-							<p class="button-height inline-label">
-								<label for="ticket_controlledBy" class="label">{{t 'ticket.ControlledBy'}}</label>
-								<input type="text" id="ticket_controledBy" data-ng-model="ticket.controlledBy.name" ui-autocomplete="searchUser()" ui-event="{autocompletecreate:'changeClass(searchUser)'}" class="input"/>
-								<small class="input-info">{{t 'ticket.ClosedTicket'}}</small>
-							</p>
-
-							<p class="button-height inline-label required">
-								<label for="expire" class="label">{{t 'ticket.Expire'}}</label>
-								<input id="expire" data-ng-model="ticket.datef" kendo-date-time-picker required/>
-							</p>
-
-							<p class="button-height inline-label">
-								<label for="important" class="label">{{t 'ticket.Important'}}</label>
-								<input type="checkbox" class="switch red-active medium" id="important" data-ng-model="ticket.important"/>
-							</p>
-
-							<p class="button-height inline-label">
-								<label for="object_include" class="label">{{t 'ticket.linkTo'}}</label>
-								<span class="input">
-									<label for="object_include" class="button orange-gradient">
-										<span class="icon-paperclip small-margin-right"></span>
-									</label>
-									<select id="link-input-select" data-ng-options="s.name for s in modules" class="select compact expandable-list" data-ng-model="module" title="{{t 'Category'}}"></select>
-									<input type="text" placeholder="{{t 'Search'}}..." data-ng-model="item.title" ui-autocomplete="searchLink()" ui-event="{autocompletecreate:'changeClass(searchLink)'}" class="input-unstyled input-sep"/>
-									<!--<input type="range" kendo-auto-complete placeholder="{{t 'Search'}}..." id="object_include" k-options="searchAutoCompleteEditor" data-ng-model="linked" class="input-unstyled input-sep"/>-->
-									<button type="button" data-ng-click="addLink(item)" class="button compact">{{t 'Add'}}</button>
-								</span>
-							</p>
-
-							<p>
-								\{{ticket}}
-							</p>
-
-							<div class="columns">
-								<div class="eight-columns">
-
-									<textarea kendo-editor id="note" k-options="noteKendoEditor" data-ng-model="ticket.comments[0].note"></textarea>
-
-									<div class="button-height align-center margin-top">
-										<button type="submit" class="button glossy mid-margin-right">
-											<span class="button-icon green-gradient"><span class="icon-tick"></span></span>
-											Create
-										</button>
-
-										<button type="button" class="button glossy" data-ng-click="disableNew();">
-											<span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
-											Cancel
-										</button>
-									</div>
-								</div>
-
-								<div class="four-columns">
-									<h5 class="green underline">{{t 'ticket.LinkTo'}}</h5>
-									<div class="boxed left-border">
-										<dl class="definition">
-											<dt data-ng-repeat-start="item in ticket.linked" data-ng-class="icon(item)">\{{item.title}}</dt>
-											<dd data-ng-repeat-end>\{{item.name || item.ref}} <a href="" data-ng-click="deleteLink($index)" class="red icon-trash"></a></dd>
-										</dl>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
+				<div data-ng-if="new">
+					<div data-ng-include data-src="'partials/ticket/new.html'"></div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<script>
-
-		// Call template init (optional, but faster if called manually)
-		$.template.init();
-
-		/*
-		 * This is a example on how to achieve a full-height layout for content panels:
-		 */
-
-		// Cache elements
-		var titleBar = $('#title-bar'),
-				panelNav = $('#panel-nav'),
-				panelContent = $('#panel-content'),
-				controlsSize = 43, // Size of the panel-controls block and borders
-				paddingSize = 40;        // Size of the padding on the panel content block
-
-		// Function to update panels size
-		updatePanelsSize = function()
-		{
-			panelNav.height($.template.viewportHeight - titleBar.outerHeight() - controlsSize);
-			panelContent.height($.template.viewportHeight - titleBar.outerHeight() - controlsSize - paddingSize);
-		};
-
-		// First call
-		updatePanelsSize();
-
-		// Refresh on resize
-		$(window).on('normalized-resize', updatePanelsSize);
-
-	</script>
 </section>

@@ -1,6 +1,6 @@
 {
 	"db": "mongodb://localhost/chaumeil",
-	"replset":"symeos",
+	"replset": "symeos",
 	"app": {
 		"name": "Speedealing",
 		"port": 3000,

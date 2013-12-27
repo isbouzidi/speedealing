@@ -16,8 +16,8 @@ var ticketSchema = new Schema({
 	ref: String,
 	name: {type: String, require: true}, //title
 	Status: {type: Schema.Types.Mixed, default: 'ST_NEW'},
-	from: {id: {type: String}, name: String},
-	to: [{id: String, name: String, read: {type: Boolean, default: false}}],
+	affectedTo: [{id: String, name: String}],
+	read: [String], // readed is in this array
 	controlledBy: {id: {type: String}, name: String},
 	datec: {type: Date, default: new Date},
 	percentage: Number,
@@ -29,7 +29,14 @@ var ticketSchema = new Schema({
 		}],
 	important: Boolean,
 	model: {type: String, default: 'NONE'}, //Model of ticket
-	comments: [Schema.Types.Mixed],
+	task : String,
+	comments: [{
+			author: {id: String, name: String},
+			note: String,
+			title: String, //top of the bar
+			datec: {type: Date, default: new Date},
+			icon: String
+		}],
 	files: [mongoose.Schema.Types.Mixed]
 });
 

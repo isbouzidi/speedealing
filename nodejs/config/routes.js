@@ -139,17 +139,21 @@ module.exports = function(app, passport, auth) {
 		var view = req.params.view;
 		res.render('partials/' + view, {user: req.user});
 	});
-
-	app.get('/partials/module/:module/:view', auth.requiresLogin, function(req, res) {
-		var module = req.params.module;
-		var view = req.params.view;
-		res.render('partials/' + module + "/" + view, {user: req.user});
-	});
 	
 	app.get('/partials/:view/:id', auth.requiresLogin, function(req, res) {
 		var view = req.params.view;
-		res.render('partials/' + view, {user: req.user});
+		var pos = req.params.id.search(".html"); // search if id is an html page
+		if(pos) // is a subview in directory
+			res.render('partials/' + view + "/" + req.params.id.substr(0,pos), {user: req.user});
+		else
+			res.render('partials/' + view, {user: req.user});
 	});
+
+	/*app.get('/partials/module/:module/:view', auth.requiresLogin, function(req, res) {
+		var module = req.params.module;
+		var view = req.params.view;
+		res.render('partials/' + module + "/" + view, {user: req.user});
+	});*/
 
 	//Home route
 	var index = require('../app/controllers/index');
