@@ -105,6 +105,7 @@
 	"Activate": "Activer",
 	"Activated": "Activé",
 	"Closed": "Clôturé",
+	"Close":"Clôturer",
 	"Closed2": "Fermé",
 	"Enabled": "Actif",
 	"Disable": "Désactiver",
@@ -673,5 +674,9 @@
 			"Ven",
 			"Sam"
 		]
-	}
+	},
+	"Forward": "Transférer",
+	"Reply": "Répondre",
+	"TimeLeft":"Temps restant",
+	"Important" : "Important"
 }

@@ -1,10 +1,10 @@
-angular.module('mean.system').controller('TicketController', ['$scope', '$rootScope', '$routeParams', '$location', '$route', 'Global', '$http', 'Ticket', function($scope, $rootScope, $routeParams, $location, $route, Global, $http, Ticket) {
+angular.module('mean.system').controller('TicketController', ['$scope', '$rootScope', '$routeParams', '$location', '$route', '$timeout', 'Global', '$http', 'Ticket', function($scope, $rootScope, $routeParams, $location, $route, $timeout, Global, $http, Ticket) {
 		$scope.global = Global;
 
 		$rootScope.$on('$viewContentLoaded', function(event) {
-			console.log(event);
+			//console.log(event);
 			//if(angular.element('#link-input-select').length > 0)
-			angular.element('#link-input-select').change(); // Update Select
+			// Update Select
 			//$scope.$apply();
 
 			$.template.init();
@@ -52,23 +52,23 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				collection: "Societe",
 				url: "societe/fiche.php?id="
 			},
-			{
+		/*	{
 				name: "Commandes",
 				icon: "icon-cart",
 				collection: "Societe",
 				url: ""
-			},
+			},*/
 			{
 				name: "Fournisseurs",
 				icon: "icon-users",
 				collection: "Societe",
-				url: ""
+				url: "societe/fiche.php?id="
 			},
 			{
 				name: "Sous-traitants",
 				icon: "icon-users",
 				collection: "Societe",
-				url: ""
+				url: "societe/fiche.php?id="
 			},
 			{
 				name: "Transport",
@@ -83,6 +83,35 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				url: ""
 			}
 		];
+
+		$scope.initSlider = function(data) {
+			angular.element('.slider').slider({
+				hideInput: true,
+				size: 150,
+				innerMarks: 20,
+				step: 20,
+				stickToStep: false,
+				autoSpacing: true,
+				topLabel: "[value]%",
+				topMarks: 20,
+				bottomMarks: 20,
+				barClasses: ["anthracite-gradient", "glossy"],
+				onEndDrag: function(data) {
+					//console.log(data);
+					$http({method: 'PUT', url: 'api/ticket/percentage', data: {
+							id: $scope.ticket._id,
+							percentage: data,
+							controller: $scope.ticket.controlledBy
+						}
+					}).
+							success(function(data, status) {
+						$route.reload();
+						//$scope.ticket = ticket;
+						//$location.path('ticket/' + data._id);
+					});
+				}
+			});
+		};
 
 		$scope.kendoUpload = {
 			multiple: true,
@@ -115,6 +144,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 		$scope.enableNew = function() {
 			$scope.new = true;
 			$scope.ticket = angular.copy(ticket);
+			$timeout(function(){
+				angular.element('#link-input-select').change();
+			}, 500);
 		};
 
 		$scope.disableNew = function() {
@@ -244,7 +276,6 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 		// Convert date to IsoString date
 		$scope.$watch('dateString', function(dateString)
 		{
-			console.log("date");
 			var time = new Date(dateString);
 
 			if (!isNaN(time.getTime()) && new Date($scope.ticket.datef).getTime() != time.getTime())
@@ -259,7 +290,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 		});
 
 		$scope.updateExpire = function(e) {
-			console.log(e.sender);
+			//console.log(e.sender);
 
 			$http({method: 'PUT', url: 'api/ticket/expire', data: {
 					id: $scope.ticket._id,
@@ -272,6 +303,10 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				//$scope.ticket = ticket;
 				//$location.path('ticket/' + data._id);
 			});
+		};
+
+		$scope.updatePercentage = function() {
+			console.log($scope.ticket.percentage);
 		};
 
 		$scope.addComment = function() {
@@ -299,6 +334,19 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				$route.reload();
 				//$scope.ticket = ticket;
 				//$location.path('ticket/' + data._id);
+			});
+		};
+
+		$scope.setClosed = function() {
+			$http({method: 'PUT', url: 'api/ticket/status', data: {
+					id: $scope.ticket._id,
+					Status: 'CLOSED'
+				}
+			}).
+					success(function(data, status) {
+				//$route.reload();
+				//$scope.ticket = ticket;
+				$location.path('ticket/');
 			});
 		};
 
@@ -377,6 +425,8 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 					id: $routeParams.id
 				}, function(ticket) {
 					$scope.ticket = ticket;
+					
+					angular.element('.slider').setSliderValue(ticket.percentage);
 
 					if (ticket.read.indexOf(Global.user._id) < 0) {
 						$http({method: 'PUT', url: 'api/ticket/read', data: {

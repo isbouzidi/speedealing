@@ -9,6 +9,7 @@ var express = require('express'),
 		mongoStore = require('connect-mongo')(express),
 		flash = require('connect-flash'),
 		helpers = require('view-helpers'),
+		fs = require('fs'),
 		config = require('./config');
 
 module.exports = function(app, passport, db) {
@@ -30,8 +31,14 @@ module.exports = function(app, passport, db) {
 	 }, function() {
 	 i18n.backend(i18nextMongoSync);*/
 
+	var namespaces = [];
+
+	fs.readdirSync(__dirname + '/../locales/fr-FR').forEach(function(file) {
+		namespaces.push(file.substr(0, file.indexOf(".json")));
+	});
+
 	i18n.init({
-		ns: {namespaces: ['main', 'errors', 'agenda', 'admin', 'companies', 'products'], defaultNs: 'main'},
+		ns: {namespaces: namespaces, defaultNs: 'main'},
 		supportedLngs: ['en-US', 'fr-FR'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
 		load: 'current',
@@ -145,13 +152,13 @@ module.exports = function(app, passport, db) {
 		app.use(passport.session());
 
 		/*app.use(expressWinston.logger({
-			transports: [
-				new winston.transports.Console({
-					json: true,
-					colorize: true
-				})
-			]
-		}));*/
+		 transports: [
+		 new winston.transports.Console({
+		 json: true,
+		 colorize: true
+		 })
+		 ]
+		 }));*/
 
 		//routes should be at the last
 		app.use(app.router);

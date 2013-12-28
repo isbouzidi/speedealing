@@ -6,7 +6,7 @@
 		<div class="panel-navigation silver-gradient">
 
 			<div class="panel-control">
-				<button data-ng-click="enableNew();" class="button icon-star">New ticket</button>
+				<button data-ng-click="enableNew();" class="button icon-star">{{t 'ticket:NewTicket'}}</button>
 				<div class="float-right">
 					<button data-ng-click="find()" class="button" title="Reload"><span class="icon-redo"></span></button>
 				</div>
@@ -17,7 +17,7 @@
 				<div class="navigable">
 					<ul class="unstyled-list">						
 						<li class="message-menu" data-ng-repeat="menuTicket in menuTickets | orderBy:'datef'">
-							<a href="#!/ticket/\{{menuTicket._id}}" title="{{t 'ticket.OpenMessage'}}">
+							<a href="#!/ticket/\{{menuTicket._id}}" title="{{t 'ticket:OpenMessage'}}">
 								<span class="message-status">
 									<span class="grey" data-ng-class="menuTicket.comments[menuTicket.comments.length - 1].icon" data-ng-hide="menuTicket.important"></span>
 									<span class="icon-new red" data-ng-show="menuTicket.important"></span>

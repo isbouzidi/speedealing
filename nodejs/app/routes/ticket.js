@@ -68,7 +68,14 @@ module.exports = function(app, passport, auth) {
 			icon: "icon-clock"
 		};
 
-		TicketModel.update({_id: req.body.id}, {'$set': {datef: datef}, '$push': {comments: addComment}, '$pop': {read: req.body.controller.id}}, function(err) {
+		var update = {
+			'$set': {datef: datef},
+			'$push': {comments: addComment}
+		}
+		if (req.user._id != req.body.controller.id)
+			update['$pop'] = {read: req.body.controller.id};
+
+		TicketModel.update({_id: req.body.id}, update, function(err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
@@ -97,7 +104,10 @@ module.exports = function(app, passport, auth) {
 			case 'reply' :
 				addComment.title = "<strong>" + req.user.firstname + "</strong> repond a <strong>" + req.body.controller.name + "</strong>";
 				addComment.icon = 'icon-reply';
-				update = {'$push': {comments: addComment}, '$pop': {read: req.body.controller.id}};
+				if (req.user._id != req.body.controller.id)
+					update = {'$push': {comments: addComment}, '$pop': {read: req.body.controller.id}};
+				else
+					update = {'$push': {comments: addComment}};
 				break;
 			case 'comment':
 				addComment.title = "<strong>" + req.user.firstname + "</strong> a ajoute un commentaire";
@@ -120,6 +130,51 @@ module.exports = function(app, passport, auth) {
 
 	app.post('/api/ticket/important', auth.requiresLogin, function(req, res) {
 		TicketModel.update({_id: req.body.id}, {'$set': {important: true, read: [req.user._id]}}, function(err) {
+			if (err) {
+				console.log(err);
+				return res.send(500, err);
+			}
+
+			return res.send(200, {});
+		});
+	});
+
+	app.put('/api/ticket/status', auth.requiresLogin, function(req, res) {
+
+		var addComment = {
+			datec: new Date(),
+			author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
+			icon: "icon-cross-round",
+			title: "<strong>" + req.user.firstname + "</strong> a cloture le ticket"
+		};
+
+		var update = {
+			'$set': {Status: req.body.Status},
+			'$push': {comments: addComment}
+		}
+		if (req.user._id != req.body.controller.id)
+			update['$pop'] = {read: req.body.controller.id};
+
+		TicketModel.update({_id: req.body.id}, update, function(err) {
+			if (err) {
+				console.log(err);
+				return res.send(500, err);
+			}
+
+			return res.send(200, {});
+		});
+	});
+
+	app.put('/api/ticket/percentage', auth.requiresLogin, function(req, res) {
+
+		var addComment = {
+			datec: new Date(),
+			author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
+			icon: "icon-gauge",
+			title: "<strong>" + req.user.firstname + "</strong> change a <strong>" + req.body.percentage + "%</strong>"
+		};
+
+		TicketModel.update({_id: req.body.id}, {'$set': {percentage: req.body.percentage}, '$push': {comments: addComment}}, function(err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
@@ -250,7 +305,7 @@ Object.prototype = {
 	read: function(req, res) {
 		var status_list = this.fk_extrafields.fields.Status;
 
-		TicketModel.find({}, function(err, doc) {
+		TicketModel.find({'affectedTo.id': req.user._id, Status: {$ne: 'CLOSED'}}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);

@@ -1,0 +1,17 @@
+{
+	"CHARSET": "UTF-8",
+	"OpenMessage": "Ouvrir le ticket",
+	"From": "De ",
+	"ForwardTo": "Transférer à",
+	"TimeCreate": "Date de création",
+	"NewTicket": "Nouveau ticket",
+	"CreateTicket": "Création d'un nouveau ticket",
+	"ControlledBy": "Contrôleur",
+	"UserClosedTicket": "Utilisateur qui cloturera le ticket",
+	"AffectedTo": "Affecté à",
+	"RecievedNotification": "Les collaborations qui recevrons les notifications",
+	"Expire": "Echéance",
+	"AddComment": "Ajouter un commentaire",
+    "Comment": "Commenter",
+	"ReplyMessage": "Envoyer un message au contrôleur"
+}

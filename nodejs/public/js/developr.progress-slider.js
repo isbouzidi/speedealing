@@ -990,7 +990,7 @@
 				useTooltips = (settings.tooltip !== null && settings.tooltip !== false),
 
 				// Enable/disabled change event listeners
-				useEvents = true,
+				useEvents = false,
 
 				// Stripes
 				stripesSize, animatedStripes, darkStripes,
