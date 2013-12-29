@@ -43,17 +43,37 @@ class MenuAuguria extends nosqlDocument {
 		$tabMenu = array();
 
 		//$topmenu = $this->getView("list", array(), true);
-		$topmenu = (object) $mongodb->view_listMenu->find();
-		$topmenu->sort(array("_id.position" => 1));
+		//$topmenu = (object) $mongodb->view_listMenu->find();
+		//$topmenu->sort(array("_id.position" => 1));
+		$topmenu = (object) $mongodb->DolibarrModules->aggregate(array(
+					array('$match' => array('enabled' => true)),
+					array('$unwind' => '$menus'),
+					array('$project' => array('_id' => array('menu' => '$menus._id', 'position' => '$menus.position'), 'value' => '$menus')),
+					array('$match' => array('value.type' => 'top')),
+					array('$sort' => array("value.position" => 1))
+		));
+
+		$topmenu = $topmenu->result;
+
 		//$submenu = $this->getView("submenu", array(), true);
-		$submenu = (object) $mongodb->view_listSubmenu->find();
-		$submenu->sort(array("_id.position" => 1));
+		//$submenu = (object) $mongodb->view_listSubmenu->find();
+		//$submenu->sort(array("_id.position" => 1));
+
+		$submenu = (object) $mongodb->DolibarrModules->aggregate(array(
+					array('$match' => array('enabled' => true)),
+					array('$unwind' => '$menus'),
+					array('$project' => array('_id' => array('menu' => '$menus.fk_menu', 'position' => '$menus.position'), 'value' => '$menus')),
+					array('$match' => array('value.type' => array('$ne' => 'top'))),
+					array('$sort' => array("value.position" => 1))
+		));
 		
+		$submenu = $submenu->result;
+
 		$this->topmenu = $topmenu;
 
 		// Construct submenu
 		foreach ($submenu as $key => $aRow) {
-			$menu = (object)$aRow['value'];
+			$menu = (object) $aRow['value'];
 			$newTabMenu = $this->verifyMenu($menu);
 			if ($newTabMenu->enabled == true && $newTabMenu->perms == true) {
 				$this->submenu[$aRow['_id']['menu']][] = $newTabMenu;
@@ -97,7 +117,7 @@ class MenuAuguria extends nosqlDocument {
 		$i = 0;
 		$selectnav = array();
 		foreach ($this->topmenu AS $aRow) {
-			
+
 			$newTabMenu = (object) $aRow['value'];
 			$newTabMenu = $this->verifyMenu($newTabMenu);
 
@@ -109,6 +129,8 @@ class MenuAuguria extends nosqlDocument {
 					// Define the class (top menu selected or not)
 					if (empty($this->idmenu))
 						$this->idmenu = dol_getcache('idmenu'); // For cache optimisation
+
+
 
 
 						
@@ -176,8 +198,8 @@ class MenuAuguria extends nosqlDocument {
 
 		print '<li class="with-right-arrow">';
 		//print '<span><span class="list-count">' . count($result) . '</span>' . $menuFather->title . '</span>';
-        print '<span>' . $menuFather->title . '</span>';
-		print '<ul class="big-menu '.($level==1?'grey-gradient':'anthracite-gradient').'">';
+		print '<span>' . $menuFather->title . '</span>';
+		print '<ul class="big-menu ' . ($level == 1 ? 'grey-gradient' : 'anthracite-gradient') . '">';
 
 		foreach ($result as $aRow) {
 			$menu = $aRow;

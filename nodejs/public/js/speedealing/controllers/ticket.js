@@ -50,36 +50,41 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				name: "Clients",
 				icon: "icon-users",
 				collection: "Societe",
+				searchUrl:"api/societe/autocomplete",
 				url: "societe/fiche.php?id="
 			},
-		/*	{
-				name: "Commandes",
-				icon: "icon-cart",
-				collection: "Societe",
-				url: ""
-			},*/
+			/*	{
+			 name: "Commandes",
+			 icon: "icon-cart",
+			 collection: "Societe",
+			 url: ""
+			 },*/
 			{
 				name: "Fournisseurs",
 				icon: "icon-users",
 				collection: "Societe",
+				searchUrl:"api/societe/autocomplete",
 				url: "societe/fiche.php?id="
 			},
 			{
 				name: "Sous-traitants",
 				icon: "icon-users",
 				collection: "Societe",
+				searchUrl:"api/societe/autocomplete",
 				url: "societe/fiche.php?id="
 			},
 			{
 				name: "Transport",
 				icon: "icon-plane",
-				collection: "Societe",
+				collection: "europexpress_courses",
+				searchUrl:"api/europexpress/courses/autocomplete",
 				url: ""
 			},
 			{
 				name: "Vehicules",
 				icon: "icon-rocket",
-				collection: "Societe",
+				collection: "europexpress_vehicule",
+				searchUrl:"api/europexpress/vehicules/immat/autocomplete",
 				url: ""
 			}
 		];
@@ -144,7 +149,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 		$scope.enableNew = function() {
 			$scope.new = true;
 			$scope.ticket = angular.copy(ticket);
-			$timeout(function(){
+			$timeout(function() {
 				angular.element('#link-input-select').change();
 			}, 500);
 		};
@@ -194,6 +199,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 
 		function SearchLink() {
 			var that = this;
+			//console.log($scope.module);
+			//console.log($scope.module.collection);
+
 			this.options = {
 				html: true,
 				minLength: 1,
@@ -201,11 +209,12 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				maxWidth: 300,
 				source: function(request, response) {
 					// you can $http or $resource service to get data frome server.
-					$http({method: 'POST', url: 'api/societe/autocomplete', data: {
+					$http({method: 'POST', url: $scope.module.searchUrl, data: {
 							take: '5',
 							skip: '0',
 							page: '1',
 							pageSize: '5',
+							//collection: $scope.module,
 							filter: {filters: [{value: request.term}]}}
 					}).
 							success(function(data, status) {
@@ -425,7 +434,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 					id: $routeParams.id
 				}, function(ticket) {
 					$scope.ticket = ticket;
-					
+
 					angular.element('.slider').setSliderValue(ticket.percentage);
 
 					if (ticket.read.indexOf(Global.user._id) < 0) {

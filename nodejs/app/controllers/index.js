@@ -68,10 +68,10 @@ map_reduce.menuList.reduce = function(key, values) {
 map_reduce.menuList.reduce = map_reduce.menuList.reduce.toString();
 map_reduce.menuList.out = {replace: "view_listMenu"};
 map_reduce.menuList.query = {enabled: true};
-ModuleModel.mapReduce(map_reduce.menuList, function(err) {
+/*ModuleModel.mapReduce(map_reduce.menuList, function(err) {
 	if (err)
 		console.log(err);
-});
+});*/
 
 map_reduce.submenuList = {};
 map_reduce.submenuList.map = function() {
@@ -92,10 +92,10 @@ map_reduce.submenuList.reduce = function(key, values) {
 map_reduce.submenuList.reduce = map_reduce.submenuList.reduce.toString();
 map_reduce.submenuList.out = {replace: "view_listSubmenu"};
 map_reduce.submenuList.query = {enabled: true};
-ModuleModel.mapReduce(map_reduce.submenuList, function(err) {
+/*ModuleModel.mapReduce(map_reduce.submenuList, function(err) {
 	if (err)
 		console.log(err);
-});
+});*/
 
 map_reduce.countTODO = {};
 
@@ -180,27 +180,64 @@ exports.render = function(req, res) {
 				[
 					//load top menu
 					function(callback) {
-						ModuleModel.mapReduce(map_reduce.menuList, function(err, model, stats) {
+						ModuleModel.aggregate([
+							{'$match': {enabled:true}},
+							{'$unwind': "$menus"},
+							{'$project': {_id : {menu: '$menus._id', position: '$menus.position'},value: '$menus'}},
+							{'$match': {"value.type": "top"}},
+							{'$sort':{"value.position":1}}
+							],
+						
+						/*if (this.menus) {
+		this.menus.forEach(function(tag) {
+			if (tag.type) {
+				emit({menu: tag._id, position: tag.position}, tag);
+			}
+		});
+						
+						map_reduce.menuList.query = {enabled: true};
+	}*/
+						
+						
+						/*ModuleModel.mapReduce(map_reduce.menuList, function(err, model, stats) {
 							if (err) {
 								console.log(err);
 								callback();
 								return;
 							}
-							model.find({}, "", {sort: {"_id.position": 1}}, function(err, docs) {
+							model.find({}, "", {sort: {"_id.position": 1}},*/ function(err, docs) {
+							console.log(docs);
 								topmenu = docs;
 								callback();
-							});
+							//});
 						});
 					},
 					//load submenu
 					function(callback) {
+						ModuleModel.aggregate([
+							{'$match': {enabled:true}},
+							{'$unwind': "$menus"},
+							{'$project': {_id : {menu: '$menus.fk_menu', position: '$menus.position'},value: '$menus'}},
+							{'$match': {"value.type": {"$ne":"top"}}},
+							{'$sort':{"value.position":1}}
+							],
+							
+							/*
+							 * if (this.menus) {
+		this.menus.forEach(function(tag) {
+			if (!tag.type) {
+				emit({menu: tag.fk_menu, position: tag.position}, tag);
+			}
+		});
+	}
+							 
 						ModuleModel.mapReduce(map_reduce.submenuList, function(err, model, stats) {
 							if (err) {
 								console.log(err);
 								callback();
 								return;
 							}
-							model.find({}, "", {sort: {"_id.position": 1}}, function(err, docs) {
+							model.find({}, "", {sort: {"_id.position": 1}},*/ function(err, docs) {
 
 								for (var i in docs) {
 									var menu = docs[i].value;
@@ -217,7 +254,7 @@ exports.render = function(req, res) {
 								}
 
 								callback();
-							});
+							//});
 						});
 					},
 					// Get Count task todo
@@ -294,7 +331,7 @@ exports.render = function(req, res) {
 
 			var selected;
 
-			for (i in topmenu) {
+			for (var i in topmenu) {
 				topmenu[i] = topmenu[i].value;
 				if (topmenu[i].enabled) {
 					idsel = (topmenu[i]._id == null ? 'none' : topmenu[i]._id);
