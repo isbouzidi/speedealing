@@ -206,7 +206,7 @@ exports.render = function(req, res) {
 								return;
 							}
 							model.find({}, "", {sort: {"_id.position": 1}},*/ function(err, docs) {
-							console.log(docs);
+							//console.log(docs);
 								topmenu = docs;
 								callback();
 							//});
