@@ -129,7 +129,7 @@
 <script src="includes/js/tinycon.min.js"></script>
 
 <script src="/socket.io/socket.io.js"></script>
-<script>
+<!--<script>
 	$(document).ready(function() {
 		var socket = io.connect();
 		socket.on('news', function(data) {
@@ -142,7 +142,7 @@
 			socket.emit('my other event', {my: 'data'});
 		});
 	});
-</script>
+</script>-->
 
 <script>
 	// Call template init (optional, but faster if called manually)
