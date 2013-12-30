@@ -133,6 +133,8 @@ exports.headfoot = function(entity, tex, callback) { //\textsc{Symeos} 158 av. L
 			tex = tex.replace(/--MYSOC--/g, "\\textbf{\\large "+doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town + "\\\\Tel : " + doc.phone + "\\\\ Fax : " + doc.fax );
 			tex = tex.replace(/--FOOT--/g, "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town + " T\\'el.: " + doc.phone + " R.C.S. " + doc.idprof1);
 
+			tex = tex.replace(/é/g,"\\'e");
+			tex = tex.replace(/è/g,"\\`e");
 			callback(tex);
 		});
 	});
@@ -143,4 +145,4 @@ exports.headfoot = function(entity, tex, callback) { //\textsc{Symeos} 158 av. L
  */
 exports.price = function(price) {
 	return accounting.formatMoney(price, { symbol: "€",  format: "%v %s",decimal : ",", thousand: " ", precision : 2   });
-}
+};

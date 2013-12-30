@@ -20,6 +20,7 @@ var billSchema = new Schema({
 	contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
 	ref_client: {type: String},
 	datec: {type: Date},
+	dater: {type: Date},
 	notes: [{
 			title: String,
 			note: String,
@@ -64,7 +65,12 @@ var billSchema = new Schema({
 			pu_ttc: Number,
 			pu_tva: Number
 		}],
-	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}]
+	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
+	latex: {
+		title: String,
+		createdAt: {type: Date},
+		data: Buffer,
+	}
 });
 
 billSchema.plugin(timestamps);
