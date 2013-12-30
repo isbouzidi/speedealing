@@ -67,7 +67,7 @@ module.exports = exports = function(server, db, socketsUser) {
 		});
 		// When user leaves
 		socket.on('disconnect', function() {
-			console.log("Disconnect");
+			console.log(socket_username + " : Disconnect");
 			socketsUser[socket_username] = null;
 		});
 		// New message from client = "write" event
