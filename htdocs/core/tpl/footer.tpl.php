@@ -135,6 +135,7 @@
 		socket.on('notify', function(data) {
 			notify(data.title, data.message, data.options);
 		});
+		socket.emit('user', "<?php echo $user->id;?>");
 		//socket.on('refreshTicket', function(data) {
 		//});
 	});
