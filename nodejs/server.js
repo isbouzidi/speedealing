@@ -97,8 +97,10 @@ require('./config/express')(app, passport, db);
 //Bootstrap routes
 require('./config/routes')(app, passport, auth);
 
+var usersSocket = {}; // Object of user connected on socket.io
+
 // Speedealing routes
-require('./app/routes')(app, passport, auth);
+require('./app/routes')(app, passport, auth, usersSocket);
 
 /*app.get('*', function(req, res){
  return res.redirect('index.php');
@@ -111,7 +113,7 @@ var server = http.createServer(app).listen(app.get('port'), function() {
 });
 
 // Start socket.io
-require('./config/socket.io')(server, db);
+require('./config/socket.io')(server, db, usersSocket);
 
 //expose app
 exports = module.exports = app;

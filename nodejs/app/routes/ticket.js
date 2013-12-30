@@ -11,9 +11,10 @@ var TicketModel = mongoose.model('ticket');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
-module.exports = function(app, passport, auth) {
+module.exports = function(app, passport, auth, usersSocket) {
 
 	var object = new Object();
+	object.usersSocket = usersSocket;
 
 	ExtrafieldModel.findById('extrafields:Societe', function(err, doc) {
 		if (err) {
@@ -47,14 +48,29 @@ module.exports = function(app, passport, auth) {
 			icon: "icon-eye"
 		};
 
+		// notify controller read
+		var socket = usersSocket[req.body.controlledBy.id];
+		if (req.body.controlledBy.id != req.user._id && socket)
+			socket.emit('notify', {
+				title: 'Ticket : ' + req.body.name,
+				message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a ouvert le ticket ' + req.body.ref,
+				options: {
+					autoClose: true
+				}
+			});
+
 		TicketModel.update({_id: req.body.id}, {'$push': {comments: addComment}, '$addToSet': {read: req.user._id}}, function(err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			return res.send(200, {});
+			object.refreshTicket(req.user._id, function() {
+				return res.send(200, {});
+			});
 		});
+
+
 	});
 
 	app.put('/api/ticket/expire', auth.requiresLogin, function(req, res) {
@@ -73,7 +89,19 @@ module.exports = function(app, passport, auth) {
 			'$push': {comments: addComment}
 		}
 		if (req.user._id != req.body.controller.id)
-			update['$pop'] = {read: req.body.controller.id};
+			update['$pull'] = {read: req.body.controller.id};
+
+		// notify controller chnge date
+		var socket = usersSocket[req.body.controller.id];
+		if (req.body.controller.id != req.user._id && socket)
+			socket.emit('notify', {
+				title: 'Ticket : ' + req.body.name,
+				message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a changé la date d\'échéance au ' + dateFormat(datef, "dd/mm/yyyy"),
+				options: {
+					autoClose: false,
+					link: "#!/ticket/" + req.body.id
+				}
+			});
 
 		TicketModel.update({_id: req.body.id}, update, function(err) {
 			if (err) {
@@ -81,7 +109,9 @@ module.exports = function(app, passport, auth) {
 				return res.send(500, err);
 			}
 
-			return res.send(200, {});
+			object.refreshTicket(req.user._id, function() {
+				return res.send(200, {});
+			});
 		});
 	});
 
@@ -100,23 +130,70 @@ module.exports = function(app, passport, auth) {
 				addComment.icon = "icon-extract";
 				addComment.title = "<strong>" + req.user.firstname + "</strong> transfert a <strong>" + req.body.addUser.name + "</strong>";
 				update = {'$push': {comments: addComment}, '$addToSet': {affectedTo: req.body.addUser}};
+				var socket = usersSocket[req.body.addUser.id];
+				if (socket)
+					socket.emit('notify', {
+						title: 'Ticket : ' + req.body.name,
+						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> vous a ajouté sur le ticket ' + req.body.ref + ' et attend votre intervention.',
+						options: {
+							autoClose: false,
+							delay: 300,
+							link: "#!/ticket/" + req.body.id,
+							classes: ["orange-gradient"],
+						}
+					});
 				break;
 			case 'reply' :
 				addComment.title = "<strong>" + req.user.firstname + "</strong> repond a <strong>" + req.body.controller.name + "</strong>";
 				addComment.icon = 'icon-reply';
 				if (req.user._id != req.body.controller.id)
-					update = {'$push': {comments: addComment}, '$pop': {read: req.body.controller.id}};
+					update = {'$push': {comments: addComment}, '$pull': {read: req.body.controller.id}};
 				else
 					update = {'$push': {comments: addComment}};
+
+				var socket = usersSocket[req.body.controller.id];
+				if (socket)
+					socket.emit('notify', {
+						title: 'Ticket : ' + req.body.name,
+						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> vous pose un question sur votre ticket ' + req.body.ref + '.',
+						options: {
+							autoClose: false,
+							delay: 300,
+							link: "#!/ticket/" + req.body.id,
+							classes: ["orange-gradient"],
+						}
+					});
 				break;
 			case 'comment':
 				addComment.title = "<strong>" + req.user.firstname + "</strong> a ajoute un commentaire";
 				addComment.icon = 'icon-chat';
 				update = {'$push': {comments: addComment}, '$set': {read: [req.user._id]}};
+
+				// notify all members change date
+				TicketModel.findOne({_id: req.body.id}, function(err, ticket) {
+					ticket.affectedTo.forEach(function(user) {
+						if (user.id === req.user._id)
+							return;
+
+						var socket = usersSocket[user.id];
+						if (socket)
+							socket.emit('notify', {
+								title: 'Ticket : ' + req.body.name,
+								message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a commenté le ticket ' + req.body.ref + '.',
+								options: {
+									autoClose: true,
+									delay: 300,
+									link: "#!/ticket/" + req.body.id,
+									classes: ["green-gradient"],
+								}
+							});
+					});
+				});
+
 				break;
 		}
 
-		console.log(addComment);
+		//console.log(addComment);
 
 		TicketModel.update({_id: req.body.id}, update, function(err) {
 			if (err) {
@@ -124,18 +201,44 @@ module.exports = function(app, passport, auth) {
 				return res.send(500, err);
 			}
 
-			return res.send(200, {});
+			object.refreshTicket(req.user._id, function() {
+				return res.send(200, {});
+			});
 		});
 	});
 
 	app.post('/api/ticket/important', auth.requiresLogin, function(req, res) {
+
+		// notify all members chnge date
+		TicketModel.findOne({_id: req.body.id}, function(err, ticket) {
+			ticket.affectedTo.forEach(function(user) {
+				if (user.id === req.user._id)
+					return;
+
+				var socket = usersSocket[user.id];
+				if (socket)
+					socket.emit('notify', {
+						title: 'Ticket : ' + req.body.name,
+						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a marqué le ticket ' + req.body.ref + ' comme étant important.',
+						options: {
+							autoClose: false,
+							delay: 300,
+							link: "#!/ticket/" + req.body.id,
+							classes: ["red-gradient"]
+						}
+					});
+			})
+		});
+
 		TicketModel.update({_id: req.body.id}, {'$set': {important: true, read: [req.user._id]}}, function(err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			return res.send(200, {});
+			object.refreshTicket(req.user._id, function() {
+				return res.send(200, {});
+			});
 		});
 	});
 
@@ -153,7 +256,7 @@ module.exports = function(app, passport, auth) {
 			'$push': {comments: addComment}
 		}
 		if (req.user._id != req.body.controller.id)
-			update['$pop'] = {read: req.body.controller.id};
+			update['$pull'] = {read: req.body.controller.id};
 
 		TicketModel.update({_id: req.body.id}, update, function(err) {
 			if (err) {
@@ -161,7 +264,9 @@ module.exports = function(app, passport, auth) {
 				return res.send(500, err);
 			}
 
-			return res.send(200, {});
+			object.refreshTicket(req.user._id, function() {
+				return res.send(200, {});
+			});
 		});
 	});
 
@@ -174,13 +279,39 @@ module.exports = function(app, passport, auth) {
 			title: "<strong>" + req.user.firstname + "</strong> change a <strong>" + req.body.percentage + "%</strong>"
 		};
 
+		// notify controller chnge date
+		var socket = usersSocket[req.body.controller.id];
+		if (req.body.controller.id != req.user._id && socket) {
+			if (parseInt(req.body.percentage) === 100)
+				socket.emit('notify', {
+					title: 'Ticket : ' + req.body.name,
+					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a terminé le ticket ' + req.body.ref + '.',
+					options: {
+						autoClose: false,
+						link: "#!/ticket/" + req.body.id,
+						classes: ["green-gradient"]
+					}
+				});
+			else
+				socket.emit('notify', {
+					title: 'Ticket : ' + req.body.name,
+					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a changé le niveau du ticket ' + req.body.ref + ' à ' + req.body.percentage + '%.',
+					options: {
+						autoClose: true,
+						link: "#!/ticket/" + req.body.id
+					}
+				});
+		}
+
 		TicketModel.update({_id: req.body.id}, {'$set': {percentage: req.body.percentage}, '$push': {comments: addComment}}, function(err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			return res.send(200, {});
+			object.refreshTicket(req.user._id, function() {
+				return res.send(200, {});
+			});
 		});
 	});
 
@@ -286,7 +417,7 @@ function Object() {
 
 Object.prototype = {
 	create: function(req, res) {
-
+		var self = this;
 		var ticket = new TicketModel(req.body);
 
 		ticket.comments.push({author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
@@ -299,40 +430,53 @@ Object.prototype = {
 			if (err)
 				console.log(err);
 
-			res.send(200, doc);
+			// notify all members change date
+			doc.affectedTo.forEach(function(user) {
+				if (user.id === req.user._id)
+					return;
+
+				var socket = self.usersSocket[user.id];
+				if (socket)
+					socket.emit('notify', {
+						title: 'Ticket : ' + doc.name,
+						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a ajouté le ticket ' + doc.ref + '.',
+						options: {
+							autoClose: false,
+							delay: 300,
+							link: "#!/ticket/" + doc._id,
+							classes: ["orange-gradient"],
+						}
+					});
+			});
+
+			self.refreshTicket(req.user._id, function() {
+				return res.send(200, doc);
+			});
 		});
 	},
 	read: function(req, res) {
 		var status_list = this.fk_extrafields.fields.Status;
 
-		TicketModel.find({'affectedTo.id': req.user._id, Status: {$ne: 'CLOSED'}}, function(err, doc) {
-			if (err) {
-				console.log(err);
-				res.send(500, doc);
-				return;
-			}
+		if (req.query.count)
+			TicketModel.count({'affectedTo.id': req.user._id, read: {$ne: req.user._id}, Status: {$ne: 'CLOSED'}}, function(err, doc) {
+				if (err) {
+					console.log(err);
+					res.send(500, doc);
+					return;
+				}
 
-			/*for (var i in doc) {
-			 var status = {};
-			 doc[i] = doc[i].value;
-			 
-			 /*doc[i].societe_id = doc[i].societe.id;
-			 doc[i].societe = doc[i].societe.name;
-			 status.id = doc[i].Status;
-			 if (status_list.values[status.id]) {
-			 status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
-			 status.css = status_list.values[status.id].cssClass;
-			 } else { // Value not present in extrafield
-			 status.name = status.id;
-			 status.css = "";
-			 }*/
+				res.send(200, {cpt: doc});
+			});
+		else
+			TicketModel.find({'affectedTo.id': req.user._id, Status: {$ne: 'CLOSED'}}, function(err, doc) {
+				if (err) {
+					console.log(err);
+					res.send(500, doc);
+					return;
+				}
 
-			//doc[i].Status = status;
-
-			//}
-			//console.log(doc);
-			res.send(200, doc);
-		});
+				res.send(200, doc);
+			});
 	},
 	findOne: function(req, res) {
 		TicketModel.findOne({_id: req.params.id}, function(err, ticket) {
@@ -359,5 +503,13 @@ Object.prototype = {
 	},
 	del: function(req) {
 		return req.body.models;
+	},
+	refreshTicket: function(userId, callback) {
+		var socket = this.usersSocket[userId];
+		if (socket) {
+			socket.broadcast.emit('refreshTicket', {});
+			socket.emit('refreshTicket', {});
+		}
+		callback();
 	}
 };

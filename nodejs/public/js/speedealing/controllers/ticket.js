@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('TicketController', ['$scope', '$rootScope', '$routeParams', '$location', '$route', '$timeout', 'Global', '$http', 'Ticket', function($scope, $rootScope, $routeParams, $location, $route, $timeout, Global, $http, Ticket) {
+angular.module('mean.system').controller('TicketController', ['$scope', '$rootScope', '$routeParams', '$location', '$route', '$timeout', 'Global', '$http', 'socket', 'Ticket', function($scope, $rootScope, $routeParams, $location, $route, $timeout, Global, $http, socket, Ticket) {
 		$scope.global = Global;
 
 		$rootScope.$on('$viewContentLoaded', function(event) {
@@ -50,7 +50,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				name: "Clients",
 				icon: "icon-users",
 				collection: "Societe",
-				searchUrl:"api/societe/autocomplete",
+				searchUrl: "api/societe/autocomplete",
 				url: "societe/fiche.php?id="
 			},
 			/*	{
@@ -63,28 +63,28 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 				name: "Fournisseurs",
 				icon: "icon-users",
 				collection: "Societe",
-				searchUrl:"api/societe/autocomplete",
+				searchUrl: "api/societe/autocomplete",
 				url: "societe/fiche.php?id="
 			},
 			{
 				name: "Sous-traitants",
 				icon: "icon-users",
 				collection: "Societe",
-				searchUrl:"api/societe/autocomplete",
+				searchUrl: "api/societe/autocomplete",
 				url: "societe/fiche.php?id="
 			},
 			{
 				name: "Transport",
 				icon: "icon-plane",
 				collection: "europexpress_courses",
-				searchUrl:"api/europexpress/courses/autocomplete",
+				searchUrl: "api/europexpress/courses/autocomplete",
 				url: ""
 			},
 			{
 				name: "Vehicules",
 				icon: "icon-rocket",
 				collection: "europexpress_vehicule",
-				searchUrl:"api/europexpress/vehicules/immat/autocomplete",
+				searchUrl: "api/europexpress/vehicules/immat/autocomplete",
 				url: ""
 			}
 		];
@@ -106,7 +106,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 					$http({method: 'PUT', url: 'api/ticket/percentage', data: {
 							id: $scope.ticket._id,
 							percentage: data,
-							controller: $scope.ticket.controlledBy
+							controller: $scope.ticket.controlledBy,
+							ref: $scope.ticket.ref,
+							name: $scope.ticket.name
 						}
 					}).
 							success(function(data, status) {
@@ -304,7 +306,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 			$http({method: 'PUT', url: 'api/ticket/expire', data: {
 					id: $scope.ticket._id,
 					datef: e.sender._value,
-					controller: $scope.ticket.controlledBy
+					controller: $scope.ticket.controlledBy,
+					ref: $scope.ticket.ref,
+					name: $scope.ticket.name
 				}
 			}).
 					success(function(data, status) {
@@ -324,7 +328,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 					note: $scope.ticket.newNote,
 					addUser: $scope.ticket.addUser,
 					mode: $scope.editMode,
-					controller: $scope.ticket.controlledBy
+					controller: $scope.ticket.controlledBy,
+					ref: $scope.ticket.ref,
+					name: $scope.ticket.name
 				}
 			}).
 					success(function(data, status) {
@@ -336,7 +342,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 
 		$scope.setImportant = function() {
 			$http({method: 'POST', url: 'api/ticket/important', data: {
-					id: $scope.ticket._id
+					id: $scope.ticket._id,
+					ref: $scope.ticket.ref,
+					name: $scope.ticket.name
 				}
 			}).
 					success(function(data, status) {
@@ -440,6 +448,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 					if (ticket.read.indexOf(Global.user._id) < 0) {
 						$http({method: 'PUT', url: 'api/ticket/read', data: {
 								id: $scope.ticket._id,
+								controlledBy: $scope.ticket.controlledBy,
+								ref: $scope.ticket.ref,
+								name: $scope.ticket.name
 							}
 						}).
 								success(function(data, status) {
@@ -521,11 +532,13 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 			});
 		};
 
-		window.setInterval(function() {
+		socket.on('refreshTicket', function(data) {
+			//window.setInterval(function() {
 			$scope.find();
-			$scope.$apply();
+			//$scope.$apply();
 			//console.log("toto");
-		}, 60000);
+			//}, 60000);
+		});
 
 		$scope.ticketRead = function(read) {
 			if (read.indexOf(Global.user._id) >= 0)

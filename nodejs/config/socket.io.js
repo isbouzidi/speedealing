@@ -2,10 +2,13 @@
 
 var passportSocketIo = require("passport.socketio"),
 		express = require('express'),
+		mongoose = require('mongoose'),
 		mongoStore = require('connect-mongo')(express),
 		config = require('./config');
 
-module.exports = exports = function(server, db) {
+var UserModel = mongoose.model('user');
+
+module.exports = exports = function(server, db, socketsUser) {
 	/** WebSocket */
 	var sockets = require('socket.io').listen(server, {log: false});
 
@@ -21,54 +24,64 @@ module.exports = exports = function(server, db) {
 			maxAge: 36000000
 					//expires: new Date(Date.now() + 3600000) //1 Hour
 		},
-		success: onAuthorizeSuccess, // *optional* callback on success - read more below
-		fail: onAuthorizeFail, // *optional* callback on fail/error - read more below
+		success: function(data, accept) {
+			//console.log('successful connection to socket.io');
+			//console.log(data);
+
+			// The accept-callback still allows us to decide whether to
+			// accept the connection or not.
+			accept(null, true);
+		},
+		fail: function(data, message, error, accept) {
+			if (error)
+				throw new Error(message);
+			console.log('failed connection to socket.io:', message);
+
+			// We use this callback to log all of our failed connections.
+			accept(null, false);
+		}
 	}));
 
 
 	sockets.on('connection', function(socket) { // New client
-		var socket_username = null;
+		//console.log("connection");
 		// User sends his username
+		var socket_username = null;
 		socket.on('user', function(username) {
 			socket_username = username;
-			sockets.emit('join', username, Date.now());
+			socketsUser[username] = socket;
+			console.log(username + " : Connected");
+			//console.log(socket);
+
+			/*UserModel.findOne({_id: username}, "firstname lastname", function(err, user) {
+				socket.broadcast.emit('notify', {
+					title: '<strong>' + user.firstname + " " + user.lastname[0] + '.</strong> vient de se connecter.',
+					message:null,
+					options:{
+						autoClose: true,
+						delay: 200,
+						closeDelay : 2000
+					}
+				});
+			});*/
 		});
 		// When user leaves
 		socket.on('disconnect', function() {
 			console.log("Disconnect");
-			if (socket_username) {
-				sockets.emit('bye', socket_username, Date.now());
-			}
+			socketsUser[socket_username] = null;
 		});
 		// New message from client = "write" event
-		socket.on('write', function(message) {
-			if (socket_username) {
-				sockets.emit('message', socket_username, message, Date.now());
-			} else {
-				socket.emit('error', 'Username is not set yet');
-			}
-		});
-		socket.emit('news', {hello: 'world a tous'});
-		socket.on('my other event', function(data) {
-			console.log(data);
-		});
+		/*socket.on('write', function(message) {
+		 if (socket_username) {
+		 sockets.emit('message', socket_username, message, Date.now());
+		 } else {
+		 socket.emit('error', 'Username is not set yet');
+		 }
+		 });*/
+		socket.emit('reboot', {date: new Date()});
+		//socket.emit('news', {hello: "bad"});
+		//socket.on('my other event', function(data) {
+		//	console.log(data);
+		//});
 	});
 };
-
-
-function onAuthorizeSuccess(data, accept) {
-	console.log('successful connection to socket.io');
-
-	// The accept-callback still allows us to decide whether to
-	// accept the connection or not.
-	accept(null, true);
-}
-
-function onAuthorizeFail(data, message, error, accept) {
-	if (error)
-		throw new Error(message);
-	console.log('failed connection to socket.io:', message);
-
-	// We use this callback to log all of our failed connections.
-	accept(null, false);
-}

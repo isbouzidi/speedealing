@@ -742,6 +742,10 @@ function main_menu() {
 		);
 		$listMyTasks = $mongodb->Agenda->find(array("Status" => array('$ne' => "DONE"), "usertodo.id" => $user->id, "datep" => array('$gt' => $params['start'], '$lte' => $params['end'])));
 	}
+	
+	
+	
+	$countTicket=$mongodb->Ticket->count(array('affectedTo.id' =>  $user->id, 'read' => array('$ne' =>  $user->id), 'Status'=> array('$ne' => 'CLOSED')));
 
 	include 'core/tpl/main_menu.tpl.php';
 }

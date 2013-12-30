@@ -49,6 +49,10 @@
 			<li style="width: 20%;">
 				<a href='#!/ticket' title="Gestion des tickets" target="_self">
 					<span class="icon-inbox"></span>
+					<?php if ($countTicket) { ?>
+						<span class="count"><?php echo $countTicket; ?></span>
+						<?php $count_icon+=$countTicket; ?>
+					<?php } ?>
 				</a>
 			</li>
 			<li style="width: 20%;">
@@ -86,7 +90,8 @@
 				<li>
 					<ul class="calendar-menu">
 						<?php foreach ($listMyTasks as $aRow) {
-							$aRow = (object) $aRow; ?>
+							$aRow = (object) $aRow;
+							?>
 							<li>
 								<a href="agenda/fiche.php?id=<?php echo $aRow->_id; ?>" title="<?php echo $aRow->societe['name']; ?>">
 									<time datetime="<?php echo dol_print_date(date("c", $aRow->datep->sec), "day"); ?>">
