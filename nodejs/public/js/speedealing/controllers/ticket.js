@@ -123,14 +123,19 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 		$scope.kendoUpload = {
 			multiple: true,
 			async: {
-				saveUrl: "api/ticket/file/<?php echo $object->id; ?>",
-				removeUrl: "api/ticket/file/<?php echo $object->id; ?>",
+				saveUrl: "api/ticket/file/",
+				removeUrl: "api/ticket/file/",
 				removeVerb: "DELETE",
 				autoUpload: true
 			},
 			error: function(e) {
 				// log error
 				console.log(e);
+				console.log($scope.ticket._id);
+			},
+			upload: function(e) {
+				e.sender.options.async.saveUrl = "api/ticket/file/" + $scope.ticket._id;
+				e.sender.options.async.removeUrl = "api/ticket/file/" + $scope.ticket._id;
 			},
 			complete: function() {
 				$route.reload();
