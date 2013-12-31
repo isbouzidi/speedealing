@@ -87,7 +87,7 @@
 		<div class="large-box-shadow white-gradient with-border margin-top">
 			<div class="with-mid-padding silver-gradient no-margin-top">
 				<span class="\{{comment.icon}}" data-ng-bind-html="comment.title"></span>
-				<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='time=countDown(comment.datef, false)'><span data-ng-show="time.days > 0">\{{time.days}}j</span><span data-ng-hide="time.days > 0">{{t 'Today'}}</span></div>
+				<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(comment.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
 			</div>
 			<div class="with-padding" data-ng-if="comment.note" data-ng-bind-html="comment.note"></div>
 		</div>
