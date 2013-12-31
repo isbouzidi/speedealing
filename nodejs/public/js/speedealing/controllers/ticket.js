@@ -1,38 +1,5 @@
-angular.module('mean.system').controller('TicketController', ['$scope', '$rootScope', '$routeParams', '$location', '$route', '$timeout', 'Global', '$http', 'socket', 'Ticket', function($scope, $rootScope, $routeParams, $location, $route, $timeout, Global, $http, socket, Ticket) {
+angular.module('mean.system').controller('TicketController', ['$scope', '$routeParams', '$location', '$route', '$timeout', 'Global', '$http', 'socket', 'Ticket', function($scope, $routeParams, $location, $route, $timeout, Global, $http, socket, Ticket) {
 		$scope.global = Global;
-
-		$rootScope.$on('$viewContentLoaded', function(event) {
-			//console.log(event);
-			//if(angular.element('#link-input-select').length > 0)
-			// Update Select
-			//$scope.$apply();
-
-			$.template.init();
-
-			/*
-			 * This is a example on how to achieve a full-height layout for content panels:
-			 */
-
-			// Cache elements
-			var titleBar = $('#title-bar'),
-					panelNav = $('#panel-nav'),
-					panelContent = $('#panel-content'),
-					controlsSize = 43, // Size of the panel-controls block and borders
-					paddingSize = 40;        // Size of the padding on the panel content block
-
-			// Function to update panels size
-			updatePanelsSize = function()
-			{
-				panelNav.height($.template.viewportHeight - titleBar.outerHeight() - controlsSize);
-				panelContent.height($.template.viewportHeight - titleBar.outerHeight() - controlsSize - paddingSize);
-			};
-
-			// First call
-			updatePanelsSize();
-
-			// Refresh on resize
-			$(window).on('normalized-resize', updatePanelsSize);
-		});
 
 		var ticket = {
 			important: false,
@@ -362,7 +329,10 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$rootSc
 		$scope.setClosed = function() {
 			$http({method: 'PUT', url: 'api/ticket/status', data: {
 					id: $scope.ticket._id,
-					Status: 'CLOSED'
+					Status: 'CLOSED',
+					controller: $scope.ticket.controlledBy,
+					ref: $scope.ticket.ref,
+					name: $scope.ticket.name
 				}
 			}).
 					success(function(data, status) {
