@@ -9,8 +9,8 @@ angular.module('mean.system').directive('resize', ['$window', function($window) 
 				return {'h': w.height(), 'w': w.width()};
 			};
 			scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-				scope.windowHeight = newValue.h;
-				scope.windowWidth = newValue.w;
+				//scope.windowHeight = newValue.h;
+				//scope.windowWidth = newValue.w;
 
 				scope.style = function(height) {
 					return {

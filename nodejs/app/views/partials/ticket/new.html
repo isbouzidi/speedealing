@@ -30,7 +30,7 @@
 
 			<p class="button-height inline-label required">
 				<label for="expire" class="label">{{t 'ticket:Expire'}}</label>
-				<input id="expire" data-ng-model="dateString" kendo-date-time-picker required/>
+				<input id="expire" data-ng-model="dateString" kendo-date-time-picker required k-on-change="newExpireDate(kendoEvent)"/>
 			</p>
 
 			<p class="button-height inline-label">

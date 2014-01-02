@@ -24,7 +24,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			d.setHours(0, 0, 0);
 			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
 			var week = Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7).toString();
-			$location.path('europexpress/planning/' + week + '/' + d.getFullYear());
+			$location.path('module/europexpress/planning.html/' + week + '/' + d.getFullYear());
 		};
 
 		$scope.next = function() {
@@ -36,9 +36,9 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			}
 			week++;
 
-			console.log('europexpress/planning/' + week + '/' + year);
+			//console.log('module/europexpress/planning.html/' + week + '/' + year);
 
-			$location.path('europexpress/planning/' + week + '/' + year);
+			$location.path('module/europexpress/planning.html/' + week + '/' + year);
 		};
 
 		$scope.previous = function() {
@@ -50,7 +50,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			}
 			week--;
 
-			$location.path('europexpress/planning/' + week + '/' + year);
+			$location.path('module/europexpress/planning.html/' + week + '/' + year);
 		};
 
 		$scope.week = $routeParams.id1 + '/' + $routeParams.id2;

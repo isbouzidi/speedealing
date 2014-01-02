@@ -257,13 +257,10 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		};
 
 		// Convert date to IsoString date
-		$scope.$watch('dateString', function(dateString)
-		{
-			var time = new Date(dateString);
-
-			if (!isNaN(time.getTime()) && new Date($scope.ticket.datef).getTime() != time.getTime())
-				$scope.ticket.datef = time;
-		});
+		
+		$scope.newExpireDate = function(e) {
+				$scope.ticket.datef = e.sender._value;
+		};
 
 		$scope.$watch('ticket.datef', function(date)
 		{

@@ -24,11 +24,11 @@ window.app.config(['$routeProvider',
 			templateUrl: function(params) {
 				return 'partials/' + params.module + '/' + params.view;
 			}
-		}).when('/:view', {
+		}).when('/:view/:id', {
 			templateUrl: function(params) {
 				return 'partials/' + params.view;
 			}
-		}).when('/:view/:id', {
+		}).when('/:view', {
 			templateUrl: function(params) {
 				return 'partials/' + params.view;
 			}
