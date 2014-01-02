@@ -27,7 +27,7 @@ sequenceSchema.statics = {
 
 			var date = new Date();
 
-			return cb(name + (date.getMonth() + 1) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 5));
+			return cb(name + numberFormat((date.getMonth() + 1), 2) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 5));
 		});
 	},
 	incNumber: function(name, cb) {
