@@ -127,6 +127,13 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				angular.element('#link-input-select').change();
 			}, 500);
 		};
+		
+		$scope.enableEdit = function() {
+			$scope.edit = true;
+			$timeout(function() {
+				angular.element('#link-input-select').change();
+			}, 500);
+		};
 
 		$scope.disableNew = function() {
 			$scope.new = false;
@@ -257,9 +264,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		};
 
 		// Convert date to IsoString date
-		
+
 		$scope.newExpireDate = function(e) {
-				$scope.ticket.datef = e.sender._value;
+			$scope.ticket.datef = e.sender._value;
 		};
 
 		$scope.$watch('ticket.datef', function(date)
@@ -383,7 +390,8 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			};
 			this.events = {
 				change: function(event, ui) {
-					$scope.ticket.affectedTo.push(ui.item);
+					if (ui.item != null)
+						$scope.ticket.affectedTo.push(ui.item);
 					$scope.affected = null;
 				}
 			};
@@ -406,6 +414,15 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			});
 
 			$scope.ticket = angular.copy(ticket);
+		};
+		
+		$scope.update = function() {
+			var ticket = $scope.ticket;
+
+			ticket.$update(function() {
+				//$location.path("ticket/" /*+ response._id*/);
+				$route.reload();
+			});
 		};
 
 		$scope.findOne = function() {
@@ -483,6 +500,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			};
 			this.events = {
 				change: function(event, ui) {
+					if (ui.item == null)
+						ui.item = {};
+
 					$scope.ticket.controlledBy.id = ui.item.id;
 					$scope.ticket.controlledBy.name = ui.item.name;
 				}
@@ -512,8 +532,10 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			//}, 60000);
 		});
 
-		$scope.ticketRead = function(read) {
-			if (read.indexOf(Global.user._id) >= 0)
+		$scope.ticketRead = function(read, user) {
+			if (user == null)
+				user = Global.user._id;
+			if (read.indexOf(user) >= 0)
 				return true;
 			else
 				return false;

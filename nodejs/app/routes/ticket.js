@@ -55,7 +55,8 @@ module.exports = function(app, passport, auth, usersSocket) {
 				title: 'Ticket : ' + req.body.name,
 				message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a ouvert le ticket ' + req.body.ref,
 				options: {
-					autoClose: true
+					autoClose: true,
+					classes: ["anthracite-gradient"]
 				}
 			});
 
@@ -99,7 +100,8 @@ module.exports = function(app, passport, auth, usersSocket) {
 				message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a changé la date d\'échéance au ' + dateFormat(datef, "dd/mm/yyyy"),
 				options: {
 					autoClose: false,
-					link: "#!/ticket/" + req.body.id
+					link: "#!/ticket/" + req.body.id,
+					classes: ["anthracite-gradient"]
 				}
 			});
 
@@ -298,7 +300,8 @@ module.exports = function(app, passport, auth, usersSocket) {
 					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a changé le niveau du ticket ' + req.body.ref + ' à ' + req.body.percentage + '%.',
 					options: {
 						autoClose: true,
-						link: "#!/ticket/" + req.body.id
+						link: "#!/ticket/" + req.body.id,
+						classes: ["anthracite-gradient"]
 					}
 				});
 		}

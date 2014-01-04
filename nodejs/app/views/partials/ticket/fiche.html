@@ -1,6 +1,16 @@
 <div data-ng-init="findOne()">
-	<h2 class="thin mid-margin-bottom">\{{ticket.ref}} : \{{ticket.name}} <small class="valign-top tag orange-bg ">En cours</small></h2>
-	<h4 class="no-margin-top">{{t 'ticket:From'}}: \{{ticket.controlledBy.name}}</h4>
+	<div class="columns">
+		<div class="nine-columns no-margin-bottom">
+			<h2 class="thin mid-margin-bottom">\{{ticket.ref}} : \{{ticket.name}} <small class="valign-top tag orange-bg ">En cours</small></h2>
+			<h4 class="no-margin-top">{{t 'ticket:From'}}: \{{ticket.controlledBy.name}}</h4>
+		</div>
+		<div class="three-columns no-margin-bottom">
+			<h5 class="no-margin-top underline small-margin-bottom">{{t 'ticket:AffectedTo'}}</h5>
+			<ul>
+				<li ng-repeat="to in ticket.affectedTo">\{{to.name}} <span ng-show="ticketRead(ticket.read,to.id)" class="icon-tick green"></span></li>
+			</ul>
+		</div>
+	</div>
 
 	<div class="block large-box-shadow white-gradient with-border">
 		<div class="block-title button-height with-mid-padding">
@@ -14,6 +24,7 @@
 				<a href="" data-ng-click="enableForward()" class="button" title="{{t 'Forward'}}"><span class="icon-extract"></span></a>
 			</span>
 			<span class="button-group children-tooltip">
+				<button data-ng-click="enableEdit()" data-ng-disabled='ticket.controlledBy.id != global.user._id' class="button" title="{{t 'Edit'}}"><span class="icon-pencil"></span></button>
 				<button data-ng-disabled='ticket.important' data-ng-click="setImportant()" class="button" title="{{t 'Important'}}"><span class="icon-new"></span></button>
 				<button data-ng-click="setClosed()" data-ng-disabled='ticket.controlledBy.id != global.user._id' class="button" title="{{t 'Close'}}"><span class="icon-cross-round"></span></button>
 			</span>

@@ -1,4 +1,4 @@
-angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, Object) {
+angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', '$route', 'Global', '$http', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, $http, Object) {
 		$scope.global = Global;
 		$scope.showEdit = {};
 
@@ -29,7 +29,8 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 
 		$scope.next = function() {
 			var year = parseInt($routeParams.id2);
-			var week = parseInt($routeParams.id1)
+			var week = parseInt($routeParams.id1);
+			
 			if (week === 52) {
 				year++;
 				week = 0;
@@ -43,7 +44,8 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 
 		$scope.previous = function() {
 			var year = parseInt($routeParams.id2);
-			var week = parseInt($routeParams.id1)
+			var week = parseInt($routeParams.id1);
+			
 			if (week === 1) {
 				year--;
 				week = 53;
@@ -60,41 +62,102 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				$scope.showEdit[i] = false;
 		};
 
-		$scope.driverAutoCompleteEditor = {
-			minLength: 1,
-			dataTextField: "name",
-			dataValueField: "id",
-			filter: "contains",
-			dataSource: {
-				serverFiltering: true,
-				serverPaging: true,
-				pageSize: 5,
-				transport: {
-					read: {
-						url: "api/user/name/autocomplete",
-						type: "POST",
-						dataType: "json"
-					}
+		/**
+		 * AutoComplete User Driver
+		 */
+		function SearchDriver() {
+			var that = this;
+			this.options = {
+				html: true,
+				minLength: 1,
+				outHeight: 100,
+				maxWidth: 300,
+				source: function(request, response) {
+					// you can $http or $resource service to get data frome server.
+					$http({method: 'POST', url: 'api/user/name/autocomplete', data: {
+							take: '5',
+							skip: '0',
+							page: '1',
+							pageSize: '5',
+							filter: {filters: [{value: request.term}]}}
+					}).
+							success(function(data, status) {
+
+						angular.forEach(data, function(row) {
+							row.label = row.name;
+							row.value = row.name;
+						});
+
+						// response data to suggestion menu.
+						response(data);
+					}).
+							error(function(data, status) {
+						response(data || "Request failed");
+					});
 				}
-			}
+			};
+			this.events = {
+				change: function(event, ui) {
+					if (ui.item == null)
+						ui.item = {};
+
+					$scope.aday.driver.id = ui.item.id;
+					$scope.aday.driver.name = ui.item.name;
+				}
+			};
+		}
+		$scope.searchDriver = function() {
+			this.searchUser = new SearchDriver();
+			return this.searchUser;
 		};
 
-		$scope.sousTraitantAutoCompleteEditor = {
-			minLength: 1,
-			dataTextField: "name",
-			filter: "contains",
-			dataSource: {
-				serverFiltering: true,
-				serverPaging: true,
-				pageSize: 5,
-				transport: {
-					read: {
-						url: "api/societe/autocomplete?fournisseur=SUBCONTRACTOR",
-						type: "POST",
-						dataType: "json"
-					}
+		/**
+		 * AutoComplete Sous-Traitant
+		 */
+		function SearchSousTraitant() {
+			var that = this;
+			this.options = {
+				html: true,
+				minLength: 1,
+				outHeight: 100,
+				maxWidth: 300,
+				source: function(request, response) {
+					// you can $http or $resource service to get data frome server.
+					$http({method: 'POST', url: 'api/societe/autocomplete?fournisseur=SUBCONTRACTOR', data: {
+							take: '5',
+							skip: '0',
+							page: '1',
+							pageSize: '5',
+							filter: {filters: [{value: request.term}]}}
+					}).
+							success(function(data, status) {
+
+						angular.forEach(data, function(row) {
+							row.label = row.name;
+							row.value = row.name;
+						});
+
+						// response data to suggestion menu.
+						response(data);
+					}).
+							error(function(data, status) {
+						response(data || "Request failed");
+					});
 				}
-			}
+			};
+			this.events = {
+				change: function(event, ui) {
+					if (ui.item == null)
+						ui.item = {};
+
+					$scope.aday.sousTraitant.id = ui.item.id;
+					$scope.aday.sousTraitant.name = ui.item.name;
+				}
+			};
+		}
+		$scope.searchSousTraitant = function() {
+			this.search = new SearchSousTraitant();
+			return this.search;
 		};
 
 		$scope.update = function(id) {
@@ -112,6 +175,43 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			}, function(aday) {
 				$scope.aday = aday;
 			});
+		};
+
+		$scope.refresh = function() {
+			/*angular.element('#refresh').confirm({
+			 message: 'Are you really really sure?',
+			 onConfirm: function()
+			 {
+			 /* Custom code here */
+
+			// Return false to prevent default action
+			/*	return false;
+			 }
+			 });*/
+
+			$http({method: 'POST', url: 'api/europexpress/planning/refresh', data: {
+					year: $routeParams.id2,
+					week: $routeParams.id1}
+			}).
+					success(function(data, status) {
+				$route.reload();
+			}).
+					error(function(data, status) {
+				console.log("Request failed");
+			});
+
+		};
+		
+		$scope.disableRefresh = function(){
+			var d = new Date();
+			d.setHours(0, 0, 0);
+			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+			var todayWeek = Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7).toString();
+			
+			var year = parseInt($routeParams.id2);
+			var week = parseInt($routeParams.id1);
+			
+			return (year < d.getFullYear() || week < todayWeek);
 		};
 
 		/* $scope.create = function() {
@@ -200,24 +300,24 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 						datec: {type: "date", editable: true},
 						client: {editable: true, defaultValue: {id: null, name: ""}},
 						forfait: {editable: true, type: "boolean", defaultValue: false},
-						Mond_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Mond_mode: {editable: true, defaultValue: {id: "NONE", name: ""}},
 						Mond_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
 						Mond_panier: {editable: true, defaultValue: []},
-						Tues_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Tues_mode: {editable: true, defaultValue: {id: "NONE", name: ""}},
 						Tues_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
 						Tues_panier: {editable: true, defaultValue: []},
-						Wedn_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Wedn_mode: {editable: true, defaultValue: {id: "NONE", name: ""}},
 						Wedn_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
 						Wedn_panier: {editable: true, defaultValue: []},
-						Thur_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Thur_mode: {editable: true, defaultValue: {id: "NONE", name: ""}},
 						Thur_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
 						Thur_panier: {editable: true, defaultValue: []},
-						Frid_mode: {editable: true, defaultValue: {id:"NONE", name:""}},
+						Frid_mode: {editable: true, defaultValue: {id: "NONE", name: ""}},
 						Frid_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
-						Frid_panier:{editable: true, defaultValue: []},
-						Satu_mode:{editable: true, defaultValue: {id:"NONE", name:""}},
+						Frid_panier: {editable: true, defaultValue: []},
+						Satu_mode: {editable: true, defaultValue: {id: "NONE", name: ""}},
 						Satu_hNuit: {editable: true, type: "number", defaultValue: 0, validation: {min: 0}},
-						Satu_panier:{editable: true, defaultValue: []}
+						Satu_panier: {editable: true, defaultValue: []}
 					}
 				}
 			},
@@ -267,12 +367,12 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 			$('<input data-bind="value:' + options.field + ', source: ' + options.field + '" />')
 					.appendTo(container)
 					.kendoMultiSelect({
-				minLength : 1,
+				minLength: 1,
 				placeholder: "Sélectionner les paniers...",
 				autoBind: true,
 				//dataTextField: "name",
 				//dataValueField: "id",
-				dataSource:{
+				dataSource: {
 					serverFiltering: true,
 					serverPaging: true,
 					pageSize: 5,
