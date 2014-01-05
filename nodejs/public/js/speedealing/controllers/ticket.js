@@ -64,6 +64,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				step: 20,
 				stickToStep: false,
 				autoSpacing: true,
+				clickableTrack: false,
 				topLabel: "[value]%",
 				topMarks: 20,
 				bottomMarks: 20,
@@ -505,6 +506,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 
 					$scope.ticket.controlledBy.id = ui.item.id;
 					$scope.ticket.controlledBy.name = ui.item.name;
+					
+					$scope.ticket.addUser.id = ui.item.id;
+					$scope.ticket.addUser.name = ui.item.name;
 				}
 			};
 		}

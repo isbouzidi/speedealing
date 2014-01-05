@@ -57,13 +57,12 @@ html, body > .fixed-footer-bar {
 }
 
 html {
-	height: 100%;
-	overflow: hidden;
+	overflow-y: auto;
 }
 
 body {
-	height: 100%;
-	overflow: hidden;
+	/*height: 100%;*/
+	/*overflow: hidden;*/
 	box-sizing: border-box;
 	/*padding-top: 35px;*/
 }
@@ -88,7 +87,6 @@ body {
 }
 /* Prise en compte du footer fixe par le #main. Le header fixe est pris en compte déjà dans les styles de Developr */
 #main {
-    /*		min-height:100%; 	*/	/* fills the whole viewport */
     margin-bottom: 0px;
 }
 .fixed-footer-bar > #main {
@@ -439,14 +437,14 @@ div.box_c {
 	/*padding-bottom: 40px;*/
 /*}*/
 
-.panel-load-target {
+/*.panel-load-target {
 	padding-top: 0px;
 	padding-bottom: 175px;
-}
+}*/
 
-.panel-navigation, .panel-content {
+/*.panel-navigation, .panel-content {
 	overflow-y:hidden;
-}
+}*/
 
 .scroll {
 	overflow: auto;

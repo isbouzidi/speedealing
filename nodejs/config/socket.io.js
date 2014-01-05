@@ -57,11 +57,11 @@ module.exports = exports = function(server, db, socketsUser) {
 			UserModel.findOne({_id: username}, "firstname lastname", function(err, user) {
 				socket.broadcast.emit('notify', {
 					title: '<strong>' + user.firstname + " " + user.lastname[0] + '.</strong> vient de se connecter.',
-					message:null,
-					options:{
+					message: null,
+					options: {
 						autoClose: true,
 						delay: 200,
-						closeDelay : 2000
+						closeDelay: 2000
 					}
 				});
 			});
