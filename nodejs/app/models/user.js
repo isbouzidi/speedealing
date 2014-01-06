@@ -41,12 +41,12 @@ UserSchema.plugin(timestamps);
  * Virtuals
  */
 /*UserSchema.virtual('password').set(function(password) {
-	this._password = password;
-	this.salt = this.makeSalt();
-	this.hashed_password = this.encryptPassword(password);
-}).get(function() {
-	return this._password;
-});*/
+ this._password = password;
+ this.salt = this.makeSalt();
+ this.hashed_password = this.encryptPassword(password);
+ }).get(function() {
+ return this._password;
+ });*/
 
 /**
  * Validations
@@ -130,3 +130,21 @@ UserSchema.methods = {
 };
 
 mongoose.model('user', UserSchema, 'User');
+
+/**
+ * User Absence Schema
+ */
+
+var UserAbsenceSchema = new Schema({
+	Status: mongoose.Schema.Types.Mixed,
+	user: {id: {type: String}, name: String},
+	author: {id: {type: String}, name: String},
+	dateStart: Date,
+	dateEnd: Date,
+	nbDay: Number,
+	datec: {type: Date}
+});
+
+UserAbsenceSchema.plugin(timestamps);
+
+mongoose.model('userAbsence', UserAbsenceSchema, 'Absence');

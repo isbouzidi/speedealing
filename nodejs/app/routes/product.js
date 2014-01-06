@@ -367,7 +367,7 @@ Object.prototype = {
 		});
 	},
 	update: function(req, res) {
-		console.log(req.body);
+		//console.log(req.body);
 		var obj = JSON.parse(req.body.models);
 		obj = obj[0];
 
@@ -397,21 +397,16 @@ Object.prototype = {
 				obj._id = price._id;
 				res.send(200, obj);
 
-				doc.Status = doc.Status.id;
-				doc.type = doc.type.id;
+				//doc.Status = doc.Status.id;
+				//doc.type = doc.type.id;
 
 				//console.log(doc);
 				doc.save(function(err, doc) {
 					if (err)
 						console.log(err);
 
-
 					//console.log(obj);
-
-
 				});
-
-
 			});
 			return;
 		}
@@ -427,11 +422,12 @@ Object.prototype = {
 
 		//console.log(obj);
 
-		ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id}, $push: {history: obj}}, function(err) {
-			if (err)
-				console.log(err);
-			//console.log(obj);
-		});
+		if (obj._id)
+			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id}, $push: {history: obj}}, function(err) {
+				if (err)
+					console.log(err);
+				//console.log(obj);
+			});
 
 	},
 	del: function(req) {

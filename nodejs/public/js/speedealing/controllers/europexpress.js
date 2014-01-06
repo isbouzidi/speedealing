@@ -4,6 +4,19 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 
 		$scope.cpt = 0;
 
+
+		$scope.dateDay = function(day) {
+			var year = parseInt($routeParams.id2);
+			var week = parseInt($routeParams.id1);
+
+			var d = new Date(year, 0, 0);
+
+			d.setDate(d.getDate() + ((week - 1) * 7) - 1 + day);
+
+			return d;
+
+		}
+
 		$scope.find = function() {
 			if ($routeParams.id1 == null)
 				return $scope.today();
@@ -30,7 +43,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		$scope.next = function() {
 			var year = parseInt($routeParams.id2);
 			var week = parseInt($routeParams.id1);
-			
+
 			if (week === 52) {
 				year++;
 				week = 0;
@@ -45,7 +58,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		$scope.previous = function() {
 			var year = parseInt($routeParams.id2);
 			var week = parseInt($routeParams.id1);
-			
+
 			if (week === 1) {
 				year--;
 				week = 53;
@@ -201,16 +214,16 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			});
 
 		};
-		
-		$scope.disableRefresh = function(){
+
+		$scope.disableRefresh = function() {
 			var d = new Date();
 			d.setHours(0, 0, 0);
 			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
 			var todayWeek = Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7).toString();
-			
+
 			var year = parseInt($routeParams.id2);
 			var week = parseInt($routeParams.id1);
-			
+
 			return (year < d.getFullYear() || week < todayWeek);
 		};
 

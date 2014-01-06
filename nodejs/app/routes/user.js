@@ -1,14 +1,17 @@
 "use strict";
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+		_ = require('underscore');
 
 var UserModel = mongoose.model('user');
+var UserAbsenceModel = mongoose.model('userAbsence');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();
+	var absence = new Absence();
 
 	object.colors = ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
 		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"];
@@ -20,6 +23,7 @@ module.exports = function(app, passport, auth) {
 		}
 
 		object.fk_extrafields = doc;
+		absence.fk_extrafields = doc;
 	});
 
 	app.get('/api/user', auth.requiresLogin, function(req, res) {
@@ -112,6 +116,35 @@ module.exports = function(app, passport, auth) {
 		return res.send(200, object.update(req));
 	});
 
+	app.get('/api/user/absence', auth.requiresLogin, function(req, res) {
+		absence.read(req, res);
+	});
+
+	app.post('/api/user/absence', auth.requiresLogin, function(req, res) {
+		absence.create(req, res);
+	});
+
+	app.put('/api/user/absence', auth.requiresLogin, function(req, res) {
+		absence.update(req, res);
+	});
+
+	app.get('/api/user/absence/status/select', auth.requiresLogin, function(req, res) {
+		var result = [];
+		for (var i in absence.fk_extrafields.fields.StatusAbsence.values) {
+
+			if (absence.fk_extrafields.fields.StatusAbsence.values[i].enable) {
+				var status = {};
+
+				status.id = i;
+				status.name = absence.fk_extrafields.fields.StatusAbsence.values[i].label;
+				status.css = absence.fk_extrafields.fields.StatusAbsence.values[i].cssClass;
+
+				result.push(status);
+			}
+		}
+		res.send(200, result);
+	});
+
 
 	//other routes..
 };
@@ -133,17 +166,9 @@ Object.prototype = {
 				return;
 			}
 
-			for (i in doc) {
+			for (var i in doc) {
 				var status = {};
-				doc[i] = doc[i].value;
-				delete doc[i].entity;
-				delete doc[i].class;
-				delete doc[i].tms;
-				delete doc[i]._rev;
-				delete doc[i].history;
 
-				doc[i].societe_id = doc[i].societe.id;
-				doc[i].societe = doc[i].societe.name;
 				status.id = doc[i].Status;
 				if (status_list.values[status.id]) {
 					status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
@@ -153,16 +178,85 @@ Object.prototype = {
 					status.css = "";
 				}
 
-
 				doc[i].Status = status;
-				if (!doc[i].group.url)
-					doc[i].group.url = doc[i].group.name;
 			}
 			res.send(200, doc);
 		});
 	},
 	update: function(req) {
 		return req.body.models;
+	},
+	del: function(req) {
+		return req.body.models;
+	}
+};
+
+function Absence() {
+}
+
+Absence.prototype = {
+	create: function(req, res) {
+		var obj = JSON.parse(req.body.models);
+
+		//console.log(obj[0]);
+
+		delete obj[0]._id; // new tuple
+
+		var doc = new UserAbsenceModel(obj[0]);
+
+		doc.Status = obj[0].Status.id;
+
+		doc.save(function(err, doc) {
+			if (err)
+				console.log(err);
+			obj[0]._id = doc._id;
+			res.send(200, obj);
+		});
+	},
+	read: function(req, res) {
+		var status_list = this.fk_extrafields.fields.StatusAbsence;
+
+		UserAbsenceModel.find({}, function(err, doc) {
+			if (err) {
+				console.log(err);
+				res.send(500, doc);
+				return;
+			}
+			//console.log(doc);
+			for (var i in doc) {
+				var status = {};
+
+				status.id = doc[i].Status;
+				if (status_list.values[status.id]) {
+					status.name = req.i18n.t(status_list.values[status.id].label);
+					status.css = status_list.values[status.id].cssClass;
+				} else { // Value not present in extrafield
+					status.name = status.id;
+					status.css = "";
+				}
+
+				doc[i].Status = status;
+			}
+			res.send(200, doc);
+		});
+	},
+	update: function(req, res) {
+		var obj = JSON.parse(req.body.models);
+
+		UserAbsenceModel.findOne({_id: obj[0]._id}, function(err, doc) {
+			if (err)
+				console.log(err);
+
+			doc = _.extend(doc, obj[0]);
+
+			doc.Status = doc.Status.id;
+
+			doc.save(function(err) {
+
+				doc.Status = obj[0].Status;
+				res.send(200, [doc]);
+			});
+		});
 	},
 	del: function(req) {
 		return req.body.models;

@@ -51,6 +51,36 @@
 				}
 			}
 		},
+		"StatusAbsence": {
+			"schema": "Mixed",
+			"type": "select",
+			"enable": true,
+			"default": "REQUEST",
+			"status": true,
+			"aoColumns": {
+				"sClass": "center",
+				"bSearchable": true,
+				"bVisible": true
+			},
+			"values": {
+				"REQUEST": {
+					"enable": true,
+					"label": "Demande",
+					"cssClass": "blue-gradient"},
+				"HOLIDAY": {
+					"enable": true,
+					"label": "En conges",
+					"cssClass": "green-gradient"},
+				"ILL": {
+					"enable": true,
+					"label": "Absence maladie",
+					"cssClass": "orange-gradient"},
+				"REFUSED": {
+					"enable": true,
+					"label": "Refuse",
+					"cssClass": "red-gradient"}
+			}
+		},
 		"email": {
 			"schema": "String"
 		},

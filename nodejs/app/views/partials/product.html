@@ -1,6 +1,6 @@
 <section data-ng-controller="ProductController" class="scroll" style="height:500px" ng-style="style(0)" resize>
 	<hgroup id="main-title" class="thin">
-			<h1>Liste des produits et services</h1>
+		<h1>Liste des produits et services</h1>
 	</hgroup>
 
 	<div class="with-padding">
@@ -12,20 +12,20 @@
 		</div>
 
 		<div kendo-grid k-data-source="dataSource" k-columns='[
-			{"field": "ref", "filterable": true, "title": "reference", "editor": refDropDownEditor},
-			{"field": "label", "filterable": false, "title": "Designation", "editor": textareaEditor},
-			{"field": "type", "filterable": false, "title": "Type", "editor": typeDropDownEditor, "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
-			{"field": "tms", "title": "Date de modification", "hidden": false, "format": "{0:dd/MM/yyyy}", "filterable": {
-			"ui": "datepicker"
-			}
-			},
-			{"field": "price_level", "title": "Liste de prix", "editor": priceLevelDropDownEditor},
-			{"field": "pu_ht", "filterable": true, "title": "Prix HT", "format": "{0:c3}", "width": "60px"},
-			{"field": "qtyMin", "filterable": true, "title": "Qte Min", "format": "{0:n0}", "width": "60px"},
-			{"field": "tva_tx", "title": "TVA", "format": "{0:p2}", "template": "#=tva_tx# %"},
-			{"field": "Status", "title": "Etat", "width": "100px",
-					"editor": statusDropDownEditor, "filterable": {"field": "Status.id", "ui": statusFilter}, "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
-			{"field": "ref_customer_code", "title": "Ref Fact."}]'
+			 {"field": "ref", "filterable": true, "title": "reference", "editor": refDropDownEditor},
+			 {"field": "label", "filterable": false, "title": "Designation", "editor": textareaEditor},
+			 {"field": "type", "filterable": false, "title": "Type", "editor": typeDropDownEditor, "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
+			 {"field": "tms", "title": "Date de modification", "hidden": false, "format": "{0:dd/MM/yyyy}", "filterable": {
+			 "ui": "datepicker"
+			 }
+			 },
+			 {"field": "price_level", "title": "Liste de prix", "editor": priceLevelDropDownEditor},
+			 {"field": "pu_ht", "filterable": true, "title": "Prix HT", "format": "{0:c3}", "width": "60px"},
+			 {"field": "qtyMin", "filterable": true, "title": "Qte Min", "format": "{0:n0}", "width": "60px"},
+			 {"field": "tva_tx", "title": "TVA", "format": "{0:p2}", "template": "#=tva_tx# %"},
+			 {"field": "Status", "title": "Etat", "width": "100px",
+			 "editor": statusDropDownEditor, "filterable": {"field": "Status.id", "ui": statusFilter}, "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
+			 {"field": "ref_customer_code", "title": "Ref Fact."}]'
 			 k-pageable='{ "refresh": true, "pageSizes": [5, 10, 20, 50, 100, 500], "buttonCount": 5}'
 			 k-sortable="true" k-"filterable"="true" k-groupable="true" k-scrollable="false"
 			 k-toolbar='[{
@@ -39,62 +39,6 @@
 			 }]'
 			 k-editable='{
 			 "mode": "incell"
-			 }'
-			 ></div>
-		<!--<script>
-			$(document).ready(function() {
-
-
-				var grid = $("#grid").kendoGrid({
-					
-					columns: [
-						{"field": "ref", reorderable: true, "filterable": true, "title": "reference", "editor": refDropDown"editor"},
-						{"field": "label", reorderable: false, "filterable": false, "title": "Designation", "editor": textarea"editor"},
-						{"field": "type", reorderable: false, "filterable": false, "title": "Type", "editor": typeDropDown"editor", "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
-						{"field": "tms", "title": "Date de modification", hidden: false, "format": "{0:dd/MM/yyyy}", "filterable": {
-								ui: "datepicker"
-							}
-						},
-						{"field": "price_level", "title": "Liste de prix", "editor": priceLevelDropDown"editor"},
-						{"field": "pu_ht", "filterable": true, "title": "Prix HT", "format": "{0:c3}", "width": "60px"},
-						{"field": "qtyMin", "filterable": true, "title": "Qte Min", "format": "{0:n0}", "width": "60px"},
-						{"field": "tva_tx", "title": "TVA", "format": "{0:p2}", "template": "#=tva_tx# %"},
-						{"field": "Status_ID", "title": "Etat", "width": "100px",
-							"editor": statusDropDown"editor", "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
-						{"field": "ref_customer_code", "title": "Ref Fact."}
-						//{"field": "entity", "filterable": false, "title": "Atelier", hidden: true, "width": "100px", "editor": entityDropDown"editor"},
-						//{"field": "notes", "filterable": false, "title": "Notes", hidden: true, "editor": textarea"editor"},
-						//	{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], "title": "&nbsp;", "width": "90px"}
-					]
-				});
-
-				var autocompleteSymbol = $("#ref").kendoAutoComplete({
-					dataText"field": "name",
-					//dataValue"field": "Value"field"",
-					dataSource: {
-						serverFiltering: true,
-						serverPaging: true,
-						pageSize: 5,
-						transport: {
-							read: {
-								url: "api/product/ref/autocomplete",
-								type: "POST",
-								dataType: "json"
-							}
-						}
-					},
-					change: function() {
-						var value = this.value();
-
-						if (value) {
-							grid.data("kendoGrid").dataSource.filter({"field": "ref", operator: "contains", value: value});
-						} else {
-							grid.data("kendoGrid").dataSource.filter({});
-						}
-					}
-				});
-			});
-		</script>-->
-
+			 }'></div>
 	</div>
 </section>

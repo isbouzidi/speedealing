@@ -492,7 +492,7 @@ class modUser extends DolibarrModules {
 		$this->menus[$r]->_id = "menu:rh";
 		$this->menus[$r]->type = "top";
 		$this->menus[$r]->position = 999;
-		$this->menus[$r]->enabled = '$user->admin';
+		$this->menus[$r]->enabled = '$user->rights->user->user->creer || $user->admin';
 		$this->menus[$r]->usertype = 2;
 		$this->menus[$r]->title = "RH";
 		$r++;
@@ -502,7 +502,7 @@ class modUser extends DolibarrModules {
 		$this->menus[$r]->position = 3;
 		$this->menus[$r]->langs = "users";
 		$this->menus[$r]->url = "/user/index.php";
-		$this->menus[$r]->perms = '$user->rights->user->user->lire || $user->admin';
+		$this->menus[$r]->perms = '$user->rights->user->user->creer || $user->admin';
 		$this->menus[$r]->usertype = 2;
 		$this->menus[$r]->title = "Collaborators";
 		$this->menus[$r]->fk_menu = "menu:rh";
@@ -513,9 +513,20 @@ class modUser extends DolibarrModules {
 		$this->menus[$r]->position = 4;
 		$this->menus[$r]->langs = "users";
 		$this->menus[$r]->url = "/user/group/index.php";
-		$this->menus[$r]->perms = '($conf->global->MAIN_USE_ADVANCED_PERMS?$user->rights->user->group_advance->read:$user->rights->user->user->lire) || $user->admin';
+		$this->menus[$r]->perms = '$user->rights->user->user->creer || $user->admin';
 		$this->menus[$r]->usertype = 2;
 		$this->menus[$r]->title = "Profiles";
+		$this->menus[$r]->fk_menu = "menu:rh";
+		$r++;
+		
+		$this->menus[$r] = new stdClass();
+		$this->menus[$r]->_id = "menu:absences";
+		$this->menus[$r]->position = 5;
+		$this->menus[$r]->langs = "users";
+		$this->menus[$r]->url = "#!/module/user/absence.html";
+		$this->menus[$r]->perms = '$user->rights->user->user->creer  || $user->admin';
+		$this->menus[$r]->usertype = 2;
+		$this->menus[$r]->title = "Gestion des conges / absences";
 		$this->menus[$r]->fk_menu = "menu:rh";
 		$r++;
 
