@@ -45,7 +45,7 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 						nbDay: {type: "number" ,validation: {min: 0}},
 						author: {editable: false, defaultValue: {id: Global.user._id, name: Global.user.firstname + " " + Global.user.lastname}},
 						user: { validation: {required: true}, nullable: false, defaultValue: {id: null, name: null}},
-						Status: {defaultValue: {id: "REQUEST", name: "Demande", css: "blue-gradient"}}
+						Status: {defaultValue: {id: "NOTJUSTIFIED", name: "Absence injustifiée", css: "red-gradient"}}
 					}
 				}
 			},
