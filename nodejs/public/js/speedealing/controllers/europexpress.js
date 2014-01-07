@@ -3,7 +3,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		$scope.showEdit = {};
 
 		$scope.cpt = 0;
-
+		$scope.hsupp = 0;
 
 		$scope.dateDay = function(day) {
 			var year = parseInt($routeParams.id2);
@@ -25,6 +25,10 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
 				$scope.tournees = tournees;
 				$scope.cpt = $scope.tournees.length;
+				
+				// somme des heures Supp de la semaine
+				for(var i=0;i<$scope.cpt;i++)
+					$scope.hsupp+=tournees[i].hSupp;
 			});
 		};
 
