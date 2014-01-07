@@ -55,7 +55,7 @@
 			"schema": "Mixed",
 			"type": "select",
 			"enable": true,
-			"default": "REQUEST",
+			"default": "NOTJUSTIFIED",
 			"status": true,
 			"aoColumns": {
 				"sClass": "center",
@@ -64,9 +64,13 @@
 			},
 			"values": {
 				"REQUEST": {
-					"enable": true,
+					"enable": false,
 					"label": "Demande",
 					"cssClass": "blue-gradient"},
+				"NOTJUSTIFIED": {
+					"enable": true,
+					"label": "Absence injustifiée",
+					"cssClass": "red-gradient"},
 				"HOLIDAY": {
 					"enable": true,
 					"label": "En conges",
@@ -76,7 +80,7 @@
 					"label": "Absence maladie",
 					"cssClass": "orange-gradient"},
 				"REFUSED": {
-					"enable": true,
+					"enable": false,
 					"label": "Refuse",
 					"cssClass": "red-gradient"}
 			}

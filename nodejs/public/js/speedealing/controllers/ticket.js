@@ -30,14 +30,14 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				name: "Fournisseurs",
 				icon: "icon-users",
 				collection: "Societe",
-				searchUrl: "api/societe/autocomplete",
+				searchUrl: "api/societe/autocomplete?fournisseur=SUPPLIER",
 				url: "societe/fiche.php?id="
 			},
 			{
 				name: "Sous-traitants",
 				icon: "icon-users",
 				collection: "Societe",
-				searchUrl: "api/societe/autocomplete",
+				searchUrl: "api/societe/autocomplete?fournisseur=SUBCONTRACTOR",
 				url: "societe/fiche.php?id="
 			},
 			{

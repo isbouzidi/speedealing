@@ -29,7 +29,7 @@ var ticketSchema = new Schema({
 		}],
 	important: Boolean,
 	model: {type: String, default: 'NONE'}, //Model of ticket
-	task : String,
+	task: String,
 	comments: [{
 			author: {id: String, name: String},
 			note: String,
@@ -54,7 +54,7 @@ ticketSchema.methods = {
 
 		options.root = 'Ticket';
 
-		return gridfs.putGridFileByPath(file.path, file.originalFilename, options, function(err, result) {
+		return gridfs.putGridFileByPath(file.path, this.ref + "_" + file.originalFilename, options, function(err, result) {
 //			console.log(result);
 			var files = {};
 			files.name = result.filename;
@@ -121,7 +121,7 @@ ticketSchema.methods = {
 ticketSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incNumber("#", function(seq) {
+		SeqModel.incNumber("T", function(seq) {
 			console.log(seq);
 			self.ref = seq;
 			next();

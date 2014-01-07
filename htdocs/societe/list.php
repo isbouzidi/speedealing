@@ -52,7 +52,7 @@ if ($type != '') {
 	$titre = $langs->trans("ListOfSuppliers");
 }
 else
-	$titre = $langs->trans("ListOfAll");
+	$titre = $langs->trans("ListOfCustomers");
 
 print_fiche_titre($titre);
 
