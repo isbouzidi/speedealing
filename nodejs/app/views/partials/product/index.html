@@ -16,8 +16,7 @@
 			 {"field": "label", "filterable": false, "title": "Designation", "editor": textareaEditor},
 			 {"field": "type", "filterable": false, "title": "Type", "editor": typeDropDownEditor, "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
 			 {"field": "tms", "title": "Date de modification", "hidden": false, "format": "{0:dd/MM/yyyy}", "filterable": {
-			 "ui": "datepicker"
-			 }
+			 "ui": "datepicker", "extra": true }
 			 },
 			 {"field": "price_level", "title": "Liste de prix", "editor": priceLevelDropDownEditor},
 			 {"field": "pu_ht", "filterable": true, "title": "Prix HT", "format": "{0:c3}", "width": "60px"},
@@ -27,7 +26,7 @@
 			 "editor": statusDropDownEditor, "filterable": {"field": "Status.id", "ui": statusFilter}, "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
 			 {"field": "ref_customer_code", "title": "Ref Fact."}]'
 			 k-pageable='{ "refresh": true, "pageSizes": [5, 10, 20, 50, 100, 500], "buttonCount": 5}'
-			 k-sortable="true" k-"filterable"="true" k-groupable="true" k-scrollable="false"
+			 k-sortable="true" k-filterable='{"extra": false}' k-groupable="true" k-scrollable="false"
 			 k-toolbar='[{
 			 "name": "create",
 			 "text": "Nouveau produit/service",

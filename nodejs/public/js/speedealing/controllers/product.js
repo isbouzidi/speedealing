@@ -175,7 +175,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 				dataSource: {
 					transport: {
 						read: {
-							url: "api/chaumeil/planning/status/select",
+							url: "api/product/status/select",
 							type: "GET",
 							dataType: "json"
 						}
