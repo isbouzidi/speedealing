@@ -348,6 +348,8 @@ Object.prototype = {
 				row.ref = doc[i].ref;
 				row.Status = status;
 				row.type = doc[i].type;
+				row.compta_buy = doc[i].compta_buy;
+				row.compta_sell = doc[i].compta_sell;
 
 				row.pu_ht = doc[i].price.pu_ht;
 				row.price_level = doc[i].price.price_level;
@@ -358,6 +360,12 @@ Object.prototype = {
 					row.qtyMin = 0;
 				else
 					row.qtyMin = doc[i].price.qtyMin;
+				
+				if(!row.compta_buy)
+					row.compta_buy = "";
+				
+				if(!row.compta_sell)
+					row.compta_sell = "";
 
 				result.push(row);
 				//console.log(row);
@@ -420,10 +428,10 @@ Object.prototype = {
 
 		res.send(200, obj);
 
-		//console.log(obj);
+		console.log(obj);
 
 		if (obj._id)
-			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id}, $push: {history: obj}}, function(err) {
+			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell}, $push: {history: obj}}, function(err) {
 				if (err)
 					console.log(err);
 				//console.log(obj);

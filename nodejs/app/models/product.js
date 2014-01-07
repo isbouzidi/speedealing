@@ -12,6 +12,8 @@ var mongoose = require('mongoose'),
  */
 var productSchema = new Schema({
 	ref: {type: String, require: true, unique: true, upper: true},
+	compta_buy: {type: String, default: ""},
+	compta_sell: {type: String, default: ""},
 	label: {type: String, default: ""},
 	type: Schema.Types.Mixed,
 	Status: Schema.Types.Mixed,

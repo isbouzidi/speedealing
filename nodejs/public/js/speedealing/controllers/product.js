@@ -48,6 +48,8 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						//Status_ID: {from: "Status.id", defaultValue: "SELL"},
 						price_level: {type: "string", defaultValue: "BASE"},
 						ref_customer_code: {type: "string"},
+						compta_buy: {type: "string", defaultValue:""},
+						compta_sell: {type: "string", defaultValue:""},
 						author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
 						Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
 						tva_tx: {type: "string", defaultValue: 19.6},
@@ -163,11 +165,11 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 				}
 			});
 		};
-		
+
 		$scope.textareaEditor = function(container, options) {
 			$('<textarea rows="3" cols="25" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
 		};
-		
+
 		$scope.statusFilter = function(element) {
 			element.kendoDropDownList({
 				dataTextField: "name",
