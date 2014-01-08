@@ -1116,13 +1116,15 @@
 		options.content = message;
 
 		// Buttons
-		options.buttons = {};
-		options.buttons[ options.textCancel ] = {
-			classes:	'glossy',
+		options.buttons = options.buttons || {};
+		options.buttons[ options.textCancel ] = $.extend( {
+			classes:	'glossy'
+		}, options.buttons[ options.textCancel ] || {}, {
 			click:		function(modal) { modal.closeModal(); }
-		};
-		options.buttons[ options.textConfirm ] = {
-			classes:	'blue-gradient glossy',
+		} );
+		options.buttons[ options.textConfirm ] = $.extend( {
+			classes:	'blue-gradient glossy'
+		}, options.buttons[ options.textConfirm ] || {}, {
 			click:		function(modal)
 			{
 				// Mark as sumbmitted to prevent the cancel callback to fire
@@ -1134,7 +1136,7 @@
 				// Close modal
 				modal.closeModal();
 			}
-		};
+		} );
 
 		// Open modal
 		return $.modal(options);

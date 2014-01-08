@@ -154,23 +154,34 @@
 		// Show only active tab
 		accordions.each(function(i)
 		{
-			var dts = $(this).children('dt'),
+			var dl = $(this),
+				dts = dl.children('dt'),
 				active;
 
 			// Active section
 			active = dts.filter('.open');
-			if (active.length === 0)
+			if (!dl.hasClass('toggle-mode'))
 			{
-				active = dts.not('.closed').first();
-			}
-			if (active.length === 0)
-			{
-				active = dts.first();
+				if (active.length === 0)
+				{
+					active = dts.not('.closed').first();
+				}
+				if (active.length === 0)
+				{
+					active = dts.first();
+				}
 			}
 
 			// Tag and show/hide
-			active.removeClass('closed').next('dd').show();
-			active.siblings('dt').addClass('closed').next('dd').hide();
+			if (active.length === 0)
+			{
+				dts.addClass('closed').next('dd').hide();
+			}
+			else
+			{
+				active.removeClass('closed').next('dd').show();
+				active.siblings('dt').addClass('closed').next('dd').hide();
+			}
 		});
 
 		return this;

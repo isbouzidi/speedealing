@@ -696,10 +696,10 @@
 				height: 22px;
 				line-height: 20px;
 				}
-				.medium.disabled > .switch-on > span, .disabled .medium > .switch-on > span,
+				/*.medium.disabled > .switch-on > span, .disabled .medium > .switch-on > span,
 				.medium.disabled > .switch-off > span, .disabled .medium > .switch-off > span {
 					width: 38px;
-				}
+				}*/
 			.tiny.disabled > .switch-on, .disabled .tiny > .switch-on,
 			.tiny.disabled > .switch-off, .disabled .tiny > .switch-off,
 			.mini.disabled > .switch-on, .disabled .mini > .switch-on,

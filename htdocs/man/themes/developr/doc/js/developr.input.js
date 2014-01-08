@@ -141,8 +141,8 @@
 				isSized = (element.attr('size') > 1),
 				title = (this.title && this.title.length > 0) ? ' title="'+this.title+'"' : '',
 				tabIndex = (this.tabIndex > 0) ? this.tabIndex : 0,
+				useStyledList = false,
 				select, dropDown, text, isWatching, values;
-console.log(settings);
 
 			// If already set
 			if (replacement)
@@ -152,6 +152,29 @@ console.log(settings);
 
 			// Stop DOM watching
 			isWatching = $.template.disableDOMWatch();
+
+			/*
+			 * To avoid triggering the default select UI, the select is hidden if:
+			 * - it is displayed as multiple (even if simple) OR
+			 * - it is multiple (no overlaying UI in most OS) OR
+			 * - The setting styledList is on AND
+			 *      - This is not a touch device OR
+			 *      - This is a touch device AND the setting styledOnTouch is:
+			 *          - true OR
+			 *          - null and the select has the class 'check-list'
+			 *
+			 * Ew. Now I need to get another brain.
+			 */
+			if (showAsMultiple ||
+				this.multiple ||
+				(settings.styledList &&
+					(!$.template.touchOs ||
+					($.template.touchOs &&
+						(settings.styledOnTouch === true ||
+						(settings.styledOnTouch === null && select.hasClass('check-list')))))))
+			{
+				useStyledList = true;
+			}
 
 			// Create replacement
 			if (showAsMultiple)
@@ -179,7 +202,8 @@ console.log(settings);
 						dropDown.customScroll({
 							padding: 4,
 							showOnHover: false,
-							usePadding: true
+							usePadding: true,
+							verticalOnLeft: element.hasClass('reversed-scroll')
 						});
 					}
 				}
@@ -199,7 +223,7 @@ console.log(settings);
 				select = $('<span class="'+this.className.replace(/validate\[.*\]/, '')+disabled+' replacement"'+title+' tabindex="'+tabIndex+'">'+
 								'<span class="select-value"></span>'+
 								'<span class="select-arrow">'+($.template.ie7 ? '<span class="select-arrow-before"></span><span class="select-arrow-after"></span>' : '')+'</span>'+
-								'<span class="drop-down"></span>'+
+								( useStyledList ? '<span class="drop-down"></span>' : '' )+
 							'</span>')
 				.insertAfter(element)
 				.data('replaced', element);
@@ -220,6 +244,10 @@ console.log(settings);
 				{
 					switch (values.length)
 					{
+						case 0:
+							_updateSelectValueText(select.children('.select-value'), values, element.data('no-value-text'), settings.noValueText);
+							break;
+
 						case 1:
 							_updateSelectValueText(select.children('.select-value'), values, element.data('single-value-text'), settings.singleValueText);
 							break;
@@ -258,25 +286,8 @@ console.log(settings);
 			// Store settings
 			select.data('select-settings', settings);
 
-			/*
-			 * To avoid triggering the default select UI, the select is hidden if:
-			 * - it is displayed as multiple (even if simple) OR
-			 * - it is multiple (no overlaying UI in most OS) OR
-			 * - The setting styledList is on AND
-			 *      - This is not a touch device OR
-			 *      - This is a touch device AND the setting styledOnTouch is:
-			 *          - true OR
-			 *          - null and the select has the class 'check-list'
-			 *
-			 * Ew. Now I need to get another brain.
-			 */
-			if (showAsMultiple ||
-				this.multiple ||
-				(settings.styledList &&
-					(!$.template.touchOs ||
-					($.template.touchOs &&
-						(settings.styledOnTouch === true ||
-						(settings.styledOnTouch === null && select.hasClass('check-list')))))))
+			// Styling for elements with active list styling
+			if (useStyledList)
 			{
 				select.addClass('select-styled-list');
 			}
@@ -942,11 +953,11 @@ console.log(settings);
 		select.data('clone', clone);
 
 		// Hide - need to add an internal marker as it makes the select lose focus in some browsers */
-		select.data('select-hiding', true).addClass('select-cloned')
+		select.data('select-hiding', true).addClass('select-cloned');
 		setTimeout(function()
 		{
 			select.removeData('select-hiding');
-		}, 40);
+		}, 100);
 
 		// Refernce
 		list = clone.children('.drop-down');
@@ -1186,7 +1197,8 @@ console.log(settings);
 				showOnHover: false,
 				usePadding: true,
 				continuousWheelScroll: false,
-				continuousTouchScroll: false
+				continuousTouchScroll: false,
+				verticalOnLeft: select.hasClass('reversed-scroll')
 			});
 		}
 
@@ -2140,12 +2152,12 @@ console.log(settings);
 				// Switch
 				if (replacement)
 				{
-					replacement[checked ? 'removeClass' : 'addClass']('checked');
+					replacement[this.checked ? 'addClass' : 'removeClass']('checked');
 				}
 				// Button labels
 				else if (input.parent().is('label.button'))
 				{
-					input.parent()[checked ? 'removeClass' : 'addClass']('active');
+					input.parent()[this.checked ? 'addClass' : 'removeClass']('active');
 				}
 			});
 		}

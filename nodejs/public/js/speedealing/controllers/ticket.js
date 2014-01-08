@@ -14,7 +14,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 
 		var modules = [
 			{
-				name: "Clients",
+				name: "Client",
 				icon: "icon-users",
 				collection: "Societe",
 				searchUrl: "api/societe/autocomplete",
@@ -27,14 +27,14 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			 url: ""
 			 },*/
 			{
-				name: "Fournisseurs",
+				name: "Fournisseur",
 				icon: "icon-users",
 				collection: "Societe",
 				searchUrl: "api/societe/autocomplete?fournisseur=SUPPLIER",
 				url: "societe/fiche.php?id="
 			},
 			{
-				name: "Sous-traitants",
+				name: "Sous-traitant",
 				icon: "icon-users",
 				collection: "Societe",
 				searchUrl: "api/societe/autocomplete?fournisseur=SUBCONTRACTOR",
@@ -48,10 +48,17 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				url: ""
 			},
 			{
-				name: "Vehicules",
+				name: "Véhicule",
 				icon: "icon-rocket",
 				collection: "europexpress_vehicule",
 				searchUrl: "api/europexpress/vehicules/immat/autocomplete",
+				url: ""
+			},
+			{
+				name: "Employé",
+				icon: "icon-user",
+				collection: "User",
+				searchUrl: "api/user/name/autocomplete",
 				url: ""
 			}
 		];

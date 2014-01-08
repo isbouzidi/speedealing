@@ -114,10 +114,6 @@
 				}
 				else
 				{
-					right = -target.parentsUntil('.navigable', 'ul').length*100;
-					backHeight = back.outerHeight();
-					root.data('navigableCurrent', target);
-
 					// Text
 					if (settings.backText)
 					{
@@ -133,6 +129,10 @@
 						}
 						backText.text(parentLink.contents().filter(function(){ return(this.nodeType == 3); }).text() );
 					}
+
+					right = -target.parentsUntil('.navigable', 'ul').length*100;
+					backHeight = back.outerHeight();
+					root.data('navigableCurrent', target);
 				}
 
 				// Set root element size according to target size
@@ -256,7 +256,7 @@
 			root.stop(true).height(parentUL.outerHeight(true)+back.outerHeight(true))[animate ? 'animate' : 'css']({ height: (submenu.outerHeight(true)+back.outerHeight())+'px' });
 
 			// Move whole navigation to reveal target ul
-			mainUL.stop(true)[animate ? 'animate' : 'css']({ left: -(allUL.length*100)+'%' });
+			mainUL.stop(true)[animate ? 'animate' : 'css']({ right: -(allUL.length*100)+'%' });
 
 			// Show back button
 			back[animate ? 'animate' : 'css']({ marginTop: 0 });

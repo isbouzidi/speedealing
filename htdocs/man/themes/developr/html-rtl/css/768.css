@@ -235,7 +235,6 @@ h2 {
 		}
 		#shortcuts > li > a,
 		#shortcuts > li > span {
-			overflow: hidden;
 			text-indent: -3000px;
 			width: auto;
 			height: 70px;

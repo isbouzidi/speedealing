@@ -542,6 +542,12 @@
 				return;
 			}
 
+			// Handle only if a previous state has been saved
+			if ( !document.location.hash || document.location.hash.indexOf( ':' ) < 0 )
+			{
+				return;
+			}
+
 			// Get hash parts
 			var parts = document.location.hash.substring(1).split(':');
 			panel[(parts[0] === 'nav') ? 'loadPanelNavigation' : 'loadPanelContent'](parts[1]);

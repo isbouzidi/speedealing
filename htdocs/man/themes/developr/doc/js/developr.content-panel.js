@@ -179,9 +179,9 @@
 			target = loadTarget.length ? loadTarget : panel;
 
 		// Pre-callback
-		if (options && options.onStartLoad)
+		if (settings && settings.onStartLoad)
 		{
-			if (options.onStartLoad.call(target[0], settings, ajaxOptions) === false)
+			if (settings.onStartLoad.call(target[0], settings, ajaxOptions) === false)
 			{
 				return;
 			}

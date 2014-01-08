@@ -361,7 +361,7 @@
 					dom, domHidden = false, placeholder,
 
 					// Work vars
-					noPointerEvents, arrowOffset, animValues, removeAnimValues,
+					noPointerEvents, arrowOffset, animValues, removeAnimValues, animateDistance,
 
 					// Functions
 					updatePosition, removeTooltip, endRemove;
@@ -851,7 +851,7 @@
 					if (settings.animate && !skipAnimation)
 					{
 						// Remove
-						tooltip.addClass('tooltip-removed').animate(removeAnimValues, settings.animateSpeed, endRemove);
+						tooltip.stop(true).addClass('tooltip-removed').animate(removeAnimValues, settings.animateSpeed, endRemove);
 					}
 					else
 					{
