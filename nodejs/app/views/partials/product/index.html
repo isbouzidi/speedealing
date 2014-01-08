@@ -24,11 +24,11 @@
 			 {"field": "tva_tx", "title": "TVA", "format": "{0:p2}", "template": "#=tva_tx# %"},
 			 {"field": "Status", "title": "Etat", "width": "100px",
 			 "editor": statusDropDownEditor, "filterable": {"field": "Status.id", "ui": statusFilter}, "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
-			 {"field": "compta_sell", "title": "Compta. Vte."},
-			 {"field": "compta_buy", "title": "Compta. Ach."},
-			 {"field": "ref_customer_code", "title": "Ref Fact."}]'
+			 {"field": "compta_sell", "title": "Compta. Vte.", "hidden":true},
+			 {"field": "compta_buy", "title": "Compta. Ach.", "hidden":true},
+			 {"field": "ref_customer_code", "title": "Ref Fact.", "hidden":true}]'
 			 k-pageable='{ "refresh": true, "pageSizes": [5, 10, 20, 50, 100, 500], "buttonCount": 5}'
-			 k-sortable="true" k-filterable='{"extra": false}' k-groupable="true" k-scrollable="false"
+			 k-sortable="true" k-filterable='{"extra": false}' k-groupable="true" k-scrollable="false" k-column-menu="true"
 			 k-toolbar='[{
 			 "name": "create",
 			 "text": "Nouveau produit/service",
