@@ -52,7 +52,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						compta_sell: {type: "string", defaultValue:""},
 						author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
 						Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
-						tva_tx: {type: "string", defaultValue: 19.6},
+						tva_tx: {type: "string", defaultValue: 20},
 						type: {defaultValue: {id: "PRODUCT", name: "Produit", css: "blue-gradient"}}
 					}
 				}

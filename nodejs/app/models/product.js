@@ -18,7 +18,7 @@ var productSchema = new Schema({
 	type: Schema.Types.Mixed,
 	Status: Schema.Types.Mixed,
 	country_id: String,
-	tva_tx: {type: Number, default: 19.6},
+	tva_tx: {type: Number, default: 20},
 	weight_units: String,
 	size_units: String,
 	surface_units: String,
