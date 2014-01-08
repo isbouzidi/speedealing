@@ -382,18 +382,23 @@ Object.prototype = {
 		obj.pu_ht = parseFloat(obj.pu_ht);
 		obj.tva_tx = parseFloat(obj.tva_tx);
 		obj.qtyMin = parseFloat(obj.qtyMin);
+		
+		obj.ref = obj.ref.toUpperCase();
 
 		if (obj._id == null) {
 			delete obj._id; // new price
 
-			ProductModel.findOne({ref: obj.ref.toUpperCase()}, function(err, doc) {
+			ProductModel.findOne({ref: obj.ref}, function(err, doc) {
 				if (err)
 					console.log(err);
 
 				//console.log(doc);
 
-				if (doc == null)
+				if (doc == null) {
 					doc = new ProductModel(obj);
+					doc.Status = doc.Status.id;
+					doc.type = doc.type.id;
+				}
 
 				obj.label = doc.label;
 
@@ -404,9 +409,6 @@ Object.prototype = {
 
 				obj._id = price._id;
 				res.send(200, obj);
-
-				//doc.Status = doc.Status.id;
-				//doc.type = doc.type.id;
 
 				//console.log(doc);
 				doc.save(function(err, doc) {
