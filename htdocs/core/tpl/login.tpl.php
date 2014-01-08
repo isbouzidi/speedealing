@@ -179,7 +179,7 @@ header("Content-type: text/html; charset=" . $conf->file->character_set_client);
 
 	<script src="js/lib/jquery/jquery.min.js"></script>
 	<script src="includes/lib/validate/jquery.validate.min.js"></script>
-	<script src="js/setup.min.js"></script>
+	<script src="js/setup.js"></script>
 
 	<!-- Template functions -->
 	<script src="js/developr.input.js"></script>
