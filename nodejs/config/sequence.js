@@ -35,9 +35,15 @@ sequenceSchema.statics = {
 			if (err)
 				console.log(err);
 
-			var date = new Date();
-
 			return cb(name + doc.seq); // format PROV440
+		});
+	},
+	incBarCode: function(name, length, cb) {
+		this.findByIdAndUpdate(name, {$inc: {seq: 1}}, {upsert: true}, function(err, doc) {
+			if (err)
+				console.log(err);
+
+			return cb(name + numberFormat(doc.seq, length)); //P0120
 		});
 	}
 };

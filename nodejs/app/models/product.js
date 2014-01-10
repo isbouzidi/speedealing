@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 		Schema = mongoose.Schema,
 		timestamps = require('mongoose-timestamp');
 
-
+var SeqModel = mongoose.model('Sequence');
 /**
  * Article Schema
  */
@@ -15,6 +15,7 @@ var productSchema = new Schema({
 	compta_buy: {type: String, default: ""},
 	compta_sell: {type: String, default: ""},
 	label: {type: String, default: ""},
+	barCode: String,
 	type: Schema.Types.Mixed,
 	Status: Schema.Types.Mixed,
 	country_id: String,
@@ -50,5 +51,16 @@ var productSchema = new Schema({
 });
 
 productSchema.plugin(timestamps);
+
+productSchema.pre('save', function(next) {
+	var self = this;
+	if (this.isNew) {
+		SeqModel.incBarCode("P", 4, function(seq) {
+			self.barCode = seq;
+			next();
+		});
+	} else
+		next();
+});
 
 mongoose.model('product', productSchema, 'Product');

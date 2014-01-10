@@ -7,6 +7,8 @@ var mongoose = require('mongoose'),
 		Schema = mongoose.Schema,
 		timestamps = require('mongoose-timestamp');
 
+var SeqModel = mongoose.model('Sequence');
+
 /**
  * Article Schema
  */
@@ -15,6 +17,7 @@ var societeSchema = new Schema({
 	name: {type: String, require: true},
 	code_client: String,
 	code_fournisseur: String,
+	barCode: String,
 	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
 	address: String,
 	zip: String,
@@ -129,5 +132,16 @@ societeSchema.methods = {
 		fn("Not found", null);
 	}
 };
+
+societeSchema.pre('save', function(next) {
+	var self = this;
+	if (this.isNew) {
+		SeqModel.incBarCode("C", 5, function(seq) {
+			self.barCode = seq;
+			next();
+		});
+	} else
+		next();
+});
 
 mongoose.model('societe', societeSchema, 'Societe');
