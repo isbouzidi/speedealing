@@ -402,6 +402,7 @@ Object.prototype = {
 				}
 
 				obj.label = doc.label;
+				obj.barCode = doc.barCode;
 
 				var price = _.extend({_id: new mongoose.Types.ObjectId()}, obj);
 
