@@ -15,7 +15,7 @@ angular.module('mean.system').directive('resize', ['$window', function($window) 
 				scope.style = function(height) {
 					return {
 						'height': (newValue.h - 35 - height) + 'px'
-					//	'width': (newValue.w - 100) + 'px'
+								//	'width': (newValue.w - 100) + 'px'
 					};
 				};
 
@@ -26,3 +26,29 @@ angular.module('mean.system').directive('resize', ['$window', function($window) 
 			});
 		};
 	}]);
+
+/*angular.module('mean.system').directive('sdSelect', function() {
+	return function(scope, element) {
+		//console.log(element.parent());
+		var id = element.parent();
+		console.log(id)
+
+		//element.text("{{course.Status.css}}");
+
+		//var replaced = $(this),
+		var select = id.data('replacement');
+		console.log(select);
+
+		// If valid
+		//if (select)
+		//{
+		//	_updateSelectText(select, replaced, select.data('select-settings'));
+		//}
+
+
+		//return {
+		//restrict: 'E',
+		//template : 'Hello {{course.Status.css}}'
+		//};
+	};
+});*/

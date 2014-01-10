@@ -16,7 +16,10 @@
 		<div class="block-title button-height with-mid-padding">
 			<!--<a href="" class="button red-gradient float-right with-tooltip" title="Mark as spam">Spam</a>-->
 			<div class="float-right">
-				<input type="text" data-ng-init="initSlider()" data-ng-model="ticket.percentage" class="input slider" />
+				<input type="range" tooltip="\{{ticket.percentage}}%" data-ng-model="ticket.percentage" ng-change="updatePercentage()" min="0" max="100" step="20" style="width: 100%" class="slider">
+				
+			
+				<!--<input type="text" data-ng-init="initSlider()" data-ng-model="ticket.percentage" class="input slider" />-->
 			</div>
 			<span class="button-group children-tooltip">
 				<a href="" data-ng-click="enableComment()" class="button blue-gradient icon-speech" title="{{t 'ticket:AddComment'}}">{{t 'ticket:Comment'}}</a>
@@ -60,7 +63,7 @@
 						<div data-ng-show="editMode == 'forward'"><h5 class="green underline">{{t 'Forward'}}</h5></div>
 
 						<p data-ng-show="editMode == 'forward'" class="button-height inline-label">
-							<label for="ticket_addUser" class="label">{{t 'ticket:ForwardTo'}}</label>
+							<label for="ticket_addUser">{{t 'ticket:ForwardTo'}}</label>
 							<input type="text" id="ticket_addUser" data-ng-model="ticket.addUser.name" ui-autocomplete="searchUser()" ui-event="{autocompletecreate:'changeClass(searchUser)'}" class="input"/>
 						</p>
 

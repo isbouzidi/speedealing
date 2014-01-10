@@ -3537,13 +3537,10 @@ li.message-menu {
 	font-weight: bold;
 	padding: 0 10px;
 	line-height: inherit;
-	//line-height:expression(this.parentNode.currentStyle['line-height']);
-	height: inherit;
-	//height:expression(this.parentNode.currentStyle['height']-2);
 	min-width: 6px;
 	border-width: 1px;
 	border-style: solid;
-	margin: -1px 9px -1px -12px;
+	margin: 0px 9px -1px -12px;
 	-webkit-background-clip: padding-box;
 	-webkit-border-top-left-radius: 4px;
 	-webkit-border-bottom-left-radius: 4px;

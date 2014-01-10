@@ -19,7 +19,8 @@
  * net against concatenated scripts and/or other plugins
  * that are not closed properly.
  */
-;(function($, window, document, undefined)
+;
+(function($, window, document, undefined)
 {
 	/*
 	 * undefined is used here as the undefined global variable in ECMAScript 3 is mutable (i.e. it can
@@ -34,7 +35,7 @@
 
 	// Objects cache
 	var win = $(window),
-		doc = $(document);
+			doc = $(document);
 
 	/**
 	 * Convert switches, checkboxes and radios
@@ -48,13 +49,13 @@
 		return this.each(function(i)
 		{
 			var element = $(this),
-				settings = $.extend({}, globalSettings, element.data('checkable-options')),
-				checked = this.checked ? ' checked' : '',
-				disabled = this.disabled ? ' disabled' : '',
-				replacement = element.data('replacement'),
-				title = (this.title && this.title.length > 0) ? ' title="'+this.title+'"' : '',
-				tabIndex = (this.tabIndex > 0) ? this.tabIndex : 0,
-				isWatching;
+					settings = $.extend({}, globalSettings, element.data('checkable-options')),
+					checked = this.checked ? ' checked' : '',
+					disabled = this.disabled ? ' disabled' : '',
+					replacement = element.data('replacement'),
+					title = (this.title && this.title.length > 0) ? ' title="' + this.title + '"' : '',
+					tabIndex = (this.tabIndex > 0) ? this.tabIndex : 0,
+					isWatching;
 
 			// If already set
 			if (replacement)
@@ -68,17 +69,17 @@
 			// Create replacement
 			if (element.hasClass('switch'))
 			{
-				replacement = $('<span class="'+this.className.replace(/validate\[.*\]/, '')+checked+disabled+' replacement"'+title+' tabindex="'+tabIndex+'">'+
-									'<span class="switch-on"><span>'+(element.data('text-on') || settings.textOn)+'</span></span>'+
-									'<span class="switch-off"><span>'+(element.data('text-off') || settings.textOff)+'</span></span>'+
-									'<span class="switch-button"></span>'+
-								'</span>');
+				replacement = $('<span class="' + this.className.replace(/validate\[.*\]/, '') + checked + disabled + ' replacement"' + title + ' tabindex="' + tabIndex + '">' +
+						'<span class="switch-on"><span>' + (element.data('text-on') || settings.textOn) + '</span></span>' +
+						'<span class="switch-off"><span>' + (element.data('text-off') || settings.textOff) + '</span></span>' +
+						'<span class="switch-button"></span>' +
+						'</span>');
 			}
 			else
 			{
-				replacement = $('<span class="'+this.className.replace(/validate\[.*\]/, '')+checked+disabled+' replacement"'+title+' tabindex="'+tabIndex+'">'+
-									'<span class="check-knob"></span>'+
-								'</span>');
+				replacement = $('<span class="' + this.className.replace(/validate\[.*\]/, '') + checked + disabled + ' replacement"' + title + ' tabindex="' + tabIndex + '">' +
+						'<span class="check-knob"></span>' +
+						'</span>');
 			}
 
 			// Prevent the element from being focusable by keyboard
@@ -114,7 +115,6 @@
 		 * @var string
 		 */
 		textOn: 'ON',
-
 		/**
 		 * Default text for OFF value
 		 * @var string
@@ -134,15 +134,15 @@
 		return this.each(function(i)
 		{
 			var element = $(this),
-				settings = $.extend({}, globalSettings, element.data('select-options')),
-				replacement = element.data('replacement'),
-				disabled = this.disabled ? ' disabled' : '',
-				showAsMultiple = ((this.multiple || element.hasClass('multiple')) && !element.hasClass('multiple-as-single')),
-				isSized = (element.attr('size') > 1),
-				title = (this.title && this.title.length > 0) ? ' title="'+this.title+'"' : '',
-				tabIndex = (this.tabIndex > 0) ? this.tabIndex : 0,
-				useStyledList = false,
-				select, dropDown, text, isWatching, values;
+					settings = $.extend({}, globalSettings, element.data('select-options')),
+					replacement = element.data('replacement'),
+					disabled = this.disabled ? ' disabled' : '',
+					showAsMultiple = ((this.multiple || element.hasClass('multiple')) && !element.hasClass('multiple-as-single')),
+					isSized = (element.attr('size') > 1),
+					title = (this.title && this.title.length > 0) ? ' title="' + this.title + '"' : '',
+					tabIndex = (this.tabIndex > 0) ? this.tabIndex : 0,
+					useStyledList = false,
+					select, dropDown, text, isWatching, values;
 
 			// If already set
 			if (replacement)
@@ -166,12 +166,12 @@
 			 * Ew. Now I need to get another brain.
 			 */
 			if (showAsMultiple ||
-				this.multiple ||
-				(settings.styledList &&
-					(!$.template.touchOs ||
-					($.template.touchOs &&
-						(settings.styledOnTouch === true ||
-						(settings.styledOnTouch === null && select.hasClass('check-list')))))))
+					this.multiple ||
+					(settings.styledList &&
+							(!$.template.touchOs ||
+									($.template.touchOs &&
+											(settings.styledOnTouch === true ||
+													(settings.styledOnTouch === null && select.hasClass('check-list')))))))
 			{
 				useStyledList = true;
 			}
@@ -180,11 +180,11 @@
 			if (showAsMultiple)
 			{
 				// Create
-				select = $('<span class="'+this.className.replace(/validate\[.*\]/, '').replace(/(\s*)select(\s*)/, '$1selectMultiple$2')+disabled+' replacement"'+title+' tabindex="'+tabIndex+'">'+
-								'<span class="drop-down"></span>'+
-							'</span>')
-				.insertAfter(element)
-				.data('replaced', element);
+				select = $('<span class="' + this.className.replace(/validate\[.*\]/, '').replace(/(\s*)select(\s*)/, '$1selectMultiple$2') + disabled + ' replacement"' + title + ' tabindex="' + tabIndex + '">' +
+						'<span class="drop-down"></span>' +
+						'</span>')
+						.insertAfter(element)
+						.data('replaced', element);
 
 				// Register
 				element.data('replacement', select);
@@ -194,7 +194,7 @@
 				{
 					// Set height
 					dropDown = select.children('.drop-down');
-					dropDown.height(element.hasClass('check-list') ? (this.size*37)-1 : this.size*26);
+					dropDown.height(element.hasClass('check-list') ? (this.size * 37) - 1 : this.size * 26);
 
 					// Enable scroll
 					if ($.fn.customScroll)
@@ -220,13 +220,13 @@
 			else
 			{
 				// Create
-				select = $('<span class="'+this.className.replace(/validate\[.*\]/, '')+disabled+' replacement"'+title+' tabindex="'+tabIndex+'">'+
-								'<span class="select-value"></span>'+
-								'<span class="select-arrow">'+($.template.ie7 ? '<span class="select-arrow-before"></span><span class="select-arrow-after"></span>' : '')+'</span>'+
-								( useStyledList ? '<span class="drop-down"></span>' : '' )+
-							'</span>')
-				.insertAfter(element)
-				.data('replaced', element);
+				select = $('<span class="' + this.className.replace(/validate\[.*\]/, '') + disabled + ' replacement"' + title + ' tabindex="' + tabIndex + '">' +
+						'<span class="select-value"></span>' +
+						'<span class="select-arrow">' + ($.template.ie7 ? '<span class="select-arrow-before"></span><span class="select-arrow-after"></span>' : '') + '</span>' +
+						(useStyledList ? '<span class="drop-down"></span>' : '') +
+						'</span>')
+						.insertAfter(element)
+						.data('replaced', element);
 
 				// Gather selected values texts
 				values = [];
@@ -309,64 +309,54 @@
 		 * @var boolean
 		 */
 		styledList: true,
-
 		/**
 		 * For touch devices: false to use system's drop-down UI, true to use style's drop-downs, or null to guess (true for check-list style, false for others)
 		 * Note: only works if styledList is true
 		 * @var boolean|null
 		 */
 		styledOnTouch: null,
-
 		/**
 		 * When focused, should the arrow down key open the drop-down or just scroll values?
 		 * @var boolean
 		 */
 		openOnKeyDown: true,
-
 		/**
 		 * Text for multiple select with no value selected
 		 * @var string
 		 */
 		noValueText: '',
-
 		/**
 		 * Static text, always displayed no matter the value
 		 * @var string|boolean
 		 */
 		staticValue: false,
-
 		/**
 		 * Text for multiple select with one value selected, or false to just display the selected value
 		 * @var string|boolean
 		 */
 		singleValueText: false,
-
 		/**
 		 * Text for multiple select with multiple values selected, or false to just display the selected list
 		 * Tip: use %d as a placeholder for the number of values
 		 * @var string|boolean
 		 */
 		multipleValuesText: '%d selected',
-
 		/**
 		 * Text for multiple select with all values selected, or false to just display the selected list
 		 * Tip: use %d as a placeholder for the number of values
 		 * @var string|boolean
 		 */
 		allValuesText: 'All',
-
 		/**
 		 * Enable search field when open - use null to automatically use when list has more than searchIfMoreThan elements
 		 * @var boolean|null
 		 */
 		searchField: null,
-
 		/**
 		 * Minimum number of elements to trigger a search field, if searchField is null
 		 * @var int
 		 */
 		searchIfMoreThan: 25,
-
 		/**
 		 * Helper text for seach field
 		 * @var string
@@ -386,11 +376,11 @@
 		return this.each(function(i)
 		{
 			var element = $(this).addClass('file'),
-				settings = $.extend({}, globalSettings, element.data('file-options')),
-				blackInput = (element.hasClass('black-input') || element.closest('.black-inputs').length > 0) ? ' anthracite-gradient' : '',
-				multiple = !!this.multiple,
-				disabled = this.disabled ? ' disabled' : '',
-				isWatching;
+					settings = $.extend({}, globalSettings, element.data('file-options')),
+					blackInput = (element.hasClass('black-input') || element.closest('.black-inputs').length > 0) ? ' anthracite-gradient' : '',
+					multiple = !!this.multiple,
+					disabled = this.disabled ? ' disabled' : '',
+					isWatching;
 
 			// If already set
 			if (element.parent().hasClass('file'))
@@ -402,10 +392,10 @@
 			isWatching = $.template.disableDOMWatch();
 
 			// Create styling
-			styling = $('<span class="input '+this.className.replace(/validate\[.*\]/, '')+disabled+'">'+
-							'<span class="file-text">'+element.val()+'</span>'+
-							'<span class="button compact'+blackInput+'">'+(multiple ? settings.textMultiple : settings.textSingle)+'</span>'+
-						'</span>');
+			styling = $('<span class="input ' + this.className.replace(/validate\[.*\]/, '') + disabled + '">' +
+					'<span class="file-text">' + element.val() + '</span>' +
+					'<span class="button compact' + blackInput + '">' + (multiple ? settings.textMultiple : settings.textSingle) + '</span>' +
+					'</span>');
 
 			// Insert
 			styling.insertAfter(element);
@@ -433,7 +423,6 @@
 		 * @var string
 		 */
 		textSingle: 'Select file',
-
 		/**
 		 * Button text - multiple files
 		 * @var string
@@ -523,7 +512,7 @@
 	function _getNumberOptions(input)
 	{
 		var options = input.data('number-options'),
-			temp;
+				temp;
 
 		// If not set yet or not formatted
 		if (!options || !options.formatted)
@@ -604,13 +593,13 @@
 		value = _unformatNumberValue(value, options);
 
 		// Round value
-		value = Math.round(value/options.precision)*options.precision;
+		value = Math.round(value / options.precision) * options.precision;
 
 		// Precision bug on float values
 		if (options.precision < 1)
 		{
-			decimalPlaces = options.precision.toString().length-2;
-			value = Math.round(value*Math.pow(10, decimalPlaces))/Math.pow(10, decimalPlaces);
+			decimalPlaces = options.precision.toString().length - 2;
+			value = Math.round(value * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
 		}
 
 		// Check min/max
@@ -650,38 +639,32 @@
 		 * @var number|null
 		 */
 		min: null,
-
 		/**
 		 * Maximum value (null for none)
 		 * @var number|null
 		 */
 		max: null,
-
 		/**
 		 * Increment of up/down arrows and keys
 		 * @var number
 		 */
 		increment: 1,
-
 		/**
 		 * Increment of up/down arrows and keys when holding shift key
 		 * @var number
 		 */
 		shiftIncrement: 10,
-
 		/**
 		 * Precision of the value: the user input will be rounded using it.
 		 * For instance, use 1 for rounded nombers, 0.25 to user quarter increments...
 		 * @var number
 		 */
 		precision: 1,
-
 		/**
 		 * Character used for decimal point
 		 * @var string
 		 */
 		decimalPoint: '.',
-
 		/**
 		 * Character used for thousands separator
 		 * @var string
@@ -708,7 +691,7 @@
 		return this.each(function(i)
 		{
 			var element = $(this),
-				replacement, replaced;
+					replacement, replaced;
 
 			// Inputs
 			if (mayBeDisabled(element))
@@ -760,7 +743,7 @@
 		return this.each(function(i)
 		{
 			var element = $(this),
-				replacement, replaced;
+					replacement, replaced;
 
 			// Inputs
 			if (mayBeDisabled(element))
@@ -841,7 +824,7 @@
 			elements.findIn(self, children, 'input[placeholder][type!="password"]').each(function(i)
 			{
 				var input = $(this),
-					placeholder = input.attr('placeholder');
+						placeholder = input.attr('placeholder');
 
 				// Mark and add data for validation plugin
 				input.addClass('placeholder').attr('data-validation-placeholder', placeholder);
@@ -885,17 +868,17 @@
 	function _openSelect(select, onHover, event)
 	{
 		var replaced = select.data('replaced'),
-			settings = select.data('select-settings') || {},
-			list,
-			clone,
-			inheritParent,
-			scrollParents,
-			position, listOffset,
-			winHeight, listHeight, optionHeight,
-			listExtra, availableHeight,
-			searchWrapper, search = false, searchFocus = false,
-			date = new Date(), time = date.getTime(),
-			isWatching, updateList, onChange, onBlur;
+				settings = select.data('select-settings') || {},
+				list,
+				clone,
+				inheritParent,
+				scrollParents,
+				position, listOffset,
+				winHeight, listHeight, optionHeight,
+				listExtra, availableHeight,
+				searchWrapper, search = false, searchFocus = false,
+				date = new Date(), time = date.getTime(),
+				isWatching, updateList, onChange, onBlur;
 
 		// Prevent event default
 		if (event)
@@ -938,7 +921,7 @@
 		isWatching = $.template.disableDOMWatch();
 
 		// Clone
-		clone = select.clone().addClass('select-clone').css('width', select.width()+'px');
+		clone = select.clone().addClass('select-clone').css('width', select.width() + 'px');
 		clone[0].tabIndex = -1;
 		clone.children('select').remove();
 		clone.appendTo(document.body).trackElement(select);
@@ -1034,7 +1017,7 @@
 		{
 			// Create elements
 			searchWrapper = $('<div class="select-search-wrapper"></div>').appendTo(clone);
-			search = $('<input type="text" class="select-search" value="" placeholder="'+settings.searchText+'" autocomplete="off">').appendTo(searchWrapper);
+			search = $('<input type="text" class="select-search" value="" placeholder="' + settings.searchText + '" autocomplete="off">').appendTo(searchWrapper);
 
 			// Behavior
 			search.on('keydown', function(event)
@@ -1052,11 +1035,11 @@
 			}).keyup(function(event)
 			{
 				var text = $.trim(search.val()),
-					keys = $.template.keys,
-					searchRegex,
-					matches, matchSelected,
-					focus, next,
-					replacedOption;
+						keys = $.template.keys,
+						searchRegex,
+						matches, matchSelected,
+						focus, next,
+						replacedOption;
 
 				event.stopPropagation();
 
@@ -1205,7 +1188,7 @@
 		// Get heights
 		listOffset = list.removeClass('reversed').position().top;
 		listHeight = list.outerHeight();
-		listExtra = listHeight-list.height();
+		listExtra = listHeight - list.height();
 
 		// Function to refresh position on resize/scroll
 		updateList = function()
@@ -1216,16 +1199,16 @@
 			listHeight = list.css('max-height', '').outerHeight();
 
 			// Select vertical position
-			position = clone.offset().top-win.scrollTop();
+			position = clone.offset().top - win.scrollTop();
 
 			// Viewport height
 			winHeight = win.height();
 
 			// If too long to fit
-			if (position+listOffset+listHeight > winHeight)
+			if (position + listOffset + listHeight > winHeight)
 			{
 				// Check if it fits on top
-				if (position-listOffset-listHeight > 0)
+				if (position - listOffset - listHeight > 0)
 				{
 					// Display on top
 					clone.addClass('reversed');
@@ -1236,7 +1219,7 @@
 				 */
 				else
 				{
-					if (position > winHeight*0.6)
+					if (position > winHeight * 0.6)
 					{
 						// Display on top
 						clone.addClass('reversed');
@@ -1246,7 +1229,7 @@
 					{
 						// Display under
 						clone.removeClass('reversed');
-						availableHeight = winHeight-position-listOffset;
+						availableHeight = winHeight - position - listOffset;
 					}
 
 					// Remove list padding/borders from available size
@@ -1254,7 +1237,7 @@
 
 					// Set max-height to use available space
 					list.css({
-						maxHeight: (availableHeight-10)+'px'
+						maxHeight: (availableHeight - 10) + 'px'
 					});
 
 					// Try to restore scroll position
@@ -1404,8 +1387,8 @@
 	function _refreshSelectValues(select, replaced)
 	{
 		var list = select.children('.drop-down'),
-			checkList = select.hasClass('check-list') ? '<span class="check"></span>' : '',
-			existing, isWatching;
+				checkList = select.hasClass('check-list') ? '<span class="check"></span>' : '',
+				existing, isWatching;
 
 		// If valid
 		if (list.length > 0 && replaced)
@@ -1423,12 +1406,12 @@
 			replaced.find('option, optgroup').each(function(i)
 			{
 				var classes = [],
-					$this = this,
-					option = (this.nodeName.toLowerCase() === 'option'),
-					node = option ? 'span' : 'strong',
-					text = option ? $(this).text() : this.label,
-					found = false,
-					newItem;
+						$this = this,
+						option = (this.nodeName.toLowerCase() === 'option'),
+						node = option ? 'span' : 'strong',
+						text = option ? $(this).text() : this.label,
+						found = false,
+						newItem;
 
 				// Empty text
 				if (text.length === 0)
@@ -1462,7 +1445,7 @@
 					found.detach().appendTo(list);
 
 					// Reset text in case it changed
-					found.html(checkList+text);
+					found.html(checkList + text);
 
 					// Check classes
 					found[this.selected ? 'addClass' : 'removeClass']('selected');
@@ -1496,9 +1479,9 @@
 				}
 
 				// Create
-				newItem = $('<'+node+((classes.length > 0) ? ' class="'+classes.join(' ')+'"' : '')+'>'+checkList+text+'</'+node+'>')
-							.appendTo(list)
-							.data('select-value', this);
+				newItem = $('<' + node + ((classes.length > 0) ? ' class="' + classes.join(' ') + '"' : '') + '>' + checkList + text + '</' + node + '>')
+						.appendTo(list)
+						.data('select-value', this);
 
 				// Set behavior if not disabled
 				if (option && !this.disabled)
@@ -1530,12 +1513,12 @@
 	function _clickSelectValue(event)
 	{
 		var option = $(this),
-			list = option.parent(),
-			select = list.parent(),
-			replaced = select.data('replaced'),
-			replacedOption = option.data('select-value'),
-			multiple = replaced[0].multiple,
-			selected, value;
+				list = option.parent(),
+				select = list.parent(),
+				replaced = select.data('replaced'),
+				replacedOption = option.data('select-value'),
+				multiple = replaced[0].multiple,
+				selected, value;
 
 		// Detect touch scrolling
 		if (list.data('touch-scrolling'))
@@ -1614,9 +1597,9 @@
 	function _updateSelectText(select, replaced, settings)
 	{
 		var selected = replaced.find(':selected'),
-			selectValue = select.children('.select-value'),
-			values = [],
-			text;
+				selectValue = select.children('.select-value'),
+				values = [],
+				text;
 
 		// Not for multiple selects
 		if (select.hasClass('selectMultiple'))
@@ -1759,8 +1742,8 @@
 	function _removeCheckableReplacement()
 	{
 		var element = $(this),
-			replacement = element.data('replacement'),
-			blurFunc;
+				replacement = element.data('replacement'),
+				blurFunc;
 
 		// If not replaced
 		if (!replacement)
@@ -1798,7 +1781,7 @@
 	function _removeSelectReplacement()
 	{
 		var element = $(this),
-			select = element.data('replacement');
+				select = element.data('replacement');
 
 		// If not replaced
 		if (!select)
@@ -1850,7 +1833,7 @@
 	function _removeInputStyling()
 	{
 		var element = $(this),
-			parent = element.parent();
+				parent = element.parent();
 
 		// If not replaced
 		if (!parent.hasClass('file'))
@@ -1877,8 +1860,8 @@
 	doc.on('click', 'label', function(event)
 	{
 		var label = $(this),
-			element = $('#'+this.htmlFor),
-			replacement;
+				element = $('#' + this.htmlFor),
+				replacement;
 
 		// If no input, exit
 		if (element.length === 0)
@@ -1938,7 +1921,7 @@
 	doc.on('click', 'span.switch, span.radio, span.checkbox', function(event)
 	{
 		var element = $(this),
-			replaced = element.data('replaced');
+				replaced = element.data('replaced');
 
 		// If not valid, exit
 		if (!replaced || replaced.length === 0)
@@ -1974,46 +1957,37 @@
 	// Drag switches
 	doc.on('mousedown touchstart', 'span.switch', function(event)
 	{
-			// Parent switch
+		// Parent switch
 		var switchEl = $(this),
-			replaced = switchEl.data('replaced'),
-			reversed = (switchEl.closest('.reversed-switches').length > 0),
-
-			// Button
-			button = switchEl.children('.switch-button'),
-
-			// Is it a mini/tiny switch
-			mini = switchEl.hasClass('mini'),
-			tiny = switchEl.hasClass('tiny'),
-
-			// Size adjustments
-			buttonOverflow = tiny ? 2 : 0,
-			valuesOverflow = ((mini || tiny) ? 7 : 4)+(2*buttonOverflow),
-			marginIE7 = ($.template.ie7 && !mini && !tiny) ? 4 : 0,
-
-			// Original button position
-			initialPosition = button.position().left,
-
-			// Inner elements
-			onEl = switchEl.children('.switch-on'),
-			onSpan = onEl.children(),
-			offEl = switchEl.children('.switch-off'),
-			offSpan = offEl.children(),
-
-			// Available space
-			switchWidth = switchEl.width(),
-			buttonWidth = button.outerWidth(true),
-			availableSpace = switchWidth-buttonWidth+(2*buttonOverflow),
-
-			// Type of event
-			touchEvent = (event.type === 'touchstart'),
-
-			// Event start position
-			offsetHolder = touchEvent ? event.originalEvent.touches[0] : event,
-			mouseX = offsetHolder.pageX,
-
-			// Work vars
-			ieSelectStart, dragged = false, value;
+				replaced = switchEl.data('replaced'),
+				reversed = (switchEl.closest('.reversed-switches').length > 0),
+				// Button
+				button = switchEl.children('.switch-button'),
+				// Is it a mini/tiny switch
+				mini = switchEl.hasClass('mini'),
+				tiny = switchEl.hasClass('tiny'),
+				// Size adjustments
+				buttonOverflow = tiny ? 2 : 0,
+				valuesOverflow = ((mini || tiny) ? 7 : 4) + (2 * buttonOverflow),
+				marginIE7 = ($.template.ie7 && !mini && !tiny) ? 4 : 0,
+				// Original button position
+				initialPosition = button.position().left,
+				// Inner elements
+				onEl = switchEl.children('.switch-on'),
+				onSpan = onEl.children(),
+				offEl = switchEl.children('.switch-off'),
+				offSpan = offEl.children(),
+				// Available space
+				switchWidth = switchEl.width(),
+				buttonWidth = button.outerWidth(true),
+				availableSpace = switchWidth - buttonWidth + (2 * buttonOverflow),
+				// Type of event
+				touchEvent = (event.type === 'touchstart'),
+				// Event start position
+				offsetHolder = touchEvent ? event.originalEvent.touches[0] : event,
+				mouseX = offsetHolder.pageX,
+				// Work vars
+				ieSelectStart, dragged = false, value;
 
 		// If not valid, exit
 		if (!replaced || replaced.length === 0)
@@ -2042,25 +2016,25 @@
 		function watchMouse(event)
 		{
 			var offsetHolder = touchEvent ? event.originalEvent.touches[0] : event,
-				position = Math.max(0, Math.min(availableSpace, initialPosition+(offsetHolder.pageX-mouseX)));
+					position = Math.max(0, Math.min(availableSpace, initialPosition + (offsetHolder.pageX - mouseX)));
 
 			// Actual value
-			value = (position > availableSpace/2) ? !reversed : reversed;
+			value = (position > availableSpace / 2) ? !reversed : reversed;
 
 			// Move inner elements
 			if (reversed)
 			{
-				button.css('right', (availableSpace-position-buttonOverflow)+'px');
-				offEl.css('right', (switchWidth-position-valuesOverflow)+'px');
-				offSpan.css('margin-left', -(availableSpace-position+marginIE7)+'px');
-				onEl.css('left', (buttonWidth+position-valuesOverflow)+'px');
+				button.css('right', (availableSpace - position - buttonOverflow) + 'px');
+				offEl.css('right', (switchWidth - position - valuesOverflow) + 'px');
+				offSpan.css('margin-left', -(availableSpace - position + marginIE7) + 'px');
+				onEl.css('left', (buttonWidth + position - valuesOverflow) + 'px');
 			}
 			else
 			{
-				button.css('left', (position-buttonOverflow)+'px');
-				onEl.css('right', (switchWidth-position-valuesOverflow)+'px');
-				onSpan.css('margin-left', -(availableSpace-position+marginIE7)+'px');
-				offEl.css('left', (buttonWidth+position-valuesOverflow)+'px');
+				button.css('left', (position - buttonOverflow) + 'px');
+				onEl.css('right', (switchWidth - position - valuesOverflow) + 'px');
+				onSpan.css('margin-left', -(availableSpace - position + marginIE7) + 'px');
+				offEl.css('left', (buttonWidth + position - valuesOverflow) + 'px');
 			}
 
 			// Drag is effective
@@ -2126,8 +2100,8 @@
 	doc.on('change silent-change', ':radio, :checkbox', function(event)
 	{
 		var element = $(this),
-			replacement = element.data('replacement'),
-			checked = this.checked;
+				replacement = element.data('replacement'),
+				checked = this.checked;
 
 		// Update visual style
 		if (replacement)
@@ -2144,10 +2118,10 @@
 		// If radio, refresh others without triggering 'change'
 		if (this.type === 'radio')
 		{
-			$('input[name="'+this.name+'"]:radio').not(this).each(function(i)
+			$('input[name="' + this.name + '"]:radio').not(this).each(function(i)
 			{
 				var input = $(this),
-					replacement = input.data('replacement');
+						replacement = input.data('replacement');
 
 				// Switch
 				if (replacement)
@@ -2167,8 +2141,8 @@
 	doc.on('focus', 'span.switch, span.radio, span.checkbox', function(event)
 	{
 		var element = $(this),
-			replaced = element.data('replaced'),
-			handleKeysEvents = false;
+				replaced = element.data('replaced'),
+				handleKeysEvents = false;
 
 		// If not valid, exit
 		if (!replaced || replaced.length === 0)
@@ -2252,8 +2226,8 @@
 	doc.on('focus', 'input', function(event)
 	{
 		var input = $(this),
-			replacement, wrapper,
-			last;
+				replacement, wrapper,
+				last;
 
 		// Do not handle if disabled
 		if (input.closest('.disabled').length > 0 || input.is(':disabled'))
@@ -2336,8 +2310,8 @@
 	}).on('blur', 'input', function()
 	{
 		var input = $(this),
-			replacement,
-			wrapper;
+				replacement,
+				wrapper;
 
 		// Not for radios and checkboxes
 		if (this.type === 'radio' || this.type === 'checkbox')
@@ -2397,7 +2371,7 @@
 	doc.on('change silent-change', '.file > input[type="file"]', function(event)
 	{
 		var input = $(this),
-			files = [], text, i;
+				files = [], text, i;
 
 		// Update styling text
 		if (this.multiple && this.files)
@@ -2421,9 +2395,9 @@
 	doc.on('click', '.number-up, .number-down', function(event)
 	{
 		var button = $(this),
-			wrapper = button.parent(),
-			input = wrapper.children('input:first'),
-			value;
+				wrapper = button.parent(),
+				input = wrapper.children('input:first'),
+				value;
 
 		// Check if valid
 		if (input.length === 0 || input.is(':disabled'))
@@ -2457,7 +2431,7 @@
 	doc.on('focus', '.select > select', function()
 	{
 		var select = $(this),
-			replacement = select.data('replacement');
+				replacement = select.data('replacement');
 		if (replacement)
 		{
 			if (replacement.hasClass('select-styled-list'))
@@ -2483,10 +2457,10 @@
 		}
 
 		var select = $(this).closest('.select, .selectMultiple'),
-			settings = select.data('select-settings') || {},
-			replaced = select.data('replaced'),
-			handleKeysEvents, search = '',
-			blurTimeout, searchTimeout;
+				settings = select.data('select-settings') || {},
+				replaced = select.data('replaced'),
+				handleKeysEvents, search = '',
+				blurTimeout, searchTimeout;
 
 		// Do not handle clones
 		if (select.hasClass('select-clone'))
@@ -2538,11 +2512,11 @@
 		handleKeysEvents = function(event)
 		{
 			var keys = $.template.keys,
-				target = select.data('clone') || select,
-				list = target.children('.drop-down'),
-				selectedIndex, mode,
-				focus, next, replacedOption,
-				character, searchRegex;
+					target = select.data('clone') || select,
+					list = target.children('.drop-down'),
+					selectedIndex, mode,
+					focus, next, replacedOption,
+					character, searchRegex;
 
 			// If using easy multiple selection, use focus instead of selection
 			mode = select.hasClass('easy-multiple-selection') ? 'focus' : 'selected';
@@ -2555,7 +2529,7 @@
 					if (target.hasClass('open') || select.hasClass('selectMultiple'))
 					{
 						// Focused element
-						focus = list.children('.'+mode+':first');
+						focus = list.children('.' + mode + ':first');
 						if (focus.length === 0)
 						{
 							next = list.children('a, span').not('.disabled').last();
@@ -2605,9 +2579,9 @@
 							while (selectedIndex > 0)
 							{
 								// Make sure it is not disabled
-								if (!replaced[0].options[selectedIndex-1].disabled)
+								if (!replaced[0].options[selectedIndex - 1].disabled)
 								{
-									replaced[0].selectedIndex = selectedIndex-1;
+									replaced[0].selectedIndex = selectedIndex - 1;
 									replaced.change();
 									break;
 								}
@@ -2633,7 +2607,7 @@
 						if (target.hasClass('open') || select.hasClass('selectMultiple'))
 						{
 							// Focused element
-							focus = list.children('.'+mode+':last');
+							focus = list.children('.' + mode + ':last');
 							if (focus.length === 0)
 							{
 								next = list.children('a, span').not('.disabled').first();
@@ -2680,12 +2654,12 @@
 							selectedIndex = _getSelectedIndex(replaced);
 							if (selectedIndex !== false)
 							{
-								while (selectedIndex < replaced[0].options.length-1)
+								while (selectedIndex < replaced[0].options.length - 1)
 								{
 									// Make sure it is not disabled
-									if (!replaced[0].options[selectedIndex+1].disabled)
+									if (!replaced[0].options[selectedIndex + 1].disabled)
 									{
-										replaced[0].selectedIndex = selectedIndex+1;
+										replaced[0].selectedIndex = selectedIndex + 1;
 										replaced.change();
 										break;
 									}
@@ -2705,7 +2679,7 @@
 					if (mode === 'focus' && (select.hasClass('selectMultiple') || target.hasClass('open')))
 					{
 						// Focused element
-						focus = list.children('.'+mode);
+						focus = list.children('.' + mode);
 						if (focus.length === 1)
 						{
 							event.preventDefault();
@@ -2734,7 +2708,7 @@
 
 						// Add to search
 						search += character.toLowerCase();
-						searchRegex = new RegExp('^'+search, 'g');
+						searchRegex = new RegExp('^' + search, 'g');
 
 						// Start timeout to clear search string when no more key are pressed
 						searchTimeout = setTimeout(function()
@@ -2755,7 +2729,7 @@
 								if ($.trim(option.text().toLowerCase()).match(searchRegex))
 								{
 									// Focused element
-									focus = list.children('.'+mode+':last');
+									focus = list.children('.' + mode + ':last');
 
 									// Focus option
 									focus.removeClass(mode);
@@ -2813,7 +2787,7 @@
 		function onBlur(event, timed)
 		{
 			var target = $(event.target),
-				clone = select.data('clone');
+					clone = select.data('clone');
 
 			// If this is an internal operation, do not process
 			if (select.data('select-hiding'))
@@ -2832,7 +2806,9 @@
 			if (!blurTimeout)
 			{
 				// Wait, are you sure you want me to blur? Let's just wait a little...
-				select.data('selectBlurTimeout', setTimeout(function() { onBlur.call(this, event, true); }, 40));
+				select.data('selectBlurTimeout', setTimeout(function() {
+					onBlur.call(this, event, true);
+				}, 40));
 				return;
 			}
 			else if (timed)
@@ -2863,7 +2839,7 @@
 		function onFocusin(event)
 		{
 			var target = $(event.target),
-				clone = select.data('clone');
+					clone = select.data('clone');
 
 			// Check if focus target is within the select
 			if (target.closest(select).length || (clone && target.closest(clone).length))
@@ -2894,7 +2870,7 @@
 	doc.on('change silent-change', 'select', function()
 	{
 		var replaced = $(this),
-			select = replaced.data('replacement');
+				select = replaced.data('replacement');
 
 		// If valid
 		if (select)
@@ -2942,14 +2918,13 @@
 	doc.on('jqv.form.validating', 'form', function(event)
 	{
 		var form = $(this),
-			hidden = form.find('span.select > select, span.selectMultiple > select').filter(':hidden').show(),
-
-			// Return to normal state
-			validateEnd = function()
-			{
-				hidden.css('display', '');
-				form.off('jqv.form.result', validateEnd);
-			};
+				hidden = form.find('span.select > select, span.selectMultiple > select').filter(':hidden').show(),
+				// Return to normal state
+				validateEnd = function()
+		{
+			hidden.css('display', '');
+			form.off('jqv.form.result', validateEnd);
+		};
 
 		// Listen for end of validation
 		form.on('jqv.form.result', validateEnd);

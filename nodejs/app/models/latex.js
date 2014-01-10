@@ -60,6 +60,7 @@ exports.compileDoc = function(id, doc, callback) {
 								+ "'");
 						// make the compiledDocURI
 						response.compiledDocURI = "/servepdf/" + id;
+						response.compiledDocId = id;
 						// send response back to user
 						callback(response);
 					}
@@ -122,6 +123,21 @@ exports.servePDF = function(req, res) {
 		}
 	});
 };
+
+exports.getPDF = function(id, callback) {
+	var pdfPath = config.root + config.latex.pdfs + id + ".pdf";
+
+	//console.log(pdfPath);
+	fs.exists(pdfPath, function(exists) {
+		if (!exists) {
+			callback("error", "PDF not found", null);
+			return;
+		} else {
+			callback(null, pdfPath);
+		}
+	});
+};
+
 
 /**
  * Replace --MYSOC-- and create FOOTER

@@ -25,10 +25,10 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
 				$scope.tournees = tournees;
 				$scope.cpt = $scope.tournees.length;
-				
+
 				// somme des heures Supp de la semaine
-				for(var i=0;i<$scope.cpt;i++)
-					$scope.hsupp+=tournees[i].hSupp;
+				for (var i = 0; i < $scope.cpt; i++)
+					$scope.hsupp += tournees[i].hSupp;
 			});
 		};
 
@@ -403,4 +403,285 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 				}
 			});
 		}
+	}]);
+
+angular.module('mean.europexpress').controller('EETransportController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EETransport', function($scope, $routeParams, $location, $route, Global, Object) {
+		$scope.global = Global;
+
+		var crudServiceBaseUrl = "api/europexpress/courses";
+
+		$scope.dataSource = new kendo.data.DataSource({
+			transport: {
+				read: {
+					url: crudServiceBaseUrl,
+					type: "GET",
+					dataType: "json"
+				},
+				update: {
+					url: crudServiceBaseUrl,
+					type: "PUT",
+					dataType: "json"
+				},
+				destroy: {
+					url: crudServiceBaseUrl,
+					type: "DELETE",
+					dataType: "json"
+				},
+				create: {
+					url: crudServiceBaseUrl,
+					type: "POST",
+					dataType: "json"
+				},
+				parameterMap: function(options, operation) {
+					if (operation !== "read" && options.models) {
+						return {models: kendo.stringify(options.models)};
+					}
+				}
+			},
+			error: function(e) {
+				// log error
+				alert(e.xhr.responseText);
+			},
+			batch: true,
+			pageSize: 50,
+			schema: {
+				model: {
+					id: "_id",
+					fields: {
+						_id: {editable: false, nullable: true},
+						ref: {editable: false, defaultValue: ""},
+						bordereau: {editable: true},
+						type: {editable: true, defaultValue: {id: "COURSE", name: "Course", css: "green-gradient"}},
+						ref_client: {type: "string"},
+						client: {editable: true, defaultValue: {id: null, name: ""}},
+						contact: {editable: false, defaultValue: {id: null, name: ""}},
+						from: {editable: false, defaultValue: {zip: "", town: ""}},
+						to: {editable: false, defaultValue: {zip: "", town: ""}},
+						ETA: {editable: true, defaultValue: {date: null, contact: ""}},
+						datec: {type: "date"},
+						total_soustraitant: {type: "number", editable: false, defaultValue: null},
+						date_livraison: {type: "date", editable: true},
+						date_enlevement: {type: "date", editable: true},
+						commission: {type: "number", editable: false, defaultValue: 0},
+						fournisseur: {editable: true, defaultValue: {id: null, name: ""}},
+						Status: {editable: false, defaultValue: {id: "NEW", name: "Nouveau", css: "grey-gradient"}},
+						total_ht: {type: "number", editable: false, defaultValue: 0},
+						boutons: {editable: false}
+					}
+				}
+			},
+			sort: {field: "date_livraison", dir: "desc"}
+		});
+
+		// cache certain champ dans le popup
+		$scope.kendoEdit = function(e) {
+			console.log(e);
+			e.container.find('label[for="from"]').hide();
+			e.container.find('label[for="to"]').hide();
+			e.container.find('label[for="total_soustraitant"]').hide();
+			e.container.find('label[for="total_soustraitant"]').hide();
+			//e.container.find('div[data-container-for="from"]').hide();
+			e.container.find('label[for="undefined"]').hide();
+			e.container.find('.button-group').hide();
+		};
+
+		$scope.dateTimeEditor = function(container, options) {
+			$('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+					.appendTo(container)
+					.kendoDateTimePicker({});
+		};
+
+		$scope.clientDropDownEditor = function(container, options) {
+			$('<input required id="id"/>')
+					.attr("name", options.field)
+					.appendTo(container)
+					.kendoAutoComplete({
+				minLength: 1,
+				dataTextField: "name",
+				filter: "contains",
+				dataSource: {
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
+					transport: {
+						read: {
+							url: "api/societe/autocomplete",
+							type: "POST",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		};
+
+		$scope.fournisseurDropDownEditor = function(container, options) {
+			$('<input id="id"/>')
+					.attr("name", options.field)
+					.appendTo(container)
+					.kendoAutoComplete({
+				minLength: 1,
+				dataTextField: "name",
+				filter: "contains",
+				dataSource: {
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
+					transport: {
+						read: {
+							url: "api/societe/autocomplete?fournisseur=SUBCONTRACTOR",
+							type: "POST",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		};
+
+		$scope.typeDropDownEditor = function(container, options) {
+			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
+					.appendTo(container)
+					.kendoDropDownList({
+				autoBind: false,
+				dataSource: {
+					transport: {
+						read: {
+							url: "api/europexpress/courses/type/select",
+							type: "GET",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		};
+
+	}]);
+
+angular.module('mean.europexpress').controller('EETransportEditController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EETransport', '$http', '$timeout', function($scope, $routeParams, $location, $route, Global, Object, $http, $timeout) {
+		$scope.global = Global;
+
+		$scope.cancel = function() {
+			$location.path('module/europexpress/transport.html');
+		};
+
+		$scope.update = function(id) {
+			var course = $scope.course;
+
+			course.$update(function() {
+				$location.path('module/europexpress/transport.html');
+			});
+		};
+
+		$scope.findOne = function() {
+			Object.get({
+				id: $routeParams.id
+			}, function(course) {
+				$scope.course = course;
+				$scope.refreshContact();
+				$timeout(function() {
+					angular.element('select').change();
+				}, 300);
+			});
+		};
+
+		$scope.$watch('course.datec', function(date)
+		{
+			var time = new Date(date);
+			if (new Date($scope.dateC).getTime() != time.getTime())
+				$scope.dateC = time;
+		});
+
+		$scope.$watch('course.date_enlevement', function(date)
+		{
+			if (date == null)
+				return;
+			var time = new Date(date);
+			if (new Date($scope.dateEnlevement).getTime() != time.getTime())
+				$scope.dateEnlevement = time;
+		});
+
+		$scope.$watch('course.date_livraison', function(date)
+		{
+			if (date == null)
+				return;
+			var time = new Date(date);
+			if (new Date($scope.dateLivraison).getTime() != time.getTime())
+				$scope.dateLivraison = time;
+		});
+
+		$scope.$watch('course.ETA.date', function(date)
+		{
+			if (date == null)
+				return;
+			var time = new Date(date);
+			if (new Date($scope.ETADate).getTime() != time.getTime())
+				$scope.ETADate = time;
+		});
+
+		$scope.selectType = function() {
+			$http({method: 'GET', url: 'api/europexpress/courses/type/select'
+			}).
+					success(function(data, status) {
+				$scope.types = data;
+			});
+		};
+
+		$scope.selectStatus = function() {
+			$http({method: 'GET', url: 'api/europexpress/courses/status/select'
+			}).
+					success(function(data, status) {
+				$scope.status = data;
+			});
+		};
+
+		$scope.selectTarifs = function() {
+			$http({method: 'GET', url: 'api/europexpress/courses/tarif/select'
+			}).
+					success(function(data, status) {
+				$scope.tarifs = data;
+			});
+		};
+
+		$scope.clientAutoComplete = function(val) {
+			return $http.post('api/societe/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
+		};
+
+		$scope.fournisseurAutoComplete = function(val) {
+			return $http.post('api/societe/autocomplete?fournisseur=SUBCONTRACTOR', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
+		};
+
+		$scope.refreshContact = function() {
+			if ($scope.course.client.id == null) {
+				$scope.contacts = [];
+				return;
+			}
+
+			$http({method: 'GET', url: 'api/societe/contact/select', params: {
+					societe: $scope.course.client.id}
+			}).
+					success(function(data, status) {
+				$scope.contacts = data;
+				$timeout(function() {
+					angular.element('select').change();
+				}, 300);
+			});
+		};
+
 	}]);

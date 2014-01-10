@@ -8,18 +8,18 @@
 		</div>
 		<div class="with-padding">
 			<p class="button-height inline-label required">
-				<label for="ticket_name" class="label">{{t 'Title'}}</label>
+				<label for="ticket_name">{{t 'Title'}}</label>
 				<input type="text" data-ng-model="ticket.name" required id="ticket_name" class="input full-width">
 			</p>
 			
 			<p class="button-height inline-label">
-				<label for="ticket_controlledBy" class="label">{{t 'ticket:ControlledBy'}}</label>
+				<label for="ticket_controlledBy">{{t 'ticket:ControlledBy'}}</label>
 				<input type="text" id="ticket_controlledBy" data-ng-model="ticket.controlledBy.name" ng-change="ticket.affectedTo[0]=ticket.controlledBy" ui-autocomplete="searchUser()" ui-event="{autocompletecreate:'changeClass(searchUser)'}" class="input"/>
 				<small class="input-info">{{t 'ticket:UserClosedTicket'}}</small>
 			</p>
 
 			<p class="button-height inline-label">
-				<label for="ticket_affectedTo" class="label">{{t 'ticket:AffectedTo'}}</label>
+				<label for="ticket_affectedTo">{{t 'ticket:AffectedTo'}}</label>
 				<span  data-ng-repeat="user in ticket.affectedTo">
 					<span class="tag anthracite-gradient glossy">\{{user.name}} <a href="" data-ng-hide="$index==0" data-ng-click="deleteAffected($index)" class="icon-trash"></a></span>
 				</span>
@@ -29,17 +29,17 @@
 			</p>
 
 			<p class="button-height inline-label required">
-				<label for="expire" class="label">{{t 'ticket:Expire'}}</label>
+				<label for="expire">{{t 'ticket:Expire'}}</label>
 				<input id="expire" data-ng-model="dateString" kendo-date-time-picker required k-on-change="newExpireDate(kendoEvent)"/>
 			</p>
 
 			<p class="button-height inline-label">
-				<label for="important" class="label">{{t 'Important'}}</label>
-				<input type="checkbox" class="medium" id="important" data-ng-checked="ticket.important"/>
+				<label for="important">{{t 'Important'}}</label>
+				<input type="checkbox" class="switch medium" id="important" data-ng-model="ticket.important" data-ng-checked="ticket.important"/>
 			</p>
 
 			<p class="button-height inline-label">
-				<label for="object_include" class="label">{{t 'Links'}}</label>
+				<label for="object_include">{{t 'Links'}}</label>
 				<span class="input">
 					<label for="object_include" class="button orange-gradient">
 						<span class="icon-paperclip small-margin-right"></span>

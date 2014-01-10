@@ -41,7 +41,7 @@ module.exports = function(app, passport, auth) {
 
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function(req, res) {
-		console.dir(req.body);
+		console.dir(req.body.filter);
 
 		if (req.body.filter == null)
 			return res.send(200, {});
@@ -74,6 +74,12 @@ module.exports = function(app, passport, auth) {
 					result[i] = {};
 					result[i].name = docs[i].name;
 					result[i].id = docs[i]._id;
+					if (docs[i].cptBilling.id == null) {
+						result[i].cptBilling = {};
+						result[i].cptBilling.name = docs[i].name;
+						result[i].cptBilling.id = docs[i]._id;
+					} else
+						result[i].cptBilling = docs[i].cptBilling;
 				}
 
 			return res.send(200, result);
@@ -204,12 +210,12 @@ module.exports = function(app, passport, auth) {
 				res.send(500, {foo: "bar", status: "failed"});
 		}
 	});
-	
+
 	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
 		//console.log(id);
-		
-		if(id && req.params.fileName) {
+
+		if (id && req.params.fileName) {
 			SocieteModel.findOne({_id: id}, function(err, societe) {
 
 				if (err) {
@@ -220,39 +226,39 @@ module.exports = function(app, passport, auth) {
 					if (err)
 						console.log(err);
 
-					res.redirect('/societe/fiche.php?id='+id);
+					res.redirect('/societe/fiche.php?id=' + id);
 				});
 			});
 		} else
 			res.send(500, "File not found");
-		
+
 	});
-	
+
 	app.get('/api/societe/file/:Id/:fileName', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
-		
-		if(id && req.params.fileName) {
+
+		if (id && req.params.fileName) {
 			SocieteModel.findOne({_id: id}, function(err, societe) {
 
 				if (err) {
 					console.log(err);
 					return res.send(500, {status: "Id not found"});
 				}
-				
-				societe.getFile(req.params.fileName, function(err, store){
-					if(err)
+
+				societe.getFile(req.params.fileName, function(err, store) {
+					if (err)
 						console.log(err);
-					
+
 					//console.log(store);
 					res.type(store.contentType);
 					res.attachment(store.filename); // for douwnloading
 					store.stream(true).pipe(res);
-					
+
 				});
 			});
 		}
 	});
-	
+
 	app.del('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
 		//console.log(req.body);
 		var id = req.params.Id;
@@ -279,33 +285,23 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/societe/contact/select', auth.requiresLogin, function(req, res) {
 		//console.log(req.query);
 		var result = [];
-		result.push({id: "", name: ""});
 
 		if (req.query.societe)
-			SocieteModel.findOne({name: req.query.societe}, "_id", function(err, societe) {
+			ContactModel.find({"societe.id": req.query.societe}, "_id name", function(err, docs) {
 				if (err)
 					console.log(err);
 
-				if (societe === null)
+				if (docs === null)
 					return res.send(200, []);
 
-				ContactModel.find({"societe.id": societe._id}, "_id name", function(err, docs) {
-					if (err)
-						console.log(err);
+				for (var i in docs) {
+					var contact = {};
+					contact.id = docs[i]._id;
+					contact.name = docs[i].name;
 
-					if (docs === null)
-						return res.send(200, []);
-
-					for (var i in docs) {
-						var contact = {};
-						contact.id = docs[i]._id;
-						contact.name = docs[i].name;
-
-						result.push(contact);
-					}
-					res.send(200, result);
-				});
-
+					result.push(contact);
+				}
+				res.send(200, result);
 			});
 		else
 			ContactModel.find({}, "_id name", function(err, docs) {

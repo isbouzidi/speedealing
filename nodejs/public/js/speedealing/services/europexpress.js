@@ -8,3 +8,13 @@ angular.module('mean.europexpress').factory("EEPlanning", ['$resource', function
         }
     });
 }]);
+
+angular.module('mean.europexpress').factory("EETransport", ['$resource', function($resource) {
+    return $resource('api/europexpress/courses/:id', {
+        id: '@_id'
+    }, {
+        update: {
+            method: 'PUT'
+        }
+    });
+}]);

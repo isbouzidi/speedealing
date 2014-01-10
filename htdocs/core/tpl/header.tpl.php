@@ -35,6 +35,8 @@
 	<link rel="top" title="<?php echo $langs->trans("Home"); ?>" href="<?php echo $base_href; ?>">
 	<link rel="copyright" title="GNU General Public License" href="http://www.gnu.org/copyleft/gpl.html#SEC1">
 	<link rel="author" title="Speedealing Development Team" href="http://www.speedealing.com">
+	
+	<link rel="stylesheet" href="js/lib/bootstrap/dist/css/bootstrap.css" media="all" />
 
 	<!-- For all browsers -->
 	<link rel="stylesheet" href="css/reset.css?v=1">

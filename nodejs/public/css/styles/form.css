@@ -188,8 +188,8 @@ label {
 		}
 		.input > .input-unstyled,
 		.inputs > li > .input-unstyled {
-			padding-top: 7px;
-			padding-bottom: 7px;
+			/*padding-top: 7px;
+			padding-bottom: 7px;*/
 			}
 			.ie7 .input > .input-unstyled,
 			.ie7 .inputs > li > .input-unstyled {
@@ -351,11 +351,11 @@ input:-moz-placeholder {
 	}
 
 /* Required style */
-.required .label {
+.required label {
 	color: black;
 	font-weight: bold;
 	}
-	.required .label:after {
+	.required label:after {
 		content: ' *';
 		color: red;
 	}
@@ -499,32 +499,32 @@ input:-moz-placeholder {
 
 
 /* Form layouts */
-.block-label > .label {
+.block-label > label {
 	display: block;
 	margin-bottom: 3px;
 	font-weight: bold;
 	line-height: 16px;
 	}
-	.block-label > .label > small {
+	.block-label > label > small {
 		float: right;
 	}
 .inline-small-label {
 	padding-left: 60px;
 	}
-	.inline-small-label > .label{
+	.inline-small-label > label{
 		display: block;
 		float: left;
 		width: 55px;
 		margin-left: -60px;
 		font-weight: bold;
 		}
-		.inline-small-label.button-height > .label {
+		.inline-small-label.button-height > label {
 			line-height: 16px;
 			padding-top: 7px;
 		}
-.inline-label > .label,
-.inline-medium-label > .label,
-.inline-large-label > .label {
+.inline-label > label,
+.inline-medium-label > label,
+.inline-large-label > label {
 	display: block;
 	margin-bottom: 3px;
 	font-weight: bold;
@@ -646,16 +646,16 @@ input:-moz-placeholder {
 			.field-block .small.input-info.last-child {
 				padding-bottom: 0;
 			}
-	.field-block .label,
-	.field-drop .label {
+	.field-block label,
+	.field-drop label {
 		display: block;
 		padding: 0;
 		color: #999999;
 		font-weight: bold;
 		margin: 0;
 		}
-		.field-block .label b,
-		.field-block .label strong {
+		.field-block label b,
+		.field-block label strong {
 			color: #444444;
 		}
 
@@ -704,8 +704,8 @@ input:-moz-placeholder {
 	.field-block + .field-drop {
 		margin-top: 20px;
 	}
-	.field-drop .label b,
-	.field-drop .label strong {
+	.field-drop label b,
+	.field-drop label strong {
 		color: white;
 	}
 	.field-drop:after {
@@ -842,7 +842,6 @@ span.select {
 		display: block;
 		position: relative;
 		line-height: 16px;
-		height: 16px;
 		padding: 6px 7px 6px 8px;
 		-webkit-background-clip: padding-box;
 		-webkit-border-top-left-radius: 4px;
@@ -861,7 +860,7 @@ span.select {
 			top: 0;
 			left: 0;
 			bottom: 0;
-			right: 26px;
+			right: 24px;
 		}
 		.select-value.alt {
 			font-style: italic;
@@ -1337,7 +1336,7 @@ span.select {
 		}
 		.compact .replacement > .select-value,
 		.compact.replacement > .select-value {
-			right: 22px;
+			right: 20px;
 		}
 	.compact .select-arrow {
 		width: 21px;
@@ -1601,7 +1600,7 @@ span.select {
 	.inline-label {
 		padding-left: 120px;
 		}
-		.inline-label > .label{
+		.inline-label > label{
 			float: left;
 			width: 105px;
 			margin-left: -120px;
@@ -1611,7 +1610,7 @@ span.select {
 	.inline-medium-label {
 		padding-left: 180px;
 		}
-		.inline-medium-label > .label{
+		.inline-medium-label > label{
 			float: left;
 			width: 165px;
 			margin-left: -180px;
@@ -1621,7 +1620,7 @@ span.select {
 	.inline-large-label {
 		padding-left: 240px;
 		}
-		.inline-large-label > .label{
+		.inline-large-label > label{
 			float: left;
 			width: 225px;
 			margin-left: -240px;
@@ -1629,8 +1628,8 @@ span.select {
 			//line-height:expression(this.parentNode.currentStyle['line-height']);
 		}
 
-	.inline-label.button-height > .label,
-	.inline-large-label.button-height > .label {
+	.inline-label.button-height > label,
+	.inline-large-label.button-height > label {
 		line-height: 16px;
 		padding-top: 7px;
 	}
@@ -1645,8 +1644,8 @@ span.select {
 		padding: 0 30px 0 230px;
 		margin: 0 -20px;
 		}
-		.field-block .label,
-		.field-drop .label {
+		.field-block label,
+		.field-drop label {
 			float: left;
 			text-align: right;
 			margin: 0 0 0 -210px;
@@ -1657,7 +1656,7 @@ span.select {
 	.field-drop {
 		padding: 28px 30px 28px 230px;
 	}
-	.field-drop .label {
+	.field-drop label {
 		width: 190px;
 	}
 	.field-drop:after {
@@ -1675,8 +1674,8 @@ span.select {
 		.compact-field-blocks .field-drop {
 			padding-left: 190px;
 			}
-			.compact-field-blocks .field-block .label,
-			.compact-field-blocks .field-drop .label {
+			.compact-field-blocks .field-block label,
+			.compact-field-blocks .field-drop label {
 				width: 110px;
 				margin-left: -170px;
 			}
@@ -1687,8 +1686,8 @@ span.select {
 		.mini-field-blocks .field-drop {
 			padding-left: 150px;
 			}
-			.mini-field-blocks .field-block .label,
-			.mini-field-blocks .field-drop .label {
+			.mini-field-blocks .field-block label,
+			.mini-field-blocks .field-drop label {
 				width: 70px;
 				margin-left: -130px;
 			}

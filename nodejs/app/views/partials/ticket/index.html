@@ -12,7 +12,7 @@
 				</div>
 			</div>
 
-			<div id="panel-nav" class="panel-load-target scrollable" style="height:490px" ng-style="style(43)" resize>
+			<div id="panel-nav" class="panel-load-target scrollable" style="height:490px" ng-style="style(42)" resize>
 				<div class="navigable">
 					<ul class="unstyled-list">						
 						<li class="message-menu" data-ng-repeat="menuTicket in menuTickets | orderBy:'datef'">
@@ -29,9 +29,7 @@
 								</span>
 								<strong class="blue">\{{menuTicket.name}}</strong><br>
 								<small class="grey" data-ng-init="timec=countDown(menuTicket.comments[menuTicket.comments.length - 1].datec, false)"><strong class="black">\{{menuTicket.comments[menuTicket.comments.length - 1].author.name}} </strong><span data-ng-show="timec.days > 0">\{{timec.days}} {{t 'Day'}}</span><span data-ng-hide="timec.days > 0">\{{timec.hours}}:\{{timec.minutes}}</span> {{t 'Ago'}}</small><br/>
-								<span class="progress anthracite thin" style="width: 100px">
-									<span class="progress-bar green-bg" style="width: \{{menuTicket.percentage}}%"></span>
-								</span>
+								<progressbar class="progress-striped thin" value="menuTicket.percentage" type="success"></progressbar>
 							</a>
 						</li>
 					</ul>
@@ -47,7 +45,7 @@
 			<div class="panel-control">
 			</div>
 
-			<div id="panel-content" class="panel-load-target scrollable" style="height:450px" ng-style="style(43)" resize>
+			<div id="panel-content" class="panel-load-target scrollable" style="height:450px" ng-style="style(42)" resize>
 				<div class="with-padding">
 				<div data-ng-if="!new && selected() && !edit">
 					<div data-ng-include data-src="'partials/ticket/fiche.html'"></div>

@@ -53,3 +53,6 @@ p, h2, h3 {
 h2, h3 {
 	page-break-after: avoid;
 }
+.scroll {
+ height: inherit !important;	
+}

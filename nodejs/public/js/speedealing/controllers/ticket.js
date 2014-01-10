@@ -59,11 +59,11 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				icon: "icon-user",
 				collection: "User",
 				searchUrl: "api/user/name/autocomplete",
-				url: ""
+				url: "user/fiche.php?id="
 			}
 		];
 
-		$scope.initSlider = function(data) {
+		/*$scope.initSlider = function(data) {
 			angular.element('.slider').slider({
 				hideInput: true,
 				size: 150,
@@ -93,7 +93,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 					});
 				}
 			});
-		};
+		};*/
 
 		$scope.kendoUpload = {
 			multiple: true,
@@ -132,15 +132,15 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			$scope.new = true;
 			$scope.ticket = angular.copy(ticket);
 			$timeout(function() {
-				angular.element('#link-input-select').change();
-			}, 500);
+				angular.element('select').change();
+			}, 300);
 		};
-		
+
 		$scope.enableEdit = function() {
 			$scope.edit = true;
 			$timeout(function() {
-				angular.element('#link-input-select').change();
-			}, 500);
+				angular.element('select').change();
+			}, 300);
 		};
 
 		$scope.disableNew = function() {
@@ -303,7 +303,20 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		};
 
 		$scope.updatePercentage = function() {
-			console.log($scope.ticket.percentage);
+			//console.log(data);
+			$http({method: 'PUT', url: 'api/ticket/percentage', data: {
+					id: $scope.ticket._id,
+					percentage: $scope.ticket.percentage,
+					controller: $scope.ticket.controlledBy,
+					ref: $scope.ticket.ref,
+					name: $scope.ticket.name
+				}
+			}).
+					success(function(data, status) {
+				$route.reload();
+				//$scope.ticket = ticket;
+				//$location.path('ticket/' + data._id);
+			});
 		};
 
 		$scope.addComment = function() {
@@ -423,7 +436,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 
 			$scope.ticket = angular.copy(ticket);
 		};
-		
+
 		$scope.update = function() {
 			var ticket = $scope.ticket;
 
@@ -440,7 +453,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				}, function(ticket) {
 					$scope.ticket = ticket;
 
-					angular.element('.slider').setSliderValue(ticket.percentage);
+					//angular.element('.slider').setSliderValue(ticket.percentage);
 
 					if (ticket.read.indexOf(Global.user._id) < 0) {
 						$http({method: 'PUT', url: 'api/ticket/read', data: {
@@ -513,7 +526,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 
 					$scope.ticket.controlledBy.id = ui.item.id;
 					$scope.ticket.controlledBy.name = ui.item.name;
-					
+
 					$scope.ticket.addUser.id = ui.item.id;
 					$scope.ticket.addUser.name = ui.item.name;
 				}

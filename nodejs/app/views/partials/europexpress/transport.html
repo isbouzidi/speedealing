@@ -1,0 +1,46 @@
+<section data-ng-controller="EETransportController" class="scroll" style="height:500px" ng-style="style(0)" resize>
+	<hgroup id="main-title" class="thin">
+		<h1>Liste des transports</h1>
+	</hgroup>
+
+	<div class="with-padding">
+		<div kendo-grid k-data-source="dataSource" k-columns='[
+			 {field: "ref", "hidden": true, "title": "Numero"},
+			 {field: "type", "title": "Type", "width": "120px", "editor": typeDropDownEditor, "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
+			 {field: "client", editor: clientDropDownEditor, title: "Client", template: "#=client.name#"},
+			 {field: "ref_client", hidden: true, title: "Ref Client"},
+			 {field: "from", title: "Depart", template: "#=from.zip# #=from.town#"},
+			 {field: "date_enlevement", editor: dateTimeEditor, title: "Date Enl.", format: "{0:dd/MM/yyyy HH:mm}", template: "#if (kendo.toString(date_enlevement, \"dd/MM/yyyy\") == kendo.toString(new Date(), \"dd/MM/yyyy\")) {# <span class=\"red\">#=kendo.toString(date_enlevement, \"dd/MM/yyyy HH:mm\")#</span> #} else {# #=kendo.toString(date_enlevement, \"dd/MM/yyyy HH:mm\")# #}#", filterable: {
+			 ui: "datetimepicker"
+			 }
+			 },
+			 {field: "to", title: "Destination", template: "#=to.zip# #=to.town#"},
+			 {field: "date_livraison", editor: dateTimeEditor, title: "Date Liv.", format: "{0:dd/MM/yyyy HH:mm}", template: "#if (kendo.toString(date_livraison, \"dd/MM/yyyy\") == kendo.toString(new Date(), \"dd/MM/yyyy\")) {# <span class=\"red\">#=kendo.toString(date_livraison, \"dd/MM/yyyy HH:mm\")#</span> #} else {# #=kendo.toString(date_livraison, \"dd/MM/yyyy HH:mm\")# #}#", filterable: {
+			 ui: "datetimepicker"
+			 }
+			 },
+			 {field: "fournisseur", editor: fournisseurDropDownEditor, title: "Sous-Traitant", template: "#=fournisseur.name#"},
+			 {field: "total_soustraitant", title: "Montant ST", format: "{0:c}"},
+			 {field: "Status", title: "Etat", width: "120px",
+			 editor: statusDropDownEditor, template: "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
+			 {field: "total_ht", title: "Total HT", format: "{0:c}"},
+			 {field: "commission", title: "Comission", format: "{0:c}"},
+			 {template:"<span class=\"button-group\"><a class=\"button icon-pencil\" ng-href=\"\\#!/module/europexpress/transport_edit.html/#=_id#/\"></a><a class=\"button icon-download\" ng-href=\"api/europexpress/courses/pdf/#=_id#\" target=\"_blank\"></a></span>", "width": "80px"}
+			 ]'
+			 k-pageable='{ "refresh": true, "pageSizes": [5, 10, 20, 50], "buttonCount": 5}'
+			 k-edit='kendoEdit'
+			 k-sortable="true" k-filterable="true" k-scrollable="false" k-column-menu="true"
+			 k-toolbar='[{
+			 "name": "create",
+			 "text": "Nouvelle tournée",
+			 "className": "k-button k-button-icontext k-grid-add button"
+			 }]'
+			 k-editable='{
+					mode: "popup",
+					update:false,
+					window: {
+						width: "400px"
+					}}'
+			 ></div>
+	</div>
+</section>
