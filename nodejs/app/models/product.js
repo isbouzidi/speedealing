@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 /**
- * Article Schema
+ * Product Schema
  */
 var productSchema = new Schema({
 	ref: {type: String, require: true, unique: true, upper: true},
@@ -64,3 +64,31 @@ productSchema.pre('save', function(next) {
 });
 
 mongoose.model('product', productSchema, 'Product');
+
+/**
+ * Product Schema
+ */
+var storehouseSchema = new Schema({
+	name: {type: String, require: true, unique: true, upper: true},
+	barCode: {type: Number},
+	societe:  {id: {type: Schema.Types.ObjectId}, name: String},
+	subStock:[{
+		name: {type: String, require: true},
+		barCode: {type: Number},
+		productId : [{type: Schema.Types.ObjectId}]
+	}]
+});
+
+storehouseSchema.pre('save', function(next) {
+	var self = this;
+	if (this.isNew) {
+		SeqModel.barCode("S", 3, function(seq) {
+			self.barCode = seq;
+			next();
+		});
+	} else
+		// TODO add subStock increment on K
+		next();
+});
+
+mongoose.model('storehouse', storehouseSchema, 'Storehouse');

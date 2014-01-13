@@ -54,5 +54,22 @@ h2, h3 {
 	page-break-after: avoid;
 }
 .scroll {
- height: inherit !important;	
+	height: inherit !important;	
+}
+
+h1 {
+	line-height: 14px !important;
+	font-size: 30px !important;
+}
+
+.compact-field-blocks .field-block label, .compact-field-blocks .field-drop label {
+	width: 110px;
+	margin-right: 15px;
+}
+
+.field-block label, .field-drop label {
+	float: left;
+	text-align: right;
+	margin: 0 0 0 -210px;
+	width: 150px;
 }

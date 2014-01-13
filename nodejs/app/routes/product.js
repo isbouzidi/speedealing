@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 		_ = require('underscore');
 
 var ProductModel = mongoose.model('product');
+var StorehouseModel = mongoose.model('storehouse');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 
@@ -23,7 +24,10 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.get('/api/product', auth.requiresLogin, function(req, res) {
-		object.read(req, res);
+		if (req.query.productOnly)
+			object.read(req, res);
+		else
+			object.readPrice(req, res);
 		return;
 	});
 
@@ -78,6 +82,60 @@ module.exports = function(app, passport, auth) {
 
 	app.del('/api/product', auth.requiresLogin, function(req, res) {
 		object.del(req, res);
+	});
+
+	app.get('/api/product/storehouse', auth.requiresLogin, function(req, res) {
+		StorehouseModel.find({}, function(err, storehouses) {
+			if (err)
+				console.log(err);
+
+			res.send(200, storehouses);
+		});
+	});
+
+	app.post('/api/product/storehouse', auth.requiresLogin, function(req, res) {
+		console.log(req.body);
+
+		req.body.name = req.body.name.toUpperCase();
+		req.body.substock = req.body.substock.toUpperCase();
+
+		StorehouseModel.findOne({name: req.body.name}, function(err, storehouse) {
+			if (err)
+				return console.log(err);
+
+			if (storehouse == null) {
+				storehouse = new StorehouseModel(req.body);
+				var subStock = {};
+				subStock.name = "";
+				subStock.barCode = 0;
+				subStock.productId = [];
+				storehouse.subStock.push(subStock);
+			}
+
+			if (req.body.substock) {
+				var max = 0;
+				for (var i in storehouse.subStock) {
+					if (req.body.substock == storehouse.subStock[i].name)
+						return res.send(200, {}); //Already exist
+					if (storehouse.subStock[i].barCode > max)
+						max = storehouse.subStock[i].barCode
+				}
+
+				var subStock = {};
+				subStock.name = req.body.substock;
+				subStock.barCode = max + 1;
+				subStock.productId = [];
+
+				storehouse.subStock.push(subStock);
+			}
+
+			storehouse.save(function(err, doc) {
+				if (err)
+					console.log(err);
+
+				res.send(200, storehouse);
+			});
+		});
 	});
 
 	app.post('/api/product/import', /*ensureAuthenticated,*/ function(req, res) {
@@ -298,6 +356,19 @@ Object.prototype = {
 		});
 	},
 	read: function(req, res) {
+		var query = {};
+
+		if (req.query.type)
+			query = {type: req.query.type};
+
+		ProductModel.find(query, "ref label barCode type", {limit: 50}, function(err, products) {
+			if (err)
+				console.log(err);
+
+			res.send(200, products);
+		});
+	},
+	readPrice: function(req, res) {
 		var status_list = this.fk_extrafields.fields.Status;
 		var type_list = this.fk_extrafields.fields.type;
 
@@ -361,11 +432,11 @@ Object.prototype = {
 					row.qtyMin = 0;
 				else
 					row.qtyMin = doc[i].price.qtyMin;
-				
-				if(!row.compta_buy)
+
+				if (!row.compta_buy)
 					row.compta_buy = "";
-				
-				if(!row.compta_sell)
+
+				if (!row.compta_sell)
 					row.compta_sell = "";
 
 				result.push(row);
@@ -383,7 +454,7 @@ Object.prototype = {
 		obj.pu_ht = parseFloat(obj.pu_ht);
 		obj.tva_tx = parseFloat(obj.tva_tx);
 		obj.qtyMin = parseFloat(obj.qtyMin);
-		
+
 		obj.ref = obj.ref.toUpperCase();
 
 		if (obj._id == null) {

@@ -251,3 +251,352 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 		 });
 		 }*/
 	}]);
+
+angular.module('mean.system').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function($scope, $routeParams, Global, $http) {
+		$scope.global = Global;
+
+		var entrepot = [
+			{
+				"name": "FLEYS",
+				"codeBar": "S001",
+				"codeClient": {
+					"codeBar": "C00100",
+					"name": "FLEYS"
+				},
+				"subStock": []
+			},
+			{
+				"name": "BIOLOGISTIC",
+				"codeBar": "S002",
+				"codeClient": {
+					"codeBar": "C00101",
+					"name": "BIOLOGISTIC"
+				},
+				"subStock": []
+			},
+			{
+				"name": "GEODIS",
+				"codeBar": "S003",
+				"codeClient": {
+					"codeBar": "C00102",
+					"name": "GEODIS"
+				},
+				"subStock": [
+					{
+						"name": "",
+						"barCode": "K000"
+					}
+				]
+			},
+			{
+				"name": "SPIE",
+				"codeBar": "S004",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": [
+					{
+						"name": "SPIE MATRA",
+						"barCode": "K001"
+					},
+					{
+						"name": "SPIE REG",
+						"barCode": "K002"
+					}
+				]
+			},
+			{
+				"name": "UNISYS",
+				"codeBar": "S005",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "NEXTIRAONE",
+				"codeBar": "S006",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "INFINERA",
+				"codeBar": "S007",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "EAF",
+				"codeBar": "S008",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "APX",
+				"codeBar": "S009",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "BYBOX",
+				"codeBar": "S010",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "CIENA",
+				"codeBar": "S011",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "ORACLE",
+				"codeBar": "S012",
+				"codeClient": {
+					"codeBar": "C00103",
+					"name": "DHLSOL"
+				},
+				"subStock": []
+			},
+			{
+				"name": "IBM",
+				"codeBar": "S013",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": []
+			},
+			{
+				"name": "TOSHIBA",
+				"codeBar": "S014",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": []
+			},
+			{
+				"name": "NCR",
+				"codeBar": "S015",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": []
+			},
+			{
+				"name": "SIEMENS",
+				"codeBar": "S016",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": [
+					{
+						"name": "VALISE",
+						"barCode": "K003"
+					},
+					{
+						"name": "SIEMENS",
+						"barCode": "K004"
+					}
+				]
+			},
+			{
+				"name": "WINCOR",
+				"codeBar": "S017",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": [
+					{
+						"name": "WINCOR FR",
+						"barCode": "K005"
+					},
+					{
+						"name": "ARVATO DE",
+						"barCode": "K006"
+					},
+					{
+						"name": "WINCOR/ARVATO",
+						"barCode": "K007"
+					}
+				]
+			},
+			{
+				"name": "EURO IMPACT",
+				"codeBar": "S018",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": []
+			},
+			{
+				"name": "ROUX",
+				"codeBar": "S019",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": []
+			},
+			{
+				"name": "STACI",
+				"codeBar": "S020",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": [
+					{
+						"name": "STACI",
+						"barCode": "K008"
+					},
+					{
+						"name": "BAT",
+						"barCode": "K009"
+					}
+				]
+			},
+			{
+				"name": "MOTOBYCAT",
+				"codeBar": "S021",
+				"codeClient": {
+					"codeBar": "C00104",
+					"name": "LM2S"
+				},
+				"subStock": []
+			}
+		];
+
+		function initProducts() {
+			$http({method: 'GET', url: 'api/product', params: {
+					productOnly: 1,
+					type: 'PRODUCT'
+				}
+			}).
+					success(function(data, status) {
+				$scope.products = data;
+			});
+		}
+
+		function initEntrepot() {
+			$http({method: 'GET', url: 'api/product/storehouse', params: {
+				}
+			}).
+					success(function(data, status) {
+				//$scope.products = data;
+				console.log(data);
+			});
+		}
+
+
+		var links = {
+			"P0010": [
+				{stock: "S001", subStock: "K000"},
+				{stock: "S002", subStock: "K000"},
+				{stock: "S003", subStock: "K000"},
+				{stock: "S004", subStock: "K001"},
+				{stock: "S004", subStock: "K002"},
+				{stock: "S005", subStock: "K000"}
+			],
+			"P0020": [{stock: "S001", subStock: "K000"}]
+					//"P0030","P0040","P0110","P0120","P0130","P0140","P0100","P0141","P0122","P0142","P0120","P0220","P0310","P0312","P0313","P0320","P0330","P0340","P0341","P0350","P0319","P0360"
+		};
+
+		$scope.isChecked = function(product, stock) {
+			// stock.stock
+			// stock.subStock
+			// product
+			var aLink = links[product];
+
+			for (var i in aLink) {
+				if (!aLink[i])
+					return false;
+
+				if (aLink[i].stock == stock.stockCode && aLink[i].subStock == stock.subStockCode)
+					return true;
+			}
+			return false;
+		};
+
+		$scope.initList = function() {
+			initProducts();
+			initEntrepot();
+
+			$scope.stocks = [];
+			for (var i = 0; i < entrepot.length; i++) {
+				var stock = {};
+				stock.client = entrepot[i].codeClient.name;
+				stock.barCode = entrepot[i].codeClient.codeBar.substr(1);
+				stock.stock = entrepot[i].name;
+				stock.stockCode = entrepot[i].codeBar;
+				stock.barCode += entrepot[i].codeBar.substr(1);
+
+				var codeBar = stock.barCode;
+
+
+				if (entrepot[i].subStock.length)
+					for (var j = 0; j < entrepot[i].subStock.length; j++) {
+						stock.subStock = entrepot[i].subStock[j].name;
+						stock.subStockCode = entrepot[i].subStock[j].barCode;
+						stock.barCode = codeBar + entrepot[i].subStock[j].barCode.substr(1);
+						$scope.stocks.push(stock);
+					}
+				else
+				{
+					stock.subStock = "";
+					stock.subStockCode = "K000";
+					stock.barCode = codeBar + "K000".substr(1);
+					$scope.stocks.push(stock);
+				}
+			}
+		};
+
+		$scope.societeAutoComplete = function(val) {
+			return $http.post('api/societe/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
+		};
+
+		$scope.insert = function() {
+			$http({method: 'POST', url: 'api/product/storehouse', data: $scope.storehouse
+			}).
+					success(function(data, status) {
+				//$scope.products = data;
+				$scope.initList();
+			});
+		};
+
+
+	}]);

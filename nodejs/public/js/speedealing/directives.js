@@ -27,6 +27,20 @@ angular.module('mean.system').directive('resize', ['$window', function($window) 
 		};
 	}]);
 
+angular.module('mean.system').directive('sdBarcode', function () {
+    return {
+        // Restrict tells AngularJS how you will be declaring your directive in the markup.
+        // A = attribute, C = class, E = element and M = comment
+        restrict: 'A',
+        scope: {
+            barcodeValue: '@'
+        },
+        link: function (scope, elem, attrs) {
+			elem.barcode(attrs.barcodeValue.toString(), "code128"); 
+        }
+    };
+});
+
 /*angular.module('mean.system').directive('sdSelect', function() {
 	return function(scope, element) {
 		//console.log(element.parent());

@@ -69,7 +69,7 @@ body {
 
 a:hover,
 a:focus {
-  text-decoration: none;
+	text-decoration: none;
 }
 
 /*img, object, embed { /*max-width: 100%; height: auto;/ width: auto; }*/
