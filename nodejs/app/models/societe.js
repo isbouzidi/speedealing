@@ -72,7 +72,7 @@ societeSchema.methods = {
 
 		options.root = 'Societe';
 
-		return gridfs.putGridFileByPath(file.path, (this.code_client || this.code_fournisseur) + "_" +file.originalFilename, options, function(err, result) {
+		return gridfs.putGridFileByPath(file.path, /*(this.code_client || this.code_fournisseur) + "_" +*/file.originalFilename, options, function(err, result) {
 //			console.log(result);
 			var files = {};
 			files.name = result.filename;

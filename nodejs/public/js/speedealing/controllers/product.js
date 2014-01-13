@@ -503,13 +503,40 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 			});
 		}
 
+		function numberFormat(number, width) {
+			if(isNaN(number))
+				number=0;
+			return new Array(width + 1 - (number + '').length).join('0') + number;
+		}
+
 		function initEntrepot() {
-			$http({method: 'GET', url: 'api/product/storehouse', params: {
-				}
+			$scope.stocks = [];
+
+			$http({method: 'GET', url: 'api/product/storehouse'
 			}).
-					success(function(data, status) {
+					success(function(entrepot, status) {
 				//$scope.products = data;
-				console.log(data);
+
+				for (var i = 0; i < entrepot.length; i++) {
+					console.log(entrepot[i]);
+					var stock = {};
+					stock.client = entrepot[i].societe.name;
+					//stock.barCode = entrepot[i].societe.barCode;
+					stock.stock = entrepot[i].name;
+					//stock.stockCode = entrepot[i].barCode;
+					stock.barCode = numberFormat(entrepot[i].barCode, 4);
+
+					var codeBar = stock.barCode;
+
+					for (var j = 0; j < entrepot[i].subStock.length; j++) {
+						stock.subStock = entrepot[i].subStock[j].name;
+						stock.subStockCode = entrepot[i].subStock[j].barCode;
+						stock.barCode = codeBar + numberFormat(entrepot[i].subStock[j].barCode, 2);
+						stock.productId = entrepot[i].subStock[j].productId;
+						$scope.stocks.push(stock);
+					}
+
+				}
 			});
 		}
 
@@ -531,13 +558,31 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 			// stock.stock
 			// stock.subStock
 			// product
-			var aLink = links[product];
-
-			for (var i in aLink) {
-				if (!aLink[i])
+			var productId = product._id;
+			
+			for (var i in stock.productId) {
+				if (stock.productId[i].length == 0)
 					return false;
 
-				if (aLink[i].stock == stock.stockCode && aLink[i].subStock == stock.subStockCode)
+				if (stock.productId[i] == productId)
+					return true;
+			}
+			return false;
+		};
+		
+		$scope.updateCheck = function(product, stock) {
+			// stock.stock
+			// stock.subStock
+			// product
+			var productId = product._id;
+			console.log($scope.checked[product._id][stock.barCode]);
+			return;
+			
+			for (var i in stock.productId) {
+				if (stock.productId[i].length == 0)
+					return false;
+
+				if (stock.productId[i] == productId)
 					return true;
 			}
 			return false;
@@ -546,34 +591,6 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 		$scope.initList = function() {
 			initProducts();
 			initEntrepot();
-
-			$scope.stocks = [];
-			for (var i = 0; i < entrepot.length; i++) {
-				var stock = {};
-				stock.client = entrepot[i].codeClient.name;
-				stock.barCode = entrepot[i].codeClient.codeBar.substr(1);
-				stock.stock = entrepot[i].name;
-				stock.stockCode = entrepot[i].codeBar;
-				stock.barCode += entrepot[i].codeBar.substr(1);
-
-				var codeBar = stock.barCode;
-
-
-				if (entrepot[i].subStock.length)
-					for (var j = 0; j < entrepot[i].subStock.length; j++) {
-						stock.subStock = entrepot[i].subStock[j].name;
-						stock.subStockCode = entrepot[i].subStock[j].barCode;
-						stock.barCode = codeBar + entrepot[i].subStock[j].barCode.substr(1);
-						$scope.stocks.push(stock);
-					}
-				else
-				{
-					stock.subStock = "";
-					stock.subStockCode = "K000";
-					stock.barCode = codeBar + "K000".substr(1);
-					$scope.stocks.push(stock);
-				}
-			}
 		};
 
 		$scope.societeAutoComplete = function(val) {

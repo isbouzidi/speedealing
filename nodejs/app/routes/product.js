@@ -97,37 +97,33 @@ module.exports = function(app, passport, auth) {
 		console.log(req.body);
 
 		req.body.name = req.body.name.toUpperCase();
+		if (!req.body.substock)
+			req.body.substock = "";
+
 		req.body.substock = req.body.substock.toUpperCase();
 
 		StorehouseModel.findOne({name: req.body.name}, function(err, storehouse) {
 			if (err)
 				return console.log(err);
 
-			if (storehouse == null) {
+			if (storehouse == null)
 				storehouse = new StorehouseModel(req.body);
-				var subStock = {};
-				subStock.name = "";
-				subStock.barCode = 0;
-				subStock.productId = [];
-				storehouse.subStock.push(subStock);
+
+			var max = 0;
+
+			for (var i in storehouse.subStock) {
+				if (req.body.substock == storehouse.subStock[i].name)
+					return res.send(200, {}); //Already exist
+				if (storehouse.subStock[i].barCode > max)
+					max = storehouse.subStock[i].barCode
 			}
 
-			if (req.body.substock) {
-				var max = 0;
-				for (var i in storehouse.subStock) {
-					if (req.body.substock == storehouse.subStock[i].name)
-						return res.send(200, {}); //Already exist
-					if (storehouse.subStock[i].barCode > max)
-						max = storehouse.subStock[i].barCode
-				}
+			var subStock = {};
+			subStock.name = req.body.substock;
+			subStock.barCode = max + 1;
+			subStock.productId = [];
 
-				var subStock = {};
-				subStock.name = req.body.substock;
-				subStock.barCode = max + 1;
-				subStock.productId = [];
-
-				storehouse.subStock.push(subStock);
-			}
+			storehouse.subStock.push(subStock);
 
 			storehouse.save(function(err, doc) {
 				if (err)

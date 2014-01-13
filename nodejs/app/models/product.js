@@ -55,7 +55,7 @@ productSchema.plugin(timestamps);
 productSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incBarCode("P", 4, function(seq) {
+		SeqModel.incNumber("P", function(seq) {
 			self.barCode = seq;
 			next();
 		});
@@ -71,18 +71,18 @@ mongoose.model('product', productSchema, 'Product');
 var storehouseSchema = new Schema({
 	name: {type: String, require: true, unique: true, upper: true},
 	barCode: {type: Number},
-	societe:  {id: {type: Schema.Types.ObjectId}, name: String},
-	subStock:[{
-		name: {type: String, require: true},
-		barCode: {type: Number},
-		productId : [{type: Schema.Types.ObjectId}]
-	}]
+	societe: {id: {type: Schema.Types.ObjectId}, name: String},
+	subStock: [{
+			name: {type: String, upper: true},
+			barCode: {type: Number},
+			productId: [{type: Schema.Types.ObjectId}]
+		}]
 });
 
 storehouseSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.barCode("S", 3, function(seq) {
+		SeqModel.incNumber("S", function(seq) {
 			self.barCode = seq;
 			next();
 		});

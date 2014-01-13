@@ -35,7 +35,7 @@ sequenceSchema.statics = {
 			if (err)
 				console.log(err);
 
-			return cb(name + doc.seq); // format PROV440
+			return cb(doc.seq); // format PROV return 440
 		});
 	},
 	incBarCode: function(name, length, cb) {

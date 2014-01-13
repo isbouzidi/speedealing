@@ -213,7 +213,8 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
-		//console.log(id);
+		console.log(id);
+		console.log("toto");
 
 		if (id && req.params.fileName) {
 			SocieteModel.findOne({_id: id}, function(err, societe) {
