@@ -1774,7 +1774,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			print '<div class="controls">
 					<span class="button-group compact children-tooltip">
 						<a href="api/societe/file/' . $object->id . '/' . $aRow->name . '" class="button icon-download" title="Télécharger"></a>
-						<a href="api/societe/file/remove/' . $object->id . '/' . $aRow->name . '" class="button icon-trash confirm" title="Supprimer"></a>
+						<a href="api/societe/file/remove/' . $object->id . '/' . $aRow->name . '" class="button icon-trash" title="Supprimer"></a>
 					</span>
 					</div>';
 			print '<a href="api/societe/file/' . $object->id . '/' . $aRow->name . '">' . $aRow->name . '</a>';
