@@ -257,6 +257,7 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 
 		$scope.isChecked = {};
 		$scope.productsBarCode = {};
+		$scope.storehouse = {};
 
 		function initProducts() {
 			$http({method: 'GET', url: 'api/product', params: {
