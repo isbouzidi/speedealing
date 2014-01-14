@@ -381,7 +381,7 @@ Object.prototype = {
 		if (req.query.type)
 			query.type = req.query.type;
 
-		if (req.body.barCode)
+		if (req.query.barCode)
 			query.barCode = {$exists: true};
 
 		ProductModel.find(query, "ref label barCode type", {limit: 50}, function(err, products) {
