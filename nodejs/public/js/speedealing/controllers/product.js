@@ -289,16 +289,16 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 				//$scope.products = data;
 
 				for (var i = 0; i < entrepot.length; i++) {
-					var stock = {};
-					stock.client = entrepot[i].societe.name;
-					//stock.barCode = entrepot[i].societe.barCode;
-					stock.stock = entrepot[i].name;
-					//stock.stockCode = entrepot[i].barCode;
-					stock.barCode = numberFormat(entrepot[i].barCode, 4);
-
-					var codeBar = stock.barCode;
-
 					for (var j = 0; j < entrepot[i].subStock.length; j++) {
+						var stock = {};
+						stock.client = entrepot[i].societe.name;
+						//stock.barCode = entrepot[i].societe.barCode;
+						stock.stock = entrepot[i].name;
+						//stock.stockCode = entrepot[i].barCode;
+						stock.barCode = numberFormat(entrepot[i].barCode, 4);
+
+						var codeBar = stock.barCode;
+
 						stock.subStock = entrepot[i].subStock[j].name;
 						stock.subStockCode = entrepot[i].subStock[j].barCode;
 						stock.barCode = codeBar + numberFormat(entrepot[i].subStock[j].barCode, 2);
