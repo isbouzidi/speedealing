@@ -255,242 +255,8 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 angular.module('mean.system').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function($scope, $routeParams, Global, $http) {
 		$scope.global = Global;
 
-		var entrepot = [
-			{
-				"name": "FLEYS",
-				"codeBar": "S001",
-				"codeClient": {
-					"codeBar": "C00100",
-					"name": "FLEYS"
-				},
-				"subStock": []
-			},
-			{
-				"name": "BIOLOGISTIC",
-				"codeBar": "S002",
-				"codeClient": {
-					"codeBar": "C00101",
-					"name": "BIOLOGISTIC"
-				},
-				"subStock": []
-			},
-			{
-				"name": "GEODIS",
-				"codeBar": "S003",
-				"codeClient": {
-					"codeBar": "C00102",
-					"name": "GEODIS"
-				},
-				"subStock": [
-					{
-						"name": "",
-						"barCode": "K000"
-					}
-				]
-			},
-			{
-				"name": "SPIE",
-				"codeBar": "S004",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": [
-					{
-						"name": "SPIE MATRA",
-						"barCode": "K001"
-					},
-					{
-						"name": "SPIE REG",
-						"barCode": "K002"
-					}
-				]
-			},
-			{
-				"name": "UNISYS",
-				"codeBar": "S005",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "NEXTIRAONE",
-				"codeBar": "S006",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "INFINERA",
-				"codeBar": "S007",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "EAF",
-				"codeBar": "S008",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "APX",
-				"codeBar": "S009",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "BYBOX",
-				"codeBar": "S010",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "CIENA",
-				"codeBar": "S011",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "ORACLE",
-				"codeBar": "S012",
-				"codeClient": {
-					"codeBar": "C00103",
-					"name": "DHLSOL"
-				},
-				"subStock": []
-			},
-			{
-				"name": "IBM",
-				"codeBar": "S013",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": []
-			},
-			{
-				"name": "TOSHIBA",
-				"codeBar": "S014",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": []
-			},
-			{
-				"name": "NCR",
-				"codeBar": "S015",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": []
-			},
-			{
-				"name": "SIEMENS",
-				"codeBar": "S016",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": [
-					{
-						"name": "VALISE",
-						"barCode": "K003"
-					},
-					{
-						"name": "SIEMENS",
-						"barCode": "K004"
-					}
-				]
-			},
-			{
-				"name": "WINCOR",
-				"codeBar": "S017",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": [
-					{
-						"name": "WINCOR FR",
-						"barCode": "K005"
-					},
-					{
-						"name": "ARVATO DE",
-						"barCode": "K006"
-					},
-					{
-						"name": "WINCOR/ARVATO",
-						"barCode": "K007"
-					}
-				]
-			},
-			{
-				"name": "EURO IMPACT",
-				"codeBar": "S018",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": []
-			},
-			{
-				"name": "ROUX",
-				"codeBar": "S019",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": []
-			},
-			{
-				"name": "STACI",
-				"codeBar": "S020",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": [
-					{
-						"name": "STACI",
-						"barCode": "K008"
-					},
-					{
-						"name": "BAT",
-						"barCode": "K009"
-					}
-				]
-			},
-			{
-				"name": "MOTOBYCAT",
-				"codeBar": "S021",
-				"codeClient": {
-					"codeBar": "C00104",
-					"name": "LM2S"
-				},
-				"subStock": []
-			}
-		];
+		$scope.isChecked = {};
+		$scope.productsBarCode = {};
 
 		function initProducts() {
 			$http({method: 'GET', url: 'api/product', params: {
@@ -500,6 +266,9 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 			}).
 					success(function(data, status) {
 				$scope.products = data;
+				for(var i in data) {
+					$scope.productsBarCode[data[i]._id] = data[i];
+				}
 			});
 		}
 
@@ -518,7 +287,6 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 				//$scope.products = data;
 
 				for (var i = 0; i < entrepot.length; i++) {
-					console.log(entrepot[i]);
 					var stock = {};
 					stock.client = entrepot[i].societe.name;
 					//stock.barCode = entrepot[i].societe.barCode;
@@ -534,58 +302,28 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 						stock.barCode = codeBar + numberFormat(entrepot[i].subStock[j].barCode, 2);
 						stock.productId = entrepot[i].subStock[j].productId;
 						$scope.stocks.push(stock);
+						
+						$scope.isChecked[stock.barCode] = {};
+						
+						for (var k = 0; k< entrepot[i].subStock[j].productId.length; k++) {
+							$scope.isChecked[stock.barCode][entrepot[i].subStock[j].productId[k]] = true;
+						}
 					}
 
 				}
 			});
 		}
-
-
-		var links = {
-			"P0010": [
-				{stock: "S001", subStock: "K000"},
-				{stock: "S002", subStock: "K000"},
-				{stock: "S003", subStock: "K000"},
-				{stock: "S004", subStock: "K001"},
-				{stock: "S004", subStock: "K002"},
-				{stock: "S005", subStock: "K000"}
-			],
-			"P0020": [{stock: "S001", subStock: "K000"}]
-					//"P0030","P0040","P0110","P0120","P0130","P0140","P0100","P0141","P0122","P0142","P0120","P0220","P0310","P0312","P0313","P0320","P0330","P0340","P0341","P0350","P0319","P0360"
-		};
-
-		$scope.isChecked = function(product, stock) {
-			// stock.stock
-			// stock.subStock
-			// product
-			var productId = product._id;
-			
-			for (var i in stock.productId) {
-				if (stock.productId[i].length == 0)
-					return false;
-
-				if (stock.productId[i] == productId)
-					return true;
-			}
-			return false;
-		};
 		
 		$scope.updateCheck = function(product, stock) {
-			// stock.stock
-			// stock.subStock
-			// product
-			var productId = product._id;
-			console.log($scope.checked[product._id][stock.barCode]);
-			return;
-			
-			for (var i in stock.productId) {
-				if (stock.productId[i].length == 0)
-					return false;
-
-				if (stock.productId[i] == productId)
-					return true;
-			}
-			return false;
+			$http({method: 'PUT', url: 'api/product/storehouse', data: {
+					product: product,
+					stock: stock,
+					checked: $scope.isChecked[stock.barCode][product._id]
+				}
+			}).
+					success(function(data, status) {
+				console.log("ok");
+			});
 		};
 
 		$scope.initList = function() {

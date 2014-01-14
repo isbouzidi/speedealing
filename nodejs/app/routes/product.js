@@ -134,6 +134,30 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
+	// add or remove product to a storehouse for gencode
+	app.put('/api/product/storehouse', auth.requiresLogin, function(req, res) {
+		console.log(req.body);
+
+		if (req.body.checked) // add a product
+			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$addToSet: {'subStock.$.productId': req.body.product._id}}, function(err, doc) {
+				if (err)
+					console.log(err);
+				
+				console.log(doc);
+
+				res.send(200, {});
+			});
+		else
+			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$pull: {'subStock.$.productId': req.body.product._id}}, function(err, doc) {
+				if (err)
+					console.log(err);
+				
+				console.log(doc);
+
+				res.send(200, {});
+			});
+	});
+
 	app.post('/api/product/import', /*ensureAuthenticated,*/ function(req, res) {
 
 		if (req.files) {

@@ -4,66 +4,82 @@
 	</hgroup>
 
 	<div class="with-padding">
-		<form ng-submit="insert()">
-			<fieldset class="fieldset">
-				<legend class="legend">Ajouter un entrepot</legend>
+		<accordion close-others="true">
 
-				<p class="button-height inline-label">
-					<label for="societe" class="align-left">
-						Societe
-					</label>
-					<input type="text" required="required" data-ng-model="storehouse.societe" id="societe" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue) | filter:{name:$viewValue}" class="input">
-				</p>
-				
-				<p class="button-height inline-label">
-					<label for="storehouse" class="align-left">
-						Entrepot
-					</label>
-					<input type="text" required="required" data-ng-model="storehouse.name" id="storehouse" class="input">
-				</p>
-				
-				<p class="button-height inline-label">
-					<label for="substorehouse" class="align-left">
-						Sous-entrepot
-					</label>
-					<input type="text" data-ng-model="storehouse.substock" id="substorehouse" class="input">
-				</p>
+			<accordion-group heading="Ajouter un entrepot" is-open="false">
 
-				\{{storehouse}}
-				<div class="button-height">
-					<button type="submit" class="button glossy mid-margin-right">
-						<span class="button-icon"><span class="icon-tick"></span></span>
-						{{t 'Add'}}
-					</button>
+				<form ng-submit="insert()">
+					<fieldset class="fieldset">
+						<legend class="legend">Ajouter un entrepot</legend>
 
-					<!--<button type="button" class="button glossy" ng-click="disableEdit();">
-						<span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
-						{{t 'Cancel'}}
-					</button>-->
+						<p class="button-height inline-label">
+							<label for="societe" class="align-left">
+								Societe
+							</label>
+							<input type="text" required="required" data-ng-model="storehouse.societe" id="societe" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue) | filter:{name:$viewValue}" class="input">
+						</p>
+
+						<p class="button-height inline-label">
+							<label for="storehouse" class="align-left">
+								Entrepot
+							</label>
+							<input type="text" required="required" data-ng-model="storehouse.name" id="storehouse" class="input">
+						</p>
+
+						<p class="button-height inline-label">
+							<label for="substorehouse" class="align-left">
+								Sous-entrepot
+							</label>
+							<input type="text" data-ng-model="storehouse.substock" id="substorehouse" class="input">
+						</p>
+
+						<div class="button-height">
+							<button type="submit" class="button glossy mid-margin-right">
+								<span class="button-icon"><span class="icon-tick"></span></span>
+								{{t 'Add'}}
+							</button>
+
+							<!--<button type="button" class="button glossy" ng-click="disableEdit();">
+								<span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
+								{{t 'Cancel'}}
+							</button>-->
+						</div>
+					</fieldset>
+				</form>
+			</accordion-group>
+
+			<accordion-group heading="Liens avec les produits" is-open="false">
+
+				<div ng-init="initList()">
+					<table class="table">
+						<thead>
+							<tr>
+								<th class="header">Text</th>
+								<th class="header vertical-text" data-ng-repeat="p in products">\{{p.ref}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr data-ng-repeat="s in stocks track by $index">
+								<td>\{{s.stock}}-\{{s.subStock}}</td>
+								<td data-ng-repeat="p in products track by $index"><input type="checkbox" data-ng-model="isChecked[s.barCode][p._id]" data-ng-change="updateCheck(p,s)" data-ng-checked="isChecked[s.barCode][p._id]"/></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-			</fieldset>
-		</form>
-	</div>
-
-	<div class="with-padding" ng-init="initList()">
-		\{{stocks}}
-		<table class="table">
-			<thead>
-				<tr>
-					<th class="header">Text</th>
-					<th class="header vertical-text" data-ng-repeat="p in products">\{{p.ref}}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr data-ng-repeat="s in stocks track by $index">
-					<td>\{{s.stock}}-\{{s.subStock}}</td>
-					<td data-ng-repeat="p in products track by $index"><input type="checkbox" data-ng-model="checked[p._id][s.barCode]" data-ng-change="updateCheck(p,s)" data-ng-checked="isChecked(p,s)"/></td>
-				</tr>
-			</tbody>
-		</table>
-
-		<div data-ng-repeat="s in stocks track by $index">
-			<span>\{{s.client}}-\{{s.stock}}-\{{s.subStock}}<div sd-barcode barcode-value="\{{s.barCode}}"></div></span>
-		</div>
+			</accordion-group>
+			<accordion-group is-open="isopen">
+				<accordion-heading>
+					Liste des codes barres <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isopen, 'glyphicon-chevron-right': !isopen}"></i>
+				</accordion-heading>
+				<div class="columns">
+					<div class="three-columns" data-ng-repeat="s in stocks track by $index">
+						<h4 class="green underline">\{{s.stock}} - \{{s.subStock}}</h4>
+						<div data-ng-repeat="code in s.productId track by $index">
+							<span>\{{productsBarCode[code].ref}}<div sd-barcode barcode-value="\{{s.barCode}}\{{productsBarCode[code].barCode}}"></div></span>
+						</div>
+					</div>
+				</div>
+			</accordion-group>
+		</accordion>
 	</div>
 </section>
