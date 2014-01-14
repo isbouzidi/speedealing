@@ -112,7 +112,7 @@ module.exports = function(app, passport, auth) {
 			var max = 0;
 
 			for (var i in storehouse.subStock) {
-				if (req.body.substock == storehouse.subStock[i].name)
+				if (storehouse.subStock.length && req.body.substock == storehouse.subStock[i].name)
 					return res.send(200, {}); //Already exist
 				if (storehouse.subStock[i].barCode > max)
 					max = storehouse.subStock[i].barCode
