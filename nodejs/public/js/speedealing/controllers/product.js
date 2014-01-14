@@ -262,20 +262,21 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 		function initProducts() {
 			$http({method: 'GET', url: 'api/product', params: {
 					productOnly: 1,
-					type: 'PRODUCT'
+					type: 'PRODUCT',
+					barCode: 1
 				}
 			}).
 					success(function(data, status) {
 				$scope.products = data;
-				for(var i in data) {
+				for (var i in data) {
 					$scope.productsBarCode[data[i]._id] = data[i];
 				}
 			});
 		}
 
 		function numberFormat(number, width) {
-			if(isNaN(number))
-				number=0;
+			if (isNaN(number))
+				number = 0;
 			return new Array(width + 1 - (number + '').length).join('0') + number;
 		}
 
@@ -303,10 +304,10 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 						stock.barCode = codeBar + numberFormat(entrepot[i].subStock[j].barCode, 2);
 						stock.productId = entrepot[i].subStock[j].productId;
 						$scope.stocks.push(stock);
-						
+
 						$scope.isChecked[stock.barCode] = {};
-						
-						for (var k = 0; k< entrepot[i].subStock[j].productId.length; k++) {
+
+						for (var k = 0; k < entrepot[i].subStock[j].productId.length; k++) {
 							$scope.isChecked[stock.barCode][entrepot[i].subStock[j].productId[k]] = true;
 						}
 					}
@@ -314,7 +315,7 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 				}
 			});
 		}
-		
+
 		$scope.updateCheck = function(product, stock) {
 			$http({method: 'PUT', url: 'api/product/storehouse', data: {
 					product: product,

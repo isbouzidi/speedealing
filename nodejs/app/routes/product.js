@@ -142,7 +142,7 @@ module.exports = function(app, passport, auth) {
 			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$addToSet: {'subStock.$.productId': req.body.product._id}}, function(err, doc) {
 				if (err)
 					console.log(err);
-				
+
 				console.log(doc);
 
 				res.send(200, {});
@@ -151,7 +151,7 @@ module.exports = function(app, passport, auth) {
 			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$pull: {'subStock.$.productId': req.body.product._id}}, function(err, doc) {
 				if (err)
 					console.log(err);
-				
+
 				console.log(doc);
 
 				res.send(200, {});
@@ -379,7 +379,10 @@ Object.prototype = {
 		var query = {};
 
 		if (req.query.type)
-			query = {type: req.query.type};
+			query.type = req.query.type;
+
+		if (req.body.barCode)
+			query.barCode = {$exists: true};
 
 		ProductModel.find(query, "ref label barCode type", {limit: 50}, function(err, products) {
 			if (err)
