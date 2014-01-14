@@ -5,10 +5,20 @@
 
 	<div class="with-padding">
 		<tabset ng-init="initList()">
+			<tab heading="Selection des entrepots">
+				<div class="with-padding">
+					<div class="columns">
+						<div class="two-columns" data-ng-repeat="s in stocks track by $index">
+							<p class="green"><input type="checkbox" data-ng-model="s.enabled"/> \{{s.stock}} - \{{s.subStock}}</p>
+						</div>
+						
+					</div>
+				</div>
+			</tab>
 			<tab heading="Liste des codes barres">
 				<div class="with-padding">
 					<div class="columns">
-						<div class="three-columns" data-ng-repeat="s in stocks track by $index">
+						<div class="three-columns" data-ng-repeat="s in stocks | filter:{enabled:true}">
 							<h4 class="green underline">\{{s.stock}} - \{{s.subStock}}</h4>
 							<div data-ng-repeat="code in s.productId track by $index">
 								<span>\{{productsBarCode[code].ref}}<div sd-barcode barcode-value="\{{s.barCode}}\{{productsBarCode[code].barCode}}"></div></span>
