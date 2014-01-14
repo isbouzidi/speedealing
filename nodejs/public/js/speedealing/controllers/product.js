@@ -49,6 +49,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						price_level: {type: "string", defaultValue: "BASE"},
 						ref_customer_code: {type: "string"},
 						barCode: {type: "string"},
+						billingMode: {type: "string", defaultvalue: "QTY"},
 						compta_buy: {type: "string", defaultValue: ""},
 						compta_sell: {type: "string", defaultValue: ""},
 						author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
@@ -262,8 +263,7 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 
 		function initProducts() {
 			$http({method: 'GET', url: 'api/product', params: {
-					productOnly: 1,
-					type: 'PRODUCT',
+					withNoPrice: 1,
 					barCode: 1
 				}
 			}).

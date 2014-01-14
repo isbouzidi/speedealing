@@ -24,7 +24,7 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.get('/api/product', auth.requiresLogin, function(req, res) {
-		if (req.query.productOnly)
+		if (req.query.withNoPrice)
 			object.read(req, res);
 		else
 			object.readPrice(req, res);
@@ -445,6 +445,7 @@ Object.prototype = {
 				row.compta_buy = doc[i].compta_buy;
 				row.compta_sell = doc[i].compta_sell;
 				row.barCode = doc[i].barCode;
+				row.billingMode = doc[i].billingMode;
 
 				row.pu_ht = doc[i].price.pu_ht;
 				row.price_level = doc[i].price.price_level;
@@ -497,6 +498,7 @@ Object.prototype = {
 
 				obj.label = doc.label;
 				obj.barCode = doc.barCode;
+				obj.billingMode = doc.billingMode;
 
 				var price = _.extend({_id: new mongoose.Types.ObjectId()}, obj);
 
@@ -529,7 +531,7 @@ Object.prototype = {
 		console.log(obj);
 
 		if (obj._id)
-			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode}, $push: {history: obj}}, function(err) {
+			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode}, $push: {history: obj}}, function(err) {
 				if (err)
 					console.log(err);
 				//console.log(obj);

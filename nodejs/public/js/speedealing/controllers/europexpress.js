@@ -685,3 +685,139 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 		};
 
 	}]);
+
+angular.module('mean.europexpress').controller('EEStockController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, Object) {
+		$scope.global = Global;
+
+		var crudServiceBaseUrl = "api/europexpress/stock";
+
+		$scope.dataSource = new kendo.data.DataSource({
+			transport: {
+				read: {
+					url: crudServiceBaseUrl,
+					type: "GET",
+					dataType: "json"
+				},
+				update: {
+					url: crudServiceBaseUrl,
+					type: "PUT",
+					dataType: "json"
+				},
+				destroy: {
+					url: crudServiceBaseUrl,
+					type: "DELETE",
+					dataType: "json"
+				},
+				create: {
+					url: crudServiceBaseUrl,
+					type: "POST",
+					dataType: "json",
+					complete: function(e) {
+						$("#grid").data("kendoGrid").dataSource.read();
+					}
+				},
+				parameterMap: function(options, operation) {
+					if (operation !== "read" && options.models) {
+						return {models: kendo.stringify(options.models)};
+					}
+				}
+			},
+			error: function(e) {
+				// log error
+				alert(e.xhr.responseText);
+			},
+			batch: true,
+			pageSize: 50,
+			schema: {
+				model: {
+					id: "_id",
+					fields: {
+						_id: {editable: false, nullable: true},
+						barCode: {editable: true, validation: {required: true}},
+						qty: {type: "number", defaultValue: 1, validation: {required: true, min: 1}},
+						datec: {type: "date", editable: true, defaultValue: new Date()},
+						typeMove: {editable: false, defaultValue: {id: "IN", name: "Non defini", css: "grey-gradient"}},
+						author: {editable: true, defaultValue: {id: Global.user._id, name: Global.user.name}},
+						//penality: {editable: false, type: "boolean"},
+						storehouse: {editable: false, defaultValue: "Aucun"},
+						sub_storehouse: {editable: false, defaultValue: ""}
+					}
+				}
+			},
+			sort: {field: "datec", dir: "desc"}
+		});
+
+		$scope.statusDropDownEditor = function(container, options) {
+			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
+					.appendTo(container)
+					.kendoDropDownList({
+				autoBind: false,
+				dataSource: {
+					transport: {
+						read: {
+							url: "api/europexpress/select",
+							type: "GET",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		};
+
+
+		$scope.dateTimeEditor = function(container, options) {
+			$('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
+					.appendTo(container)
+					.kendoDateTimePicker({});
+		};
+
+		$scope.societeDropDownEditor = function(container, options) {
+			$('<input required data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
+					.appendTo(container)
+					.kendoAutoComplete({
+				minLength: 3,
+				dataTextField: "name",
+				filter: "contains",
+				dataSource: {
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
+					transport: {
+						read: {
+							url: "api/societe/autocomplete",
+							type: "GET",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		};
+
+		$scope.textareaEditor = function(container, options) {
+			$('<textarea rows="5" cols="30" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
+		};
+
+		$scope.userDropDownEditor = function(container, options) {
+			$('<input required id="id"/>')
+					.attr("name", options.field)
+					.appendTo(container)
+					.kendoAutoComplete({
+				minLength: 2,
+				dataTextField: "name",
+				filter: "contains",
+				dataSource: {
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
+					transport: {
+						read: {
+							url: "api/user/name/autocomplete",
+							type: "POST",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		};
+
+	}]);

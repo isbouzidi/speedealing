@@ -11,7 +11,7 @@ var SeqModel = mongoose.model('Sequence');
  * Product Schema
  */
 var productSchema = new Schema({
-	ref: {type: String, require: true, unique: true, upper: true},
+	ref: {type: String, require: true, unique: true, uppercase: true},
 	compta_buy: {type: String, default: ""},
 	compta_sell: {type: String, default: ""},
 	label: {type: String, default: ""},
@@ -28,6 +28,7 @@ var productSchema = new Schema({
 	price_base_type: String,
 	tms: Date,
 	datec: Date,
+	billingMode : {type: String, uppercase:true, default:"QTY"}, //MONTH, QTY, ...
 	Tag: [String],
 	entity: String,
 	price: [{
@@ -69,11 +70,11 @@ mongoose.model('product', productSchema, 'Product');
  * Product Schema
  */
 var storehouseSchema = new Schema({
-	name: {type: String, require: true, unique: true, upper: true},
+	name: {type: String, require: true, unique: true, uppercase: true},
 	barCode: {type: Number},
 	societe: {id: {type: Schema.Types.ObjectId}, name: String},
 	subStock: [{
-			name: {type: String, upper: true},
+			name: {type: String, uppercase: true},
 			barCode: {type: Number},
 			productId: [{type: Schema.Types.ObjectId}]
 		}]
