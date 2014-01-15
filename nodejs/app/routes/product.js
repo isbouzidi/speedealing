@@ -444,8 +444,16 @@ Object.prototype = {
 				row.type = doc[i].type;
 				row.compta_buy = doc[i].compta_buy;
 				row.compta_sell = doc[i].compta_sell;
-				row.barCode = doc[i].barCode;
-				row.billingMode = doc[i].billingMode;
+				if (doc[i].barCode == null)
+					row.barCode = "";
+				else
+					row.barCode = doc[i].barCode;
+					
+
+				if (doc[i].billingMode == null)
+					row.billingMode = "QTY";
+				else
+					row.billingMode = doc[i].billingMode;
 
 				row.pu_ht = doc[i].price.pu_ht;
 				row.price_level = doc[i].price.price_level;
