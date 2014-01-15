@@ -64,36 +64,36 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		];
 
 		/*$scope.initSlider = function(data) {
-			angular.element('.slider').slider({
-				hideInput: true,
-				size: 150,
-				innerMarks: 20,
-				step: 20,
-				stickToStep: false,
-				autoSpacing: true,
-				clickableTrack: false,
-				topLabel: "[value]%",
-				topMarks: 20,
-				bottomMarks: 20,
-				barClasses: ["anthracite-gradient", "glossy"],
-				onEndDrag: function(data) {
-					//console.log(data);
-					$http({method: 'PUT', url: 'api/ticket/percentage', data: {
-							id: $scope.ticket._id,
-							percentage: data,
-							controller: $scope.ticket.controlledBy,
-							ref: $scope.ticket.ref,
-							name: $scope.ticket.name
-						}
-					}).
-							success(function(data, status) {
-						$route.reload();
-						//$scope.ticket = ticket;
-						//$location.path('ticket/' + data._id);
-					});
-				}
-			});
-		};*/
+		 angular.element('.slider').slider({
+		 hideInput: true,
+		 size: 150,
+		 innerMarks: 20,
+		 step: 20,
+		 stickToStep: false,
+		 autoSpacing: true,
+		 clickableTrack: false,
+		 topLabel: "[value]%",
+		 topMarks: 20,
+		 bottomMarks: 20,
+		 barClasses: ["anthracite-gradient", "glossy"],
+		 onEndDrag: function(data) {
+		 //console.log(data);
+		 $http({method: 'PUT', url: 'api/ticket/percentage', data: {
+		 id: $scope.ticket._id,
+		 percentage: data,
+		 controller: $scope.ticket.controlledBy,
+		 ref: $scope.ticket.ref,
+		 name: $scope.ticket.name
+		 }
+		 }).
+		 success(function(data, status) {
+		 $route.reload();
+		 //$scope.ticket = ticket;
+		 //$location.path('ticket/' + data._id);
+		 });
+		 }
+		 });
+		 };*/
 
 		$scope.kendoUpload = {
 			multiple: true,
@@ -123,8 +123,6 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		$scope.module = modules[0]; //for default
 
 		$scope.modules = modules;
-
-		var link = {};
 
 		$scope.new = false;
 
@@ -182,64 +180,30 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			return "";
 		};
 
-		/**
-		 * For Search Link
-		 */
-
-		function SearchLink() {
-			var that = this;
-			//console.log($scope.module);
-			//console.log($scope.module.collection);
-
-			this.options = {
-				html: true,
-				minLength: 1,
-				outHeight: 100,
-				maxWidth: 300,
-				source: function(request, response) {
-					// you can $http or $resource service to get data frome server.
-					$http({method: 'POST', url: $scope.module.searchUrl, data: {
-							take: '5',
-							skip: '0',
-							page: '1',
-							pageSize: '5',
-							//collection: $scope.module,
-							filter: {filters: [{value: request.term}]}}
-					}).
-							success(function(data, status) {
-
-						angular.forEach(data, function(row) {
-							// there must have 'value' property while ngModel is a object.
-							// custom html string label
-							if (row.Societe || row.Client) {
-								row.label = '<strong>' + row.name + '</strong> (' +
-										row.Societe.name + ')';
-								row.value = row.name + ' (' +
-										row.Societe.name + ')';
-							} else {
-								row.label = row.name;
-								row.value = row.name;
-							}
-						});
-
-						// response data to suggestion menu.
-						response(data);
-					}).
-							error(function(data, status) {
-						response(data || "Request failed");
-					});
+		$scope.userAutoComplete = function(val) {
+			return $http.post('api/user/name/autocomplete?status=ENABLE', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
 				}
-			};
-			this.events = {
-				change: function(event, ui) {
-					link = ui.item;
-				}
-			};
-		}
+			}).then(function(res) {
+				return res.data
+			});
+		};
 
-		$scope.searchLink = function() {
-			this.searchLink = new SearchLink();
-			return this.searchLink;
+		$scope.linkAutoComplete = function(val) {
+			return $http.post($scope.module.searchUrl, {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data;
+			});
 		};
 
 		$scope.deleteLink = function(index) {
@@ -367,62 +331,6 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			});
 		};
 
-
-		/**
-		 * AutoComplete User Affected To
-		 */
-		function SearchUserAffected() {
-			var that = this;
-			this.options = {
-				html: true,
-				minLength: 1,
-				outHeight: 100,
-				maxWidth: 300,
-				source: function(request, response) {
-					// you can $http or $resource service to get data frome server.
-					$http({method: 'POST', url: 'api/user/name/autocomplete?status=ENABLE', data: {
-							take: '5',
-							skip: '0',
-							page: '1',
-							pageSize: '5',
-							filter: {filters: [{value: request.term}]}}
-					}).
-							success(function(data, status) {
-
-						angular.forEach(data, function(row) {
-							row.label = row.name;
-							row.value = row.name;
-						});
-
-						for (var j = 0; j < data.length; j++)
-							for (var i = 0; i < $scope.ticket.affectedTo.length; i++)
-								if (data[j].name == $scope.ticket.affectedTo[i].name) {
-									data.splice(j, 1);
-									j--;
-								}
-
-						// response data to suggestion menu.
-						response(data);
-					}).
-							error(function(data, status) {
-						response(data || "Request failed");
-					});
-				}
-			};
-			this.events = {
-				change: function(event, ui) {
-					if (ui.item != null)
-						$scope.ticket.affectedTo.push(ui.item);
-					$scope.affected = null;
-				}
-			};
-		}
-
-		$scope.searchUserAffected = function() {
-			this.searchUserAffected = new SearchUserAffected();
-			return this.searchUserAffected;
-		};
-
 		$scope.deleteAffected = function(index) {
 			$scope.ticket.affectedTo.splice(index, 1);
 		};
@@ -477,65 +385,12 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				return false;
 		}
 
-		$scope.addLink = function(item) {
+		$scope.addLink = function() {
+			var link = $scope.item;
 			if (link.id) {
 				$scope.ticket.linked.push({id: link.id, name: link.name, collection: $scope.module.collection, title: $scope.module.name});
-				$scope.item = {};
-				link = {};
+				$scope.item = null;
 			}
-		};
-
-		/**
-		 * AutoComplete User Controlled By
-		 */
-		function SearchUser() {
-			var that = this;
-			this.options = {
-				html: true,
-				minLength: 1,
-				outHeight: 100,
-				maxWidth: 300,
-				source: function(request, response) {
-					// you can $http or $resource service to get data frome server.
-					$http({method: 'POST', url: 'api/user/name/autocomplete?status=ENABLE', data: {
-							take: '5',
-							skip: '0',
-							page: '1',
-							pageSize: '5',
-							filter: {filters: [{value: request.term}]}}
-					}).
-							success(function(data, status) {
-
-						angular.forEach(data, function(row) {
-							row.label = row.name;
-							row.value = row.name;
-						});
-
-						// response data to suggestion menu.
-						response(data);
-					}).
-							error(function(data, status) {
-						response(data || "Request failed");
-					});
-				}
-			};
-			this.events = {
-				change: function(event, ui) {
-					if (ui.item == null)
-						ui.item = {};
-
-					$scope.ticket.controlledBy.id = ui.item.id;
-					$scope.ticket.controlledBy.name = ui.item.name;
-
-					$scope.ticket.addUser.id = ui.item.id;
-					$scope.ticket.addUser.name = ui.item.name;
-				}
-			};
-		}
-
-		$scope.searchUser = function() {
-			this.searchUser = new SearchUser();
-			return this.searchUser;
 		};
 
 		/**

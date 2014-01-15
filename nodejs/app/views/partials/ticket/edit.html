@@ -11,10 +11,10 @@
 				<label for="ticket_name" class="">{{t 'Title'}}</label>
 				<input type="text" data-ng-model="ticket.name" required id="ticket_name" class="input full-width">
 			</p>
-			
+
 			<p class="button-height inline-label">
 				<label for="ticket_controlledBy">{{t 'ticket:ControlledBy'}}</label>
-				<input type="text" id="ticket_controlledBy" data-ng-model="ticket.controlledBy.name" ng-change="ticket.affectedTo[0]=ticket.controlledBy" ui-autocomplete="searchUser()" ui-event="{autocompletecreate:'changeClass(searchUser)'}" class="input"/>
+				<input type="text" id="ticket_controlledBy" data-ng-model="ticket.controlledBy" data-typeahead-on-select="ticket.affectedTo[0]=ticket.controlledBy" data-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="input"/>
 				<small class="input-info">{{t 'ticket:UserClosedTicket'}}</small>
 			</p>
 
@@ -23,7 +23,7 @@
 				<span  data-ng-repeat="user in ticket.affectedTo">
 					<span class="tag anthracite-gradient glossy">\{{user.name}} <a href="" data-ng-hide="$index==0" data-ng-click="deleteAffected($index)" class="icon-trash"></a></span>
 				</span>
-				<input type="text" id="ticket_affectedTo" data-ng-model="affected" ui-autocomplete="searchUserAffected()" ui-event="{autocompletecreate:'changeClass(searchUserAffected)'}" class="input"/>
+				<input type="text" id="ticket_affectedTo" data-ng-model="affected" data-typeahead-on-select="ticket.affectedTo.push(affected); affected=null;" data-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="input"/>
 				<!--<select kendo-multi-select id="ticket_affectedTo" k-options="userAutoCompleteEditor" data-ng-model="ticket.affectedTo" class="input"></select>-->
 				<small class="input-info">{{t 'ticket:RecievedNotification'}}</small>
 			</p>
@@ -45,9 +45,7 @@
 						<span class="icon-paperclip small-margin-right"></span>
 					</label>
 					<select id="link-input-select" data-ng-options="s.name for s in modules" class="select compact expandable-list" data-ng-model="module" title="{{t 'Category'}}"></select>
-					<input type="text" placeholder="{{t 'Search'}}..." data-ng-model="item.title" ui-autocomplete="searchLink()" ui-event="{autocompletecreate:'changeClass(searchLink)'}" class="input-unstyled input-sep"/>
-					<!--<input type="range" kendo-auto-complete placeholder="{{t 'Search'}}..." id="object_include" k-options="searchAutoCompleteEditor" data-ng-model="linked" class="input-unstyled input-sep"/>-->
-					<button type="button" data-ng-click="addLink(item)" class="button compact">{{t 'Add'}}</button>
+					<input type="text" placeholder="{{t 'Search'}}..." data-ng-model="item" data-typeahead-on-select="addLink()" data-typeahead="item as item.name for item in linkAutoComplete($viewValue) | filter:{name:$viewValue}" class="input-unstyled"/>
 				</span>
 			</p>
 

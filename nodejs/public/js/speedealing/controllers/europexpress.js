@@ -736,11 +736,13 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 						barCode: {editable: true, validation: {required: true}},
 						qty: {type: "number", defaultValue: 1, validation: {required: true, min: 1}},
 						datec: {type: "date", editable: true, defaultValue: new Date()},
-						typeMove: {editable: false, defaultValue: {id: "IN", name: "Non defini", css: "grey-gradient"}},
+						product:{editable:false,defaultValue:{id:null}},
+						'product.name': {editable: false, defaultValue: "Non defini"},
 						author: {editable: true, defaultValue: {id: Global.user._id, name: Global.user.name}},
 						//penality: {editable: false, type: "boolean"},
 						storehouse: {editable: false, defaultValue: "Aucun"},
-						sub_storehouse: {editable: false, defaultValue: ""}
+						sub_storehouse: {editable: false, defaultValue: ""},
+						client: {editable: false, defaultValue: {id: null, name: ""}}
 					}
 				}
 			},
