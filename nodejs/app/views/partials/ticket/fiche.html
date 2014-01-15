@@ -17,8 +17,8 @@
 			<!--<a href="" class="button red-gradient float-right with-tooltip" title="Mark as spam">Spam</a>-->
 			<div class="float-right">
 				<input type="range" tooltip="\{{ticket.percentage}}%" data-ng-model="ticket.percentage" ng-change="updatePercentage()" min="0" max="100" step="20" style="width: 100%" class="slider">
-				
-			
+
+
 				<!--<input type="text" data-ng-init="initSlider()" data-ng-model="ticket.percentage" class="input slider" />-->
 			</div>
 			<span class="button-group children-tooltip">
@@ -64,7 +64,7 @@
 
 						<p data-ng-show="editMode == 'forward'" class="button-height inline-label">
 							<label for="ticket_addUser">{{t 'ticket:ForwardTo'}}</label>
-							<input type="text" id="ticket_addUser" data-ng-model="ticket.addUser.name" ui-autocomplete="searchUser()" ui-event="{autocompletecreate:'changeClass(searchUser)'}" class="input"/>
+							<input type="text" id="ticket_addUser" data-ng-model="ticket.addUser" data-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}"  class="input"/>
 						</p>
 
 						<textarea kendo-editor k-options="noteKendoEditor" data-ng-model="ticket.newNote"></textarea>
