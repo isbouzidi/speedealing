@@ -23,7 +23,7 @@ var ticketSchema = new Schema({
 	percentage: Number,
 	datef: Date,
 	linked: [{//link internal object
-			id: {type: Schema.Types.ObjectId},
+			id: {type: String},
 			name: String,
 			title: String
 		}],

@@ -496,6 +496,8 @@ Object.prototype = {
 				return res.send(500, err);
 			if (!ticket)
 				return res.send(404, 'Failed to load ticket ' + req.params.id);
+			
+			//console.log(req.body);
 
 			ticket = _.extend(ticket, req.body);
 

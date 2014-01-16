@@ -140,7 +140,7 @@ module.exports = function(app, passport, db) {
 		app.use(flash());
 
 		//bodyParser should be above methodOverride
-		app.use(express.bodyParser({uploadDir: './uploads'}));
+		app.use(express.bodyParser({uploadDir: __dirname +'/../uploads'}));
 		app.use(i18n.handle);
 		app.use(express.methodOverride());
 
