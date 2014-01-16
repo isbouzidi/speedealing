@@ -2455,7 +2455,7 @@ li.message-menu {
 		position: relative;
 		}
 		#main-title + .with-padding {
-			padding-top: 0 !important;
+			padding-top: 1px !important;
 		}
 		#main-title h1,
 		#main-title h2 {
