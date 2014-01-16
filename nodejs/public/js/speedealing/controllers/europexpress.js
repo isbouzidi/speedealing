@@ -739,6 +739,7 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 						product:{editable:false,defaultValue:{id:null}},
 						'product.name': {editable: false, defaultValue: "Non defini"},
 						author: {editable: true, defaultValue: {id: Global.user._id, name: Global.user.name}},
+						typeMove: {editable:false, defaultValue:{id:null, css:"", name:""}},
 						//penality: {editable: false, type: "boolean"},
 						storehouse: {editable: false, defaultValue: "Aucun"},
 						sub_storehouse: {editable: false, defaultValue: ""},

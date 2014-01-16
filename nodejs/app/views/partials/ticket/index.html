@@ -18,8 +18,8 @@
 						<li class="message-menu" data-ng-repeat="menuTicket in menuTickets | orderBy:'datef'">
 							<a href="#!/ticket/\{{menuTicket._id}}" title="{{t 'ticket:OpenMessage'}}">
 								<span class="message-status">
-									<span class="grey" data-ng-class="menuTicket.comments[menuTicket.comments.length - 1].icon" data-ng-hide="menuTicket.important"></span>
-									<span class="icon-new red" data-ng-show="menuTicket.important"></span>
+									<span class="grey" data-ng-class="menuTicket.comments[menuTicket.comments.length - 1].icon"></span>
+									<!--<span class="icon-new red" data-ng-show="menuTicket.important"></span>-->
 									<span class="new-message" data-ng-hide="ticketRead(menuTicket.read)" title="{{t 'NewMessage'}}"></span>
 								</span>
 								<span class="message-info">

@@ -28,7 +28,7 @@
 			</span>
 			<span class="button-group children-tooltip">
 				<button data-ng-click="enableEdit()" data-ng-disabled='ticket.controlledBy.id != global.user._id' class="button" title="{{t 'Edit'}}"><span class="icon-pencil"></span></button>
-				<button data-ng-disabled='ticket.important' data-ng-click="setImportant()" class="button" title="{{t 'Important'}}"><span class="icon-new"></span></button>
+				<!--<button data-ng-disabled='ticket.important' data-ng-click="setImportant()" class="button" title="{{t 'Important'}}"><span class="icon-new"></span></button>-->
 				<button data-ng-click="setClosed()" data-ng-disabled='ticket.controlledBy.id != global.user._id' class="button" title="{{t 'Close'}}"><span class="icon-cross-round"></span></button>
 			</span>
 			<span class="large-margin-left">{{t 'ticket:Expire'}} : 

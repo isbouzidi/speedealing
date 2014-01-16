@@ -209,7 +209,7 @@ module.exports = function(app, passport, auth, usersSocket) {
 		});
 	});
 
-	app.post('/api/ticket/important', auth.requiresLogin, function(req, res) {
+	/*app.post('/api/ticket/important', auth.requiresLogin, function(req, res) {
 
 		// notify all members chnge date
 		TicketModel.findOne({_id: req.body.id}, function(err, ticket) {
@@ -242,7 +242,7 @@ module.exports = function(app, passport, auth, usersSocket) {
 				return res.send(200, {});
 			});
 		});
-	});
+	});*/
 
 	app.put('/api/ticket/status', auth.requiresLogin, function(req, res) {
 
