@@ -7,7 +7,7 @@
 		<tab heading="Selection des entrepots">
 			<div class="with-padding">
 				<div class="columns">
-					<div class="four-columns" data-ng-repeat="s in stocks track by $index">
+					<div class="four-columns" data-ng-repeat="s in stocks   | orderBy:'client':'stock'">
 						<p class=""><input type="checkbox" data-ng-model="s.enabled"/> \{{s.client}} - \{{s.stock}} - \{{s.subStock}}</p>
 					</div>
 
