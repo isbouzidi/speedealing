@@ -19,8 +19,8 @@
 }
 
 body ::-webkit-scrollbar {
-	height: 10px;
-	width: 10px;
+	height: 11px;
+	width: 11px;
 	overflow: visible;
 }
 body ::-webkit-scrollbar-thumb {
@@ -478,3 +478,8 @@ input[type="range"]:after {
     right: 0em;
     content: attr(max);
 }
+
+.field-drop .wrapped {
+	line-height: 16px;
+	display: inline;
+} 
