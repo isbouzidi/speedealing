@@ -387,7 +387,7 @@ Object.prototype = {
 		ProductModel.find(query, "ref label barCode billingMode type", {limit: 50}, function(err, products) {
 			if (err)
 				console.log(err);
-			
+
 			//console.log(products);
 
 			res.send(200, products);
@@ -398,14 +398,27 @@ Object.prototype = {
 		var type_list = this.fk_extrafields.fields.type;
 
 		var result = [];
-		var query;
+		var query = [];
 
 		//console.log(req.query);
 
+		if (req.query.ref)
+			query.push({$match: {'ref': req.query.ref}});
+
 		if (req.query.type)
-			query = [{$match: {type: req.query.type}}, {$unwind: "$price"}];
-		else
-			query = [{$unwind: "$price"}];
+			query.push({$match: {type: req.query.type}});
+
+		query.push({$unwind: "$price"});
+
+		if (req.query.price_level)
+			query.push({$match: {'price.price_level': req.query.price_level}});
+
+		if (req.query.qty) {
+			query.push({$match: {'price.qtyMin': {'$lte': parseFloat(req.query.qty)}}});
+			query.push({$sort : { 'price.qtyMin' : -1}});
+		}
+
+		//console.log(req.query);
 
 		ProductModel.aggregate(query, function(err, doc) {
 			if (err) {
@@ -450,7 +463,7 @@ Object.prototype = {
 					row.barCode = "";
 				else
 					row.barCode = doc[i].barCode;
-					
+
 
 				if (doc[i].billingMode == null)
 					row.billingMode = "QTY";

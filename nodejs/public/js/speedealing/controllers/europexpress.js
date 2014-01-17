@@ -684,6 +684,45 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 			});
 		};
 
+		$scope.calculPrice = function() {
+			if ($scope.course.type.id !== "MESSAGERIE")
+				return;
+
+			if (!$scope.course.poids || !$scope.course.to.zip)
+				return;
+
+			$http({method: 'GET', url: 'api/product', params: {
+					price_level: $scope.course.client.price_level.toUpperCase(),
+					ref: "MESS" + $scope.course.to.zip.substr(0, 2),
+					qty: $scope.course.poids
+				}
+			}).
+					success(function(data, status) {
+				/*
+				 * 2 cas de figures :
+				 *  - si poids inf ou egale a 100 on applique tranche de poids
+				 *  - si poids supp a 100 : arrondi a la dizaine supp puis divise par 100 et multiplie par le poids
+				 *  ex : 261 => 270 : 2.7 x poids
+				 *  
+				 *  order enable : price value is the first value of array data
+				 */
+
+				if (data.length == 0)
+					return;
+
+				if ($scope.course.poids <= 100) {
+					$scope.course.total_ht = data[0].pu_ht;
+				} else {
+					var poids = $scope.course.poids;
+					// arrondi a la dizaine supp.
+					if (poids % 10) {
+						poids = (Math.floor(poids / 10) + 1) * 10;
+					}
+					$scope.course.total_ht = Math.round(poids / 100 * data[0].pu_ht * 100) / 100;
+				}
+			});
+		};
+
 	}]);
 
 angular.module('mean.europexpress').controller('EEStockController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, Object) {
@@ -736,10 +775,10 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 						barCode: {editable: true, validation: {required: true}},
 						qty: {type: "number", defaultValue: 1, validation: {required: true, min: 1}},
 						datec: {type: "date", editable: true, defaultValue: new Date()},
-						product:{editable:false,defaultValue:{id:null}},
+						product: {editable: false, defaultValue: {id: null}},
 						'product.name': {editable: false, defaultValue: "Non defini"},
 						author: {editable: true, defaultValue: {id: Global.user._id, name: Global.user.name}},
-						typeMove: {editable:false, defaultValue:{id:null, css:"", name:""}},
+						typeMove: {editable: false, defaultValue: {id: null, css: "", name: ""}},
 						//penality: {editable: false, type: "boolean"},
 						storehouse: {editable: false, defaultValue: "Aucun"},
 						sub_storehouse: {editable: false, defaultValue: ""},

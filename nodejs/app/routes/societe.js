@@ -80,6 +80,11 @@ module.exports = function(app, passport, auth) {
 						result[i].cptBilling.id = docs[i]._id;
 					} else
 						result[i].cptBilling = docs[i].cptBilling;
+						
+					if(docs[i].price_level)
+						result[i].price_level = docs[i].price_level;
+					else
+						result[i].price_level = "BASE";
 				}
 
 			return res.send(200, result);
