@@ -289,7 +289,7 @@ Migrate.prototype = {
 					i++;
 			};
 
-			mongodb.connect('mongodb://' + config.mongo.host + ":" + config.mongo.port + "/" + config.mongo.database, function(err, db) {
+			mongodb.connect(config.db, function(err, db) {
 				if (err)
 					return console.log(err);
 				rows.forEach(function(value) {
