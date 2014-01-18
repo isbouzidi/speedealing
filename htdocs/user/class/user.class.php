@@ -443,7 +443,7 @@ class User extends nosqlDocument {
 		if (!is_object($this->rights))
 			$this->rights = new stdClass();
 
-		//if (count($result)) {
+		if (count($result)) {
 		foreach ($result as $rows) {
 			foreach ($rows['rights'] as $aRow) {
 
@@ -492,7 +492,7 @@ class User extends nosqlDocument {
 				}
 			}
 		}
-		//}
+		}
 		//print_r($this->rights);
 		// Convert for old right definition
 		if (!empty($this->rights->societe->creer))
