@@ -458,8 +458,15 @@ class User extends nosqlDocument {
 				// Add default rights
 				if (!empty($rights_class) && !is_object($this->rights->$rights_class))
 					$this->rights->$rights_class = new stdClass();
-				if (count($perm) == 1)
+				
+				print_r($perm);
+				
+				if (count($perm) == 1){
+					if (!is_object($this->rights->$rights_class->$perm[0]))
+						$this->rights->$rights_class->$perm[0] = new stdClass();
+					
 					$this->rights->$rights_class->$perm[0] = $aRow->Status;
+				}
 				elseif (count($perm) == 2) {
 					if (!is_object($this->rights->$rights_class->$perm[0]))
 						$this->rights->$rights_class->$perm[0] = new stdClass();
