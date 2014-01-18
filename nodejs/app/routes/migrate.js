@@ -10,7 +10,7 @@ var cradle = require('cradle'),
 		mongodb = require('mongodb'),
 		acl = require('mongoose-acl'),
 		timestamps = require('mongoose-timestamp'),
-		config = require(__dirname +'/../../config'),
+		config = require(__dirname +'/../../config/config'),
 		fs = require('fs');
 
 var ProductModel = mongoose.model('product');
