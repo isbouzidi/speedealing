@@ -5,8 +5,6 @@ var mongoose = require('mongoose');
 var CommandeModel = mongoose.model('commande');
 var ExtrafieldModel = mongoose.model('extrafields');
 
-var dateFormat = require('dateformat');
-
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();
