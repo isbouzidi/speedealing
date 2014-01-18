@@ -24,7 +24,6 @@
  */
 require_once(DOL_DOCUMENT_ROOT . "/core/class/nosqlDocument.class.php");
 require_once(DOL_DOCUMENT_ROOT . "/core/class/extrafields.class.php");
-require_once(DOL_DOCUMENT_ROOT . "/core/db/couchdb/lib/couchAdmin.php");
 require_once(DOL_DOCUMENT_ROOT . "/user/class/userdatabase.class.php");
 
 if ($conf->ldap->enabled)
