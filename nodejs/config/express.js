@@ -10,7 +10,7 @@ var express = require('express'),
 		flash = require('connect-flash'),
 		helpers = require('view-helpers'),
 		fs = require('fs'),
-		config = require('./config');
+		config = require(__dirname +'/config');
 
 module.exports = function(app, passport, db) {
 
