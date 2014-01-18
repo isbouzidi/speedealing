@@ -444,54 +444,56 @@ class User extends nosqlDocument {
 			$this->rights = new stdClass();
 
 		if (count($result)) {
-		foreach ($result as $rows) {
-			foreach ($rows['rights'] as $aRow) {
+			foreach ($result as $rows) {
+				foreach ($rows['rights'] as $aRow) {
 
-				$aRow = json_decode(json_encode($aRow));
+					$aRow = json_decode(json_encode($aRow));
 
-				//$object->name = $aRow->value->name;
-				//$object->numero = $aRow->value->numero;
-				$rights_class = $rows['rights_class'];
-				//$object->id = $aRow->value->id;
-				$perm = $aRow->perm;
+					//$object->name = $aRow->value->name;
+					//$object->numero = $aRow->value->numero;
+					$rights_class = $rows['rights_class'];
+					//$object->id = $aRow->value->id;
+					$perm = $aRow->perm;
 
-				// Add default rights
-				if (!is_object($this->rights->$rights_class))
-					$this->rights->$rights_class = new stdClass();
-				if (count($perm) == 1)
-					$this->rights->$rights_class->$perm[0] = $aRow->Status;
-				elseif (count($perm) == 2) {
-					if (!is_object($this->rights->$rights_class->$perm[0]))
-						$this->rights->$rights_class->$perm[0] = new stdClass();
-					if (isset($this->rights->$rights_class->$perm[0]))
-						$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
-					else
-						$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
-				}
-
-				// Add user rights
-
-				if ((is_array($this->rights) && isset($this->rights->$key)) || (is_array($this->own_rights) && isset($this->own_rights->$key)) || $this->admin) {
+					print_r($this->rights);
+					print_r($this->rights->$rights_class);
+					// Add default rights
+					if (!is_object($this->rights->$rights_class))
+						$this->rights->$rights_class = new stdClass();
 					if (count($perm) == 1)
-						$this->rights->$rights_class->$perm[0] = true;
-					elseif (count($perm) == 2)
-						$this->rights->$rights_class->$perm[0]->$perm[1] = true;
-				}
+						$this->rights->$rights_class->$perm[0] = $aRow->Status;
+					elseif (count($perm) == 2) {
+						if (!is_object($this->rights->$rights_class->$perm[0]))
+							$this->rights->$rights_class->$perm[0] = new stdClass();
+						if (isset($this->rights->$rights_class->$perm[0]))
+							$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
+						else
+							$this->rights->$rights_class->$perm[0]->$perm[1] = $aRow->Status;
+					}
 
-				// Add groups rights
-				for ($i = 0; $i < count($groups); $i++) {
-					$key = $aRow->id;
-					//print_r($groups[$i]['rights']->$key);
-					//exit;
-					if (isset($groups[$i]['rights'][$key])) {
+					// Add user rights
+
+					if ((is_array($this->rights) && isset($this->rights->$key)) || (is_array($this->own_rights) && isset($this->own_rights->$key)) || $this->admin) {
 						if (count($perm) == 1)
 							$this->rights->$rights_class->$perm[0] = true;
 						elseif (count($perm) == 2)
 							$this->rights->$rights_class->$perm[0]->$perm[1] = true;
 					}
+
+					// Add groups rights
+					for ($i = 0; $i < count($groups); $i++) {
+						$key = $aRow->id;
+						//print_r($groups[$i]['rights']->$key);
+						//exit;
+						if (isset($groups[$i]['rights'][$key])) {
+							if (count($perm) == 1)
+								$this->rights->$rights_class->$perm[0] = true;
+							elseif (count($perm) == 2)
+								$this->rights->$rights_class->$perm[0]->$perm[1] = true;
+						}
+					}
 				}
 			}
-		}
 		}
 		//print_r($this->rights);
 		// Convert for old right definition
