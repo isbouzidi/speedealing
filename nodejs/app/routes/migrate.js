@@ -217,6 +217,8 @@ Migrate.prototype = {
 		var res = this.res;
 
 		couchdb.view('unlink/all', function(err, rows) {
+			if(err)
+				return console.log(err);
 
 			var i = 1;
 
@@ -292,6 +294,7 @@ Migrate.prototype = {
 			mongodb.connect(config.db, function(err, db) {
 				if (err)
 					return console.log(err);
+				
 				rows.forEach(function(value) {
 					if (typeof value.class !== 'undefined') {
 
