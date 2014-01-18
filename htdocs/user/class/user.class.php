@@ -440,7 +440,7 @@ class User extends nosqlDocument {
 			print $exc->getMessage();
 		}
 
-		print_r($result);
+		//print_r($result);
 
 		//if (count($result)) {
 		foreach ($result as $rows) {
