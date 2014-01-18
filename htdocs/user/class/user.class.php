@@ -445,7 +445,7 @@ class User extends nosqlDocument {
 		//if (count($result)) {
 		foreach ($result as $rows) {
 			//print_r($rows);
-			foreach ($rows['srights'] as $aRow) {
+			foreach ($rows['rights'] as $aRow) {
 
 				$aRow = json_decode(json_encode($aRow));
 
