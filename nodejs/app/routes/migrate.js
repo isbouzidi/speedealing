@@ -46,7 +46,7 @@ module.exports = function(app, passport, auth) {
 	app.get('/migrate/notes', function(req, res) {
 		var collection = ["Commande", "Societe", "Agenda"];
 
-		mongodb.connect('mongodb://' + config.mongo.host + ":" + config.mongo.port + "/" + config.mongo.database, function(err, db) {
+		mongodb.connect(config.db, function(err, db) {
 			if (err)
 				return console.log(err);
 
