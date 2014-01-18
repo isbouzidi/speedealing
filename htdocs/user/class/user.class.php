@@ -88,7 +88,6 @@ class User extends nosqlDocument {
 		$this->fk_extrafields->fetch(get_class($this));
 
 		//$this->couchAdmin = new couchAdmin($this->couchdb);
-
 		// Preference utilisateur
 		$this->liste_limit = 0;
 		$this->clicktodial_loaded = 0;
@@ -135,10 +134,10 @@ class User extends nosqlDocument {
 			$session = json_decode(file_get_contents(
 							'http://' . $conf->nodejs->host . ":" . $conf->nodejs->port . '/api/session', false, $context));
 			//$login = $this->couchAdmin->getLoginSession();
-			
-			if($session->message)
+
+			if ($session->message)
 				$this->error = $session->message;
-			
+
 			if ($session->name)
 				$login = $session->name;
 			else
@@ -429,7 +428,7 @@ class User extends nosqlDocument {
 
 		try {
 			//$result = $object->getView("default_right", '', $cache);
-			
+
 			$result = $object->getDefaultRight();
 
 			if (count($this->roles) > 0) {
@@ -440,6 +439,9 @@ class User extends nosqlDocument {
 		} catch (Exception $exc) {
 			print $exc->getMessage();
 		}
+
+		if (!is_object($this->rights))
+			$this->rights = new stdClass();
 
 		//if (count($result)) {
 		foreach ($result as $rows) {
