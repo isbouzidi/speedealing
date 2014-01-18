@@ -194,7 +194,7 @@ abstract class nosqlDocument extends CommonObject {
 			//if($this->Extrafields->fields->_id->settype == "ObjectId")
 			//	$id = new MongoId($id);
 			
-			error_log(print_r($id, true));
+			error_log(print_r('toto'.$id, true));
 			
 			if (is_object($id))
 				$id = new MongoId($id->{'$id'});
