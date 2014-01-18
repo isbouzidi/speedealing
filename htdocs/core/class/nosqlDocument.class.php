@@ -195,7 +195,7 @@ abstract class nosqlDocument extends CommonObject {
 			//if($this->Extrafields->fields->_id->settype == "ObjectId")
 			//	$id = new MongoId($id);
 
-			error_log(print_r($id, true));
+			//error_log(print_r($id, true));
 
 			if (is_object($id))
 				$id = new MongoId($id->{'$id'});
@@ -203,7 +203,7 @@ abstract class nosqlDocument extends CommonObject {
 				$id = new MongoId($id);
 
 			//error_log(print_r($this->fk_extrafields->fields, true));
-			error_log(print_r($id, true));
+			//error_log(print_r($id, true));
 			$values = $this->mongodb->findOne(array('_id' => $id));
 
 			if ($cache && !empty($conf->memcached)) {
