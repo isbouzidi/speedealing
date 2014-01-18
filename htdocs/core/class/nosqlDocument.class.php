@@ -198,7 +198,7 @@ abstract class nosqlDocument extends CommonObject {
 			elseif (strlen($id) == 24 && isset($this->fk_extrafields->fields->_id->schema) && ($this->fk_extrafields->fields->_id->schema == "ObjectId" || $this->fk_extrafields->fields->_id->schema->type == "ObjectId"))
 				$id = new MongoId($id);
 
-			error_log(print_r($this->fk_extrafields->fields, true));
+			//error_log(print_r($this->fk_extrafields->fields, true));
 			error_log(print_r($id, true));
 			$values = $this->mongodb->findOne(array('_id' => $id));
 
