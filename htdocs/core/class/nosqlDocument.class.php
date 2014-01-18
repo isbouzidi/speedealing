@@ -66,7 +66,8 @@ abstract class nosqlDocument extends CommonObject {
 		}
 
 		$collection = get_class($this);
-		$this->mongodb = $mongodb->$collection;
+		if (!empty($collection))
+			$this->mongodb = $mongodb->$collection;
 	}
 
 	/**
@@ -193,9 +194,9 @@ abstract class nosqlDocument extends CommonObject {
 			//$values = $this->couchdb->getDoc($id); // load extrafields for class
 			//if($this->Extrafields->fields->_id->settype == "ObjectId")
 			//	$id = new MongoId($id);
-			
-			error_log(print_r('toto'.$id, true));
-			
+
+			error_log(print_r($id, true));
+
 			if (is_object($id))
 				$id = new MongoId($id->{'$id'});
 			elseif (strlen($id) == 24 && isset($this->fk_extrafields->fields->_id->schema) && ($this->fk_extrafields->fields->_id->schema == "ObjectId" || $this->fk_extrafields->fields->_id->schema->type == "ObjectId"))
