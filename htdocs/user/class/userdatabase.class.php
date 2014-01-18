@@ -23,7 +23,6 @@
  */
 require_once DOL_DOCUMENT_ROOT . '/core/class/nosqlDocument.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-require_once DOL_DOCUMENT_ROOT . '/core/db/couchdb/lib/couchAdmin.php';
 if (!empty($conf->ldap->enabled))
 	require_once DOL_DOCUMENT_ROOT . '/core/class/ldap.class.php';
 
