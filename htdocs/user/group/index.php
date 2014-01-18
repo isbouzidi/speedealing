@@ -63,6 +63,7 @@ if ($_GET['json'] == "list") {
     if (!empty($result2)) {
         foreach ($result2 as $aRow) {
             foreach ($aRow as $row) {
+				print_r($row);
                 $row = (object) $row;
                 if ($row->_id) {
                     //print_r($row);
