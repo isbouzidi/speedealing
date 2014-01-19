@@ -330,7 +330,7 @@ class Agenda extends nosqlDocument {
 
 		// Check parameters
 		
-		if (strlen($this->usertodo) > 0 || strpos($this->usertodo, ",") !== false) {
+		/*if (strlen($this->usertodo) > 0 || strpos($this->usertodo, ",") !== false) {
 			$usertodo = explode(",", $this->usertodo);
 			$this->usertodo = array();
 			foreach ($usertodo as $aRow) {
@@ -339,9 +339,9 @@ class Agenda extends nosqlDocument {
 				if($fuser->name)
 					$this->usertodo[] = array("id" => $aRow, "name" => $fuser->name);
 			}
-		} else {
+		} else {*/
 			$this->usertodo = array(array("id" => $user->id, "name" => $user->name));
-		}
+		//}
 
 		if ($this->Status == "DONE" && !$this->userdone->id) {
 			$this->userdone = new stdClass();
