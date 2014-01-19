@@ -191,14 +191,13 @@
 			}
 		},
 		"usertodo": {
-			"schema": [{
+			"schema": {
 					"id": "String",
 					"name": "String"
-				}],
+				},
 			"enable": true,
 			"type": "select",
 			"label": "ActionAffectedTo",
-			"cssClass": "multiple-as-single easy-multiple-selection check-list",
 			"multiple": true,
 			"mongo": {
 				"collection": "User",
