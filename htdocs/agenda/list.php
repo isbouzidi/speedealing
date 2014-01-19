@@ -245,7 +245,7 @@ $obj->aoColumns[$i] = new stdClass();
 $obj->aoColumns[$i]->mDataProp = "usertodo";
 $obj->aoColumns[$i]->sClass = "center";
 $obj->aoColumns[$i]->sDefaultContent = "";
-$obj->aoColumns[$i]->fnRender = $userstatic->datatablesFnRender("usertodo", "array");
+$obj->aoColumns[$i]->fnRender = $userstatic->datatablesFnRender("usertodo.name", "url", array('id' => "usertodo.id"));
 $i++;
 print'<th class="essential">';
 print $langs->trans('DoneBy');
