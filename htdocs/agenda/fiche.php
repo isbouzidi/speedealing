@@ -196,7 +196,11 @@ if ($action == 'add_action') {
 	$object->author->name = $user->name;
 	$object->usermod = null;
 
-	$object->usertodo = $_POST["affectedto"];
+	//$object->usertodo = $_POST["affectedto"];
+
+	$object->usertodo = new stdClass();
+	if (strlen($_POST["affectedto"]) > 0)
+		$object->usertodo->id = GETPOST("affectedto");
 
 	/*
 	  $userdone = new User($db);
@@ -368,7 +372,11 @@ if ($action == 'update') {
 		  }
 		 */
 		// Users
-		$object->usertodo = $_POST["affectedto"];
+		//$object->usertodo = $_POST["affectedto"];
+
+		$object->usertodo = new stdClass();
+		if (strlen($_POST["affectedto"]) > 0)
+			$object->usertodo->id = GETPOST("affectedto");
 
 		$object->userdone = new stdClass();
 		$object->userdone->id = $_POST["doneby"];
@@ -678,31 +686,31 @@ if ($action == 'create') {
 	// Affected by
 	$var = false;
 	print '<tr><td width="30%" nowrap="nowrap">' . $langs->trans("ActionAffectedTo") . '</td><td>';
-	//print $object->select_fk_extrafields("usertodo", 'affectedto');
-	print '<input id="usertodo" name="affectedto">';
+	print $object->select_fk_extrafields("usertodo", 'affectedto');
+	/*print '<input id="usertodo" name="affectedto">';
 	?><script>
 		$(document).ready(function() {
-		var multiselect = $("#usertodo").kendoMultiSelect({
-		placeholder: "Utilisateurs...",
-		dataTextField: "name",
-		dataValueField: "id",
-		autoBind: false,
-		dataSource: {
-		type: "json",
-		serverFiltering: true,
-		transport: {
-		read: {
-		url: "api/user/select",
-		}
-		}
-		}
-		}).data("kendoMultiSelect");
+			var multiselect = $("#usertodo").kendoMultiSelect({
+				placeholder: "Utilisateurs...",
+				dataTextField: "name",
+				dataValueField: "id",
+				autoBind: false,
+				dataSource: {
+					type: "json",
+					serverFiltering: true,
+					transport: {
+						read: {
+							url: "api/user/select",
+						}
+					}
+				}
+			}).data("kendoMultiSelect");
 
-		$("#button").on("click", function() {
-		this.form.elements["affectedto"].value = multiselect.value();
+			$("#button").on("click", function() {
+				this.form.elements["affectedto"].value = multiselect.value();
+			});
 		});
-		});
-	</script><?php
+	</script><?php*/
 	//
 	//
 	//$form->select_users(GETPOST("affectedto") ? GETPOST("affectedto") : ($object->usertodo->id > 0 ? $object->usertodo : $user), 'affectedto', 1);
@@ -1122,35 +1130,35 @@ if ($id) {
 
 		// Affected to
 		print '<tr><td nowrap="nowrap">' . $langs->trans("ActionAffectedTo") . '</td><td colspan="3">';
-		//print $object->select_fk_extrafields("usertodo", 'affectedto');
-		print '<input id="usertodo" name="affectedto">';
+		print $object->select_fk_extrafields("usertodo", 'affectedto');
+		/*print '<input id="usertodo" name="affectedto">';
 		?><script>
 			$(document).ready(function() {
-			var multiselect = $("#usertodo").kendoMultiSelect({
-			placeholder: "Utilisateurs...",
-			dataTextField: "name",
-			dataValueField: "id",
-			autoBind: false,
-			dataSource: {
-			type: "json",
-			serverFiltering: true,
-			transport: {
-			read: {
-			url: "api/user/select",
-			}
-			}
-			},
-			value: <?php echo json_encode($object->usertodo); ?>
-			//{name: "admin", id: "user:admin"},
-			//{name: "demo", id: "user:demo"}
+				var multiselect = $("#usertodo").kendoMultiSelect({
+					placeholder: "Utilisateurs...",
+					dataTextField: "name",
+					dataValueField: "id",
+					autoBind: false,
+					dataSource: {
+						type: "json",
+						serverFiltering: true,
+						transport: {
+							read: {
+								url: "api/user/select",
+							}
+						}
+					},
+					value: <?php echo json_encode($object->usertodo); ?>
+					//{name: "admin", id: "user:admin"},
+					//{name: "demo", id: "user:demo"}
 
-			}).data("kendoMultiSelect");
+				}).data("kendoMultiSelect");
 
-			$("#button").on("click", function() {
-			this.form.elements["affectedto"].value = multiselect.value();
+				$("#button").on("click", function() {
+					this.form.elements["affectedto"].value = multiselect.value();
+				});
 			});
-			});
-		</script><?php
+		</script><?php*/
 		print '</td></tr>';
 
 		// Realised by

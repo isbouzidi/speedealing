@@ -22,7 +22,7 @@ var agendaSchema = new Schema({
 	durationp: Number,
 	type_code: Schema.Types.Mixed,
 	author: {id: String, name: String},
-	usertodo: [{id: String, name: String}],
+	usertodo: {id: String, name: String},
 	userdone: {id: String, name: String},
 	notes: [{edit: Boolean, title: String, note: String}]
 });
