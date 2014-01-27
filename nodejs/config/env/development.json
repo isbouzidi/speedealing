@@ -52,11 +52,8 @@
 	},
 	"elasticsearch": {
 		"hosts": [
-			{
-				"host": "localhost",
-				"port": 9200
-			}
+			"http://localhost:9200"
 		],
-		"secure": false
+		"log": "trace"
 	}
 }

@@ -198,7 +198,6 @@
 			"enable": true,
 			"type": "select",
 			"label": "ActionAffectedTo",
-			"multiple": true,
 			"mongo": {
 				"collection": "User",
 				"method": "find",

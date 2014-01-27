@@ -440,11 +440,12 @@ class User extends nosqlDocument {
 			print $exc->getMessage();
 		}
 
-		//print_r($result);
+	//print_r($result);
 
 		//if (count($result)) {
 		foreach ($result as $rows) {
 			//print_r($rows);
+			//print "</br>";
 			foreach ($rows['rights'] as $aRow) {
 
 				$aRow = json_decode(json_encode($aRow));
@@ -460,6 +461,7 @@ class User extends nosqlDocument {
 					$this->rights->$rights_class = new stdClass();
 				
 				//print_r($aRow);
+				//print $rights_class ."\n";
 				
 				if (count($perm) == 1){
 					$this->rights->$rights_class->$perm[0] = $aRow->Status;
