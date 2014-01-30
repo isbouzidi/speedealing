@@ -82,99 +82,35 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		/**
 		 * AutoComplete User Driver
 		 */
-		function SearchDriver() {
-			var that = this;
-			this.options = {
-				html: true,
-				minLength: 1,
-				outHeight: 100,
-				maxWidth: 300,
-				source: function(request, response) {
-					// you can $http or $resource service to get data frome server.
-					$http({method: 'POST', url: 'api/user/name/autocomplete', data: {
-							take: '5',
-							skip: '0',
-							page: '1',
-							pageSize: '5',
-							filter: {filters: [{value: request.term}]}}
-					}).
-							success(function(data, status) {
-
-						angular.forEach(data, function(row) {
-							row.label = row.name;
-							row.value = row.name;
-						});
-
-						// response data to suggestion menu.
-						response(data);
-					}).
-							error(function(data, status) {
-						response(data || "Request failed");
-					});
+		
+		$scope.driverAutoComplete = function(val) {
+			return $http.post('api/user/name/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
 				}
-			};
-			this.events = {
-				change: function(event, ui) {
-					if (ui.item == null)
-						ui.item = {};
-
-					$scope.aday.driver.id = ui.item.id;
-					$scope.aday.driver.name = ui.item.name;
-				}
-			};
-		}
-		$scope.searchDriver = function() {
-			this.searchUser = new SearchDriver();
-			return this.searchUser;
+			}).then(function(res) {
+				return res.data
+			});
 		};
 
 		/**
 		 * AutoComplete Sous-Traitant
 		 */
-		function SearchSousTraitant() {
-			var that = this;
-			this.options = {
-				html: true,
-				minLength: 1,
-				outHeight: 100,
-				maxWidth: 300,
-				source: function(request, response) {
-					// you can $http or $resource service to get data frome server.
-					$http({method: 'POST', url: 'api/societe/autocomplete?fournisseur=SUBCONTRACTOR', data: {
-							take: '5',
-							skip: '0',
-							page: '1',
-							pageSize: '5',
-							filter: {filters: [{value: request.term}]}}
-					}).
-							success(function(data, status) {
-
-						angular.forEach(data, function(row) {
-							row.label = row.name;
-							row.value = row.name;
-						});
-
-						// response data to suggestion menu.
-						response(data);
-					}).
-							error(function(data, status) {
-						response(data || "Request failed");
-					});
+		
+		$scope.subcontractorAutoComplete = function(val) {
+			return $http.post('api/societe/autocomplete?fournisseur=SUBCONTRACTOR', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
 				}
-			};
-			this.events = {
-				change: function(event, ui) {
-					if (ui.item == null)
-						ui.item = {};
-
-					$scope.aday.sousTraitant.id = ui.item.id;
-					$scope.aday.sousTraitant.name = ui.item.name;
-				}
-			};
-		}
-		$scope.searchSousTraitant = function() {
-			this.search = new SearchSousTraitant();
-			return this.search;
+			}).then(function(res) {
+				return res.data
+			});
 		};
 
 		$scope.update = function(id) {
@@ -863,3 +799,43 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 		};
 
 	}]);
+
+angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope', '$routeParams', '$location', '$route', '$upload', 'Global', 'EEVehicule', function($scope, $routeParams, $location, $route, $upload, Global, Object) {
+		$scope.global = Global;
+
+		$scope.findOne = function() {
+			Object.get({
+				id: $routeParams.id
+			}, function(vehicule) {
+				$scope.vehicule = vehicule;
+			});
+		};
+
+		$scope.onFileSelect = function($files) {
+			//$files: an array of files selected, each file has name, size, and type.
+			for (var i = 0; i < $files.length; i++) {
+				var file = $files[i];
+				$scope.upload = $upload.upload({
+					url: 'server/upload/url', //upload.php script, node.js route, or servlet url
+					// method: POST or PUT,
+					// headers: {'headerKey': 'headerValue'},
+					// withCredential: true,
+					data: {myObj: $scope.myModelObj},
+					file: file,
+					// file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
+					/* set file formData name for 'Content-Desposition' header. Default: 'file' */
+					//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
+					/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
+					//formDataAppender: function(formData, key, val){} 
+				}).progress(function(evt) {
+					console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+				}).success(function(data, status, headers, config) {
+					// file is uploaded successfully
+					console.log(data);
+				});
+				//.error(...)
+				//.then(success, error, progress); 
+			}
+		};
+
+	}]);	

@@ -34,22 +34,6 @@ exports.updateAmounts = function(object, callback) {
 	callback();
 };
 
-Object.defineProperty(Object.prototype, 'clone', {
-	enumerable: false,
-	value: function() {
-		var newObj = (this instanceof Array) ? [] : {};
-		for (var i in this) {
-			if (i == 'clone')
-				continue;
-			if (this[i] && typeof this[i] == "object") {
-				newObj[i] = this[i].clone();
-			} else
-				newObj[i] = this[i]
-		}
-		return newObj;
-	}
-});
-
 function calcul_price_total(line, callback) {
 
 	// initialize total (may be HT or TTC depending on price_base_type)

@@ -482,4 +482,47 @@ input[type="range"]:after {
 .field-drop .wrapped {
 	line-height: 16px;
 	display: inline;
-} 
+}
+
+ul.nav {
+	margin-left: 0
+}
+
+.nav > li > a {
+	padding: 4px 12px;
+}
+
+.nav-tabs {
+	border-bottom: 0px;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+	background: #e3e5ea;
+	z-index: 5;
+}
+
+/* File Upload*/
+
+.drop-box {
+	border: 3px dashed #CCC;
+	width: 100%;
+	height: 65px; 
+	text-align: center;
+	padding-top: 35px; 
+	position: relative;
+}
+
+.drop-box.dragover {
+	border: 5px dashed blue;
+}
+
+.input.file > input {
+	height: 30px;
+}
+
+/* Forms */
+.block-label > label {
+	color:inherit;
+	padding: inherit;
+	text-align: inherit;
+}

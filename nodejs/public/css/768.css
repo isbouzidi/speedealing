@@ -690,9 +690,6 @@ h2 {
 	.standard-tabs > .tabs {
 		right: 0;
 		width: auto;
-		height: 30px;
-		margin: -5px -5px 0 -5px;
-		padding: 5px 5px 0 5px;
 		}
 		.standard-tabs > .tabs > li {
 			float: left;

@@ -20,7 +20,7 @@ var ticketSchema = new Schema({
 	read: [String], // readed is in this array
 	controlledBy: {id: {type: String}, name: String},
 	datec: {type: Date, default: new Date},
-	percentage: Number,
+	percentage: {type: Number, default: 0},
 	datef: Date,
 	linked: [{//link internal object
 			id: {type: String},

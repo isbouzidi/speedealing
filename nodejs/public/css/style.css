@@ -236,6 +236,8 @@ h6:first-child {
 .boxed {
 	display: block;
 	padding: 16px;
+	border-width: 1px;
+	border-style: solid;
 }
 
 

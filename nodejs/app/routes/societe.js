@@ -257,7 +257,7 @@ module.exports = function(app, passport, auth) {
 
 					//console.log(store);
 					res.type(store.contentType);
-					res.attachment(store.filename); // for douwnloading
+					//res.attachment(store.filename); // for downloading
 					store.stream(true).pipe(res);
 
 				});

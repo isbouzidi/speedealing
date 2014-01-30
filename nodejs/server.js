@@ -20,7 +20,7 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
 		mongoose = require('mongoose');
 
 //Bootstrap db connection
-var db = mongoose.connect(config.db, {server: {auto_reconnect: true}, replset: { rs_name: config.replset }});
+var db = mongoose.connect(config.db, {server: {auto_reconnect: true}, replset: {rs_name: config.replset}});
 
 var mongoose_connect = mongoose.connection;
 mongoose_connect.on('error', console.error.bind(console, 'connection mongodb error native :'));

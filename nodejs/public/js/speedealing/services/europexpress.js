@@ -18,3 +18,13 @@ angular.module('mean.europexpress').factory("EETransport", ['$resource', functio
         }
     });
 }]);
+
+angular.module('mean.europexpress').factory("EEVehicule", ['$resource', function($resource) {
+    return $resource('api/europexpress/vehicules/:id', {
+        id: '@_id'
+    }, {
+        update: {
+            method: 'PUT'
+        }
+    });
+}]);
