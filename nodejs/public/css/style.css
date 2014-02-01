@@ -953,7 +953,7 @@ li.message-menu {
 	}
 	.list > li,
 	.list-link {
-		padding: 4px 0;
+		padding: 4px 2px;
 		color: #808080;
 		min-height: 16px;
 		line-height: 16px;
@@ -2453,7 +2453,7 @@ li.message-menu {
 	/* Title */
 	#main-title {
 		color: #b3b5b8;
-		padding: 17px 20px 21px;
+		padding: 8px 14px 12px;
 		position: relative;
 		}
 		#main-title + .with-padding {

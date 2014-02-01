@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
+		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
 var SocieteModel = mongoose.model('societe');
@@ -80,8 +81,8 @@ module.exports = function(app, passport, auth) {
 						result[i].cptBilling.id = docs[i]._id;
 					} else
 						result[i].cptBilling = docs[i].cptBilling;
-						
-					if(docs[i].price_level)
+
+					if (docs[i].price_level)
 						result[i].price_level = docs[i].price_level;
 					else
 						result[i].price_level = "BASE";
@@ -184,85 +185,37 @@ module.exports = function(app, passport, auth) {
 
 		if (req.files && id) {
 			//console.log(req.files);
-			var filename = req.files.files.path;
-			if (fs.existsSync(filename)) {
-				//console.log(filename);
-				SocieteModel.findOne({_id: id}, function(err, societe) {
 
-					if (err) {
-						console.log(err);
-						return res.send(500, {status: "Id not found"});
-					}
-
-					var opts;
-					opts = {
-						content_type: req.files.files.type,
-						metadata: {
-							_id: id
-						}
-					};
-
-					return societe.addFile(req.files.files, opts, function(err, result) {
-						if (err)
-							console.log(err);
-
-						//console.log(result);
-
-						return res.send(200, {status: "ok"});
-					});
-				});
-			} else
-				res.send(500, {foo: "bar", status: "failed"});
-		}
-	});
-
-	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function(req, res) {
-		var id = req.params.Id;
-		console.log(id);
-		console.log("toto");
-
-		if (id && req.params.fileName) {
-			SocieteModel.findOne({_id: id}, function(err, societe) {
-
-				if (err) {
-					console.log(err);
-					return res.send(500, {status: "Id not found"});
-				}
-				societe.removeFile(req.params.fileName, function(err, result) {
-					if (err)
-						console.log(err);
-
-					res.redirect('/societe/fiche.php?id=' + id);
-				});
+			gridfs.addFile(SocieteModel, id, req.files.files, function(err) {
+				if (err)
+					res.send(500, err);
+				else
+					res.send(200, {status: "ok"});
 			});
 		} else
-			res.send(500, "File not found");
-
+			res.send(500, "Error in request file");
 	});
 
 	app.get('/api/societe/file/:Id/:fileName', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
 
 		if (id && req.params.fileName) {
-			SocieteModel.findOne({_id: id}, function(err, societe) {
 
-				if (err) {
-					console.log(err);
-					return res.send(500, {status: "Id not found"});
-				}
+			gridfs.getFile(SocieteModel, id, req.params.fileName, function(err, store) {
+				if (err)
+					return res.send(500, err);
 
-				societe.getFile(req.params.fileName, function(err, store) {
-					if (err)
-						console.log(err);
+				if (req.query.download)
+					res.attachment(store.filename); // for downloading 
 
-					//console.log(store);
-					res.type(store.contentType);
-					//res.attachment(store.filename); // for downloading
-					store.stream(true).pipe(res);
+				res.type(store.contentType);
+				store.stream(true).pipe(res);
 
-				});
 			});
+		} else {
+			res.send(500, "Error in request file");
 		}
+
 	});
 
 	app.del('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
@@ -271,18 +224,25 @@ module.exports = function(app, passport, auth) {
 		//console.log(id);
 
 		if (req.body.fileNames && id) {
-			SocieteModel.findOne({_id: id}, function(err, societe) {
-
-				if (err) {
-					console.log(err);
-					return res.send(500, {status: "Id not found"});
-				}
-				societe.removeFile(req.body.fileNames, function(err, result) {
-					if (err)
-						console.log(err);
-
+			gridfs.delFile(SocieteModel, id, req.body.fileNames, function(err) {
+				if (err)
+					res.send(500, err);
+				else
 					res.send(200, {status: "ok"});
-				});
+			});
+		} else
+			res.send(500, "File not found");
+	});
+
+	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function(req, res) {
+		var id = req.params.Id;
+
+		if (req.params.fileName && id) {
+			gridfs.delFile(SocieteModel, id, req.params.fileName, function(err) {
+				if (err)
+					res.send(500, err);
+				else
+					res.redirect('/societe/fiche.php?id=' + id);
 			});
 		} else
 			res.send(500, "File not found");

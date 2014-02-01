@@ -1773,7 +1773,8 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action)) {
 			print '<span class="icon file-' . substr($aRow->name, strpos($aRow->name, ".") + 1) . '"></span>';
 			print '<div class="controls">
 					<span class="button-group compact children-tooltip">
-						<a href="api/societe/file/' . $object->id . '/' . $aRow->name . '" class="button icon-download" title="Télécharger"></a>
+						<a href="api/societe/file/' . $object->id . '/' . $aRow->name . '" class="button icon-eye" target="_blank" title="Ouvrir"></a>
+						<a href="api/societe/file/' . $object->id . '/' . $aRow->name . '?download=1" class="button icon-download" title="Télécharger"></a>
 						<a href="api/societe/file/remove/' . $object->id . '/' . $aRow->name . '" class="button icon-trash" title="Supprimer"></a>
 					</span>
 					</div>';

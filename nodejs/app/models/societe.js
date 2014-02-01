@@ -54,84 +54,12 @@ var societeSchema = new Schema({
 	gps: [Number],
 	contractID: String,
 	UGAP_Ref_Client: String,
-	datec: Date,
-	files: [mongoose.Schema.Types.Mixed]
+	datec: Date
 });
 
 societeSchema.plugin(timestamps);
 
-societeSchema.methods = {
-	/**
-	 * Add file to GridFs
-	 * @param {String} file
-	 * @return {Boolean}
-	 * @api public
-	 */
-	addFile: function(file, options, fn) {
-		var _this = this;
-
-		options.root = 'Societe';
-
-		return gridfs.putGridFileByPath(file.path, /*(this.code_client || this.code_fournisseur) + "_" +*/file.originalFilename, options, function(err, result) {
-//			console.log(result);
-			var files = {};
-			files.name = result.filename;
-			files.type = result.contentType;
-			files.size = result.internalChunkSize;
-			files._id = result.fileId;
-			files.datec = result.uploadDate;
-
-			var found = false;
-			for (var i = 0; i < _this.files.length; i++)
-				if (_this.files[i].name == result.filename) {
-					_this.files[i] = files;
-					found = true;
-				}
-
-			if (!found)
-				_this.files.push(files);
-
-			return _this.save(fn);
-		});
-	},
-	removeFile: function(file, fn) {
-		var _this = this;
-
-		var options = {root: 'Societe'};
-
-		var found = false;
-		for (var i = 0; i < _this.files.length; i++)
-			if (_this.files[i].name == file) {
-				//_this.files[i] = files;
-				gridfs.deleteGridFile(_this.files[i]._id.toString(), options, function(err, result) {
-					if (err)
-						console.log(err);
-				});
-				_this.files.splice(i, 1);
-			}
-
-		return _this.save(fn);
-	},
-	getFile: function(file, fn) {
-		var _this = this;
-
-		var options = {root: 'Societe'};
-
-		var found = false;
-		for (var i = 0; i < _this.files.length; i++)
-			if (_this.files[i].name == file) {
-				return gridfs.getGridFile(_this.files[i]._id.toString(), options, function(err, store) {
-					if (err) {
-						console.log(err);
-						return fn(err, null);
-					}
-					//console.log(store);
-					fn(null, store);
-				});
-			}
-		fn("Not found", null);
-	}
-};
+societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 
 societeSchema.pre('save', function(next) {
 	var self = this;

@@ -510,6 +510,7 @@ ul.nav {
 	text-align: center;
 	padding-top: 35px; 
 	position: relative;
+	pointer-events: inherit;
 }
 
 .drop-box.dragover {
@@ -525,4 +526,5 @@ ul.nav {
 	color:inherit;
 	padding: inherit;
 	text-align: inherit;
+	font-size: inherit;
 }

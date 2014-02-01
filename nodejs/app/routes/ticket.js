@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 		csv = require('csv'),
 		_ = require('underscore'),
 		dateFormat = require('dateformat'),
+		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
 var TicketModel = mongoose.model('ticket');
@@ -210,39 +211,39 @@ module.exports = function(app, passport, auth, usersSocket) {
 	});
 
 	/*app.post('/api/ticket/important', auth.requiresLogin, function(req, res) {
-
-		// notify all members chnge date
-		TicketModel.findOne({_id: req.body.id}, function(err, ticket) {
-			ticket.affectedTo.forEach(function(user) {
-				if (user.id === req.user._id)
-					return;
-
-				var socket = usersSocket[user.id];
-				if (socket)
-					socket.emit('notify', {
-						title: 'Ticket : ' + req.body.name,
-						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a marqué le ticket ' + req.body.ref + ' comme étant important.',
-						options: {
-							autoClose: false,
-							delay: 300,
-							link: "#!/ticket/" + req.body.id,
-							classes: ["red-gradient"]
-						}
-					});
-			})
-		});
-
-		TicketModel.update({_id: req.body.id}, {'$set': {important: true, read: [req.user._id]}}, function(err) {
-			if (err) {
-				console.log(err);
-				return res.send(500, err);
-			}
-
-			object.refreshTicket(req.user._id, function() {
-				return res.send(200, {});
-			});
-		});
-	});*/
+	 
+	 // notify all members chnge date
+	 TicketModel.findOne({_id: req.body.id}, function(err, ticket) {
+	 ticket.affectedTo.forEach(function(user) {
+	 if (user.id === req.user._id)
+	 return;
+	 
+	 var socket = usersSocket[user.id];
+	 if (socket)
+	 socket.emit('notify', {
+	 title: 'Ticket : ' + req.body.name,
+	 message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a marqué le ticket ' + req.body.ref + ' comme étant important.',
+	 options: {
+	 autoClose: false,
+	 delay: 300,
+	 link: "#!/ticket/" + req.body.id,
+	 classes: ["red-gradient"]
+	 }
+	 });
+	 })
+	 });
+	 
+	 TicketModel.update({_id: req.body.id}, {'$set': {important: true, read: [req.user._id]}}, function(err) {
+	 if (err) {
+	 console.log(err);
+	 return res.send(500, err);
+	 }
+	 
+	 object.refreshTicket(req.user._id, function() {
+	 return res.send(200, {});
+	 });
+	 });
+	 });*/
 
 	app.put('/api/ticket/status', auth.requiresLogin, function(req, res) {
 
@@ -332,61 +333,37 @@ module.exports = function(app, passport, auth, usersSocket) {
 
 		if (req.files && id) {
 			//console.log(req.files);
-			var filename = req.files.files.path;
-			if (fs.existsSync(filename)) {
-				//console.log(filename);
-				TicketModel.findOne({_id: id}, function(err, ticket) {
 
-					if (err) {
-						console.log(err);
-						return res.send(500, {status: "Id not found"});
-					}
-
-					var opts;
-					opts = {
-						content_type: req.files.files.type,
-						metadata: {
-							_id: id
-						}
-					};
-
-					return ticket.addFile(req.files.files, opts, function(err, result) {
-						if (err)
-							console.log(err);
-
-						//console.log(result);
-
-						return res.send(200, {status: "ok"});
-					});
-				});
-			} else
-				res.send(500, {foo: "bar", status: "failed"});
-		}
+			gridfs.addFile(TicketModel, id, req.files.files, function(err) {
+				if (err)
+					res.send(500, err);
+				else
+					res.send(200, {status: "ok"});
+			});
+		} else
+			res.send(500, "Error in request file");
 	});
 
 	app.get('/api/ticket/file/:Id/:fileName', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
 
 		if (id && req.params.fileName) {
-			TicketModel.findOne({_id: id}, function(err, ticket) {
 
-				if (err) {
-					console.log(err);
-					return res.send(500, {status: "Id not found"});
-				}
+			gridfs.getFile(TicketModel, id, req.params.fileName, function(err, store) {
+				if (err)
+					return res.send(500, err);
 
-				ticket.getFile(req.params.fileName, function(err, store) {
-					if (err)
-						console.log(err);
+				if (req.query.download)
+					res.attachment(store.filename); // for downloading 
 
-					//console.log(store);
-					res.type(store.contentType);
-					res.attachment(store.filename); // for douwnloading
-					store.stream(true).pipe(res);
+				res.type(store.contentType);
+				store.stream(true).pipe(res);
 
-				});
 			});
+		} else {
+			res.send(500, "Error in request file");
 		}
+
 	});
 
 	app.del('/api/ticket/file/:Id', auth.requiresLogin, function(req, res) {
@@ -395,18 +372,11 @@ module.exports = function(app, passport, auth, usersSocket) {
 		//console.log(id);
 
 		if (req.body.fileNames && id) {
-			TicketModel.findOne({_id: id}, function(err, ticket) {
-
-				if (err) {
-					console.log(err);
-					return res.send(500, {status: "Id not found"});
-				}
-				ticket.removeFile(req.body.fileNames, function(err, result) {
-					if (err)
-						console.log(err);
-
+			gridfs.delFile(TicketModel, id, req.body.fileNames, function(err){
+				if(err)
+					res.send(500, err);
+				else
 					res.send(200, {status: "ok"});
-				});
 			});
 		} else
 			res.send(500, "File not found");
@@ -496,7 +466,7 @@ Object.prototype = {
 				return res.send(500, err);
 			if (!ticket)
 				return res.send(404, 'Failed to load ticket ' + req.params.id);
-			
+
 			//console.log(req.body);
 
 			ticket = _.extend(ticket, req.body);

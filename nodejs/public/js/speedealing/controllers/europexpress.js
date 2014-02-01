@@ -82,7 +82,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		/**
 		 * AutoComplete User Driver
 		 */
-		
+
 		$scope.driverAutoComplete = function(val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
@@ -99,7 +99,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		/**
 		 * AutoComplete Sous-Traitant
 		 */
-		
+
 		$scope.subcontractorAutoComplete = function(val) {
 			return $http.post('api/societe/autocomplete?fournisseur=SUBCONTRACTOR', {
 				take: '5',
@@ -800,8 +800,10 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope', '$routeParams', '$location', '$route', '$upload', 'Global', 'EEVehicule', function($scope, $routeParams, $location, $route, $upload, Global, Object) {
+angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope', '$routeParams', '$location', '$route', '$upload', '$http', 'Global', 'EEVehicule', function($scope, $routeParams, $location, $route, $upload, $http, Global, Object) {
 		$scope.global = Global;
+
+		$scope.form = {};
 
 		$scope.findOne = function() {
 			Object.get({
@@ -811,31 +813,69 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			});
 		};
 
+		$scope.addNote = function() {
+			$http({method: 'POST', url: 'api/europexpress/vehicules/note', data: {
+					id: $scope.vehicule._id,
+					note: $scope.note
+				}
+			}).
+					success(function(data, status) {
+				if (status == 200) {
+					$scope.vehicule.notes.push(data);
+					$scope.note = "";
+				}
+			});
+		};
+
+		$scope.addEntretien = function(id) {
+			$http({method: 'POST', url: 'api/europexpress/vehicules/entretien', data: {
+					id: $scope.vehicule._id,
+					desc: $scope.form.desc,
+					date: $scope.form.date,
+					km: $scope.form.km
+				}
+			}).
+					success(function(data, status) {
+				if (status == 200) {
+					$scope.vehicule.entretiens.push(data);
+					$scope.vehicule.kms = data.km;
+					$scope.form = {};
+				}
+			});
+		};
+
 		$scope.onFileSelect = function($files) {
 			//$files: an array of files selected, each file has name, size, and type.
 			for (var i = 0; i < $files.length; i++) {
 				var file = $files[i];
-				$scope.upload = $upload.upload({
-					url: 'server/upload/url', //upload.php script, node.js route, or servlet url
-					// method: POST or PUT,
-					// headers: {'headerKey': 'headerValue'},
-					// withCredential: true,
-					data: {myObj: $scope.myModelObj},
-					file: file,
-					// file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
-					/* set file formData name for 'Content-Desposition' header. Default: 'file' */
-					//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
-					/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
-					//formDataAppender: function(formData, key, val){} 
-				}).progress(function(evt) {
-					console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-				}).success(function(data, status, headers, config) {
-					// file is uploaded successfully
-					console.log(data);
-				});
+				if ($scope.vehicule)
+					$scope.upload = $upload.upload({
+						url: 'api/europexpress/vehicules/file/' + $scope.vehicule._id,
+						method: 'POST',
+						// headers: {'headerKey': 'headerValue'},
+						// withCredential: true,
+						data: {myObj: $scope.myModelObj},
+						file: file,
+						// file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
+						/* set file formData name for 'Content-Desposition' header. Default: 'file' */
+						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
+						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
+						//formDataAppender: function(formData, key, val){} 
+					}).progress(function(evt) {
+						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+					}).success(function(data, status, headers, config) {
+						// file is uploaded successfully
+						//$scope.myFiles = "";
+						console.log(data);
+						$scope.vehicule.files = data.data.files;
+					});
 				//.error(...)
 				//.then(success, error, progress); 
 			}
+		};
+
+		$scope.fileType = function(name) {
+			return "file-" + name.substr(name.lastIndexOf(".") + 1);
 		};
 
 	}]);	
