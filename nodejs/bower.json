@@ -7,7 +7,7 @@
 		"angular-resource": "latest",
 		"angular-cookies": "latest",
 		"angular-mocks": "latest",
-		"angular-sanitize":"latest",
+		"angular-sanitize": "latest",
 		"angular-route": "latest",
 		"angular-animate": "latest",
 		"bootstrap": "3.0.3",
@@ -15,7 +15,8 @@
 		"angular-ui-utils": "0.0.4",
 		"kendo-ui": "2013.3.1119",
 		"jquery": "1.10.2",
-		"angular-kendo":"https://github.com/kendo-labs/angular-kendo.git",
-		"ng-file-upload":"latest"
+		"angular-kendo": "https://github.com/kendo-labs/angular-kendo.git",
+		"ng-file-upload": "latest",
+		"ng-grid": "latest"
 	}
 }

@@ -372,8 +372,8 @@ module.exports = function(app, passport, auth, usersSocket) {
 		//console.log(id);
 
 		if (req.body.fileNames && id) {
-			gridfs.delFile(TicketModel, id, req.body.fileNames, function(err){
-				if(err)
+			gridfs.delFile(TicketModel, id, req.body.fileNames, function(err) {
+				if (err)
 					res.send(500, err);
 				else
 					res.send(200, {status: "ok"});
@@ -440,8 +440,24 @@ Object.prototype = {
 
 				res.send(200, {cpt: doc});
 			});
-		else
-			TicketModel.find({'affectedTo.id': req.user._id, Status: {$ne: 'CLOSED'}}, function(err, doc) {
+		else {
+			var query = {};
+			var fields = {};
+			/**
+			 * Find for box ticket in fiche
+			 */
+			
+			if (req.query.find) {
+				query = JSON.parse(req.query.find);
+			} else {
+				query = {'affectedTo.id': req.user._id, Status: {$ne: 'CLOSED'}};
+			}
+			
+			if(req.query.fields) {
+				fields = req.query.fields;
+			}
+
+			TicketModel.find(query,fields, function(err, doc) {
 				if (err) {
 					console.log(err);
 					res.send(500, doc);
@@ -450,6 +466,7 @@ Object.prototype = {
 
 				res.send(200, doc);
 			});
+		}
 	},
 	findOne: function(req, res) {
 		TicketModel.findOne({_id: req.params.id}, function(err, ticket) {

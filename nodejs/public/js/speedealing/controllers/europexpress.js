@@ -810,8 +810,35 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 				id: $routeParams.id
 			}, function(vehicule) {
 				$scope.vehicule = vehicule;
+
+				$http({method: 'GET', url: 'api/ticket', params:
+							{
+								find: {"linked.id": vehicule._id},
+								fields: "name ref updatedAt percentage Status task"
+							}
+				}).success(function(data, status) {
+					if (status == 200)
+						$scope.myData = data;
+				});
+
 			});
 		};
+
+		var iconsFilesList = {};
+
+		/**
+		 * Get fileType for icon
+		 */
+		$scope.getFileTypes = function() {
+			$http({method: 'GET', url: 'dict/filesIcons'
+			}).
+					success(function(data, status) {
+				if (status == 200) {
+					iconsFilesList = data;
+				}
+			});
+		};
+
 
 		$scope.addNote = function() {
 			$http({method: 'POST', url: 'api/europexpress/vehicules/note', data: {
@@ -874,8 +901,65 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			}
 		};
 
-		$scope.fileType = function(name) {
-			return "file-" + name.substr(name.lastIndexOf(".") + 1);
+		$scope.suppressFile = function(id, fileName, idx) {
+			$http({method: 'DELETE', url: 'api/europexpress/vehicules/file/' + id + '/' + fileName
+			}).
+					success(function(data, status) {
+				if (status == 200) {
+					$scope.vehicule.files.splice(idx, 1);
+				}
+			});
 		};
 
-	}]);	
+		$scope.fileType = function(name) {
+			if (typeof iconsFilesList[name.substr(name.lastIndexOf(".") + 1)] == 'undefined')
+				return iconsFilesList["default"];
+
+			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
+		};
+
+		$scope.countDown = function(date, reverse) {
+			var today = new Date();
+			var day = new Date(date);
+			//console.log(date);
+			var seconds_left = today - day;
+
+			if (reverse && seconds_left > 0)
+				seconds_left = 0;
+			else
+				seconds_left = Math.round(seconds_left / 1000);
+
+			var days = parseInt(seconds_left / 86400);
+			seconds_left = seconds_left % 86400;
+
+			var hours = parseInt(seconds_left / 3600);
+			seconds_left = seconds_left % 3600;
+
+			var minutes = parseInt(seconds_left / 60);
+			if (reverse)
+				minutes = Math.abs(minutes);
+
+			minutes = ('0' + minutes).slice(-2);
+
+			//return day;
+			return {days: days, hours: hours, minutes: minutes};
+		};
+
+		/*
+		 * NG-GRID for ticket list
+		 */
+		$scope.gridOptions = {
+			data: 'myData',
+			enableRowSelection: false,
+			sortInfo: {fields: ["updatedAt"], directions: ["desc"]},
+			showFilter: true,
+				//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
+			columnDefs: [
+				{field: 'name', displayName: 'Titre', cellTemplate:'<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-ticket"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Id'},
+				{field: 'percentage', displayName: 'Etat', cellTemplate: '<div class="ngCellText"><progressbar class="progress-striped thin" value="row.getProperty(col.field)" type="success"></progressbar></div>'},
+				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
+			]
+		};
+
+	}]);

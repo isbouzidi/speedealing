@@ -52,7 +52,7 @@ module.exports = function(app, passport, auth) {
 				_id: req.user._id,
 				entity: req.user.entity,
 				photo: req.user.photo};
-			
+
 			//console.log(req.user.photo);
 
 			if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
@@ -121,39 +121,89 @@ module.exports = function(app, passport, auth) {
 	app.param('userId', users.user);
 
 	/*/Article Routes
-	var articles = require('../app/controllers/articles');
-	app.get('/articles', articles.all);
-	app.post('/articles', auth.requiresLogin, articles.create);
-	app.get('/articles/:articleId', articles.show);
-	app.put('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.update);
-	app.del('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.destroy);
-
-	//Finish with setting up the articleId param
-	app.param('articleId', articles.article);*/
+	 var articles = require('../app/controllers/articles');
+	 app.get('/articles', articles.all);
+	 app.post('/articles', auth.requiresLogin, articles.create);
+	 app.get('/articles/:articleId', articles.show);
+	 app.put('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.update);
+	 app.del('/articles/:articleId', auth.requiresLogin, auth.article.hasAuthorization, articles.destroy);
+	 
+	 //Finish with setting up the articleId param
+	 app.param('articleId', articles.article);*/
 
 	//latex Routes
 	var latex = require('../app/models/latex');
-	app.get('/servepdf/:pdfId', latex.servePDF);
+	app.get('/servepdf/:pdfId', auth.requiresLogin, latex.servePDF);
+
+	// File type icons TODO put it in dict
+	app.get('/dict/filesIcons', auth.requiresLogin, function(req, res) {
+		var iconList = {
+			aac: "file-aac",
+			avi: "file-avi",
+			bat: "file-bat",
+			bmp: "file-bmp",
+			chm: "file-chm",
+			css: "file-css",
+			dat: "file-dat",
+			default: "file-default",
+			dll: "file-dll",
+			xls: "file-excel",
+			xlsx: "file-excel",
+			exe: "file-exe",
+			fon: "file-fon",
+			gif: "file-gif",
+			html: "file-html",
+			tiff: "file-image",
+			ini: "file-ini",
+			jar: "file-jar",
+			jpg: "file-jpg",
+			js: "file-js",
+			log: "file-log",
+			mov: "file-mov",
+			mp3: "file-mp",
+			mpg: "file-mpg",
+			otf: "file-otf",
+			pdf: "file-pdf",
+			png: "file-png",
+			ppt: "file-powerpoint",
+			reg: "file-reg",
+			rtf: "file-rtf",
+			swf: "file-swf",
+			sys: "file-sys",
+			txt: "file-txt",
+			ttc: "file-ttc",
+			ttf: "file-ttf",
+			vbs: "file-vbs",
+			wav: "file-wav",
+			wma: "file-wma",
+			wmv: "file-wmv",
+			doc: "file-word",
+			docx: "file-word",
+			xml: "file-xml"
+		};
+
+		res.send(200, iconList);
+	});
 
 	app.get('/partials/:view', auth.requiresLogin, function(req, res) {
 		var view = req.params.view;
 		res.render('partials/' + view, {user: req.user});
 	});
-	
+
 	app.get('/partials/:view/:id', auth.requiresLogin, function(req, res) {
 		var view = req.params.view;
 		var pos = req.params.id.search(".html"); // search if id is an html page
-		if(pos) // is a subview in directory
-			res.render('partials/' + view + "/" + req.params.id.substr(0,pos), {user: req.user});
+		if (pos) // is a subview in directory
+			res.render('partials/' + view + "/" + req.params.id.substr(0, pos), {user: req.user});
 		else
 			res.render('partials/' + view, {user: req.user});
 	});
 
 	/*app.get('/partials/module/:module/:view', auth.requiresLogin, function(req, res) {
-		var module = req.params.module;
-		var view = req.params.view;
-		res.render('partials/' + module + "/" + view, {user: req.user});
-	});*/
+	 var module = req.params.module;
+	 var view = req.params.view;
+	 res.render('partials/' + module + "/" + view, {user: req.user});
+	 });*/
 
 	//Home route
 	var index = require('../app/controllers/index');
