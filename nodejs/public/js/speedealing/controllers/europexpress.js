@@ -818,7 +818,17 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 							}
 				}).success(function(data, status) {
 					if (status == 200)
-						$scope.myData = data;
+						$scope.tickets = data;
+				});
+				
+				$http({method: 'GET', url: 'api/europexpress/buy', params:
+							{
+								find: {"vehicule.id": vehicule._id},
+								fields: "title ref datec Status total_ht"
+							}
+				}).success(function(data, status) {
+					if (status == 200)
+						$scope.requestBuy = data;
 				});
 
 			});
@@ -948,8 +958,8 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 		/*
 		 * NG-GRID for ticket list
 		 */
-		$scope.gridOptions = {
-			data: 'myData',
+		$scope.gridOptionsTicket = {
+			data: 'tickets',
 			enableRowSelection: false,
 			sortInfo: {fields: ["updatedAt"], directions: ["desc"]},
 			showFilter: true,
@@ -959,6 +969,24 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 				{field: 'ref', displayName: 'Id'},
 				{field: 'percentage', displayName: 'Etat', cellTemplate: '<div class="ngCellText"><progressbar class="progress-striped thin" value="row.getProperty(col.field)" type="success"></progressbar></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
+			]
+		};
+		
+		/*
+		 * NG-GRID for ticket list
+		 */
+		$scope.gridOptionsBuyer = {
+			data: 'requestBuy',
+			enableRowSelection: false,
+			sortInfo: {fields: ["ref"], directions: ["desc"]},
+			showFilter: true,
+				//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
+			columnDefs: [
+				{field: 'title', displayName: 'Titre', cellTemplate:'<div class="ngCellText"><a ng-href="/europexpress/requestbuy.php"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Id'},
+				{field: 'Status', displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+				{field: 'datec', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				{field: 'total_ht', displayName: 'Total HT', cellClass: "align-right"}
 			]
 		};
 
