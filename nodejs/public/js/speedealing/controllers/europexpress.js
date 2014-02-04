@@ -388,6 +388,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 						ref: {editable: false, defaultValue: ""},
 						bordereau: {editable: true},
 						type: {editable: true, defaultValue: {id: "COURSE", name: "Course", css: "green-gradient"}},
+						typeCss: {defaultValue:{id: "COURSE", name: "Course", css: "green-gradient"}},
 						ref_client: {type: "string"},
 						client: {editable: true, defaultValue: {id: null, name: ""}},
 						contact: {editable: false, defaultValue: {id: null, name: ""}},
@@ -401,6 +402,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 						commission: {type: "number", editable: false, defaultValue: 0},
 						fournisseur: {editable: true, defaultValue: {id: null, name: ""}},
 						Status: {editable: false, defaultValue: {id: "NEW", name: "Nouveau", css: "grey-gradient"}},
+						StatusCss : {defaultValue: {id: "NEW", name: "Nouveau", css: "grey-gradient"}},
 						total_ht: {type: "number", editable: false, defaultValue: 0},
 						boutons: {editable: false}
 					}
@@ -411,7 +413,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 
 		// cache certain champ dans le popup
 		$scope.kendoEdit = function(e) {
-			console.log(e);
+			//console.log(e);
 			e.container.find('label[for="from"]').hide();
 			e.container.find('label[for="to"]').hide();
 			e.container.find('label[for="total_soustraitant"]').hide();
@@ -860,6 +862,9 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 
 
 		$scope.addNote = function() {
+			if(!$scope.note)
+				return
+			
 			$http({method: 'POST', url: 'api/europexpress/vehicules/note', data: {
 					id: $scope.vehicule._id,
 					note: $scope.note
