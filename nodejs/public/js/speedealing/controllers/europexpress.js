@@ -347,6 +347,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 		var crudServiceBaseUrl = "api/europexpress/courses";
 
 		$scope.dataSource = new kendo.data.DataSource({
+			serverSorting: true,
 			transport: {
 				read: {
 					url: crudServiceBaseUrl,
@@ -372,6 +373,14 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					if (operation !== "read" && options.models) {
 						return {models: kendo.stringify(options.models)};
 					}
+					if (operation === "read") {
+						return {
+							$top: options.take,
+							$skip: options.skip,
+							$sort: options.sort
+						}
+
+					}
 				}
 			},
 			error: function(e) {
@@ -388,7 +397,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 						ref: {editable: false, defaultValue: ""},
 						bordereau: {editable: true},
 						type: {editable: true, defaultValue: {id: "COURSE", name: "Course", css: "green-gradient"}},
-						typeCss: {defaultValue:{id: "COURSE", name: "Course", css: "green-gradient"}},
+						typeCss: {defaultValue: {id: "COURSE", name: "Course", css: "green-gradient"}},
 						ref_client: {type: "string"},
 						client: {editable: true, defaultValue: {id: null, name: ""}},
 						contact: {editable: false, defaultValue: {id: null, name: ""}},
@@ -402,7 +411,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 						commission: {type: "number", editable: false, defaultValue: 0},
 						fournisseur: {editable: true, defaultValue: {id: null, name: ""}},
 						Status: {editable: false, defaultValue: {id: "NEW", name: "Nouveau", css: "grey-gradient"}},
-						StatusCss : {defaultValue: {id: "NEW", name: "Nouveau", css: "grey-gradient"}},
+						StatusCss: {defaultValue: {id: "NEW", name: "Nouveau", css: "grey-gradient"}},
 						total_ht: {type: "number", editable: false, defaultValue: 0},
 						boutons: {editable: false}
 					}
@@ -485,6 +494,25 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 						read: {
 							url: "api/europexpress/courses/type/select",
 							type: "GET",
+							dataType: "json"
+						}
+					}
+				}
+			});
+		};
+
+		$scope.societeFilter = function(element) {
+			element.kendoAutoComplete({
+				dataTextField: "name",
+				dataValueField: "name",
+				dataSource: {
+					serverFiltering: true,
+					serverPaging: true,
+					pageSize: 5,
+					transport: {
+						read: {
+							url: "api/chaumeil/planning/societe/autocomplete",
+							type: "POST",
 							dataType: "json"
 						}
 					}
@@ -862,9 +890,9 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 
 
 		$scope.addNote = function() {
-			if(!$scope.note)
+			if (!$scope.note)
 				return
-			
+
 			$http({method: 'POST', url: 'api/europexpress/vehicules/note', data: {
 					id: $scope.vehicule._id,
 					note: $scope.note
