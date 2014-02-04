@@ -25,7 +25,7 @@ label {
 .input, .inputs {
 	display: inline-block;
 	text-align: left;
-	padding: 0 9px;
+	padding: 0 4px;
 	line-height: 30px;
 	border: 0;
 	vertical-align: baseline;
@@ -59,8 +59,8 @@ label {
 	}
 	input.input,
 	textarea.input {
-		padding-top: 7px;
-		padding-bottom: 7px;
+		padding-top: 4px;
+		padding-bottom: 4px;
 		line-height: 16px;
 		}
 		.no-boxshadow input.input,
