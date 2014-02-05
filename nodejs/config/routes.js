@@ -26,8 +26,8 @@ module.exports = function(app, passport, auth) {
 			}
 
 			/* CheckExternalIP */
-			console.log(req.connection.remoteAddress);
-			if(!ip.isPrivate(req.connection.remoteAddress) && !user.externalConnect) {
+			console.log(req.headers['x-real-ip']);
+			if(!ip.isPrivate(req.headers['x-real-ip']) && !user.externalConnect) {
 				res.json({success: false, errors: "External access denied"}, 401);
 				return users.signout;
 			}
