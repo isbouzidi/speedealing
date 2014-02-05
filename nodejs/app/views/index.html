@@ -1,21 +1,21 @@
 {{> header}}
 
-<body class="clearfix with-menu">
+<body class="clearfix" data-ng-controller="HeaderController" data-ng-class="withMenu()">
 	<header id="title-bar" role='banner'>
-		<div data-ng-controller="HeaderController">
+		<div >
 			<h2>\{{title}}</h2>
 		</div>
 	</header>
 
 	<!-- Button to open/hide menu --> 
-	<a id="open-menu" href='#'>
+	<a data-ng-show="withMenu()" id="open-menu" href='#'>
 		<span>Menu</span>
 	</a>
 
 	<!-- Button to open/hide shortcuts -->
-	<a id="open-shortcuts" href='#'>
+	<!--<a id="open-shortcuts" href='#'>
 		<span class="icon-thumbs"></span>
-	</a>
+	</a>-->
 
 	<!-- Main content -->
 	<section id="main" role="main">
@@ -31,7 +31,7 @@
 	<!-- include menuleft-->
 
 	<!-- Menu content-->
-	<section id="menu" role='complementary'>
+	<section data-ng-show="withMenu()" id="menu" role='complementary'>
 		{{> menu}}
 	</section>
 

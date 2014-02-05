@@ -171,7 +171,14 @@
 							complete: function(req) {
 								var resp = $.parseJSON(req.responseText);
 								if (req.status == 200) {
-									document.location.href = 'index.php';
+									//console.log(document.location.href);
+									//console.log(document.location.href.indexOf('/login'));
+									//console.log(document.location.href.substr(32));
+									console.log(req);
+									if (req.responseJSON.url)
+										document.location.href = '/' + req.responseJSON.url; //Default page in user profile
+									else
+										document.location.href = '/' + document.location.href.substr(32); // redirect to old page
 								} else {
 									formLogin.clearMessages();
 									displayError("{{t 'errors:ErrorBadLoginPassword'}}");

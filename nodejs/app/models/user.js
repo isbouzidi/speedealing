@@ -32,7 +32,10 @@ var UserSchema = new Schema({
 	roles: [String],
 	_createdAt: {type: Date},
 	LastConnection: Date,
-	NewConnection: Date
+	NewConnection: Date,
+	externalConnect : {type: Boolean, default: false},
+	right_menu: {type: Boolean, default: true},
+	url: String //url by default after login
 });
 
 UserSchema.plugin(timestamps);

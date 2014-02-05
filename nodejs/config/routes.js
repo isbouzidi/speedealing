@@ -1,4 +1,5 @@
-var async = require('async');
+var async = require('async'),
+		ip = require('ip');
 
 module.exports = function(app, passport, auth) {
 	//User Routes
@@ -18,15 +19,24 @@ module.exports = function(app, passport, auth) {
 			if (err) {
 				return next(err)
 			}
+
 			if (!user) {
 				req.session.messages = [info.message];
 				return res.json({success: false, errors: info.message}, 401);
 			}
+
+			/* CheckExternalIP */
+			console.log(req.connection.remoteAddress);
+			if(!ip.isPrivate(req.connection.remoteAddress) && !user.externalConnect) {
+				res.json({success: false, errors: "External access denied"}, 401);
+				return users.signout;
+			}
+
 			req.logIn(user, function(err) {
 				if (err) {
 					return next(err);
 				}
-				return res.json({success: true}, 200);
+				return res.json({success: true, url: user.url}, 200);
 			});
 		})(req, res, next);
 	});
@@ -51,7 +61,8 @@ module.exports = function(app, passport, auth) {
 				email: req.user.email,
 				_id: req.user._id,
 				entity: req.user.entity,
-				photo: req.user.photo};
+				photo: req.user.photo,
+				right_menu: req.user.right_menu};
 
 			//console.log(req.user.photo);
 

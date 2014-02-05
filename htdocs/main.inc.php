@@ -191,6 +191,7 @@ if (!defined('NOREQUIREAJAX'))
 
 
 
+
 	
 // If install or upgrade process not done or not completely finished, we call the install page.
 if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_UPGRADED)) {
@@ -271,7 +272,8 @@ if (!defined('NOLOGIN')) {
 			include DOL_DOCUMENT_ROOT . '/core/class/translatestandalone.class.php'; // Use this class before authentication
 			$langs = new TranslateStandalone();
 		}
-		dol_loginfunction($langs, $conf, (!empty($mysoc) ? $mysoc : ''));
+		header('Location:/login');
+		//dol_loginfunction($langs, $conf, (!empty($mysoc) ? $mysoc : ''));
 		exit;
 	} else {
 		// We are already into an authenticated session
@@ -592,6 +594,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 
 
 
+
 		
 // DOCTYPE
 	include DOL_DOCUMENT_ROOT . '/core/tpl/preheader.tpl.php';
@@ -729,7 +732,7 @@ function main_menu() {
 					"out" => array("inline" => 1)));
 
 		//print_r($countTODO);
-		
+
 		foreach ($countTODO->results as $key => $aRow) {
 			//print $countTODO->results[$key]['value'];
 			if ($aRow['_id'] == $user->id)
@@ -742,10 +745,10 @@ function main_menu() {
 		);
 		$listMyTasks = $mongodb->Agenda->find(array("Status" => array('$ne' => "DONE"), "usertodo.id" => $user->id, "datep" => array('$gt' => $params['start'], '$lte' => $params['end'])));
 	}
-	
-	
-	
-	$countTicket=$mongodb->Ticket->count(array('affectedTo.id' =>  $user->id, 'read' => array('$ne' =>  $user->id), 'Status'=> array('$ne' => 'CLOSED')));
+
+
+
+	$countTicket = $mongodb->Ticket->count(array('affectedTo.id' => $user->id, 'read' => array('$ne' => $user->id), 'Status' => array('$ne' => 'CLOSED')));
 
 	include 'core/tpl/main_menu.tpl.php';
 }
@@ -788,7 +791,7 @@ if (!function_exists("llxFooter")) {
 		// Global html output events ($mesgs, $errors, $warnings)
 		dol_htmloutput_events();
 
-		if($user->error)
+		if ($user->error)
 			dol_htmloutput_errors($user->error);
 		?>
 		</section>

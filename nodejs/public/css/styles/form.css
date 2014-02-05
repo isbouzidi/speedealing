@@ -153,8 +153,8 @@ label {
 	}
 	.button-height .button,
 	.button-height .input {
-		margin-top: 0;
-		margin-bottom: 0;
+		margin-top: 4px;
+		margin-bottom: 4px;
 	}
 	.black-inputs .input,
 	.input.black-input,
@@ -551,7 +551,7 @@ input:-moz-placeholder {
 		position: absolute;
 		z-index: 2;
 		right: 3px;
-		top: 3px;
+		top: -1px;
 	}
 	.input.file > input {
 		position: relative;
@@ -617,16 +617,16 @@ input:-moz-placeholder {
 		margin-bottom: 0;
 	}
 	.field-block + .field-block {
-		margin-top: 20px;
+		margin-top: 10px;
 		border-top: 1px solid #e0e0e0;
-		padding-top: 20px;
+		padding-top: 10px;
 	}
 	.field-drop + .field-block {
 		padding-top: 20px;
 		}
 		.field-block + .field-block.button-height,
 		.field-drop + .field-block.button-height {
-			padding-top: 18px;
+			padding-top: 10px;
 		}
 	.field-block small.input-info,
 	.field-block .small.input-info {
@@ -1507,8 +1507,8 @@ span.select {
 		display: inline-block;
 		*display: inline;
 		zoom: 1;
-		height: 40px;
-		line-height: 40px;
+		height: 39px;
+		line-height: 39px;
 		padding: 0 0 0 57px;
 		width: 0;
 		text-indent: -9999px;
@@ -1550,7 +1550,7 @@ span.select {
 		float: left;
 		margin: 8px 0 0 -27px;
 		line-height: 16px;
-		min-width: 16px;
+		min-width: 24px;
 		font-weight: bold;
 		text-indent: 0;
 		padding: 3px;
@@ -1648,8 +1648,9 @@ span.select {
 		.field-drop label {
 			float: left;
 			text-align: right;
-			margin: 10px 0 0 -210px;
+			margin: 6px 0 0 -210px;
 			width: 150px;
+			line-height: initial;
 		}
 
 	/* Field drop */
@@ -1706,6 +1707,7 @@ span.select {
 			width: auto;
 			text-indent: 0;
 			padding: 0 9px 0 65px;
+			cursor: pointer;
 		}
 		.wizard-step {
 			margin-left: -32px;
