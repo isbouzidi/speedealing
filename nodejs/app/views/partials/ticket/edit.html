@@ -30,7 +30,19 @@
 
 			<p class="button-height inline-label required">
 				<label for="expire">{{t 'ticket:Expire'}}</label>
-				<input id="expire" data-ng-model="dateString" kendo-date-time-picker required k-on-change="newExpireDate(kendoEvent)"/>
+				<input id="expire" data-ng-model="dateString" kendo-date-time-picker required k-on-change="ticket.datef = kendoEvent.sender._value;"/>
+			</p>
+			
+			<p class="button-height inline-label">
+				<label for="callback">{{t 'ticket:Callback'}}</label>
+				<input id="callback" data-ng-model="callbackString" kendo-date-time-picker k-on-change="ticket.callback = kendoEvent.sender._value;"/>
+				<small class="input-info">{{t 'ticket:CallbackNotification'}}</small>
+			</p>
+			
+			<p class="button-height inline-label">
+				<label for="recurrency">{{t 'ticket:Recurrency'}}</label>
+				<input type="number" data-ng-model="ticket.recurrency" id="recurrency" class="input">
+				<small class="input-info">{{t 'ticket:RecurrencyNotification'}}</small>
 			</p>
 
 			<!--<p class="button-height inline-label">
@@ -41,11 +53,11 @@
 			<p class="button-height inline-label">
 				<label for="object_include">{{t 'Links'}}</label>
 				<span class="input">
-					<label for="object_include" class="button orange-gradient">
+					<label class="button orange-gradient">
 						<span class="icon-paperclip small-margin-right"></span>
 					</label>
 					<select id="link-input-select" data-ng-options="s.name for s in modules" class="select compact expandable-list" data-ng-model="module" title="{{t 'Category'}}"></select>
-					<input type="text" placeholder="{{t 'Search'}}..." data-ng-model="item" data-typeahead-on-select="addLink()" data-typeahead="item as item.name for item in linkAutoComplete($viewValue) | filter:{name:$viewValue}" class="input-unstyled"/>
+					<input type="text" id='object_include' placeholder="{{t 'Search'}}..." data-ng-model="item" data-typeahead-on-select="addLink()" data-typeahead="item as item.name for item in linkAutoComplete($viewValue) | filter:{name:$viewValue}" class="input-unstyled"/>
 				</span>
 			</p>
 

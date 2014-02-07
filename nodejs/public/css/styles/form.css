@@ -61,14 +61,14 @@ label {
 	textarea.input {
 		padding-top: 4px;
 		padding-bottom: 4px;
-		line-height: 16px;
+		line-height: 20px;
 		}
 		.no-boxshadow input.input,
 		.no-boxshadow textarea.input {
 			padding-top: 6px;
 			padding-bottom: 6px;
-			line-height: 16px;
-			min-height: 16px;
+			line-height: 20px;
+			min-height: 20px;
 		}
 	.inputs {
 		display: block;
@@ -1301,8 +1301,8 @@ span.select {
 					}
 
 .select.compact, .compact .select {
-	line-height: 24px;
-	height: 24px;
+	line-height: 28px;
+	height: 28px;
 	padding-right: 22px;
 	*vertical-align: -7px;
 	}
@@ -1328,7 +1328,7 @@ span.select {
 			margin-right: -6px;
 		}
 	.compact .select-value {
-		padding: 3px 8px;
+		padding: 5px 8px;
 		-webkit-border-top-left-radius: 4px;
 		-webkit-border-bottom-left-radius: 4px;
 		-moz-border-radius: 4px 0 0 4px;

@@ -12,6 +12,11 @@
 	"RecievedNotification": "Les collaborations qui recevrons les notifications",
 	"Expire": "Echéance",
 	"AddComment": "Ajouter un commentaire",
-    "Comment": "Commenter",
-	"ReplyMessage": "Envoyer un message au contrôleur"
+	"Comment": "Commenter",
+	"ReplyMessage": "Envoyer un message au contrôleur",
+	"EditTicket": "Editer un ticket",
+	"Callback": "Rappel",
+	"CallbackNotification": "Date à partir duquel le ticket sera re-ouvert",
+	"Recurrency" : "Récurrence",
+	"RecurrencyNotification" : "Récurrence du ticket en jours"
 }

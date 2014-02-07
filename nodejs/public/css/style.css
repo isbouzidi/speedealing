@@ -3380,7 +3380,7 @@ ol.button-height.last-child {
 	border-radius: 0;
 }
 .input .button:first-child {
-	margin-left: -9px;
+	
 }
 .ie7 .input .button:first-child {
 	margin-left: 0;

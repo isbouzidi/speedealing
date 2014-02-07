@@ -26,20 +26,9 @@ module.exports = function(app, passport, auth, usersSocket) {
 		object.fk_extrafields = doc;
 	});
 
-	app.get('/api/ticket', auth.requiresLogin, function(req, res) {
-		object.read(req, res);
-		return;
-	});
-
-	app.get('/api/ticket/:id', auth.requiresLogin, function(req, res) {
-		object.findOne(req, res);
-		return;
-	});
-
-	app.post('/api/ticket', auth.requiresLogin, function(req, res) {
-		object.create(req, res);
-	});
-
+	app.get('/api/ticket', auth.requiresLogin, object.read);
+	app.get('/api/ticket/:id', auth.requiresLogin, object.findOne);
+	app.post('/api/ticket', auth.requiresLogin, object.create);
 	app.put('/api/ticket/read', auth.requiresLogin, function(req, res) {
 
 		var addComment = {
@@ -196,7 +185,7 @@ module.exports = function(app, passport, auth, usersSocket) {
 				break;
 		}
 
-		//console.log(addComment);
+//console.log(addComment);
 
 		TicketModel.update({_id: req.body.id}, update, function(err) {
 			if (err) {
@@ -255,9 +244,20 @@ module.exports = function(app, passport, auth, usersSocket) {
 		};
 
 		var update = {
-			'$set': {Status: req.body.Status},
-			'$push': {comments: addComment}
+			$set: {Status: req.body.Status},
+			$push: {comments: addComment}
+		};
+
+		if (req.body.recurrency) {
+			var datef = new Date();
+			datef.setDate(datef.getDate() + req.body.recurrency + 5);
+
+			var callback = new Date();
+			callback.setDate(callback.getDate() + req.body.recurrency);
+
+			update['$set'] = {Status: "NEW", read: [], datef: datef, callback: callback};
 		}
+
 		if (req.user._id != req.body.controller.id)
 			update['$pull'] = {read: req.body.controller.id};
 
@@ -318,15 +318,8 @@ module.exports = function(app, passport, auth, usersSocket) {
 			});
 		});
 	});
-
-	app.put('/api/ticket/:id', auth.requiresLogin, function(req, res) {
-		object.update(req, res);
-	});
-
-	app.del('/api/ticket', auth.requiresLogin, function(req, res) {
-		object.del(req, res);
-	});
-
+	app.put('/api/ticket/:id', auth.requiresLogin, object.update);
+	app.del('/api/ticket', auth.requiresLogin, object.del);
 	app.post('/api/ticket/file/:Id', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
 		//console.log(id);
@@ -367,7 +360,7 @@ module.exports = function(app, passport, auth, usersSocket) {
 	});
 
 	app.del('/api/ticket/file/:Id', auth.requiresLogin, function(req, res) {
-		//console.log(req.body);
+//console.log(req.body);
 		var id = req.params.Id;
 		//console.log(id);
 
@@ -399,6 +392,8 @@ Object.prototype = {
 			icon: "icon-speech"
 		});
 
+		ticket.read.push(req.body.controller.id);
+
 		ticket.save(function(err, doc) {
 			if (err)
 				console.log(err);
@@ -428,10 +423,9 @@ Object.prototype = {
 		});
 	},
 	read: function(req, res) {
-		var status_list = this.fk_extrafields.fields.Status;
 
 		if (req.query.count)
-			TicketModel.count({'affectedTo.id': req.user._id, read: {$ne: req.user._id}, Status: {$ne: 'CLOSED'}}, function(err, doc) {
+			TicketModel.count({'affectedTo.id': req.user._id, read: {$ne: req.user._id}, Status: {$ne: 'CLOSED'}, $or: [{callback: {$lt: new Date()}}, {callback: null}]}, function(err, doc) {
 				if (err) {
 					console.log(err);
 					res.send(500, doc);
@@ -446,18 +440,18 @@ Object.prototype = {
 			/**
 			 * Find for box ticket in fiche
 			 */
-			
+
 			if (req.query.find) {
 				query = JSON.parse(req.query.find);
 			} else {
-				query = {'affectedTo.id': req.user._id, Status: {$ne: 'CLOSED'}};
+				query = {'affectedTo.id': req.user._id, Status: {$ne: 'CLOSED'}, $or: [{callback: {$lt: new Date()}}, {callback: null}]};
 			}
-			
-			if(req.query.fields) {
+
+			if (req.query.fields) {
 				fields = req.query.fields;
 			}
 
-			TicketModel.find(query,fields, function(err, doc) {
+			TicketModel.find(query, fields, function(err, doc) {
 				if (err) {
 					console.log(err);
 					res.send(500, doc);

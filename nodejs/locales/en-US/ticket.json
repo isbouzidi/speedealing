@@ -13,5 +13,10 @@
 	"Expire": "Expiration date",
 	"AddComment": "Add a comment",
 	"Comment": "Comment",
-	"ReplyMessage": "Send a message to controler"
+	"ReplyMessage": "Send a message to controler",
+	"EditTicket": "Edit a ticket",
+    "Callback": "Date callback",
+	"CallbackNotification": "Date ticket re-open",
+	"Recurrency" : "Recurrency",
+	"RecurrencyNotification" : "Recurrency of ticket in days"
 }

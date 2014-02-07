@@ -236,16 +236,21 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		};
 
 		// Convert date to IsoString date
-
-		$scope.newExpireDate = function(e) {
-			$scope.ticket.datef = e.sender._value;
-		};
-
 		$scope.$watch('ticket.datef', function(date)
 		{
 			var time = new Date(date);
 			if (new Date($scope.dateString).getTime() != time.getTime())
 				$scope.dateString = time;
+		});
+		
+		$scope.$watch('ticket.callback', function(date)
+		{
+			var time = new Date(date);
+			if (new Date($scope.dateString).getTime() != time.getTime())
+				$scope.callbackString = time;
+			
+			if($scope.callbackString > $scope.dateString)
+				$scope.ticket.datef = time;
 		});
 
 		$scope.updateExpire = function(e) {
@@ -320,6 +325,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 					id: $scope.ticket._id,
 					Status: 'CLOSED',
 					controller: $scope.ticket.controlledBy,
+					recurrency : $scope.ticket.recurrency,
 					ref: $scope.ticket.ref,
 					name: $scope.ticket.name
 				}

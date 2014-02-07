@@ -36,12 +36,14 @@ var ticketSchema = new Schema({
 			title: String, //top of the bar
 			datec: {type: Date, default: new Date},
 			icon: String
-		}]
+		}],
+	callback: Date,
+	recurrency: Number
 });
 
 ticketSchema.plugin(timestamps);
 
-ticketSchema.plugin(gridfs.pluginGridFs,{root:'Ticket'});
+ticketSchema.plugin(gridfs.pluginGridFs, {root: 'Ticket'});
 
 /**
  * Pre-save hook
