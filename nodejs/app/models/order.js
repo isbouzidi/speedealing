@@ -1,11 +1,15 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		Schema = mongoose.Schema,
+		gridfs = require('../controllers/gridfs'),
 		timestamps = require('mongoose-timestamp');
 
+var SeqModel = mongoose.model('Sequence');
 
 /**
  * Article Schema
@@ -44,6 +48,19 @@ var orderSchema = new Schema({
 	linked_objects: [{id: Schema.Types.ObjectId, name: String}],
 	bills: [Schema.Types.ObjectId],
 	groups: [Schema.Types.Mixed],
+	optional: Schema.Types.Mixed,
+	bl: [{
+			label: String,
+			name: String,
+			address: String,
+			zip: String,
+			town: String,
+			products: [{
+					id: Schema.Types.ObjectId,
+					name: String,
+					qty: {type: Number, default: 0}
+				}]
+		}],
 	lines: [{
 			pu: Number,
 			qty: Number,
@@ -71,6 +88,8 @@ var orderSchema = new Schema({
 });
 
 orderSchema.plugin(timestamps);
+
+orderSchema.plugin(gridfs.pluginGridFs,{root:'Commande'});
 
 /**
  * Pre-save hook

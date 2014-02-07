@@ -1,6 +1,8 @@
 "use strict";
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+		gridfs = require('../controllers/gridfs'),
+		_ = require('underscore');
 
 var CommandeModel = mongoose.model('commande');
 var ExtrafieldModel = mongoose.model('extrafields');
@@ -17,17 +19,20 @@ module.exports = function(app, passport, auth) {
 
 		object.fk_extrafields = doc;
 	});
+	app.get('/api/commande/lines/list', auth.requiresLogin, object.listLines);
+	//app.get('/api/commande/BL/pdf', auth.requiresLogin, object.genBlPDF);
 
-	app.get('/api/commande/lines/list', auth.requiresLogin, function(req, res) {
-		object.listLines(req, res);
-		return;
-	});
+	app.get('/api/commande', auth.requiresLogin, object.all);
+	app.post('/api/commande', auth.requiresLogin, object.create);
+	app.get('/api/commande/:orderId', auth.requiresLogin, object.show);
+	app.put('/api/commande/:orderId', auth.requiresLogin, object.update);
+	app.del('/api/commande/:orderId', auth.requiresLogin, object.destroy);
+	app.post('/api/commande/file/:Id', auth.requiresLogin, object.createFile);
+	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
+	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 
-	app.get('/api/commande/BL/pdf', auth.requiresLogin, function(req, res) {
-		object.genBlPDF(req, res);
-		return;
-	});
-
+	//Finish with setting up the orderId param
+	app.param('orderId', object.order);
 	//other routes..
 };
 
@@ -45,5 +50,143 @@ Object.prototype = {
 
 			res.send(200, doc.lines);
 		});
+	},
+	/**
+	 * Find order by id
+	 */
+	order: function(req, res, next, id) {
+		CommandeModel.findOne({_id: id}, function(err, doc) {
+			if (err)
+				return next(err);
+			if (!doc)
+				return next(new Error('Failed to load order ' + id));
+			req.order = doc;
+			next();
+		});
+	},
+	/**
+	 * Create an order
+	 */
+	create: function(req, res) {
+		var order = new CommandeModel(req.body);
+		order.author = {};
+		order.author.id = req.user._id;
+		order.author.name = req.user.name;
+		order.save(function(err) {
+			if (err) {
+				return console.log(err);
+			} else {
+				res.json(order);
+			}
+		});
+	},
+	/**
+	 * Update an order
+	 */
+	update: function(req, res) {
+		var order = req.order;
+		order = _.extend(order, req.body);
+		order.save(function(err, doc) {
+			res.json(doc);
+		});
+	},
+	/**
+	 * Delete an order
+	 */
+	destroy: function(req, res) {
+		var order = req.order;
+		order.remove(function(err) {
+			if (err) {
+				res.render('error', {
+					status: 500
+				});
+			} else {
+				res.json(order);
+			}
+		});
+	},
+	/**
+	 * Show an order
+	 */
+	show: function(req, res) {
+		res.json(req.order);
+	},
+	/**
+	 * List of orders
+	 */
+	all: function(req, res) {
+		CommandeModel.find({}, {}, function(err, orders) {
+			if (err) {
+				res.render('error', {
+					status: 500
+				});
+			} else {
+				res.json(orders);
+			}
+		});
+	},
+	/**
+	 * Add a file in an order
+	 */
+	createFile: function(req, res) {
+		var id = req.params.Id;
+		//console.log(id);
+		//console.log(req.body);
+
+		if (req.files && id) {
+			//console.log(req.files);
+			
+			/* Add dossier information in filename */
+			req.files.file.originalFilename = req.body.idx + "_" + req.files.file.originalFilename;
+
+			gridfs.addFile(CommandeModel, id, req.files.file, function(err, result) {
+				//console.log(result);
+				if (err)
+					res.send(500, err);
+				else
+					res.send(200, result);
+			});
+		} else
+			res.send(500, "Error in request file");
+	},
+	/**
+	 * Get a file form an order
+	 */
+	getFile: function(req, res) {
+		var id = req.params.Id;
+		if (id && req.params.fileName) {
+
+			gridfs.getFile(CommandeModel, id, req.params.fileName, function(err, store) {
+				if (err)
+					return res.send(500, err);
+				if (req.query.download)
+					res.attachment(store.filename); // for downloading 
+
+				res.type(store.contentType);
+				store.stream(true).pipe(res);
+			});
+		} else {
+			res.send(500, "Error in request file");
+		}
+
+	},
+	/**
+	 * Delete a file in an order
+	 */
+	deleteFile: function(req, res) {
+		//console.log(req.body);
+		var id = req.params.Id;
+		//console.log(id);
+
+		if (req.params.fileName && id) {
+			gridfs.delFile(CommandeModel, id, req.params.fileName, function(err) {
+				if (err)
+					res.send(500, err);
+				else
+					res.send(200, {status: "ok"});
+			});
+		} else
+			res.send(500, "File not found");
 	}
+
 };

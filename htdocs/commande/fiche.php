@@ -247,10 +247,10 @@ if ($action == 'add' && $user->rights->commande->creer) {
 		$mesg = '<div class="error">' . $object->error . '</div>';
 	}
 } else if ($action == 'remove_file') {
-        $langs->load("other");
-		$comref = dol_sanitizeFileName($object->ref);
-        $file = $conf->commande->dir_output . '/' . GETPOST('file'); // Do not use urldecode here ($_GET and $_REQUEST are already decoded by PHP).
-		$ret = dol_delete_file($file);
+	$langs->load("other");
+	$comref = dol_sanitizeFileName($object->ref);
+	$file = $conf->commande->dir_output . '/' . GETPOST('file'); // Do not use urldecode here ($_GET and $_REQUEST are already decoded by PHP).
+	$ret = dol_delete_file($file);
 } else if ($action == 'builddoc') { // In get or post
 	/*
 	 * Generate order document
@@ -273,7 +273,7 @@ if ($action == 'add' && $user->rights->commande->creer) {
 		$outputlangs = new Translate();
 		$outputlangs->setDefaultLang($newlang);
 	}
-	
+
 	$object->modelpdf = "bl"; // TODO Automatic mode
 	$result = commande_pdf_create($db, $object, $object->modelpdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
 
@@ -892,7 +892,6 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 //    print '<tr><td>' . $langs->trans('DateDeliveryPlanned') . '</td>';
 //    print '<td colspan="3">' . ($object->date_livraison ? dol_print_date($object->date_livraison, 'daytext') : '&nbsp;') . '</td>';
 //    print '</tr>';
-	
 	//$object->date_livraison = date("c", $object->date_livraison->sec);
 	print '<tr><td>' . $form->editfieldkey("DateDeliveryPlanned", 'date_livraison', $object->date_livraison, $object, $user->rights->commande->creer && $object->Status == "DRAFT", "datepicker") . '</td>';
 	print '<td td colspan="5">';
@@ -1048,6 +1047,56 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	// Print Addresses
 	print column_start("six");
 	print $object->showAddresses();
+	
+	$titre = $langs->trans("Documents");
+	print start_box($titre, "icon-object-documents");
+	/* ?><input type="file" name="files" id="files" />
+	  <script>
+	  $(document).ready(function() {
+	  $("#files").kendoUpload({
+	  multiple: true,
+	  async: {
+	  saveUrl: "api/societe/file/<?php echo $object->id; ?>",
+	  removeUrl: "api/societe/file/<?php echo $object->id; ?>",
+	  removeVerb: "DELETE",
+	  autoUpload: true
+	  },
+	  error: function(e) {
+	  // log error
+	  console.log(e);
+	  },
+	  complete: function() {
+	  document.location.reload();
+	  },
+	  localization: {
+	  select: "Ajouter fichiers"
+	  }
+	  });
+
+	  });
+	  </script>
+	  <?php */
+	print '<h5 class="green">Fichiers</h5>
+					<ul class="files-icons">';
+
+	foreach ($object->files as $aRow) {
+		print '<li>';
+		print '<span class="icon file-' . substr($aRow->name, strpos($aRow->name, ".") + 1) . '"></span>';
+		print '<div class="controls">
+					<span class="button-group compact children-tooltip">
+						<a href="api/commande/file/' . $object->id . '/' . $aRow->name . '" class="button icon-eye" target="_blank" title="Ouvrir"></a>
+						<a href="api/commande/file/' . $object->id . '/' . $aRow->name . '?download=1" class="button icon-download" title="Télécharger"></a>
+						<a href="api/commande/file/remove/' . $object->id . '/' . $aRow->name . '" class="button icon-trash" title="Supprimer"></a>
+					</span>
+					</div>';
+		print '<a href="api/commande/file/' . $object->id . '/' . $aRow->name . '">' . $aRow->name . '</a>';
+		print '</li>';
+	}
+
+	print '</ul>';
+
+	print end_box();
+	
 	print column_end();
 
 	// Print Notes
