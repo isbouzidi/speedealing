@@ -8,6 +8,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			$scope.order.bl[0] = {};
 			$scope.order.bl[1] = {};
 			$scope.filePercentage = {};
+			$scope.fileName = {};
 			$scope.checkFile = false;
 			$scope.validAddress = false;
 			$scope.validOrder = false;
@@ -170,15 +171,36 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
-						
+
 						$scope.order.files = data.files;
 						$scope.order.__v = data.__v; // for update
-						
+
 						$scope.filePercentage[idx] = 100;
+						$scope.fileName[idx] = file.name;
 					});
 				//.error(...)
 				//.then(success, error, progress); 
 			}
+		};
+
+		$scope.suppressFile = function(id, fileName, idx) {
+			console.log(id);
+			console.log(fileName);
+			console.log(idx);
+			//CO0214-00060_pvFeuPorte_Dossier1_UGAP_422014.csv
+			
+			fileName = $scope.order.ref + "_" + idx + "_" + fileName;
+
+			$http({method: 'DELETE', url: 'api/commande/file/' + id + '/' + fileName
+			}).success(function(data, status) {
+				if (status == 200) {
+					$scope.order.files = data.files;
+					$scope.order.__v = data.__v; // for update
+
+					$scope.filePercentage[idx] = 0;
+
+				}
+			});
 		};
 
 	}]);
