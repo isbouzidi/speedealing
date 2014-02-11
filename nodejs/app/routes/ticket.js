@@ -28,7 +28,9 @@ module.exports = function(app, passport, auth, usersSocket) {
 
 	app.get('/api/ticket', auth.requiresLogin, object.read);
 	app.get('/api/ticket/:id', auth.requiresLogin, object.findOne);
-	app.post('/api/ticket', auth.requiresLogin, object.create);
+	app.post('/api/ticket', auth.requiresLogin, function(req, res) {
+		object.create(req, res);
+	});
 	app.put('/api/ticket/read', auth.requiresLogin, function(req, res) {
 
 		var addComment = {
@@ -69,7 +71,7 @@ module.exports = function(app, passport, auth, usersSocket) {
 		var datef = new Date(req.body.datef);
 
 		var addComment = {
-			title: "<strong>" + req.user.firstname + "</strong> a change la date <strong>" + dateFormat(datef, "dd/mm/yyyy") + " " + datef.toLocaleTimeString() + "</strong>",
+			title: "<strong>" + req.user.firstname + "</strong> a change la date d\'échéance au <strong>" + dateFormat(datef, "dd/mm/yyyy") + " " + datef.toLocaleTimeString() + "</strong>",
 			datec: new Date(),
 			author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
 			icon: "icon-clock"
@@ -387,12 +389,13 @@ Object.prototype = {
 		var ticket = new TicketModel(req.body);
 
 		ticket.comments.push({author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
-			title: "<strong>" + req.user.firstname + "</strong> a cree le ticket",
+			title: "<strong>" + req.user.firstname + "</strong> a crée le ticket",
 			datec: new Date(),
-			icon: "icon-speech"
+			icon: "icon-speech",
+			note: "Date d\'échéance au " + dateFormat(ticket.datef, "dd/mm/yyyy")
 		});
 
-		ticket.read.push(req.body.controller.id);
+		ticket.read.push(req.body.controlledBy.id);
 
 		ticket.save(function(err, doc) {
 			if (err)

@@ -192,6 +192,7 @@ if (!defined('NOREQUIREAJAX'))
 
 
 
+
 	
 // If install or upgrade process not done or not completely finished, we call the install page.
 if (!empty($conf->global->MAIN_NOT_INSTALLED) || !empty($conf->global->MAIN_NOT_UPGRADED)) {
@@ -595,6 +596,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 
 
 
+
 		
 // DOCTYPE
 	include DOL_DOCUMENT_ROOT . '/core/tpl/preheader.tpl.php';
@@ -748,7 +750,10 @@ function main_menu() {
 
 
 
-	$countTicket = $mongodb->Ticket->count(array('affectedTo.id' => $user->id, 'read' => array('$ne' => $user->id), 'Status' => array('$ne' => 'CLOSED')));
+	$countTicket = $mongodb->Ticket->count(array('affectedTo.id' => $user->id, 'read' => array('$ne' => $user->id),
+		'Status' => array('$ne' => 'CLOSED'),
+		'$or' => array(array("callback" => array('$lt' => new MongoDate(mktime(0, 0, 0, date("m"), date("d"), date("Y"))))), array("callback" => null))
+	));
 
 	include 'core/tpl/main_menu.tpl.php';
 }
