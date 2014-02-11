@@ -5,6 +5,7 @@ module.exports = function(app, passport, auth) {
 	//User Routes
 	var users = require('../app/controllers/users');
 	app.get('/login', function(req, res) {
+		console.log(req.locale);
 		var navigator = require('ua-parser').parse(req.headers['user-agent']);
 		var error = "";
 		if (navigator.ua.family == "Other" && parseFloat((req.headers['user-agent'].match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) < 10) {

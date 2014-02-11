@@ -41,12 +41,15 @@ module.exports = function(app, passport, db) {
 		ns: {namespaces: namespaces, defaultNs: 'main'},
 		supportedLngs: ['en-US', 'fr-FR'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
-		load: 'current',
+		//load: 'current',
 		preload: ['fr-FR', 'en-US'],
+		//useCookie: false,
 		cookie: 'speedealingLang',
+		detectLngFromHeaders: false,
 		saveMissing: true,
 		debug: false,
-		sendMissingTo: 'fallback'
+		sendMissingTo: 'fallback',
+		lng: "fr-FR"
 	});
 
 	hbs.registerHelper('t', function(i18n_key) {
