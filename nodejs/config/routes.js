@@ -5,7 +5,13 @@ module.exports = function(app, passport, auth) {
 	//User Routes
 	var users = require('../app/controllers/users');
 	app.get('/login', function(req, res) {
-		res.render('login');
+		var navigator = require('ua-parser').parse(req.headers['user-agent']);
+		var error = "";
+		if (navigator.ua.family == "Other" && parseFloat((req.headers['user-agent'].match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) < 10) {
+			error = "Votre version Internet Explorer est trop ancienne. Utilisez Chrome ou Firefox.";
+		}
+
+		res.render('login', {error: error});
 	});
 	//app.get('/signin', users.signin);
 	//app.get('/signup', users.signup);
@@ -20,15 +26,25 @@ module.exports = function(app, passport, auth) {
 				return next(err)
 			}
 
+			var navigator = require('ua-parser').parse(req.headers['user-agent']);
+			//console.log(req.headers['user-agent']);
+			//console.log(navigator.ua.family);
+			//console.log(navigator.ua.major);
+
+			if (navigator.ua.family == "Other" && parseFloat((req.headers['user-agent'].match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) < 10) {
+				res.json({success: false, errors: "Votre version Internet Explorer est trop ancienne. Utilisez Chrome ou Firefox."}, 500);
+				return users.signout;
+			}
+
 			if (!user) {
 				req.session.messages = [info.message];
-				return res.json({success: false, errors: info.message}, 401);
+				return res.json({success: false, errors: req.i18n.t('errors:ErrorBadLoginPassword')}, 401);
 			}
 
 			/* CheckExternalIP */
 			console.log(req.headers['x-real-ip']);
 			if (!ip.isPrivate(req.headers['x-real-ip']) && !user.externalConnect) {
-				res.json({success: false, errors: "External access denied"}, 401);
+				res.json({success: false, errors: "Internet access denied"}, 500);
 				return users.signout;
 			}
 

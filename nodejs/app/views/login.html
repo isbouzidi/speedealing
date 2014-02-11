@@ -83,6 +83,15 @@
 			<hgroup id="login-title" class="large-margin-bottom">
 				<h1 class="login-title-image">Speedealing</h1>
 			</hgroup>
+
+			{{#if error}}
+			<p class="big-message red-gradient">
+				<span class="big-message-icon icon-warning"></span>
+				<strong>Incompatibilité</strong><br>
+				{{error}}
+			</p>
+			{{/if}}
+
 			<form name="login" action="login" method="post" id="form-login">
 				<input type="hidden" name="token" value="token" />
 				<input type="hidden" name="loginfunction" value="loginfunction" />
@@ -181,7 +190,7 @@
 										document.location.href = '/' + document.location.href.substr(document.location.href.indexOf('/login') + 6); // redirect to old page
 								} else {
 									formLogin.clearMessages();
-									displayError("{{t 'errors:ErrorBadLoginPassword'}}");
+									displayError(req.responseJSON.errors);
 								}
 							},
 							error: function() {
