@@ -34,4 +34,11 @@ angular.module('mean.system').controller('MenuController', ['$scope', 'Global', 
 		socket.on('refreshTicket', function(data) {
 			$scope.ticketCounter();
 		});
+		
+		/* Resize all elements */
+		angular.element(document).ready(function() {
+			setTimeout(function() {
+				angular.element(window).resize();
+			},300);
+		});
 	}]);

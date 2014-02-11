@@ -830,7 +830,7 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope', '$routeParams', '$location', '$route', '$upload', '$http', 'Global', 'EEVehicule', function($scope, $routeParams, $location, $route, $upload, $http, Global, Object) {
+angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope', '$routeParams', '$location', '$route', '$upload', '$http', '$domUtilityService', 'Global', 'EEVehicule', function($scope, $routeParams, $location, $route, $upload, $http, $domUtilityService, Global, Object) {
 		$scope.global = Global;
 
 		$scope.form = {};

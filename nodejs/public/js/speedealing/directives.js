@@ -20,7 +20,7 @@ angular.module('mean.system').directive('resize', ['$window', function($window) 
 				};
 
 			}, true);
-
+			
 			w.bind('resize', function() {
 				scope.$apply();
 			});

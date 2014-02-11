@@ -2035,6 +2035,9 @@
 		$('#open-menu').on('touchend click', function(event)
 		{
 			event.preventDefault();
+			setTimeout(function() {
+				$(window).resize();
+			},100);
 
 			// Check if valid touch-click event
 			if (!$.template.processTouchClick(this, event))
