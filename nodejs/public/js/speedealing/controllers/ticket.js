@@ -1,5 +1,9 @@
-angular.module('mean.system').controller('TicketController', ['$scope', '$routeParams', '$location', '$route', '$timeout', 'Global', '$http', 'socket', 'Ticket', function($scope, $routeParams, $location, $route, $timeout, Global, $http, socket, Ticket) {
+angular.module('mean.system').controller('TicketController', ['$scope', '$routeParams', '$location', '$route', '$timeout', 'Global', 'pageTitle', '$http', 'socket', 'Ticket', function($scope, $routeParams, $location, $route, $timeout, Global, pageTitle, $http, socket, Ticket) {
 		$scope.global = Global;
+
+		pageTitle.setTitle('Gestion des tickets');
+
+//MyCtrl.$inject = ['pageTitleSetter'];
 
 		var ticket = {
 			important: false,
@@ -249,14 +253,14 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			if (new Date($scope.dateString).getTime() != time.getTime())
 				$scope.dateString = time;
 		});
-		
+
 		$scope.$watch('ticket.callback', function(date)
 		{
 			var time = new Date(date);
 			if (new Date($scope.dateString).getTime() != time.getTime())
 				$scope.callbackString = time;
-			
-			if($scope.callbackString > $scope.dateString)
+
+			if ($scope.callbackString > $scope.dateString)
 				$scope.ticket.datef = time;
 		});
 
@@ -332,7 +336,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 					id: $scope.ticket._id,
 					Status: 'CLOSED',
 					controller: $scope.ticket.controlledBy,
-					recurrency : $scope.ticket.recurrency,
+					recurrency: $scope.ticket.recurrency,
 					ref: $scope.ticket.ref,
 					name: $scope.ticket.name
 				}
