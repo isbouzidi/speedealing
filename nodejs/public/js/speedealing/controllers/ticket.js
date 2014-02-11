@@ -60,6 +60,13 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				collection: "User",
 				searchUrl: "api/user/name/autocomplete",
 				url: "user/fiche.php?id="
+			},
+			{
+				name: "Demande d'achat",
+				icon: "icon-cart",
+				collection: "europexpress_buy",
+				searchUrl: "api/europexpress/buy/autocomplete",
+				url: ""
 			}
 		];
 
