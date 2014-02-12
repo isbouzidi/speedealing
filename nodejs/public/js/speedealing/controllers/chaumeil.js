@@ -202,5 +202,9 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 				}
 			});
 		};
+		
+		$scope.updateDF = function(obj){
+			$scope.order.optional.numDF = obj.centreCout.substr(1,2) + "/      /"+obj.centreCout.substr(3);
+		};
 
 	}]);

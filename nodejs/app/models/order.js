@@ -52,6 +52,7 @@ var orderSchema = new Schema({
 	bl: [{
 			label: String,
 			name: String,
+			contact: String,
 			address: String,
 			zip: String,
 			town: String,
