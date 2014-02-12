@@ -412,8 +412,8 @@
 /* White */
 .calendar-menu > li,
 li.calendar-menu,
-.message-menu > li,
-li.message-menu,
+//.message-menu > li,
+//li.message-menu,
 .message, .big-message,
 .table > thead > tr > .header:hover {
 	color: #666666;

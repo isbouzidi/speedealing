@@ -432,9 +432,9 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			if (user == null)
 				user = Global.user._id;
 			if (read.indexOf(user) >= 0)
-				return true;
+				return "white-gradient";
 			else
-				return false;
+				return "orange-gradient";
 		};
 
 		$scope.countDown = function(date, reverse) {

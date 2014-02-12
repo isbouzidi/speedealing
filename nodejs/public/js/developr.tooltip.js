@@ -519,7 +519,7 @@
 
 				// Create element
 				noPointerEvents = settings.noPointerEvents ? ' no-pointer-events' : '';
-				tooltip = $('<div class="message tooltip '+settings.classes.join(' ')+noPointerEvents+'">'+content+'</div>')
+				tooltip = $('<div class="message white-gradient tooltip '+settings.classes.join(' ')+noPointerEvents+'">'+content+'</div>')
 							.appendTo(parent)
 							.data('tooltip-target', target);
 
