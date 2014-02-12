@@ -28,6 +28,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<meta name="robots" content="noindex,nofollow" />
 	<meta name="author" content="Speedealing Development Team" />
+	<meta name="google" value="notranslate" />
 
 	<title><?php echo $title; ?></title>
 	<base href="<?php echo $base_href; ?>" />
