@@ -973,7 +973,7 @@ class pdf_einstein extends ModelePDFCommandes {
 			// Show recipient name
 			$pdf->SetXY($posx + 2, $posy + 3);
 			$pdf->SetFont('', 'B', $default_font_size);
-			$pdf->MultiCell(96, 4, "BBB".$carac_client_name, 0, 'L');
+			$pdf->MultiCell(96, 4, $carac_client_name, 0, 'L');
 
 			// Show recipient information
 			$pdf->SetFont('', '', $default_font_size - 1);

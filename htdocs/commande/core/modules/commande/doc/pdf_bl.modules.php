@@ -963,7 +963,7 @@ class pdf_bl extends ModelePDFCommandes {
 				$carac_client_name = $outputlangs->convToOutputCharset($socname);
 			}
 			else {
-				$carac_client_name = $outputlangs->convToOutputCharset($object->thirdparty->name);
+				$carac_client_name = $outputlangs->convToOutputCharset("BBB".$object->thirdparty->name);
 			}
 
 			$carac_client = pdf_build_address($outputlangs, $this->emetteur, $object->thirdparty, ($usecontact ? $object->contact : ''), $usecontact, 'target');
