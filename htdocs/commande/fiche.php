@@ -80,7 +80,7 @@ $soc = new Societe($db);
 if (!empty($id)) {
 	$object->fetch($id);
 	$object->fetch_thirdparty();
-	print_r($object->thirdparty);
+	//print_r($object->thirdparty);
 	$soc->load($object->client->id);
 }
 

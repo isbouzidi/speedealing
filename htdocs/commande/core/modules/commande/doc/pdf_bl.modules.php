@@ -142,7 +142,7 @@ class pdf_bl extends ModelePDFCommandes {
 		$default_font_size = pdf_getPDFFontSize($outputlangs);
 
 		if ($conf->commande->dir_output) {
-			$object->fetch_thirdparty();
+			//$object->fetch_thirdparty();
 
 			$deja_regle = "";
 
@@ -856,8 +856,10 @@ class pdf_bl extends ModelePDFCommandes {
 		$this->emetteur->zip = "94200";
 		$this->emetteur->town = "Ivry Sur Seine";
 		$this->emetteur->logo = "logo.jpg";
+		
+		//error_log(print_r($object->groups[0]->shipments[0], true));
 
-		$object->thirdparty->name = $object->groups[0]->shipments[0]->societe . "\n". $object->groups[0]->shipments[0]->firstname . " " . $object->groups[0]->shipments[0]->lastname;
+		$object->thirdparty->name = $object->thirdparty->name . "\n". $object->groups[0]->shipments[0]->firstname . " " . $object->groups[0]->shipments[0]->lastname;
 		$object->thirdparty->address = $object->groups[0]->shipments[0]->address;
 		$object->thirdparty->town = $object->groups[0]->shipments[0]->town;
 		$object->thirdparty->zip = $object->groups[0]->shipments[0]->zip;
@@ -964,7 +966,7 @@ class pdf_bl extends ModelePDFCommandes {
 			}
 			else {
 				$carac_client_name = $outputlangs->convToOutputCharset($object->thirdparty->name);
-				error_log(print_r($object->thirdparty, true));
+				//error_log(print_r($object->thirdparty, true));
 			}
 
 			$carac_client = pdf_build_address($outputlangs, $this->emetteur, $object->thirdparty, ($usecontact ? $object->contact : ''), $usecontact, 'target');
