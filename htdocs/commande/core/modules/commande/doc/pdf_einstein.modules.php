@@ -948,11 +948,11 @@ class pdf_einstein extends ModelePDFCommandes {
 					$socname = $object->contact->socname;
 				else
 					$socname = $object->thirdparty->name;
-				$carac_client_name = $outputlangs->convToOutputCharset("TITI" . $socname);
+				$carac_client_name = $outputlangs->convToOutputCharset($socname);
 			}
 			else {
 				error_log($object->thirdparty->name);
-				$carac_client_name = $outputlangs->convToOutputCharset("TOTO" . $object->thirdparty->name);
+				$carac_client_name = $outputlangs->convToOutputCharset($object->thirdparty->name);
 			}
 
 			$carac_client = pdf_build_address($outputlangs, $this->emetteur, $object->thirdparty, ($usecontact ? $object->contact : ''), $usecontact, 'target');
@@ -973,7 +973,7 @@ class pdf_einstein extends ModelePDFCommandes {
 			// Show recipient name
 			$pdf->SetXY($posx + 2, $posy + 3);
 			$pdf->SetFont('', 'B', $default_font_size);
-			$pdf->MultiCell(96, 4, $carac_client_name, 0, 'L');
+			$pdf->MultiCell(96, 4, "BBB".$carac_client_name, 0, 'L');
 
 			// Show recipient information
 			$pdf->SetFont('', '', $default_font_size - 1);
