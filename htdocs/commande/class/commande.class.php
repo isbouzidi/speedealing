@@ -2883,7 +2883,7 @@ class Commande extends AbstractInvoice {
 	public function fetch_thirdparty() {
 
 		$thirdparty = new Societe($this->db);
-		$thirdparty->fetch($this->client->id);
+		$thirdparty->load($this->client->id);
 		$this->thirdparty = $thirdparty;
 	}
 
