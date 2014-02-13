@@ -5,8 +5,12 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			$scope.active = 1;
 			$scope.order = {};
 			$scope.order.bl = [];
-			$scope.order.bl[0] = {};
-			$scope.order.bl[1] = {};
+			$scope.order.bl.push({
+				products: [
+					{name: 'paper'},
+					{name: 'cd'}
+				]
+			});
 			$scope.filePercentage = {};
 			$scope.fileName = {};
 			$scope.checkFile = false;
@@ -25,20 +29,13 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			order.$save(function(response) {
 				$scope.order = response;
 
-				$scope.order.bl[0] = {};
-				$scope.order.bl[1] = {};
-
-				$scope.order.bl[0].products = [];
-				$scope.order.bl[0].products[0] = {};
-				$scope.order.bl[0].products[0].name = 'paper';
-				$scope.order.bl[0].products[1] = {};
-				$scope.order.bl[0].products[1].name = 'cd';
-
-				$scope.order.bl[1].products = [];
-				$scope.order.bl[1].products[0] = {};
-				$scope.order.bl[1].products[0].name = 'paper';
-				$scope.order.bl[1].products[1] = {};
-				$scope.order.bl[1].products[1].name = 'cd';
+				$scope.order.bl = [];
+				$scope.order.bl.push({
+					products: [
+						{name: 'paper'},
+						{name: 'cd'}
+					]
+				});
 
 				$scope.order.optional.dossiers = [];
 				$scope.order.optional.dossiers[0] = {};
@@ -102,6 +99,15 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 
 		$scope.addDossier = function() {
 			$scope.order.optional.dossiers.push({});
+		};
+
+		$scope.addDest = function() {
+			$scope.order.bl.push({
+				products: [
+					{name: 'paper'},
+					{name: 'cd'}
+				]
+			});
 		};
 
 		$scope.sendOrder = function() {
@@ -188,7 +194,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			console.log(fileName);
 			console.log(idx);
 			//CO0214-00060_pvFeuPorte_Dossier1_UGAP_422014.csv
-			
+
 			fileName = $scope.order.ref + "_" + idx + "_" + fileName;
 
 			$http({method: 'DELETE', url: 'api/commande/file/' + id + '/' + fileName
@@ -202,9 +208,11 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 				}
 			});
 		};
-		
-		$scope.updateDF = function(obj){
-			$scope.order.optional.numDF = obj.centreCout.substr(1,2) + "/      /"+obj.centreCout.substr(3);
+
+		$scope.updateDF = function(obj) {
+			$scope.order.optional.numDF = obj.centreCout.substr(1, 2) + "/      /" + obj.centreCout.substr(3);
+			var date = new Date();
+			$scope.order.optional.DOE = obj.numAffaire + " - DOE - " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 		};
 
 	}]);
