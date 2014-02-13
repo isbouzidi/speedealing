@@ -964,6 +964,7 @@ class pdf_bl extends ModelePDFCommandes {
 			}
 			else {
 				$carac_client_name = $outputlangs->convToOutputCharset($object->thirdparty->name);
+				error_log(print_r($object->thirdparty, true));
 			}
 
 			$carac_client = pdf_build_address($outputlangs, $this->emetteur, $object->thirdparty, ($usecontact ? $object->contact : ''), $usecontact, 'target');
