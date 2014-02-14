@@ -1036,7 +1036,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			filterOptions: $scope.filterOptionsBuy,
 			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
 			columnDefs: [
-				{field: 'title', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/europexpress/requestbuy.php"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'title', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', displayName: 'Id'},
 				{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
 				{field: 'datec', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
