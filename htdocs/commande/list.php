@@ -249,8 +249,8 @@ $obj->aaSorting = array(array(5, 'desc'));
 
 
 $query = "";
-$query = '[{name :"class",value:"' . get_class($object) . '"}]';
-//	{"name": "query", "value": "{\"$and\":[{\"Status\": {\"$ne\" : \"ST_NO\"}},{\"Status\":{\"$ne\" : \"ST_NEVER\"}}]}"}]';
+$query = '[{name :"class",value:"' . get_class($object) . '"},
+	{"name": "query", "value": "{\"entity\":\"'.$user->entity.'\"}"}]';
 
 $obj->aoAjaxData = $query;
 
