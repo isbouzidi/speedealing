@@ -38,10 +38,11 @@ function putGridFile(buf, name, options, fn) {
 }
 ;
 
-function putGridFileByPath(path, name, options, fn) {
+function putGridFileByPath(path, name, original, options, fn) {
 	var db = mongoose.connection.db,
 			options = parse(options);
 	options.metadata.filename = name;
+	options.metadata.originalFilename = original;
 
 	new GridStore(db, name, "w", options).open(function(err, file) {
 		if (err)
@@ -105,26 +106,29 @@ exports.pluginGridFs = function(schema, opt) {
 
 			options.root = opt.root;
 
-			return putGridFileByPath(file.path, (this.ref || this.name) + "_" + file.originalFilename, options, function(err, result) {
-//			console.log(result);
+			return putGridFileByPath(file.path, (this.ref || this.name) + "_" + file.originalFilename, file.originalFilename, options, function(err, result) {
+			//console.log(result);
 				var files = {};
 				files.name = result.filename;
+				files.originalFilename = result.metadata.originalFilename;
 				files.type = result.contentType;
 				files.size = result.internalChunkSize;
 				files._id = result.fileId;
 				files.datec = result.uploadDate;
 
-				var found = false;
+				var update = false;
 				for (var i = 0; i < _this.files.length; i++)
 					if (_this.files[i].name == result.filename) {
 						_this.files[i] = files;
-						found = true;
+						update = true;
 					}
 
-				if (!found)
+				if (!update)
 					_this.files.push(files);
 
-				return _this.save(fn);
+				return _this.save(function(err, doc) {
+					fn(err, doc, files, update);
+				});
 			});
 		},
 		removeFile: function(file, fn) {
@@ -187,14 +191,7 @@ exports.addFile = function(Model, id, file, callback) {
 				}
 			};
 
-			doc.addFile(file, opts, function(err, result) {
-				if (err)
-					console.log(err);
-
-				//console.log(result);
-
-				return callback(null, result);
-			});
+			doc.addFile(file, opts, callback);
 		});
 	} else
 		callback({foo: "bar", status: "failed"});

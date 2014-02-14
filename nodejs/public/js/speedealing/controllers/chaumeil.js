@@ -86,8 +86,10 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			});
 		};
 
-		$scope.initAssistantes = function() {
-			$http({method: 'GET', url: 'api/chaumeil/otis/assistantes'
+		$scope.initAssistantes = function(centreCout) {
+			$http({method: 'GET', url: 'api/chaumeil/otis/assistantes', params: {
+					centreCout: centreCout
+				}
 			}).
 					success(function(data, status) {
 				$scope.assistantes = data;
@@ -210,6 +212,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 		};
 
 		$scope.updateDF = function(obj) {
+			$scope.initAssistantes(obj.centreCout.substr(1,3)); //update liste assistante
 			$scope.order.optional.numDF = obj.centreCout.substr(1, 2) + "/      /" + obj.centreCout.substr(3);
 			var date = new Date();
 			$scope.order.optional.DOE = obj.numAffaire + " - DOE - " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();

@@ -945,8 +945,9 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 					}).success(function(data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
-						console.log(data);
-						$scope.vehicule.files = data.data.files;
+						//console.log(data);
+						if(!data.update) // if not file update, add file to files[]
+							$scope.vehicule.files.push(data.file);
 					});
 				//.error(...)
 				//.then(success, error, progress); 

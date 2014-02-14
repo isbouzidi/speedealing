@@ -137,7 +137,8 @@ Object.prototype = {
 			//console.log(req.files);
 			
 			/* Add dossier information in filename */
-			req.files.file.originalFilename = req.body.idx + "_" + req.files.file.originalFilename;
+			if(req.body.idx)
+				req.files.file.originalFilename = req.body.idx + "___" + req.files.file.originalFilename;
 
 			gridfs.addFile(CommandeModel, id, req.files.file, function(err, result) {
 				//console.log(result);
