@@ -11,6 +11,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 					{name: 'cd'}
 				]
 			});
+			$scope.order.societe = Global.user.societe;
 			$scope.filePercentage = {};
 			$scope.fileName = {};
 			$scope.checkFile = false;

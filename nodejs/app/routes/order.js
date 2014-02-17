@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 		_ = require('underscore');
 
 var CommandeModel = mongoose.model('commande');
+var ContactModel = mongoose.model('contact');
 var ExtrafieldModel = mongoose.model('extrafields');
 
 module.exports = function(app, passport, auth) {
@@ -72,6 +73,52 @@ Object.prototype = {
 		order.author = {};
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
+		
+		if(order.entity == null)
+			order.entity = req.user.entity;
+
+		if (req.user.societe.id) { // It's an external order
+			return ContactModel.findOne({'societe.id': req.user.societe.id}, function(err, contact) {
+				if (err)
+					console.log(err);
+
+				if (contact == null)
+					contact = new ContactModel();
+
+				contact.entity = req.user.entity;
+				contact.firstname = req.user.firstname;
+				contact.lastname = req.user.lastname;
+				contact.email = req.user.email;
+
+
+				contact.societe.id = req.user.societe.id;
+				contact.societe.name = req.user.societe.name;
+
+				contact.name = contact.firstname + " " + contact.lastname;
+
+
+				//console.log(contact);
+				contact.save(function(err, doc) {
+					if (err)
+						console.log(err);
+
+					//console.log(doc);
+
+					order.contact.id = doc._id;
+					order.contact.name = doc.name;
+
+					order.save(function(err) {
+						if (err) {
+							return console.log(err);
+						} else {
+							res.json(order);
+						}
+					});
+
+				});
+			});
+		}
+
 		order.save(function(err) {
 			if (err) {
 				return console.log(err);
@@ -135,9 +182,9 @@ Object.prototype = {
 
 		if (req.files && id) {
 			//console.log(req.files);
-			
+
 			/* Add dossier information in filename */
-			if(req.body.idx)
+			if (req.body.idx)
 				req.files.file.originalFilename = req.body.idx + "___" + req.files.file.originalFilename;
 
 			gridfs.addFile(CommandeModel, id, req.files.file, function(err, result) {

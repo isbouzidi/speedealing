@@ -946,7 +946,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
-						if(!data.update) // if not file update, add file to files[]
+						if (!data.update) // if not file update, add file to files[]
 							$scope.vehicule.files.push(data.file);
 					});
 				//.error(...)
@@ -1012,6 +1012,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			enableRowSelection: false,
 			sortInfo: {fields: ["updatedAt"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsTicket,
+			i18n: 'fr',
 			columnDefs: [
 				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-ticket"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', displayName: 'Id'},
@@ -1034,6 +1035,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			enableRowSelection: false,
 			sortInfo: {fields: ["ref"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsBuy,
+			i18n: 'fr',
 			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
 			columnDefs: [
 				{field: 'title', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
@@ -1043,5 +1045,128 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
 			]
 		};
+
+	}]);
+
+angular.module('mean.europexpress').controller('EEFacturationController', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+
+		$scope.find = function() {
+			if ($routeParams.id1 == null)
+				return $scope.today();
+
+			//console.log($routeParams);
+			/*Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
+			 $scope.tournees = tournees;
+			 $scope.cpt = $scope.tournees.length;
+			 
+			 // somme des heures Supp de la semaine
+			 for (var i = 0; i < $scope.cpt; i++)
+			 $scope.hsupp += tournees[i].hSupp;
+			 });*/
+
+			$http({method: 'POST', url: 'api/europexpress/billing', data: {
+					month: parseInt($routeParams.id1) - 1,
+					year: parseInt($routeParams.id2)
+				}
+			}).success(function(data, status) {
+				if (status == 200) {
+					$scope.result = data;
+
+					$scope.countCourses = data.courses.length;
+					$scope.TotalCourses = 0;
+					angular.forEach(data.courses, function(row) {
+						$scope.TotalCourses += row.total_ht;
+					});
+
+
+				}
+			});
+
+		};
+
+		$scope.today = function() {
+			var d = new Date();
+			d.setHours(0, 0, 0);
+			$location.path('module/europexpress/facturation.html/' + (d.getMonth() + 1) + '/' + d.getFullYear());
+		};
+
+		$scope.next = function() {
+			var year = parseInt($routeParams.id2);
+			var month = parseInt($routeParams.id1);
+
+			if (month === 12) {
+				year++;
+				month = 0;
+			}
+			month++;
+
+			$location.path('module/europexpress/facturation.html/' + month + '/' + year);
+		};
+
+		$scope.previous = function() {
+			var year = parseInt($routeParams.id2);
+			var month = parseInt($routeParams.id1);
+
+			if (month === 1) {
+				year--;
+				month = 13;
+			}
+			month--;
+
+			$location.path('module/europexpress/facturation.html/' + month + '/' + year);
+		};
+
+		$scope.month = $routeParams.id1 + '/' + $routeParams.id2;
+
+		/*
+		 * NG-GRID for courses list
+		 */
+
+		$scope.filterOptionsCourses = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsCourses = {
+			data: 'result.courses',
+			enableRowSelection: false,
+			sortInfo: {fields: ["client.cptBilling.name"], directions: ["asc"]},
+			filterOptions: $scope.filterOptionsCourses,
+			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
+			showGroupPanel: false,
+			//jqueryUIDraggable: true,
+			i18n: 'fr',
+			groups: ['client.cptBilling.name'],
+			columnDefs: [
+				{field: 'client.cptBilling.name', width:"25%", displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', width:"25%", displayName: 'Id'},
+				{field: 'Status.name', width:"12%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+				{field: 'date_enlevement', width:"15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				{field: 'total_ht', width:"20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+			],
+			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
+					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.totalChildren()}} {{entryMaybePlural(row)}} {{row.label CUSTOM_FILTERS}}</span> <span>Total HT: {{aggFunc(row) | euro}}</span></span>" +
+					"    <div class=\"{{row.aggClass()}}\"></div>" +
+					"</div>" +
+					""
+		};
+
+		$scope.aggFunc = function(row) {
+			var total = 0;
+			//console.log(row);
+			angular.forEach(row.children, function(cropEntry) {
+				total += cropEntry.entity.total_ht;
+			});
+			return total.toString();
+		};
+		$scope.entryMaybePlural = function(row) {
+			if (row.children.length > 1)
+			{
+				return "commandes";
+			}
+			else
+				return "commande";
+		};
+
 
 	}]);

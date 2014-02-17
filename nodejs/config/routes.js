@@ -79,6 +79,7 @@ module.exports = function(app, passport, auth) {
 				_id: req.user._id,
 				entity: req.user.entity,
 				photo: req.user.photo,
+				societe: req.user.societe,
 				right_menu: req.user.right_menu};
 
 			//console.log(req.user.photo);

@@ -158,5 +158,6 @@
     "CloseProcessedOrdersAutomatically": "Classer automatiquement à \"Traitées\" les commandes sélectionnées.",
     "LinkedInvoices": "Factures jointes",
     "LinkedProposals": "Propositions commerciales jointes",
-    "ShippingHT": "Frais de transport"
+    "ShippingHT": "Frais de transport",
+	"List": "Liste"
 }

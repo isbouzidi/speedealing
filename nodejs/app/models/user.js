@@ -33,9 +33,13 @@ var UserSchema = new Schema({
 	_createdAt: {type: Date},
 	LastConnection: Date,
 	NewConnection: Date,
-	externalConnect : {type: Boolean, default: false},
+	externalConnect: {type: Boolean, default: false},
 	right_menu: {type: Boolean, default: true},
-	url: String //url by default after login
+	url: String, //url by default after login
+	societe: {
+		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
+		name: String
+	}
 });
 
 UserSchema.plugin(timestamps);
