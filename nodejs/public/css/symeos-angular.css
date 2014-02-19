@@ -504,11 +504,8 @@ ul.nav {
 /* File Upload*/
 
 .drop-box {
-	border: 3px dashed #CCC;
 	width: 100%;
-	height: 65px; 
-	text-align: center;
-	padding-top: 35px; 
+	text-align: center; 
 	position: relative;
 	pointer-events: inherit;
 }
