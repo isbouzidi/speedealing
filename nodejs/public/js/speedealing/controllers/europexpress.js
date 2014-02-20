@@ -1141,6 +1141,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			i18n: 'fr',
 			groups: ['client.cptBilling.name'],
 			groupsCollapsedByDefault: false,
+			plugins: [new ngGridFlexibleHeightPlugin()],
 			columnDefs: [
 				{field: 'client.cptBilling.name', width: "25%", displayName: 'Client', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', width: "25%", displayName: 'Id'},
@@ -1189,6 +1190,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
 			showGroupPanel: false,
 			//jqueryUIDraggable: true,
+			plugins: [new ngGridFlexibleHeightPlugin()],
 			i18n: 'fr',
 			groups: ['fournisseur.name'],
 			groupsCollapsedByDefault: false,
