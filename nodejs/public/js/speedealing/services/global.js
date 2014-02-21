@@ -17,7 +17,7 @@ angular.module('mean.system').service('pageTitle', function($window) {
 	myService.setTitle = function(documentTitle) {
 		$window.document.title = "Speedealing - " + documentTitle;
 		//$rootScope.$apply(function() {
-		data.title = "Speedealing - " /*+ window.user.company*/ + " (" + window.user.entity + ") - " + documentTitle;
+		data.title = "Speedealing " /*+ window.user.company*/ + " (" + window.user.entity + ") - " + documentTitle;
 		//});
 	};
 

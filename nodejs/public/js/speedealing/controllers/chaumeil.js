@@ -1,5 +1,7 @@
-angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http', '$timeout', '$upload', 'Global', 'Order', function($scope, $http, $timeout, $upload, Global, Order) {
+angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTitle', '$http', '$timeout', '$upload', 'Global', 'Order', function($scope, pageTitle, $http, $timeout, $upload, Global, Order) {
 		$scope.global = Global;
+
+		pageTitle.setTitle('Nouvelle commande OTIS');
 
 		$scope.init = function() {
 			$scope.active = 1;
@@ -7,8 +9,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			$scope.order.bl = [];
 			$scope.order.bl.push({
 				products: [
-					{name: 'paper'},
-					{name: 'cd'}
+					{name: 'paper', qty: 0},
+					{name: 'cd', qty: 0}
 				]
 			});
 			$scope.order.societe = Global.user.societe;
@@ -17,6 +19,10 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			$scope.checkFile = false;
 			$scope.validAddress = false;
 			$scope.validOrder = false;
+
+			$scope.order.optional = {};
+			$scope.order.optional.dossiers = [];
+			$scope.order.optional.dossiers[0] = {};
 		};
 
 		$scope.create = function() {
@@ -33,8 +39,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 				$scope.order.bl = [];
 				$scope.order.bl.push({
 					products: [
-						{name: 'paper'},
-						{name: 'cd'}
+						{name: 'paper', qty: 0},
+						{name: 'cd', qty: 0}
 					]
 				});
 
@@ -100,6 +106,17 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			});
 		};
 
+		$scope.initSelectFiles = function() {
+			$http({method: 'GET', url: 'api/chaumeil/otis/selectFiles'
+			}).success(function(data, status) {
+				$scope.selectFiles = data;
+
+				$timeout(function() {
+					angular.element('select').change();
+				}, 300);
+			});
+		};
+
 		$scope.addDossier = function() {
 			$scope.order.optional.dossiers.push({});
 		};
@@ -107,8 +124,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 		$scope.addDest = function() {
 			$scope.order.bl.push({
 				products: [
-					{name: 'paper'},
-					{name: 'cd'}
+					{name: 'paper', qty: 0},
+					{name: 'cd', qty: 0}
 				]
 			});
 		};
@@ -117,36 +134,44 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			$scope.order.date = new Date();
 			$scope.order.date_livraison = new Date();
 			$scope.order.date_livraison.setDate($scope.order.date_livraison.getDate() + 5);
-			$scope.order.entity = "colombes";
 
 			$scope.order.Status = "NEW"; // commande validee
 
+			for (var i in this.order.bl) {
+				var note = "";
+				note += "Adresse de livraison : <br/><p>" + this.order.bl[i].name + "<br/>";
+				note += this.order.bl[i].address + "<br />";
+				note += this.order.bl[i].zip + " " + this.order.bl[i].town + "</p>";
+				note += "<p> Nombre d'exemplaires papier : " + this.order.bl[i].products[0].qty + "</p>";
+				note += "<p> Nombre d'exemplaires CD : " + this.order.bl[i].products[1].qty + "</p>";
 
-			var note = "";
-			note += "Adresse de livraison : <br/><p>" + this.order.bl[0].name + "<br/>";
-			note += this.order.bl[0].address + "<br />";
-			note += this.order.bl[0].zip + " " + this.order.bl[0].town + "</p>";
-			note += "<p> Nombre d'exemplaires papier : " + this.order.bl[0].products[0].qty + "</p>";
-			note += "<p> Nombre d'exemplaires CD : " + this.order.bl[0].products[1].qty + "</p>";
+				$scope.order.notes.push({
+					note: note,
+					title: "Destinataire " + (parseInt(i) + 1),
+					edit: false
+				});
+			}
 
-			$scope.order.notes.push({
-				note: note,
-				title: "Destinataire 1",
-				edit: false
-			});
+			for (var j in $scope.order.optional.dossiers) {
+				// Add specific files
+				var note = "";
+				note += '<h4 class="green underline">' + "Liste des fichiers natifs</h4>";
+				note += '<ul>';
+				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
+					note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
+					note += '<span class="icon-extract">' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
+					note += '</a></li>';
+				}
+				note += '</ul>';
 
-			var note = "";
-			note += "Adresse de livraison : <br/><p>" + this.order.bl[1].name + "<br/>";
-			note += this.order.bl[1].address + "<br />";
-			note += this.order.bl[1].zip + " " + this.order.bl[1].town + "</p>";
-			note += "<p> Nombre d'exemplaires papier : " + this.order.bl[1].products[0].qty + "</p>";
-			note += "<p> Nombre d'exemplaires CD : " + this.order.bl[1].products[1].qty + "</p>";
 
-			$scope.order.notes.push({
-				note: note,
-				title: "Destinataire 2",
-				edit: false
-			})
+				$scope.order.notes.push({
+					note: note,
+					title: "Fichiers webdoc dossier " + (parseInt(i) + 1),
+					edit: false
+				});
+				//console.log(note);
+			}
 
 			$scope.update();
 			$scope.next();
@@ -193,9 +218,9 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 		};
 
 		$scope.suppressFile = function(id, fileName, idx) {
-			console.log(id);
-			console.log(fileName);
-			console.log(idx);
+			//console.log(id);
+			//console.log(fileName);
+			//console.log(idx);
 			//CO0214-00060_pvFeuPorte_Dossier1_UGAP_422014.csv
 
 			fileName = $scope.order.ref + "_" + idx + "_" + fileName;
@@ -212,8 +237,19 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', '$http'
 			});
 		};
 
+		$scope.countExemplaires = function() {
+
+			$scope.cd = 0;
+			$scope.papier = 0;
+
+			for (var i = 0; i < this.order.bl.length; i++) {
+				$scope.papier += this.order.bl[i].products[0].qty;
+				$scope.cd += this.order.bl[i].products[1].qty;
+			}
+		};
+
 		$scope.updateDF = function(obj) {
-			$scope.initAssistantes(obj.centreCout.substr(1,3)); //update liste assistante
+			$scope.initAssistantes(obj.centreCout.substr(1, 3)); //update liste assistante
 			$scope.order.optional.numDF = obj.centreCout.substr(1, 2) + "/      /" + obj.centreCout.substr(3);
 			var date = new Date();
 			$scope.order.optional.DOE = obj.numAffaire + " - DOE - " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();

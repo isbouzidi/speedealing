@@ -153,7 +153,7 @@ label {
 	}
 	.button-height .button,
 	.button-height .input {
-		margin-top: 4px;
+		margin-top: 1px;
 		margin-bottom: 4px;
 	}
 	.black-inputs .input,
@@ -551,7 +551,7 @@ input:-moz-placeholder {
 		position: absolute;
 		z-index: 2;
 		right: 3px;
-		top: -1px;
+		top: 2px;
 	}
 	.input.file > input {
 		position: relative;

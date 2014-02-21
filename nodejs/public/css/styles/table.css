@@ -119,7 +119,7 @@ th.button-height {
 	.table-header.button-height,
 	.table-footer.button-height {
 		margin: 0;
-		padding: 0px 10px;
+		padding: 4px 10px;
 	}
 	.table-header.silver-gradient {
 		-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);

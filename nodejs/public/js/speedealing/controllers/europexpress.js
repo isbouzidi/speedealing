@@ -1071,34 +1071,34 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			}).success(function(data, status) {
 				if (status == 200) {
 					$scope.result = data;
-					
+
 					$scope.countCourses = {};
 					$scope.TotalCourses = {};
-					
+
 
 					$scope.countCourses.course = data.course.length;
 					$scope.countCourses.messagerie = data.messagerie.length;
 					$scope.countCourses.affretement = data.affretement.length;
-					
+
 					$scope.countCoursesST = data.allST.length;
-					
+
 					$scope.TotalCourses.course = 0;
 					$scope.TotalCourses.messagerie = 0;
 					$scope.TotalCourses.affretement = 0;
 					$scope.TotalCoursesST = 0;
-					
+
 					angular.forEach(data.course, function(row) {
 						$scope.TotalCourses.course += row.total_ht;
 					});
-					
+
 					angular.forEach(data.messagerie, function(row) {
 						$scope.TotalCourses.messagerie += row.total_ht;
 					});
-					
+
 					angular.forEach(data.affretement, function(row) {
 						$scope.TotalCourses.affretement += row.total_ht;
 					});
-					
+
 					angular.forEach(data.allST, function(row) {
 						$scope.TotalCoursesST += row.total_soustraitant;
 					});
@@ -1231,5 +1231,41 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 					""
 		};
 
+
+	}]);
+
+angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', function($scope, pageTitle, $routeParams, $http, $location) {
+
+		pageTitle.setTitle('Cartes Gazoil');
+
+		/*
+		 * NG-GRID for courses sous-traitant list
+		 */
+
+		$scope.filterOptions = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptions = {
+			data: 'result.allST',
+			enableRowSelection: false,
+			sortInfo: {fields: ["fournisseur.name"], directions: ["asc"]},
+			filterOptions: $scope.filterOptionsCoursesST,
+			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
+			showGroupPanel: false,
+			//jqueryUIDraggable: true,
+			plugins: [new ngGridFlexibleHeightPlugin()],
+			i18n: 'fr',
+			//groups: ['fournisseur.name'],
+			//groupsCollapsedByDefault: false,
+			columnDefs: [
+				{field: 'fournisseur.name', width: "25%", displayName: 'Sous-traitant', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', width: "25%", displayName: 'Id'},
+				{field: 'Status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+				{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				{field: 'total_soustraitant', width: "20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+			]
+		};
 
 	}]);

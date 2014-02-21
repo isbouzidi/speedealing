@@ -106,6 +106,9 @@ Object.prototype = {
 
 					order.contact.id = doc._id;
 					order.contact.name = doc.name;
+					
+					order.societe.id = req.user.societe.id;
+					order.societe.name = req.user.societe.name;
 
 					order.save(function(err) {
 						if (err) {
