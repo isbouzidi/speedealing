@@ -1,4 +1,4 @@
-angular.module('mean.system').directive('resize', ['$window', function($window) {
+angular.module('mean').directive('resize', ['$window', function($window) {
 		return function(scope, element) {
 			var w = angular.element($window);
 			//var w = element;

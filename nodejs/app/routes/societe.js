@@ -15,19 +15,7 @@ module.exports = function(app, passport, auth) {
 
 	var object = new Object();
 
-	ExtrafieldModel.findById('extrafields:Societe', function(err, doc) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-
-		object.fk_extrafields = doc;
-	});
-
-	app.get('/api/societe', auth.requiresLogin, function(req, res) {
-		object.read(req, res);
-		return;
-	});
+	app.get('/api/societe', auth.requiresLogin, object.read);
 
 	// Specific for autocomplete
 	app.get('/api/societe/select', auth.requiresLogin, function(req, res) {
@@ -299,41 +287,39 @@ Object.prototype = {
 		return req.body.models;
 	},
 	read: function(req, res) {
-		var status_list = this.fk_extrafields.fields.Status;
+		var query = {};
 
-		SocieteModel.find({}, function(err, doc) {
+		if (req.query.query) {
+			switch (req.query.query) {
+				case "CUSTOMER" :
+					query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
+					break;
+				case "SUPPLIER" :
+					query.fournisseur = "SUPPLIER";
+					break;
+				case "SUBCONTRATOR" :
+					query.fournisseur = "SUBCONTRATOR";
+					break;
+				case "SUSPECT" :
+					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
+					break;
+			}
+		}
+
+		SocieteModel.find(query, "-history -files", function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
 				return;
 			}
 
-			for (i in doc) {
-				var status = {};
-				doc[i] = doc[i].value;
-				delete doc[i].entity;
-				delete doc[i].class;
-				delete doc[i].tms;
-				delete doc[i]._rev;
-				delete doc[i].history;
+			//console.log(doc);
 
-				doc[i].societe_id = doc[i].societe.id;
-				doc[i].societe = doc[i].societe.name;
-				status.id = doc[i].Status;
-				if (status_list.values[status.id]) {
-					status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
-					status.css = status_list.values[status.id].cssClass;
-				} else { // Value not present in extrafield
-					status.name = status.id;
-					status.css = "";
-				}
-
-
-				doc[i].Status = status;
-				if (!doc[i].group.url)
-					doc[i].group.url = doc[i].group.name;
+			for (var i in doc) {
+				doc[i].setStatus(doc[i].Status, req.i18n);
+				doc[i].setProspectLevel(doc[i].prospectlevel, req.i18n);
 			}
-			res.send(200, doc);
+			res.json(200, doc);
 		});
 	},
 	update: function(req) {

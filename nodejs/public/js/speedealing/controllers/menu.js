@@ -40,5 +40,8 @@ angular.module('mean.system').controller('MenuController', ['$scope', 'Global', 
 			setTimeout(function() {
 				angular.element(window).resize();
 			},300);
+			setTimeout(function() {
+				angular.element(window).resize();
+			},2000);
 		});
 	}]);

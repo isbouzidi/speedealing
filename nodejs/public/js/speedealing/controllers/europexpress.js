@@ -873,6 +873,14 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			});
 		};
 
+		$scope.update = function() {
+			var vehicule = $scope.vehicule;
+
+			vehicule.$update(function(response) {
+
+			});
+		};
+
 		var iconsFilesList = {};
 
 		/**
@@ -1269,3 +1277,49 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 		};
 
 	}]);
+
+angular.module('mean.europexpress').controller('EEMouvementStockController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', function($scope, pageTitle, $routeParams, $http, $location) {
+		$scope.radio = {entrepot:undefined};
+		
+		function numberFormat(number, width) {
+			if (isNaN(number))
+				number = 0;
+			return new Array(width + 1 - (number + '').length).join('0') + number;
+		}
+		
+		$scope.entrepotsList = function() {
+			$scope.entrepots = [];
+
+			$http({method: 'GET', url: 'api/product/storehouse'
+			}).success(function(entrepot, status) {
+				//$scope.products = data;
+
+				for (var i = 0; i < entrepot.length; i++) {
+					for (var j = 0; j < entrepot[i].subStock.length; j++) {
+						var stock = {};
+						stock.client = entrepot[i].societe.name;
+						//stock.barCode = entrepot[i].societe.barCode;
+						stock.stock = entrepot[i].name;
+						//stock.stockCode = entrepot[i].barCode;
+						stock.barCode = numberFormat(entrepot[i].barCode, 4);
+
+						var codeBar = stock.barCode;
+
+						stock.subStock = entrepot[i].subStock[j].name;
+						stock.subStockCode = entrepot[i].subStock[j].barCode;
+						stock.barCode = codeBar + numberFormat(entrepot[i].subStock[j].barCode, 2);
+						stock.productId = entrepot[i].subStock[j].productId;
+						$scope.entrepots.push(stock);
+					}
+
+				}
+			});
+		};
+		
+		$scope.find = function() {
+			console.log("toto");
+		};
+		
+		
+
+}]);

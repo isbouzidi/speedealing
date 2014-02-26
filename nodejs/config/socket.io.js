@@ -13,7 +13,7 @@ module.exports = exports = function(server, db, socketsUser) {
 	//console.log(db.connection.db);
 	var sockets = require('socket.io').listen(server, {log: false});
 
-	/*sockets.set('authorization', passportSocketIo.authorize({
+	sockets.set('authorization', passportSocketIo.authorize({
 		cookieParser: express.cookieParser,
 		key: 'SpeedSession', // the name of the cookie where express/connect stores its session_id
 		secret: config.app.secret, // the session_secret to parse the cookie
@@ -21,13 +21,14 @@ module.exports = exports = function(server, db, socketsUser) {
 			db: db.connection.db,
 			collection: 'session'
 		}),
-		cookie: {
-			maxAge: 36000000
+		//cookie: {
+		//	maxAge: 36000000
 					//expires: new Date(Date.now() + 3600000) //1 Hour
-		},
+		//},
 		success: function(data, accept) {
 			//console.log('successful connection to socket.io');
 			//console.log(data);
+			console.log(data.user.name + " : Connected");
 
 			// The accept-callback still allows us to decide whether to
 			// accept the connection or not.
@@ -41,7 +42,7 @@ module.exports = exports = function(server, db, socketsUser) {
 			// We use this callback to log all of our failed connections.
 			accept(null, false);
 		}
-	}));*/
+	}));
 
 
 	sockets.on('connection', function(socket) { // New client
@@ -51,7 +52,7 @@ module.exports = exports = function(server, db, socketsUser) {
 		socket.on('user', function(username) {
 			socket_username = username;
 			socketsUser[username] = socket;
-			console.log(username + " : Connected");
+			//console.log(username + " : Connected");
 			//console.log(socket);
 
 			UserModel.findOne({_id: username}, "firstname lastname", function(err, user) {

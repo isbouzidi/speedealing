@@ -64,6 +64,8 @@ var logger = new (winston.Logger)({
 });
 
 require('./config/sequence'); // load the sequence ID First
+// Speedealing Schema
+require('./config/extrafields');
 
 //Bootstrap models
 var models_path = __dirname + '/app/models';
@@ -84,8 +86,7 @@ walk(models_path);
 
 var app;
 
-// Speedealing Schema
-require('./config/extrafields');
+
 //bootstrap passport config
 require('./config/passport')(passport);
 

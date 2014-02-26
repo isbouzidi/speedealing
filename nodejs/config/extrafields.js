@@ -18,6 +18,17 @@ var extrafieldSchema = new mongoose.Schema({
 });
 
 var ExtrafieldModel = mongoose.model('extrafields', extrafieldSchema, 'ExtraFields');
+
+var dictSchema = new mongoose.Schema({
+	_id: String,
+	values: {type: mongoose.Schema.Types.Mixed}
+});
+
+dictSchema.plugin(timestamps);
+
+var DictModel = mongoose.model('dict', dictSchema, 'Dict');
+
+
 /*
 //ExtrafieldModel.collection.findOne({_id: "test"}, function(err, doc) {
 	var args = test.substr(test.indexOf("(") +1 ,(test.indexOf(")") - test.indexOf("(") -1) );

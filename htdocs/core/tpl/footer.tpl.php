@@ -91,10 +91,10 @@
 <!-- <script type="text/javascript" src="includes/jquery/plugins/multiselect/js/ui.multiselect.js"></script> -->
 
 <!-- HighChart -->
-<script type="text/javascript" src="includes/jquery/plugins/highcharts/js/highcharts.js" defer></script>
+<script type="text/javascript" src="js/lib/highcharts/highcharts.js" defer></script>
 <!-- Highstock -->
-<script type="text/javascript" src="includes/jquery/plugins/highstock/js/highstock.js" defer></script>
-<script type="text/javascript" src="includes/jquery/plugins/highcharts/js/themes/symeos.js" defer></script>
+<!--<script type="text/javascript" src="includes/jquery/plugins/highstock/js/highstock.js" defer></script>-->
+<script type="text/javascript" src="js/libs/highcharts/symeos.js" defer></script>
 
 <!-- CKEditor -->
 <!--<script type="text/javascript">var CKEDITOR_BASEPATH = '<?php echo DOL_URL_ROOT; ?>/includes/ckeditor/';</script>

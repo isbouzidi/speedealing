@@ -2038,6 +2038,9 @@
 			setTimeout(function() {
 				$(window).resize();
 			},100);
+			setTimeout(function() {
+				$(window).resize();
+			},300);
 
 			// Check if valid touch-click event
 			if (!$.template.processTouchClick(this, event))
