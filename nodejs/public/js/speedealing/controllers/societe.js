@@ -1,14 +1,14 @@
-angular.module('mean.societes').controller('SocieteListController', ['$scope', '$location','pageTitle', 'Societes', function($scope, $location,pageTitle, Societe) {
-		
+angular.module('mean.societes').controller('SocieteListController', ['$scope', '$location', '$http', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, pageTitle, Global, Societe) {
+
 		pageTitle.setTitle('Liste des sociétés');
-		
+		initCharts();
+
 		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
 			{name: "Sous-traitants", id: "SUBCONTRATOR"},
 			{name: "Non determine", id: "SUSPECT"}];
 
 		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
-
 
 		$scope.create = function() {
 			var societe = new Societe({
@@ -32,7 +32,7 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			var societe = $scope.societe;
 
 			societe.$update(function() {
-				$location.path('societe/' + societe._id);
+				//$location.path('societe/' + societe._id);
 			});
 		};
 
@@ -40,14 +40,6 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			Societe.query({query: this.type.id}, function(societes) {
 				$scope.societes = societes;
 				$scope.countSocietes = societes.length;
-			});
-		};
-
-		$scope.findOne = function() {
-			Societe.get({
-				Id: $routeParams.Id
-			}, function(societe) {
-				$scope.societe = societe;
 			});
 		};
 
@@ -68,7 +60,7 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			plugins: [new ngGridFlexibleHeightPlugin()],
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societe/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'commercial_id.name', displayName: 'Commerciaux', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
 				{field: 'zip', displayName: 'Code Postal'},
 				{field: 'town', displayName: 'Ville'},
@@ -80,6 +72,36 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			]
 		};
 
+		function initCharts() {
+			$http({method: 'GET', url: '/core/ajax/viewgraph.php?json=graphPieStatus&class=Societe'
+			}).success(function(data, status) {
+				console.log(data);
+				$scope.pieChartConfig.series[0] = {
+					data: data,
+					type: "funnel",
+					name: "Quantité",
+					//size: 100
+				};
+			});
+
+			$http({method: 'GET', url: '/core/ajax/viewgraph.php', params: {
+					json: "graphBarStatus",
+					class: "Societe",
+					name: Global.user.name
+				}
+			}).success(function(data, status) {
+				console.log(data);
+				$scope.barChartConfig.series = [];
+
+
+				$scope.barChartConfig.series[0] = {
+					data: data,
+					name: "admin"
+				};
+			});
+		}
+
+
 		/**
 		 * Highcharts Pie
 		 */
@@ -87,49 +109,137 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 		$scope.pieChartConfig = {
 			options: {
 				chart: {
-					margin: 0,
+					type: 'funnel',
+					//margin: 0,
 					plotBackgroundColor: null,
 					plotBorderWidth: null,
-					plotShadow: false
+					plotShadow: false,
+					marginRight: 120
 				},
 				legend: {
-					layout: "vertical", backgroundColor: Highcharts.theme.legendBackgroundColor || "#FFFFFF", align: "left", verticalAlign: "bottom", x: 0, y: 20, floating: true, shadow: true,
 					enabled: false
 				},
 				tooltip: {
 					enabled: true,
 					formatter: function() {
-						return '<b>' + this.point.name + '</b>: ' + Math.round(this.percentage*100)/100 + ' %';
+						return '<b>' + this.point.name + '</b>: ' + Math.round(this.percentage * 100) / 100 + ' %';
 					}
 				},
-				navigator: {
-					margin: 30
-				},
+				//navigator: {
+				//	margin: 30
+				//},
 				plotOptions: {
-					pie: {
-						allowPointSelect: true,
-						cursor: 'pointer',
+					/*pie: {
+					 allowPointSelect: true,
+					 cursor: 'pointer',
+					 dataLabels: {
+					 enabled: true,
+					 color: '#FFF',
+					 connectorColor: '#FFF',
+					 distance: 30,
+					 formatter: function() {
+					 return '<b>' + this.point.name + '</b><br> ' + Math.round(this.percentage) + ' %';
+					 }
+					 }
+					 },*/
+					series: {
 						dataLabels: {
 							enabled: true,
+							format: '<b>{point.name}</b> ({point.y:,.0f})',
 							color: '#FFF',
 							connectorColor: '#FFF',
-							distance: 30,
-							formatter: function() {
-								return '<b>' + this.point.name + '</b><br> ' + Math.round(this.percentage) + ' %';
-							}
-						}
+							softConnector: true
+						},
+						neckWidth: '30%',
+						neckHeight: '25%'
+
+								//-- Other available options
+								// height: pixels or percent
+								// width: pixels or percent
 					}
 				}
 			},
 			title: {
 				text: null
 			},
-			series: [{
-					type: "pie",
-					name: "Quantité",
-					size: 100,
-					data: [{"name": "Client -3 mois", "y": 4, "sliced": true, "selected": true}, ["Client fid\u00e8le", 6], ["Client r\u00e9current", 3], ["Prospect chaud", 5], ["Prospect froid", 8], ["Ne pas contacter", 3]]
-				}]
+			series: []
+		};
+
+		$scope.barChartConfig = {
+			options: {
+				chart: {
+					renderTo: 'bar-status',
+					defaultSeriesType: "column",
+					zoomType: "x",
+					marginBottom: 30
+				},
+				credits: {
+					enabled: false
+				},
+				xAxis: {
+					categories: ['Ne pas contacter', 'Non déterminé', 'Prospect froid', 'Prospect chaud', 'Client -3 mois', 'Client récurrent', 'Client fidèle'],
+					maxZoom: 1
+							//labels: {rotation: 90, align: "left"}
+				},
+				yAxis: {
+					title: {text: "Total"},
+					allowDecimals: false,
+					min: 0
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'top',
+					x: -5,
+					y: 5,
+					floating: true,
+					borderWidth: 1,
+					backgroundColor: Highcharts.theme.legendBackgroundColor || '#FFFFFF',
+					shadow: true
+				},
+				tooltip: {
+					enabled: true,
+					formatter: function() {
+						//return this.point.name + ' : ' + this.y;
+						return '<b>' + this.x + '</b><br/>' +
+								this.series.name + ': ' + this.y;
+					}
+				}
+			},
+			title: {
+				//text: "<?php echo $langs->trans("SalesRepresentatives"); ?>"
+				text: null
+			},
+			series: []
+		};
+
+
+	}]);
+
+angular.module('mean.societes').controller('SocieteViewController', ['$scope', '$location', '$http', '$routeParams', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, pageTitle, Global, Societe) {
+		pageTitle.setTitle('Fiche société');
+		$scope.vehicule={};
+
+		$scope.remove = function(societe) {
+			societe.$remove();
+
+		};
+
+		$scope.update = function() {
+			var societe = $scope.societe;
+
+			societe.$update(function() {
+				//$location.path('societe/' + societe._id);
+			});
+		};
+
+		$scope.findOne = function() {
+			Societe.get({
+				Id: $routeParams.id
+			}, function(societe) {
+				$scope.societe = societe;
+				pageTitle.setTitle('Fiche ' + $scope.societe.name);
+			});
 		};
 
 

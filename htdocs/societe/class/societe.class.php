@@ -1778,8 +1778,10 @@ class Societe extends nosqlDocument {
 				$key = $aRow->_id;
 				//print_r($aRow);
 				$label = $langs->trans($this->fk_extrafields->fields->Status->values->$key->label);
-				if (empty($label))
+				
+				if (empty($label)) {
 					$label = $langs->trans($aRow->_id);
+				}
 
 				if ($i == 0) { // first element
 					$output[$i] = new stdClass();

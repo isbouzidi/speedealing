@@ -107,7 +107,7 @@ exports.pluginGridFs = function(schema, opt) {
 			options.root = opt.root;
 
 			return putGridFileByPath(file.path, (this.ref || this.name) + "_" + file.originalFilename, file.originalFilename, options, function(err, result) {
-			//console.log(result);
+				//console.log(result);
 				var files = {};
 				files.name = result.filename;
 				files.originalFilename = result.metadata.originalFilename;
@@ -178,7 +178,7 @@ exports.addFile = function(Model, id, file, callback) {
 		//console.log(filename);
 		Model.findOne({_id: id}, function(err, doc) {
 
-			if (err) {
+			if (err || doc == null) {
 				console.log(err);
 				return callback({status: "Id not found"});
 			}

@@ -26,7 +26,7 @@ window.app.config(['$routeProvider',
 			}
 		}).when('/:view/:id', {
 			templateUrl: function(params) {
-				return 'partials/' + params.view;
+				return 'partials/' + params.view +'/' + params.id;
 			}
 		}).when('/:view', {
 			templateUrl: function(params) {

@@ -13,36 +13,38 @@ module.exports = exports = function(server, db, socketsUser) {
 	//console.log(db.connection.db);
 	var sockets = require('socket.io').listen(server, {log: false});
 
-	sockets.set('authorization', passportSocketIo.authorize({
-		cookieParser: express.cookieParser,
-		key: 'SpeedSession', // the name of the cookie where express/connect stores its session_id
-		secret: config.app.secret, // the session_secret to parse the cookie
-		store: new mongoStore({
-			db: db.connection.db,
-			collection: 'session'
-		}),
-		//cookie: {
-		//	maxAge: 36000000
-					//expires: new Date(Date.now() + 3600000) //1 Hour
-		//},
-		success: function(data, accept) {
-			//console.log('successful connection to socket.io');
-			//console.log(data);
-			console.log(data.user.name + " : Connected");
+	setTimeout(function() {
+		sockets.set('authorization', passportSocketIo.authorize({
+			cookieParser: express.cookieParser,
+			key: 'SpeedSession', // the name of the cookie where express/connect stores its session_id
+			secret: config.app.secret, // the session_secret to parse the cookie
+			store: new mongoStore({
+				db: db.connection.db,
+				collection: 'session'
+			}),
+			//cookie: {
+			//	maxAge: 36000000
+			//expires: new Date(Date.now() + 3600000) //1 Hour
+			//},
+			success: function(data, accept) {
+				//console.log('successful connection to socket.io');
+				//console.log(data);
+				console.log(data.user.name + " : Connected");
 
-			// The accept-callback still allows us to decide whether to
-			// accept the connection or not.
-			accept(null, true);
-		},
-		fail: function(data, message, error, accept) {
-			if (error)
-				throw new Error(message);
-			console.log('failed connection to socket.io:', message);
+				// The accept-callback still allows us to decide whether to
+				// accept the connection or not.
+				accept(null, true);
+			},
+			fail: function(data, message, error, accept) {
+				if (error)
+					throw new Error(message);
+				console.log('failed connection to socket.io:', message);
 
-			// We use this callback to log all of our failed connections.
-			accept(null, false);
-		}
-	}));
+				// We use this callback to log all of our failed connections.
+				accept(null, false);
+			}
+		}))
+	}, 300);
 
 
 	sockets.on('connection', function(socket) { // New client

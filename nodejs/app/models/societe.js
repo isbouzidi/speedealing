@@ -93,34 +93,33 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 /**
  * Methods
  */
-societeSchema.methods = {
-	setStatus: function(status, i18n) {
-		this.status = {};
+societeSchema.methods.setStatus = function(status, i18n) {
+	this.status = {};
 
-		if (statusList.values[status].label) {
-			this.status.id = status;
-			//this.status.name = i18n.t("intervention." + statusList.values[status].label);
-			this.status.name = statusList.values[status].label;
-			this.status.css = statusList.values[status].cssClass;
-		} else { // By default
-			this.status.id = status;
-			this.status.name = status;
-			this.status.css = "";
-		}
-	},
-	setProspectLevel: function(level, i18n) {
-		this.prospectLevel = {};
+	if (statusList.values[status].label) {
+		this.status.id = status;
+		//this.status.name = i18n.t("intervention." + statusList.values[status].label);
+		this.status.name = statusList.values[status].label;
+		this.status.css = statusList.values[status].cssClass;
+	} else { // By default
+		this.status.id = status;
+		this.status.name = status;
+		this.status.css = "";
+	}
+};
 
-		if (prospectLevelList.values[level].cssClass) {
-			this.prospectLevel.id = level;
-			this.prospectLevel.name = i18n.t("companies:" + level);
-			//this.prospectLevel.name = prospectLevelList.values[level].label;
-			this.prospectLevel.css = prospectLevelList.values[level].cssClass;
-		} else { // By default
-			this.prospectLevel.id = level;
-			this.prospectLevel.name = level;
-			this.prospectLevel.css = "";
-		}
+societeSchema.methods.setProspectLevel = function(level, i18n) {
+	this.prospectLevel = {};
+
+	if (prospectLevelList.values[level].cssClass) {
+		this.prospectLevel.id = level;
+		this.prospectLevel.name = i18n.t("companies:" + level);
+		//this.prospectLevel.name = prospectLevelList.values[level].label;
+		this.prospectLevel.css = prospectLevelList.values[level].cssClass;
+	} else { // By default
+		this.prospectLevel.id = level;
+		this.prospectLevel.name = level;
+		this.prospectLevel.css = "";
 	}
 };
 

@@ -154,20 +154,23 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 			for (var j in $scope.order.optional.dossiers) {
 				// Add specific files
+
 				var note = "";
 				note += '<h4 class="green underline">' + "Liste des fichiers natifs</h4>";
 				note += '<ul>';
 				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
-					note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
-					note += '<span class="icon-extract">' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
-					note += '</a></li>';
+					if ($scope.order.optional.dossiers[j].selectedFiles[i] != null) {
+						note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
+						note += '<span class="icon-extract">' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
+						note += '</a></li>';
+					}
 				}
 				note += '</ul>';
 
 
 				$scope.order.notes.push({
 					note: note,
-					title: "Fichiers webdoc dossier " + (parseInt(i) + 1),
+					title: "Fichiers webdoc dossier " + (parseInt(j) + 1),
 					edit: false
 				});
 				//console.log(note);

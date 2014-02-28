@@ -20,7 +20,7 @@ angular.module('mean').directive('resize', ['$window', function($window) {
 				};
 
 			}, true);
-			
+
 			w.bind('resize', function() {
 				scope.$apply();
 			});
@@ -66,4 +66,26 @@ angular.module('mean.system').directive('sdBarcode', function() {
  //};
  };
  });*/
+
+angular.module('mean.system').directive('ngEnter', function() {
+	return function(scope, element, attrs) {
+		element.bind("keydown keypress", function(event) {
+			if (event.which === 13) {
+				scope.$apply(function() {
+					scope.$eval(attrs.ngEnter, {'event': event});
+				});
+
+				event.preventDefault();
+			}
+		});
+	};
+});
+
+angular.module('mean.system').directive('ngBlur', function() {
+	return function(scope, elem, attrs) {
+		elem.bind('blur', function() {
+			scope.$apply(attrs.ngBlur);
+		});
+	};
+})
 

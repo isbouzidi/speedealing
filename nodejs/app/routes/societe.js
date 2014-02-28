@@ -16,6 +16,7 @@ module.exports = function(app, passport, auth) {
 	var object = new Object();
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
+	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
 
 	// Specific for autocomplete
 	app.get('/api/societe/select', auth.requiresLogin, function(req, res) {
@@ -276,6 +277,8 @@ module.exports = function(app, passport, auth) {
 			});
 	});
 
+	app.param('societeId', object.societe);
+
 	//other routes..
 };
 
@@ -283,6 +286,19 @@ function Object() {
 }
 
 Object.prototype = {
+	societe: function(req, res, next, id) {
+		SocieteModel.findOne({_id:id}, function(err, doc) {
+			if (err)
+				return next(err);
+			if (!doc)
+				return next(new Error('Failed to load societe ' + id));
+			doc.setStatus(doc.Status, req.i18n);
+			doc.setProspectLevel(doc.prospectlevel, req.i18n);
+			
+			req.societe = doc;
+			next();
+		});
+	},
 	create: function(req) {
 		return req.body.models;
 	},
@@ -321,6 +337,9 @@ Object.prototype = {
 			}
 			res.json(200, doc);
 		});
+	},
+	show: function(req, res) {
+		res.json(req.societe);
 	},
 	update: function(req) {
 		return req.body.models;

@@ -51,7 +51,8 @@ if (!empty($json) && !empty($class)) {
     $object = new $class($db);
     
     header('Content-type: application/json');
-    echo $_GET["callback"] . '(' . json_encode($object->$json(true)) . ');';
+    //echo $_GET["callback"] . '(' . json_encode($object->$json(true)) . ');';
+	echo json_encode($object->$json(true));
     exit;
 }
 ?>

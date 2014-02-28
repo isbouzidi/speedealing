@@ -1278,16 +1278,235 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEMouvementStockController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', function($scope, pageTitle, $routeParams, $http, $location) {
-		$scope.radio = {entrepot:undefined};
-		
+angular.module('mean.europexpress').controller('EEMouvementStockController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', '$timeout', function($scope, pageTitle, $routeParams, $http, $location, $timeout) {
+		$scope.radio = {entrepot: undefined};
+
+		var typeMove_list = {
+			"type": "select",
+			"enable": true,
+			"default": "130",
+			"status": true,
+			"label": "Type",
+			"values": {
+				"010": {
+					"enable": true,
+					"label": "Surf. dediee",
+					"cssClass": "grey-gradient",
+					"billing": "month"
+				},
+				"020": {
+					"enable": true,
+					"label": "Stock. etageres",
+					"cssClass": "grey-gradient",
+					"billing": "month"
+				},
+				"030": {
+					"enable": true,
+					"label": "Surf. palette",
+					"cssClass": "grey-gradient",
+					"billing": "month"
+				},
+				"040": {
+					"enable": true,
+					"label": "Surf. annexe PUDO",
+					"cssClass": "grey-gradient",
+					"billing": "month"
+				},
+				"110": {
+					"enable": true,
+					"label": "Entrée PUDO",
+					"cssClass": "green-gradient",
+					"billing": "clic"
+				},
+				"120": {
+					"label": "Sortie PUDO",
+					"enable": true,
+					"cssClass": "blue-gradient",
+					"billing": "clic"
+				},
+				"130": {
+					"enable": true,
+					"label": "Entrée FSL",
+					"cssClass": "green-gradient",
+					"billing": "clic"
+				},
+				"140": {
+					"label": "Sortie FSL",
+					"enable": true,
+					"cssClass": "blue-gradient",
+					"billing": "clic"
+				},
+				"100": {
+					"enable": true,
+					"label": "GIDR",
+					"cssClass": "orange-gradient",
+					"billing": "clic"
+				},
+				"141": {
+					"enable": true,
+					"label": "Deplac. Astreinte FSL",
+					"cssClass": "red-gradient",
+					"billing": "clic"
+				},
+				"122": {
+					"label": "Astr. samedi matin PUDO",
+					"enable": true,
+					"cssClass": "red-gradient",
+					"billing": "clic"
+				},
+				"142": {
+					"label": "Astr. samedi matin FSL",
+					"enable": true,
+					"cssClass": "red-gradient",
+					"billing": "clic"
+				},
+				"210": {
+					"enable": true,
+					"label": "Forf. ouv. Samedi",
+					"cssClass": "grey-gradient",
+					"billing": "month"
+				},
+				"220": {
+					"enable": true,
+					"label": "Forf. Astreinte",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"310": {
+					"enable": true,
+					"label": "Clic prep. 1-15",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"312": {
+					"enable": true,
+					"label": "Clic prep. 16-30",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"313": {
+					"enable": true,
+					"label": "Clic prep. +31",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"320": {
+					"enable": true,
+					"label": "Clic badge",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"330": {
+					"enable": true,
+					"label": "Tps gestion. clic = 1/2h",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"340": {
+					"enable": true,
+					"label": "Inventaires au clic",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"341": {
+					"enable": true,
+					"label": "Inventaire au forfait",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"350": {
+					"enable": true,
+					"label": "Destruction palette",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				},
+				"319": {
+					"enable": true,
+					"label": "PFP Conditionnement",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
+				}
+			}
+		};
+
+		$scope.productsBarCode = {};
+
+		$scope.today = function() {
+			var d = new Date();
+			d.setHours(0, 0, 0);
+			$location.path('module/europexpress/mouvementstock.html/' + (d.getMonth() + 1) + '/' + d.getFullYear());
+		};
+
+		$scope.next = function() {
+			var year = parseInt($routeParams.id2);
+			var month = parseInt($routeParams.id1);
+
+			if (month === 12) {
+				year++;
+				month = 0;
+			}
+			month++;
+
+			$location.path('module/europexpress/mouvementstock.html/' + month + '/' + year);
+		};
+
+		$scope.previous = function() {
+			var year = parseInt($routeParams.id2);
+			var month = parseInt($routeParams.id1);
+
+			if (month === 1) {
+				year--;
+				month = 13;
+			}
+			month--;
+
+			$location.path('module/europexpress/mouvementstock.html/' + month + '/' + year);
+		};
+
+		$scope.month = $routeParams.id1 + '/' + $routeParams.id2;
+
 		function numberFormat(number, width) {
 			if (isNaN(number))
 				number = 0;
 			return new Array(width + 1 - (number + '').length).join('0') + number;
 		}
-		
+
+		function initProducts() {
+			$http({method: 'GET', url: 'api/product', params: {
+					withNoPrice: 1,
+					barCode: 1
+				}
+			}).
+					success(function(data, status) {
+				$scope.products = data;
+				for (var i in data) {
+					$scope.productsBarCode[data[i]._id] = data[i];
+				}
+			});
+		}
+
+		var totaux = {};
+		function getTotaux() {
+			if ($routeParams.id1 == null)
+				return;
+
+			$http({method: 'GET', url: 'api/europexpress/stock/total/' + $routeParams.id1 + '/' + $routeParams.id2
+			}).
+					success(function(data, status) {
+				for (var i in data) {
+					totaux[data[i]._id] = data[i].total;
+				}
+				//console.log(totaux);
+			});
+		}
+
 		$scope.entrepotsList = function() {
+			if ($routeParams.id1 == null)
+				return $scope.today();
+
+			initProducts();
+			getTotaux();
+
 			$scope.entrepots = [];
 
 			$http({method: 'GET', url: 'api/product/storehouse'
@@ -1315,11 +1534,101 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				}
 			});
 		};
-		
-		$scope.find = function() {
-			console.log("toto");
-		};
-		
-		
 
-}]);
+		$scope.find = function() {
+			//console.log("toto");
+			$scope.productsTab = [];
+			angular.forEach($scope.radio.entrepot.productId, function(code) {
+				var product = angular.copy($scope.productsBarCode[code]);
+				product.barCode = $scope.radio.entrepot.barCode + product.barCode;
+				product.qty = totaux[product.barCode];
+				
+				product.typeMove = {};
+				
+				product.typeMove.id = product.barCode.slice(-3);
+				if (typeMove_list.values[product.typeMove.id]) {
+					product.typeMove.name = typeMove_list.values[product.typeMove.id].label;
+					product.typeMove.css = typeMove_list.values[product.typeMove.id].cssClass;
+				} else { // Value not present in extrafield
+					product.typeMove.name = product.typeMove.id;
+					product.typeMove.css = "";
+				}
+				
+				//console.log(product);
+				$scope.productsTab.push(product);
+			});
+			//$scope.products = 
+		};
+
+		$scope.update = function(row) {
+			if(!$scope.productsTab[row.rowIndex].qtyAdd)
+				return;
+			
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					$http({method: 'POST', url: 'api/europexpress/stock', data: {
+							barCode: $scope.productsTab[$scope.save.row].barCode,
+							qty: $scope.productsTab[$scope.save.row].qtyAdd
+						}
+					}).success(function(data, status) {
+						console.log(data);
+						$scope.productsTab[$scope.save.row].qty += data.qty;
+						$scope.productsTab[$scope.save.row].qtyAdd = null;
+					});
+					//$scope.productsTab[$scope.save.row].$update();
+					console.log("Here you'd save your record to the server, we're updating row: "
+							+ $scope.save.row + " to be: "
+							+ $scope.productsTab[$scope.save.row]._id + ","
+							+ $scope.productsTab[$scope.save.row].ref + ","
+							+ $scope.productsTab[$scope.save.row].barCode + ","
+							+ $scope.productsTab[$scope.save.row].qtyAdd);
+					$scope.save.pending = false;
+				}, 500);
+			}
+		};
+
+		/*
+		 * NG-GRID for mouvement de stock list
+		 */
+
+		$scope.filterOptions = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptions = {
+			data: 'productsTab',
+			enableRowSelection: false,
+			sortInfo: {fields: ["ref"], directions: ["asc"]},
+			filterOptions: $scope.filterOptions,
+			showGroupPanel: false,
+			//jqueryUIDraggable: true,
+			//plugins: [new ngGridFlexibleHeightPlugin()],
+			i18n: 'fr',
+			enableCellSelection: true,
+			enableCellEditOnFocus: true,
+			//groups: ['fournisseur.name'],
+			//groupsCollapsedByDefault: false,
+			columnDefs: [
+				//	{field: ' fournisseur.name', width: "25%", displayName: 'Sous-traitant', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: '_id', displayName: 'id', visible: false, enableCellEdit: false},
+				{field: 'typeMove.name', displayName: 'Ref', enableCellEdit: false, cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy " ng-class="row.getProperty(\'typeMove.css\')">{{row.getProperty(\'typeMove.name\')}}</small></div>'},
+				{field: 'barCode', displayName: 'Code barre', enableCellEdit: false},
+				{field: 'billingMode', displayName: 'Mode fact.', enableCellEdit: false},
+				{field: 'label', displayName: 'Description', enableCellEdit: false},
+				{field: 'qty', displayName: 'Quantité total', cellClass: "align-right", enableCellEdit: false},
+				{field: 'qtyAdd', displayName: 'Ajouter', enableCellEdit: true, editableCellTemplate: '<input type="number" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>', }
+				//	{field: 'Status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+				//	{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				//	{field: 'total_soustraitant', width: "20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+			]
+		};
+
+
+
+	}]);
