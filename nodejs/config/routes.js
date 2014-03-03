@@ -28,9 +28,9 @@ module.exports = function(app, passport, auth) {
 			}
 
 			var navigator = require('ua-parser').parse(req.headers['user-agent']);
-			//console.log(req.headers['user-agent']);
-			//console.log(navigator.ua.family);
-			//console.log(navigator.ua.major);
+			console.log(req.headers['user-agent']);
+			console.log(navigator.ua.family);
+			console.log(navigator.ua.major);
 
 			if (navigator.ua.family == "Other" && parseFloat((req.headers['user-agent'].match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) < 10) {
 				res.json({success: false, errors: "Votre version Internet Explorer est trop ancienne. Utilisez Chrome ou Firefox."}, 500);
