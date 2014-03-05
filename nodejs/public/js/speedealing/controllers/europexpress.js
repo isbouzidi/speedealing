@@ -869,6 +869,11 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 					});
 					$scope.countBuy = $scope.requestBuy.length;
 				});
+				
+				$scope.checklist = 0;
+				for (var i in vehicule.checklist)
+					if(vehicule.checklist[i])
+						$scope.checklist++;
 
 			});
 		};
@@ -877,7 +882,10 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			var vehicule = $scope.vehicule;
 
 			vehicule.$update(function(response) {
-
+				$scope.checklist = 0;
+				for (var i in response.checklist)
+					if(response.checklist[i])
+						$scope.checklist++;
 			});
 		};
 

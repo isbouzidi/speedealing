@@ -57,6 +57,7 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptionsSociete,
 			sortInfo: {fields: ["name"], directions: ["asc"]},
+			//showFilter:true,
 			plugins: [new ngGridFlexibleHeightPlugin()],
 			i18n: 'fr',
 			columnDefs: [

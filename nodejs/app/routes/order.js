@@ -2,11 +2,15 @@
 
 var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
-		_ = require('underscore');
+		nodemailer = require("nodemailer"),
+		_ = require('underscore'),
+		config = require(__dirname + '/../../config');
 
 var CommandeModel = mongoose.model('commande');
 var ContactModel = mongoose.model('contact');
 var ExtrafieldModel = mongoose.model('extrafields');
+
+var smtpTransport = nodemailer.createTransport("SMTP", config.transport);
 
 module.exports = function(app, passport, auth) {
 
@@ -73,8 +77,8 @@ Object.prototype = {
 		order.author = {};
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
-		
-		if(order.entity == null)
+
+		if (order.entity == null)
 			order.entity = req.user.entity;
 
 		if (req.user.societe.id) { // It's an external order
@@ -106,7 +110,7 @@ Object.prototype = {
 
 					order.contact.id = doc._id;
 					order.contact.name = doc.name;
-					
+
 					order.societe.id = req.user.societe.id;
 					order.societe.name = req.user.societe.name;
 
@@ -126,6 +130,36 @@ Object.prototype = {
 			if (err) {
 				return console.log(err);
 			} else {
+				if (req.user.societe.id) { // It's an external order
+					console.log("Mail order");
+					setTimeout(function(order, societe) {
+						// Send an email
+						var mailOptions = {
+							from: "ERP Speedealing<no-reply@speedealing.com>",
+							//to: "Christophe Courtens<christophe.courtens@chaumeil.net>",
+							cc: "herve.prot@symeos.com",
+							subject: "Nouvelle commande " + societe.name + " - " + order.ref + " dans l'ERP"
+						};
+
+						mailOptions.text = "La commande " + order.ref + " vient d'etre cree \n";
+						mailOptions.text += "Pour consulter la commande cliquer sur ce lien : ";
+						mailOptions.text += '<a href="http://erp.chaumeil.net/commande/fiche.php?id=' + order._id + '">' + order.ref + '</a>';
+						mailOptions.text += "\n\n";
+
+						// send mail with defined transport object
+						smtpTransport.sendMail(mailOptions, function(error, response) {
+							if (error) {
+								console.log(error);
+							} else {
+								console.log("Message sent: " + response.message);
+							}
+
+							// if you don't want to use this transport object anymore, uncomment following line
+							smtpTransport.close(); // shut down the connection pool, no more messages
+						});
+					}, 900000, order, req.user.societe); // Envoi un mail 15 min plus tard
+				}
+
 				res.json(order);
 			}
 		});

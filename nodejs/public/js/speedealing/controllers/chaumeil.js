@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTitle', '$http', '$timeout', '$upload', 'Global', 'Order', function($scope, pageTitle, $http, $timeout, $upload, Global, Order) {
+angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTitle', '$http', '$timeout', '$upload', '$route', 'Global', 'Order', function($scope, pageTitle, $http, $timeout, $upload, $route, Global, Order) {
 		$scope.global = Global;
 
 		pageTitle.setTitle('Nouvelle commande OTIS');
@@ -23,6 +23,10 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			$scope.order.optional = {};
 			$scope.order.optional.dossiers = [];
 			$scope.order.optional.dossiers[0] = {};
+		};
+		
+		$scope.newOrder = function() {
+			$route.reload();
 		};
 
 		$scope.create = function() {
@@ -105,6 +109,30 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				}, 300);
 			});
 		};
+		
+		$scope.updateAssistante = function() {
+			//console.log($scope.order.optional.assistante);
+			if(!$scope.order.optional.assistante)
+				return;
+			
+			$scope.order.bl[0].products = [
+						{name: 'paper', qty: 1},
+						{name: 'cd', qty: 1}
+					];
+			
+			$scope.order.bl[0].name = "OTIS";
+			$scope.order.bl[0].address = $scope.order.optional.assistante.address;
+			$scope.order.bl[0].zip = $scope.order.optional.assistante.zip;
+			$scope.order.bl[0].town = $scope.order.optional.assistante.town;
+			$scope.order.bl[0].contact = $scope.order.optional.assistante.firstname + " " + $scope.order.optional.assistante.lastname;
+				
+			$scope.order.bl[1] = {};
+			$scope.order.bl[1].products = [
+						{name: 'paper', qty: 0},
+						{name: 'cd', qty: 0}
+					];
+			
+		}
 
 		$scope.initSelectFiles = function() {
 			$http({method: 'GET', url: 'api/chaumeil/otis/selectFiles'
