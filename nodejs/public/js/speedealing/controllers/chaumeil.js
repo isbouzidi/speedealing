@@ -24,7 +24,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			$scope.order.optional.dossiers = [];
 			$scope.order.optional.dossiers[0] = {};
 		};
-		
+
 		$scope.newOrder = function() {
 			$route.reload();
 		};
@@ -109,29 +109,29 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				}, 300);
 			});
 		};
-		
+
 		$scope.updateAssistante = function() {
 			//console.log($scope.order.optional.assistante);
-			if(!$scope.order.optional.assistante)
+			if (!$scope.order.optional.assistante)
 				return;
-			
+
 			$scope.order.bl[0].products = [
-						{name: 'paper', qty: 1},
-						{name: 'cd', qty: 1}
-					];
-			
+				{name: 'paper', qty: 1},
+				{name: 'cd', qty: 1}
+			];
+
 			$scope.order.bl[0].name = "OTIS";
 			$scope.order.bl[0].address = $scope.order.optional.assistante.address;
 			$scope.order.bl[0].zip = $scope.order.optional.assistante.zip;
 			$scope.order.bl[0].town = $scope.order.optional.assistante.town;
 			$scope.order.bl[0].contact = $scope.order.optional.assistante.firstname + " " + $scope.order.optional.assistante.lastname;
-				
+
 			$scope.order.bl[1] = {};
 			$scope.order.bl[1].products = [
-						{name: 'paper', qty: 0},
-						{name: 'cd', qty: 0}
-					];
-			
+				{name: 'paper', qty: 0},
+				{name: 'cd', qty: 0}
+			];
+
 		}
 
 		$scope.initSelectFiles = function() {
@@ -173,6 +173,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				note += "<p> Nombre d'exemplaires papier : " + this.order.bl[i].products[0].qty + "</p>";
 				note += "<p> Nombre d'exemplaires CD : " + this.order.bl[i].products[1].qty + "</p>";
 
+				note += '<br /><a href="api/chaumeil/otis/latex/' + this.order._id + '?bl=' + i + '" target="_blank" title="Telecharger"><span class="icon-extract"> Fichier classeur</span></a>';
+
 				$scope.order.notes.push({
 					note: note,
 					title: "Destinataire " + (parseInt(i) + 1),
@@ -202,6 +204,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 					edit: false
 				});
 				//console.log(note);
+
+
 			}
 
 			$scope.update();
