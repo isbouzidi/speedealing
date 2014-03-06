@@ -40,16 +40,10 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			order.$save(function(response) {
 				$scope.order = response;
 
-				$scope.order.bl = [];
-				$scope.order.bl.push({
-					products: [
-						{name: 'paper', qty: 0},
-						{name: 'cd', qty: 0}
-					]
-				});
-
 				$scope.order.optional.dossiers = [];
 				$scope.order.optional.dossiers[0] = {};
+				
+				$scope.countExemplaires();
 
 			});
 		};

@@ -28,3 +28,13 @@ angular.module('mean.europexpress').factory("EEVehicule", ['$resource', function
         }
     });
 }]);
+
+angular.module('mean.europexpress').factory("EEGazoilCard", ['$resource', function($resource) {
+    return $resource('api/europexpress/essence/:id', {
+        id: '@_id'
+    }, {
+        update: {
+            method: 'PUT'
+        }
+    });
+}]);

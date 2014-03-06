@@ -869,10 +869,10 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 					});
 					$scope.countBuy = $scope.requestBuy.length;
 				});
-				
+
 				$scope.checklist = 0;
 				for (var i in vehicule.checklist)
-					if(vehicule.checklist[i])
+					if (vehicule.checklist[i])
 						$scope.checklist++;
 
 			});
@@ -884,7 +884,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			vehicule.$update(function(response) {
 				$scope.checklist = 0;
 				for (var i in response.checklist)
-					if(response.checklist[i])
+					if (response.checklist[i])
 						$scope.checklist++;
 			});
 		};
@@ -1250,9 +1250,138 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', function($scope, pageTitle, $routeParams, $http, $location) {
+angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', '$modal', 'EEGazoilCard', function($scope, pageTitle, $routeParams, $http, $location, $modal, Object) {
 
 		pageTitle.setTitle('Cartes Gazoil');
+
+		$scope.paiements = [];
+		$scope.paiement = {};
+		$scope.Total = 0;
+		$scope.count = 0;
+
+
+		$scope.create = function() {
+			var object = new Object(this.paiement);
+			object.$save(function(response) {
+				$scope.paiements.push(response);
+				total();
+			});
+		};
+
+		var total = function() {
+			$scope.Total = 0;
+			$scope.count = 0;
+
+			$scope.count = $scope.paiements.length;
+			for (var i = 0; i < $scope.paiements.length; i++) {
+				$scope.Total += $scope.paiements[i].total_ht;
+			}
+		};
+
+		$scope.remove = function(object) {
+			object.$remove();
+
+			for (var i in $scope.paiements) {
+				if ($scope.paiements[i] == object) {
+					$scope.paiements.splice(i, 1);
+				}
+			}
+		};
+
+		$scope.update = function() {
+			var object = $scope.paiement;
+
+			object.$update(function() {
+
+			});
+		};
+
+		$scope.find = function() {
+			Object.query(function(paiements) {
+				$scope.paiements = paiements;
+				total();
+			});
+		};
+
+		$scope.addNew = function() {
+
+			var modalInstance = $modal.open({
+				templateUrl: 'myModalContent.html',
+				controller: ModalInstanceCtrl,
+				resolve: {
+					object: function() {
+						return $scope.paiement;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(paiement) {
+				$scope.paiement = paiement;
+				$scope.create();
+				$scope.paiement = {};
+			}, function() {
+			});
+		};
+
+		$scope.edit = function(row) {
+
+			var modalInstance = $modal.open({
+				templateUrl: 'myModalContent.html',
+				controller: ModalInstanceCtrl,
+				resolve: {
+					object: function() {
+						return row.entity;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(paiement) {
+				$scope.paiement = paiement;
+				$scope.update();
+				$scope.paiement = {};
+			}, function() {
+			});
+		};
+
+		var ModalInstanceCtrl = function($scope, $modalInstance, object) {
+
+			$scope.paiement = object;
+			if (object.card)
+				$scope.cardSelect = {
+					id: object.card,
+					vehicule: object.vehicule
+				};
+
+			$scope.datec = new Date(object.datec);
+
+
+			$scope.cardAutoComplete = function(val) {
+				return $http.post('api/europexpress/card/autocomplete', {
+					take: '5',
+					skip: '0',
+					page: '1',
+					pageSize: '5',
+					filter: {logic: 'and', filters: [{value: val}]
+					}
+				}).then(function(res) {
+					return res.data
+				});
+			};
+
+			$scope.refreshVehicule = function() {
+				$scope.paiement.vehicule = this.cardSelect.vehicule;
+				$scope.paiement.card = this.cardSelect.id;
+			};
+
+			$scope.ok = function() {
+				$modalInstance.close($scope.paiement);
+			};
+
+			$scope.cancel = function() {
+				$modalInstance.dismiss('cancel');
+			};
+		};
+
 
 		/*
 		 * NG-GRID for courses sous-traitant list
@@ -1264,10 +1393,10 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 		};
 
 		$scope.gridOptions = {
-			data: 'result.allST',
+			data: 'paiements',
 			enableRowSelection: false,
-			sortInfo: {fields: ["fournisseur.name"], directions: ["asc"]},
-			filterOptions: $scope.filterOptionsCoursesST,
+			sortInfo: {fields: ["datec"], directions: ["desc"]},
+			filterOptions: $scope.filterOptions,
 			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
 			showGroupPanel: false,
 			//jqueryUIDraggable: true,
@@ -1276,11 +1405,12 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 			//groups: ['fournisseur.name'],
 			//groupsCollapsedByDefault: false,
 			columnDefs: [
-				{field: 'fournisseur.name', width: "25%", displayName: 'Sous-traitant', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'ref', width: "25%", displayName: 'Id'},
-				{field: 'Status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
-				{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
-				{field: 'total_soustraitant', width: "20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+				{field: 'card', displayName: 'Carte'},
+				{field: 'vehicule.name', displayName: 'Véhicule'},
+				{field: 'datec', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'qty', displayName: 'Volume (l)', cellClass: "align-right", cellFilter: "number:0"},
+				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"},
+				{displayName: '', width: "30px", cellTemplate: '<div class="ngCellText"><button class="icon-pencil" title="Editer" ng-click="edit(row)"></button></div>'}
 			]
 		};
 
@@ -1550,9 +1680,9 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				var product = angular.copy($scope.productsBarCode[code]);
 				product.barCode = $scope.radio.entrepot.barCode + product.barCode;
 				product.qty = totaux[product.barCode];
-				
+
 				product.typeMove = {};
-				
+
 				product.typeMove.id = product.barCode.slice(-3);
 				if (typeMove_list.values[product.typeMove.id]) {
 					product.typeMove.name = typeMove_list.values[product.typeMove.id].label;
@@ -1561,7 +1691,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 					product.typeMove.name = product.typeMove.id;
 					product.typeMove.css = "";
 				}
-				
+
 				//console.log(product);
 				$scope.productsTab.push(product);
 			});
@@ -1569,9 +1699,9 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		};
 
 		$scope.update = function(row) {
-			if(!$scope.productsTab[row.rowIndex].qtyAdd)
+			if (!$scope.productsTab[row.rowIndex].qtyAdd)
 				return;
-			
+
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
