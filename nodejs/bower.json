@@ -17,7 +17,7 @@
 		"jquery": "1.10.2",
 		"angular-kendo": "https://github.com/kendo-labs/angular-kendo.git",
 		"ng-file-upload": "latest",
-		"ng-grid": "latest",
+		"ng-grid": "2.0.8",
 		"angular-xeditable":"latest",
 		"highcharts":"latest",
 		"highcharts-ng":"latest"
