@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		nodemailer = require("nodemailer"),
 		_ = require('underscore'),
-		config = require(__dirname + '/../../config');
+		config = require('../../config');
 
 var CommandeModel = mongoose.model('commande');
 var ContactModel = mongoose.model('contact');
