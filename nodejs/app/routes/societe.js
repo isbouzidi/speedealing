@@ -313,7 +313,7 @@ Object.prototype = {
 				case "SUPPLIER" :
 					query.fournisseur = "SUPPLIER";
 					break;
-				case "SUBCONTRATOR" :
+				case "SUBCONTRACTOR" :
 					query.fournisseur = "SUBCONTRATOR";
 					break;
 				case "SUSPECT" :
