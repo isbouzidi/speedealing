@@ -211,4 +211,6 @@ module.exports = function(app, passport, db) {
 			.serveClientScript(app)
 			.serveDynamicResources(app)
 			.serveMissingKeyRoute(app);
+	
+	i18n.setLng("FR-fr",function(){});
 };
