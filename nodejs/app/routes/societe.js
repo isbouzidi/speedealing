@@ -329,7 +329,7 @@ Object.prototype = {
 				return;
 			}
 
-			console.log(doc);
+			//console.log(doc);
 
 			for (var i in doc) {
 				doc[i].setStatus(doc[i].Status, req.i18n);
