@@ -314,7 +314,7 @@ Object.prototype = {
 					query.fournisseur = "SUPPLIER";
 					break;
 				case "SUBCONTRACTOR" :
-					query.fournisseur = "SUBCONTRATOR";
+					query.fournisseur = "SUBCONTRACTOR";
 					break;
 				case "SUSPECT" :
 					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
