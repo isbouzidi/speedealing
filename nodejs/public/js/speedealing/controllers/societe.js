@@ -6,7 +6,8 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
 			{name: "Sous-traitants", id: "SUBCONTRACTOR"},
-			{name: "Non determine", id: "SUSPECT"}];
+			{name: "Non determine", id: "SUSPECT"},
+			{name: "Tous", id:"ALL"}];
 
 		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
 

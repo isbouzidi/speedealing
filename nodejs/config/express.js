@@ -42,7 +42,7 @@ module.exports = function(app, passport, db) {
 		supportedLngs: ['fr','en'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
 		//load: 'current',
-		preload: ['fr-FR','en-US'],
+		preload: ['fr-FR'],
 		useCookie: false,
 		//cookie: 'speedealingLang',
 		detectLngFromHeaders: false,

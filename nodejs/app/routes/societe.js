@@ -319,6 +319,8 @@ Object.prototype = {
 				case "SUSPECT" :
 					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
 					break;
+				default :
+					break;
 			}
 		}
 
