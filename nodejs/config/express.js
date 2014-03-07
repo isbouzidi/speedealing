@@ -47,7 +47,7 @@ module.exports = function(app, passport, db) {
 		cookie: 'speedealingLang',
 		detectLngFromHeaders: false,
 		saveMissing: true,
-		debug: false,
+		debug: true,
 		sendMissingTo: 'fallback',
 		lng: "fr-FR"
 	});
