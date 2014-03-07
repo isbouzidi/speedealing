@@ -59,8 +59,8 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			sortInfo: {fields: ["name"], directions: ["asc"]},
 			//showFilter:true,
 			plugins: [new ngGridFlexibleHeightPlugin()],
-			i18n: 'fr',
-			columnDefs: [
+			i18n: 'fr'
+			/*columnDefs: [
 				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'commercial_id.name', displayName: 'Commerciaux', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
 				{field: 'zip', displayName: 'Code Postal'},
@@ -70,7 +70,7 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
-			]
+			]*/
 		};
 
 		function initCharts() {
