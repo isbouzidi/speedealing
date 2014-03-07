@@ -43,7 +43,7 @@ module.exports = function(app, passport, db) {
 		resSetPath: 'locales/__lng__/new.__ns__.json',
 		//load: 'current',
 		preload: ['fr-FR'],
-		//useCookie: false,
+		useCookie: false,
 		cookie: 'speedealingLang',
 		detectLngFromHeaders: false,
 		saveMissing: true,
@@ -212,5 +212,4 @@ module.exports = function(app, passport, db) {
 			.serveDynamicResources(app)
 			.serveMissingKeyRoute(app);
 	
-	i18n.setLng("FR-fr",function(){});
 };
