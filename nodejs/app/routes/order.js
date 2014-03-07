@@ -111,9 +111,8 @@ Object.prototype = {
 					order.contact.id = doc._id;
 					order.contact.name = doc.name;
 					
-					console.log(req.user.societe);
-					order.societe.id = req.user.societe.id;
-					order.societe.name = req.user.societe.name;
+					order.client.id = req.user.societe.id;
+					order.client.name = req.user.societe.name;
 
 					order.save(function(err) {
 						if (err) {
