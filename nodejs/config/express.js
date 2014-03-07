@@ -39,17 +39,17 @@ module.exports = function(app, passport, db) {
 
 	i18n.init({
 		ns: {namespaces: namespaces, defaultNs: 'main'},
-		supportedLngs: ['fr-FR'],
+		supportedLngs: ['fr','en'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
 		//load: 'current',
-		preload: ['fr-FR'],
+		preload: ['fr-FR','en-US'],
 		useCookie: false,
-		cookie: 'speedealingLang',
+		//cookie: 'speedealingLang',
 		detectLngFromHeaders: false,
 		saveMissing: true,
-		debug: true,
+		debug: false,
 		sendMissingTo: 'fallback',
-		lng: "fr-FR"
+		fallbackLng: "fr-FR"
 	});
 
 	hbs.registerHelper('t', function(i18n_key) {
