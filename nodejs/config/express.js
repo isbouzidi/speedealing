@@ -39,10 +39,10 @@ module.exports = function(app, passport, db) {
 
 	i18n.init({
 		ns: {namespaces: namespaces, defaultNs: 'main'},
-		supportedLngs: ['en-US', 'fr-FR'],
+		supportedLngs: ['fr-FR'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
 		//load: 'current',
-		preload: ['fr-FR', 'en-US'],
+		preload: ['fr-FR'],
 		//useCookie: false,
 		cookie: 'speedealingLang',
 		detectLngFromHeaders: false,
