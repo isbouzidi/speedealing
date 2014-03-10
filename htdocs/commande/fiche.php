@@ -1101,7 +1101,7 @@ if (($action == 'create' || $action == 'edit') && $user->rights->commande->creer
 	print column_end();
 
 	// Print Notes
-	print column_start("six");
+	print column_start("twelve","new-row");
 	print $object->show_notes();
 	print column_end();
 

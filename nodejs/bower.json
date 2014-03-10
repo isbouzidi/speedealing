@@ -1,6 +1,6 @@
 {
 	"name": "Speedealing",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"main": "public/lib",
 	"dependencies": {
 		"angular": "latest",
@@ -10,9 +10,9 @@
 		"angular-sanitize": "latest",
 		"angular-route": "latest",
 		"angular-animate": "latest",
-		"bootstrap": "3.0.3",
-		"angular-bootstrap": "0.9.0",
-		"angular-ui-utils": "0.0.4",
+		"bootstrap": "latest",
+		"angular-bootstrap": "latest",
+		"angular-ui-utils": "latest",
 		"kendo-ui": "2013.3.1119",
 		"jquery": "1.10.2",
 		"angular-kendo": "https://github.com/kendo-labs/angular-kendo.git",

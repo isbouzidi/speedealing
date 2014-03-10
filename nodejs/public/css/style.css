@@ -2479,7 +2479,7 @@ body.reversed #open-shortcuts {
 }
 #main-title h2 strong {
 	font-size: 30px;
-	vertical-align: -3px;
+	/*vertical-align: -3px;*/
 }
 
 /* Side tabs shortcuts */
