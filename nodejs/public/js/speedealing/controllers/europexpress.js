@@ -1563,11 +1563,18 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 					"label": "PFP Conditionnement",
 					"cssClass": "grey-gradient",
 					"billing": "clic"
+				},
+				"360":{
+					"enable": true,
+					"label": "Entrée palette/colis",
+					"cssClass": "grey-gradient",
+					"billing": "clic"
 				}
 			}
 		};
 
 		$scope.productsBarCode = {};
+		$scope.productsTab = [];
 
 		$scope.today = function() {
 			var d = new Date();
@@ -1714,17 +1721,13 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 							qty: $scope.productsTab[$scope.save.row].qtyAdd
 						}
 					}).success(function(data, status) {
-						console.log(data);
+						//console.log(data);
+						if(!$scope.productsTab[$scope.save.row].qty)
+							$scope.productsTab[$scope.save.row].qty = 0;
+						
 						$scope.productsTab[$scope.save.row].qty += data.qty;
 						$scope.productsTab[$scope.save.row].qtyAdd = null;
 					});
-					//$scope.productsTab[$scope.save.row].$update();
-					console.log("Here you'd save your record to the server, we're updating row: "
-							+ $scope.save.row + " to be: "
-							+ $scope.productsTab[$scope.save.row]._id + ","
-							+ $scope.productsTab[$scope.save.row].ref + ","
-							+ $scope.productsTab[$scope.save.row].barCode + ","
-							+ $scope.productsTab[$scope.save.row].qtyAdd);
 					$scope.save.pending = false;
 				}, 500);
 			}

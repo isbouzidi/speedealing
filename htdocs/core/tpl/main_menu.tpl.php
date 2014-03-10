@@ -42,12 +42,12 @@
 		<!-- By default, this section is made for 4 icons, see the doc to learn how to change this, in "basic markup explained" -->
 		<ul id="access" class="children-tooltip">
 			<li style="width: 20%;">
-				<a href="index.php?idmenu=menu:home" title="<?php echo $langs->trans("Home"); ?>">
+				<a href="/" title="<?php echo $langs->trans("Home"); ?>">
 					<span class="icon-home"></span>
 				</a>
 			</li>
 			<li style="width: 20%;">
-				<a href='#!/ticket' title="Gestion des tickets" target="_self">
+				<a href='#!/ticket' title="Gestion des tickets">
 					<span class="icon-inbox"></span>
 					<?php if ($countTicket) { ?>
 						<span class="count"><?php echo $countTicket; ?></span>

@@ -1,7 +1,28 @@
-<section data-ng-controller="IndexController">
+<section data-ng-controller="IndexHomeController">
 	<hgroup class="thin" id="main-title">
-		<h1> Basic markup explained {{title}}</h1>
+		<h1>{{t 'Dashboard'}}</h1>
+		<h2>\{{dateNow | date:'dd'}} <strong>\{{dateNow | date:'MMMM'}}</strong></h2>
 	</hgroup>
+
+	<div class="dashboard">
+		<div class="columns">
+			<div class="nine-columns twelve-columns-mobile chart">
+				<!--id="demo-chart"-->
+				<div style="height: 280px; min-width: 100px"></div>
+			</div>
+
+			<div class="three-columns twelve-columns-mobile new-row-mobile">
+				<ul class="stats split-on-mobile">
+					<li><a href="#"> <strong>-</strong> new <br>accounts
+						</a></li>
+					<li><a href="#"> <strong>-</strong> referred new <br>accounts
+						</a></li>
+					<li><strong>-</strong> new <br>items</li>
+					<li><strong>-</strong> new <br>comments</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 
 	<div class="with-padding">
 		<h2>{{t 'Hello'}} \{{global.user.name}}</h2>

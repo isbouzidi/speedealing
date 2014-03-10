@@ -213,6 +213,9 @@ module.exports = function(app, passport, auth) {
 
 		res.send(200, iconList);
 	});
+	
+	var index = require('../app/controllers/index');
+	app.get('/partials/home', auth.requiresLogin, index.home);
 
 	app.get('/partials/:view', auth.requiresLogin, function(req, res) {
 		var view = req.params.view;
@@ -243,7 +246,6 @@ module.exports = function(app, passport, auth) {
 	 res.render('partials/' + module + "/" + view, {user: req.user});
 	 });*/
 
-	//Home route
-	var index = require('../app/controllers/index');
+	// Master angular Page
 	app.get('/', auth.requiresLogin, index.render);
 };

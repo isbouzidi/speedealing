@@ -69,9 +69,9 @@ map_reduce.menuList.reduce = map_reduce.menuList.reduce.toString();
 map_reduce.menuList.out = {replace: "view_listMenu"};
 map_reduce.menuList.query = {enabled: true};
 /*ModuleModel.mapReduce(map_reduce.menuList, function(err) {
-	if (err)
-		console.log(err);
-});*/
+ if (err)
+ console.log(err);
+ });*/
 
 map_reduce.submenuList = {};
 map_reduce.submenuList.map = function() {
@@ -93,9 +93,9 @@ map_reduce.submenuList.reduce = map_reduce.submenuList.reduce.toString();
 map_reduce.submenuList.out = {replace: "view_listSubmenu"};
 map_reduce.submenuList.query = {enabled: true};
 /*ModuleModel.mapReduce(map_reduce.submenuList, function(err) {
-	if (err)
-		console.log(err);
-});*/
+ if (err)
+ console.log(err);
+ });*/
 
 map_reduce.countTODO = {};
 
@@ -130,18 +130,6 @@ fs.readdirSync(__dirname + '/../../public/js/speedealing/controllers').forEach(f
 
 exports.render = function(req, res) {
 	var url = "/";
-
-	/*return res.render('index', {
-	 user: req.user ? JSON.stringify(req.user) : "null",
-	 title: "toto"
-	 });*/
-
-	/**
-	 * Redirect to PHP
-	 */
-
-	//res.redirect('index.php');
-	//return;
 
 	/**
 	 * Generate the menu
@@ -181,81 +169,46 @@ exports.render = function(req, res) {
 					//load top menu
 					function(callback) {
 						ModuleModel.aggregate([
-							{'$match': {enabled:true}},
+							{'$match': {enabled: true}},
 							{'$unwind': "$menus"},
-							{'$project': {_id : {menu: '$menus._id', position: '$menus.position'},value: '$menus'}},
+							{'$project': {_id: {menu: '$menus._id', position: '$menus.position'}, value: '$menus'}},
 							{'$match': {"value.type": "top"}},
-							{'$sort':{"value.position":1}}
-							],
-						
-						/*if (this.menus) {
-		this.menus.forEach(function(tag) {
-			if (tag.type) {
-				emit({menu: tag._id, position: tag.position}, tag);
-			}
-		});
-						
-						map_reduce.menuList.query = {enabled: true};
-	}*/
-						
-						
-						/*ModuleModel.mapReduce(map_reduce.menuList, function(err, model, stats) {
-							if (err) {
-								console.log(err);
-								callback();
-								return;
-							}
-							model.find({}, "", {sort: {"_id.position": 1}},*/ function(err, docs) {
+							{'$sort': {"value.position": 1}}
+						], function(err, docs) {
 							//console.log(docs);
-								topmenu = docs;
-								callback();
+							topmenu = docs;
+							callback();
 							//});
 						});
 					},
 					//load submenu
 					function(callback) {
 						ModuleModel.aggregate([
-							{'$match': {enabled:true}},
+							{'$match': {enabled: true}},
 							{'$unwind': "$menus"},
-							{'$project': {_id : {menu: '$menus.fk_menu', position: '$menus.position'},value: '$menus'}},
-							{'$match': {"value.type": {"$ne":"top"}}},
-							{'$sort':{"value.position":1}}
-							],
-							
-							/*
-							 * if (this.menus) {
-		this.menus.forEach(function(tag) {
-			if (!tag.type) {
-				emit({menu: tag.fk_menu, position: tag.position}, tag);
-			}
-		});
-	}
-							 
-						ModuleModel.mapReduce(map_reduce.submenuList, function(err, model, stats) {
-							if (err) {
-								console.log(err);
-								callback();
-								return;
-							}
-							model.find({}, "", {sort: {"_id.position": 1}},*/ function(err, docs) {
+							{'$project': {_id: {menu: '$menus.fk_menu', position: '$menus.position'}, value: '$menus'}},
+							{'$match': {"value.type": {"$ne": "top"}}},
+							{'$sort': {"value.position": 1}}
+						],
+								function(err, docs) {
 
-								for (var i in docs) {
-									var menu = docs[i].value;
+									for (var i in docs) {
+										var menu = docs[i].value;
 
-									var newTabMenu = verifyMenu(menu, req);
-									//console.log(newTabMenu);
+										var newTabMenu = verifyMenu(menu, req);
+										//console.log(newTabMenu);
 
-									if (newTabMenu.enabled && newTabMenu.perms) {
-										if (typeof submenu[docs[i]._id.menu] === 'undefined')
-											submenu[docs[i]._id.menu] = [];
+										if (newTabMenu.enabled && newTabMenu.perms) {
+											if (typeof submenu[docs[i]._id.menu] === 'undefined')
+												submenu[docs[i]._id.menu] = [];
 
-										submenu[docs[i]._id.menu].push(newTabMenu);
+											submenu[docs[i]._id.menu].push(newTabMenu);
+										}
 									}
-								}
 
-								callback();
-							//});
-						});
+									callback();
+									//});
+								});
 					},
 					// Get Count task todo
 					function(callback) {
@@ -409,7 +362,6 @@ exports.render = function(req, res) {
 			res.render('index', {title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, version: config.version, angular: angular});
 		});
 	});
-
 };
 
 function verifyMenu(newTabMenu, req) {
@@ -441,3 +393,9 @@ function verifyMenu(newTabMenu, req) {
 
 	return newTabMenu;
 }
+
+exports.home = function(req, res) {
+
+
+	res.render('partials/home', {user: req.user});
+};
