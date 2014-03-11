@@ -1,0 +1,28 @@
+<div class="four-columns six-columns-tablet twelve-columns-mobile">
+
+	<h2 class="relative thin no-margin-bottom">
+		{{user.firstname}} {{user.lastname}}
+		<span class="info-spot">
+			<span class="icon-info-round"></span>
+			<span class="info-bubble">
+				Liste des dernières connexions
+			</span>
+		</span>
+	</h2>
+	<small>Dernière connexion : \{{global.user.LastConnection | date:'dd/MM/yyyy HH:mm'}}</small>
+
+	<ul class="list spaced" data-ng-init='connection()'>
+
+		<li data-ng-repeat='user in userConnection'>
+			<span class="list-link icon-user">
+				<span class="meter green-gradient"></span>
+				<span class="meter green-gradient"></span>
+				<span class="meter green-gradient"></span>
+				<span class="meter green-gradient"></span>
+
+				<strong>\{{user.firstname}}</strong> \{{user.lastname}} <span class='float-right'>\{{user.NewConnection | date:'dd/MM/yyyy HH:mm'}}</span>
+			</span>
+		</li>
+
+	</ul>
+</div>

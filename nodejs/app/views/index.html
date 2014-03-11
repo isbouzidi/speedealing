@@ -12,9 +12,11 @@
 	</header>
 
 	<!-- Button to open/hide menu --> 
-	<a data-ng-show="withMenu()" id="open-menu" href='#'>
+	{{#if user.right_menu}}
+	<a id="open-menu" href='#'>
 		<span>Menu</span>
 	</a>
+	{{/if}}
 
 	<!-- Button to open/hide shortcuts -->
 	<!--<a id="open-shortcuts" href='#'>
@@ -35,10 +37,12 @@
 	<!-- include menuleft-->
 
 	<!-- Menu content-->
-	<section data-ng-show="withMenu()" id="menu" role='complementary'>
+	{{#if user.right_menu}}
+	<section id="menu" role='complementary'>
 		{{> menu}}
 		<!--<div data-ng-include data-src="'partials/menu.html'"></div>-->
 	</section>
+	{{/if}}
 
 	<footer id="footer">
 		{{> footer}}

@@ -1,5 +1,6 @@
 var async = require('async'),
-		ip = require('ip');
+		ip = require('ip'),
+		config = require(__dirname + '/config');
 
 module.exports = function(app, passport, auth) {
 	//User Routes
@@ -44,7 +45,7 @@ module.exports = function(app, passport, auth) {
 
 			/* CheckExternalIP */
 			console.log(req.headers['x-real-ip']);
-			if (!ip.isPrivate(req.headers['x-real-ip']) && !user.externalConnect) {
+			if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
 				res.json({success: false, errors: "Internet access denied"}, 500);
 				return users.signout;
 			}
@@ -80,7 +81,10 @@ module.exports = function(app, passport, auth) {
 				entity: req.user.entity,
 				photo: req.user.photo,
 				societe: req.user.societe,
-				right_menu: req.user.right_menu};
+				right_menu: req.user.right_menu,
+				url: req.user.url,
+				LastConnection: req.user.LastConnection
+			};
 
 			//console.log(req.user.photo);
 
@@ -213,7 +217,7 @@ module.exports = function(app, passport, auth) {
 
 		res.send(200, iconList);
 	});
-	
+
 	var index = require('../app/controllers/index');
 	app.get('/partials/home', auth.requiresLogin, index.home);
 
@@ -230,7 +234,7 @@ module.exports = function(app, passport, auth) {
 		} else
 			res.render('partials/' + view, {user: req.user});
 	});
-	
+
 	app.get('/partials/:view/:id', auth.requiresLogin, function(req, res) {
 		var view = req.params.view;
 		var pos = req.params.id.search(".html"); // search if id is an html page

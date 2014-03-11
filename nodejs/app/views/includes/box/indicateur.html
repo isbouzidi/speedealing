@@ -1,0 +1,50 @@
+<div class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>Indicateurs du mois</h3>
+			<span class="ribbon"><span class="ribbon-inner">{{t 'New'}}</span></span>
+		</div>
+
+		<ul class="events" data-ng-init='indicateur()'>
+
+			<li>
+				<span class="event-date orange">\{{indicateurs.abs}}</span>
+				<span class="event-description">
+					<h4>Nombre de jours d'absences (non justifiées)</h4>
+					<p>Depuis le début de l'année</p>
+				</span>
+			</li>
+
+			<li>
+				<span class="event-date">
+					\{{familles.sous_traitants/1000 | number:1}} <span class="event-hour">k€</span>
+				</span>
+				<span class="event-description">
+					<h4>Sous-traitance</h4>
+					<p>Objectif mensuel : </p>
+				</span>
+				<span class="ribbon tiny"><span class="ribbon-inner red-gradient">Impor.</span></span>
+			</li>
+
+			<!--<li>
+				<span class="event-date red">
+					0 <span class="event-hour">k€</span>
+				</span>
+				<h4>Interventions non facturées</h4>
+				<p>&nbsp;</p>
+			</li>-->
+			
+			<li>
+				<span class="event-date">
+					\{{indicateurs.hsupp}} <span class="event-hour">H</span>
+				</span>
+				<h4>Heures supplémentaires</h4>
+				<p>Depuis le début du mois</p>
+			</li>
+
+		</ul>
+
+	</div>
+</div>

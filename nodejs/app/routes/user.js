@@ -102,7 +102,7 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.post('/api/user', auth.requiresLogin, function(req, res) {
-		console.log(JSON.stringify(req.body));
+		//console.log(JSON.stringify(req.body));
 		return res.send(200, object.create(req));
 	});
 
@@ -115,6 +115,8 @@ module.exports = function(app, passport, auth) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
 	});
+
+	app.get('/api/user/connection', auth.requiresLogin, object.connection);
 
 	app.get('/api/user/absence', auth.requiresLogin, function(req, res) {
 		absence.read(req, res);
@@ -145,6 +147,7 @@ module.exports = function(app, passport, auth) {
 		res.send(200, result);
 	});
 
+	app.get('/api/user/absence/count', auth.requiresLogin, absence.count);
 
 	//other routes..
 };
@@ -188,6 +191,13 @@ Object.prototype = {
 	},
 	del: function(req) {
 		return req.body.models;
+	},
+	connection: function(req, res) {
+		UserModel.find({NewConnection: {$ne: null}}, "lastname firstname NewConnection", {limit: 10, sort: {
+				NewConnection: -1
+			}}, function(err, docs) {
+			res.json(200, docs);
+		});
 	}
 };
 
@@ -260,5 +270,19 @@ Absence.prototype = {
 	},
 	del: function(req) {
 		return req.body.models;
+	},
+	count: function(req, res) {
+		var d = new Date();
+		d.setHours(0, 0, 0);
+		var dateStart = new Date(d.getFullYear(), 0, 1);
+		var dateEnd = new Date(d.getFullYear() + 1, 0, 1);
+
+		UserAbsenceModel.aggregate([
+			{$match: {Status: "NOTJUSTIFIED", dateStart: {$gte: dateStart, $lt: dateEnd}}},
+			{$project: {_id: 0, nbDay: 1}},
+			{$group: {'_id': 0, sum: {"$sum": "$nbDay"}}}
+		], function(err, docs) {
+			res.json(200,docs[0]);
+		});
 	}
 };

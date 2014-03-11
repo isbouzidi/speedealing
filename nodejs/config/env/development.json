@@ -55,5 +55,6 @@
 			"http://localhost:9200"
 		],
 		"log": "trace"
-	}
+	},
+	"externalIPAllowed": ["127.0.0.1"]
 }

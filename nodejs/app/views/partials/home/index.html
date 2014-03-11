@@ -1,9 +1,10 @@
 <section data-ng-controller="IndexHomeController">
 	<hgroup class="thin" id="main-title">
 		<h1>{{t 'Dashboard'}}</h1>
-		<h2>\{{dateNow | date:'dd'}} <strong>\{{dateNow | date:'MMMM' | capitalize}}</strong></h2>
+		<h2>\{{dateNow | date:'MMM'}} <strong>\{{dateNow | date:'dd'}}</strong></h2>
 	</hgroup>
 
+	{{#if stats}}
 	<div class="dashboard">
 		<div class="columns">
 			<div class="nine-columns twelve-columns-mobile chart">
@@ -25,6 +26,13 @@
 	</div>
 
 	<div class="with-padding">
-		<h2>{{t 'Hello'}} \{{global.user.name}}</h2>
+		<div class='columns'>
+			{{> 'box/infologin'}}
+			{{> 'box/result'}}
+			{{> 'box/cost'}}
+			{{> 'box/indicateur'}}
+			{{> 'box/ca'}}
+		</div>
 	</div>
+	{{/if}}
 </section>

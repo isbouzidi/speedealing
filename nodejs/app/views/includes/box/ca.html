@@ -1,0 +1,23 @@
+<div class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>CA HT par famille</h3>
+		</div>
+
+		<ul class="events" data-ng-init="familleCA()">
+
+			<li data-ng-repeat="ca in familles.familles">
+				<span class="event-date">
+					\{{ca.sum/1000 | number:1}} <span class="event-hour">k€</span>
+				</span>
+				<div class="event-description">
+					<h4>\{{ca._id}}</h4>
+					<p>Total du mois en cours</p>
+				</div>
+			</li>
+
+		</ul>
+
+	</div>
+</div>

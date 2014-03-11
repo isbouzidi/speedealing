@@ -359,7 +359,12 @@ exports.render = function(req, res) {
 				return selectnow;
 			}
 
-			res.render('index', {title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, version: config.version, angular: angular});
+			// To hide menus
+			var withMenu = "";
+			if (req.user.right_menu)
+				withMenu = 'with-menu';
+
+			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, version: config.version, angular: angular});
 		});
 	});
 };
@@ -395,7 +400,14 @@ function verifyMenu(newTabMenu, req) {
 }
 
 exports.home = function(req, res) {
+	var stats = false;
+
+	for (var i in req.user.roles)
+		if (req.user.roles == "direction" || req.user.admin) {
+			stats = true;
+			break;
+		}
 
 
-	res.render('partials/home', {user: req.user});
+	res.render('partials/home', {user: req.user, stats: stats});
 };
