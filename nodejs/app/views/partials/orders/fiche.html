@@ -1,0 +1,271 @@
+<section data-ng-controller="SocieteViewController" class="scroll" style="height:500px" ng-style="style(0)" resize>
+	<div data-ng-init="findOne()">
+		<hgroup id="main-title" class="thin">
+			<h1>\{{societe.name}}</h1>
+		</hgroup>
+		<div class="with-padding">
+			<div class="columns">
+				<div class="six-columns">
+
+					<tabset>
+						<tab>
+							<tab-heading>
+								<span class="icon-info">Infos société</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<span class="ribbon">
+									<span class="ribbon-inner" data-ng-class="societe.status.css">\{{societe.status.name | limitTo:12}}</span>
+								</span>
+								<table class="simple-table">
+									<tbody>
+										<tr>
+											<th width="40%" scope="row">Immatriculation</th>
+											<td><span editable-text="vehicule.immat" e-form="textBtnForm" onaftersave="update()">
+													\{{vehicule.immat}}
+												</span>&nbsp;
+												<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">Description</th>
+											<td>\{{vehicule.desc}}</td>
+										</tr>
+										<tr>
+											<th scope="row">Affectation</th>
+											<td>\{{vehicule.affectation}}</td>
+										</tr>
+										<tr>
+											<th scope="row">Date de mise en circulation</th>
+											<td>\{{vehicule.date_mise_circu | date:'dd/MM/yyyy'}}</td>
+										</tr>
+										<tr>
+											<th scope="row">Date CT</th>
+											<td>\{{vehicule.date_CT | date:'dd/MM/yyyy'}}</td>
+										</tr>
+										<tr>
+											<th scope="row">Freq révision</th>
+											<td>\{{vehicule.freq_rev}} km</td>
+										</tr>
+										<tr>
+											<th scope="row">Carte gazoil</th>
+											<td>\{{vehicule.gazoilCard}} (<i>code : \{{vehicule.gazoilCardPIN}}</i>)</td>
+										</tr>
+										<tr>
+											<th scope="row">Téléephone</th>
+											<td>\{{vehicule.phone}}</td>
+										</tr>
+										<tr>
+											<th scope="row">Kilométrage</th>
+											<td class="red">\{{vehicule.kms}} km</td>
+										</tr>
+										<tr>
+											<th scope="row">Géolocaolisation</th>
+											<td><input type="checkbox" disabled ng-checked="vehicule.geoloc"></td>
+										</tr>
+										<tr>
+											<th scope="row">Derniere mis a jour</th>
+											<td class="blue">\{{vehicule.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+										</tr>
+										<tr>
+											<th scope="row">Pneus</th>
+											<td>\{{vehicule.pneu}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-tools">Entretiens / Réparations</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<table class="simple-table margin-bottom">
+									<tbody>
+										<tr>
+											<th width="40%" scope="row">Freq révision</th>
+											<td>\{{vehicule.freq_rev}} km</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<table class="table margin-bottom">
+									<thead>
+										<tr>
+											<th width="30%" scope="col">Date</th>
+											<th width="40%" scope="col">Description</th>
+											<th scope="col">km</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td colspan="3" class="no-padding">
+												<div class="scroll" style="height:140px">
+													<table class="simple-table">
+														<tr data-ng-repeat="entretien in vehicule.entretiens | orderBy:'-date'">
+															<th width="30%">\{{entretien.date | date:'dd/MM/yyyy'}}</th>
+															<td width="40%">\{{entretien.desc}}</td>
+															<td>\{{entretien.km}}</td>
+														</tr>
+													</table>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<div class='boxed white-bg'>
+									<form data-ng-submit="addEntretien()">
+										<table>
+											<tbody>
+												<tr>
+													<td>
+														<div class="button-height block-label">
+															<label for="date" class="label">
+																Date
+															</label>
+															<input kendo-date-picker required id="date" data-ng-model="date" k-on-change="form.date = kendoEvent.sender._value;" class="input"/>
+														</div>
+													</td>
+													<td>
+														<div class="button-height block-label">
+															<label for="desc" class="label">
+																Description
+															</label>
+															<input id="desc" required data-ng-model="form.desc" class="input"/>
+														</div>
+														<div class="button-height block-label">
+															<label for="km" class="label">
+																Km
+															</label>
+															<input type="number" required id="km" data-ng-model="form.km" class="input"/>
+
+															<div class="button-height float-right">
+																<button type="submit" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</form>
+								</div>
+							</div>
+						</tab>
+					</tabset>
+				</div>
+
+				<div class="two-columns margin-top"></div>
+				<div class="four-columns margin-top">
+					<h5 class="green underline">Notes</h5>
+
+					<div class="button-height block-label margin-bottom">
+						<label for="note" class="label">
+							Ajouter une note
+						</label>
+						<textarea id="note" cols="25" rows="2" data-ng-model="note" class="input"></textarea>
+
+						<div class="button-height float-right">
+							<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
+						</div>
+					</div>
+
+					<div class="scroll" style="height:360px">
+						<div data-ng-repeat="vnote in vehicule.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+							<div class="with-small-padding silver-gradient no-margin-top">
+								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+							</div>
+							<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+						</div>
+					</div>
+
+
+				</div>
+
+				<div class="six-columns">
+					<div class="panel-content linen">
+
+						<div class="panel-control align-right">
+							<div class="float-right">
+								<div class="button-group">
+									<progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
+								</div>
+								<div class="button-group">
+									<div class="button-height">
+										<input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
+										<!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
+									</div>
+								</div>
+							</div>
+
+
+
+						</div>
+
+						<div id="panel-content" class="panel-load-target scrollable" style="height:700px">
+							<div class="with-padding">
+								<p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
+								<p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
+
+								<ul class="files-icons on-dark" data-ng-init="getFileTypes()">
+									<!--<li>
+										<a href="#" class="file-link">
+											<span class="icon folder-net"></span>
+											Dossier public
+										</a>
+									</li>-->
+									<li data-ng-repeat="file in vehicule.files">
+										<span class="icon" data-ng-class="fileType(file.name)"></span>
+										<div class="controls">
+											<span class="button-group compact children-tooltip">
+												<a data-ng-href="api/europexpress/vehicules/file/\{{vehicule._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
+												<a data-ng-href="api/europexpress/vehicules/file/\{{vehicule._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
+												<button data-ng-click="suppressFile(vehicule._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
+											</span>
+										</div>
+										<a data-ng-href="api/europexpress/vehicules/file/\{{vehicule._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename || file.name}}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="six-columns">
+					<h5 class="green underline">Historique des tickets</h5>
+
+					<div class="table-header silver-gradient glossy button-height">
+						<div class="float-right">
+							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsTicket.filterText" class="input small mid-margin-left">
+						</div>
+					</div>
+					<div class="gridStyle"  data-ng-grid="gridOptionsTicket"></div>
+					<div class="table-footer silver-gradient">
+						\{{countTicket}} ligne(s)
+					</div>
+				</div>
+
+				<div class="six-columns">
+					<h5 class="green underline">Demandes d'achats</h5>
+
+					<div class="table-header silver-gradient glossy button-height">
+						<div class="float-right">
+							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsBuy.filterText" class="input small mid-margin-left">
+						</div>
+						\{{searchBuy}}
+					</div>
+					<div class="gridStyle"  data-ng-grid="gridOptionsBuyer"></div>
+					<div class="table-footer silver-gradient">
+						<div class="float-right strong">
+							Total HT payé : \{{TotalBuy | euro}}  
+						</div>
+						\{{countBuy}} ligne(s)
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>

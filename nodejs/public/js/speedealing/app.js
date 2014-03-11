@@ -11,15 +11,17 @@ window.app = angular.module('mean', ['ngRoute',
 	"highcharts-ng",
 	'mean.system',
 	'mean.societes',
+	'mean.orders',
 	'mean.articles',
 	'mean.europexpress'
 ]);
 
 angular.module('mean.system', []);
 angular.module('mean.societes', []);
+angular.module('mean.orders', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
 
 window.app.run(function(editableOptions) {
-  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+	editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });

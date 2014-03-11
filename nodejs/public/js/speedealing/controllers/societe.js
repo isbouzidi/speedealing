@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteListController', ['$scope', '$location', '$http', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteListController', ['$scope', '$location', '$http', '$modal', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $modal, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
 		initCharts();
@@ -7,7 +7,7 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			{name: "Fournisseur", id: "SUPPLIER"},
 			{name: "Sous-traitants", id: "SUBCONTRACTOR"},
 			{name: "Non determine", id: "SUSPECT"},
-			{name: "Tous", id:"ALL"}];
+			{name: "Tous", id: "ALL"}];
 
 		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
 
@@ -213,13 +213,75 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			},
 			series: []
 		};
+		
+		$scope.societe={};
+
+		$scope.addNew = function() {
+
+			var modalInstance = $modal.open({
+				templateUrl: 'myModalContent.html',
+				controller: ModalInstanceCtrl,
+				resolve: {
+					object: function() {
+						return $scope.societe;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(societe) {
+				$scope.societe = societe;
+				$scope.create();
+				$scope.societe = {};
+			}, function() {
+			});
+		};
+
+		var ModalInstanceCtrl = function($scope, $modalInstance, object) {
+
+			$scope.societe = object;
+			if (object.card)
+				$scope.cardSelect = {
+					id: object.card,
+					vehicule: object.vehicule
+				};
+
+			$scope.datec = new Date(object.datec);
+
+
+			$scope.cardAutoComplete = function(val) {
+				return $http.post('api/europexpress/card/autocomplete', {
+					take: '5',
+					skip: '0',
+					page: '1',
+					pageSize: '5',
+					filter: {logic: 'and', filters: [{value: val}]
+					}
+				}).then(function(res) {
+					return res.data
+				});
+			};
+
+			$scope.refreshVehicule = function() {
+				$scope.paiement.vehicule = this.cardSelect.vehicule;
+				$scope.paiement.card = this.cardSelect.id;
+			};
+
+			$scope.ok = function() {
+				$modalInstance.close($scope.paiement);
+			};
+
+			$scope.cancel = function() {
+				$modalInstance.dismiss('cancel');
+			};
+		};
+
 
 
 	}]);
 
 angular.module('mean.societes').controller('SocieteViewController', ['$scope', '$location', '$http', '$routeParams', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, pageTitle, Global, Societe) {
 		pageTitle.setTitle('Fiche société');
-		$scope.vehicule={};
+		$scope.vehicule = {};
 
 		$scope.remove = function(societe) {
 			societe.$remove();

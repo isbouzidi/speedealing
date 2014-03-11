@@ -1,9 +1,9 @@
-<section data-ng-controller="SocieteListController">
+<section data-ng-controller="OrderListController">
 	<hgroup id="main-title" class="thin">
-		<h1>Liste des sociétés</h1>
+		<h1>{{t 'orders:Orders'}}</h1>
 	</hgroup>
 
-	<div class="dashboard">
+	<!--<div class="dashboard">
 		<div class="columns">
 			<div class="four-columns twelve-columns-mobile graph">
 				<highchart id="pieChart" config="pieChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>
@@ -13,11 +13,12 @@
 				<highchart id="barChart" config="barChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>
 			</div>
 		</div>
-	</div>
+	</div>-->
 
-	<script type="text/ng-template" id="myModalContent.html">
+	<div class="with-padding" data-ng-init="find()">
+		<script type="text/ng-template" id="myModalContent.html">
 		<div class="modal-header">
-		<h3 class="no-margin-bottom">{{t 'companies:NewThirdParty'}}</h3>
+		<h3 class="no-margin-bottom">{{t 'orders:NewOrder'}}</h3>
 		</div>
 		<div class="modal-body">
 
@@ -45,13 +46,11 @@
 		</div>
 		<div class="modal-footer">
 		<span class="button-group">
-		<button class="button green-gradient icon-tick" ng-click="ok()"> OK</button>
-		<button class="button orange-gradient icon-forbidden" ng-click="cancel()"> Cancel</button>
+		<button class="button green-gradient icon-tick" ng-click="ok()"> {{t 'Save'}}</button>
+		<button class="button orange-gradient icon-forbidden" ng-click="cancel()"> {{t 'Cancel'}}</button>
 		</span>
 		</div>
 	</script>
-
-	<div class="with-padding" data-ng-init="find()">
 
 		<div class="table-header silver-gradient glossy button-height">
 			<div class="row">
@@ -59,7 +58,6 @@
 					<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
 				</div>
 				<div class="col-sm-4">
-					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
 				</div>
 				<div class="col-sm-4">
 					<div class="float-right">
@@ -68,7 +66,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="gridStyle"  data-ng-grid="gridOptionsSociete" ng-style="style(100)" resize></div>
+		<div class="gridStyle"  data-ng-grid="gridOptionsSociete" ng-style="style(170)" resize></div>
 		<div class="table-footer silver-gradient">
 			\{{countSocietes}} ligne(s)
 		</div>
