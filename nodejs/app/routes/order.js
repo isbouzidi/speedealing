@@ -200,14 +200,17 @@ Object.prototype = {
 	 * List of orders
 	 */
 	all: function(req, res) {
+
 		CommandeModel.find({}, {}, function(err, orders) {
-			if (err) {
-				res.render('error', {
+			if (err)
+				return res.render('error', {
 					status: 500
 				});
-			} else {
-				res.json(orders);
+			for (var i in orders) {
+				orders[i].setStatus(orders[i].Status, req.i18n);
 			}
+
+			res.json(orders);
 		});
 	},
 	/**

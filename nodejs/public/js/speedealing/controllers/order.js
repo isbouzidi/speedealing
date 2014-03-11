@@ -48,19 +48,17 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 			data: 'orders',
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptions,
-			sortInfo: {fields: ["name"], directions: ["asc"]},
+			sortInfo: {fields: ["createdAt"], directions: ["desc"]},
 			//showFilter:true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'commercial_id.name', displayName: 'Commerciaux', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
-				{field: 'zip', displayName: 'Code Postal'},
-				{field: 'town', displayName: 'Ville'},
-				{field: 'idprof3', displayName: 'APE'},
-				{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
-				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
-				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
-				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
+				{field: 'ref', displayName: 'Ref', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/orders/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'client.name', displayName: 'Société'},
+				{field: 'ref_client', displayName: 'Ref. client'},
+				{field: 'contact.name', displayName: 'Contact'},
+				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'total_ht', displayName: 'Montant HT', cellFilter: "currency", cellClass:"align-right"},
+				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'}
 			]
 		};
 		

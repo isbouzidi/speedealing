@@ -23,24 +23,20 @@
 		<div class="modal-body">
 
 		<p class="button-height inline-medium-label">
-		<label for="card">Numéro carte gazoil</label>
+		<label for="card">Référence client</label>
 		<input id="card" data-ng-model="cardSelect" typeahead-on-select="refreshVehicule()" typeahead="card as card.id for card in cardAutoComplete($viewValue) | filter:{id:$viewValue}" class="input">
 		</p>
 		<p class="button-height inline-medium-label">
-		<label for="vehicule">Véhicule</label>
-		\{{paiement.vehicule.name}}
+		<label for="societe">Société</label>
+		<input type="text" id="societe" data-ng-model="client" class="input">
 		</p>
 		<p class="button-height inline-medium-label">
-		<label for="datec">Date</label>
+		<label for="datec">Date de commande</label>
 		<input kendo-date-picker id="datec" data-ng-model="datec" k-on-change="paiement.datec = kendoEvent.sender._value;" class="input">
 		</p>
 		<p class="button-height inline-medium-label">
-		<label for="qty">Volume</label>
-		<input type="number" min="0" step="any" id="qty" data-ng-model="paiement.qty" class="input">
-		</p>
-		<p class="button-height inline-medium-label">
-		<label for="total_ht">Total HT</label>
-		<input type="number" min="0" step="any" id="total_ht" data-ng-model="paiement.total_ht" class="input">
+		<label for="datel">Date de livraison</label>
+		<input kendo-date-picker id="datel" data-ng-model="datec" k-on-change="paiement.datec = kendoEvent.sender._value;" class="input">
 		</p>
 
 		</div>
