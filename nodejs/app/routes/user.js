@@ -282,7 +282,10 @@ Absence.prototype = {
 			{$project: {_id: 0, nbDay: 1}},
 			{$group: {'_id': 0, sum: {"$sum": "$nbDay"}}}
 		], function(err, docs) {
-			res.json(200,docs[0]);
+			if (docs.length == 0)
+				return res.json(200, {_id: 0, sum: 0});
+
+			res.json(200, docs[0]);
 		});
 	}
 };
