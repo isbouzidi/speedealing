@@ -1,5 +1,7 @@
-angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', 'Global', function($scope, $location, $http, Global) {
+angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', 'Global', 'pageTitle', function($scope, $location, $http, Global, pageTitle) {
 		$scope.global = Global;
+
+		pageTitle.setTitle('Accueil');
 
 		$scope.dateNow = new Date();
 		$scope.userConnection = [];
