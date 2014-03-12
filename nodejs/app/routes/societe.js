@@ -287,14 +287,14 @@ function Object() {
 
 Object.prototype = {
 	societe: function(req, res, next, id) {
-		SocieteModel.findOne({_id:id}, function(err, doc) {
+		SocieteModel.findOne({_id: id}, function(err, doc) {
 			if (err)
 				return next(err);
 			if (!doc)
 				return next(new Error('Failed to load societe ' + id));
 			doc.setStatus(doc.Status, req.i18n);
 			doc.setProspectLevel(doc.prospectlevel, req.i18n);
-			
+
 			req.societe = doc;
 			next();
 		});

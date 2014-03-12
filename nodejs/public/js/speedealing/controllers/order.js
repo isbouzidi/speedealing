@@ -2,6 +2,23 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 
 		pageTitle.setTitle('Liste des commandes');
 
+		getEntities();
+
+		function getEntities() {
+			$http({method: 'GET', url: 'api/entity/select'
+			}).
+					success(function(data, status) {
+				$scope.entities = data;
+			});
+		}
+
+		$scope.entity = {id: Global.user.entity, name: Global.user.entity};
+
+		$scope.types = [{name: "En cours", id: "NOW"},
+			{name: "Clos", id: "CLOSED"}];
+
+		$scope.type = {name: "En cours", id: "NOW"};
+
 		$scope.create = function() {
 			var societe = new Societe({
 				title: this.title,
@@ -29,7 +46,7 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 		};
 
 		$scope.find = function() {
-			Orders.query({}, function(orders) {
+			Orders.query({query: this.type.id}, function(orders) {
 				$scope.orders = orders;
 				$scope.count = orders.length;
 			});
@@ -57,12 +74,12 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 				{field: 'ref_client', displayName: 'Ref. client'},
 				{field: 'contact.name', displayName: 'Contact'},
 				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy'"},
-				{field: 'total_ht', displayName: 'Montant HT', cellFilter: "currency", cellClass:"align-right"},
+				{field: 'total_ht', displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'}
 			]
 		};
-		
-		$scope.order={};
+
+		$scope.order = {};
 
 		$scope.addNew = function() {
 

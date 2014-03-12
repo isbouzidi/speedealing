@@ -200,8 +200,22 @@ Object.prototype = {
 	 * List of orders
 	 */
 	all: function(req, res) {
+		var query = {};
 
-		CommandeModel.find({}, {}, function(err, orders) {
+		if (req.query.query) {
+			switch (req.query.query) {
+				case "NOW" :
+					query.Status = {"$nin": ["SHIPPING", "CLOSED","CANCELED"]};
+					break;
+				case "CLOSED" :
+					query.Status = {"$in": ["SHIPPING", "CLOSED","CANCELED"]};
+					break;
+				default :
+					break;
+			}
+		}
+		
+		CommandeModel.find(query, "-files", function(err, orders) {
 			if (err)
 				return res.render('error', {
 					status: 500

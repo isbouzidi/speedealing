@@ -82,7 +82,7 @@ module.exports = function(app, passport, auth) {
 		if (req.user) {
 			//console.log('session : ' + req.user.name);
 
-			var user = {name: req.user.name,
+			/*var user = {name: req.user.name,
 				firstname: req.user.firstname,
 				lastname: req.user.lastname,
 				email: req.user.email,
@@ -93,7 +93,7 @@ module.exports = function(app, passport, auth) {
 				right_menu: req.user.right_menu,
 				url: req.user.url,
 				LastConnection: req.user.LastConnection
-			};
+			};*/
 
 			//console.log(req.user.photo);
 
@@ -102,7 +102,7 @@ module.exports = function(app, passport, auth) {
 				user.message = req.session.flash.error[nb];
 			}
 
-			return res.send(200, user);
+			return res.send(200, req.user);
 		} else if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 			//console.log(req.session);
 			req.session.nb++;
