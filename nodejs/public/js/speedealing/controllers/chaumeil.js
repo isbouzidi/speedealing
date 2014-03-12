@@ -167,7 +167,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				note += "<p> Nombre d'exemplaires papier : " + this.order.bl[i].products[0].qty + "</p>";
 				note += "<p> Nombre d'exemplaires CD : " + this.order.bl[i].products[1].qty + "</p>";
 
-				note += '<br /><a href="api/chaumeil/otis/latex/' + this.order._id + '?bl=' + i + '" target="_blank" title="Telecharger"><span class="icon-extract"> Fichier classeur</span></a>';
+				note += '<br /><a href="api/chaumeil/otis/classeur/' + this.order._id + '?bl=' + i + '" target="_blank" title="Telecharger"><span class="icon-extract"> Fichier classeur</span></a>';
+				note += '<br /><a href="api/chaumeil/otis/bordereau/' + this.order._id + '?bl=' + i + '" target="_blank" title="Telecharger"><span class="icon-extract"> Fichier bordereau</span></a>';
 
 				$scope.order.notes.push({
 					note: note,
@@ -185,7 +186,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
 					if ($scope.order.optional.dossiers[j].selectedFiles[i] != null) {
 						note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
-						note += '<span class="icon-extract">' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
+						note += '<span class="icon-extract">' + i +"_" +$scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
 						note += '</a></li>';
 					}
 				}

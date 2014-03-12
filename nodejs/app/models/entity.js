@@ -29,8 +29,8 @@ var entitySchema = new Schema({
 	logo: String,
 	_id: String,
 	currency: String,
-	fiscal_month_start: Number
-
+	fiscal_month_start: Number,
+	cptRef:String //used for numerotation ex : COIV0314-000001
 });
 
 mongoose.model('entity', entitySchema, 'Mysoc');

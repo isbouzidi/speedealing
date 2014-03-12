@@ -54,6 +54,15 @@ module.exports = function(app, passport, auth) {
 				if (err) {
 					return next(err);
 				}
+				
+				user.LastConnection = user.NewConnection;
+				user.NewConnection = new Date();
+				
+				user.save(function(err){
+					if(err)
+						console.log(err);
+				});
+				
 				return res.json({success: true, url: user.url}, 200);
 			});
 		})(req, res, next);

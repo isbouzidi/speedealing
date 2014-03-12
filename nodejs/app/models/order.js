@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 var DictModel = mongoose.model('dict');
+var EntityModel = mongoose.model('entity');
 
 /**
  * Article Schema
@@ -101,9 +102,17 @@ orderSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew && this.ref == null) {
 		SeqModel.inc("CO", function(seq) {
-			console.log(seq);
-			self.ref = seq;
-			next();
+			//console.log(seq);
+			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+				if (err)
+					console.log(err);
+
+				if (entity && entity.cptRef)
+					self.ref = "CO" + entity.cptRef + seq;
+				else
+					self.ref = "CO" + seq;
+				next();
+			});
 		});
 	} else
 		next();

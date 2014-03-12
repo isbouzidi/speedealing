@@ -1,0 +1,108 @@
+\documentclass[a4paper, oneside, 10pt, french]{article}
+
+\usepackage[a4paper]{geometry}
+\geometry{top=1.5cm, bottom=1cm, left=1.5cm, right=1.5cm,foot=1.5cm,head=2cm,headsep=.5cm,includefoot}
+
+\newcommand{\FOOT}{}
+
+\usepackage{symeos_base}
+
+
+
+\definecolor{chaumeil-violet}{rgb}{0.58,0.07,0.47}
+\definecolor{chaumeil-bleu}{rgb}{0.01,0.28,0.58}
+\newcommand{\vhline}{\arrayrulecolor{chaumeil-violet}\hline\arrayrulecolor{black}}
+\newcommand{\ghline}{\arrayrulecolor{gray}\hline\arrayrulecolor{black}}
+\newcommand{\bhline}{\arrayrulecolor{chaumeil-bleu}\hline\arrayrulecolor{black}}
+\makeatletter
+\renewcommand{\section}{\@startsection {section}{1}{\z@}%
+             {-0ex \@plus -1ex \@minus -.2ex}%
+             {0.01ex \@plus.2ex}%
+             {\normalfont\normalsize\sffamily}}
+\makeatother
+\begin{document}
+
+\pagestyle{empty}
+
+\vspace*{2cm}
+
+\begin{center}
+\includegraphics[width=.7\textwidth]{otis.jpg}
+\end{center}
+
+\vspace{1.5cm}
+
+\begin{center}
+\Huge --REFERENCE--
+\end{center}
+
+\vspace{2cm}
+
+\begin{center}
+\textbf{\Huge D.O.E.}
+\end{center}
+
+\vspace{2cm}
+
+\Large Affaire : --NUMAFFAIRE--
+
+\newpage
+
+\vspace*{1cm}
+
+\begin{center}
+\textbf{\Huge SOMMAIRE}
+\end{center}
+
+\vspace{2cm}
+
+\begin{enumerate}
+\item Déclarations Intermédiaire de Conformité CE de(des) appareil(s)\\ \vspace{1em}
+\item PV au feu porte cabine\\ \vspace{1em}
+\item PV au feu paroi cabine (sauf paroi Inox ou Vitrée)\\ \vspace{1em}
+\item PV au feu revêtement de sol (si lot Otis)\\ \vspace{1em}
+\item Plan(s) de(des) appareil(s)
+\end{enumerate}
+
+
+\newpage
+
+\vspace*{10cm}
+
+\begin{center}
+\textbf{\Huge D.I.C de(s) appareil(s)}
+\end{center}
+
+\newpage
+
+\vspace*{10cm}
+
+\begin{center}
+\textbf{\Huge PV au feu porte cabine}
+\end{center}
+
+\newpage
+
+\vspace*{10cm}
+
+\begin{center}
+\textbf{\Huge PV au feu paroi cabine}
+\end{center}
+
+\newpage
+
+\vspace*{10cm}
+
+\begin{center}
+\textbf{\Huge PV au feu revêtement de sol}
+\end{center}
+
+\newpage
+
+\vspace*{10cm}
+
+\begin{center}
+\textbf{\Huge Plan(s) de(des) appareils(s)}
+\end{center}
+
+\end{document}

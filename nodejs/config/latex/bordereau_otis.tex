@@ -1,0 +1,86 @@
+\documentclass[a4paper, oneside, 10pt, french]{article}
+
+\usepackage[a4paper]{geometry}
+\geometry{top=1.5cm, bottom=1cm, left=1.5cm, right=1.5cm,foot=1.5cm,head=2cm,headsep=.5cm,includefoot}
+
+\newcommand{\FOOT}{}
+
+\usepackage{symeos_base}
+
+
+
+\definecolor{chaumeil-violet}{rgb}{0.58,0.07,0.47}
+\definecolor{chaumeil-bleu}{rgb}{0.01,0.28,0.58}
+\newcommand{\vhline}{\arrayrulecolor{chaumeil-violet}\hline\arrayrulecolor{black}}
+\newcommand{\ghline}{\arrayrulecolor{gray}\hline\arrayrulecolor{black}}
+\newcommand{\bhline}{\arrayrulecolor{chaumeil-bleu}\hline\arrayrulecolor{black}}
+\makeatletter
+\renewcommand{\section}{\@startsection {section}{1}{\z@}%
+             {-0ex \@plus -1ex \@minus -.2ex}%
+             {0.01ex \@plus.2ex}%
+             {\normalfont\normalsize\sffamily}}
+\makeatother
+\begin{document}
+
+\pagestyle{empty}
+
+\begin{center}
+\textbf{\Huge BORDEREAU D'ENVOI DOE}
+\end{center}
+
+\vspace{2cm}
+
+\begin{minipage}[t]{0.40\textwidth}
+Date : --DATEC--
+\end{minipage}
+\hspace{1cm}
+\begin{minipage}[t]{0.52\textwidth}
+{\small Destinataire :}
+
+\begin{fminipage}
+--DESTINATAIRE--\\
+\begin{minipage}{\textwidth}
+\flushright
+\end{minipage}
+\end{fminipage}
+\end{minipage}
+
+\textbf{Courrier recommandé avec AR}
+
+Affaire : --REFERENCE--\\
+N. Réf. : --NUMAFFAIRE--
+
+
+\tablefirsthead{%
+\hline
+\multicolumn{1}{|c}{Désignation} &
+\multicolumn{1}{c}{Nb papier} &
+\multicolumn{1}{c|}{Nb CD} \\
+\hline
+\hline}
+\tablehead{%
+\hline
+\multicolumn{3}{|l|}{\small\sl suite de la page précédente}\\
+\hline
+\multicolumn{1}{|c}{\tbsp Désignation} &
+Nb papier &
+\multicolumn{1}{c|}{Nb CD} \\
+\hline
+\hline}
+\tabletail{%
+\hline
+\multicolumn{3}{|r|}{\small\sl suite sur la prochaine page}\\
+\hline}
+\tablelasttail{\hline}
+\begin{supertabular*}{\textwidth}{|p{10.5cm}@{\extracolsep{1mm plus 1fil}}|r|r|}
+DOE concernant l'affaire citée ci-dessus & --PAGE-- & --CD-- \\
+\end{supertabular*}
+
+
+Restant à votre disposition, veuillez recevoir, nos salutations distinguées.
+
+\vspace{1cm}
+
+\hspace{12cm} \textbf{\large Le Service Construction}
+
+\end{document}

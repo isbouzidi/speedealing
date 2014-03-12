@@ -365,7 +365,6 @@ exports.render = function(req, res) {
 				withMenu = 'with-menu';
 
 			var random = Math.random().toString(36).substring(7);
-			console.log(random);
 			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, random: random, version: config.version, angular: angular});
 		});
 	});
