@@ -1,11 +1,12 @@
-<section data-ng-controller="SocieteViewController" class="scroll" style="height:500px" ng-style="style(0)" resize>
+<section data-ng-controller="SocieteViewController">
 	<div data-ng-init="findOne()">
 		<hgroup id="main-title" class="thin">
 			<h1>\{{societe.name}}</h1>
+			<span class="valign-top tag glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span>
 		</hgroup>
 		<div class="with-padding">
 			<div class="columns">
-				<div class="six-columns">
+				<div class="twelve-columns">
 
 					<tabset>
 						<tab>
@@ -13,174 +14,157 @@
 								<span class="icon-info">Infos société</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
-								<span class="ribbon">
-									<span class="ribbon-inner" data-ng-class="societe.status.css">\{{societe.status.name | limitTo:12}}</span>
-								</span>
-								<table class="simple-table">
-									<tbody>
-										<tr>
-											<th width="40%" scope="row">Immatriculation</th>
-											<td><span editable-text="vehicule.immat" e-form="textBtnForm" onaftersave="update()">
-													\{{vehicule.immat}}
-												</span>&nbsp;
-												<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
-												</span>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">Description</th>
-											<td>\{{vehicule.desc}}</td>
-										</tr>
-										<tr>
-											<th scope="row">Affectation</th>
-											<td>\{{vehicule.affectation}}</td>
-										</tr>
-										<tr>
-											<th scope="row">Date de mise en circulation</th>
-											<td>\{{vehicule.date_mise_circu | date:'dd/MM/yyyy'}}</td>
-										</tr>
-										<tr>
-											<th scope="row">Date CT</th>
-											<td>\{{vehicule.date_CT | date:'dd/MM/yyyy'}}</td>
-										</tr>
-										<tr>
-											<th scope="row">Freq révision</th>
-											<td>\{{vehicule.freq_rev}} km</td>
-										</tr>
-										<tr>
-											<th scope="row">Carte gazoil</th>
-											<td>\{{vehicule.gazoilCard}} (<i>code : \{{vehicule.gazoilCardPIN}}</i>)</td>
-										</tr>
-										<tr>
-											<th scope="row">Téléephone</th>
-											<td>\{{vehicule.phone}}</td>
-										</tr>
-										<tr>
-											<th scope="row">Kilométrage</th>
-											<td class="red">\{{vehicule.kms}} km</td>
-										</tr>
-										<tr>
-											<th scope="row">Géolocaolisation</th>
-											<td><input type="checkbox" disabled ng-checked="vehicule.geoloc"></td>
-										</tr>
-										<tr>
-											<th scope="row">Derniere mis a jour</th>
-											<td class="blue">\{{vehicule.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
-										</tr>
-										<tr>
-											<th scope="row">Pneus</th>
-											<td>\{{vehicule.pneu}}</td>
-										</tr>
-									</tbody>
-								</table>
+
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
+															\{{societe.name}}
+														</span>&nbsp;
+														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
+														</span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:CustomerCode'}}</th>
+													<td>\{{vehicule.desc}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Supplier'}}</th>
+													<td>\{{vehicule.affectation}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'Status'}}</th>
+													<td>\{{vehicule.date_mise_circu | date:'dd/MM/yyyy'}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Address'}}</th>
+													<td>\{{vehicule.date_CT | date:'dd/MM/yyyy'}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Zip'}}</th>
+													<td></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Town'}}</th>
+													<td></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Country'}}</th>
+													<td>\{{vehicule.phone}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Phone'}}</th>
+													<td class="red">\{{vehicule.kms}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Fax'}}</th>
+													<td></td>
+												</tr>
+												<tr>
+													<th scope="row">Derniere mis a jour</th>
+													<td class="blue">\{{vehicule.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</tab>
 						<tab>
 							<tab-heading>
-								<span class="icon-tools">Entretiens / Réparations</span>
+								<span class="icon-cart">Client/prospect</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
-								<table class="simple-table margin-bottom">
-									<tbody>
-										<tr>
-											<th width="40%" scope="row">Freq révision</th>
-											<td>\{{vehicule.freq_rev}} km</td>
-										</tr>
-									</tbody>
-								</table>
 
-								<table class="table margin-bottom">
-									<thead>
-										<tr>
-											<th width="30%" scope="col">Date</th>
-											<th width="40%" scope="col">Description</th>
-											<th scope="col">km</th>
-										</tr>
-									</thead>
+
+
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-tools">Comptabilité</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+
+
+
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-box">Fournisseur</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+
+
+
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-tick">Checklist<span class="count right">\{{checklist}}</span></span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+								<table class="simple-table">
 									<tbody>
 										<tr>
-											<td colspan="3" class="no-padding">
-												<div class="scroll" style="height:140px">
-													<table class="simple-table">
-														<tr data-ng-repeat="entretien in vehicule.entretiens | orderBy:'-date'">
-															<th width="30%">\{{entretien.date | date:'dd/MM/yyyy'}}</th>
-															<td width="40%">\{{entretien.desc}}</td>
-															<td>\{{entretien.km}}</td>
-														</tr>
-													</table>
-												</div>
+											<th width="40%" scope="row">KBIS</th>
+											<td><input type="checkbox" data-ng-model="vehicule.checklist.carteGrise" data-ng-checked="vehicule.checklist.carteGrise" data-ng-change="update()" />
 											</td>
 										</tr>
+										
 									</tbody>
 								</table>
-
-								<div class='boxed white-bg'>
-									<form data-ng-submit="addEntretien()">
-										<table>
-											<tbody>
-												<tr>
-													<td>
-														<div class="button-height block-label">
-															<label for="date" class="label">
-																Date
-															</label>
-															<input kendo-date-picker required id="date" data-ng-model="date" k-on-change="form.date = kendoEvent.sender._value;" class="input"/>
-														</div>
-													</td>
-													<td>
-														<div class="button-height block-label">
-															<label for="desc" class="label">
-																Description
-															</label>
-															<input id="desc" required data-ng-model="form.desc" class="input"/>
-														</div>
-														<div class="button-height block-label">
-															<label for="km" class="label">
-																Km
-															</label>
-															<input type="number" required id="km" data-ng-model="form.km" class="input"/>
-
-															<div class="button-height float-right">
-																<button type="submit" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
-															</div>
-														</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</form>
+									</div>
 								</div>
 							</div>
 						</tab>
-					</tabset>
-				</div>
 
-				<div class="two-columns margin-top"></div>
-				<div class="four-columns margin-top">
-					<h5 class="green underline">Notes</h5>
+						<tab>
+							<tab-heading>
+								<span class="icon-pencil">Notes<span class="count count green-gradient right">\{{checklist}}</span></span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
 
-					<div class="button-height block-label margin-bottom">
-						<label for="note" class="label">
-							Ajouter une note
-						</label>
-						<textarea id="note" cols="25" rows="2" data-ng-model="note" class="input"></textarea>
+								<div class="columns">
+									<div class="six-columns">
+										<div class="button-height block-label margin-bottom">
+											<h5 for="note" class="underline green">
+												Ajouter une note
+											</h5>
+											<textarea id="note" cols="40" rows="10" data-ng-model="note" class="input"></textarea>
 
-						<div class="button-height float-right">
-							<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
-						</div>
-					</div>
+											<div class="button-height float-right">
+												<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
+											</div>
+										</div>
+									</div>
 
-					<div class="scroll" style="height:360px">
-						<div data-ng-repeat="vnote in vehicule.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
-							<div class="with-small-padding silver-gradient no-margin-top">
-								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+
+									<div class="six-columns">
+										<div class="scroll" style="height:360px">
+											<div data-ng-repeat="vnote in vehicule.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+												<div class="with-small-padding silver-gradient no-margin-top">
+													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+												</div>
+												<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
 							</div>
-							<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
-						</div>
-					</div>
+						</tab>
 
-
+					</tabset>
 				</div>
 
 				<div class="six-columns">

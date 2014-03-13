@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('HeaderController', ['$scope', 'Global', 'pageTitle', function($scope, Global, pageTitle) {
+angular.module('mean.system').controller('HeaderController', ['$scope', '$http', 'Global', 'pageTitle', function($scope, $http, Global, pageTitle) {
 		$scope.global = Global;
 
 		$scope.title = pageTitle.getTitle();
@@ -8,5 +8,20 @@ angular.module('mean.system').controller('HeaderController', ['$scope', 'Global'
 			if (Global && Global.user.right_menu)
 				return "with-menu";
 		};
+
+		$scope.getEntities = function() {
+			$http({method: 'GET', url: 'api/entity/select'
+			}).
+					success(function(data, status) {
+				$scope.entities = data;
+			});
+		};
+
+		$scope.entity = {id: Global.user.entity, name: Global.user.entity};
+		
+		$scope.changeEntity = function() {
+			$scope.title = pageTitle.getTitle();
+			Global.user.entity = $scope.entity.id;
+		}
 
 	}]);

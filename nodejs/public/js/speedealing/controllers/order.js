@@ -2,18 +2,6 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 
 		pageTitle.setTitle('Liste des commandes');
 
-		getEntities();
-
-		function getEntities() {
-			$http({method: 'GET', url: 'api/entity/select'
-			}).
-					success(function(data, status) {
-				$scope.entities = data;
-			});
-		}
-
-		$scope.entity = {id: Global.user.entity, name: Global.user.entity};
-
 		$scope.types = [{name: "En cours", id: "NOW"},
 			{name: "Clos", id: "CLOSED"}];
 

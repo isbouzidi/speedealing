@@ -2470,6 +2470,7 @@ body.reversed #open-shortcuts {
 #main-title h2 {
 	margin: 0;
 	padding: 0;
+	display: inline-block;
 }
 #main-title h2 {
 	position: absolute;

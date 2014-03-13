@@ -39,7 +39,8 @@ var UserSchema = new Schema({
 	societe: {
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String
-	}
+	},
+	multiEntities: {type: Boolean, default: false} // Access to all entities ?
 });
 
 UserSchema.plugin(timestamps);

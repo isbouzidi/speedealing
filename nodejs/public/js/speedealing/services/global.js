@@ -9,15 +9,15 @@ angular.module('mean.system').factory("Global", [function() {
 		return _this._data;
 	}]);
 
-angular.module('mean.system').service('pageTitle', function($window) {
+angular.module('mean.system').service('pageTitle', function($window, Global) {
 
 	var myService = {};
-	var data = {title: "Speedealing " /*+ window.user.company */+ " (" + window.user.entity + ")"};
+	var data = {title: "Speedealing " /*+ window.user.company */+ " (" + Global.user.entity + ")"};
 
 	myService.setTitle = function(documentTitle) {
 		$window.document.title = "Speedealing - " + documentTitle;
 		//$rootScope.$apply(function() {
-		data.title = "Speedealing " /*+ window.user.company*/ + " (" + window.user.entity + ") - " + documentTitle;
+		data.title = "Speedealing " /*+ window.user.company*/ + " (" + Global.user.entity + ") - " + documentTitle;
 		//});
 	};
 
@@ -26,4 +26,4 @@ angular.module('mean.system').service('pageTitle', function($window) {
 	}
 
 	return myService;
-}, {$inject: '$window'});
+}, {$inject: ['$window','Global']});

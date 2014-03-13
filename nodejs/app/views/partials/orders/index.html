@@ -54,8 +54,7 @@
 					<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
 				</div>
 				<div class="col-sm-4">
-					{{t 'Mode'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>&nbsp;
-					{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="find()" class=""></select>
+					{{t 'Mode'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
 				</div>
 				<div class="col-sm-4">
 					<div class="float-right">
