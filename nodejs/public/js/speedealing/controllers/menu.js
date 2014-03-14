@@ -3,7 +3,7 @@ angular.module('mean.system').controller('MenuController', ['$scope', 'Global', 
 
 		$scope.ticketCpt = 0;
 
-		socket.emit('user', Global.user._id);
+		//socket.emit('user', Global.user._id);
 
 		socket.on('reboot', function(data) {
 			socket.emit('user', Global.user._id);
