@@ -1,13 +1,16 @@
 {{> header}}
 
 <body class="clearfix" data-ng-controller="HeaderController" data-ng-class="withMenu()">
-	<header id="title-bar" role='banner' data-ng-init="getEntities()">
+	<header id="title-bar" role='banner'>
 		<div>
 			<span class='title'>\{{title.title}}</span>
 			<div class='float-right with-tooltip'>
 				{{#if user.multiEntities}}
 				<span class='margin-right'>
-					{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>
+					<a href="#" editable-select="global.user.entity" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
+						\{{global.user.entity}}
+					</a>
+					<!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->
 				</span>
 				{{/if}}
 				<a  class='' href="logout" title="Déconnexion" target="_self">

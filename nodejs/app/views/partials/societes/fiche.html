@@ -29,44 +29,56 @@
 													</td>
 												</tr>
 												<tr>
-													<th scope="row">{{t 'companies:CustomerCode'}}</th>
-													<td>\{{vehicule.desc}}</td>
+													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
+													<td>\{{societe.code_client}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
+													<td><span class="tag small glossy"data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Supplier'}}</th>
-													<td>\{{vehicule.affectation}}</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'Status'}}</th>
-													<td>\{{vehicule.date_mise_circu | date:'dd/MM/yyyy'}}</td>
+													<td>\{{societe.fournisseur}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Address'}}</th>
-													<td>\{{vehicule.date_CT | date:'dd/MM/yyyy'}}</td>
+													<td>\{{societe.address}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Zip'}}</th>
-													<td></td>
+													<td>\{{societe.zip}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Town'}}</th>
-													<td></td>
+													<td>\{{societe.town}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Country'}}</th>
-													<td>\{{vehicule.phone}}</td>
+													<td>\{{societe.country}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Phone'}}</th>
-													<td class="red">\{{vehicule.kms}}</td>
+													<td >\{{societe.phone}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Fax'}}</th>
-													<td></td>
+													<td>\{{societe.fax}}</td>
 												</tr>
 												<tr>
-													<th scope="row">Derniere mis a jour</th>
-													<td class="blue">\{{vehicule.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+													<th scope="row">{{t 'EMail'}}</th>
+													<td>\{{societe.email}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'Web'}}</th>
+													<td>\{{societe.url}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'DateLastModification'}}</th>
+													<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+												</tr> 
+												<tr>
+													<th scope="row">{{t 'Entity'}}</th>
+													<td>\{{societe.entity}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -79,7 +91,81 @@
 								<span class="icon-cart">Client/prospect</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
+															\{{societe.name}}
+														</span>&nbsp;
+														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
+														</span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
+													<td>\{{societe.code_client}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
+													<td><span class="tag small glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProspectLevelShort'}}</th>
+													<td><span class="tag small glossy" data-ng-class="societe.prospectLevel.css">\{{societe.prospectLevel.name}}</span></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'commercial:Commercial'}}</th>
+													<td >\{{societe.commercial_id.name}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'zonegeo'}}</th>
+													<td>\{{societe.zonegeo}}</td>
+												</tr>
+												
+												<tr>
+													<th scope="row">{{t 'Categories'}}</th>
+													<td>\{{societe.Tag}}</td>
+												</tr>
 
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyType'}}</th>
+													<td>\{{societe.typent_id}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Staff'}}</th>
+													<td>\{{societe.effectif_id}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:JuridicalStatus'}}</th>
+													<td>\{{societe.forme_juridique_code}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Capital'}}</th>
+													<td>\{{societe.capital}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:PriceLevel'}}</th>
+													<td>\{{societe.price_level}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
+													<td>\{{societe.remise_client}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'DateLastModification'}}</th>
+													<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+												</tr>
+
+												ProfId - idprof
+
+
+											</tbody>
+										</table>
+									</div>
+								</div>
 
 
 							</div>
@@ -89,9 +175,84 @@
 								<span class="icon-tools">Comptabilité</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
+															\{{societe.name}}
+														</span>&nbsp;
+														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
+														</span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
+													<td>\{{societe.code_client}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
+													<td><span class="tag small glossy"data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Supplier'}}</th>
+													<td>\{{societe.fournisseur}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'compta:CustomerAccountancyCode'}}</th>
+													<td>\{{societe.customeraccountancycode}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'compta:SupplierAccountancyCode'}}</th>
+													<td>\{{societe.code_compta_fournisseur}}</td>
+												</tr>
 
-
-
+												<tr>
+													<th scope="row">{{t 'companies:Address'}}</th>
+													<td>\{{societe.address}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Zip'}}</th>
+													<td>\{{societe.zip}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Town'}}</th>
+													<td>\{{societe.town}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Country'}}</th>
+													<td>\{{societe.country}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:VATIsUsed'}}</th>
+													<td >\{{societe.tva_assuj}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:VATIntra'}}</th>
+													<td>\{{societe.tva_intra}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
+													<td>\{{societe.cond_reglement}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'bills:PaymentMode'}}</th>
+													<td>\{{societe.mode_reglement}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'banks:RIB'}}</th>
+													<td>\{{societe.iban}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyBilling'}}</th>
+													<td>\{{societe.cptBilling}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</tab>
 						<tab>
@@ -99,9 +260,39 @@
 								<span class="icon-box">Fournisseur</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
-
-
-
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
+															\{{societe.name}}
+														</span>&nbsp;
+														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
+														</span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
+													<td>\{{societe.code_client}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Supplier'}}</th>
+													<td>\{{societe.fournisseur}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'Categories'}}</th>
+													<td>\{{societe.Tag}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'DateLastModification'}}</th>
+													<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</tab>
 						<tab>
@@ -111,16 +302,16 @@
 							<div class="boxed relative large-box-shadow">
 								<div class="columns">
 									<div class="six-columns">
-								<table class="simple-table">
-									<tbody>
-										<tr>
-											<th width="40%" scope="row">KBIS</th>
-											<td><input type="checkbox" data-ng-model="vehicule.checklist.carteGrise" data-ng-checked="vehicule.checklist.carteGrise" data-ng-change="update()" />
-											</td>
-										</tr>
-										
-									</tbody>
-								</table>
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th width="40%" scope="row">KBIS</th>
+													<td><input type="checkbox" data-ng-model="vehicule.checklist.carteGrise" data-ng-checked="vehicule.checklist.carteGrise" data-ng-change="update()" />
+													</td>
+												</tr>
+
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>

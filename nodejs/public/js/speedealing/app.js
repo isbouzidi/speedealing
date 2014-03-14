@@ -22,6 +22,6 @@ angular.module('mean.orders', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
 
-window.app.run(function(editableOptions) {
+/*window.app.run(function(editableOptions) {
 	editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-});
+});*/
