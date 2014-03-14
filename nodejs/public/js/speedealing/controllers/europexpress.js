@@ -1564,7 +1564,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 					"cssClass": "grey-gradient",
 					"billing": "clic"
 				},
-				"360":{
+				"360": {
 					"enable": true,
 					"label": "Entrée palette/colis",
 					"cssClass": "grey-gradient",
@@ -1713,18 +1713,27 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				$scope.save = {promise: null, pending: false, row: null};
 			}
 			$scope.save.row = row.rowIndex;
+
+			var d = new Date();
+
+			if(d.getMonth()+1 != parseInt($routeParams.id1)) { // ce n'est pas dans le meme mois
+				// on utilise alors le dernier jour du mois
+				d = new Date($routeParams.id2, $routeParams.id1, 0);
+			}
+
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
 				$scope.save.promise = $timeout(function() {
 					$http({method: 'POST', url: 'api/europexpress/stock', data: {
 							barCode: $scope.productsTab[$scope.save.row].barCode,
-							qty: $scope.productsTab[$scope.save.row].qtyAdd
+							qty: $scope.productsTab[$scope.save.row].qtyAdd,
+							datec: d
 						}
 					}).success(function(data, status) {
 						//console.log(data);
-						if(!$scope.productsTab[$scope.save.row].qty)
+						if (!$scope.productsTab[$scope.save.row].qty)
 							$scope.productsTab[$scope.save.row].qty = 0;
-						
+
 						$scope.productsTab[$scope.save.row].qty += data.qty;
 						$scope.productsTab[$scope.save.row].qtyAdd = null;
 					});
