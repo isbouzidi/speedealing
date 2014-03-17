@@ -1,9 +1,9 @@
-<section data-ng-controller="SocieteListController">
+<section data-ng-controller="SocieteController">
 	<hgroup id="main-title" class="thin">
 		<h1>Liste des sociétés</h1>
 	</hgroup>
 
-	<div class="dashboard">
+	<div class="dashboard" data-ng-init="initCharts()">
 		<div class="columns">
 			<div class="four-columns twelve-columns-mobile graph">
 				<highchart id="pieChart" config="pieChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>

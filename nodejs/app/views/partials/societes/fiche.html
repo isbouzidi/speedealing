@@ -1,4 +1,4 @@
-<section data-ng-controller="SocieteViewController">
+<section data-ng-controller="SocieteController">
 	<div data-ng-init="findOne()">
 		<hgroup id="main-title" class="thin">
 			<h1>\{{societe.name}}</h1>
@@ -6,10 +6,77 @@
 		</hgroup>
 		<div class="with-padding">
 			<div class="columns">
-				<div class="twelve-columns">
+				<div class="four-columns twelve-columns-mobile">
+					<div class="boxed">
+						<p class="icon-info green underline">Infos société</p>
+
+						<table class="info-table">
+							<tbody>
+								<tr>
+									<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+									<td><span class="blue h4" editable-text="societe.name" buttons="no" e-form="nameBtnForm" onaftersave="update()">
+											\{{societe.name}}
+										</span> <span class="icon-pencil grey" ng-click="nameBtnForm.$show()" ng-hide="nameBtnForm.$visible"></span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
+									<td>\{{societe.code_client}}</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'Entity'}}</th>
+									<td><small class="tag anthracite-gradient glossy">\{{societe.entity}}</small></td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Supplier'}}</th>
+									<td>\{{societe.fournisseur}}</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Address'}}</th>
+									<td>\{{societe.address}}<br />
+										\{{societe.zip}} \{{societe.town}} \{{societe.country}}
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Phone'}}</th>
+									<td >\{{societe.phone}}</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Fax'}}</th>
+									<td>\{{societe.fax}}</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'EMail'}}</th>
+									<td>\{{societe.email}}</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'Web'}}</th>
+									<td>\{{societe.url}}</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'DateLastModification'}}</th>
+									<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<h5 class="green underline">Les dernieres notes</h5>
+
+					<div class="scroll" style="height:60px">
+						<div data-ng-repeat="vnote in vehicule.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+							<div class="with-small-padding silver-gradient no-margin-top">
+								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+							</div>
+							<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+						</div>
+					</div>
+				</div>
+				<div class="eight-columns">
 
 					<tabset>
-						<tab>
+						<!--<tab>
 							<tab-heading>
 								<span class="icon-info">Infos société</span>
 							</tab-heading>
@@ -21,11 +88,7 @@
 											<tbody>
 												<tr>
 													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
-															\{{societe.name}}
-														</span>&nbsp;
-														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
-														</span>
+													<td>
 													</td>
 												</tr>
 												<tr>
@@ -85,7 +148,8 @@
 									</div>
 								</div>
 							</div>
-						</tab>
+						</tab>-->
+						
 						<tab>
 							<tab-heading>
 								<span class="icon-cart">Client/prospect</span>
@@ -95,19 +159,6 @@
 									<div class="six-columns">
 										<table class="simple-table">
 											<tbody>
-												<tr>
-													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
-															\{{societe.name}}
-														</span>&nbsp;
-														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
-														</span>
-													</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
-													<td>\{{societe.code_client}}</td>
-												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
 													<td><span class="tag small glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
@@ -154,11 +205,7 @@
 													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
 													<td>\{{societe.remise_client}}</td>
 												</tr>
-												<tr>
-													<th scope="row">{{t 'DateLastModification'}}</th>
-													<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
-												</tr>
-
+												
 												ProfId - idprof
 
 
@@ -180,19 +227,6 @@
 										<table class="simple-table">
 											<tbody>
 												<tr>
-													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
-															\{{societe.name}}
-														</span>&nbsp;
-														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
-														</span>
-													</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
-													<td>\{{societe.code_client}}</td>
-												</tr>
-												<tr>
 													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
 													<td><span class="tag small glossy"data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
 												</tr>
@@ -207,23 +241,6 @@
 												<tr>
 													<th scope="row">{{t 'compta:SupplierAccountancyCode'}}</th>
 													<td>\{{societe.code_compta_fournisseur}}</td>
-												</tr>
-
-												<tr>
-													<th scope="row">{{t 'companies:Address'}}</th>
-													<td>\{{societe.address}}</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:Zip'}}</th>
-													<td>\{{societe.zip}}</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:Town'}}</th>
-													<td>\{{societe.town}}</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:Country'}}</th>
-													<td>\{{societe.country}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:VATIsUsed'}}</th>
@@ -264,19 +281,7 @@
 									<div class="six-columns">
 										<table class="simple-table">
 											<tbody>
-												<tr>
-													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-													<td><span editable-text="societe.name" e-form="textBtnForm" onaftersave="update()">
-															\{{societe.name}}
-														</span>&nbsp;
-														<span class="icon-pencil grey" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
-														</span>
-													</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
-													<td>\{{societe.code_client}}</td>
-												</tr>
+												
 												<tr>
 													<th scope="row">{{t 'companies:Supplier'}}</th>
 													<td>\{{societe.fournisseur}}</td>
@@ -285,10 +290,7 @@
 													<th scope="row">{{t 'Categories'}}</th>
 													<td>\{{societe.Tag}}</td>
 												</tr>
-												<tr>
-													<th scope="row">{{t 'DateLastModification'}}</th>
-													<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
-												</tr>
+												
 											</tbody>
 										</table>
 									</div>
@@ -316,10 +318,9 @@
 								</div>
 							</div>
 						</tab>
-
 						<tab>
 							<tab-heading>
-								<span class="icon-pencil">Notes<span class="count count green-gradient right">\{{checklist}}</span></span>
+								<span class="icon-pencil">Notes</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
 
@@ -329,7 +330,7 @@
 											<h5 for="note" class="underline green">
 												Ajouter une note
 											</h5>
-											<textarea id="note" cols="40" rows="10" data-ng-model="note" class="input full-width"></textarea>
+											<textarea id="note" cols="30" rows="5" data-ng-model="note" class="input full-width"></textarea>
 
 											<div class="margin-top button-height float-right">
 												<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
@@ -354,11 +355,10 @@
 
 							</div>
 						</tab>
-
 					</tabset>
 				</div>
 
-				<div class="six-columns">
+				<div class="six-columns new-row">
 					<div class="panel-content linen">
 
 						<div class="panel-control align-right">
@@ -416,7 +416,7 @@
 							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsTicket.filterText" class="input small mid-margin-left">
 						</div>
 					</div>
-					<div class="gridStyle"  data-ng-grid="gridOptionsTicket"></div>
+					<!--<div class="gridStyle"  data-ng-grid="gridOptionsTicket"></div>-->
 					<div class="table-footer silver-gradient">
 						\{{countTicket}} ligne(s)
 					</div>
@@ -431,7 +431,7 @@
 						</div>
 						\{{searchBuy}}
 					</div>
-					<div class="gridStyle"  data-ng-grid="gridOptionsBuyer"></div>
+					<!--<div class="gridStyle"  data-ng-grid="gridOptionsBuyer"></div>-->
 					<div class="table-footer silver-gradient">
 						<div class="float-right strong">
 							Total HT payé : \{{TotalBuy | euro}}  

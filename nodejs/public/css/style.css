@@ -1126,6 +1126,7 @@ to {		background-position: -80px 0;	}
 	border-radius: 4px;
 	border-width: 1px;
     border-style: solid;
+	font-style: normal;
     /*font-size: 10px;*/
 }
 .ie9 .tag {

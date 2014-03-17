@@ -126,8 +126,9 @@ DictModel.findOne({_id: "dict:fk_order_status"}, function(err, docs) {
 /**
  * Methods
  */
-orderSchema.methods.setStatus = function(status, i18n) {
+orderSchema.methods.setVirtual = function(i18n) {
 	this.status = {};
+	var status = this.Status;
 
 	if (statusList.values[status].label) {
 		this.status.id = status;

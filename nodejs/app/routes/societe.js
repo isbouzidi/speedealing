@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
+		_ = require('underscore'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -17,6 +18,9 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
+	app.post('/api/societe', auth.requiresLogin, object.create);
+	app.put('/api/societe/:societeId', auth.requiresLogin, object.update);
+	app.del('/api/societe/:societeId', auth.requiresLogin, object.destroy);
 
 	// Specific for autocomplete
 	app.get('/api/societe/select', auth.requiresLogin, function(req, res) {
@@ -79,21 +83,6 @@ module.exports = function(app, passport, auth) {
 
 			return res.send(200, result);
 		});
-	});
-
-	app.post('/api/societe', auth.requiresLogin, function(req, res) {
-		console.log(JSON.stringify(req.body));
-		return res.send(200, object.create(req));
-	});
-
-	app.put('/api/societe', auth.requiresLogin, function(req, res) {
-		console.log(JSON.stringify(req.body));
-		return res.send(200, object.update(req));
-	});
-
-	app.del('/api/societe', auth.requiresLogin, function(req, res) {
-		console.log(JSON.stringify(req.body));
-		return res.send(200, object.update(req));
 	});
 
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
@@ -292,15 +281,11 @@ Object.prototype = {
 				return next(err);
 			if (!doc)
 				return next(new Error('Failed to load societe ' + id));
-			doc.setStatus(doc.Status, req.i18n);
-			doc.setProspectLevel(doc.prospectlevel, req.i18n);
+			doc.setVirtual(req.i18n);
 
 			req.societe = doc;
 			next();
 		});
-	},
-	create: function(req) {
-		return req.body.models;
 	},
 	read: function(req, res) {
 		var query = {};
@@ -334,8 +319,7 @@ Object.prototype = {
 			//console.log(doc);
 
 			for (var i in doc) {
-				doc[i].setStatus(doc[i].Status, req.i18n);
-				doc[i].setProspectLevel(doc[i].prospectlevel, req.i18n);
+				doc[i].setVirtual(req.i18n);
 			}
 			res.json(200, doc);
 		});
@@ -343,11 +327,44 @@ Object.prototype = {
 	show: function(req, res) {
 		res.json(req.societe);
 	},
-	update: function(req) {
-		return req.body.models;
+	create: function(req, res) {
+		var societe = new SocieteModel(req.body);
+		societe.author = {};
+		societe.author.id = req.user._id;
+		societe.author.name = req.user.name;
+
+		if (societe.entity == null)
+			societe.entity = req.user.entity;
+		
+		societe.setVirtual(req.i18n);
+
+		societe.save(function(err) {
+			if (err) {
+				return console.log(err);
+			}
+
+			res.json(societe);
+		});
 	},
-	del: function(req) {
-		return req.body.models;
+	update: function(req, res) {
+		var societe = req.societe;
+		societe = _.extend(societe, req.body);
+
+		societe.save(function(err, doc) {
+			res.json(doc);
+		});
+	},
+	destroy: function(req, res) {
+		var societe = req.societe;
+		societe.remove(function(err) {
+			if (err) {
+				res.render('error', {
+					status: 500
+				});
+			} else {
+				res.json(societe);
+			}
+		});
 	},
 	select: function(req, res) {
 		var db = this.connection.database(this.db);

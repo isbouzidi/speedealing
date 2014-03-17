@@ -21,7 +21,7 @@ var societeSchema = new Schema({
 	code_client: String,
 	code_fournisseur: String,
 	barCode: String,
-	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
+	Status: {type: Schema.Types.Mixed, default: 'ST_PFROI'},
 	status: {type: Schema.Types.Mixed, virtual: true},
 	address: String,
 	zip: String,
@@ -40,7 +40,7 @@ var societeSchema = new Schema({
 	commercial_id: {id: {type: String}, name: String},
 	cptBilling: {id: {type: Schema.Types.ObjectId}, name: String},
 	civilite_id: {type: String, default: 'NO'},
-	price_level: {type: String, default: 'base'},
+	price_level: {type: String, default: 'BASE', uppercase: true, trim: true},
 	prospectlevel: {type: String, default: 'PL_NONE'},
 	prospectLevel: {type: Schema.Types.Mixed, virtual: true},
 	cond_reglement: String,
@@ -93,8 +93,10 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 /**
  * Methods
  */
-societeSchema.methods.setStatus = function(status, i18n) {
+societeSchema.methods.setVirtual = function(i18n) {
 	this.status = {};
+	
+	var status = this.Status;
 
 	if (statusList.values[status].label) {
 		this.status.id = status;
@@ -106,10 +108,10 @@ societeSchema.methods.setStatus = function(status, i18n) {
 		this.status.name = status;
 		this.status.css = "";
 	}
-};
-
-societeSchema.methods.setProspectLevel = function(level, i18n) {
+	
 	this.prospectLevel = {};
+	
+	var level = this.prospectlevel;
 
 	if (prospectLevelList.values[level].cssClass) {
 		this.prospectLevel.id = level;

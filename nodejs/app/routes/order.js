@@ -221,7 +221,7 @@ Object.prototype = {
 					status: 500
 				});
 			for (var i in orders) {
-				orders[i].setStatus(orders[i].Status, req.i18n);
+				orders[i].setVirtual(req.i18n);
 			}
 
 			res.json(orders);

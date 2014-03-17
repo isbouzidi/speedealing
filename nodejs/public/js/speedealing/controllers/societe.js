@@ -1,7 +1,6 @@
-angular.module('mean.societes').controller('SocieteListController', ['$scope', '$location', '$http', '$modal', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $modal, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
-		initCharts();
 
 		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
@@ -33,7 +32,7 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			var societe = $scope.societe;
 
 			societe.$update(function() {
-				//$location.path('societe/' + societe._id);
+				pageTitle.setTitle('Fiche ' + societe.name);
 			});
 		};
 
@@ -41,6 +40,15 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			Societe.query({query: this.type.id}, function(societes) {
 				$scope.societes = societes;
 				$scope.countSocietes = societes.length;
+			});
+		};
+
+		$scope.findOne = function() {
+			Societe.get({
+				Id: $routeParams.id
+			}, function(societe) {
+				$scope.societe = societe;
+				pageTitle.setTitle('Fiche ' + $scope.societe.name);
 			});
 		};
 
@@ -73,7 +81,7 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			]
 		};
 
-		function initCharts() {
+		$scope.initCharts = function() {
 			$http({method: 'GET', url: '/core/ajax/viewgraph.php?json=graphPieStatus&class=Societe'
 			}).success(function(data, status) {
 				console.log(data);
@@ -213,8 +221,8 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			},
 			series: []
 		};
-		
-		$scope.societe={};
+
+		$scope.societe = {};
 
 		$scope.addNew = function() {
 
@@ -275,35 +283,6 @@ angular.module('mean.societes').controller('SocieteListController', ['$scope', '
 			};
 		};
 
-
-
-	}]);
-
-angular.module('mean.societes').controller('SocieteViewController', ['$scope', '$location', '$http', '$routeParams', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, pageTitle, Global, Societe) {
-		pageTitle.setTitle('Fiche société');
-		$scope.vehicule = {};
-
-		$scope.remove = function(societe) {
-			societe.$remove();
-
-		};
-
-		$scope.update = function() {
-			var societe = $scope.societe;
-
-			societe.$update(function() {
-				//$location.path('societe/' + societe._id);
-			});
-		};
-
-		$scope.findOne = function() {
-			Societe.get({
-				Id: $routeParams.id
-			}, function(societe) {
-				$scope.societe = societe;
-				pageTitle.setTitle('Fiche ' + $scope.societe.name);
-			});
-		};
 
 
 	}]);
