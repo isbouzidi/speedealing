@@ -1,4 +1,4 @@
-angular.module('mean.orders').controller('OrderListController', ['$scope', '$location', '$http', '$modal', 'pageTitle', 'Global', 'Orders', function($scope, $location, $http, $modal, pageTitle, Global, Orders) {
+angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', 'pageTitle', 'Global', 'Orders', function($scope, $location, $http, $routeParams, $modal, pageTitle, Global, Orders) {
 
 		pageTitle.setTitle('Liste des commandes');
 
@@ -40,6 +40,15 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 			});
 		};
 
+		$scope.findOne = function() {
+			Societe.get({
+				Id: $routeParams.id
+			}, function(societe) {
+				$scope.societe = societe;
+				pageTitle.setTitle('Fiche ' + $scope.societe.name);
+			});
+		};
+
 		/*
 		 * NG-GRID for societe list
 		 */
@@ -57,13 +66,14 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 			//showFilter:true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/orders/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Ref', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'client.name', displayName: 'Société'},
 				{field: 'ref_client', displayName: 'Ref. client'},
-				{field: 'contact.name', displayName: 'Contact'},
-				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
+				{field: 'createdAt', displayName: 'Date création',width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'total_ht', displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
-				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'}
+				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
+				{displayName: "Actions", width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a ng-href="#!/orders/{{row.getProperty(\'_id\')}}" class="button icon-download" title="Bon de commande PDF"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
 		};
 
@@ -72,8 +82,9 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 		$scope.addNew = function() {
 
 			var modalInstance = $modal.open({
-				templateUrl: 'myModalContent.html',
-				controller: ModalInstanceCtrl,
+				templateUrl: '/partials/orders/create.html',
+				controller: "CHMOtisController",
+				windowClass: "steps",
 				resolve: {
 					object: function() {
 						return $scope.order;
@@ -127,36 +138,5 @@ angular.module('mean.orders').controller('OrderListController', ['$scope', '$loc
 				$modalInstance.dismiss('cancel');
 			};
 		};
-
-
-
-	}]);
-
-angular.module('mean.orders').controller('OrderViewController', ['$scope', '$location', '$http', '$routeParams', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, pageTitle, Global, Societe) {
-		pageTitle.setTitle('Fiche commande');
-		$scope.vehicule = {};
-
-		$scope.remove = function(societe) {
-			societe.$remove();
-
-		};
-
-		$scope.update = function() {
-			var societe = $scope.societe;
-
-			societe.$update(function() {
-				//$location.path('societe/' + societe._id);
-			});
-		};
-
-		$scope.findOne = function() {
-			Societe.get({
-				Id: $routeParams.id
-			}, function(societe) {
-				$scope.societe = societe;
-				pageTitle.setTitle('Fiche ' + $scope.societe.name);
-			});
-		};
-
 
 	}]);

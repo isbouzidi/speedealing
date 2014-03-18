@@ -653,6 +653,9 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 		$scope.calculPrice = function() {
 			if ($scope.course.type.id !== "MESSAGERIE")
 				return;
+			
+			if($scope.course.total_soustraitant == null)
+				$scope.course.total_soustraitant = 0;
 
 			if (!$scope.course.poids || !$scope.course.to.zip)
 				return;

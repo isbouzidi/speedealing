@@ -548,3 +548,15 @@ ul.nav {
 	font-style: italic;
 	
 }
+
+/*
+ * Modal Windows with steps
+ */
+
+.steps .modal-dialog  {
+	width: 802px;
+}
+
+.steps .modal-content {
+	background-color: transparent;
+}

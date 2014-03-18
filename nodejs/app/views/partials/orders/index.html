@@ -1,4 +1,4 @@
-<section data-ng-controller="OrderListController">
+<section data-ng-controller="OrderController">
 	<hgroup id="main-title" class="thin">
 		<h1>{{t 'orders:Orders'}}</h1>
 	</hgroup>
@@ -16,7 +16,7 @@
 	</div>-->
 
 	<div class="with-padding" data-ng-init="find()">
-		<script type="text/ng-template" id="myModalContent.html">
+	<!--	<script type="text/ng-template" id="myModalContent.html">
 		<div class="modal-header">
 		<h3 class="no-margin-bottom">{{t 'orders:NewOrder'}}</h3>
 		</div>
@@ -32,7 +32,7 @@
 		</p>
 		<p class="button-height inline-medium-label">
 		<label for="datec">Date de commande</label>
-		<input kendo-date-picker id="datec" data-ng-model="datec" k-on-change="paiement.datec = kendoEvent.sender._value;" class="input">
+		<input kendo-date-picker id="datec" data-ng-model="datec" k-on-change="paiement.datec = kendoEvent.sender._value;" required class="input">
 		</p>
 		<p class="button-height inline-medium-label">
 		<label for="datel">Date de livraison</label>
@@ -46,7 +46,7 @@
 		<button class="button orange-gradient icon-forbidden" ng-click="cancel()"> {{t 'Cancel'}}</button>
 		</span>
 		</div>
-	</script>
+	</script>-->
 	
 		<div class="table-header silver-gradient glossy button-height">
 			<div class="row">
@@ -65,7 +65,7 @@
 		</div>
 		<div class="gridStyle"  data-ng-grid="gridOptionsSociete" ng-style="style(170)" resize></div>
 		<div class="table-footer silver-gradient">
-			\{{countSocietes}} ligne(s)
+			\{{count}} ligne(s)
 		</div>
 
 	</div>
