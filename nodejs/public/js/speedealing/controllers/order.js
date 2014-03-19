@@ -62,7 +62,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			data: 'orders',
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptions,
-			sortInfo: {fields: ["createdAt"], directions: ["desc"]},
+			sortInfo: {fields: ["date_livraison"], directions: ["desc"]},
 			//showFilter:true,
 			i18n: 'fr',
 			columnDefs: [
@@ -70,7 +70,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				{field: 'client.name', displayName: 'Société'},
 				{field: 'ref_client', displayName: 'Ref. client'},
 				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
-				{field: 'createdAt', displayName: 'Date création',width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'date_livraison', displayName: 'Date livraison',width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'total_ht', displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'entity', displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
