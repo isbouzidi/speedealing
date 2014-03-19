@@ -209,23 +209,25 @@ Object.prototype = {
 
 		if (req.query) {
 			for (var i in req.query) {
-				if (i == "query")
+				if (i == "query") {
+					var status = ["SHIPPING", "CLOSED", "CANCELED", "BILLING"];
+
 					switch (req.query[i]) {
 						case "NOW" :
-							query.Status = {"$nin": ["SHIPPING", "CLOSED", "CANCELED"]};
+							query.Status = {"$nin": status};
 							break;
 						case "CLOSED" :
-							query.Status = {"$in": ["SHIPPING", "CLOSED", "CANCELED"]};
+							query.Status = {"$in": status};
 							break;
 						default :
 							break;
 					}
-				else
+				} else
 					query[i] = req.query[i];
 			}
 		}
 
-		CommandeModel.find(query, "-files", function(err, orders) {
+		CommandeModel.find(query, "-files -latex", function(err, orders) {
 			if (err)
 				return res.render('error', {
 					status: 500
