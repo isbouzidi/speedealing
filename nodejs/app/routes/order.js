@@ -336,7 +336,7 @@ Object.prototype = {
 
 				for (var i = 0; i < products.length; i++) {
 					//tab_latex += products[i].title.replace(/_/g, "\\_") + "&" + products[i].note.replace(/<br\/>/g,"\\\\") + "& & \\tabularnewline\n";
-					tab_latex += products[i].title.replace(/_/g, "\\_") + "&\\specialcell[t]{" + products[i].note.replace(/<br\/>/g, "\\\\").replace(/<p>/g, "").replace(/<\/p>/g, "") + "}& & \\tabularnewline\n";
+					tab_latex += products[i].title.replace(/_/g, "\\_") + "&\\specialcell[t]{" + products[i].note.replace(/<br\/>/g, "\\\\").replace(/<br \/>/g, "\\\\").replace(/<p>/g, "").replace(/<\/p>/g, "") + "}& & \\tabularnewline\n";
 				}
 
 				//tab_latex += "&\\specialcell[t]{" + doc.desc.replace(/\n/g, "\\\\") + "}& & \\tabularnewline\n";
