@@ -165,7 +165,7 @@ class modCommande extends DolibarrModules {
 		$this->menus[$r]->title = "Orders";
 		$r++;
 
-		$this->menus[$r] = new stdClass();
+		/*$this->menus[$r] = new stdClass();
 		$this->menus[$r]->_id = "menu:newcommande";
 		$this->menus[$r]->position = 0;
 		$this->menus[$r]->url = "/commande/fiche.php?action=create";
@@ -175,12 +175,12 @@ class modCommande extends DolibarrModules {
 		$this->menus[$r]->usertype = 2;
 		$this->menus[$r]->title = "NewOrder";
 		$this->menus[$r]->fk_menu = "menu:commandes";
-		$r++;
+		$r++;*/
 
 		$this->menus[$r] = new stdClass();
 		$this->menus[$r]->_id = "menu:orderslist";
 		$this->menus[$r]->position = 1;
-		$this->menus[$r]->url = "/commande/list.php";
+		$this->menus[$r]->url = "/#!/orders";
 		$this->menus[$r]->langs = "orders";
 		$this->menus[$r]->perms = '$user->rights->commande->lire';
 		$this->menus[$r]->enabled = '$conf->commande->enabled';

@@ -79,6 +79,14 @@ module.exports = function(app, passport, auth) {
 						result[i].price_level = docs[i].price_level;
 					else
 						result[i].price_level = "BASE";
+					
+					// add address
+					result[i].address = {};
+					result[i].address.name = docs[i].name;
+					result[i].address.address = docs[i].address;
+					result[i].address.zip = docs[i].zip;
+					result[i].address.town = docs[i].town;
+					result[i].address.country = docs[i].country;
 				}
 
 			return res.send(200, result);

@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('HeaderController', ['$scope', '$http', 'Global', 'pageTitle', function($scope, $http, Global, pageTitle) {
+angular.module('mean.system').controller('HeaderController', ['$scope', '$http', '$route', 'Global', 'pageTitle', function($scope, $http, $route, Global, pageTitle) {
 		$scope.global = Global;
 
 		$scope.title = pageTitle.getTitle();
@@ -18,10 +18,11 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$http',
 		};
 
 		$scope.entity = {id: Global.user.entity, name: Global.user.entity};
-		
+
 		$scope.changeEntity = function() {
 			$scope.title = pageTitle.getTitle();
-			Global.user.entity = $scope.entity.id;
+			//Global.user.entity = $scope.entity.id;
+			$route.reload();
 		}
 
 	}]);

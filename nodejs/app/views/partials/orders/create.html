@@ -1,14 +1,14 @@
 <form data-ng-init='init()' data-ng-submit='sendOrder()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
 	<!-- Block style is optional, you can use any layout -->
-	<h3 class="block-title">{{t 'orders:NewOrder'}}</h3>
+	<h3 class="block-title">{{t 'orders:NewOrder'}} <span class="blue">\{{order.ref}}</span></h3>
 
 	<ul class="wizard-steps">
 		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span> Références</li>
-		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Adresses</li>
-		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Fichiers</li>
-		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">4</span> Validation</li>
-		<li data-ng-class="isActive(5)" data-ng-click='goto(5)'><span class="wizard-step">5</span> Résumé</li>
+		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Adresse facturation</li>
+		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Adresses livraison</li>
+		<!--<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Fichiers</li>-->
+		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">4</span> Produits/services</li>
 	</ul>
 
 	<!-- Each form step should be wrapped in a fieldset -->
@@ -16,51 +16,78 @@
 
 		<div class="field-block">
 			<h4>{{t 'Hello'}}</h4>
-			<p>Bienvenue sur la plateforme de commandes en ligne PPC Chaumeil.</p>
+			<p>Bienvenue sur la plateforme de commandes en ligne.</p>
 		</div>
 
 		<div class="field-block button-height">
-			<label><b>Num affaire</b></label>
-			<input required type="text" data-ng-model="order.optional.numAffaire" typeahead-on-select="order.optional.centreCout = $item.centreCout;updateDF($item);" typeahead="otis.numAffaire for otis in otisAutoComplete($viewValue, 'numAffaire') | filter:{numAffaire:$viewValue}" id="client" class="input" autocomplete="off">
+			<label for="client"><b>{{t 'companies:Company'}}</b></label>
+			<input required type="text" data-ng-model="order.client" typeahead-on-select="order.billing = order.client.address;" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
 		</div>
 
 		<div class="field-block button-height">
-			<label><b>Centre de coûts</b></label>
-			<input type="text" data-ng-model="order.optional.centreCout" typeahead-on-select="order.optional.numAffaire = $item.numAffaire;updateDF($item);" typeahead="otis.centreCout for otis in otisAutoComplete($viewValue,'centreCout') | filter:{centreCout:$viewValue}" id="client" class="input" autocomplete="off">
+			<label for="contact"><b>Contact</b></label>
+			<input type="text" data-ng-model="order.contact.name" id="contact" class="input" autocomplete="off">
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="ref_client"><b>Référence du client</b></label>
+			<input type="text" data-ng-model="order.ref_client" id="ref_client" class="input" autocomplete="off">
 		</div>
 
 		<div class="field-block button-height">
-			<label><b>Num DF</b></label>
-			<input type="text" class="input" data-ng-model='order.optional.numDF' autocomplete="off">
+			<label for="date_commande"><b>Date de commande</b></label>
+			<input kendo-date-picker required id="date_commande" k-on-change="order.datec = kendoEvent.sender._value;" class="input"/>
 		</div>
-
+		
 		<div class="field-block button-height">
-			<label for="projet"><b>Nom du projet</b></label>
-			<input required type="text" data-ng-model="order.optional.projet" id="projet" placeholder="Désignation client" class="input full-width" autocomplete="off">
-			<!--<small class="input-info">Désignation client</small>-->
+			<label for="date_livraison"><b>Date de livraison</b></label>
+			<input kendo-date-picker required id="date_livraison" k-on-change="order.date_livraison = kendoEvent.sender._value;" class="input"/>
 		</div>
-
-		<div class="field-block button-height">
-			<label for="assistante"><b>Assistant(e) gestionnaire du dossier</b></label>
-			<select data-ng-model="order.optional.assistante" data-ng-change="updateAssistante()" data-ng-options="A as (A.lastname + ' ' + A.firstname) group by A.entite for A in assistantes | orderBy:'lastname' track by A.id" id="assistante" class="select">
-				<option value="">-- Sélectionner assistante --</option>
-			</select>
-		</div>
-
-		<div class="field-block button-height">
-			<label for="envoiDEO"><b>Références de l'envoi DOE</b></label>
-			<input type="text" disabled data-ng-model="order.optional.DOE" id="envoiDEO" class="input full-width">
-		</div>
-
-
 
 		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button" data-ng-disabled="!(order.optional.projet && order.optional.numAffaire && order.optional.assistante)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button" data-ng-disabled="!(order.datec && order.date_livraison && order.client.id)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
 	</fieldset>
 
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
+
+		<div class="field-block">
+			<h4>Adresses de facturation</h4>
+			<p></p>
+		</div>
+
+		<div class="field-block button-height">
+			<label><b>Adresse facturation</b></label>
+			<div class='columns'>
+				<div class='seven-columns'>
+					<input type="text" data-ng-model="order.billing.name" class="input" placeholder="Nom"/><br/>
+					<input type="text" data-ng-model="order.billing.contact" class="input" placeholder="Nom du contact"/><br/>
+					<textarea class='input' rows='3' data-ng-model="order.billing.address" placeholder="Adresse"></textarea><br/>
+					<input type="text" class="input" placeholder="Code postal" data-ng-model="order.billing.zip" size="8"/>
+					<input type="text" class="input" data-ng-model="order.billing.town" placeholder="Ville"/>
+				</div>
+				<div class="five-columns">
+					<!--<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires papier</small>
+						<input type="number" data-ng-model='bl.products[0].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>
+					<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires CD</small>
+						<input type="number" data-ng-model='bl.products[1].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>-->
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>
+	
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
 
 		<div class="field-block">
 			<h4>Adresses de livraison</h4>
@@ -79,14 +106,14 @@
 					<input type="text" class="input" data-ng-model="bl.town" placeholder="Ville"/>
 				</div>
 				<div class="five-columns">
-					<div class='margin-bottom'>
+					<!--<div class='margin-bottom'>
 						<small class="input-info black">Nombre d'exemplaires papier</small>
 						<input type="number" data-ng-model='bl.products[0].qty' data-ng-change="countExemplaires()" integer class="input small">
 					</div>
 					<div class='margin-bottom'>
 						<small class="input-info black">Nombre d'exemplaires CD</small>
 						<input type="number" data-ng-model='bl.products[1].qty' data-ng-change="countExemplaires()" integer class="input small">
-					</div>
+					</div>-->
 				</div>
 			</div>
 		</div>
@@ -102,7 +129,7 @@
 
 	</fieldset>
 
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
+	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
 
 		<div class="field-block">
 			<h4>Envoi des fichiers</h4>
@@ -119,7 +146,6 @@
 
 				<div class="field-block button-height">
 					<label for="pvFeuPorte.\{{$index}}"><b>PV au feu des portes palières</b></label>
-					<!--<input type="file" data-ng-disabled="filePercentage['pvFeuPorte_Dossier'+($index+1)]" ng-model="dossier.pvFeuPorte" id='pvFeuPorte.\{{$index}}' ng-file-select="onFileSelect($files, ('pvFeuPorte_Dossier'+($index+1)))" class="file">-->
 					<select data-ng-model="dossier.selectedFiles.PVFeuPortePaliere" data-ng-options="PV as (PV.filename) group by PV.directory for PV in selectFiles.PVFeuPortePaliere | orderBy:'filename' track by PV.filename" id="pvFeuPorte.\{{$index}}" class="form-control">
 						<option value="">-- PV au feu des portes palières --</option>
 					</select>
@@ -131,7 +157,6 @@
 				</div>
 				<div class="field-block button-height">
 					<label for="pvFeuCab.\{{$index}}"><b>PV au feu parois cabine</b></label>
-					<!--<input type="file" data-ng-disabled="filePercentage['pvFeuCab_Dossier'+($index+1)]" ng-model="dossier.pvFeuCab" id='pvFeuCab.\{{$index}}' ng-file-select="onFileSelect($files, ('pvFeuCab_Dossier'+($index+1)))" class="file">-->
 					<select data-ng-model="dossier.selectedFiles.PVFeuParoisCabine" data-ng-options="PV as (PV.filename) for PV in selectFiles.PVFeuParoisCabine | orderBy:'filename' track by PV.filename" id="pvFeuCab.\{{$index}}" class="form-control">
 						<option value="">-- PV au feu parois cabine --</option>
 					</select>
@@ -143,7 +168,6 @@
 				</div>
 				<div class="field-block button-height">
 					<label for="pvFeuSol.\{{$index}}"><b>PV au feu sol cabine</b></label>
-					<!--<input type="file" data-ng-disabled="filePercentage['pvFeuSol_Dossier'+($index+1)]" ng-model="dossier.pvFeuSol" id='pvFeuSol.\{{$index}}' ng-file-select="onFileSelect($files, ('pvFeuSol_Dossier'+($index+1)))" class="file">-->
 					<select data-ng-model="dossier.selectedFiles.PVFeuSolCabine" data-ng-options="PV as (PV.filename) for PV in selectFiles.PVFeuSolCabine | orderBy:'filename' track by PV.filename" id="assistante" class="form-control">
 						<option value="">-- PV au feu sol cabine --</option>
 					</select>
@@ -206,9 +230,39 @@
 			<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
+	</fieldset>-->
+	
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
+
+		<div class="field-block">
+			<h4>Ajout des produits / services</h4>
+			<p>Détails des prestations</p>
+		</div>
+
+		<div class="field-block clearfix">
+			<label for="desgination"><b>Détails de la commande</b></label>
+			<input type="hidden" data-ng-init="order.notes[0].title='Prestations'"/>
+			<textarea id="desgination" cols="30" rows="5" data-ng-model="order.notes[0].note" class="input full-width"></textarea>
+		</div>
+		
+		<div class="field-block button-height wizard-controls align-right">
+
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
+				<span class="button-icon anthracite-gradient">
+					<span class="icon-backward"></span>
+				</span>{{t 'Previous'}}</button>
+
+			<button type="submit" data-ng-disabled='!order.notes[0].note' class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				Valider commande
+			</button>
+
+		</div>
+
+		
 	</fieldset>
 
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
+	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
 
 		<div class="field-block">
 			<h4>Confirmation de votre commande</h4>
@@ -271,6 +325,6 @@
 		<div class="field-block button-height align-center clearfix">
 			<button type="button" data-ng-click='newOrder()' class="button blue-gradient glossy"><span class="icon-plus"></span> Nouvelle commande</button>
 		</div>
-	</fieldset>
+	</fieldset>-->
 
 </form>

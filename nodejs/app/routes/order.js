@@ -4,11 +4,13 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		nodemailer = require("nodemailer"),
 		_ = require('underscore'),
+		dateFormat = require('dateformat'),
 		config = require(__dirname + '/../../config/config');
 
 var CommandeModel = mongoose.model('commande');
 var ContactModel = mongoose.model('contact');
 var ExtrafieldModel = mongoose.model('extrafields');
+var SocieteModel = mongoose.model('societe');
 
 var smtpTransport = nodemailer.createTransport("SMTP", config.transport);
 
@@ -35,6 +37,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/commande/file/:Id', auth.requiresLogin, object.createFile);
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
+	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
 
 	//Finish with setting up the orderId param
 	app.param('orderId', object.order);
@@ -115,11 +118,11 @@ Object.prototype = {
 					order.client.name = req.user.societe.name;
 
 					order.save(function(err) {
-						if (err) {
+						if (err)
 							return console.log(err);
-						} else {
-							res.json(order);
-						}
+
+						order.setVirtual(req.i18n);
+						res.json(order);
 					});
 
 				});
@@ -131,6 +134,7 @@ Object.prototype = {
 				return console.log(err);
 			}
 
+			order.setVirtual(req.i18n);
 			res.json(order);
 		});
 	},
@@ -172,6 +176,7 @@ Object.prototype = {
 
 
 		order.save(function(err, doc) {
+			doc.setVirtual(req.i18n);
 			res.json(doc);
 		});
 	},
@@ -202,19 +207,24 @@ Object.prototype = {
 	all: function(req, res) {
 		var query = {};
 
-		if (req.query.query) {
-			switch (req.query.query) {
-				case "NOW" :
-					query.Status = {"$nin": ["SHIPPING", "CLOSED","CANCELED"]};
-					break;
-				case "CLOSED" :
-					query.Status = {"$in": ["SHIPPING", "CLOSED","CANCELED"]};
-					break;
-				default :
-					break;
+		if (req.query) {
+			for (var i in req.query) {
+				if (i == "query")
+					switch (req.query[i]) {
+						case "NOW" :
+							query.Status = {"$nin": ["SHIPPING", "CLOSED", "CANCELED"]};
+							break;
+						case "CLOSED" :
+							query.Status = {"$in": ["SHIPPING", "CLOSED", "CANCELED"]};
+							break;
+						default :
+							break;
+					}
+				else
+					query[i] = req.query[i];
 			}
 		}
-		
+
 		CommandeModel.find(query, "-files", function(err, orders) {
 			if (err)
 				return res.render('error', {
@@ -290,6 +300,78 @@ Object.prototype = {
 			});
 		} else
 			res.send(500, "File not found");
-	}
+	},
+	genPDF: function(req, res) {
+		var latex = require('../models/latex');
 
+		latex.loadModel("order.tex", function(err, tex) {
+			var doc = req.order;
+
+			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
+
+				// replacement des variables
+				tex = tex.replace(/--NUM--/g, doc.ref);
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.billing.name + "} \\\\" + doc.billing.address + "\\\\ \\textsc{" + doc.billing.zip + " " + doc.billing.town + "}");
+				tex = tex.replace(/--CODECLIENT--/g, societe._id);
+				tex = tex.replace(/--TITLE--/g, doc.ref_client);
+				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
+				tex = tex.replace(/--DATEL--/g, dateFormat(doc.date_livraison, "dd/mm/yyyy"));
+
+				//tex = tex.replace(/--NOTE--/g, doc.desc.replace(/\n/g, "\\\\"));
+				tex = tex.replace(/--NOTE--/g, "");
+
+				//console.log(doc);
+
+				var products = [];
+
+				for (var i = 0; i < doc.notes.length; i++)
+					products.push(doc.notes[i]);
+
+				//console.log(product);
+
+
+				//console.log(products);
+
+				var tab_latex = "";
+
+				for (var i = 0; i < products.length; i++) {
+					//tab_latex += products[i].title.replace(/_/g, "\\_") + "&" + products[i].note.replace(/<br\/>/g,"\\\\") + "& & \\tabularnewline\n";
+					tab_latex += products[i].title.replace(/_/g, "\\_") + "&\\specialcell[t]{" + products[i].note.replace(/<br\/>/g, "\\\\").replace(/<p>/g, "").replace(/<\/p>/g, "") + "}& & \\tabularnewline\n";
+				}
+
+				//tab_latex += "&\\specialcell[t]{" + doc.desc.replace(/\n/g, "\\\\") + "}& & \\tabularnewline\n";
+
+				tex = tex.replace("--TABULAR--", tab_latex);
+
+				latex.headfoot(doc.entity, tex, function(tex) {
+
+					tex = tex.replace(/undefined/g, "");
+
+					doc.latex.data = new Buffer(tex);
+					doc.latex.createdAt = new Date();
+					doc.latex.title = "Order " + doc.ref;
+
+					doc.save(function(err) {
+						if (err) {
+							console.log("Error while trying to save this document");
+							res.send(403, "Error while trying to save this document");
+						}
+
+						latex.compileDoc(doc._id, doc.latex, function(result) {
+							if (result.errors.length) {
+								//console.log(pdf);
+								return res.send(500, result.errors);
+							}
+
+							return latex.getPDF(result.compiledDocId, function(err, pdfPath) {
+								res.type('application/pdf');
+								res.attachment(doc.ref + ".pdf"); // for douwnloading
+								res.sendfile(pdfPath);
+							});
+						});
+					});
+				});
+			});
+		});
+	}
 };

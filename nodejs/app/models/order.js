@@ -52,6 +52,14 @@ var orderSchema = new Schema({
 	bills: [Schema.Types.ObjectId],
 	groups: [Schema.Types.Mixed],
 	optional: Schema.Types.Mixed,
+	billing : {
+		name : String,
+		contact: String,
+		address : String,
+		zip : String,
+		town : String,
+		country : String
+	},
 	bl: [{
 			label: String,
 			name: String,
@@ -88,7 +96,12 @@ var orderSchema = new Schema({
 			pu_ttc: Number,
 			pu_tva: Number
 		}],
-	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}]
+	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
+	latex: {
+		title: String,
+		createdAt: {type: Date},
+		data: Buffer,
+	}
 });
 
 orderSchema.plugin(timestamps);

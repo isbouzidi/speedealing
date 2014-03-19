@@ -13,7 +13,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 					{name: 'cd', qty: 0}
 				]
 			});
-			$scope.order.societe = Global.user.societe;
+			$scope.order.client = Global.user.societe;
 			$scope.filePercentage = {};
 			$scope.fileName = {};
 			$scope.checkFile = false;
@@ -153,7 +153,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 		};
 
 		$scope.sendOrder = function() {
-			$scope.order.date = new Date();
+			$scope.order.datec = new Date();
 			$scope.order.date_livraison = new Date();
 			$scope.order.date_livraison.setDate($scope.order.date_livraison.getDate() + 5);
 
@@ -162,7 +162,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			for (var i in this.order.bl) {
 				var note = "";
 				note += "Adresse de livraison : <br/><p>" + this.order.bl[i].name + "<br/>";
-				note += this.order.bl[i].address + "<br />";
+				note += this.order.bl[i].contact + "<br/>"
+				note += this.order.bl[i].address + "<br/>";
 				note += this.order.bl[i].zip + " " + this.order.bl[i].town + "</p>";
 				note += "<p> Nombre d'exemplaires papier : " + this.order.bl[i].products[0].qty + "</p>";
 				note += "<p> Nombre d'exemplaires CD : " + this.order.bl[i].products[1].qty + "</p>";
@@ -281,6 +282,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 		$scope.updateDF = function(obj) {
 			$scope.initAssistantes(obj.centreCout.substr(1, 3)); //update liste assistante
 			$scope.order.optional.numDF = obj.centreCout.substr(1, 2) + "/      /" + obj.centreCout.substr(3);
+			$scope.oldNumDF = $scope.order.optional.numDF;
 			var date = new Date();
 			$scope.order.optional.DOE = obj.numAffaire + " - DOE - " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 		};

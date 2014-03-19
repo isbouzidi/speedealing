@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
  * Auth callback
  */
 exports.authCallback = function(req, res, next) {
-    res.redirect('/index.php');
+    res.redirect('/');
 };
 
 /**
@@ -43,7 +43,7 @@ exports.signout = function(req, res) {
  * Session
  */
 exports.session = function(req, res) {
-    res.redirect('/index.php');
+    res.redirect('/');
 };
 
 /**

@@ -560,3 +560,9 @@ ul.nav {
 .steps .modal-content {
 	background-color: transparent;
 }
+
+/* Form bootstrap */
+
+.form-control {
+	width: initial;
+}
