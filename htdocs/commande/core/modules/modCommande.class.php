@@ -180,7 +180,7 @@ class modCommande extends DolibarrModules {
 		$this->menus[$r] = new stdClass();
 		$this->menus[$r]->_id = "menu:orderslist";
 		$this->menus[$r]->position = 1;
-		$this->menus[$r]->url = "/#!/orders";
+		$this->menus[$r]->url = "#!/orders";
 		$this->menus[$r]->langs = "orders";
 		$this->menus[$r]->perms = '$user->rights->commande->lire';
 		$this->menus[$r]->enabled = '$conf->commande->enabled';
