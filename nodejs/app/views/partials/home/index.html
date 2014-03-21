@@ -7,9 +7,8 @@
 	{{#if stats}}
 	<div class="dashboard">
 		<div class="columns">
-			<div class="nine-columns twelve-columns-mobile chart">
-				<!--id="demo-chart"-->
-				<div style="height: 280px; min-width: 100px"></div>
+			<div class="nine-columns twelve-columns-mobile chart" data-ng-init="initCharts()">
+				<highchart id="caChart" config="caChartConfig" style="min-width: 100px; height: 270px; margin: 0 auto;"></highchart>
 			</div>
 
 			<div class="three-columns twelve-columns-mobile new-row-mobile">

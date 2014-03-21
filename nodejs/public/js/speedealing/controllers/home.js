@@ -42,4 +42,75 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 			});
 		};
 
+		$scope.initCharts = function() {
+			$http({method: 'GET', url: '/api/europexpress/billing/ca', params: {
+					name: Global.user.name,
+					entity: Global.user.entity
+				}
+			}).success(function(data, status) {
+				$scope.caChartConfig.series = data;
+			});
+		}
+
+		$scope.caChartConfig = {
+			options: {
+				chart: {
+					type: 'spline',
+					zoomType: "x",
+					marginBottom: 20
+				},
+				credits: {
+					enabled: false
+				},
+				xAxis: {
+					categories: ['Jan', 'Fev', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept', 'Oct', 'Nov', 'Dec'],
+					maxZoom: 1
+							//labels: {rotation: 90, align: "left"}
+				},
+				yAxis: {
+					title: {text: "Total HT"},
+					allowDecimals: false,
+					min: 0
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'top',
+					x: -5,
+					y: 5,
+					floating: true,
+					borderWidth: 1,
+					backgroundColor: Highcharts.theme.legendBackgroundColor || '#FFFFFF',
+					shadow: true
+				},
+				labels: {
+					items: [{
+							html: 'Répartition du CA par famille',
+							style: {
+								left: '85px',
+								top: '-10px',
+								color: 'white'
+							}
+						}]
+				},
+				tooltip: {
+					enabled: true,
+					formatter: function() {
+						if (this.point.name) // the pie chart
+							return '<b>' + this.point.name + '</b>' +
+									' : ' + this.y;
+
+						else
+							return '<b>' + this.x + '</b><br/>' +
+									this.series.name + ' : ' + this.y;
+					}
+				}
+			},
+			title: {
+				text: null
+			},
+			series: []
+		};
+
+
 	}]);
