@@ -98,11 +98,11 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 					formatter: function() {
 						if (this.point.name) // the pie chart
 							return '<b>' + this.point.name + '</b>' +
-									' : ' + this.y;
+									' : ' + Math.round(this.y);
 
 						else
 							return '<b>' + this.x + '</b><br/>' +
-									this.series.name + ' : ' + this.y;
+									this.series.name + ' : ' + Math.round(this.y);
 					}
 				}
 			},
