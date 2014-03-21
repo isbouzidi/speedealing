@@ -67,17 +67,38 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 					maxZoom: 1
 							//labels: {rotation: 90, align: "left"}
 				},
-				yAxis: {
-					title: {text: "Total HT"},
-					allowDecimals: false,
-					min: 0
-				},
+				yAxis: [{// Primary yAxis
+						title: {text: "Total produits HT"},
+						allowDecimals: false,
+						min: 0
+					},
+					{// Secondary yAxis
+						gridLineWidth: 0,
+						title: {
+							text: 'Total CA HT',
+							style: {
+								color: '#4572A7'
+							}
+						},
+						allowDecimals: false,
+						min: 0,
+						labels: {
+							/*formatter: function() {
+							 return this.value +' k';
+							 },*/
+							style: {
+								color: '#4572A7'
+							}
+						},
+						opposite: true
+
+					}],
 				legend: {
 					layout: 'vertical',
 					align: 'right',
 					verticalAlign: 'top',
-					x: -5,
-					y: 5,
+					x: -65,
+					y: -10,
 					floating: true,
 					borderWidth: 1,
 					backgroundColor: Highcharts.theme.legendBackgroundColor || '#FFFFFF',
