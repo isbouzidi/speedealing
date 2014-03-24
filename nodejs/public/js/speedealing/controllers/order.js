@@ -81,7 +81,6 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 		$scope.order = {};
 
 		$scope.addNew = function() {
-
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/orders/create.html',
 				controller: "OrderCreateController",
@@ -97,7 +96,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 
 	}]);
 
-angular.module('mean.system').controller('OrderCreateController', ['$scope', 'pageTitle', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Order', function($scope, pageTitle, $http, $modalInstance, $upload, $route, Global, Order) {
+angular.module('mean.system').controller('OrderCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Order', function($scope, $http, $modalInstance, $upload, $route, Global, Order) {
 		$scope.global = Global;
 
 		//pageTitle.setTitle('Nouvelle commande');

@@ -56,5 +56,6 @@
 		],
 		"log": "trace"
 	},
-	"externalIPAllowed": ["127.0.0.1"]
+	"externalIPAllowed": ["127.0.0.1"],
+	"sessionTimeout" : 3600000
 }

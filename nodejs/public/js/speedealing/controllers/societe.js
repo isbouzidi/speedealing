@@ -222,67 +222,113 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			series: []
 		};
 
-		$scope.societe = {};
-
 		$scope.addNew = function() {
-
 			var modalInstance = $modal.open({
-				templateUrl: 'myModalContent.html',
-				controller: ModalInstanceCtrl,
-				resolve: {
-					object: function() {
-						return $scope.societe;
-					}
-				}
+				templateUrl: '/partials/societes/create.html',
+				controller: "SocieteCreateController",
+				windowClass: "steps"
 			});
 
 			modalInstance.result.then(function(societe) {
-				$scope.societe = societe;
-				$scope.create();
-				$scope.societe = {};
+				$scope.societes.push(societe);
+				$scope.countSocietes++;
 			}, function() {
 			});
 		};
 
-		var ModalInstanceCtrl = function($scope, $modalInstance, object) {
 
-			$scope.societe = object;
-			if (object.card)
-				$scope.cardSelect = {
-					id: object.card,
-					vehicule: object.vehicule
-				};
+	}]);
 
-			$scope.datec = new Date(object.datec);
+angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Societes', function($scope, $http, $modalInstance, $upload, $route, Global, Societes) {
+		$scope.global = Global;
 
+		$scope.active = 1;
+		$scope.validSiret = false;
+		$scope.societe = {};
+		$scope.siretFound = "";
 
-			$scope.cardAutoComplete = function(val) {
-				return $http.post('api/europexpress/card/autocomplete', {
-					take: '5',
-					skip: '0',
-					page: '1',
-					pageSize: '5',
-					filter: {logic: 'and', filters: [{value: val}]
-					}
-				}).then(function(res) {
-					return res.data
-				});
-			};
-
-			$scope.refreshVehicule = function() {
-				$scope.paiement.vehicule = this.cardSelect.vehicule;
-				$scope.paiement.card = this.cardSelect.id;
-			};
-
-			$scope.ok = function() {
-				$modalInstance.close($scope.paiement);
-			};
-
-			$scope.cancel = function() {
-				$modalInstance.dismiss('cancel');
-			};
+		$scope.isActive = function(idx) {
+			if (idx == $scope.active)
+				return "active";
 		};
 
+		$scope.next = function() {
+			$scope.active++;
+		};
 
+		$scope.previous = function() {
+			$scope.active--;
+		};
 
+		$scope.goto = function(idx) {
+			if ($scope.active == 5)
+				return;
+
+			if (idx < $scope.active)
+				$scope.active = idx;
+		};
+
+		$scope.init = function() {
+			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+					field: "Status"
+				}
+			}).success(function(data, status) {
+				$scope.status = data;
+				//console.log(data);
+				$scope.societe.Status = data.default;
+			});
+			
+			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+					field: "fournisseur"
+				}
+			}).success(function(data, status) {
+				$scope.fournisseur = data;
+				//console.log(data);
+				$scope.societe.fournisseur = "NO";
+			});
+		};
+
+		$scope.isValidSiret = function() {
+			var siret = $scope.societe.idprof2;
+			$scope.siretFound = "";
+
+			var isValide;
+			if (!siret || siret.length != 14 || isNaN(siret))
+				isValide = false;
+			else {
+				// Donc le SIRET est un numérique à 14 chiffres
+				// Les 9 premiers chiffres sont ceux du SIREN (ou RCS), les 4 suivants
+				// correspondent au numéro d'établissement
+				// et enfin le dernier chiffre est une clef de LUHN. 
+				var somme = 0;
+				var tmp;
+				for (var cpt = 0; cpt < siret.length; cpt++) {
+					if ((cpt % 2) == 0) { // Les positions impaires : 1er, 3è, 5è, etc... 
+						tmp = siret.charAt(cpt) * 2; // On le multiplie par 2
+						if (tmp > 9)
+							tmp -= 9;	// Si le résultat est supérieur à 9, on lui soustrait 9
+					}
+					else
+						tmp = siret.charAt(cpt);
+					somme += parseInt(tmp);
+				}
+				if ((somme % 10) == 0)
+					isValide = true; // Si la somme est un multiple de 10 alors le SIRET est valide 
+				else
+					isValide = false;
+			}
+
+			if (isValide)
+				$http({method: 'GET', url: '/api/societe/uniqId', params: {
+						idprof2: siret
+					}
+				}).success(function(data, status) {
+					$scope.validSiret = isValide;
+					if (data.name) { // already exist
+						$scope.siretFound = data;
+					}
+				});
+			else
+				$scope.validSiret = isValide;
+		};
 	}]);

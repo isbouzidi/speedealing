@@ -130,7 +130,7 @@ module.exports = function(app, passport, db) {
 			secret: config.app.secret,
 			key: 'SpeedSession',
 			cookie: {
-				maxAge: 36000000
+				maxAge: config.sessionTimeout || 36000000
 						//expires: new Date(Date.now() + 3600000) //1 Hour
 			},
 			store: new mongoStore({

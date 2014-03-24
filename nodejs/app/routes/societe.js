@@ -11,27 +11,19 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 
 var ExtrafieldModel = mongoose.model('extrafields');
+var DictModel = mongoose.model('dict');
 
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
+	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
 	app.post('/api/societe', auth.requiresLogin, object.create);
 	app.put('/api/societe/:societeId', auth.requiresLogin, object.update);
 	app.del('/api/societe/:societeId', auth.requiresLogin, object.destroy);
-
-	// Specific for autocomplete
-	app.get('/api/societe/select', auth.requiresLogin, function(req, res) {
-		if (config.couchdb_name)
-			object.db = config.couchdb_name;
-		else
-			object.db = req.query.db;
-
-		console.dir(req.query);
-		object.select(req, res);
-	});
+	app.get('/api/societe/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function(req, res) {
@@ -79,7 +71,7 @@ module.exports = function(app, passport, auth) {
 						result[i].price_level = docs[i].price_level;
 					else
 						result[i].price_level = "BASE";
-					
+
 					// add address
 					result[i].address = {};
 					result[i].address.name = docs[i].name;
@@ -343,7 +335,7 @@ Object.prototype = {
 
 		if (societe.entity == null)
 			societe.entity = req.user.entity;
-		
+
 		societe.setVirtual(req.i18n);
 
 		societe.save(function(err) {
@@ -353,6 +345,20 @@ Object.prototype = {
 
 			res.json(societe);
 		});
+	},
+	uniqId: function(req, res) {
+		if (!req.query.idprof2)
+			return res.send(404);
+
+		SocieteModel.findOne({idprof2: req.query.idprof2}, "name entity", function(err, doc) {
+			if (err)
+				return next(err);
+			if (!doc)
+				return res.json({});
+
+			res.json(doc);
+		});
+
 	},
 	update: function(req, res) {
 		var societe = req.societe;
@@ -375,31 +381,41 @@ Object.prototype = {
 		});
 	},
 	select: function(req, res) {
-		var db = this.connection.database(this.db);
-
-		db.get('extrafields:Intervention', function(err, doc) {
+		ExtrafieldModel.findById('extrafields:Societe', function(err, doc) {
 			if (err) {
 				console.log(err);
-				res.send(500, doc);
 				return;
 			}
-			else {
-				var result = [];
-				for (i in doc.fields.Status.values) {
+			var result = [];
+			if (doc.fields[req.query.field].dict)
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
 
-					if (doc.fields.Status.values[i].enable) {
-						var status = {};
-
-						status.id = i;
-						status.name = req.i18n.t("intervention." + doc.fields.Status.values[i].label);
-						status.css = doc.fields.Status.values[i].cssClass;
-
-						result.push(status);
+					if (docs) {
+						for (var i in docs.values) {
+							if (docs.values[i].enable) {
+								var val = {};
+								val.id = i;
+								val.label = docs.values[i].label;
+								result.push(val);
+							}
+						}
+						doc.fields[req.query.field].values = result;
 					}
+
+					res.json(doc.fields[req.query.field]);
+				});
+
+			for (var i in doc.fields[req.query.field].values) {
+				if (doc.fields[req.query.field].values[i].enable) {
+					var val = {};
+					val.id = i;
+					val.label = doc.fields[req.query.field].values[i].label;
+					result.push(val);
 				}
-				res.send(200, result);
 			}
-			return;
+			doc.fields[req.query.field].values = result;
+
+			res.json(doc.fields[req.query.field]);
 		});
 	}
 };

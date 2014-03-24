@@ -1,0 +1,327 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">{{t 'companies:NewCompany'}} <span class="blue">\{{societe.ref}}</span></h3>
+
+	<ul class="wizard-steps">
+		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span> Références</li>
+		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Adresse</li>
+		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Registres</li>
+		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">4</span> Facturation</li>
+	</ul>
+
+	<!-- Each form step should be wrapped in a fieldset -->
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+		<div class="field-block">
+			<h4>{{t 'Hello'}}</h4>
+			<p>Bienvenue sur l'interface de création des sociétés.</p>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="name"><b>{{t 'companies:Company'}}</b></label>
+			<input required type="text" data-ng-model="societe.name" id="name" class="input" autocomplete="off">
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="code"><b>{{t 'SIRET'}}</b></label>
+			<input required type="text" data-ng-model="societe.idprof2" data-ng-change="isValidSiret()" id="code" class="input" autocomplete="off">
+			<small ng-show="societe.idprof2==null" class="icon-warning blue input-info"> Ce numéro permet de vérifier que le compte n'existe pas dans la base. (sans espace)</small>
+			<small ng-show="societe.idprof2 && !validSiret" class="icon-warning orange input-info"> Code incorrect.</small>
+			<small ng-show="validSiret && siretFound" class="icon-warning red input-info"> Ce code existe déjà dans la base : \{{siretFound.name}} ({{t 'Entity'}} : \{{siretFound.entity}}).</small>
+			<small ng-show="validSiret && !siretFound" class="icon-tick green input-info"> Code correct.</small>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="status"><b>Status commercial</b></label>
+			<select class="form-control" id="status" data-ng-model="societe.Status" data-ng-options="c.id as c.label for c in status.values"></select>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="statusF"><b>Status fournisseur</b></label>
+			<select class="form-control" id="statusF" data-ng-model="societe.fournisseur" data-ng-options="f.id as f.label for f in fournisseur.values"></select>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button" data-ng-disabled="!(societe.name && validSiret && !siretFound)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>
+
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
+
+		<div class="field-block">
+			<h4>Adresses de facturation</h4>
+			<p></p>
+		</div>
+
+		<div class="field-block button-height">
+			<label><b>Adresse facturation</b></label>
+			<div class='columns'>
+				<div class='seven-columns'>
+					<input type="text" data-ng-model="societe.billing.name" class="input" placeholder="Nom"/><br/>
+					<input type="text" data-ng-model="societe.billing.contact" class="input" placeholder="Nom du contact"/><br/>
+					<textarea class='input' rows='3' data-ng-model="societe.billing.address" placeholder="Adresse"></textarea><br/>
+					<input type="text" class="input" placeholder="Code postal" data-ng-model="societe.billing.zip" size="8"/>
+					<input type="text" class="input" data-ng-model="societe.billing.town" placeholder="Ville"/>
+				</div>
+				<div class="five-columns">
+					<!--<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires papier</small>
+						<input type="number" data-ng-model='bl.products[0].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>
+					<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires CD</small>
+						<input type="number" data-ng-model='bl.products[1].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>-->
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>
+	
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
+
+		<div class="field-block">
+			<h4>Adresses de livraison</h4>
+			<p></p>
+		</div>
+
+		<div class="field-block button-height" data-ng-repeat="bl in societe.bl">
+			<label><b>Adresse destinataire \{{$index + 1}}</b></label>
+			<div class='columns'>
+				<div class='seven-columns'>
+					<input type="hidden" data-ng-init="bl.label='Destinataire '+($index+1)"/> 
+					<input type="text" data-ng-model="bl.name" class="input" placeholder="Nom"/><br/>
+					<input type="text" data-ng-model="bl.contact" class="input" placeholder="Nom du contact"/><br/>
+					<textarea class='input' rows='3' data-ng-model="bl.address" placeholder="Adresse"></textarea><br/>
+					<input type="text" class="input" placeholder="Code postal" data-ng-model="bl.zip" size="8"/>
+					<input type="text" class="input" data-ng-model="bl.town" placeholder="Ville"/>
+				</div>
+				<div class="five-columns">
+					<!--<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires papier</small>
+						<input type="number" data-ng-model='bl.products[0].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>
+					<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires CD</small>
+						<input type="number" data-ng-model='bl.products[1].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>-->
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height align-center clearfix">
+			<button type="button" data-ng-click='addDest()' class="button blue-gradient glossy"><span class="icon-plus"></span> {{t 'Add'}} un autre destinataire</button>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>
+
+	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
+
+		<div class="field-block">
+			<h4>Envoi des fichiers</h4>
+			<p></p>
+		</div>
+
+		<div class="field-block button-height" data-ng-repeat='dossier in societe.optional.dossiers' data-ng-init="initSelectFiles()">
+			<label><b>Dossier \{{$index +1}}</b></label><br/>
+			<fieldset class="fields-list">
+				<div class="field-block button-height">
+					<label for="numApp.\{{$index}}"><b>Num Appareil</b></label>
+					<input type="text" data-ng-model='dossier.numApp' name="numApp" id="numApp.\{{$index}}" class="input">
+				</div>
+
+				<div class="field-block button-height">
+					<label for="pvFeuPorte.\{{$index}}"><b>PV au feu des portes palières</b></label>
+					<select data-ng-model="dossier.selectedFiles.PVFeuPortePaliere" data-ng-options="PV as (PV.filename) group by PV.directory for PV in selectFiles.PVFeuPortePaliere | societeBy:'filename' track by PV.filename" id="pvFeuPorte.\{{$index}}" class="form-control">
+						<option value="">-- PV au feu des portes palières --</option>
+					</select>
+
+					<div class="row" ng-show="filePercentage['pvFeuPorte_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar  class="progress-striped" value="filePercentage['pvFeuPorte_Dossier'+($index+1)]" type="success">\{{filePercentage['pvFeuPorte_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['pvFeuPorte_Dossier'+($index+1)], 'pvFeuPorte_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+				<div class="field-block button-height">
+					<label for="pvFeuCab.\{{$index}}"><b>PV au feu parois cabine</b></label>
+					<select data-ng-model="dossier.selectedFiles.PVFeuParoisCabine" data-ng-options="PV as (PV.filename) for PV in selectFiles.PVFeuParoisCabine | orderBy:'filename' track by PV.filename" id="pvFeuCab.\{{$index}}" class="form-control">
+						<option value="">-- PV au feu parois cabine --</option>
+					</select>
+
+					<div class="row" ng-show="filePercentage['pvFeuCab_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar class="progress-striped" value="filePercentage['pvFeuCab_Dossier'+($index+1)]" type="success">\{{filePercentage['pvFeuCab_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['pvFeuCab_Dossier'+($index+1)], 'pvFeuCab_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+				<div class="field-block button-height">
+					<label for="pvFeuSol.\{{$index}}"><b>PV au feu sol cabine</b></label>
+					<select data-ng-model="dossier.selectedFiles.PVFeuSolCabine" data-ng-options="PV as (PV.filename) for PV in selectFiles.PVFeuSolCabine | orderBy:'filename' track by PV.filename" id="assistante" class="form-control">
+						<option value="">-- PV au feu sol cabine --</option>
+					</select>
+
+					<div class="row" ng-show="filePercentage['pvFeuSol_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar class="progress-striped" value="filePercentage['pvFeuSol_Dossier'+($index+1)]" type="success">\{{filePercentage['pvFeuSol_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['pvFeuSol_Dossier'+($index+1)], 'pvFeuSol_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+				<div class="field-block button-height">
+					<label for="plans.\{{$index}}"><b>Plans</b></label>
+					<input type="file" data-ng-disabled="filePercentage['plans_Dossier'+($index+1)]" ng-model="dossier.plans" id='plans.\{{$index}}' ng-file-select="onFileSelect($files, ('plans_Dossier'+($index+1)))" class="file">
+					<div class="row" ng-show="filePercentage['plans_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar class="progress-striped" value="filePercentage['plans_Dossier'+($index+1)]" type="success">\{{filePercentage['plans_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['plans_Dossier'+($index+1)], 'plans_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+				<div class="field-block button-height">
+					<label for="dic.\{{$index}}"><b>DIC</b></label>
+					<a href="\\ofrgnf04.eu.otis.utc.com\03-Exterieur\Doc_N-4\45">\\ofrgnf04.eu.otis.utc.com\03-Exterieur\Doc_N-4\45</a>
+					<input type="file" data-ng-disabled="filePercentage['dic_Dossier'+($index+1)]" ng-model="dossier.dic" id='pvFeuSol.\{{$index}}' ng-file-select="onFileSelect($files, ('dic_Dossier'+($index+1)))" class="file">
+					<div class="row" ng-show="filePercentage['dic_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar class="progress-striped" value="filePercentage['dic_Dossier'+($index+1)]" type="success">\{{filePercentage['dic_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['dic_Dossier'+($index+1)], 'dic_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+				<div class="field-block button-height">
+					<label for="manuelInst.\{{$index}}"><b>Manuel d'instruction</b></label>
+					<input type="file" data-ng-disabled="filePercentage['manuelInst_Dossier'+($index+1)]" ng-model="dossier.manuelInst" id='manuelInst.\{{$index}}' ng-file-select="onFileSelect($files, ('manuelInst_Dossier'+($index+1)))" class="file">
+					<div class="row" ng-show="filePercentage['manuelInst_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar class="progress-striped" value="filePercentage['manuelInst_Dossier'+($index+1)]" type="success">\{{filePercentage['manuelInst_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['manuelInst_Dossier'+($index+1)], 'manuelInst_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+				<div class="field-block button-height">
+					<label for="annexManuelInst.\{{$index}}"><b>Annexes Manuel d'instruction</b></label>
+					<input type="file" data-ng-disabled="filePercentage['annexManuelInst_Dossier'+($index+1)]" ng-model="dossier.annexManuelInst" id='annexManuelInst.\{{$index}}' ng-file-select="onFileSelect($files, ('annexManuelInst_Dossier'+($index+1)))" class="file">
+					<div class="row" ng-show="filePercentage['annexManuelInst_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar class="progress-striped" value="filePercentage['annexManuelInst_Dossier'+($index+1)]" type="success">\{{filePercentage['annexManuelInst_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['annexManuelInst_Dossier'+($index+1)], 'annexManuelInst_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+				<div class="field-block button-height">
+					<label for="annexAutres.\{{$index}}"><b>Autres annexes</b></label>
+					<input type="file" data-ng-disabled="filePercentage['annexAutres_Dossier'+($index+1)]" ng-model="dossier.annexAutres" id='annexAutres.\{{$index}}' ng-file-select="onFileSelect($files, ('annexAutres_Dossier'+($index+1)))" class="file">
+					<div class="row" ng-show="filePercentage['annexAutres_Dossier'+($index+1)]">
+						<div class="col-sm-8"><progressbar class="progress-striped" value="filePercentage['annexAutres_Dossier'+($index+1)]" type="success">\{{filePercentage['annexAutres_Dossier'+($index+1)]}} %</progressbar></div>
+						<div class="col-sm-4"><a class="icon-trash red" data-ng-click="suppressFile(societe._id, fileName['annexAutres_Dossier'+($index+1)], 'annexAutres_Dossier'+($index+1))" title="{{t 'Delete'}}"></a></div>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+
+		<div class="field-block button-height align-center clearfix">
+			<button type="button" data-ng-click='addDossier()' class="button blue-gradient glossy"><span class="icon-plus"></span> {{t 'Add'}} un autre dossier</button>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button" data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>-->
+	
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
+
+		<div class="field-block">
+			<h4>Ajout des produits / services</h4>
+			<p>Détails des prestations</p>
+		</div>
+
+		<div class="field-block clearfix">
+			<label for="desgination"><b>Détails de la commande</b></label>
+			
+		</div>
+		
+		<div class="field-block button-height wizard-controls align-right">
+
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
+				<span class="button-icon anthracite-gradient">
+					<span class="icon-backward"></span>
+				</span>{{t 'Previous'}}</button>
+
+			<button type="submit" data-ng-disabled='!societe.notes[0].note' class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				Valider commande
+			</button>
+
+		</div>
+
+		
+	</fieldset>
+
+	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
+
+		<div class="field-block">
+			<h4>Confirmation de votre commande</h4>
+			<p></p>
+		</div>
+
+		<div class="field-block button-height">
+			<label><b>Références</b></label>
+			Centre de coût : \{{societe.optional.centreCout}}<br/>
+			Num Affaire : \{{societe.optional.numAffaire}}<br/>
+			Num DF : \{{societe.optional.numDF}}
+		</div>
+
+		<div class="field-drop button-height black-inputs">
+			<label for="newsletter"><b>Nb exemplaires</b></label>
+			Nombre d'exemplaires papier	: <b>\{{papier}}</b><br/>
+			Nombre d'exemplaires CD	: <b>\{{cd}}</b>
+		</div>
+
+		<div class="field-block button-height">
+			<label><b>Vérifications</b></label>
+			<input type="checkbox" data-ng-model='checkFile' class="" tabindex="-1"/> J'ai effectué le contrôle de mes fichiers avant l'envoi<br/>
+			<input type="checkbox" data-ng-model='validAddress' class="" tabindex="-1"/> J'ai contrôle l'exactitude des adresses de livraison<br/>
+			<input type="checkbox" data-ng-model='validsociete' class="" tabindex="-1"/> Je confirme l'envoi de ma commande
+		</div>
+
+		<div class="field-block button-height wizard-controls align-right">
+
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
+				<span class="button-icon anthracite-gradient">
+					<span class="icon-backward"></span>
+				</span>{{t 'Previous'}}</button>
+
+			<button type="submit" data-ng-disabled='!checkFile || !validAddress || !validsociete' class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				Valider commande
+			</button>
+
+		</div>
+
+	</fieldset>
+
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(5)'>
+
+		<div class="field-block">
+			<h4>Commande validée</h4>
+			<p>Votre commande a bien été enregistrée sur PPC Chaumeil.</p>
+		</div>
+
+		<div class="field-block clearfix">
+			<label><b>Numéro de commande</b></label>
+			<strong>\{{societe.ref}}</strong>
+		</div>
+
+		<div class="field-block clearfix">
+			<label><b>Date de commande</b></label>
+			\{{societe.updatedAt | date:'dd-MM-yyyy HH:mm:ss'}}
+		</div>
+
+		<div class="field-block button-height align-center clearfix">
+			<button type="button" data-ng-click='newsociete()' class="button blue-gradient glossy"><span class="icon-plus"></span> Nouvelle commande</button>
+		</div>
+	</fieldset>-->
+
+</form>

@@ -116,9 +116,20 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		$scope.update = function(id) {
 			var article = $scope.aday;
 
-			article.$update(function() {
-				$route.reload();
+			article.$update(function(doc) {
+				//$route.reload();
 				//$location.path('articles/' + article._id);
+				$scope.showEdit = {};
+				for(var i=0; i<$scope.tournees.length; i++) {
+					//console.log($scope.tournees[i]);
+					for(var j=0; j< $scope.tournees[i].details.length;j++){
+						if($scope.tournees[i].details[j] && doc._id == $scope.tournees[i].details[j]._id)
+							$scope.tournees[i].details[j] = doc;
+						//console.log(day);
+					}
+				}
+				
+				
 			});
 		};
 

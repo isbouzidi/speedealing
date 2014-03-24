@@ -509,7 +509,7 @@
 			"values": {
 				"NO": {
 					"enable": true,
-					"label": "Client seulement",
+					"label": "Aucun",
 					"cssClass": "anthracite-gradient"
 				},
 				"SUPPLIER": {

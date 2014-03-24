@@ -59,7 +59,11 @@ var societeSchema = new Schema({
 	gps: [Number],
 	contractID: String,
 	UGAP_Ref_Client: String,
-	datec: Date
+	datec: Date,
+	idporf1 : String,
+	idprof2 : {type:String, require :true, unique:true}, // SIRET
+	idprof3 : String,
+	idprof4 : String
 });
 
 societeSchema.plugin(timestamps);
