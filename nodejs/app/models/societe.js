@@ -60,10 +60,12 @@ var societeSchema = new Schema({
 	contractID: String,
 	UGAP_Ref_Client: String,
 	datec: Date,
-	idporf1 : String,
-	idprof2 : {type:String, require :true, unique:true}, // SIRET
-	idprof3 : String,
-	idprof4 : String
+	idporf1: String,
+	idprof2: {type: String, require: true, unique: true}, // SIRET
+	idprof3: String,
+	idprof4: String,
+	idprof5: String,
+	idprof6: String
 });
 
 societeSchema.plugin(timestamps);
@@ -72,10 +74,21 @@ societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 
 societeSchema.pre('save', function(next) {
 	var self = this;
-	if (this.isNew) {
-		SeqModel.incBarCode("C", 5, function(seq) {
-			self.barCode = seq;
-			next();
+	if (this.isNew && this.code_client == null) {
+		SeqModel.incNumber("C", 6, function(seq) {
+			self.barCode = "C" + seq;
+
+			//console.log(seq);
+			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+				if (err)
+					console.log(err);
+
+				if (entity && entity.cptRef)
+					self.code_client = entity.cptRef + "-" + seq;
+				else
+					self.code_client = "C" + seq;
+				next();
+			});
 		});
 	} else
 		next();
@@ -99,7 +112,7 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
  */
 societeSchema.methods.setVirtual = function(i18n) {
 	this.status = {};
-	
+
 	var status = this.Status;
 
 	if (statusList.values[status].label) {
@@ -112,9 +125,9 @@ societeSchema.methods.setVirtual = function(i18n) {
 		this.status.name = status;
 		this.status.css = "";
 	}
-	
+
 	this.prospectLevel = {};
-	
+
 	var level = this.prospectlevel;
 
 	if (prospectLevelList.values[level].cssClass) {

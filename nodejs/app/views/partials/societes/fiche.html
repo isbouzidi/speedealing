@@ -2,7 +2,7 @@
 	<div data-ng-init="findOne()">
 		<hgroup id="main-title" class="thin">
 			<h1>\{{societe.name}}</h1>
-			<span class="valign-top tag glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span>
+			<!--<span class="valign-top tag glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span>-->
 		</hgroup>
 		<div class="with-padding">
 			<div class="columns">
@@ -26,6 +26,10 @@
 								<tr>
 									<th scope="row">{{t 'Entity'}}</th>
 									<td><small class="tag anthracite-gradient glossy">\{{societe.entity}}</small></td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
+									<td><span class="tag small glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Supplier'}}</th>
@@ -149,7 +153,7 @@
 								</div>
 							</div>
 						</tab>-->
-						
+
 						<tab>
 							<tab-heading>
 								<span class="icon-cart">Client/prospect</span>
@@ -205,7 +209,7 @@
 													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
 													<td>\{{societe.remise_client}}</td>
 												</tr>
-												
+
 												ProfId - idprof
 
 
@@ -281,7 +285,7 @@
 									<div class="six-columns">
 										<table class="simple-table">
 											<tbody>
-												
+
 												<tr>
 													<th scope="row">{{t 'companies:Supplier'}}</th>
 													<td>\{{societe.fournisseur}}</td>
@@ -290,7 +294,7 @@
 													<th scope="row">{{t 'Categories'}}</th>
 													<td>\{{societe.Tag}}</td>
 												</tr>
-												
+
 											</tbody>
 										</table>
 									</div>

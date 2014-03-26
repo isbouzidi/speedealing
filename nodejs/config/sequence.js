@@ -30,12 +30,12 @@ sequenceSchema.statics = {
 			return cb(numberFormat((date.getMonth() + 1), 2) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 6));
 		});
 	},
-	incNumber: function(name, cb) {
+	incNumber: function(name, length, cb) {
 		this.findByIdAndUpdate(name, {$inc: {seq: 1}}, {upsert: true}, function(err, doc) {
 			if (err)
 				console.log(err);
 
-			return cb(doc.seq); // format PROV return 440
+			return cb(numberFormat(doc.seq, length)); // format PROV return 000440
 		});
 	},
 	incBarCode: function(name, length, cb) {

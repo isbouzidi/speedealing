@@ -395,7 +395,10 @@ Object.prototype = {
 							if (docs.values[i].enable) {
 								var val = {};
 								val.id = i;
-								val.label = docs.values[i].label;
+								if (docs.values[i].label)
+									val.label = docs.values[i].label;
+								else
+									val.label = req.i18n.t("companies:" + i);
 								result.push(val);
 							}
 						}

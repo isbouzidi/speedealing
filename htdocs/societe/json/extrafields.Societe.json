@@ -308,7 +308,8 @@
 			"type": "select",
 			"label": "JuridicalStatus",
 			"dict": "dict:fk_forme_juridique",
-			"enable": true
+			"enable": true,
+			"default":"0"
 		},
 		"commercial_id": {
 			"schema": {

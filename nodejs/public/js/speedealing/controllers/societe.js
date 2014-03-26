@@ -286,11 +286,92 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				//console.log(data);
 				$scope.societe.fournisseur = "NO";
 			});
+			
+			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+					field: "prospectlevel"
+				}
+			}).success(function(data, status) {
+				$scope.potential = data;
+				//console.log(data);
+				$scope.societe.prospectlevel = data.default;
+			});
+			
+			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+					field: "typent_id"
+				}
+			}).success(function(data, status) {
+				$scope.typent = data;
+				//console.log(data);
+				$scope.societe.typent_id = data.default;
+			});
+			
+			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+					field: "effectif_id"
+				}
+			}).success(function(data, status) {
+				$scope.effectif = data;
+				//console.log(data);
+				$scope.societe.effectif_id = data.default;
+			});
+			
+			$scope.societe.commercial_id = {
+				id : Global.user._id,
+				name : Global.user.firstname + " " + Global.user.lastname
+			}
+			
+			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+					field: "forme_juridique_code"
+				}
+			}).success(function(data, status) {
+				$scope.forme_juridique = data;
+				//console.log(data);
+				$scope.societe.forme_juridique_code = data.default;
+			});
+			
+			$scope.societe.price_level = "BASE";
+			$scope.societe.capital = 0;
+		};
+		
+		$scope.create = function() {
+			var societe = new Societes(this.societe);
+			societe.$save(function(response) {
+				//console.log(response);
+				$modalInstance.close(response);
+				//$location.path("societe/" + response._id);
+			});
+		};
+
+		
+		$scope.userAutoComplete = function(val) {
+			return $http.post('api/user/name/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
+		};
+		
+		$scope.priceLevelAutoComplete = function(val) {
+			return $http.post('api/product/price_level/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
 		};
 
 		$scope.isValidSiret = function() {
 			var siret = $scope.societe.idprof2;
 			$scope.siretFound = "";
+			$scope.societe.idprof1 = "";
 
 			var isValide;
 			if (!siret || siret.length != 14 || isNaN(siret))
@@ -312,10 +393,12 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 						tmp = siret.charAt(cpt);
 					somme += parseInt(tmp);
 				}
-				if ((somme % 10) == 0)
+				if ((somme % 10) == 0) {
 					isValide = true; // Si la somme est un multiple de 10 alors le SIRET est valide 
-				else
+					$scope.societe.idprof1 = siret.substr(0,9);
+				} else {
 					isValide = false;
+				}
 			}
 
 			if (isValide)
@@ -328,7 +411,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 						$scope.siretFound = data;
 					}
 				});
-			else
+			else 
 				$scope.validSiret = isValide;
 		};
 	}]);
