@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 var DictModel = mongoose.model('dict');
+var EntityModel = mongoose.model('entity');
 
 /**
  * Article Schema
