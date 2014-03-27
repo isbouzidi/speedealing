@@ -281,7 +281,7 @@ Object.prototype = {
 				return next(err);
 			if (!doc)
 				return next(new Error('Failed to load societe ' + id));
-			doc.setVirtual(req.i18n);
+			//doc.setVirtual(req.i18n);
 
 			req.societe = doc;
 			next();
@@ -318,9 +318,6 @@ Object.prototype = {
 
 			//console.log(doc);
 
-			for (var i in doc) {
-				doc[i].setVirtual(req.i18n);
-			}
 			res.json(200, doc);
 		});
 	},
@@ -337,12 +334,12 @@ Object.prototype = {
 			societe.entity = req.user.entity;
 
 		societe.setVirtual(req.i18n);
-
-		societe.save(function(err) {
+console.log(societe);
+		societe.save(function(err, doc) {
 			if (err) {
 				return console.log(err);
 			}
-
+			
 			res.json(societe);
 		});
 	},

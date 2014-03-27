@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		gridfs = require('../controllers/gridfs'),
 		Schema = mongoose.Schema,
+		i18n = require("i18next"),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
@@ -23,7 +24,7 @@ var societeSchema = new Schema({
 	code_fournisseur: String,
 	barCode: String,
 	Status: {type: Schema.Types.Mixed, default: 'ST_PFROI'},
-	status: {type: Schema.Types.Mixed, virtual: true},
+	//status: {type: mongoose.VirtualType},
 	address: String,
 	zip: String,
 	town: String,
@@ -43,7 +44,7 @@ var societeSchema = new Schema({
 	civilite_id: {type: String, default: 'NO'},
 	price_level: {type: String, default: 'BASE', uppercase: true, trim: true},
 	prospectlevel: {type: String, default: 'PL_NONE'},
-	prospectLevel: {type: Schema.Types.Mixed, virtual: true},
+	//prospectLevel: {type: Schema.Types.Mixed, virtual: true},
 	cond_reglement: String,
 	mode_reglement: String,
 	zonegeo: String,
@@ -67,6 +68,9 @@ var societeSchema = new Schema({
 	idprof4: String,
 	idprof5: String,
 	idprof6: String
+}, {
+	toObject: {virtuals: true},
+	toJSON: {virtuals: true}
 });
 
 societeSchema.plugin(timestamps);
@@ -105,42 +109,46 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 	prospectLevelList = docs;
 });
 
-
-
-
-/**
- * Methods
- */
-societeSchema.methods.setVirtual = function(i18n) {
-	this.status = {};
+societeSchema.virtual('status')
+		.get(function() {
+	var res_status = {};
 
 	var status = this.Status;
 
 	if (statusList.values[status].label) {
-		this.status.id = status;
+		//console.log(this);
+		res_status.id = status;
 		//this.status.name = i18n.t("intervention." + statusList.values[status].label);
-		this.status.name = statusList.values[status].label;
-		this.status.css = statusList.values[status].cssClass;
+		res_status.name = statusList.values[status].label;
+		res_status.css = statusList.values[status].cssClass;
 	} else { // By default
-		this.status.id = status;
-		this.status.name = status;
-		this.status.css = "";
+		res_status.id = status;
+		res_status.name = status;
+		res_status.css = "";
 	}
+	return res_status;
 
-	this.prospectLevel = {};
+});
+
+societeSchema.virtual('prospectLevel')
+		.get(function() {
+	var prospectLevel = {};
 
 	var level = this.prospectlevel;
 
 	if (prospectLevelList.values[level].cssClass) {
-		this.prospectLevel.id = level;
-		this.prospectLevel.name = i18n.t("companies:" + level);
+		prospectLevel.id = level;
+//		prospectLevel.name = i18n.t("companies:" + level);
+		prospectLevel.name = i18n.t("companies:" + level);
 		//this.prospectLevel.name = prospectLevelList.values[level].label;
-		this.prospectLevel.css = prospectLevelList.values[level].cssClass;
+		prospectLevel.css = prospectLevelList.values[level].cssClass;
 	} else { // By default
-		this.prospectLevel.id = level;
-		this.prospectLevel.name = level;
-		this.prospectLevel.css = "";
+		prospectLevel.id = level;
+		prospectLevel.name = level;
+		prospectLevel.css = "";
 	}
-};
+
+	return prospectLevel;
+});
 
 mongoose.model('societe', societeSchema, 'Societe');

@@ -4,7 +4,7 @@
 			<h1>\{{societe.name}}</h1>
 			<!--<span class="valign-top tag glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span>-->
 		</hgroup>
-		<div class="with-padding">
+		<div class="with-padding" data-ng-init="init()">
 			<div class="columns">
 				<div class="four-columns twelve-columns-mobile">
 					<div class="boxed">
@@ -14,9 +14,9 @@
 							<tbody>
 								<tr>
 									<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-									<td><span class="blue h4" editable-text="societe.name" buttons="no" e-form="nameBtnForm" onaftersave="update()">
-											\{{societe.name}}
-										</span> <span class="icon-pencil grey" ng-click="nameBtnForm.$show()" ng-hide="nameBtnForm.$visible"></span>
+									<td><a href="#" class="blue h4" editable-text="societe.name" buttons="no" onaftersave="update()">
+											\{{societe.name || "Non defini"}}
+										</a>
 									</td>
 								</tr>
 								<tr>
@@ -29,11 +29,16 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
-									<td><span class="tag small glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
+									<td><span class="tag small glossy" data-ng-class="societe.status.css" editable-select="societe.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in Status.values">
+											\{{societe.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>
+									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Supplier'}}</th>
-									<td>\{{societe.fournisseur}}</td>
+									<td><a href="#" editable-select="societe.fournisseur" buttons="no" e-ng-options="s.id as s.label for s in fournisseur.values" onaftersave="update()">
+											\{{ showStatus('fournisseur') }}
+										</a>
+									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Address'}}</th>
@@ -51,11 +56,11 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'EMail'}}</th>
-									<td>\{{societe.email}}</td>
+									<td><a data-ng-href="mailto:\{{societe.email}}">\{{societe.email}}</a></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Web'}}</th>
-									<td>\{{societe.url}}</td>
+									<td><a data-ng-href="\{{societe.url}}">\{{societe.url}}</a></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'DateLastModification'}}</th>
@@ -164,12 +169,10 @@
 										<table class="simple-table">
 											<tbody>
 												<tr>
-													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
-													<td><span class="tag small glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
-												</tr>
-												<tr>
 													<th scope="row">{{t 'companies:ProspectLevelShort'}}</th>
-													<td><span class="tag small glossy" data-ng-class="societe.prospectLevel.css">\{{societe.prospectLevel.name}}</span></td>
+													<td><span class="tag small glossy" data-ng-class="societe.prospectLevel.css" editable-select="societe.prospectlevel" buttons="no" e-form="prospectlevelBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in prospectlevel.values">
+															\{{societe.prospectLevel.name}}</span> <span class="icon-pencil grey" ng-click="prospectlevelBtnForm.$show()" ng-hide="prospectlevelBtnForm.$visible"></span>
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'commercial:Commercial'}}</th>
@@ -177,7 +180,9 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'zonegeo'}}</th>
-													<td>\{{societe.zonegeo}}</td>
+													<td><a href="#" editable-text="societe.zonegeo" buttons="no" onaftersave="update()">
+															\{{societe.zonegeo || "Non défini"}}
+														</a></td>
 												</tr>
 
 												<tr>
@@ -187,30 +192,62 @@
 
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyType'}}</th>
-													<td>\{{societe.typent_id}}</td>
+													<td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in typent_id.values" onaftersave="update()">
+															\{{ showStatus('typent_id') }}
+														</a>
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Staff'}}</th>
-													<td>\{{societe.effectif_id}}</td>
+													<td><a href="#" editable-select="societe.effectif_id" buttons="no" e-ng-options="s.id as s.label for s in effectif_id.values" onaftersave="update()">
+															\{{ showStatus('effectif_id') }}
+														</a>
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:JuridicalStatus'}}</th>
-													<td>\{{societe.forme_juridique_code}}</td>
+													<td>
+														<a href="#" editable-select="societe.forme_juridique_code" buttons="no" e-ng-options="s.id as s.label for s in forme_juridique_code.values" onaftersave="update()">
+															\{{ showStatus('forme_juridique_code') }}
+														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Capital'}}</th>
-													<td>\{{societe.capital}}</td>
+													<td><a href="#" editable-text="societe.capital" buttons="no" onaftersave="update()">
+															\{{societe.capital || "Non défini"}}
+														</a></td>
 												</tr>
 												<tr>
-													<th scope="row">{{t 'companies:PriceLevel'}}</th>
-													<td>\{{societe.price_level}}</td>
+													<th scope="row">{{t 'companies:ProfId1FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof1" buttons="no" onaftersave="update()">
+															\{{societe.idprof1 || "Non défini"}}
+														</a></td>
 												</tr>
 												<tr>
-													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
-													<td>\{{societe.remise_client}}</td>
+													<th scope="row">{{t 'companies:ProfId2FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof2" buttons="no" onaftersave="update()">
+															\{{societe.idprof2 || "Non défini"}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProfId3FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof3" buttons="no" onaftersave="update()">
+															\{{societe.idprof3 || "Non défini"}}
+														</a></td>
+												</tr>
+												<!--<tr>
+													<th scope="row">{{t 'companies:ProfId4FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof4" buttons="no" onaftersave="update()">
+															\{{societe.idprof4 || "Aucun"}}
+														</a></td>
+												</tr>-->
+												<tr>
+													<th scope="row">{{t 'companies:ProfId5FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof5" buttons="no" onaftersave="update()">
+															\{{societe.idprof5 || "Non défini"}}
+														</a></td>
 												</tr>
 
-												ProfId - idprof
 
 
 											</tbody>
@@ -223,21 +260,13 @@
 						</tab>
 						<tab>
 							<tab-heading>
-								<span class="icon-tools">Comptabilité</span>
+								<span class="icon-tools">Facturation</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
 								<div class="columns">
 									<div class="six-columns">
 										<table class="simple-table">
 											<tbody>
-												<tr>
-													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
-													<td><span class="tag small glossy"data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:Supplier'}}</th>
-													<td>\{{societe.fournisseur}}</td>
-												</tr>
 												<tr>
 													<th scope="row">{{t 'compta:CustomerAccountancyCode'}}</th>
 													<td>\{{societe.customeraccountancycode}}</td>
@@ -263,6 +292,14 @@
 													<td>\{{societe.mode_reglement}}</td>
 												</tr>
 												<tr>
+													<th scope="row">{{t 'companies:PriceLevel'}}</th>
+													<td>\{{societe.price_level}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
+													<td>\{{societe.remise_client}}</td>
+												</tr>
+												<tr>
 													<th scope="row">{{t 'banks:RIB'}}</th>
 													<td>\{{societe.iban}}</td>
 												</tr>
@@ -276,7 +313,7 @@
 								</div>
 							</div>
 						</tab>
-						<tab>
+						<tab disabled="societe.fournisseur=='NO'">
 							<tab-heading>
 								<span class="icon-box">Fournisseur</span>
 							</tab-heading>
@@ -285,11 +322,6 @@
 									<div class="six-columns">
 										<table class="simple-table">
 											<tbody>
-
-												<tr>
-													<th scope="row">{{t 'companies:Supplier'}}</th>
-													<td>\{{societe.fournisseur}}</td>
-												</tr>
 												<tr>
 													<th scope="row">{{t 'Categories'}}</th>
 													<td>\{{societe.Tag}}</td>

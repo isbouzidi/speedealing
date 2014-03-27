@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
 
@@ -10,17 +10,26 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
 
-		$scope.create = function() {
-			var societe = new Societe({
-				title: this.title,
-				content: this.content
-			});
-			societe.$save(function(response) {
-				$location.path("societe/" + response._id);
-			});
+		$scope.init = function() {
+			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code"];
 
-			this.title = "";
-			this.content = "";
+			angular.forEach(fields, function(field) {
+				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+						field: field
+					}
+				}).success(function(data, status) {
+					$scope[field] = data;
+					//console.log(data);
+				});
+			});
+		};
+
+		$scope.showStatus = function(idx) {
+			if(!($scope[idx] && $scope.societe[idx]))
+				return;
+			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
+			
+			return ($scope.societe[idx] && selected.length) ? selected[0].label : 'Non défini';
 		};
 
 		$scope.remove = function(societe) {
@@ -277,7 +286,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				//console.log(data);
 				$scope.societe.Status = data.default;
 			});
-			
+
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "fournisseur"
 				}
@@ -286,7 +295,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				//console.log(data);
 				$scope.societe.fournisseur = "NO";
 			});
-			
+
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "prospectlevel"
 				}
@@ -295,7 +304,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				//console.log(data);
 				$scope.societe.prospectlevel = data.default;
 			});
-			
+
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "typent_id"
 				}
@@ -304,7 +313,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				//console.log(data);
 				$scope.societe.typent_id = data.default;
 			});
-			
+
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "effectif_id"
 				}
@@ -313,12 +322,12 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				//console.log(data);
 				$scope.societe.effectif_id = data.default;
 			});
-			
+
 			$scope.societe.commercial_id = {
-				id : Global.user._id,
-				name : Global.user.firstname + " " + Global.user.lastname
+				id: Global.user._id,
+				name: Global.user.firstname + " " + Global.user.lastname
 			}
-			
+
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "forme_juridique_code"
 				}
@@ -327,11 +336,11 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				//console.log(data);
 				$scope.societe.forme_juridique_code = data.default;
 			});
-			
+
 			$scope.societe.price_level = "BASE";
 			$scope.societe.capital = 0;
 		};
-		
+
 		$scope.create = function() {
 			var societe = new Societes(this.societe);
 			societe.$save(function(response) {
@@ -341,7 +350,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			});
 		};
 
-		
+
 		$scope.userAutoComplete = function(val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
@@ -354,7 +363,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				return res.data
 			});
 		};
-		
+
 		$scope.priceLevelAutoComplete = function(val) {
 			return $http.post('api/product/price_level/autocomplete', {
 				take: '5',
@@ -395,7 +404,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				}
 				if ((somme % 10) == 0) {
 					isValide = true; // Si la somme est un multiple de 10 alors le SIRET est valide 
-					$scope.societe.idprof1 = siret.substr(0,9);
+					$scope.societe.idprof1 = siret.substr(0, 9);
 				} else {
 					isValide = false;
 				}
@@ -411,7 +420,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 						$scope.siretFound = data;
 					}
 				});
-			else 
+			else
 				$scope.validSiret = isValide;
 		};
 	}]);
