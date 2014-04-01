@@ -3,91 +3,27 @@
 		<h1>Liste des absences et des congés</h1>
 	</hgroup>
 
-	<div class="with-padding">
-		<div class="margin-bottom">
-			<!--<p class="button-height block-label">
-				<label class="label" for="ref">{{t 'Search'}} : </label>
-				<input class="input" type="text" id="ref" />
-			</p>-->
+	<div class="with-padding" data-ng-init="find()">
+		
+		<div class="table-header silver-gradient glossy button-height">
+			<div class="row">
+				<div class="col-sm-4">
+					<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
+				</div>
+				<div class="col-sm-4">
+					{{t 'Mode'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
+				</div>
+				<div class="col-sm-4">
+					<div class="float-right">
+						{{t 'Search'}} <input type="text" data-ng-model="filterOptions.filterText" class="input small mid-margin-left">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gridStyle"  data-ng-grid="gridOptions" ng-style="style(170)" resize></div>
+		<div class="table-footer silver-gradient">
+			\{{count}} ligne(s)
 		</div>
 		
-		<div kendo-grid k-data-source="dataSource" k-columns='[
-			 {"field": "user", "filterable": true, "title": "Salarié", "editor": userEditor, "template": "#=user.name#"},
-			 {"field": "datec", "filterable": false, "title": "Date demande", format: "{0:dd/MM/yyyy}"},
-			 {"field": "dateStart", "title": "Date debut", "editor": dateTimeEditor, format: "{0:dd/MM/yyyy HH:mm}", filterable: {extra: true}},
-			 {"field": "dateEnd", "title": "Date de fin",  "editor": dateTimeEditor, format: "{0:dd/MM/yyyy HH:mm}", filterable: {extra: true}},
-			 {"field": "nbDay", "title": "Nombre de jours", format: "{0:n1}"},
-			 {"field": "Status", "title": "Etat", "width": "130px",
-			 "editor": statusDropDownEditor, "filterable": {"field": "Status.id", "ui": statusFilter}, "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
-			 {"command": [{"name": "edit", "text": {"edit": "Editer", "update": "Enregistrer", "cancel": "Annuler"}}], "title": "&nbsp;", "width": "90px"}]'
-			 k-pageable='{ "refresh": true, "pageSizes": [5, 10, 20, 50, 100, 500], "buttonCount": 5}'
-			 k-sortable="true" k-"filterable"="true" k-groupable="false" k-scrollable="false"
-			 k-toolbar='[{
-			 "name": "create",
-			 "text": "Nouvelle absence",
-			 "className": "k-button k-button-icontext k-grid-add button"
-			 }]'
-			 k-editable='{
-			 "mode": "popup",
-			 "window": {
-			 "width": "400px"
-			 }
-			 }'
-			 ></div>
-		<!--<script>
-			$(document).ready(function() {
-
-
-				var grid = $("#grid").kendoGrid({
-					
-					columns: [
-						{"field": "ref", reorderable: true, "filterable": true, "title": "reference", "editor": refDropDown"editor"},
-						{"field": "label", reorderable: false, "filterable": false, "title": "Designation", "editor": textarea"editor"},
-						{"field": "type", reorderable: false, "filterable": false, "title": "Type", "editor": typeDropDown"editor", "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
-						{"field": "tms", "title": "Date de modification", hidden: false, "format": "{0:dd/MM/yyyy}", "filterable": {
-								ui: "datepicker"
-							}
-						},
-						{"field": "price_level", "title": "Liste de prix", "editor": priceLevelDropDown"editor"},
-						{"field": "pu_ht", "filterable": true, "title": "Prix HT", "format": "{0:c3}", "width": "60px"},
-						{"field": "qtyMin", "filterable": true, "title": "Qte Min", "format": "{0:n0}", "width": "60px"},
-						{"field": "tva_tx", "title": "TVA", "format": "{0:p2}", "template": "#=tva_tx# %"},
-						{"field": "Status_ID", "title": "Etat", "width": "100px",
-							"editor": statusDropDown"editor", "template": "<small class=\"tag #=Status.css# glossy \">#=Status.name#</small>"},
-						{"field": "ref_customer_code", "title": "Ref Fact."}
-						//{"field": "entity", "filterable": false, "title": "Atelier", hidden: true, "width": "100px", "editor": entityDropDown"editor"},
-						//{"field": "notes", "filterable": false, "title": "Notes", hidden: true, "editor": textarea"editor"},
-						//	{command: [{name: "edit", text: {edit: "Editer", update: "Enregistrer", cancel: "Annuler"}}/*, {name: "destroy", text: "Supp."}*/], "title": "&nbsp;", "width": "90px"}
-					]
-				});
-
-				var autocompleteSymbol = $("#ref").kendoAutoComplete({
-					dataText"field": "name",
-					//dataValue"field": "Value"field"",
-					dataSource: {
-						serverFiltering: true,
-						serverPaging: true,
-						pageSize: 5,
-						transport: {
-							read: {
-								url: "api/product/ref/autocomplete",
-								type: "POST",
-								dataType: "json"
-							}
-						}
-					},
-					change: function() {
-						var value = this.value();
-
-						if (value) {
-							grid.data("kendoGrid").dataSource.filter({"field": "ref", operator: "contains", value: value});
-						} else {
-							grid.data("kendoGrid").dataSource.filter({});
-						}
-					}
-				});
-			});
-		</script>-->
-
 	</div>
 </section>

@@ -150,9 +150,63 @@ var UserAbsenceSchema = new Schema({
 	dateStart: Date,
 	dateEnd: Date,
 	nbDay: Number,
+	entity: String,
+	closed: {type: Boolean, default: false}, // Check true if employee came back
 	datec: {type: Date}
+}, {
+	toObject: {virtuals: true},
+	toJSON: {virtuals: true}
 });
 
 UserAbsenceSchema.plugin(timestamps);
+
+var statusAbsenceList = {
+	"enable": true,
+	"default": "NOTJUSTIFIED",
+	"values": {
+		"REQUEST": {
+			"enable": false,
+			"label": "Demande",
+			"cssClass": "blue-gradient"},
+		"NOTJUSTIFIED": {
+			"enable": true,
+			"label": "Absence injustifiée",
+			"cssClass": "red-gradient"},
+		"HOLIDAY": {
+			"enable": true,
+			"label": "En congés",
+			"cssClass": "green-gradient"},
+		"ILL": {
+			"enable": true,
+			"label": "Absence maladie",
+			"cssClass": "orange-gradient"},
+		"REFUSED": {
+			"enable": false,
+			"label": "Refusé",
+			"cssClass": "red-gradient"}
+	}
+};
+
+UserAbsenceSchema.virtual('status')
+		.get(function() {
+	var res_status = {};
+
+	var status = this.Status;
+
+	if (statusAbsenceList.values[status].label) {
+		//console.log(this);
+		res_status.id = status;
+		//this.status.name = i18n.t("intervention." + statusList.values[status].label);
+		res_status.name = statusAbsenceList.values[status].label;
+		res_status.css = statusAbsenceList.values[status].cssClass;
+	} else { // By default
+		res_status.id = status;
+		res_status.name = status;
+		res_status.css = "";
+	}
+	return res_status;
+
+});
+
 
 mongoose.model('userAbsence', UserAbsenceSchema, 'Absence');

@@ -118,17 +118,9 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/user/connection', auth.requiresLogin, object.connection);
 
-	app.get('/api/user/absence', auth.requiresLogin, function(req, res) {
-		absence.read(req, res);
-	});
-
-	app.post('/api/user/absence', auth.requiresLogin, function(req, res) {
-		absence.create(req, res);
-	});
-
-	app.put('/api/user/absence', auth.requiresLogin, function(req, res) {
-		absence.update(req, res);
-	});
+	app.get('/api/user/absence', auth.requiresLogin, absence.read);
+	app.post('/api/user/absence', auth.requiresLogin, absence.create);
+	app.put('/api/user/absence/:id', auth.requiresLogin, absence.update);
 
 	app.get('/api/user/absence/status/select', auth.requiresLogin, function(req, res) {
 		var result = [];
@@ -206,65 +198,58 @@ function Absence() {
 
 Absence.prototype = {
 	create: function(req, res) {
-		var obj = JSON.parse(req.body.models);
+		var obj = req.body;
 
-		//console.log(obj[0]);
+		console.log(obj);
 
-		delete obj[0]._id; // new tuple
+		delete obj._id; // new tuple
 
-		var doc = new UserAbsenceModel(obj[0]);
+		var doc = new UserAbsenceModel(obj);
 
-		doc.Status = obj[0].Status.id;
+		doc.datec = new Date();
+		doc.author.id = req.user._id;
+		doc.author.name = req.user.name;
 
 		doc.save(function(err, doc) {
 			if (err)
 				console.log(err);
-			obj[0]._id = doc._id;
-			res.send(200, obj);
+
+			res.send(200, doc);
 		});
 	},
 	read: function(req, res) {
-		var status_list = this.fk_extrafields.fields.StatusAbsence;
+		var query = {};
+		console.log(req.query);
+		if (req.query.query) {
+			if (req.query.query == 'NOW')
+				query.closed = false;
+			else
+				query.closed = true;
+		}
 
-		UserAbsenceModel.find({}, function(err, doc) {
+		query.entity = req.query.entity;
+
+		UserAbsenceModel.find(query, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
 				return;
 			}
-			//console.log(doc);
-			for (var i in doc) {
-				var status = {};
-
-				status.id = doc[i].Status;
-				if (status_list.values[status.id]) {
-					status.name = req.i18n.t(status_list.values[status.id].label);
-					status.css = status_list.values[status.id].cssClass;
-				} else { // Value not present in extrafield
-					status.name = status.id;
-					status.css = "";
-				}
-
-				doc[i].Status = status;
-			}
 			res.send(200, doc);
 		});
 	},
 	update: function(req, res) {
-		var obj = JSON.parse(req.body.models);
+		var obj = req.body;
+		//console.log(obj);
 
-		UserAbsenceModel.findOne({_id: obj[0]._id}, function(err, doc) {
+		UserAbsenceModel.findOne({_id: req.params.id}, function(err, doc) {
 			if (err)
 				console.log(err);
 
-			doc = _.extend(doc, obj[0]);
+			doc = _.extend(doc, obj);
 
-			doc.Status = doc.Status.id;
-
-			doc.save(function(err) {
-
-				doc.Status = obj[0].Status;
-				res.send(200, [doc]);
+			doc.save(function(err, doc) {
+				res.send(200, doc);
 			});
 		});
 	},

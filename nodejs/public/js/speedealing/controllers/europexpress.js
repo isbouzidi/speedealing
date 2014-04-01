@@ -1786,7 +1786,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				{field: 'billingMode', displayName: 'Mode fact.', enableCellEdit: false},
 				{field: 'label', displayName: 'Description', enableCellEdit: false},
 				{field: 'qty', displayName: 'Quantité total', cellClass: "align-right", enableCellEdit: false},
-				{field: 'qtyAdd', displayName: 'Ajouter', enableCellEdit: true, editableCellTemplate: '<input type="number" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>', }
+				{field: 'qtyAdd', displayName: 'Ajouter', enableCellEdit: true, editableCellTemplate: '<input type="number" step="0.01" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>', }
 				//	{field: 'Status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
 				//	{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
 				//	{field: 'total_soustraitant', width: "20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}

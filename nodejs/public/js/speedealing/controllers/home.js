@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', 'Global', 'pageTitle', function($scope, $location, $http, Global, pageTitle) {
+angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', 'Global', 'pageTitle', 'Users', function($scope, $location, $http, Global, pageTitle, Users) {
 		$scope.global = Global;
 
 		pageTitle.setTitle('Accueil');
@@ -133,5 +133,21 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 			series: []
 		};
 
+		$scope.findAbsences = function() {
+			Users.absences.query({query: 'NOW', entity: Global.user.entity}, function(absences) {
+				$scope.absences = absences;
+			});
+		};
+		
+		$scope.absenceAddTick = function(idx) {
+			$scope.absences[idx].closed = true;
+			$scope.absences[idx].$update();
+			$scope.absences.splice(idx, 1);
+		};
+		
+		$scope.late= function(date) {
+			if(new Date(date) <= new Date)
+				return "red";
+		};
 
 	}]);

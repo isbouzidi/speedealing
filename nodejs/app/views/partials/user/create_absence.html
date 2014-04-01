@@ -1,0 +1,47 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">{{t 'users:NewAbsence'}}</h3>
+
+	<fieldset class="wizard-fieldset fields-list active">
+
+		<div class="field-block">
+			<p>Bienvenue sur l'interface de saisie des dates de congés et des absences.</p>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="name"><b>{{t 'users:Employee'}}</b></label>
+			<input required type="text" data-ng-model="absence.user" typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="name" class="input" autocomplete="off">
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="dateStart"><b>Date de début</b></label>
+			<input kendo-date-time-picker data-ng-model="dateStart" k-on-change="absence.dateStart = kendoEvent.sender._value;" id="dateStart" class="input" />		
+			<small class='input-info'>Date du 1er jour du congés. ex 8/03/2014 8h00</small>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="dateEnd"><b>Date de fin</b></label>
+			<input kendo-date-time-picker data-ng-model="dateEnd" k-on-change="absence.dateEnd = kendoEvent.sender._value;" id="dateStart" class="input" />
+			<small class='input-info'>Date du dernier jour du congés. ex 18/03/2014 18h00</small>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="nbDay"><b>Nombre de jours</b></label>
+			<input type='number' min='0' step='0.1' class="input" id="nbDay" data-ng-model="absence.nbDay" />
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="status"><b>Type</b></label>
+			<select class="form-control" id="status" data-ng-model="absence.Status" data-ng-options="c.id as c.name for c in status"></select>
+		</div>
+
+		<div class="field-block button-height wizard-controls align-right">
+			<button type="submit" data-ng-disabled='!(absence.nbDay > 0 && absence.user && absence.user.id && absence.dateStart && absence.dateEnd && absence.Status)' class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				{{t 'Add'}}
+			</button>
+		</div>
+
+	</fieldset>
+</form>

@@ -50,7 +50,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 		};
 
 		/*
-		 * NG-GRID for societe list
+		 * NG-GRID for order list
 		 */
 
 		$scope.filterOptions = {
@@ -58,7 +58,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			useExternalFilter: false
 		};
 
-		$scope.gridOptionsSociete = {
+		$scope.gridOptions = {
 			data: 'orders',
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptions,
