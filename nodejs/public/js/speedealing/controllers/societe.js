@@ -61,6 +61,36 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				Id: $routeParams.id
 			}, function(societe) {
 				$scope.societe = societe;
+				
+				$http({method: 'GET', url: 'api/ticket', params:
+							{
+								find: {"linked.id": societe._id},
+								fields: "name ref updatedAt percentage Status task"
+							}
+				}).success(function(data, status) {
+					if (status == 200)
+						$scope.tickets = data;
+
+					$scope.countTicket = $scope.tickets.length;
+				});
+
+				$http({method: 'GET', url: 'api/europexpress/buy', params:
+							{
+								find: {"vehicule.id": societe._id},
+								fields: "title ref datec Status total_ht"
+							}
+				}).success(function(data, status) {
+					if (status == 200)
+						$scope.requestBuy = data;
+
+					$scope.TotalBuy = 0;
+					angular.forEach($scope.requestBuy, function(row) {
+						if (row.Status.id == "PAYED")
+							$scope.TotalBuy += row.total_ht;
+					});
+					$scope.countBuy = $scope.requestBuy.length;
+				});
+				
 				pageTitle.setTitle('Fiche ' + $scope.societe.name);
 				$scope.checklist = 0;
 				for (var i in societe.checklist)
@@ -333,6 +363,54 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				return iconsFilesList["default"];
 
 			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
+		};
+
+		/*
+		 * NG-GRID for ticket list
+		 */
+
+		$scope.filterOptionsTicket = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsTicket = {
+			data: 'tickets',
+			enableRowSelection: false,
+			sortInfo: {fields: ["updatedAt"], directions: ["desc"]},
+			filterOptions: $scope.filterOptionsTicket,
+			i18n: 'fr',
+			columnDefs: [
+				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-ticket"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Id'},
+				{field: 'percentage', displayName: 'Etat', cellTemplate: '<div class="ngCellText"><progressbar class="progress-striped thin" value="row.getProperty(col.field)" type="success"></progressbar></div>'},
+				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
+			]
+		};
+
+		/*
+		 * NG-GRID for ticket list
+		 */
+
+		$scope.filterOptionsBuy = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsBuyer = {
+			data: 'requestBuy',
+			enableRowSelection: false,
+			sortInfo: {fields: ["ref"], directions: ["desc"]},
+			filterOptions: $scope.filterOptionsBuy,
+			i18n: 'fr',
+			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
+			columnDefs: [
+				{field: 'title', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Id'},
+				{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+				{field: 'datec', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+			]
 		};
 
 
