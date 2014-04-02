@@ -25,10 +25,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 		$scope.showStatus = function(idx) {
-			if(!($scope[idx] && $scope.societe[idx]))
+			if (!($scope[idx] && $scope.societe[idx]))
 				return;
 			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
-			
+
 			return ($scope.societe[idx] && selected.length) ? selected[0].label : 'Non défini';
 		};
 
@@ -40,8 +40,12 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		$scope.update = function() {
 			var societe = $scope.societe;
 
-			societe.$update(function() {
+			societe.$update(function(response) {
 				pageTitle.setTitle('Fiche ' + societe.name);
+				$scope.checklist = 0;
+				for (var i in response.checklist)
+					if (response.checklist[i])
+						$scope.checklist++;
 			});
 		};
 
@@ -58,6 +62,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			}, function(societe) {
 				$scope.societe = societe;
 				pageTitle.setTitle('Fiche ' + $scope.societe.name);
+				$scope.checklist = 0;
+				for (var i in societe.checklist)
+					if (societe.checklist[i])
+						$scope.checklist++;
 			});
 		};
 
@@ -243,6 +251,88 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$scope.countSocietes++;
 			}, function() {
 			});
+		};
+
+		$scope.addNote = function() {
+			if (!this.note)
+				return;
+
+			var note = {};
+			note.note = this.note;
+			note.datec = new Date();
+			note.author = {}
+			note.author.id = Global.user._id;
+			note.author.name = Global.user.firstname + " " + Global.user.lastname;
+
+			if (!$scope.societe.notes)
+				$scope.societe.notes = [];
+
+			$scope.societe.notes.push(note);
+			$scope.update();
+			this.note = "";
+		};
+		
+		var iconsFilesList = {};
+
+		/**
+		 * Get fileType for icon
+		 */
+		$scope.getFileTypes = function() {
+			$http({method: 'GET', url: 'dict/filesIcons'
+			}).
+					success(function(data, status) {
+				if (status == 200) {
+					iconsFilesList = data;
+				}
+			});
+		};
+		
+		$scope.onFileSelect = function($files) {
+			//$files: an array of files selected, each file has name, size, and type.
+			for (var i = 0; i < $files.length; i++) {
+				var file = $files[i];
+				if ($scope.vehicule)
+					$scope.upload = $upload.upload({
+						url: 'api/europexpress/vehicules/file/' + $scope.vehicule._id,
+						method: 'POST',
+						// headers: {'headerKey': 'headerValue'},
+						// withCredential: true,
+						data: {myObj: $scope.myModelObj},
+						file: file,
+						// file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
+						/* set file formData name for 'Content-Desposition' header. Default: 'file' */
+						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
+						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
+						//formDataAppender: function(formData, key, val){} 
+					}).progress(function(evt) {
+						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+					}).success(function(data, status, headers, config) {
+						// file is uploaded successfully
+						//$scope.myFiles = "";
+						//console.log(data);
+						if (!data.update) // if not file update, add file to files[]
+							$scope.vehicule.files.push(data.file);
+					});
+				//.error(...)
+				//.then(success, error, progress); 
+			}
+		};
+
+		$scope.suppressFile = function(id, fileName, idx) {
+			$http({method: 'DELETE', url: 'api/europexpress/vehicules/file/' + id + '/' + fileName
+			}).
+					success(function(data, status) {
+				if (status == 200) {
+					$scope.vehicule.files.splice(idx, 1);
+				}
+			});
+		};
+
+		$scope.fileType = function(name) {
+			if (typeof iconsFilesList[name.substr(name.lastIndexOf(".") + 1)] == 'undefined')
+				return iconsFilesList["default"];
+
+			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
 		};
 
 

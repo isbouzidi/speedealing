@@ -49,7 +49,14 @@ var societeSchema = new Schema({
 	mode_reglement: String,
 	zonegeo: String,
 	Tag: [String],
-	notes: String,
+	notes: [{
+			author: {
+				id: {type: String, ref: 'User'},
+				name: String
+			},
+			datec: Date,
+			note: String
+		}],
 	public_notes: String,
 	code_compta: String,
 	code_compta_fournisseur: String,
@@ -67,7 +74,8 @@ var societeSchema = new Schema({
 	idprof3: String,
 	idprof4: String,
 	idprof5: String,
-	idprof6: String
+	idprof6: String,
+	checklist: mongoose.Schema.Types.Mixed
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}

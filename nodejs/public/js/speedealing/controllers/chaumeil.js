@@ -161,6 +161,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 			for (var i in this.order.bl) {
 				var note = "";
+				note += "Numero de DF (Uniquement pour la facturation) : " + this.order.optional.numDF + "<br/><br/>";
 				note += "Adresse de livraison : <br/><p>" + this.order.bl[i].name + "<br/>";
 				note += this.order.bl[i].contact + "<br/>"
 				note += this.order.bl[i].address + "<br/>";

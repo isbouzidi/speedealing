@@ -72,8 +72,8 @@
 
 					<h5 class="green underline">Les dernieres notes</h5>
 
-					<div class="scroll" style="height:60px">
-						<div data-ng-repeat="vnote in vehicule.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+					<div class="scroll" style="height:120px">
+						<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
 							<div class="with-small-padding silver-gradient no-margin-top">
 								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -335,7 +335,7 @@
 						</tab>
 						<tab>
 							<tab-heading>
-								<span class="icon-tick">Checklist<span class="count right">\{{checklist}}</span></span>
+								<span class="icon-tick">Checklist<span ng-show='checklist' class="count right">\{{checklist}}</span></span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
 								<div class="columns">
@@ -344,7 +344,7 @@
 											<tbody>
 												<tr>
 													<th width="40%" scope="row">KBIS</th>
-													<td><input type="checkbox" data-ng-model="vehicule.checklist.carteGrise" data-ng-checked="vehicule.checklist.carteGrise" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="societe.checklist.KBIS" data-ng-checked="societe.checklist.KBIS" data-ng-change="update()" />
 													</td>
 												</tr>
 
@@ -377,7 +377,7 @@
 
 									<div class="six-columns">
 										<div class="scroll" style="height:360px">
-											<div data-ng-repeat="vnote in vehicule.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+											<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
 													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -426,7 +426,7 @@
 											Dossier public
 										</a>
 									</li>-->
-									<li data-ng-repeat="file in vehicule.files">
+									<li data-ng-repeat="file in societe.files">
 										<span class="icon" data-ng-class="fileType(file.name)"></span>
 										<div class="controls">
 											<span class="button-group compact children-tooltip">
