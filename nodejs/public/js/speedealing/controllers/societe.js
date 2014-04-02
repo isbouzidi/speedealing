@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
 
@@ -271,7 +271,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			$scope.update();
 			this.note = "";
 		};
-		
+
 		var iconsFilesList = {};
 
 		/**
@@ -286,14 +286,14 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				}
 			});
 		};
-		
+
 		$scope.onFileSelect = function($files) {
 			//$files: an array of files selected, each file has name, size, and type.
 			for (var i = 0; i < $files.length; i++) {
 				var file = $files[i];
-				if ($scope.vehicule)
+				if ($scope.societe)
 					$scope.upload = $upload.upload({
-						url: 'api/europexpress/vehicules/file/' + $scope.vehicule._id,
+						url: 'api/societe/file/' + $scope.societe._id,
 						method: 'POST',
 						// headers: {'headerKey': 'headerValue'},
 						// withCredential: true,
@@ -311,7 +311,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 						//$scope.myFiles = "";
 						//console.log(data);
 						if (!data.update) // if not file update, add file to files[]
-							$scope.vehicule.files.push(data.file);
+							$scope.societe.files.push(data.file);
 					});
 				//.error(...)
 				//.then(success, error, progress); 
@@ -319,11 +319,11 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 		$scope.suppressFile = function(id, fileName, idx) {
-			$http({method: 'DELETE', url: 'api/europexpress/vehicules/file/' + id + '/' + fileName
+			$http({method: 'DELETE', url: 'api/societe/file/' + id + '/' + fileName
 			}).
 					success(function(data, status) {
 				if (status == 200) {
-					$scope.vehicule.files.splice(idx, 1);
+					$scope.societe.files.splice(idx, 1);
 				}
 			});
 		};

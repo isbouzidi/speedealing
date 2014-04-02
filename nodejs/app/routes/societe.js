@@ -164,11 +164,11 @@ module.exports = function(app, passport, auth) {
 		if (req.files && id) {
 			//console.log(req.files);
 
-			gridfs.addFile(SocieteModel, id, req.files.files, function(err) {
+			gridfs.addFile(SocieteModel, id, req.files.file, function(err, result, file, update) {
 				if (err)
-					res.send(500, err);
-				else
-					res.send(200, {status: "ok"});
+					return res.send(500, err);
+
+				return res.send(200, {status: "ok", file: file, update: update});
 			});
 		} else
 			res.send(500, "Error in request file");
@@ -195,14 +195,14 @@ module.exports = function(app, passport, auth) {
 		}
 
 	});
-
-	app.del('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
-		//console.log(req.body);
+	
+	app.del('/api/societe/file/:Id/:fileNames', auth.requiresLogin, function(req, res) {
+		console.log(req.body);
 		var id = req.params.Id;
 		//console.log(id);
 
-		if (req.body.fileNames && id) {
-			gridfs.delFile(SocieteModel, id, req.body.fileNames, function(err) {
+		if (req.params.fileNames && id) {
+			gridfs.delFile(SocieteModel, id, req.params.fileNames, function(err) {
 				if (err)
 					res.send(500, err);
 				else

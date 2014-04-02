@@ -48,19 +48,21 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Phone'}}</th>
-									<td >\{{societe.phone}}</td>
+									<td ><span editable-text="societe.phone" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone || "Non défini"}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Fax'}}</th>
-									<td>\{{societe.fax}}</td>
+									<td><span editable-text="societe.fax" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax || "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
-									<th scope="row">{{t 'EMail'}}</th>
-									<td><a data-ng-href="mailto:\{{societe.email}}">\{{societe.email}}</a></td>
+									<th scope="row">{{t 'EMail'}}</th> 
+									<td><a data-ng-href="mailto:\{{societe.email}}" target="_blank" editable-text="societe.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{societe.email}}</a>
+										<span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Web'}}</th>
-									<td><a data-ng-href="\{{societe.url}}">\{{societe.url}}</a></td>
+									<td><a data-ng-href="\{{societe.url}}" target="_blank" editable-text="societe.url" buttons="no" e-form="urlBtnForm" onaftersave="update()">\{{societe.url}}</a>
+										<span class="icon-pencil grey" ng-click="urlBtnForm.$show()" ng-hide="urlBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'DateLastModification'}}</th>
@@ -430,12 +432,12 @@
 										<span class="icon" data-ng-class="fileType(file.name)"></span>
 										<div class="controls">
 											<span class="button-group compact children-tooltip">
-												<a data-ng-href="api/europexpress/vehicules/file/\{{vehicule._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
-												<a data-ng-href="api/europexpress/vehicules/file/\{{vehicule._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
-												<button data-ng-click="suppressFile(vehicule._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
+												<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
+												<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
+												<button data-ng-click="suppressFile(societe._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
 											</span>
 										</div>
-										<a data-ng-href="api/europexpress/vehicules/file/\{{vehicule._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename || file.name}}</a>
+										<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename || file.name}}</a>
 									</li>
 								</ul>
 							</div>
