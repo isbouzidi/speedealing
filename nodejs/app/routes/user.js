@@ -221,7 +221,9 @@ Absence.prototype = {
 		var query = {};
 		console.log(req.query);
 		if (req.query.query) {
-			if (req.query.query != 'NOW')
+			if (req.query.query == 'NOW')
+				query.closed = false;
+			else
 				query.closed = true;
 		}
 
