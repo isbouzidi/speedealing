@@ -38,6 +38,14 @@ sequenceSchema.statics = {
 			return cb(numberFormat(doc.seq, length)); // format PROV return 000440
 		});
 	},
+	incCpt: function(name, cb) {
+		this.findByIdAndUpdate(name, {$inc: {seq: 1}}, {upsert: true}, function(err, doc) {
+			if (err)
+				console.log(err);
+
+			return cb(doc.seq); // format T return 440
+		});
+	},
 	incBarCode: function(name, length, cb) {
 		this.findByIdAndUpdate(name, {$inc: {seq: 1}}, {upsert: true}, function(err, doc) {
 			if (err)

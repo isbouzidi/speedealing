@@ -51,8 +51,8 @@ ticketSchema.plugin(gridfs.pluginGridFs, {root: 'Ticket'});
 ticketSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incNumber("T", function(seq) {
-			console.log(seq);
+		SeqModel.incCpt("T", function(seq) {
+			//console.log(seq);
 			self.ref = seq;
 			next();
 		});
