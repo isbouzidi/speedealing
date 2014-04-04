@@ -25,10 +25,10 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
 				$scope.tournees = tournees;
 				$scope.cpt = $scope.tournees.length;
-
+				
 				// somme des heures Supp de la semaine
 				for (var i = 0; i < $scope.cpt; i++)
-					$scope.hsupp += tournees[i].hSupp;
+						$scope.hsupp += tournees[i].hSupp;
 			});
 		};
 
@@ -120,16 +120,16 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				//$route.reload();
 				//$location.path('articles/' + article._id);
 				$scope.showEdit = {};
-				for(var i=0; i<$scope.tournees.length; i++) {
+				for (var i = 0; i < $scope.tournees.length; i++) {
 					//console.log($scope.tournees[i]);
-					for(var j=0; j< $scope.tournees[i].details.length;j++){
-						if($scope.tournees[i].details[j] && doc._id == $scope.tournees[i].details[j]._id)
+					for (var j = 0; j < $scope.tournees[i].details.length; j++) {
+						if ($scope.tournees[i].details[j] && doc._id == $scope.tournees[i].details[j]._id)
 							$scope.tournees[i].details[j] = doc;
 						//console.log(day);
 					}
 				}
-				
-				
+
+
 			});
 		};
 
@@ -664,8 +664,8 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 		$scope.calculPrice = function() {
 			if ($scope.course.type.id !== "MESSAGERIE")
 				return;
-			
-			if($scope.course.total_soustraitant == null)
+
+			if ($scope.course.total_soustraitant == null)
 				$scope.course.total_soustraitant = 0;
 
 			if (!$scope.course.poids || !$scope.course.to.zip)
@@ -1730,7 +1730,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 
 			var d = new Date();
 
-			if(d.getMonth()+1 != parseInt($routeParams.id1)) { // ce n'est pas dans le meme mois
+			if (d.getMonth() + 1 != parseInt($routeParams.id1)) { // ce n'est pas dans le meme mois
 				// on utilise alors le dernier jour du mois
 				d = new Date($routeParams.id2, $routeParams.id1, 0);
 			}
