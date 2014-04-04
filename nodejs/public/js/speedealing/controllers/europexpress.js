@@ -15,7 +15,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 
 			return d;
 
-		}
+		};
 
 		$scope.find = function() {
 			if ($routeParams.id1 == null)
@@ -25,10 +25,20 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
 				$scope.tournees = tournees;
 				$scope.cpt = $scope.tournees.length;
-				
+
 				// somme des heures Supp de la semaine
 				for (var i = 0; i < $scope.cpt; i++)
-						$scope.hsupp += tournees[i].hSupp;
+					$scope.hsupp += tournees[i].hSupp;
+			});
+		};
+
+		$scope.createWeek = function() {
+			$http({method: 'POST', url: 'api/europexpress/planning', data: {
+					year: $routeParams.id2,
+					week: $routeParams.id1}
+			}).
+					success(function(data, status) {
+				$scope.find();
 			});
 		};
 
