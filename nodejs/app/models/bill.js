@@ -117,10 +117,11 @@ billSchema.methods = {
 	 */
 	setNumber: function() {
 		var self = this;
-		SeqModel.inc("FA", function(seq) {
-			//console.log(seq);
-			self.ref = "FA" + seq;
-		});
+		if (this.ref.substr(0, 4) == "PROV")
+			SeqModel.inc("FA", function(seq) {
+				//console.log(seq);
+				self.ref = "FA" + seq;
+			});
 	}
 }
 
