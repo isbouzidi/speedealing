@@ -116,9 +116,10 @@ billSchema.methods = {
 	 * @api public
 	 */
 	setNumber: function() {
-		return SeqModel.inc("FA", function(seq) {
+		var self = this;
+		SeqModel.inc("FA", function(seq) {
 			//console.log(seq);
-			return "FA" + seq;
+			self.ref = "FA" + seq;
 		});
 	}
 }
