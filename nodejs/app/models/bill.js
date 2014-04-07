@@ -101,8 +101,16 @@ billSchema.pre('save', function(next) {
 			self.ref = "PROV" + seq;
 			next();
 		});
-	} else
-		next();
+	} else {
+		if (this.Status != "DRAFT" && this.ref.substr(0, 4) == "PROV")
+			SeqModel.inc("FA", function(seq) {
+				//console.log(seq);
+				self.ref = "FA" + seq;
+				next();
+			});
+		else
+			next();
+	}
 });
 
 /**
