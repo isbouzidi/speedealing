@@ -98,7 +98,7 @@ billSchema.pre('save', function(next) {
 	if (this.isNew) {
 		SeqModel.inc("PROV", function(seq) {
 			//console.log(seq);
-			self.ref = "PROV"+seq;
+			self.ref = "PROV" + seq;
 			next();
 		});
 	} else
@@ -115,10 +115,10 @@ billSchema.methods = {
 	 * @param {function} callback
 	 * @api public
 	 */
-	inc: function(callback) {
-		SeqModel.inc("FA", function(seq) {
+	setNumber: function() {
+		return SeqModel.inc("FA", function(seq) {
 			//console.log(seq);
-			callback("FA"+seq);
+			return "FA" + seq;
 		});
 	}
 }
