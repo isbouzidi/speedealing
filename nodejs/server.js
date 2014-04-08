@@ -66,6 +66,8 @@ var logger = new (winston.Logger)({
 require('./config/sequence'); // load the sequence ID First
 // Speedealing Schema
 require('./config/extrafields');
+// Multi-entities
+require('./config/entity');
 
 //Bootstrap models
 var models_path = __dirname + '/app/models';

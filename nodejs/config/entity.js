@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-		config = require('../../config/config'),
+		config = require('./config'),
 		Schema = mongoose.Schema,
 		timestamps = require('mongoose-timestamp');
 
