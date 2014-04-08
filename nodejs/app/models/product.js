@@ -28,7 +28,7 @@ var productSchema = new Schema({
 	price_base_type: String,
 	tms: Date,
 	datec: Date,
-	billingMode : {type: String, uppercase:true, default:"QTY"}, //MONTH, QTY, ...
+	billingMode: {type: String, uppercase: true, default: "QTY"}, //MONTH, QTY, ...
 	Tag: [String],
 	entity: String,
 	price: [{
@@ -56,8 +56,8 @@ productSchema.plugin(timestamps);
 productSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incNumber("P", function(seq) {
-			self.barCode = seq;
+		SeqModel.incNumber("P", 10, function(seq) {
+			self.barCode = "P" + seq;
 			next();
 		});
 	} else
