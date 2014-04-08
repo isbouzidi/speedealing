@@ -59,5 +59,8 @@ sequenceSchema.statics = {
 mongoose.model('Sequence', sequenceSchema, 'Sequence');
 
 var numberFormat = function(number, width) {
+	console.log("number : " + number);
+	console.log("width : " + width);
+	console.log(number + '');
 	return new Array(width + 1 - (number + '').length).join('0') + number;
 }
