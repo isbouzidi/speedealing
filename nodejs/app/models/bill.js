@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
+var EntityModel = mongoose.model('entity');
 
 /**
  * Article Schema
@@ -102,13 +103,26 @@ billSchema.pre('save', function(next) {
 			next();
 		});
 	} else {
-		if (this.Status != "DRAFT" && this.ref.substr(0, 4) == "PROV")
-			SeqModel.inc("FA", function(seq) {
-				//console.log(seq);
-				self.ref = "FA" + seq;
-				next();
+		if (this.Status != "DRAFT" && this.ref.substr(0, 4) == "PROV") {
+			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+				if (err)
+					console.log(err);
+
+				if (entity && entity.cptRef) {
+					SeqModel.inc("FA" + entity.cptRef, function(seq) {
+						//console.log(seq);
+						self.ref = "FA" + entity.cptRef + seq;
+						next();
+					});
+				} else {
+					SeqModel.inc("FA", function(seq) {
+						//console.log(seq);
+						self.ref = "FA" + seq;
+						next();
+					});
+				}
 			});
-		else
+		} else
 			next();
 	}
 });
