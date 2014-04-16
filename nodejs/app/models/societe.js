@@ -49,6 +49,9 @@ var societeSchema = new Schema({
 	mode_reglement: String,
 	zonegeo: String,
 	Tag: [String],
+	segmentation:[{
+			text: String
+	}],
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},

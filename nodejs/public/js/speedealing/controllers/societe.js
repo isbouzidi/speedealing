@@ -1,6 +1,8 @@
 angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
+		
+		$scope.societe = {};
 
 		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
@@ -21,6 +23,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 					$scope[field] = data;
 					//console.log(data);
 				});
+			});
+		};
+		
+		$scope.segmentationAutoComplete = function(val) {
+			return $http.post('api/societe/segmentation/autocomplete', {
+				take: 5,
+				skip: 0,
+				page: 1,
+				pageSize: 5,
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
 			});
 		};
 

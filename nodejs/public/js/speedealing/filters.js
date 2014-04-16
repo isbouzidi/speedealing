@@ -4,7 +4,7 @@ angular.module('mean.system').filter('euro', function() {
 		size = size || 2;
 
 		if (isNaN(text))
-			return;
+			return text;
 
 		text = Math.round(Math.pow(10, 2) * text) / Math.pow(10, 2);
 

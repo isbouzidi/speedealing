@@ -85,6 +85,40 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
+	app.post('/api/societe/segmentation/autocomplete', auth.requiresLogin, function(req, res) {
+		//console.dir(req.body);
+
+		if (req.body.filter == null)
+			return res.send(200, {});
+
+		var query = {
+			'segmentation.text': new RegExp(req.body.filter.filters[0].value, "i")
+		};
+
+		//console.log(query);
+		SocieteModel.aggregate([
+			{$project: {_id: 0, segmentation: 1}},
+			{$unwind: "$segmentation"},
+			{$match: query},
+			{$limit: req.body.take}
+		], function(err, docs) {
+			if (err) {
+				console.log("err : /api/societe/segmentation/autocomplete");
+				console.log(err);
+				return;
+			}
+
+			var result = [];
+
+			if (docs !== null)
+				for (var i in docs) {
+					result.push(docs[i].segmentation);
+				}
+
+			return res.send(200, result);
+		});
+	});
+
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
 
 		if (req.files) {
@@ -195,7 +229,7 @@ module.exports = function(app, passport, auth) {
 		}
 
 	});
-	
+
 	app.del('/api/societe/file/:Id/:fileNames', auth.requiresLogin, function(req, res) {
 		console.log(req.body);
 		var id = req.params.Id;
@@ -334,12 +368,12 @@ Object.prototype = {
 			societe.entity = req.user.entity;
 
 		societe.setVirtual(req.i18n);
-console.log(societe);
+		console.log(societe);
 		societe.save(function(err, doc) {
 			if (err) {
 				return console.log(err);
 			}
-			
+
 			res.json(societe);
 		});
 	},

@@ -572,13 +572,13 @@ ul.nav {
 
 /* ng-tags-input */
 tags-input .tags .input {
-	height: 23px;
+	height: 21px;
 	font-size: 12px;
 }
 
 tags-input .tags .tag-item {
-	line-height: 18px;
-	height: inherit;
+	line-height: 17px;
+	height: 21px;
 	border-color: #282e36;
 	color: #fff;
 	background: #505050 url(../img/old-browsers/colors/bg_anthracite-gradient_glossy.png) repeat-x;
@@ -599,11 +599,12 @@ tags-input .tags .tag-item {
 	border-width: 1px;
 	border-style: solid;
 	font-style: normal;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 tags-input .tags .tag-item .remove-button {
 	color: #666666;
+	margin: 0 0 0 2px;
 }
 
 tags-input .tags .tag-item .remove-button:hover {
