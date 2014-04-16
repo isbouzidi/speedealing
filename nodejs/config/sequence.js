@@ -63,4 +63,4 @@ var numberFormat = function(number, width) {
 	//console.log("width : " + width);
 	//console.log(number + '');
 	return new Array(width + 1 - (number + '').length).join('0') + number;
-}
+};

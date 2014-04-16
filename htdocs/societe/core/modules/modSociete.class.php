@@ -240,7 +240,7 @@ class modSociete extends DolibarrModules {
         $this->menus[$r]->title = "ThirdParties";
         $r++;
 
-		$this->menus[$r] = new stdClass();
+		/*$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:newcompany";
         $this->menus[$r]->position = 1;
         $this->menus[$r]->url = "/societe/fiche.php?action=create";
@@ -250,21 +250,21 @@ class modSociete extends DolibarrModules {
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->title = "MenuNewThirdParty";
         $this->menus[$r]->fk_menu = "menu:companies";
-        $r++;
+        $r++;*/
 		
 		$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:thirdpartyenable";
         $this->menus[$r]->position = 2;
-        $this->menus[$r]->url = "/societe/list.php";
+        $this->menus[$r]->url = "#!/societes";
         $this->menus[$r]->langs = "companies";
         $this->menus[$r]->perms = '$user->rights->societe->lire';
         $this->menus[$r]->enabled = '$conf->societe->enabled';
         $this->menus[$r]->usertype = 2;
-        $this->menus[$r]->title = "ListOfThirdPartiesEnable";
+        $this->menus[$r]->title = "ListOfThirdParties";
         $this->menus[$r]->fk_menu = "menu:companies";
         $r++;
 		
-		$this->menus[$r] = new stdClass();
+		/*$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:thirdpartysupplier";
         $this->menus[$r]->position = 3;
         $this->menus[$r]->url = "/societe/list.php?type=supplier";
@@ -286,7 +286,7 @@ class modSociete extends DolibarrModules {
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->title = "ListOfThirdPartiesDisable";
         $this->menus[$r]->fk_menu = "menu:companies";
-        $r++;
+        $r++;*/
         
 		/*$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:newcontact";

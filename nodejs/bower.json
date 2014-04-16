@@ -1,15 +1,15 @@
 {
 	"name": "Speedealing",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"main": "public/lib",
 	"dependencies": {
-		"angular": "latest",
-		"angular-resource": "latest",
-		"angular-cookies": "latest",
-		"angular-mocks": "latest",
-		"angular-sanitize": "latest",
-		"angular-route": "latest",
-		"angular-animate": "latest",
+		"angular": "1.2.15",
+		"angular-resource": "1.2.15",
+		"angular-cookies": "1.2.15",
+		"angular-mocks": "1.2.15",
+		"angular-sanitize": "1.2.15",
+		"angular-route": "1.2.15",
+		"angular-animate": "1.2.15",
 		"bootstrap": "latest",
 		"angular-bootstrap": "latest",
 		"angular-ui-utils": "latest",
@@ -20,6 +20,7 @@
 		"ng-grid": "2.0.8",
 		"angular-xeditable":"latest",
 		"highcharts":"latest",
-		"highcharts-ng":"latest"
+		"highcharts-ng":"latest",
+		"ng-tags-input":"latest"
 	}
 }
