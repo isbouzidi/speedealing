@@ -92,7 +92,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 				$http({method: 'GET', url: 'api/europexpress/buy', params:
 							{
-								find: {"vehicule.id": societe._id},
+								find: {"fournisseur.id": societe._id},
 								fields: "title ref datec Status total_ht"
 							}
 				}).success(function(data, status) {
