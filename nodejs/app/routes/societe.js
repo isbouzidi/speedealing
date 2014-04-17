@@ -316,7 +316,6 @@ Object.prototype = {
 				return next(err);
 			if (!doc)
 				return next(new Error('Failed to load societe ' + id));
-			//doc.setVirtual(req.i18n);
 
 			req.societe = doc;
 			next();
@@ -368,7 +367,6 @@ Object.prototype = {
 		if (societe.entity == null)
 			societe.entity = req.user.entity;
 
-		societe.setVirtual(req.i18n);
 		console.log(societe);
 		societe.save(function(err, doc) {
 			if (err) {
