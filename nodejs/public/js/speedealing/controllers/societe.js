@@ -35,6 +35,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
+				//console.log(res.data);
 				return res.data
 			});
 		};

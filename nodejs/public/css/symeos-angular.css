@@ -67,6 +67,10 @@ body {
 	/*padding-top: 35px;*/
 }
 
+pre {
+	color: inherit;
+}
+
 a:hover,
 a:focus {
 	text-decoration: none;

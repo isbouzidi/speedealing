@@ -100,6 +100,7 @@ module.exports = function(app, passport, auth) {
 			{$project: {_id: 0, segmentation: 1}},
 			{$unwind: "$segmentation"},
 			{$match: query},
+			{$group: {_id : "$segmentation.text"}},
 			{$limit: req.body.take}
 		], function(err, docs) {
 			if (err) {
@@ -107,12 +108,12 @@ module.exports = function(app, passport, auth) {
 				console.log(err);
 				return;
 			}
-
+			//console.log(docs);
 			var result = [];
 
 			if (docs !== null)
 				for (var i in docs) {
-					result.push(docs[i].segmentation);
+					result.push({text:docs[i]._id});
 				}
 
 			return res.send(200, result);

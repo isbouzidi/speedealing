@@ -42,8 +42,23 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Address'}}</th>
-									<td>\{{societe.address}}<br />
-										\{{societe.zip}} \{{societe.town}} \{{societe.country}}
+									<td>
+										<form editable-form name="editableFormAddress" onaftersave="update()">
+											<span editable-textarea="societe.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ societe.address || 'empty' }}</pre></span>
+
+											<span editable-text="societe.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{societe.zip}}</span> <span editable-text="societe.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{societe.town}}</span>
+											\{{societe.country}}
+											<!-- button to show form -->
+											<span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible"></span>
+
+
+											<div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
+												<button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableFormAddress.$waiting"></button>
+
+												<button type="button" class="button icon-cross-round white-gradient" ng-disabled="editableFormAddress.$waiting" title="{{t 'Cancel'}}" ng-click="editableFormAddress.$cancel()"></button>
+											</div>
+
+										</form>
 									</td>
 								</tr>
 								<tr>
@@ -245,15 +260,15 @@
 												</tr>
 												<tr>
 													<th scope="row" colspan="2">{{t 'companies:Segmentation'}}<br/>
-														<tags-input data-ng-model="societe.segmentation" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-															<auto-complete source="segmentationAutoComplete($query)" min-length="1" max-results-to-show="5"></auto-complete>
-														</tags-input>
-													</th>
-												</tr>
+											<tags-input data-ng-model="societe.segmentation" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+												<auto-complete source="segmentationAutoComplete($query)" min-length="1" max-results-to-show="5"></auto-complete>
+											</tags-input>
+											</th>
+											</tr>
 											<tr>
 												<th scope="row" colspan="2">{{t 'companies:FamilyProduct'}}<br/>
-													<tags-input ng-model="Tag" placeholder="{{t 'Add'}}"></tags-input>
-												</th>
+											<tags-input ng-model="Tag" placeholder="{{t 'Add'}}"></tags-input>
+											</th>
 											</tr>
 											</tbody>
 										</table>
