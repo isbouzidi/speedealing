@@ -32,8 +32,15 @@ angular.module('mean.system').filter('phone', function() {
 
 		var value = tel.toString().trim().replace(/^\+/, '');
 
-		if (value.match(/[^0-9]/)) {
+		if (value.match(/[^0-9]/)) { // NOT a NUMBER
 			return tel;
+		}
+
+		if (value.match(/^[0-9]/)) { // Start with 0
+			country = value.slice(0, 1);
+			city = "";
+			number = value.slice(4);
+			return country + city + value.slice(1, 2) + "." + value.slice(2, 4) + "." + value.slice(4, 6) + "." + value.slice(6, 8) + "." + value.slice(8);
 		}
 
 		var country, city, number;
@@ -55,7 +62,7 @@ angular.module('mean.system').filter('phone', function() {
 				country = value.slice(0, 2);
 				city = " (0)";
 				number = value.slice(4);
-				return "+" + country + city + value.slice(2,3) + "." +  value.slice(3, 5) +  "." +  value.slice(5, 7) + "." +  value.slice(7, 9) +  "." +  value.slice(9);
+				return "+" + country + city + value.slice(2, 3) + "." + value.slice(3, 5) + "." + value.slice(5, 7) + "." + value.slice(7, 9) + "." + value.slice(9);
 
 			case 12: // +CCCPP####### -> CCC (PP) ###-####
 				country = value.slice(0, 3);
