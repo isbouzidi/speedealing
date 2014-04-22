@@ -126,7 +126,7 @@ societeSchema.virtual('status')
 
 	var status = this.Status;
 
-	if (statusList.values[status].label) {
+	if (status && statusList.values[status].label) {
 		//console.log(this);
 		res_status.id = status;
 		//this.status.name = i18n.t("intervention." + statusList.values[status].label);
@@ -147,7 +147,7 @@ societeSchema.virtual('prospectLevel')
 
 	var level = this.prospectlevel;
 
-	if (prospectLevelList.values[level].cssClass) {
+	if (level && prospectLevelList.values[level].cssClass) {
 		prospectLevel.id = level;
 //		prospectLevel.name = i18n.t("companies:" + level);
 		prospectLevel.name = i18n.t("companies:" + level);
