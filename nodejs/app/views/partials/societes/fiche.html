@@ -363,11 +363,40 @@
 										<table class="simple-table">
 											<tbody>
 												<tr>
-													<th width="40%" scope="row">KBIS</th>
+													<th width="90%" scope="row">Extrait KBIS (moins de 3 mois)</th>
 													<td><input type="checkbox" data-ng-model="societe.checklist.KBIS" data-ng-checked="societe.checklist.KBIS" data-ng-change="update()" />
 													</td>
 												</tr>
-
+												<tr>
+													<th scope="row">Licences nationale et communautaire</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.licencesNationaleCommunautaire" data-ng-checked="societe.checklist.licencesNationaleCommunautaire" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">Attestation de régularité fiscale</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attestationRegulFiscale" data-ng-checked="societe.checklist.attestationRegulFiscale" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">Attestation URSAFF</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attetationUrsaff" data-ng-checked="societe.checklist.attetationUrsaff" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">Attestation d'assurance à jour - Responsabilité Civile et Marchandise Transportée</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attestationAssurance" data-ng-checked="societe.checklist.attestationAssurance" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">Attestation sur l'honneur</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attestationHonneur" data-ng-checked="societe.checklist.attestationHonneur" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">Copie Permis de conduire et Déclaration Unique d'Embauche (DUE)</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.permisConduireDUE" data-ng-checked="societe.checklist.permisConduireDUE" data-ng-change="update()" />
+													</td>
+												</tr>
 											</tbody>
 										</table>
 									</div>

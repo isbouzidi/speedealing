@@ -1,8 +1,10 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
-		
+
 		$scope.societe = {};
+		$scope.societes = [];
+		$scope.gridOptionsSociete = {};
 
 		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
@@ -25,7 +27,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				});
 			});
 		};
-		
+
 		$scope.segmentationAutoComplete = function(val) {
 			return $http.post('api/societe/segmentation/autocomplete', {
 				take: 5,
@@ -77,7 +79,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				Id: $routeParams.id
 			}, function(societe) {
 				$scope.societe = societe;
-				
+
 				$http({method: 'GET', url: 'api/ticket', params:
 							{
 								find: {"linked.id": societe._id},
@@ -106,12 +108,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 					});
 					$scope.countBuy = $scope.requestBuy.length;
 				});
-				
+
 				pageTitle.setTitle('Fiche ' + $scope.societe.name);
 				$scope.checklist = 0;
 				for (var i in societe.checklist)
 					if (societe.checklist[i])
 						$scope.checklist++;
+			});
+
+			$http({method: 'GET', url: '/api/europexpress/buy/status/select', params: {
+					field: "Status"
+				}
+			}).success(function(data, status) {
+				$scope.status = data;
 			});
 		};
 
@@ -130,6 +139,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			filterOptions: $scope.filterOptionsSociete,
 			sortInfo: {fields: ["name"], directions: ["asc"]},
 			//showFilter:true,
+			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
 				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
@@ -396,6 +406,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			sortInfo: {fields: ["updatedAt"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsTicket,
 			i18n: 'fr',
+			enableColumnResize: true,
 			columnDefs: [
 				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-ticket"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', displayName: 'Id'},
@@ -419,14 +430,48 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			sortInfo: {fields: ["ref"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsBuy,
 			i18n: 'fr',
-			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
+			enableColumnResize: true,
+			enableCellEditOnFocus: true,
+			enableCellSelection: false,
 			columnDefs: [
-				{field: 'title', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'ref', displayName: 'Id'},
-				{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
-				{field: 'datec', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
-				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+				{field: 'title', displayName: 'Titre', enableCellEdit: false, cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Id', enableCellEdit: false},
+				//{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+				{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'Status.css\')}} glossy">{{row.getProperty(\'Status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(\'/api/europexpress/buy\',\'Status\', row)" ng-input="row.entity.Status" data-ng-options="c.id as c.name for c in status"></select>'},
+				{field: 'datec', displayName: 'Date création', enableCellEdit: false, cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(\'/api/europexpress/buy\',\'total_ht\', row)"/>'}
 			]
+		};
+
+		$scope.updateInPlace = function(api, field, row) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
+						data: {
+							value: row.entity[field]
+						}
+					}).
+							success(function(data, status) {
+						if (status == 200) {
+							if (data.value) {
+								if (data.field === "Status")
+									for (var i = 0; i < $scope.status.length; i++) {
+										if ($scope.status[i].id === data.value)
+											row.entity.Status = $scope.status[i];
+									}
+							}
+						}
+					});
+
+					$scope.save.pending = false;
+				}, 500);
+			}
 		};
 
 

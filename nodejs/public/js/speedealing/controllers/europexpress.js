@@ -1053,6 +1053,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			sortInfo: {fields: ["updatedAt"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsTicket,
 			i18n: 'fr',
+			enableColumnResize: true,
 			columnDefs: [
 				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-ticket"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', displayName: 'Id'},
@@ -1076,6 +1077,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			sortInfo: {fields: ["ref"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsBuy,
 			i18n: 'fr',
+			enableColumnResize: true,
 			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
 			columnDefs: [
 				{field: 'title', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
@@ -1203,7 +1205,8 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 				i18n: 'fr',
 				groups: ['client.name'],
 				groupsCollapsedByDefault: false,
-				plugins: [new ngGridFlexibleHeightPlugin()],
+				enableColumnResize: true,
+				//plugins: [new ngGridFlexibleHeightPlugin()],
 				columnDefs: [
 					{field: 'client.name', width: "25%", displayName: 'Client', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 					{field: 'ref', width: "25%", displayName: 'Id'},
@@ -1253,7 +1256,8 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
 			showGroupPanel: false,
 			//jqueryUIDraggable: true,
-			plugins: [new ngGridFlexibleHeightPlugin()],
+			//plugins: [new ngGridFlexibleHeightPlugin()],
+			enableColumnResize: true,
 			i18n: 'fr',
 			groups: ['fournisseur.name'],
 			groupsCollapsedByDefault: false,
@@ -1426,6 +1430,7 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 			//jqueryUIDraggable: true,
 			plugins: [new ngGridFlexibleHeightPlugin()],
 			i18n: 'fr',
+			enableColumnResize: true,
 			//groups: ['fournisseur.name'],
 			//groupsCollapsedByDefault: false,
 			columnDefs: [
@@ -1786,6 +1791,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 			i18n: 'fr',
 			enableCellSelection: true,
 			enableCellEditOnFocus: true,
+			enableColumnResize: true,
 			//groups: ['fournisseur.name'],
 			//groupsCollapsedByDefault: false,
 			columnDefs: [

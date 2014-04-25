@@ -10,6 +10,7 @@ window.app = angular.module('mean', ['ngRoute',
 	"xeditable",
 	"highcharts-ng",
 	"ngTagsInput",
+	"ui.bootstrap.datetimepicker",
 	'mean.system',
 	'mean.societes',
 	'mean.orders',
@@ -25,6 +26,9 @@ angular.module('mean.users', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
 
-/*window.app.run(function(editableOptions) {
- editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
- });*/
+window.app.run(function(editableOptions, editableThemes) {
+	// bootstrap3 theme. Can be also 'bs2', 'default'
+	editableThemes.bs3.inputClass = 'input-sm';
+	editableThemes.bs3.buttonsClass = 'btn-sm';
+	editableOptions.theme = 'bs3';
+});

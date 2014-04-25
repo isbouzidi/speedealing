@@ -128,7 +128,7 @@ angular.module('mean.users').controller('UserRhAbsenceCreateController', ['$scop
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 
