@@ -66,7 +66,7 @@ class MenuAuguria extends nosqlDocument {
 					array('$match' => array('value.type' => array('$ne' => 'top'))),
 					array('$sort' => array("value.position" => 1))
 		));
-		
+
 		$submenu = $submenu->result;
 
 		$this->topmenu = $topmenu;
@@ -129,6 +129,8 @@ class MenuAuguria extends nosqlDocument {
 					// Define the class (top menu selected or not)
 					if (empty($this->idmenu))
 						$this->idmenu = dol_getcache('idmenu'); // For cache optimisation
+
+
 
 
 
@@ -277,6 +279,13 @@ class MenuAuguria extends nosqlDocument {
 		// Define url
 		if (preg_match("/^(http:\/\/|https:\/\/|#)/i", $newTabMenu->url)) {
 			$url = $newTabMenu->url;
+			if (preg_match('/^#/', $url)) {
+				if (!preg_match('/\?/', $url))
+					$url.='?';
+				else
+					$url.='&';
+				$url.='idmenu=' . $_id;
+			}
 		} else {
 			$url = dol_buildpath($newTabMenu->url, 1);
 			if (!preg_match('/mainmenu/i', $url) || !preg_match('/leftmenu/i', $url)) {

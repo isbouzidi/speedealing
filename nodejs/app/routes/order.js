@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 var CommandeModel = mongoose.model('commande');
 var ContactModel = mongoose.model('contact');
 var ExtrafieldModel = mongoose.model('extrafields');
+var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
 
 var smtpTransport = nodemailer.createTransport("SMTP", config.transport);
@@ -27,10 +28,9 @@ module.exports = function(app, passport, auth) {
 		object.fk_extrafields = doc;
 	});
 	app.get('/api/commande/lines/list', auth.requiresLogin, object.listLines);
-	//app.get('/api/commande/BL/pdf', auth.requiresLogin, object.genBlPDF);
-
 	app.get('/api/commande', auth.requiresLogin, object.all);
 	app.post('/api/commande', auth.requiresLogin, object.create);
+	app.get('/api/commande/select', auth.requiresLogin, object.select);
 	app.get('/api/commande/:orderId', auth.requiresLogin, object.show);
 	app.put('/api/commande/:orderId', auth.requiresLogin, object.update);
 	app.del('/api/commande/:orderId', auth.requiresLogin, object.destroy);
@@ -374,6 +374,50 @@ Object.prototype = {
 					});
 				});
 			});
+		});
+	},
+	select: function(req, res) {
+		ExtrafieldModel.findById('extrafields:Commande', function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			var result = [];
+			if (doc.fields[req.query.field].dict)
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+
+					if (docs) {
+						for (var i in docs.values) {
+							if (docs.values[i].enable) {
+								var val = {};
+								val.id = i;
+								if (docs.values[i].label)
+									val.label = req.i18n.t("orders:" + docs.values[i].label);
+								else
+									val.label = req.i18n.t("orders:" + i);
+								
+								if (docs.values[i].cssClass)
+									val.css = docs.values[i].cssClass;
+								
+								result.push(val);
+							}
+						}
+						doc.fields[req.query.field].values = result;
+					}
+					res.json(doc.fields[req.query.field]);
+				});
+
+			for (var i in doc.fields[req.query.field].values) {
+				if (doc.fields[req.query.field].values[i].enable) {
+					var val = {};
+					val.id = i;
+					val.label = doc.fields[req.query.field].values[i].label;
+					result.push(val);
+				}
+			}
+			doc.fields[req.query.field].values = result;
+
+			res.json(doc.fields[req.query.field]);
 		});
 	}
 };

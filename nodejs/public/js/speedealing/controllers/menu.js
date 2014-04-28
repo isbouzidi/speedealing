@@ -1,17 +1,22 @@
-angular.module('mean.system').controller('MenuController', ['$scope', 'Global', 'socket','$http', function($scope, Global, socket, $http) {
+angular.module('mean.system').controller('MenuController', ['$scope', '$routeParams', 'Global', 'socket', '$http', function($scope, $routeParams, Global, socket, $http) {
 		$scope.global = Global;
 
 		$scope.ticketCpt = 0;
 
 		//socket.emit('user', Global.user._id);
 
-		socket.on('reboot', function(data) {
-			socket.emit('user', Global.user._id);
-		});
+		//socket.on('reboot', function(data) {
+		//	socket.emit('user', Global.user._id);
+		//});
 
 		socket.on('notify', function(data) {
 			notify(data.title, data.message, data.options);
 		});
+
+		$scope.selectedMenu = function(id) {
+			if($routeParams.idmenu === id)
+				return "current collapsible-current";
+		};
 
 		/*socket.on('news', function(data) {
 		 notify('<span class="icon-info-round"> </span><i>Philippe</i> : Appeler DHL', data.hello, {
@@ -34,14 +39,14 @@ angular.module('mean.system').controller('MenuController', ['$scope', 'Global', 
 		socket.on('refreshTicket', function(data) {
 			$scope.ticketCounter();
 		});
-		
+
 		/* Resize all elements */
 		angular.element(document).ready(function() {
 			setTimeout(function() {
 				angular.element(window).resize();
-			},300);
+			}, 300);
 			setTimeout(function() {
 				angular.element(window).resize();
-			},2000);
+			}, 2000);
 		});
 	}]);
