@@ -3,6 +3,8 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 
 		pageTitle.setTitle('Gestion des absences');
 
+		$scope.absence = {};
+
 		$scope.types = [{name: "En cours", id: "NOW"},
 			{name: "Clos", id: "CLOSED"}];
 
@@ -43,12 +45,12 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 			columnDefs: [
 				{field: 'user.name', enableCellEdit: false, displayName: 'Salarié', cellTemplate: '<div class="ngCellText"><span><span class="icon-user"></span> {{row.getProperty(col.field)}}</span>'},
 				{field: 'datec', enableCellEdit: false, displayName: 'Date demande', width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
-				{field: 'dateStart', displayName: 'Date début', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(col, row)"/>'},
-				{field: 'dateEnd', displayName: 'Date fin', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(col, row)"/>'},
+				{field: 'dateStart', enableCellEdit: false, displayName: 'Date début', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(col, row)"/>'},
+				{field: 'dateEnd', enableCellEdit: false, displayName: 'Date fin', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(col, row)"/>'},
 				{field: 'nbDay', enableCellEdit: true, displayName: 'Nombre de jours', width: "130px", cellClass: "align-right", editableCellTemplate: '<input type="number" min="0" step="0.1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="updateInPlace(col, row)" class="input"/>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.name for c in status"></select>'},
 				{field: 'entity', enableCellEdit: false, displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
-				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button data-ng-click="addTick(row)" ng-disabled="row.getProperty(\'closed\')" class="button icon-tick" title="Le salarié est de retour"></button><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-click="edit(row)"></button><button data-ng-click="addTick(row)" ng-disabled="row.getProperty(\'closed\')" class="button icon-tick" title="Le salarié est de retour"></button><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
 		};
 
@@ -64,12 +66,42 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/user/create_absence.html',
 				controller: "UserRhAbsenceCreateController",
-				windowClass: "steps"
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return $scope.absence;
+					}
+				}
 			});
 
 			modalInstance.result.then(function(absence) {
+				absence = new Users.absences(absence);
+				absence.$save(function() {
+				});
+
 				$scope.absences.push(absence);
 				$scope.count++;
+			}, function() {
+			});
+		};
+
+		$scope.edit = function(row) {
+
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/user/create_absence.html',
+				controller: "UserRhAbsenceCreateController",
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return row.entity;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(absence) {
+				absence.$update(function() {
+				});
+				$scope.absence = {};
 			}, function() {
 			});
 		};
@@ -91,12 +123,16 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 
 	}]);
 
-angular.module('mean.users').controller('UserRhAbsenceCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Users', function($scope, $http, $modalInstance, $upload, $route, Global, Users) {
+angular.module('mean.users').controller('UserRhAbsenceCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Users', 'object', function($scope, $http, $modalInstance, $upload, $route, Global, Users, object) {
 		$scope.global = Global;
 
-		$scope.absence = {
-			entity: Global.user.entity
-		};
+		$scope.absence = object;
+		//$scope.absence = {
+		//	entity: Global.user.entity
+		//};
+
+		$scope.dateStart = new Date(object.dateStart);
+		$scope.dateEnd = new Date(object.dateEnd);
 
 		$scope.init = function() {
 			$http({method: 'GET', url: '/api/user/absence/status/select', params: {
@@ -105,17 +141,21 @@ angular.module('mean.users').controller('UserRhAbsenceCreateController', ['$scop
 			}).success(function(data, status) {
 				$scope.status = data;
 				//console.log(data);
-				$scope.absence.Status = data.default;
+				//$scope.absence.Status = data.default;
 			});
 		};
 
 		$scope.create = function() {
-			var absence = new Users.absences(this.absence);
-			absence.$save(function(response) {
-				//console.log(response);
-				$modalInstance.close(response);
-				//$location.path("societe/" + response._id);
-			});
+			//Add entity
+			if (this.absence.user && this.absence.user.entity)
+				this.absence.entity = this.absence.user.entity;
+
+			//var absence = new Users.absences(this.absence);
+			//absence.$save(function(response) {
+			//console.log(response);
+			$modalInstance.close(this.absence);
+			//$location.path("societe/" + response._id);
+			//});
 		};
 
 
