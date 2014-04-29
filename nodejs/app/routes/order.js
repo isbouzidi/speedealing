@@ -117,25 +117,23 @@ Object.prototype = {
 					order.client.id = req.user.societe.id;
 					order.client.name = req.user.societe.name;
 
-					order.save(function(err) {
+					order.save(function(err, doc) {
 						if (err)
 							return console.log(err);
 
-						order.setVirtual(req.i18n);
-						res.json(order);
+						res.json(doc);
 					});
 
 				});
 			});
 		}
 
-		order.save(function(err) {
+		order.save(function(err, doc) {
 			if (err) {
 				return console.log(err);
 			}
 
-			order.setVirtual(req.i18n);
-			res.json(order);
+			res.json(doc);
 		});
 	},
 	/**
@@ -176,7 +174,6 @@ Object.prototype = {
 
 
 		order.save(function(err, doc) {
-			doc.setVirtual(req.i18n);
 			res.json(doc);
 		});
 	},
@@ -232,9 +229,6 @@ Object.prototype = {
 				return res.render('error', {
 					status: 500
 				});
-			for (var i in orders) {
-				orders[i].setVirtual(req.i18n);
-			}
 
 			res.json(orders);
 		});

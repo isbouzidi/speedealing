@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		Schema = mongoose.Schema,
+		i18n = require("i18next"),
 		gridfs = require('../controllers/gridfs'),
 		timestamps = require('mongoose-timestamp');
 
@@ -17,15 +18,14 @@ var EntityModel = mongoose.model('entity');
  * Article Schema
  */
 var orderSchema = new Schema({
-	ref: String,
+	ref: {type: String},
 	Status: {type: Schema.Types.Mixed, default: 'DRAFT'},
-	status: {type: Schema.Types.Mixed, virtual: true},
 	cond_reglement_code: {type: String, default: 'RECEP'},
 	mode_reglement_code: {type: String, default: 'TIP'},
 	availability_code: {type: String, default: 'AV_NOW'},
 	demand_reason_code: {type: String, default: 'SRC_CAMP_EMAIL'},
-	client: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
-	contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
+	client: {id: {type: Schema.Types.ObjectId, ref: 'societe'}, name: String},
+	contact: {id: {type: Schema.Types.ObjectId, ref: 'contact'}, name: String},
 	ref_client: {type: String},
 	datec: {type: Date},
 	date_livraison: Date,
@@ -84,7 +84,7 @@ var orderSchema = new Schema({
 			description: String,
 			product_type: String,
 			product: {
-				id: {type: Schema.Types.ObjectId, ref: "Product"},
+				id: {type: Schema.Types.ObjectId, ref: "product"},
 				name: String
 			},
 			total_tva: Number,
@@ -142,20 +142,24 @@ DictModel.findOne({_id: "dict:fk_order_status"}, function(err, docs) {
 /**
  * Methods
  */
-orderSchema.methods.setVirtual = function(i18n) {
-	this.status = {};
+orderSchema.virtual('status')
+		.get(function() {
+	var res_status = {};
+
 	var status = this.Status;
 
 	if (statusList.values[status].label) {
-		this.status.id = status;
-		this.status.name = i18n.t("orders:" + statusList.values[status].label);
+		res_status.id = status;
+		res_status.name = i18n.t("orders:" + statusList.values[status].label);
 		//this.status.name = statusList.values[status].label;
-		this.status.css = statusList.values[status].cssClass;
+		res_status.css = statusList.values[status].cssClass;
 	} else { // By default
-		this.status.id = status;
-		this.status.name = status;
-		this.status.css = "";
+		res_status.id = status;
+		res_status.name = status;
+		res_status.css = "";
 	}
-};
+	
+	return res_status;
+});
 
 mongoose.model('commande', orderSchema, 'Commande');
