@@ -52,13 +52,13 @@ var orderSchema = new Schema({
 	bills: [Schema.Types.ObjectId],
 	groups: [Schema.Types.Mixed],
 	optional: Schema.Types.Mixed,
-	billing : {
-		name : String,
+	billing: {
+		name: String,
 		contact: String,
-		address : String,
-		zip : String,
-		town : String,
-		country : String
+		address: String,
+		zip: String,
+		town: String,
+		country: String
 	},
 	bl: [{
 			label: String,
@@ -102,6 +102,9 @@ var orderSchema = new Schema({
 		createdAt: {type: Date},
 		data: Buffer,
 	}
+}, {
+	toObject: {virtuals: true},
+	toJSON: {virtuals: true}
 });
 
 orderSchema.plugin(timestamps);
