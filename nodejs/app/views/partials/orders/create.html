@@ -5,9 +5,9 @@
 
 	<ul class="wizard-steps">
 		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span> Références</li>
-		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">4</span> Produits/services</li>
+		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Produits/services</li>
 		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Livraison</li>
-		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">2</span> Paiement</li>
+		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">4</span> Paiement</li>
 	</ul>
 
 	<!-- Each form step should be wrapped in a fieldset -->
@@ -27,17 +27,17 @@
 			<label for="contact"><b>Demandeur</b></label>
 			<input type="text" required data-ng-model="order.contact.name" id="contact" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="ref_client"><b>Référence / Nom de l'affaire</b></label>
 			<input type="text" required data-ng-model="order.ref_client" id="ref_client" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="phone"><b>{{t 'companies:Phone'}}</b></label>
 			<input type="text" required data-ng-model="order.phone" id="phone" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="email"><b>{{t 'Email'}}</b></label>
 			<input type="email" data-ng-model="order.email" id="email" class="input" autocomplete="off">
@@ -47,7 +47,7 @@
 			<label for="date_commande"><b>Date de commande</b></label>
 			<input kendo-date-picker required id="date_commande" k-on-change="order.datec = kendoEvent.sender._value;" class="input"/>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="date_livraison"><b>Date de livraison</b></label>
 			<input kendo-date-picker required id="date_livraison" k-on-change="order.date_livraison = kendoEvent.sender._value;" class="input"/>
@@ -58,7 +58,7 @@
 		</div>
 
 	</fieldset>
-	
+
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
 
 		<div class="field-block">
@@ -71,24 +71,14 @@
 			<input type="hidden" data-ng-init="order.notes[0].title='Prestations'"/>
 			<textarea id="desgination" cols="30" rows="5" data-ng-model="order.notes[0].note" class="input full-width"></textarea>
 		</div>
-		
-		<div class="field-block button-height wizard-controls align-right">
 
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
-				<span class="button-icon anthracite-gradient">
-					<span class="icon-backward"></span>
-				</span>{{t 'Previous'}}</button>
-
-			<button type="submit" data-ng-disabled='!order.notes[0].note' class="button glossy mid-margin-right">
-				<span class="button-icon"><span class="icon-tick"></span></span>
-				Valider commande
-			</button>
-
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' data-ng-disabled='!order.notes[0].note' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
-		
 	</fieldset>
-	
+
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
 
 		<div class="field-block">
@@ -233,7 +223,7 @@
 		</div>
 
 	</fieldset>-->
-	
+
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
 
 		<div class="field-block">
@@ -264,9 +254,20 @@
 			</div>
 		</div>
 
-		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
-			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		<div class="field-block button-height wizard-controls align-right">
+
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
+				<span class="button-icon anthracite-gradient">
+					<span class="icon-backward"></span>
+				</span>{{t 'Previous'}}</button>
+
+
+
+			<button type="submit" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				Valider commande
+			</button>
+
 		</div>
 
 	</fieldset>
