@@ -41,10 +41,10 @@ var orderSchema = new Schema({
 				default: false
 			}
 		}],
-	total_ht: Number,
-	total_tva: Number,
-	total_ttc: Number,
-	shipping: Number,
+	total_ht: {type: Number, default: 0},
+	total_tva: {type: Number, default: 0},
+	total_ttc: {type: Number, default: 0},
+	shipping: {type: Number, default: 0},
 	author: {id: String, name: String},
 	entity: String,
 	modelpdf: String,
@@ -74,27 +74,27 @@ var orderSchema = new Schema({
 				}]
 		}],
 	lines: [{
-			pu: Number,
-			qty: Number,
-			tva_tx: Number,
+			pu: {type: Number, default: 0},
+			qty: {type: Number, default: 0},
+			tva_tx: {type: Number, default: 0},
 			price_base_type: String,
 			group: String,
 			title: String,
-			pu_ht: Number,
+			pu_ht: {type: Number, default: 0},
 			description: String,
 			product_type: String,
 			product: {
 				id: {type: Schema.Types.ObjectId, ref: "product"},
 				name: String
 			},
-			total_tva: Number,
-			total_ttc: Number,
-			total_ht_without_discount: Number,
-			total_ttc_without_discount: Number,
-			total_vat_without_discount: Number,
-			total_ht: Number,
-			pu_ttc: Number,
-			pu_tva: Number
+			total_tva: {type: Number, default: 0},
+			total_ttc: {type: Number, default: 0},
+			total_ht_without_discount: {type: Number, default: 0},
+			total_ttc_without_discount: {type: Number, default: 0},
+			total_vat_without_discount: {type: Number, default: 0},
+			total_ht: {type: Number, default: 0},
+			pu_ttc: {type: Number, default: 0},
+			pu_tva: {type: Number, default: 0}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {
@@ -158,7 +158,7 @@ orderSchema.virtual('status')
 		res_status.name = status;
 		res_status.css = "";
 	}
-	
+
 	return res_status;
 });
 
