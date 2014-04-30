@@ -42,7 +42,7 @@ var orderSchema = new Schema({
 			}
 		}],
 	total_ht: {type: Number, default: 0},
-	//total_tva: {type: Number, default: 0},
+	total_tva: {type: Number, default: 0},
 	//total_ttc: {type: Number, default: 0},
 	shipping: {type: Number, default: 0},
 	author: {id: String, name: String},
