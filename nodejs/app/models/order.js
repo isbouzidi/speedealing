@@ -87,7 +87,7 @@ var orderSchema = new Schema({
 				id: {type: Schema.Types.ObjectId, ref: "product"},
 				name: String
 			},
-			total_tva: {type: Number, default: 0},
+			//total_tva: {type: Number, default: 0},
 			//total_ttc: {type: Number, default: 0},
 			total_ht_without_discount: {type: Number, default: 0},
 			total_ttc_without_discount: {type: Number, default: 0},
