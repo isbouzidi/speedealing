@@ -54,6 +54,17 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			societe.$remove();
 
 		};
+		
+		$scope.checkCodeClient= function(data){
+			return $http.get('api/societe/'+data).then(function(societe) {
+				//console.log(societe.data);
+				if(societe.data._id && $scope.societe._id !== societe.data._id)
+					return "Existe deja !";
+				else
+					return true;
+			});
+			
+		};
 
 		$scope.update = function() {
 			var societe = $scope.societe;

@@ -21,7 +21,10 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
-									<td>\{{societe.code_client}}</td>
+									<td><a href="#" editable-text="societe.code_client" buttons="no" onbeforesave="checkCodeClient($data)" onaftersave="update()">
+											\{{societe.code_client || "Non defini"}}
+										</a>
+									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Entity'}}</th>

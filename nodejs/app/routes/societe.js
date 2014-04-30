@@ -100,7 +100,7 @@ module.exports = function(app, passport, auth) {
 			{$project: {_id: 0, segmentation: 1}},
 			{$unwind: "$segmentation"},
 			{$match: query},
-			{$group: {_id : "$segmentation.text"}},
+			{$group: {_id: "$segmentation.text"}},
 			{$limit: req.body.take}
 		], function(err, docs) {
 			if (err) {
@@ -113,7 +113,7 @@ module.exports = function(app, passport, auth) {
 
 			if (docs !== null)
 				for (var i in docs) {
-					result.push({text:docs[i]._id});
+					result.push({text: docs[i]._id});
 				}
 
 			return res.send(200, result);
@@ -311,12 +311,20 @@ function Object() {
 
 Object.prototype = {
 	societe: function(req, res, next, id) {
-		SocieteModel.findOne({_id: id}, function(err, doc) {
+		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+		var query = {};
+		
+		if(checkForHexRegExp.test(id))
+			query = { _id: id };
+		else
+			query = { code_client: id };
+		
+		//console.log(query);
+		
+		SocieteModel.findOne(query, function(err, doc) {
 			if (err)
 				return next(err);
-			if (!doc)
-				return next(new Error('Failed to load societe ' + id));
-
+			
 			req.societe = doc;
 			next();
 		});

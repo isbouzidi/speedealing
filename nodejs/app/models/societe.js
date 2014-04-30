@@ -19,8 +19,8 @@ var EntityModel = mongoose.model('entity');
  */
 var societeSchema = new Schema({
 	ref: String,
-	name: {type: String, require: true},
-	code_client: String,
+	name: {type: String, required: true},
+	code_client: {type: String, unique: true},
 	code_fournisseur: String,
 	barCode: String,
 	Status: {type: Schema.Types.Mixed, default: 'ST_PFROI'},
