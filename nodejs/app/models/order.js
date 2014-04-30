@@ -43,8 +43,13 @@ var orderSchema = new Schema({
 		}],
 	total_ht: {type: Number, default: 0},
 	total_tva: {type: Number, default: 0},
-	//total_ttc: {type: Number, default: 0},
-	shipping: {type: Number, default: 0},
+	total_ttc: {type: Number, default: 0},
+	shipping: {
+		total_ht: {type: Number, default: 0},
+		tva_tx: {type: Number, default: 0},
+		total_tva: {type: Number, default: 0},
+		total_ttc: {type: Number, default: 0}
+	},
 	author: {id: String, name: String},
 	entity: String,
 	modelpdf: String,
@@ -87,8 +92,8 @@ var orderSchema = new Schema({
 				id: {type: Schema.Types.ObjectId, ref: "product"},
 				name: String
 			},
-			//total_tva: {type: Number, default: 0},
-			//total_ttc: {type: Number, default: 0},
+			total_tva: {type: Number, default: 0},
+			total_ttc: {type: Number, default: 0},
 			total_ht_without_discount: {type: Number, default: 0},
 			total_ttc_without_discount: {type: Number, default: 0},
 			total_vat_without_discount: {type: Number, default: 0},
@@ -115,6 +120,27 @@ orderSchema.plugin(gridfs.pluginGridFs, {root: 'Commande'});
  * Pre-save hook
  */
 orderSchema.pre('save', function(next) {
+	this.total_ht = 0;
+	this.total_tva = 0;
+	this.total_ttc = 0;
+
+	for (var i = 0; i < this.lines.length; i++) {
+		//console.log(object.lines[i].total_ht);
+		this.total_ht += this.lines[i].total_ht;
+		this.total_tva += this.lines[i].total_tva;
+		this.total_ttc += this.lines[i].total_ttc;
+	}
+
+	// Shipping
+	this.total_ht += this.shipping.total_ht;
+	this.total_tva += this.shipping.total_tva;
+	this.total_ttc += this.shipping.total_ttc;
+
+	// Round
+	this.total_ht = Math.round(this.total_ht * 100) / 100;
+	this.total_tva = Math.round(this.total_tva * 100) / 100;
+	this.total_ttc = Math.round(this.total_ttc * 100) / 100;
+
 	var self = this;
 	if (this.isNew && this.ref == null) {
 		SeqModel.inc("CO", function(seq) {
