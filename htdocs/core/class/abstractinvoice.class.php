@@ -285,7 +285,7 @@ class AbstractInvoice extends nosqlDocument {
 			//	$out.= price(price2num($this->$aRow, 'MT'));
 				$out.= 0;
 				if(is_object($this->$aRow))
-					$out.= 1;
+					$out.= $this->$aRow->total_ht;
 			} else
 				$out.= $this->$aRow;
 			if (isset($this->fk_extrafields->fields->$aRow->cssClass))
