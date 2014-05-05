@@ -1128,6 +1128,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 					$scope.TotalCourses.messagerie = 0;
 					$scope.TotalCourses.affretement = 0;
 					$scope.TotalCoursesST = 0;
+					$scope.TotalCoursesCE = 0;
 
 					angular.forEach(data.course, function(row) {
 						$scope.TotalCourses.course += row.total_ht;
@@ -1143,6 +1144,11 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 
 					angular.forEach(data.allST, function(row) {
 						$scope.TotalCoursesST += row.total_soustraitant;
+					});
+					
+					angular.forEach(data.allST, function(row) {
+						if(row.chargesExt)
+							$scope.TotalCoursesCE += row.chargesExt;
 					});
 
 				}
@@ -1226,7 +1232,8 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			var total = 0;
 			//console.log(row);
 			angular.forEach(row.children, function(cropEntry) {
-				total += cropEntry.entity[idx];
+				if(cropEntry.entity[idx])
+					total += cropEntry.entity[idx];
 			});
 			return total.toString();
 		};
@@ -1263,13 +1270,14 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			groupsCollapsedByDefault: false,
 			columnDefs: [
 				{field: 'fournisseur.name', width: "25%", displayName: 'Sous-traitant', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'ref', width: "25%", displayName: 'Id'},
+				{field: 'ref', width: "15%", displayName: 'Id'},
 				{field: 'Status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
 				{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
-				{field: 'total_soustraitant', width: "20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+				{field: 'total_soustraitant', width: "15%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"},
+				{field: 'chargesExt', width: "15%", displayName: 'Charges extenes', cellFilter: "euro", cellClass: "align-right"}
 			],
 			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
-					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.totalChildren()}} {{entryMaybePlural(row)}} {{row.label CUSTOM_FILTERS}}</span> <span class=\"red strong\">Total HT: {{aggFunc(row,'total_soustraitant') | euro}}</span></span>" +
+					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.totalChildren()}} {{entryMaybePlural(row)}} {{row.label CUSTOM_FILTERS}}</span> <span class=\"red strong\">Total HT: {{aggFunc(row,'total_soustraitant') | euro}}</span> / <span class=\"strong\">Total HT charges externes: {{aggFunc(row,'chargesExt') | euro}}</span></span>" +
 					"    <div class=\"{{row.aggClass()}}\"></div>" +
 					"</div>" +
 					""
