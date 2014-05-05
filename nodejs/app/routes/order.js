@@ -127,6 +127,8 @@ Object.prototype = {
 				});
 			});
 		}
+		
+		console.log(order);
 
 		order.save(function(err, doc) {
 			if (err) {

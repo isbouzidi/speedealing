@@ -25,7 +25,12 @@ var orderSchema = new Schema({
 	availability_code: {type: String, default: 'AV_NOW'},
 	demand_reason_code: {type: String, default: 'SRC_CAMP_EMAIL'},
 	client: {id: {type: Schema.Types.ObjectId, ref: 'societe'}, name: String},
-	contact: {id: {type: Schema.Types.ObjectId, ref: 'contact'}, name: String},
+	contact: {
+		id: {type: Schema.Types.ObjectId, ref: 'contact'},
+		name: String,
+		phone: String,
+		email: String,
+	},
 	ref_client: {type: String},
 	datec: {type: Date},
 	date_livraison: Date,
@@ -63,7 +68,12 @@ var orderSchema = new Schema({
 		address: String,
 		zip: String,
 		town: String,
-		country: String
+		country: String,
+		paiment: {
+			id: String, // CHQ, ESP, CB, MONEY, CPT(en compte)
+			label: String
+		},
+		mode: {type: String, default: "BILL"} // TICKET or BILL
 	},
 	bl: [{
 			label: String,
@@ -76,7 +86,13 @@ var orderSchema = new Schema({
 					id: Schema.Types.ObjectId,
 					name: String,
 					qty: {type: Number, default: 0}
-				}]
+				}],
+			shipping: {
+				id: String,
+				label: String,
+				address: Boolean,
+				total_ht: {type: Number, default: 0}
+			}
 		}],
 	lines: [{
 			pu: {type: Number, default: 0},

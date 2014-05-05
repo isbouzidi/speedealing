@@ -81,7 +81,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				{field: 'contact.name', enableCellEdit: false, displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
 				{field: 'date_livraison', enableCellEdit: false, displayName: 'Date livraison', width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'total_ht', enableCellEdit: false, displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
-				{field: 'status.name', enableCellEdit: true, displayName: 'Etat',headerClass:"blue", cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.label for c in status.values"></select>'},
+				{field: 'status.name', enableCellEdit: true, displayName: 'Etat', headerClass: "blue", cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.label for c in status.values"></select>'},
 				{field: 'entity', enableCellEdit: false, displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
 				{displayName: "Actions", enableCellEdit: false, width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a ng-href="/api/commande/pdf/{{row.getProperty(\'_id\')}}" class="button icon-download" title="Bon de commande PDF"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
@@ -137,6 +137,27 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 
 			$scope.order.optional = {};
 		};
+
+		$scope.shipping = {
+			default: "NONE",
+			values: [
+				{id: "NONE", label: "A diposition", address: false},
+				{id: "TNT", label: "TNT", address: true},
+				{id: "MAIL", label: "Courrier", address: true},
+				{id: "COURSIER", label: "Coursier", address: true},
+				{id: "TRANSPORTEUR", label: "Transporteur", address: true},
+			]
+		};
+
+		$scope.billing = {
+			default: "CHQ",
+			values: [
+				{id: "CPT", label: "En compte"},
+				{id: "MONEY", label: "Espèce"},
+				{id: "CHQ", label: "Chèque"},
+				{id: "CB", label: "Carte bancaire"},
+			]
+		}
 
 		$scope.create = function() {
 			if (this.order._id)
