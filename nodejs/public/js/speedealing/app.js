@@ -14,6 +14,7 @@ window.app = angular.module('mean', ['ngRoute',
 	'mean.system',
 	'mean.societes',
 	'mean.orders',
+	'mean.bills',
 	'mean.users',
 	'mean.articles',
 	'mean.europexpress'
@@ -23,6 +24,7 @@ angular.module('mean.system', []);
 angular.module('mean.societes', []);
 angular.module('mean.orders', []);
 angular.module('mean.users', []);
+angular.module('mean.bills', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
 

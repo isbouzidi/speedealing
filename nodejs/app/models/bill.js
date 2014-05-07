@@ -2,12 +2,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+		i18n = require("i18next"),
 		config = require('../../config/config'),
 		Schema = mongoose.Schema,
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
 var EntityModel = mongoose.model('entity');
+var ExtrafieldModel = mongoose.model('extrafields');
 
 /**
  * Article Schema
@@ -39,6 +41,7 @@ var billSchema = new Schema({
 	total_ttc: Number,
 	shipping: Number,
 	author: {id: String, name: String},
+	commercial_id: {id: {type: String}, name: String},
 	entity: {type: String},
 	modelpdf: String,
 	orders: [Schema.Types.ObjectId],
@@ -72,6 +75,9 @@ var billSchema = new Schema({
 		createdAt: {type: Date},
 		data: Buffer,
 	}
+},{
+	toObject: {virtuals: true},
+	toJSON: {virtuals: true}
 });
 
 billSchema.plugin(timestamps);
@@ -146,5 +152,35 @@ billSchema.methods = {
 			});
 	}
 }
+
+var statusList = {};
+ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
+	if (err) {
+		console.log(err);
+		return;
+	}
+	statusList = doc.fields.Status;
+});
+
+billSchema.virtual('status')
+		.get(function() {
+			var res_status = {};
+
+			var status = this.Status;
+
+			if (status && statusList.values[status].label) {
+				//console.log(this);
+				res_status.id = status;
+				res_status.name = i18n.t("bills:" + statusList.values[status].label);
+				//res_status.name = statusList.values[status].label;
+				res_status.css = statusList.values[status].cssClass;
+			} else { // By default
+				res_status.id = status;
+				res_status.name = status;
+				res_status.css = "";
+			}
+			return res_status;
+
+		});
 
 mongoose.model('bill', billSchema, 'Facture');

@@ -156,7 +156,7 @@ orderSchema.pre('save', function(next) {
 	this.total_ht = Math.round(this.total_ht * 100) / 100;
 	this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = Math.round(this.total_ttc * 100) / 100;
-
+	
 	var self = this;
 	if (this.isNew && this.ref == null) {
 		SeqModel.inc("CO", function(seq) {
