@@ -12,6 +12,7 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 
 var ExtrafieldModel = mongoose.model('extrafields');
+var DictModel = mongoose.model('dict');
 
 module.exports = function(app, passport, auth) {
 
@@ -44,9 +45,9 @@ module.exports = function(app, passport, auth) {
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
 		console.log(query);
-		SocieteModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		BillModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
 			if (err) {
-				console.log("err : /api/societe/autocomplete");
+				console.log("err : /api/bill/autocomplete");
 				console.log(err);
 				return;
 			}
@@ -100,15 +101,17 @@ Object.prototype = {
 		if (checkForHexRegExp.test(id))
 			query = {_id: id};
 		else
-			query = {code_client: id};
+			query = {ref: id};
 
 		//console.log(query);
 
-		SocieteModel.findOne(query, function(err, doc) {
+		BillModel.findOne(query, function(err, doc) {
 			if (err)
 				return next(err);
 
-			req.societe = doc;
+			req.bill = doc;
+			
+			//console.log(doc);
 			next();
 		});
 	},
@@ -143,48 +146,48 @@ Object.prototype = {
 		});
 	},
 	show: function(req, res) {
-		res.json(req.societe);
+		res.json(req.bill);
 	},
 	create: function(req, res) {
-		var societe = new SocieteModel(req.body);
-		societe.author = {};
-		societe.author.id = req.user._id;
-		societe.author.name = req.user.name;
+		var bill = new BillModel(req.body);
+		bill.author = {};
+		bill.author.id = req.user._id;
+		bill.author.name = req.user.name;
 
-		if (societe.entity == null)
-			societe.entity = req.user.entity;
+		if (bill.entity == null)
+			bill.entity = req.user.entity;
 
-		console.log(societe);
-		societe.save(function(err, doc) {
+		console.log(bill);
+		bill.save(function(err, doc) {
 			if (err) {
 				return console.log(err);
 			}
 
-			res.json(societe);
+			res.json(bill);
 		});
 	},
 	update: function(req, res) {
-		var societe = req.societe;
-		societe = _.extend(societe, req.body);
+		var bill = req.bill;
+		bill = _.extend(bill, req.body);
 
-		societe.save(function(err, doc) {
+		bill.save(function(err, doc) {
 			res.json(doc);
 		});
 	},
 	destroy: function(req, res) {
-		var societe = req.societe;
-		societe.remove(function(err) {
+		var bill = req.bill;
+		bill.remove(function(err) {
 			if (err) {
 				res.render('error', {
 					status: 500
 				});
 			} else {
-				res.json(societe);
+				res.json(bill);
 			}
 		});
 	},
 	select: function(req, res) {
-		ExtrafieldModel.findById('extrafields:Societe', function(err, doc) {
+		ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
 			if (err) {
 				console.log(err);
 				return;
@@ -201,7 +204,7 @@ Object.prototype = {
 								if (docs.values[i].label)
 									val.label = docs.values[i].label;
 								else
-									val.label = req.i18n.t("companies:" + i);
+									val.label = req.i18n.t("bills:" + i);
 								result.push(val);
 							}
 						}
@@ -215,7 +218,7 @@ Object.prototype = {
 				if (doc.fields[req.query.field].values[i].enable) {
 					var val = {};
 					val.id = i;
-					val.label = doc.fields[req.query.field].values[i].label;
+					val.label = req.i18n.t("bills:"+doc.fields[req.query.field].values[i].label);
 					result.push(val);
 				}
 			}

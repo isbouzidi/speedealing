@@ -67,10 +67,7 @@ module.exports = function(app, passport, auth) {
 					} else
 						result[i].cptBilling = docs[i].cptBilling;
 
-					if (docs[i].price_level)
-						result[i].price_level = docs[i].price_level;
-					else
-						result[i].price_level = "BASE";
+					result[i].price_level = docs[i].price_level;
 
 					// add address
 					result[i].address = {};
@@ -311,6 +308,7 @@ function Object() {
 
 Object.prototype = {
 	societe: function(req, res, next, id) {
+		//TODO Check ACL here
 		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 		var query = {};
 		

@@ -164,7 +164,8 @@
        "tva_tx": {
            "type": "text",
            "enable": true,
-           "label": "VAT"
+           "label": "VAT",
+		   "dict": "dict:fk_tva"
        },
        "remise": {
            "type": "text",

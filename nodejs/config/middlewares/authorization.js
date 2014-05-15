@@ -11,23 +11,24 @@ exports.requiresLogin = function(req, res, next) {
 };
 
 /**
- * User authorizations routing middleware
+ * Render HTML authorizations routing middleware
  */
-exports.user = {
+exports.html = {
     hasAuthorization: function(req, res, next) {
-        if (req.profile.id != req.user.id) {
-            return res.send(401, 'User is not authorized');
-        }
+		// Test d'acces sur le module
+       // if (req.profile.id != req.user.id) {
+            //return res.render('/partials/401.html');
+        //}
         next();
     }
 };
 
 /**
- * Article authorizations routing middleware
+ * API authorizations routing middleware
  */
-exports.article = {
+exports.api = {
     hasAuthorization: function(req, res, next) {
-        if (req.article.user.id != req.user.id) {
+        if (req.user.id != req.user.id) {
             return res.send(401, 'User is not authorized');
         }
         next();

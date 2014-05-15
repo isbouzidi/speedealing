@@ -66,11 +66,11 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Phone'}}</th>
-									<td ><span editable-tel="societe.phone" e-pattern="\+\d{11}" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone || "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
+									<td ><span editable-tel="societe.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone || "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Fax'}}</th>
-									<td><span editable-tel="societe.fax" e-pattern="\+\d{11}" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax || "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
+									<td><span editable-tel="societe.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax || "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'EMail'}}</th> 

@@ -9,6 +9,7 @@ var ProductModel = mongoose.model('product');
 var StorehouseModel = mongoose.model('storehouse');
 
 var ExtrafieldModel = mongoose.model('extrafields');
+var DictModel = mongoose.model('dict');
 
 module.exports = function(app, passport, auth) {
 
@@ -40,10 +41,17 @@ module.exports = function(app, passport, auth) {
 
 		var query = {
 			"$or": [
-				{name: new RegExp(req.body.filter.filters[0].value, "i")},
-				{ref: new RegExp(req.body.filter.filters[0].value, "i")}
+				{ref: new RegExp(req.body.filter.filters[0].value, "i")},
+				{label: new RegExp(req.body.filter.filters[0].value, "i")}
 			]
 		};
+
+		var price_level = 'BASE';
+		if (req.body.price_level) {
+			price_level = req.body.price_level;
+		}
+
+		query['price.price_level'] = price_level;
 
 		/*if (req.query.fournisseur) {
 		 query.fournisseur = req.query.fournisseur;
@@ -51,26 +59,45 @@ module.exports = function(app, passport, auth) {
 		 query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};*/
 
 		//console.log(query);
-		ProductModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		ProductModel.aggregate([
+			{$match: query},
+			{$project: {name: "$ref", label: 1, template: 1, price: 1, minPrice: 1, description: 1}},
+			{$unwind: "$price"},
+			{$match: {'price.price_level': price_level}},
+			{$limit: req.body.take}], function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/autocomplete");
 				console.log(err);
 				return;
 			}
+			console.log(docs);
 
-			var result = [];
-
-			if (docs !== null)
-				for (var i in docs) {
-					//console.log(docs[i].ref);
-					result[i] = {};
-					result[i].name = docs[i].name;
-					result[i].id = docs[i]._id;
-				}
-
-			return res.send(200, result);
+			return res.send(200, docs);
 		});
 	});
+
+	app.get('/api/product/fk_extrafields/select', auth.requiresLogin, object.select);
+	app.get('/api/product/convert_tva', auth.requiresLogin, function(req, res) {
+		DictModel.findOne({_id: "dict:fk_tva"}, function(err, docs) {
+			for (var i in docs.values) {
+				if (docs.values[i].label)
+					docs.values[i].value = docs.values[i].label;
+
+				if (docs.values[i].label == null && docs.values[i].value == null)
+					docs.values[i].value = 0;
+
+				delete docs.values[i].label;
+
+				//console.log(docs.values[i]);
+			}
+			docs.save(function(err, doc) {
+				//console.log(err);
+				res.json(doc);
+			});
+		});
+
+	});
+
 
 	app.post('/api/product', auth.requiresLogin, function(req, res) {
 		object.create(req, res);
@@ -169,63 +196,63 @@ module.exports = function(app, passport, auth) {
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
 						.transform(function(row, index, callback) {
-					if (index === 0) {
-						tab = row; // Save header line
-						return callback();
-					}
-					//console.log(tab);
-					//console.log(row);
+							if (index === 0) {
+								tab = row; // Save header line
+								return callback();
+							}
+							//console.log(tab);
+							//console.log(row);
 
-					//console.log(row[0]);
+							//console.log(row[0]);
 
-					//return;
+							//return;
 
-					SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
-						if (err) {
-							console.log(err);
-							return callback();
-						}
+							SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
+								if (err) {
+									console.log(err);
+									return callback();
+								}
 
-						if (societe == null)
-							societe = new SocieteModel();
-
-
-						for (var i = 0; i < row.length; i++) {
-							societe[tab[i]] = row[i];
-						}
+								if (societe == null)
+									societe = new SocieteModel();
 
 
+								for (var i = 0; i < row.length; i++) {
+									societe[tab[i]] = row[i];
+								}
 
-						//console.log(row[10]);
-						//console.log(societe)
-						//console.log(societe.datec);
 
-						societe.save(function(err, doc) {
-							if (err)
-								console.log(err);
-							/*if (doc == null)
-							 console.log("null");
-							 else
-							 console.log(doc);*/
 
-							callback();
-						});
+								//console.log(row[10]);
+								//console.log(societe)
+								//console.log(societe.datec);
 
-					});
+								societe.save(function(err, doc) {
+									if (err)
+										console.log(err);
+									/*if (doc == null)
+									 console.log("null");
+									 else
+									 console.log(doc);*/
 
-					//return row;
-				}/*, {parallel: 1}*/)
+									callback();
+								});
+
+							});
+
+							//return row;
+						}/*, {parallel: 1}*/)
 						.on("end", function(count) {
-					console.log('Number of lines: ' + count);
-					fs.unlink(filename, function(err) {
-						if (err)
-							console.log(err);
-					});
-					return res.send(200, {count: count});
-				})
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function(err) {
+								if (err)
+									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
 						.on('error', function(error) {
-					console.log(error.message);
-				});
+							console.log(error.message);
+						});
 			}
 		}
 	});
@@ -415,7 +442,7 @@ Object.prototype = {
 
 		if (req.query.qty) {
 			query.push({$match: {'price.qtyMin': {'$lte': parseFloat(req.query.qty)}}});
-			query.push({$sort : { 'price.qtyMin' : -1}});
+			query.push({$sort: {'price.qtyMin': -1}});
 		}
 
 		//console.log(req.query);
@@ -579,5 +606,53 @@ Object.prototype = {
 			}
 		}
 		res.send(200, result);
+	},
+	select: function(req, res) {
+		ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			var result = [];
+			if (doc.fields[req.query.field].dict)
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+
+					if (docs) {
+						for (var i in docs.values) {
+							if (docs.values[i].enable) {
+								if (docs.values[i].pays_code && docs.values[i].pays_code != 'FR')
+									continue;
+								//console.log(docs.values[i]);
+								var val = {};
+								val.id = i;
+								if (docs.values[i].label)
+									val.label = docs.values[i].label;
+								else
+									val.label = req.i18n.t("bills:" + i);
+
+								if (docs.values[i].value !== null)
+									val.value = docs.values[i].value
+
+								result.push(val);
+							}
+						}
+						doc.fields[req.query.field].values = result;
+					}
+
+					res.json(doc.fields[req.query.field]);
+				});
+
+			for (var i in doc.fields[req.query.field].values) {
+				if (doc.fields[req.query.field].values[i].enable) {
+					var val = {};
+					val.id = i;
+					val.label = req.i18n.t("bills:" + doc.fields[req.query.field].values[i].label);
+					result.push(val);
+				}
+			}
+			doc.fields[req.query.field].values = result;
+
+			res.json(doc.fields[req.query.field]);
+		});
 	}
 };

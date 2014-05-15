@@ -47,7 +47,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				return;
 			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
 
-			return ($scope.societe[idx] && selected.length) ? selected[0].label : 'Non défini';
+			return ($scope.societe[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
 		$scope.remove = function(societe) {
@@ -125,6 +125,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				for (var i in societe.checklist)
 					if (societe.checklist[i])
 						$scope.checklist++;
+			}, function(err){
+				if(err.status == 401)
+					$location.path("401.html");
 			});
 
 			$http({method: 'GET', url: '/api/europexpress/buy/status/select', params: {

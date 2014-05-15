@@ -2,7 +2,12 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 		pageTitle.setTitle('Liste des factures');
 
-		$scope.bill = {};
+		$scope.bill = {
+			lines: [],
+			notes: []
+		};
+		$scope.tickets = [];
+		$scope.countTicket = 0;
 		$scope.bills = [];
 		$scope.gridOptionsBills = {};
 
@@ -11,10 +16,10 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		$scope.type = {name: "Toutes", id: "ALL"};
 
 		$scope.init = function() {
-			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code"];
+			var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
 
 			angular.forEach(fields, function(field) {
-				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+				$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
 						field: field
 					}
 				}).success(function(data, status) {
@@ -24,26 +29,12 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			});
 		};
 
-		$scope.segmentationAutoComplete = function(val) {
-			return $http.post('api/societe/segmentation/autocomplete', {
-				take: 5,
-				skip: 0,
-				page: 1,
-				pageSize: 5,
-				filter: {logic: 'and', filters: [{value: val}]
-				}
-			}).then(function(res) {
-				//console.log(res.data);
-				return res.data
-			});
-		};
-
 		$scope.showStatus = function(idx) {
-			if (!($scope[idx] && $scope.societe[idx]))
+			if (!($scope[idx] && $scope.bill[idx]))
 				return;
-			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
+			var selected = $filter('filter')($scope[idx].values, {id: $scope.bill[idx]});
 
-			return ($scope.societe[idx] && selected.length) ? selected[0].label : 'Non défini';
+			return ($scope.bill[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
 		$scope.remove = function(bill) {
@@ -70,6 +61,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			Bill.get({
 				Id: $routeParams.id
 			}, function(bill) {
+				//console.log(bill);
 				$scope.bill = bill;
 
 				$http({method: 'GET', url: 'api/ticket', params:
@@ -85,11 +77,51 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				});
 
 				pageTitle.setTitle('Facture ' + $scope.bill.ref);
+			}, function(err) {
+				if (err.status == 401)
+					$location.path("401.html");
 			});
 		};
 
+		$scope.societeAutoComplete = function(val, field) {
+			return $http.post('api/societe/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
+		};
+
+		$scope.userAutoComplete = function(val) {
+			return $http.post('api/user/name/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data;
+			});
+		};
+
+		$scope.updateAddress = function(data) {
+			$scope.bill.address = data.address.address;
+			$scope.bill.zip = data.address.zip;
+			$scope.bill.town = data.address.town;
+
+			$scope.bill.price_level = data.price_level;
+
+			return true;
+		};
+
+
 		/*
-		 * NG-GRID for societe list
+		 * NG-GRID for bill list
 		 */
 
 		$scope.filterOptionsBill = {
@@ -117,18 +149,62 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			]
 		};
 
-		$scope.addNew = function() {
+		$scope.addNewLine = function() {
 			var modalInstance = $modal.open({
-				templateUrl: '/partials/bills/create.html',
-				controller: "BillCreateController",
-				windowClass: "steps"
+				templateUrl: '/partials/lines',
+				controller: "LineController",
+				windowClass: "steps",
+				resolve: {
+					price_level: function() {
+						return $scope.bill.price_level;
+					},
+					object: function() {
+						return {};
+					}
+				}
 			});
 
-			modalInstance.result.then(function(bill) {
-				$scope.societes.push(bill);
-				$scope.countBills++;
+			modalInstance.result.then(function(line) {
+				$scope.bill.lines.push(line);
+				$scope.bill.$update(function(response) {
+					$scope.bill = response;
+				});
 			}, function() {
 			});
+		};
+
+		$scope.editLine = function(row) {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/lines',
+				controller: "LineController",
+				windowClass: "steps",
+				resolve: {
+					price_level: function() {
+						return $scope.bill.price_level;
+					},
+					object: function() {
+						return row.entity;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(line) {
+				$scope.bill.$update(function(response) {
+					$scope.bill = response;
+				});
+			}, function() {
+			});
+		};
+
+		$scope.removeLine = function(row) {
+			//console.log(row.entity._id);
+			for (var i = 0; i < $scope.bill.lines.length; i++) {
+				if (row.entity._id === $scope.bill.lines[i]._id) {
+					$scope.bill.lines.splice(i, 1);
+					$scope.update();
+					break;
+				}
+			}
 		};
 
 		$scope.addNote = function() {
@@ -148,6 +224,52 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			$scope.bill.notes.push(note);
 			$scope.update();
 			this.note = "";
+		};
+
+		/*
+		 * NG-GRID for bill lines
+		 */
+
+		$scope.filterOptionsLines = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsLines = {
+			data: 'bill.lines',
+			enableRowSelection: false,
+			sortInfo: {fields: ["group"], directions: ["asc"]},
+			filterOptions: $scope.filterOptionsLines,
+			i18n: 'fr',
+			enableColumnResize: true,
+			groups: ['group'],
+			groupsCollapsedByDefault: false,
+			rowHeight: 50,
+			columnDefs: [
+				{field: 'product.name', width: "60%", displayName: 'Désignation', cellTemplate: '<div class="ngCellText"><span class="blue strong icon-cart">{{row.getProperty(col.field)}}</span> - {{row.getProperty(\'product.label\')}}<pre class="no-padding">{{row.getProperty(\'description\')}}</pre></div>'},
+				{field: 'group', displayName: "Groupe", visible: false},
+				{field: 'tva_tx', displayName: 'TVA', cellClass: "align-right"},
+				{field: 'pu_ht', displayName: 'P.U. HT', cellClass: "align-right", cellFilter: "currency"},
+				{field: 'qty', displayName: 'Qté', cellClass: "align-right"},
+				//{field: '', displayName: 'Réduc'},
+				{field: 'total_ht', displayName: 'Total HT', cellFilter: "currency", cellClass: "align-right"},
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-click="editLine(row)"></button></button><button class="button orange-gradient icon-trash" title="Supprimer" ng-click="removeLine(row)"></button></div></div>'}
+			],
+			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
+					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}}</span><br/><span class=\"anthracite strong\">Total HT: {{aggFunc(row,'total_ht') | currency}}</span></span>" +
+					"    <div class=\"{{row.aggClass()}}\"></div>" +
+					"</div>" +
+					""
+		};
+
+		$scope.aggFunc = function(row, idx) {
+			var total = 0;
+			//console.log(row);
+			angular.forEach(row.children, function(cropEntry) {
+				if (cropEntry.entity[idx])
+					total += cropEntry.entity[idx];
+			});
+			return total;
 		};
 
 		/*
@@ -189,16 +311,16 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 						}
 					}).
 							success(function(data, status) {
-						if (status == 200) {
-							if (data.value) {
-								if (data.field === "Status")
-									for (var i = 0; i < $scope.status.length; i++) {
-										if ($scope.status[i].id === data.value)
-											row.entity.Status = $scope.status[i];
+								if (status == 200) {
+									if (data.value) {
+										if (data.field === "Status")
+											for (var i = 0; i < $scope.status.length; i++) {
+												if ($scope.status[i].id === data.value)
+													row.entity.Status = $scope.status[i];
+											}
 									}
-							}
-						}
-					});
+								}
+							});
 
 					$scope.save.pending = false;
 				}, 500);
@@ -236,67 +358,19 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 		};
 
 		$scope.init = function() {
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+			$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
 					field: "Status"
 				}
 			}).success(function(data, status) {
 				$scope.status = data;
 				//console.log(data);
-				$scope.societe.Status = data.default;
+				$scope.bill.Status = data.default;
 			});
 
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "fournisseur"
-				}
-			}).success(function(data, status) {
-				$scope.fournisseur = data;
-				//console.log(data);
-				$scope.societe.fournisseur = "NO";
-			});
-
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "prospectlevel"
-				}
-			}).success(function(data, status) {
-				$scope.potential = data;
-				//console.log(data);
-				$scope.societe.prospectlevel = data.default;
-			});
-
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "typent_id"
-				}
-			}).success(function(data, status) {
-				$scope.typent = data;
-				//console.log(data);
-				$scope.societe.typent_id = data.default;
-			});
-
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "effectif_id"
-				}
-			}).success(function(data, status) {
-				$scope.effectif = data;
-				//console.log(data);
-				$scope.societe.effectif_id = data.default;
-			});
-
-			$scope.societe.commercial_id = {
+			$scope.bill.commercial_id = {
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
 			}
-
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "forme_juridique_code"
-				}
-			}).success(function(data, status) {
-				$scope.forme_juridique = data;
-				//console.log(data);
-				$scope.societe.forme_juridique_code = data.default;
-			});
-
-			$scope.societe.price_level = "BASE";
-			$scope.societe.capital = 0;
 		};
 
 		$scope.create = function() {
@@ -304,7 +378,7 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 			bill.$save(function(response) {
 				//console.log(response);
 				$modalInstance.close(response);
-				//$location.path("societe/" + response._id);
+				//$location.path("bill/" + response._id);
 			});
 		};
 
@@ -318,7 +392,7 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 

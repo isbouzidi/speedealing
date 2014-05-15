@@ -36,7 +36,7 @@ angular.module('mean.system').filter('phone', function() {
 			return tel;
 		}
 
-		if (value.match(/^[0-9]/)) { // Start with 0
+		if (value.match(/^0/)) { // Start with 0
 			country = value.slice(0, 1);
 			city = "";
 			number = value.slice(4);

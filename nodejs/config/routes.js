@@ -230,7 +230,7 @@ module.exports = function(app, passport, auth) {
 	var index = require('../app/controllers/index');
 	app.get('/partials/home', auth.requiresLogin, index.home);
 
-	app.get('/partials/:view', auth.requiresLogin, function(req, res) {
+	app.get('/partials/:view', auth.requiresLogin, auth.html.hasAuthorization, function(req, res) {
 		var view = req.params.view;
 		res.render('partials/' + view, {user: req.user}); // Mode list view
 	});

@@ -15,15 +15,14 @@ var productSchema = new Schema({
 	compta_buy: {type: String, default: ""},
 	compta_sell: {type: String, default: ""},
 	label: {type: String, default: ""},
+	description: {type: String, default: ""},
 	barCode: String,
 	type: Schema.Types.Mixed,
 	Status: Schema.Types.Mixed,
 	country_id: String,
 	tva_tx: {type: Number, default: 20},
-	weight_units: String,
-	size_units: String,
-	surface_units: String,
-	volume_units: String,
+	units: String,
+	minPrice: {type: Number, default: 0},
 	finished: String,
 	price_base_type: String,
 	tms: Date,
@@ -48,7 +47,8 @@ var productSchema = new Schema({
 			pu_ht: Number,
 			ref_customer_code: String,
 			price_level: String
-		}]
+		}],
+	template: {type: String, default: "/partials/lines/classic.html"}
 });
 
 productSchema.plugin(timestamps);
