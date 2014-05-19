@@ -15,7 +15,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
 
 		$scope.init = function() {
-			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code"];
+			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement"];
 
 			angular.forEach(fields, function(field) {
 				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
@@ -44,7 +44,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 		$scope.showStatus = function(idx) {
 			if (!($scope[idx] && $scope.societe[idx]))
-				return;
+				return 'Non défini';
 			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
 
 			return ($scope.societe[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
@@ -54,16 +54,16 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			societe.$remove();
 
 		};
-		
-		$scope.checkCodeClient= function(data){
-			return $http.get('api/societe/'+data).then(function(societe) {
+
+		$scope.checkCodeClient = function(data) {
+			return $http.get('api/societe/' + data).then(function(societe) {
 				//console.log(societe.data);
-				if(societe.data._id && $scope.societe._id !== societe.data._id)
+				if (societe.data._id && $scope.societe._id !== societe.data._id)
 					return "Existe deja !";
 				else
 					return true;
 			});
-			
+
 		};
 
 		$scope.update = function() {
@@ -125,8 +125,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				for (var i in societe.checklist)
 					if (societe.checklist[i])
 						$scope.checklist++;
-			}, function(err){
-				if(err.status == 401)
+			}, function(err) {
+				if (err.status == 401)
 					$location.path("401.html");
 			});
 
@@ -351,10 +351,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			$http({method: 'GET', url: 'dict/filesIcons'
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					iconsFilesList = data;
-				}
-			});
+						if (status == 200) {
+							iconsFilesList = data;
+						}
+					});
 		};
 
 		$scope.onFileSelect = function($files) {
@@ -392,10 +392,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			$http({method: 'DELETE', url: 'api/societe/file/' + id + '/' + fileName
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					$scope.societe.files.splice(idx, 1);
-				}
-			});
+						if (status == 200) {
+							$scope.societe.files.splice(idx, 1);
+						}
+					});
 		};
 
 		$scope.fileType = function(name) {
@@ -472,16 +472,16 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 						}
 					}).
 							success(function(data, status) {
-						if (status == 200) {
-							if (data.value) {
-								if (data.field === "Status")
-									for (var i = 0; i < $scope.status.length; i++) {
-										if ($scope.status[i].id === data.value)
-											row.entity.Status = $scope.status[i];
+								if (status == 200) {
+									if (data.value) {
+										if (data.field === "Status")
+											for (var i = 0; i < $scope.status.length; i++) {
+												if ($scope.status[i].id === data.value)
+													row.entity.Status = $scope.status[i];
+											}
 									}
-							}
-						}
-					});
+								}
+							});
 
 					$scope.save.pending = false;
 				}, 500);

@@ -1,4 +1,4 @@
-angular.module('mean.bills').controller('BillController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Bills', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bill) {
+angular.module('mean.bills').controller('BillController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Bills', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
 
 		pageTitle.setTitle('Liste des factures');
 
@@ -51,14 +51,14 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		};
 
 		$scope.find = function() {
-			Bill.query({query: this.type.id, entity: Global.user.entity}, function(bills) {
+			Bills.query({query: this.type.id, entity: Global.user.entity}, function(bills) {
 				$scope.bills = bills;
 				$scope.countBills = bills.length;
 			});
 		};
 
 		$scope.findOne = function() {
-			Bill.get({
+			Bills.get({
 				Id: $routeParams.id
 			}, function(bill) {
 				//console.log(bill);
@@ -147,6 +147,22 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
+		};
+
+		$scope.addNewBill = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/bills/create.html',
+				controller: "BillCreateController",
+				windowClass: "steps"
+			});
+
+			modalInstance.result.then(function(bill) {
+				bill = new Bills(bill);
+				bill.$save(function(response) {
+					$location.path("bills/" + response._id);
+				});
+			}, function() {
+			});
 		};
 
 		$scope.addNewLine = function() {
@@ -330,11 +346,13 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 	}]);
 
-angular.module('mean.bills').controller('BillCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Bills', function($scope, $http, $modalInstance, $upload, $route, Global, Bills) {
+angular.module('mean.bills').controller('BillCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function($scope, $http, $modalInstance, $upload, $route, Global) {
 		$scope.global = Global;
 
 		$scope.active = 1;
-		$scope.bill = {};
+		$scope.bill = {
+			Status: "DRAFT"
+		};
 
 		$scope.isActive = function(idx) {
 			if (idx == $scope.active)
@@ -358,13 +376,17 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 		};
 
 		$scope.init = function() {
-			$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
-					field: "Status"
-				}
-			}).success(function(data, status) {
-				$scope.status = data;
-				//console.log(data);
-				$scope.bill.Status = data.default;
+			var fields = ["Status", "mode_reglement_code", "cond_reglement_code"];
+
+			angular.forEach(fields, function(field) {
+				$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
+						field: field
+					}
+				}).success(function(data, status) {
+					$scope[field] = data;
+					//console.log(data);
+					$scope.bill[field] = data.default;
+				});
 			});
 
 			$scope.bill.commercial_id = {
@@ -374,14 +396,19 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 		};
 
 		$scope.create = function() {
-			var bill = new Bills(this.bill);
-			bill.$save(function(response) {
-				//console.log(response);
-				$modalInstance.close(response);
-				//$location.path("bill/" + response._id);
-			});
+			$modalInstance.close(this.bill);
 		};
 
+		$scope.updateCoord = function(item, model, label) {
+			//console.log(item);
+
+			$scope.bill.price_level = item.price_level;
+			$scope.bill.address = item.address.address;
+			$scope.bill.zip = item.address.zip;
+			$scope.bill.town = item.address.town;
+			$scope.bill.mode_reglement_code = item.mode_reglement_code;
+			$scope.bill.cond_reglement_code = item.cond_reglement_code;
+		};
 
 		$scope.userAutoComplete = function(val) {
 			return $http.post('api/user/name/autocomplete', {
@@ -393,6 +420,19 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				}
 			}).then(function(res) {
 				return res.data;
+			});
+		};
+
+		$scope.societeAutoComplete = function(val, field) {
+			return $http.post('api/societe/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
 			});
 		};
 

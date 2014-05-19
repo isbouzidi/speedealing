@@ -197,39 +197,42 @@ billSchema.methods = {
 	 * 	@return     date     			       	Date limite de reglement si ok, <0 si ko
 	 */
 	calculate_date_lim_reglement: function() {
-
 		var data = cond_reglement.values[this.cond_reglement_code];
-
 
 		var cdr_nbjour = data.nbjour;
 		var cdr_fdm = data.fdm;
-		var cdr_decalage = data.decalage;
+		var cdr_decalage = data.decalage || 0;
 
 		/* Definition de la date limite */
 
 		// 1 : ajout du nombre de jours
-		var datelim = this.datec + (cdr_nbjour * 3600 * 24);
-		console.log(datelim);
+		var datelim = new Date(this.datec);
+		datelim.setDate(datelim.getDate() + cdr_nbjour);
 
 		// 2 : application de la regle "fin de mois"
 		if (cdr_fdm) {
-			var mois = date('m', datelim);
-			var annee = date('Y', datelim);
-			if (mois == 12) {
+			var mois = datelim.getMonth();
+			var annee = datelim.getFullYear();
+			if (mois === 12) {
 				mois = 1;
 				annee += 1;
 			} else {
 				mois += 1;
 			}
+			
 			// On se deplace au debut du mois suivant, et on retire un jour
-			datelim = dol_mktime(12, 0, 0, mois, 1, annee);
-			datelim -= (3600 * 24);
+			datelim.setHours(0);
+			datelim.setMonth(mois);
+			datelim.setFullYear(annee);
+			datelim.setDate(0);
+			//console.log(datelim);
 		}
 
 		// 3 : application du decalage
-		datelim += (cdr_decalage * 3600 * 24);
+		datelim.setDate(datelim.getDate() + cdr_decalage);
+		//console.log(datelim);
 
-		//this.dater = datelim;
+		this.dater = datelim;
 	}
 };
 

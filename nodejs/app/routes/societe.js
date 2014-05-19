@@ -76,6 +76,9 @@ module.exports = function(app, passport, auth) {
 					result[i].address.zip = docs[i].zip;
 					result[i].address.town = docs[i].town;
 					result[i].address.country = docs[i].country;
+					
+					result[i].mode_reglement_code = docs[i].mode_reglement;
+					result[i].cond_reglement_code = docs[i].cond_reglement;
 				}
 
 			return res.send(200, result);

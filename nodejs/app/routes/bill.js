@@ -4,8 +4,10 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('underscore'),
+		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
-		config = require('../../config/config');
+		config = require('../../config/config'),
+		latex = require('../models/latex');
 
 var BillModel = mongoose.model('bill');
 var SocieteModel = mongoose.model('societe');
@@ -23,6 +25,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/bill', auth.requiresLogin, object.create);
 	app.put('/api/bill/:billId', auth.requiresLogin, object.update);
 	app.del('/api/bill/:billId', auth.requiresLogin, object.destroy);
+	app.get('/api/bill/pdf/:billId', auth.requiresLogin, object.pdf);
 	app.get('/api/bill/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
@@ -110,7 +113,7 @@ Object.prototype = {
 				return next(err);
 
 			req.bill = doc;
-			
+
 			//console.log(doc);
 			next();
 		});
@@ -218,13 +221,105 @@ Object.prototype = {
 				if (doc.fields[req.query.field].values[i].enable) {
 					var val = {};
 					val.id = i;
-					val.label = req.i18n.t("bills:"+doc.fields[req.query.field].values[i].label);
+					val.label = req.i18n.t("bills:" + doc.fields[req.query.field].values[i].label);
 					result.push(val);
 				}
 			}
 			doc.fields[req.query.field].values = result;
 
 			res.json(doc.fields[req.query.field]);
+		});
+	},
+	pdf: function(req, res) {
+		// Generation de la facture PDF et download
+
+		var fk_facture;
+		ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			fk_facture = doc;
+		});
+
+		latex.loadModel("facture.tex", function(err, tex) {
+
+			var doc = req.bill;
+
+			if (doc.Status == "DRAFT") {
+				res.type('html');
+				return res.send(500, "Impossible de générer le PDF, la facture n'est pas validée");
+			}
+
+			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
+
+				// replacement des variables
+				tex = tex.replace(/--NUM--/g, doc.ref);
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
+				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
+				tex = tex.replace(/--TITLE--/g, doc.title);
+				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
+				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
+				tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
+
+				tex = tex.replace(/--REGLEMENT--/g, "Réglement à 30 jours"/*fk_facture.fields.cond_reglement_code.values[doc.cond_reglement_code].label*/);
+				tex = tex.replace(/--PAID--/g, "Virement");
+				tex = tex.replace(/--RIB--/g, "BANQUE CHALUS \\\\RIB : 10188 06801 50647829381 71\\\\ IBAN : FR76 1018 8068 0150 6478 2938 171 BIC : BCHAFR21");
+				//tex = tex.replace(/--NOTE--/g, doc.desc.replace(/\n/g, "\\\\"));
+				tex = tex.replace(/--NOTE--/g, "");
+
+				//console.log(doc);
+
+				var tab_latex = "";
+				for (var i = 0; i < doc.lines.length; i++)
+					tab_latex += doc.lines[i].product.name.replace(/_/g, "\\_") + "&" + doc.lines[i].description + "&" + doc.lines[i].tva_tx + "\\% &" + latex.price(doc.lines[i].pu_ht) + "&" + doc.lines[i].qty + "&" + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
+				//console.log(products)
+
+				//tab_latex += "&\\specialcell[t]{" + doc.desc.replace(/\n/g, "\\\\") + "}& & \\tabularnewline\n";
+
+				tex = tex.replace("--TABULAR--", tab_latex);
+
+				var tab_latex = "";
+				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
+				for(var i=0;i<doc.total_tva.length;i++) {
+					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
+				}
+				tab_latex += "\\vhline\n";
+				tab_latex += "Total TTC &" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
+				//Payé & --PAYE--\\ 
+				tex = tex.replace("--TOTAL--", tab_latex);
+
+				tex = tex.replace(/--APAYER--/g, latex.price(doc.total_ttc));
+
+				latex.headfoot(doc.entity, tex, function(tex) {
+
+					tex = tex.replace(/undefined/g, "");
+
+					doc.latex.data = new Buffer(tex);
+					doc.latex.createdAt = new Date();
+					doc.latex.title = "Facture - " + doc.ref;
+
+					doc.save(function(err) {
+						if (err) {
+							console.log("Error while trying to save this document");
+							res.send(403, "Error while trying to save this document");
+						}
+
+						latex.compileDoc(doc._id, doc.latex, function(result) {
+							if (result.errors.length) {
+								//console.log(pdf);
+								return res.send(500, result.errors);
+							}
+							return latex.getPDF(result.compiledDocId, function(err, pdfPath) {
+								res.type('application/pdf');
+								//res.attachment(doc.ref + ".pdf"); // for douwnloading
+								res.sendfile(pdfPath);
+							});
+						});
+					});
+				});
+			});
 		});
 	}
 };

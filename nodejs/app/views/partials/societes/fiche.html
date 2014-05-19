@@ -15,14 +15,14 @@
 								<tr>
 									<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
 									<td><a href="#" class="blue h4" editable-text="societe.name" buttons="no" onaftersave="update()">
-											\{{societe.name || "Non defini"}}
+											\{{societe.name|| "Non defini"}}
 										</a>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
 									<td><a href="#" editable-text="societe.code_client" buttons="no" onbeforesave="checkCodeClient($data)" onaftersave="update()">
-											\{{societe.code_client || "Non defini"}}
+											\{{societe.code_client|| "Non defini"}}
 										</a>
 									</td>
 								</tr>
@@ -39,7 +39,7 @@
 								<tr>
 									<th scope="row">{{t 'companies:Supplier'}}</th>
 									<td><a href="#" editable-select="societe.fournisseur" buttons="no" e-ng-options="s.id as s.label for s in fournisseur.values" onaftersave="update()">
-											\{{ showStatus('fournisseur') }}
+											\{{ showStatus('fournisseur')}}
 										</a>
 									</td>
 								</tr>
@@ -66,11 +66,11 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Phone'}}</th>
-									<td ><span editable-tel="societe.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone || "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
+									<td ><span editable-tel="societe.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Fax'}}</th>
-									<td><span editable-tel="societe.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax || "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
+									<td><span editable-tel="societe.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax|| "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'EMail'}}</th> 
@@ -84,7 +84,7 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'DateLastModification'}}</th>
-									<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+									<td class="blue">\{{societe.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -93,10 +93,10 @@
 					<h5 class="green underline">Les dernieres notes</h5>
 
 					<div class="scroll" style="height:120px">
-						<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
+						<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
 							<div class="with-small-padding silver-gradient no-margin-top">
-								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
 							</div>
 							<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
 						</div>
@@ -201,20 +201,20 @@
 												<tr>
 													<th scope="row">{{t 'zonegeo'}}</th>
 													<td><a href="#" editable-text="societe.zonegeo" buttons="no" onaftersave="update()">
-															\{{societe.zonegeo || "Non défini"}}
+															\{{societe.zonegeo|| "Non défini"}}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyType'}}</th>
 													<td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in typent_id.values" onaftersave="update()">
-															\{{ showStatus('typent_id') }}
+															\{{ showStatus('typent_id')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Staff'}}</th>
 													<td><a href="#" editable-select="societe.effectif_id" buttons="no" e-ng-options="s.id as s.label for s in effectif_id.values" onaftersave="update()">
-															\{{ showStatus('effectif_id') }}
+															\{{ showStatus('effectif_id')}}
 														</a>
 													</td>
 												</tr>
@@ -222,31 +222,31 @@
 													<th scope="row">{{t 'companies:JuridicalStatus'}}</th>
 													<td>
 														<a href="#" editable-select="societe.forme_juridique_code" buttons="no" e-ng-options="s.id as s.label for s in forme_juridique_code.values" onaftersave="update()">
-															\{{ showStatus('forme_juridique_code') || "-"  }}
+															\{{ showStatus('forme_juridique_code') || "-"}}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Capital'}}</th>
 													<td><a href="#" editable-text="societe.capital" buttons="no" onaftersave="update()">
-															\{{societe.capital || "Non défini" | euro}}
+															\{{societe.capital|| "Non défini" | euro}}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ProfId1FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof1" buttons="no" onaftersave="update()">
-															\{{societe.idprof1 || "Non défini"}}
+															\{{societe.idprof1|| "Non défini"}}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ProfId2FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof2" buttons="no" onaftersave="update()">
-															\{{societe.idprof2 || "Non défini"}}
+															\{{societe.idprof2|| "Non défini"}}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ProfId3FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof3" buttons="no" onaftersave="update()">
-															\{{societe.idprof3 || "Non défini"}}
+															\{{societe.idprof3|| "Non défini"}}
 														</a></td>
 												</tr>
 												<!--<tr>
@@ -258,7 +258,7 @@
 												<tr>
 													<th scope="row">{{t 'companies:ProfId5FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof5" buttons="no" onaftersave="update()">
-															\{{societe.idprof5 || "Non défini"}}
+															\{{societe.idprof5|| "Non défini"}}
 														</a></td>
 												</tr>
 												<tr>
@@ -308,11 +308,19 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
-													<td>\{{societe.cond_reglement}}</td>
+													<td>
+														<a href="#" editable-select="societe.cond_reglement" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement.values" onaftersave="update()">
+															\{{ showStatus('cond_reglement')}}
+														</a>
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentMode'}}</th>
-													<td>\{{societe.mode_reglement}}</td>
+													<td>
+														<a href="#" editable-select="societe.mode_reglement" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement.values" onaftersave="update()">
+															\{{ showStatus('mode_reglement')}}
+														</a>
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:PriceLevel'}}</th>
@@ -370,32 +378,32 @@
 													<td><input type="checkbox" data-ng-model="societe.checklist.KBIS" data-ng-checked="societe.checklist.KBIS" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="societe.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
 													<th scope="row">Licences nationale et communautaire</th>
 													<td><input type="checkbox" data-ng-model="societe.checklist.licencesNationaleCommunautaire" data-ng-checked="societe.checklist.licencesNationaleCommunautaire" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="societe.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
 													<th scope="row">Attestation de régularité fiscale</th>
 													<td><input type="checkbox" data-ng-model="societe.checklist.attestationRegulFiscale" data-ng-checked="societe.checklist.attestationRegulFiscale" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="societe.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
 													<th scope="row">Attestation URSAFF</th>
 													<td><input type="checkbox" data-ng-model="societe.checklist.attetationUrsaff" data-ng-checked="societe.checklist.attetationUrsaff" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="societe.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
 													<th scope="row">Attestation d'assurance à jour - Responsabilité Civile et Marchandise Transportée</th>
 													<td><input type="checkbox" data-ng-model="societe.checklist.attestationAssurance" data-ng-checked="societe.checklist.attestationAssurance" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="societe.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
 													<th scope="row">Attestation sur l'honneur</th>
 													<td><input type="checkbox" data-ng-model="societe.checklist.attestationHonneur" data-ng-checked="societe.checklist.attestationHonneur" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="societe.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
 													<th scope="row">Copie Permis de conduire et Déclaration Unique d'Embauche (DUE)</th>
 													<td><input type="checkbox" data-ng-model="societe.checklist.permisConduireDUE" data-ng-checked="societe.checklist.permisConduireDUE" data-ng-change="update()" />
 													</td>
@@ -429,10 +437,10 @@
 
 									<div class="six-columns">
 										<div class="scroll" style="height:360px">
-											<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+											<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
-													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec | date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment=countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
 												</div>
 												<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
 											</div>
@@ -487,7 +495,7 @@
 												<button data-ng-click="suppressFile(societe._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
 											</span>
 										</div>
-										<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename || file.name}}</a>
+										<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
 									</li>
 								</ul>
 							</div>
@@ -522,7 +530,7 @@
 					<div class="gridStyle"  data-ng-grid="gridOptionsBuyer"></div>
 					<div class="table-footer silver-gradient">
 						<div class="float-right strong">
-							Total HT payé : \{{TotalBuy | euro}}  
+							Total HT payé : \{{TotalBuy| euro}}  
 						</div>
 						\{{countBuy}} ligne(s)
 					</div>
