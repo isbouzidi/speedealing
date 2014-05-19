@@ -35,6 +35,11 @@
 			<label for="status"><b>Type</b></label>
 			<select class="form-control" id="status" data-ng-model="absence.Status" data-ng-options="c.id as c.name for c in status"></select>
 		</div>
+		
+		<div class="field-block button-height">
+			<label for="closed"><b>Clos</b></label>
+			<input type="checkbox" id="closed" data-ng-model="absence.closed" data-ng-checked="absence.closed"/>
+		</div>
 
 		<div class="field-block button-height wizard-controls align-right">
 			<button type="submit" data-ng-disabled='!(absence.nbDay > 0 && absence.user && absence.user.id && absence.dateStart && absence.dateEnd && absence.Status)' class="button glossy mid-margin-right">
