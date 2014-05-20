@@ -38,10 +38,13 @@
 			
 			<li>
 				<span class="event-date">
-					\{{indicateurs.hsupp}} <span class="event-hour">H</span>
+					\{{indicateurs.hsupp[1]}} <span class="event-hour">H</span>
+					<span class="indic-progress red" ng-show="indicatorHSupp()>0">+\{{indicatorHSupp() | number:0}}% ▲</span>
+					<span class="indic-progress green" ng-show="indicatorHSupp()<0">\{{indicatorHSupp() | number:0}}% ▼</span>
 				</span>
 				<h4>Heures supplémentaires</h4>
 				<p>Depuis le début du mois</p>
+				
 			</li>
 
 		</ul>

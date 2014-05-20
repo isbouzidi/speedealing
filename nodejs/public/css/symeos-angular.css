@@ -590,18 +590,18 @@ tags-input .tags .input {
 }
 
 .field-block-include { //For ng-include in product line
-	margin-top: 10px;
-	border-top: 1px solid #e0e0e0;
-	border-bottom: 1px solid #e0e0e0;
-	padding-top: 10px;
-	margin-left: -20px;
-	margin-right: -20px;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-bottom: 10px;
-	margin-bottom: 10px;
-	
-	//padding-left: 0px;
+					   margin-top: 10px;
+					   border-top: 1px solid #e0e0e0;
+					   border-bottom: 1px solid #e0e0e0;
+					   padding-top: 10px;
+					   margin-left: -20px;
+					   margin-right: -20px;
+					   padding-left: 20px;
+					   padding-right: 20px;
+					   padding-bottom: 10px;
+					   margin-bottom: 10px;
+
+					   //padding-left: 0px;
 }
 
 tags-input .tags .tag-item {
@@ -660,4 +660,12 @@ tags-input .tags {
 
 .ngCellText pre{
 	font-size: x-small;
+}
+
+.indic-progress {
+	display: block;
+	padding-right: 5px;
+	font-size: small;
+	line-height: 12px;
+	text-align: right;
 }
