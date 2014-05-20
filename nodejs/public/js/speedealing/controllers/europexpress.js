@@ -38,8 +38,8 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 					week: $routeParams.id1}
 			}).
 					success(function(data, status) {
-				$scope.find();
-			});
+						$scope.find();
+					});
 		};
 
 		$scope.enableEdit = function(id) {
@@ -124,6 +124,12 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		};
 
 		$scope.update = function(id) {
+			//console.log($scope.aday);
+
+			if (!$scope.aday.driver && !$scope.aday.formation) {
+				$scope.aday.hSupp = 0;
+			}
+
 			var article = $scope.aday;
 
 			article.$update(function(doc) {
@@ -168,11 +174,11 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 					week: $routeParams.id1}
 			}).
 					success(function(data, status) {
-				$route.reload();
-			}).
+						$route.reload();
+					}).
 					error(function(data, status) {
-				console.log("Request failed");
-			});
+						console.log("Request failed");
+					});
 
 		};
 
@@ -303,62 +309,62 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 					.attr("name", options.field)
 					.appendTo(container)
 					.kendoAutoComplete({
-				minLength: 1,
-				dataTextField: "name",
-				filter: "contains",
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/societe/autocomplete",
-							type: "POST",
-							dataType: "json"
+						minLength: 1,
+						dataTextField: "name",
+						filter: "contains",
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/societe/autocomplete",
+									type: "POST",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		}
 
 		$scope.modeDropDownEditor = function(container, options) {
 			$('<input data-ng-model="name" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
-				autoBind: true,
-				dataTextField: "name",
-				dataValueField: "id",
-				dataSource: [
-					{id: "NONE", name: ""},
-					{id: "AM", name: "AM"},
-					{id: "PM", name: "PM"},
-					{id: "DAY", name: "En journée"}
-				]
-			});
+						autoBind: true,
+						dataTextField: "name",
+						dataValueField: "id",
+						dataSource: [
+							{id: "NONE", name: ""},
+							{id: "AM", name: "AM"},
+							{id: "PM", name: "PM"},
+							{id: "DAY", name: "En journée"}
+						]
+					});
 		}
 
 		$scope.panierMultiSelect = function(container, options) {
 			$('<input data-bind="value:' + options.field + ', source: ' + options.field + '" />')
 					.appendTo(container)
 					.kendoMultiSelect({
-				minLength: 1,
-				placeholder: "Sélectionner les paniers...",
-				autoBind: true,
-				//dataTextField: "name",
-				//dataValueField: "id",
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/europexpress/tournee/select/panier",
-							type: "POST",
-							dataType: "json"
+						minLength: 1,
+						placeholder: "Sélectionner les paniers...",
+						autoBind: true,
+						//dataTextField: "name",
+						//dataValueField: "id",
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/europexpress/tournee/select/panier",
+									type: "POST",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		}
 	}]);
 
@@ -464,22 +470,22 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					.attr("name", options.field)
 					.appendTo(container)
 					.kendoAutoComplete({
-				minLength: 1,
-				dataTextField: "name",
-				filter: "contains",
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/societe/autocomplete",
-							type: "POST",
-							dataType: "json"
+						minLength: 1,
+						dataTextField: "name",
+						filter: "contains",
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/societe/autocomplete",
+									type: "POST",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 		$scope.fournisseurDropDownEditor = function(container, options) {
@@ -487,39 +493,39 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					.attr("name", options.field)
 					.appendTo(container)
 					.kendoAutoComplete({
-				minLength: 1,
-				dataTextField: "name",
-				filter: "contains",
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/societe/autocomplete?fournisseur=SUBCONTRACTOR",
-							type: "POST",
-							dataType: "json"
+						minLength: 1,
+						dataTextField: "name",
+						filter: "contains",
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/societe/autocomplete?fournisseur=SUBCONTRACTOR",
+									type: "POST",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 		$scope.typeDropDownEditor = function(container, options) {
 			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
-				autoBind: false,
-				dataSource: {
-					transport: {
-						read: {
-							url: "api/europexpress/courses/type/select",
-							type: "GET",
-							dataType: "json"
+						autoBind: false,
+						dataSource: {
+							transport: {
+								read: {
+									url: "api/europexpress/courses/type/select",
+									type: "GET",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 		$scope.societeFilter = function(element) {
@@ -608,24 +614,24 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 			$http({method: 'GET', url: 'api/europexpress/courses/type/select'
 			}).
 					success(function(data, status) {
-				$scope.types = data;
-			});
+						$scope.types = data;
+					});
 		};
 
 		$scope.selectStatus = function() {
 			$http({method: 'GET', url: 'api/europexpress/courses/status/select'
 			}).
 					success(function(data, status) {
-				$scope.status = data;
-			});
+						$scope.status = data;
+					});
 		};
 
 		$scope.selectTarifs = function() {
 			$http({method: 'GET', url: 'api/europexpress/courses/tarif/select'
 			}).
 					success(function(data, status) {
-				$scope.tarifs = data;
-			});
+						$scope.tarifs = data;
+					});
 		};
 
 		$scope.clientAutoComplete = function(val) {
@@ -664,11 +670,11 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 					societe: $scope.course.client.id}
 			}).
 					success(function(data, status) {
-				$scope.contacts = data;
-				$timeout(function() {
-					angular.element('select').change();
-				}, 300);
-			});
+						$scope.contacts = data;
+						$timeout(function() {
+							angular.element('select').change();
+						}, 300);
+					});
 		};
 
 		$scope.calculPrice = function() {
@@ -688,29 +694,29 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 				}
 			}).
 					success(function(data, status) {
-				/*
-				 * 2 cas de figures :
-				 *  - si poids inf ou egale a 100 on applique tranche de poids
-				 *  - si poids supp a 100 : arrondi a la dizaine supp puis divise par 100 et multiplie par le poids
-				 *  ex : 261 => 270 : 2.7 x poids
-				 *  
-				 *  order enable : price value is the first value of array data
-				 */
+						/*
+						 * 2 cas de figures :
+						 *  - si poids inf ou egale a 100 on applique tranche de poids
+						 *  - si poids supp a 100 : arrondi a la dizaine supp puis divise par 100 et multiplie par le poids
+						 *  ex : 261 => 270 : 2.7 x poids
+						 *  
+						 *  order enable : price value is the first value of array data
+						 */
 
-				if (data.length == 0)
-					return;
+						if (data.length == 0)
+							return;
 
-				if ($scope.course.poids <= 100) {
-					$scope.course.total_ht = data[0].pu_ht;
-				} else {
-					var poids = $scope.course.poids;
-					// arrondi a la dizaine supp.
-					if (poids % 10) {
-						poids = (Math.floor(poids / 10) + 1) * 10;
-					}
-					$scope.course.total_ht = Math.round(poids / 100 * data[0].pu_ht * 100) / 100;
-				}
-			});
+						if ($scope.course.poids <= 100) {
+							$scope.course.total_ht = data[0].pu_ht;
+						} else {
+							var poids = $scope.course.poids;
+							// arrondi a la dizaine supp.
+							if (poids % 10) {
+								poids = (Math.floor(poids / 10) + 1) * 10;
+							}
+							$scope.course.total_ht = Math.round(poids / 100 * data[0].pu_ht * 100) / 100;
+						}
+					});
 		};
 
 	}]);
@@ -783,17 +789,17 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
-				autoBind: false,
-				dataSource: {
-					transport: {
-						read: {
-							url: "api/europexpress/select",
-							type: "GET",
-							dataType: "json"
+						autoBind: false,
+						dataSource: {
+							transport: {
+								read: {
+									url: "api/europexpress/select",
+									type: "GET",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 
@@ -807,22 +813,22 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 			$('<input required data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoAutoComplete({
-				minLength: 3,
-				dataTextField: "name",
-				filter: "contains",
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/societe/autocomplete",
-							type: "GET",
-							dataType: "json"
+						minLength: 3,
+						dataTextField: "name",
+						filter: "contains",
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/societe/autocomplete",
+									type: "GET",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 		$scope.textareaEditor = function(container, options) {
@@ -834,22 +840,22 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 					.attr("name", options.field)
 					.appendTo(container)
 					.kendoAutoComplete({
-				minLength: 2,
-				dataTextField: "name",
-				filter: "contains",
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/user/name/autocomplete",
-							type: "POST",
-							dataType: "json"
+						minLength: 2,
+						dataTextField: "name",
+						filter: "contains",
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/user/name/autocomplete",
+									type: "POST",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 	}]);
@@ -922,10 +928,10 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			$http({method: 'GET', url: 'dict/filesIcons'
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					iconsFilesList = data;
-				}
-			});
+						if (status == 200) {
+							iconsFilesList = data;
+						}
+					});
 		};
 
 
@@ -939,11 +945,11 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 				}
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					$scope.vehicule.notes.push(data);
-					$scope.note = "";
-				}
-			});
+						if (status == 200) {
+							$scope.vehicule.notes.push(data);
+							$scope.note = "";
+						}
+					});
 		};
 
 		$scope.addEntretien = function(id) {
@@ -955,12 +961,12 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 				}
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					$scope.vehicule.entretiens.push(data);
-					$scope.vehicule.kms = data.km;
-					$scope.form = {};
-				}
-			});
+						if (status == 200) {
+							$scope.vehicule.entretiens.push(data);
+							$scope.vehicule.kms = data.km;
+							$scope.form = {};
+						}
+					});
 		};
 
 		$scope.onFileSelect = function($files) {
@@ -998,10 +1004,10 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			$http({method: 'DELETE', url: 'api/europexpress/vehicules/file/' + id + '/' + fileName
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					$scope.vehicule.files.splice(idx, 1);
-				}
-			});
+						if (status == 200) {
+							$scope.vehicule.files.splice(idx, 1);
+						}
+					});
 		};
 
 		$scope.fileType = function(name) {
@@ -1145,9 +1151,9 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 					angular.forEach(data.allST, function(row) {
 						$scope.TotalCoursesST += row.total_soustraitant;
 					});
-					
+
 					angular.forEach(data.allST, function(row) {
-						if(row.chargesExt)
+						if (row.chargesExt)
 							$scope.TotalCoursesCE += row.chargesExt;
 					});
 
@@ -1232,7 +1238,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			var total = 0;
 			//console.log(row);
 			angular.forEach(row.children, function(cropEntry) {
-				if(cropEntry.entity[idx])
+				if (cropEntry.entity[idx])
 					total += cropEntry.entity[idx];
 			});
 			return total.toString();
@@ -1660,11 +1666,11 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				}
 			}).
 					success(function(data, status) {
-				$scope.products = data;
-				for (var i in data) {
-					$scope.productsBarCode[data[i]._id] = data[i];
-				}
-			});
+						$scope.products = data;
+						for (var i in data) {
+							$scope.productsBarCode[data[i]._id] = data[i];
+						}
+					});
 		}
 
 		var totaux = {};
@@ -1675,11 +1681,11 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 			$http({method: 'GET', url: 'api/europexpress/stock/total/' + $routeParams.id1 + '/' + $routeParams.id2
 			}).
 					success(function(data, status) {
-				for (var i in data) {
-					totaux[data[i]._id] = data[i].total;
-				}
-				//console.log(totaux);
-			});
+						for (var i in data) {
+							totaux[data[i]._id] = data[i].total;
+						}
+						//console.log(totaux);
+					});
 		}
 
 		$scope.entrepotsList = function() {
