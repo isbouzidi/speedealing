@@ -30,7 +30,8 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 
 			$http({method: 'GET', url: 'api/europexpress/planning/countHSupp'
 			}).success(function(cpt, status) {
-				$scope.indicateurs.hsupp = cpt.sum;
+				
+				$scope.indicateurs.hsupp = cpt;
 			});
 		};
 

@@ -1,0 +1,26 @@
+<div class="four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div data-ng-show="absences.length > 0">
+		<h2 class="relative thin no-margin-bottom">
+			Liste des absences
+			<span class="info-spot">
+			<span class="icon-info-round"></span>
+			<span class="info-bubble">
+				Collaborateurs et dates de rentrée
+			</span>
+		</span>
+		</h2>
+
+		<ul class="list spaced" data-ng-init='findAbsences()'>
+			<li data-ng-repeat='user in absences | orderBy:"dateEnd"'>
+				<span class="list-link icon-user">
+					<strong>\{{user.user.name}}</strong> <span data-ng-class="late(user.dateEnd)">\{{user.dateEnd | date:'dd/MM/yyyy HH:mm'}}</span>
+				</span>
+				<div class="absolute-right compact show-on-parent-hover" ng-show="late(user.dateEnd)">
+					<button class="button icon-tick" ng-click="absenceAddTick($index)">Est présent</button>
+				</div>
+			</li>
+
+		</ul>
+	</div>
+</div>
