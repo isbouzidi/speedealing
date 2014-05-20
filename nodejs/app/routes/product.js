@@ -47,11 +47,11 @@ module.exports = function(app, passport, auth) {
 		};
 
 		var price_level = 'BASE';
-		if (req.body.price_level) {
+		/*if (req.body.price_level) {
 			price_level = req.body.price_level;
-		}
+		}*/
 
-		query['price.price_level'] = price_level;
+		//query['price.price_level'] = price_level;
 
 		/*if (req.query.fournisseur) {
 		 query.fournisseur = req.query.fournisseur;
@@ -63,14 +63,14 @@ module.exports = function(app, passport, auth) {
 			{$match: query},
 			{$project: {name: "$ref", label: 1, template: 1, price: 1, minPrice: 1, description: 1}},
 			{$unwind: "$price"},
-			{$match: {'price.price_level': price_level}},
+			{$match: {'$or': [{'price.price_level': req.body.price_level}, {'price.price_level': 'BASE'}]}},
 			{$limit: req.body.take}], function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/autocomplete");
 				console.log(err);
 				return;
 			}
-			console.log(docs);
+			//console.log(docs);
 
 			return res.send(200, docs);
 		});
