@@ -401,7 +401,10 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 
 		$scope.updateCoord = function(item, model, label) {
 			//console.log(item);
-
+			
+			if($scope.bill.client.name === "Accueil")
+				$scope.bill.client.isNameModified = true;
+			
 			$scope.bill.price_level = item.price_level;
 			$scope.bill.address = item.address.address;
 			$scope.bill.zip = item.address.zip;

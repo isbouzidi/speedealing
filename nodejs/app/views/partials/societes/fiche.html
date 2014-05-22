@@ -416,7 +416,59 @@
 						</tab>
 						<tab>
 							<tab-heading>
-								<span class="icon-pencil">Notes</span>
+								<span class="icon-folder">Fichiers<span ng-if='societe.files.length' class="count green-bg right">\{{societe.files.length}}</span></span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+
+								<div class="panel-content linen">
+
+									<div class="panel-control align-right">
+										<div class="float-right">
+											<div class="button-group">
+												<progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
+											</div>
+											<div class="button-group">
+												<div class="button-height">
+													<input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
+													<!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div id="panel-content" class="panel-load-target scrollable" style="height:500px">
+										<div class="with-padding">
+											<p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
+											<p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
+
+											<ul class="files-icons on-dark" data-ng-init="getFileTypes()">
+												<!--<li>
+													<a href="#" class="file-link">
+														<span class="icon folder-net"></span>
+														Dossier public
+													</a>
+												</li>-->
+												<li data-ng-repeat="file in societe.files">
+													<span class="icon" data-ng-class="fileType(file.name)"></span>
+													<div class="controls">
+														<span class="button-group compact children-tooltip">
+															<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
+															<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
+															<button data-ng-click="suppressFile(societe._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
+														</span>
+													</div>
+													<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-pencil">Notes<span ng-if='societe.notes.length' class="count orange-bg right">\{{societe.notes.length}}</span></span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
 
@@ -453,58 +505,22 @@
 						</tab>
 					</tabset>
 				</div>
+				
+				<div class="twelve-columns">
+					<h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
 
-				<div class="six-columns new-row">
-					<div class="panel-content linen">
-
-						<div class="panel-control align-right">
-							<div class="float-right">
-								<div class="button-group">
-									<progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
-								</div>
-								<div class="button-group">
-									<div class="button-height">
-										<input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
-										<!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
-									</div>
-								</div>
-							</div>
-
-
-
+					<div class="table-header silver-gradient glossy button-height">
+						<div class="float-right">
+							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
 						</div>
-
-						<div id="panel-content" class="panel-load-target scrollable" style="height:700px">
-							<div class="with-padding">
-								<p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
-								<p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
-
-								<ul class="files-icons on-dark" data-ng-init="getFileTypes()">
-									<!--<li>
-										<a href="#" class="file-link">
-											<span class="icon folder-net"></span>
-											Dossier public
-										</a>
-									</li>-->
-									<li data-ng-repeat="file in societe.files">
-										<span class="icon" data-ng-class="fileType(file.name)"></span>
-										<div class="controls">
-											<span class="button-group compact children-tooltip">
-												<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
-												<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
-												<button data-ng-click="suppressFile(societe._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
-											</span>
-										</div>
-										<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-
+					</div>
+					<div class="gridStyle"  data-ng-grid="gridOptionsContact"></div>
+					<div class="table-footer silver-gradient">
+						\{{countContact}} ligne(s)
 					</div>
 				</div>
 
-				<div class="six-columns">
+				<div class="twelve-columns">
 					<h5 class="green underline">Historique des tickets</h5>
 
 					<div class="table-header silver-gradient glossy button-height">
@@ -518,7 +534,7 @@
 					</div>
 				</div>
 
-				<div class="six-columns">
+				<div class="twelve-columns">
 					<h5 class="green underline">Demandes d'achats</h5>
 
 					<div class="table-header silver-gradient glossy button-height">

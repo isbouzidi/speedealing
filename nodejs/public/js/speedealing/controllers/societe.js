@@ -79,7 +79,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 		$scope.find = function() {
-			Societe.query({query: this.type.id}, function(societes) {
+			Societe.query({query: this.type.id, entity: Global.user.entity}, function(societes) {
 				$scope.societes = societes;
 				$scope.countSocietes = societes.length;
 			});
@@ -90,6 +90,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				Id: $routeParams.id
 			}, function(societe) {
 				$scope.societe = societe;
+				
+				$http({method: 'GET', url: 'api/societe/contact', params:
+							{
+								find: {"societe.id": societe._id},
+								fields: "name firstname lastname updatedAt Status phone email poste"
+							}
+				}).success(function(data, status) {
+					if (status == 200)
+						$scope.contacts = data;
+
+					$scope.countContact = $scope.contacts.length;
+				});
 
 				$http({method: 'GET', url: 'api/ticket', params:
 							{
@@ -164,7 +176,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
-				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
+				{field: 'entity', displayName: 'Entité', cellClass: "align-center"}
+				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
 		};
 
@@ -404,6 +417,32 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
 		};
+		
+		/*
+		 * NG-GRID for contact list
+		 */
+
+		$scope.filterOptionsContact = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsContact = {
+			data: 'contacts',
+			enableRowSelection: false,
+			sortInfo: {fields: ["name"], directions: ["asc"]},
+			filterOptions: $scope.filterOptionsContact,
+			i18n: 'fr',
+			enableColumnResize: true,
+			columnDefs: [
+				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'poste', displayName: 'Fonction'},
+				{field: 'phone', displayName: 'Téléphone', cellFilter:"phone"},
+				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
+				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
+				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
+			]
+		};
 
 		/*
 		 * NG-GRID for ticket list
@@ -422,8 +461,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			i18n: 'fr',
 			enableColumnResize: true,
 			columnDefs: [
-				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-ticket"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'ref', displayName: 'Id'},
+				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-ticket"></span> {{row.getProperty("ref")}} - {{row.getProperty(col.field)}}</a>'},
+				{field: 'task', displayName: 'Tâche'},
 				{field: 'percentage', displayName: 'Etat', cellTemplate: '<div class="ngCellText"><progressbar class="progress-striped thin" value="row.getProperty(col.field)" type="success"></progressbar></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
 			]

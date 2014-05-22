@@ -21,7 +21,11 @@ var billSchema = new Schema({
 	Status: {type: String, default: 'DRAFT'},
 	cond_reglement_code: {type: String, default: 'RECEP'},
 	mode_reglement_code: {type: String, default: 'TIP'},
-	client: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
+	client: {
+		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
+		name: String,
+		isNameModified: {type: Boolean}
+	},
 	contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
 	ref_client: {type: String},
 	price_level: {type: String, default: "BASE", uppercase: true, trim: true},
@@ -133,7 +137,7 @@ billSchema.pre('save', function(next) {
 	this.total_ht = Math.round(this.total_ht * 100) / 100;
 	//this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = this.total_ht;
-	
+
 	for (var j = 0; j < this.total_tva.length; j++) {
 		this.total_tva[j].total = Math.round(this.total_tva[j].total * 100) / 100;
 		this.total_ttc += this.total_tva[j].total;
@@ -219,7 +223,7 @@ billSchema.methods = {
 			} else {
 				mois += 1;
 			}
-			
+
 			// On se deplace au debut du mois suivant, et on retire un jour
 			datelim.setHours(0);
 			datelim.setMonth(mois);

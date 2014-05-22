@@ -151,10 +151,11 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 			});
 		};
 
-		$scope.absenceAddTick = function(idx) {
-			$scope.absences[idx].closed = true;
-			$scope.absences[idx].$update();
-			$scope.absences.splice(idx, 1);
+		$scope.absenceAddTick = function(user) {
+			user.closed = true;
+			//console.log(user);
+			user.$update();
+			$scope.absences.splice($scope.absences.indexOf(user),1);
 		};
 
 		$scope.late = function(date) {

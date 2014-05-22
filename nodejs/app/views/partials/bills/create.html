@@ -22,6 +22,12 @@
 			<label for="client"><b>{{t 'companies:Company'}}</b></label>
 			<input required type="text" data-ng-model="bill.client" typeahead-on-select="updateCoord($item, $model, $label)" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
 		</div>
+		
+		<div class="field-block button-height" ng-show="bill.client.isNameModified">
+			<label for="name"><b>{{t 'Name'}}</b></label>
+			<input type="text" data-ng-model="bill.client.name" id="namw" class="input" autocomplete="off">
+			<small class="icon-info blue input-info"> Mettre ici le nom de la société n'ayant pas de compte ou les nom et prénom du client.</small>
+		</div>
 
 		<div class="field-block button-height">
 			<label for="ref_client"><b>Référence / Nom de l'affaire</b></label>
