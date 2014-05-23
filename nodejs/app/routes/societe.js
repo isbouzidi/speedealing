@@ -262,7 +262,10 @@ module.exports = function(app, passport, auth) {
 				"Sté Intérêt Collectif Agrico (Sica)":"63",
 				"Sté Coop Production Anonyme (SCPA)":"51",
 				"Sté nationalisée droit public (SNDP)":"41",
-				"S.A.R.L. Coopérative (SARL COOP.)":"51"
+				"S.A.R.L. Coopérative (SARL COOP.)":"51",
+				"Société de Fait (STE FAIT)":"22",
+				"Sté nationalisée droit comm. (SNADC)":"41",
+				"S.A. Conseil de Surveillance (SA C.SURV.)":"56"
 			}
 		};
 
