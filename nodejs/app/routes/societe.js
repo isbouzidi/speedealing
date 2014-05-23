@@ -212,6 +212,7 @@ module.exports = function(app, passport, auth) {
 				"Plus de 5 000": "EF5000+"
 			},
 			sex: {
+				"":null,
 				"Homme": "H",
 				"Femme": "F"
 			},
@@ -227,6 +228,10 @@ module.exports = function(app, passport, auth) {
 				"Publique / Administration": "TE_PUBLIC"
 			},
 			forme_juridique_code: {
+				"":null,
+				"59":null,
+				"60":null,
+				"62":null,
 				"Affaire Personnelle (AF.PERS)": "11",
 				"Association sans but lucratif (AS 1901)": "92",
 				"Coopérative (COOPE.)": "51",
