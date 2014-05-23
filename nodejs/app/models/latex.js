@@ -142,12 +142,18 @@ exports.getPDF = function(id, callback) {
 /**
  * Replace --MYSOC-- and create FOOTER
  */
-exports.headfoot = function(entity, tex, callback) { //\textsc{Symeos} 158 av. Leon Blum F-63000 Clermont-Ferrand. Tél.: +33 (0) 4 27 46 39 60 - R.C.S. Clermont-Ferrand  483 278 842
+exports.headfoot = function(entity, tex, callback) { 
 	mongoose.connection.db.collection('Mysoc', function(err, collection) {
 		collection.findOne({_id: entity}, function(err, doc) {
 
 			tex = tex.replace(/--MYSOC--/g, "\\textbf{\\large "+doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town + "\\\\Tel : " + doc.phone + "\\\\ Fax : " + doc.fax );
 			tex = tex.replace(/--FOOT--/g, "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town + " T\\'el.: " + doc.phone + " R.C.S. " + doc.idprof1);
+
+			tex = tex.replace(/--ENTITY--/g, "\\textbf{"+doc.name + "}");
+			if(doc.iban)
+				tex = tex.replace(/--IBAN--/g, doc.iban.name + "\\\\RIB : " + doc.iban.rib + "\\\\ IBAN : " + doc.iban.iban + "\\\\ BIC : " + doc.iban.bic);
+			else
+				tex = tex.replace(/--IBAN--/g, "RIB Abscent");
 
 			tex = tex.replace(/é/g,"\\'e");
 			tex = tex.replace(/è/g,"\\`e");

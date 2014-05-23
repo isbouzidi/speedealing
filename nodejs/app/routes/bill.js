@@ -108,7 +108,7 @@ Object.prototype = {
 
 		//console.log(query);
 
-		BillModel.findOne(query, function(err, doc) {
+		BillModel.findOne(query, "-latex", function(err, doc) {
 			if (err)
 				return next(err);
 
@@ -136,7 +136,7 @@ Object.prototype = {
 			}
 		}
 
-		BillModel.find(query, "-history -files", function(err, doc) {
+		BillModel.find(query, "-history -files -latex", function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -160,7 +160,7 @@ Object.prototype = {
 		if (bill.entity == null)
 			bill.entity = req.user.entity;
 
-		console.log(bill);
+		//console.log(bill);
 		bill.save(function(err, doc) {
 			if (err) {
 				return console.log(err);
@@ -171,9 +171,14 @@ Object.prototype = {
 	},
 	update: function(req, res) {
 		var bill = req.bill;
+		//console.log(req.body);
 		bill = _.extend(bill, req.body);
 
 		bill.save(function(err, doc) {
+			if(err)
+				console.log(err);
+			
+			//console.log(doc);
 			res.json(doc);
 		});
 	},
@@ -243,6 +248,16 @@ Object.prototype = {
 			fk_facture = doc;
 		});
 
+		var cond_reglement_code = {};
+		DictModel.findOne({_id: "dict:fk_payment_term"}, function(err, docs) {
+			cond_reglement_code = docs;
+		});
+
+		var mode_reglement_code = {};
+		DictModel.findOne({_id: "dict:fk_paiement"}, function(err, docs) {
+			mode_reglement_code = docs;
+		});
+
 		latex.loadModel("facture.tex", function(err, tex) {
 
 			var doc = req.bill;
@@ -263,9 +278,23 @@ Object.prototype = {
 				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
 				tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
 
-				tex = tex.replace(/--REGLEMENT--/g, "Réglement à 30 jours"/*fk_facture.fields.cond_reglement_code.values[doc.cond_reglement_code].label*/);
-				tex = tex.replace(/--PAID--/g, "Virement");
-				tex = tex.replace(/--RIB--/g, "BANQUE CHALUS \\\\RIB : 10188 06801 50647829381 71\\\\ IBAN : FR76 1018 8068 0150 6478 2938 171 BIC : BCHAFR21");
+				tex = tex.replace(/--REGLEMENT--/g, cond_reglement_code.values[doc.cond_reglement_code].label);
+
+				tex = tex.replace(/--PAID--/g, mode_reglement_code.values[doc.mode_reglement_code].label);
+
+				switch (doc.mode_reglement_code) {
+					case "VIR" :
+						tex = tex.replace(/--BK--/g, "\\\\ --IBAN--");
+						break;
+
+					case "CHQ" :
+						tex = tex.replace(/--BK--/g, "A l'ordre de --ENTITY--");
+						console.log(req.entity);
+						break;
+
+					default :
+						tex = tex.replace(/--BK--/g, "");
+				}
 				//tex = tex.replace(/--NOTE--/g, doc.desc.replace(/\n/g, "\\\\"));
 				tex = tex.replace(/--NOTE--/g, "");
 
@@ -282,7 +311,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
-				for(var i=0;i<doc.total_tva.length;i++) {
+				for (var i = 0; i < doc.total_tva.length; i++) {
 					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
 				}
 				tab_latex += "\\vhline\n";

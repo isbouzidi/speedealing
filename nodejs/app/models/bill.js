@@ -20,7 +20,7 @@ var billSchema = new Schema({
 	type: {type: String, default: 'INVOICE_STANDARD'},
 	Status: {type: String, default: 'DRAFT'},
 	cond_reglement_code: {type: String, default: 'RECEP'},
-	mode_reglement_code: {type: String, default: 'TIP'},
+	mode_reglement_code: {type: String, default: 'CHQ'},
 	client: {
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String,
