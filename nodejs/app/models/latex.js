@@ -153,7 +153,7 @@ exports.headfoot = function(entity, tex, callback) {
 			if(doc.iban)
 				tex = tex.replace(/--IBAN--/g, doc.iban.name + "\\\\RIB : " + doc.iban.rib + "\\\\ IBAN : " + doc.iban.iban + "\\\\ BIC : " + doc.iban.bic);
 			else
-				tex = tex.replace(/--IBAN--/g, "RIB Abscent");
+				tex = tex.replace(/--IBAN--/g, "RIB sur demande.");
 
 			tex = tex.replace(/é/g,"\\'e");
 			tex = tex.replace(/è/g,"\\`e");
