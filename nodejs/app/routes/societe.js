@@ -258,7 +258,8 @@ module.exports = function(app, passport, auth) {
 				"Sté en nom collectif (SNC)": "52",
 				"Sté Expl Libérale Resp Limitée (SELARL)": "15",
 				"Sté par Action Simplifiée (S.A.S.)": "57",
-				"Syndicat (SYND.)": "91"
+				"Syndicat (SYND.)": "91",
+				"Sté Intérêt Collectif Agrico (Sica)":"63"
 			}
 		};
 
