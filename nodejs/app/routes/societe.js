@@ -260,7 +260,8 @@ module.exports = function(app, passport, auth) {
 				"Sté par Action Simplifiée (S.A.S.)": "57",
 				"Syndicat (SYND.)": "91",
 				"Sté Intérêt Collectif Agrico (Sica)":"63",
-				"Sté Coop Production Anonyme (SCPA)":"51"
+				"Sté Coop Production Anonyme (SCPA)":"51",
+				"Sté nationalisée droit public (SNDP)":"41"
 			}
 		};
 
