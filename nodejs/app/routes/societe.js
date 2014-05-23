@@ -259,7 +259,8 @@ module.exports = function(app, passport, auth) {
 				"Sté Expl Libérale Resp Limitée (SELARL)": "15",
 				"Sté par Action Simplifiée (S.A.S.)": "57",
 				"Syndicat (SYND.)": "91",
-				"Sté Intérêt Collectif Agrico (Sica)":"63"
+				"Sté Intérêt Collectif Agrico (Sica)":"63",
+				"Sté Coop Production Anonyme (SCPA)":"51"
 			}
 		};
 
