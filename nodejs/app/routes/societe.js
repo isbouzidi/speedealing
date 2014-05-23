@@ -261,7 +261,8 @@ module.exports = function(app, passport, auth) {
 				"Syndicat (SYND.)": "91",
 				"Sté Intérêt Collectif Agrico (Sica)":"63",
 				"Sté Coop Production Anonyme (SCPA)":"51",
-				"Sté nationalisée droit public (SNDP)":"41"
+				"Sté nationalisée droit public (SNDP)":"41",
+				"S.A.R.L. Coopérative (SARL COOP.)":"51"
 			}
 		};
 
