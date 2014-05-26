@@ -368,8 +368,14 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 		}
 	}]);
 
-angular.module('mean.europexpress').controller('EETransportController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EETransport', function($scope, $routeParams, $location, $route, Global, Object) {
+angular.module('mean.europexpress').controller('EETransportController', ['$scope', '$routeParams', '$location', '$route', '$modal', 'Global', 'EETransport', function($scope, $routeParams, $location, $route, $modal, Global, Object) {
 		$scope.global = Global;
+
+		$scope.gridOptionsTransports = {};
+
+		$scope.types = [{name: "Toutes", id: "ALL"}];
+
+		$scope.type = {name: "Toutes", id: "ALL"};
 
 		var crudServiceBaseUrl = "api/europexpress/courses";
 
@@ -545,6 +551,207 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					}
 				}
 			});
+		};
+
+		$scope.find = function() {
+			Object.query({query: this.type.id, entity: Global.user.entity}, function(courses) {
+				$scope.transports = courses;
+				$scope.countTransports = courses.length;
+			});
+		};
+
+		/*
+		 * NG-GRID for transport list
+		 */
+
+		$scope.filterOptionsTransports = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsTransports = {
+			data: 'transports',
+			enableRowSelection: false,
+			filterOptions: $scope.filterOptionsTransports,
+			sortInfo: {fields: ["ref"], directions: ["desc"]},
+			//showFilter:true,
+			showGroupPanel: true,
+			enableColumnResize: true,
+			i18n: 'fr',
+			columnDefs: [
+				{field: 'ref', displayName: 'Ref.', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/module/europexpress/transport_edit.html/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: "typeCss.name", displayName: "Type", cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'typeCss.css\')}} glossy ">{{row.getProperty(\'typeCss.name\')}}</small></div>'},
+				{field: 'client.name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'client.id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				//{field: 'ref_client', displayName: 'Ref Client'},
+				{field: "from.zip", displayName: "Depart", cellTemplate: '<div class="ngCellText">{{row.getProperty(\'from.zip\')}} {{row.getProperty(\'from.town\')}}</div>'},
+				{field: 'date_enlevement', displayName: 'Date Enl.', cellTemplate: '<div class="ngCellText" ng-class="{red: row.getProperty(col.field) == 10 }">{{row.getProperty(col.field) | date:\'dd-MM-yyyy HH:mm\'}}</div>'},
+				{field: "to.zip", displayName: "Destination", cellTemplate: '<div class="ngCellText">{{row.getProperty(\'to.zip\')}} {{row.getProperty(\'to.town\')}}</div>'},
+				{field: 'date_livraison', displayName: 'Date Liv.', cellTemplate: '<div class="ngCellText" ng-class="{red: row.getProperty(col.field) == 10 }">{{row.getProperty(col.field) | date:\'dd-MM-yyyy HH:mm\'}}</div>'},
+				{field: 'fournisseur.name', displayName: 'Sous-Traitant'},
+				{field: 'total_soustraitant', displayName: 'Montant ST', cellFilter: "currency", cellClass: "align-right"},
+				{field: 'StatusCss.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'StatusCss.css\')}} glossy">{{row.getProperty(\'StatusCss.name\')}}</small></div>'},
+				{field: 'total_ht', displayName: 'Total HT', cellFilter: "currency", cellClass: "align-right"},
+				{field: 'commission', displayName: 'Comission', cellFilter: "currency", cellClass: "align-right"},
+				{field: 'bordereau', displayName: 'Bordereau'},
+				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"},
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a class="button icon-download" ng-href="api/europexpress/courses/pdf/{{row.getProperty(\'_id\')}}" target="_blank"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
+			]
+		};
+
+		/*   {field: "date_enlevement", editor: dateTimeEditor, title: "Date Enl.", format: "{0:dd/MM/yyyy HH:mm}", template: "#if (kendo.toString(date_enlevement, \"dd/MM/yyyy\") == kendo.toString(new Date(), \"dd/MM/yyyy\")) {# <span class=\"red\">#=kendo.toString(date_enlevement, \"dd/MM/yyyy HH:mm\")#</span> #} else {# #=kendo.toString(date_enlevement, \"dd/MM/yyyy HH:mm\")# #}#", filterable: {
+		 ui: "datetimepicker"
+		 }
+		 },
+		 
+		 {field: "date_livraison", editor: dateTimeEditor, title: "Date Liv.", format: "{0:dd/MM/yyyy HH:mm}", template: "#if (kendo.toString(date_livraison, \"dd/MM/yyyy\") == kendo.toString(new Date(), \"dd/MM/yyyy\")) {# <span class=\"red\">#=kendo.toString(date_livraison, \"dd/MM/yyyy HH:mm\")#</span> #} else {# #=kendo.toString(date_livraison, \"dd/MM/yyyy HH:mm\")# #}#", filterable: {
+		 ui: "datetimepicker"
+		 }
+		 },
+		 
+		 
+		 {template:"<span class=\"button-group\"><a class=\"button icon-pencil\" ng-href=\"\\#!/module/europexpress/transport_edit.html/#=_id#/\"></a><a class=\"button icon-download\" ng-href=\"api/europexpress/courses/pdf/#=_id#\" target=\"_blank\"></a></span>", "width": "80px"}
+		 ]'*/
+
+		$scope.addNewMessagerie = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/europexpress/create_messagerie.html',
+				controller: "EETransportCreateController",
+				windowClass: "steps"
+			});
+
+			modalInstance.result.then(function(course) {
+				course = new Object(course);
+				course.$save(function(response) {
+					$scope.transports.push(response);
+					$scope.countTransports++;
+				});
+			}, function() {
+			});
+		};
+
+	}]);
+
+angular.module('mean.europexpress').controller('EETransportCreateController', ['$scope', '$routeParams', '$location', '$route', '$modalInstance', 'Global', 'EETransport', '$http', '$timeout', function($scope, $routeParams, $location, $route, $modalInstance, Global, Object, $http, $timeout) {
+		$scope.global = Global;
+
+		$scope.course = {
+			type: {
+				id: "MESSAGERIE"
+			},
+			from: {
+				zip:"",
+				town:""
+			},
+			to: {
+				zip:"",
+				town:""
+			}
+		};
+
+		$scope.validBorderau = true;
+
+		$scope.create = function() {
+			$modalInstance.close($scope.course);
+		};
+
+		$scope.$watch('course.datec', function(date)
+		{
+			var time = new Date(date);
+			if (new Date($scope.dateC).getTime() != time.getTime())
+				$scope.dateC = time;
+		});
+
+		$scope.selectStatus = function() {
+			$http({method: 'GET', url: 'api/europexpress/courses/status/select'
+			}).
+					success(function(data, status) {
+						$scope.status = data;
+					});
+		};
+
+		$scope.clientAutoComplete = function(val) {
+			return $http.post('api/societe/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
+		};
+
+		$scope.fournisseurAutoComplete = function(val) {
+			return $http.post('api/societe/autocomplete?fournisseur=SUBCONTRACTOR', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data
+			});
+		};
+
+		$scope.calculPrice = function() {
+			if ($scope.course.type.id !== "MESSAGERIE")
+				return;
+
+			if ($scope.course.total_soustraitant == null)
+				$scope.course.total_soustraitant = 0;
+
+			if (!$scope.course.poids || !$scope.course.to.zip)
+				return;
+
+			$http({method: 'GET', url: 'api/product', params: {
+					price_level: $scope.course.client.price_level.toUpperCase(),
+					ref: "MESS" + $scope.course.to.zip.substr(0, 2),
+					qty: $scope.course.poids
+				}
+			}).
+					success(function(data, status) {
+						/*
+						 * 2 cas de figures :
+						 *  - si poids inf ou egale a 100 on applique tranche de poids
+						 *  - si poids supp a 100 : arrondi a la dizaine supp puis divise par 100 et multiplie par le poids
+						 *  ex : 261 => 270 : 2.7 x poids
+						 *  
+						 *  order enable : price value is the first value of array data
+						 */
+
+						if (data.length == 0)
+							return;
+
+						if ($scope.course.poids <= 100) {
+							$scope.course.total_ht = data[0].pu_ht;
+						} else {
+							var poids = $scope.course.poids;
+							// arrondi a la dizaine supp.
+							if (poids % 10) {
+								poids = (Math.floor(poids / 10) + 1) * 10;
+							}
+							$scope.course.total_ht = Math.round(poids / 100 * data[0].pu_ht * 100) / 100;
+						}
+					});
+		};
+
+
+		$scope.checkBordereau = function() {
+
+			if ($scope.course.bordereau)
+				$http({method: 'GET', url: '/api/europexpress/courses/uniqId', params: {
+						bordereau: $scope.course.bordereau
+					}
+				}).success(function(data, status) {
+					$scope.validBorderau = true;
+					if (data.bordereau) { // already exist
+						$scope.validBorderau = false;
+					}
+				});
+			else
+				$scope.validBordereau = false;
 		};
 
 	}]);

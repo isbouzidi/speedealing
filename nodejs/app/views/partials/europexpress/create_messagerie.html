@@ -1,0 +1,141 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">Messagerie <span class="blue">\{{course.bordereau}}</span></h3>
+
+	<!-- Each form step should be wrapped in a fieldset -->
+	<fieldset class="wizard-fieldset fields-list active">
+		\{{course}}
+		
+		<div class="field-block button-height">
+			<label for="bordereau"><b>Num de Bordereau</b></label>
+			<input type="text" data-ng-model="course.bordereau" data-ng-change="checkBordereau()" id="bordereau" class="input" autocomplete="off">
+
+			<small ng-show="!validBorderau && course.bordereau" class="icon-warning red input-info"> Ce bordereau existe déjà dans la base.</small>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="datec"><b>Date du bordereau</b></label>
+			<input kendo-date-picker required id="datec" k-on-change="course.datec = kendoEvent.sender._value;" class="input"/>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="client"><b>{{t 'companies:Company'}}</b></label>
+			<input required type="text" data-ng-model="course.client" typeahead="societe as societe.name for societe in clientAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height" ng-show="course.client.isNameModified">
+			<label for="name"><b>{{t 'Name'}}</b></label>
+			<input type="text" data-ng-model="course.client.name" id="name" class="input" autocomplete="off">
+			<small class="icon-info blue input-info"> Mettre ici le nom de la société n'ayant pas de compte ou les nom et prénom du client.</small>
+		</div>
+
+		<div class="field-block button-height">	
+			<label for="ref_client"><b>Ref. Client</b></label>
+			<input type="text" data-ng-model="course.ref_client" id="ref_client" class="input">
+		</div>
+
+		<div class="field-block button-height">
+			<label for="Status"><b>Status</b></label>
+			<select data-ng-model="course.Status" id="Status" data-ng-init="selectStatus()" data-ng-options="S as S.name for S in status track by S.id" class="form-control"></select>
+		</div>
+
+		<div class="field-block button-height">
+			<label><b>Arrivée</b></label>
+			<div class="field-block button-height">
+				<p class="small-margin-bottom">
+					<label for="to.name"><b>Nom</b></label>
+					<input type="text" data-ng-model="course.to.name" id="to.name" class="input">
+				</p>
+				<p class="small-margin-bottom">	
+					<label for="to.address"><b>Adresse</b></label>
+					<textarea class="input" rows="5" cols="25" data-ng-model="course.to.address" id="to.address"></textarea>
+				</p>
+				<p class="small-margin-bottom">
+					<label for="to.zip"><b>Code Postal</b></label>
+					<input type="text" data-ng-model="course.to.zip" id="to.zip" data-ng-change="calculPrice()" required="required" class="input">
+				</p>
+				<p class="small-margin-bottom">
+					<label for="to.town"><b>Ville</b></label>
+					<input type="text" data-ng-model="course.to.town" id="to.town" required="required" class="input">
+				</p>
+				<p class="small-margin-bottom">
+					<label for="to.country_id"><b>Pays</b></label>
+					<input type="text" data-ng-model="course.to.country_id" id="to.country_id" value="" class="input">
+				</p>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label><b>Options</b></label>
+			<div class="field-block button-height">
+				<!--<p class="small-margin-bottom">	
+					<label for="tarif"><b>Type de Tarif</b></label>
+					<select data-ng-model="course.tarif" id="tarif" data-ng-init="selectTarifs()" data-ng-options="T for T in tarifs" class="form-control"></select>
+				</p>-->
+				<!--<p class="small-margin-bottom">
+					<label for="exoTVA"><b>Exo. TVA</b></label>
+					<input type="checkbox" class id="exoTVA" name="exoTVA" data-ng-model="course.exoTVA" data-ng-checked="course.exoTVA" data-checkable-options='{"textOn":"Oui","textOff":"Non"}'>
+				</p>-->
+				<p class="small-margin-bottom">
+					<label for="nbPalette"><b>Nb. colis ou palettes</b></label>
+					<input type="number" step="any" min="0" data-role="numerictextbox" data-ng-model="course.nbPalette" id="nbPalette" value="0" class="input">
+				</p>
+				<p class="small-margin-bottom">
+					<label for="poids"><b>Poids (kg)</b></label>
+					<input type="number" min="0" step="any" data-ng-model="course.poids" data-ng-change="calculPrice()" id="poids" value="0" class="input">
+				</p>
+				<p class="small-margin-bottom">
+					<label for="contreRMB"><b>Contre remboursement</b></label>
+					<input type="checkbox" class="" id="contreRMB" ng-model="course.contreRMB" ng-checked="course.contreRMB" data-checkable-options='{"textOn":"Oui","textOff":"Non"}'>
+				</p>
+				<p class="small-margin-bottom">
+					<label for="assurance"><b>Assurance</b></label>
+					<input type="checkbox" class="" id="assurance" ng-model="course.assurance" ng-checked="course.assurance" data-checkable-options='{"textOn":"Oui","textOff":"Non"}'>
+				</p>
+				<!--<p class="small-margin-bottom">
+					<label for="notes"><b>Notes privees</b></label>
+					<textarea class="input" rows="3" cols="26" data-ng-model="course.notes" id="notes"></textarea>
+				</p>-->
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="fournisseur"><b>Sous-traitant</b></label>
+			<input type="text" required data-ng-model="course.fournisseur" typeahead="fournisseur as fournisseur.name for fournisseur in fournisseurAutoComplete($viewValue) | filter:{name:$viewValue}" id="fournisseur" class="input">
+		</div>
+
+		<div class="field-block button-height">
+			<label><b>Tarification</b></label>
+			<div class="field-block button-height">
+				<p class="small-margin-bottom">
+					<label for="total_soustraitant"><b>Tarif sous-traitant</b></label>
+					<input type="number" min="0" step="any" data-ng-model="course.total_soustraitant" id="total_soustraitant" class="input">
+					<small class="input-info">Montant HT de la sous-traitance</small>
+				</p>
+			</div>
+			<div class="field-drop button-height black-inputs">
+				<p class="small-margin-bottom">
+					<label for="total_ht"><b class="green">Total HT / Comm.</b></label>
+					<input type="number" min="0" step="any" data-ng-model="course.total_ht" id="total_ht" autocomplete="off" class="input"/>
+					<span class="wrapped large-text-shadow" data-ng-class="{'red-gradient': course.commission < 0}">
+						<span data-ng-bind-html="course.commission=course.total_ht-course.total_soustraitant-course.chargesExt-course.chargesInt | currency"></span>
+						(\{{(course.commission / course.total_ht)*100 | number:0}}%)
+					</span>
+				</p>
+
+			</div>
+		</div>
+
+		<div class="field-block button-height wizard-controls align-right">
+
+			<button type="submit" ng-disabled="!course.datec || !course.client.name || !validBorderau" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				Créer
+			</button>
+
+		</div>
+
+	</fieldset>
+
+</form>
