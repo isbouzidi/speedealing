@@ -1,4 +1,4 @@
-<div data-ng-controller="MenuController">
+<div data-ng-controller="MenuController" ng-init="init()">
 	<div id="menu-content">
 		<header>
 			<form id="search_box" action='search.php' method='post'>
@@ -13,7 +13,7 @@
 			<div ng-if="!global.user.photo">
 				<img src="img/user.png" width="64" class="user-icon" alt="User name">
 			</div>
-			
+
 			<p> {{t 'Hello'}}
 				<span class="name">\{{global.user.firstname}} 
 					<b> \{{global.user.lastname}}</b>
@@ -23,7 +23,8 @@
 
 		<ul class="children-tooltip" id="access">
 			<li style="width: 20%;">
-				<a href='#!/' title="{{t 'Home'}}" >
+				<a href='#!/' title="{{t
+						'Home'}}" >
 					<span class="icon-home"></span>
 				</a>
 			</li>
@@ -34,7 +35,8 @@
 				</a>
 			</li>
 			<li style="width: 20%;">
-				<a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t 'Agenda'}}" target="_self">
+				<a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t
+						'Agenda'}}" target="_self">
 					<span class="icon-calendar"></span>
 					{{#if agenda.count}}
 					<span class="count">{{agenda.count}}</span>
@@ -47,14 +49,33 @@
 				</a>
 			</li>
 			<li style="width: 20%;">
-				<a href="logout" title="{{t 'Logout'}}" target="_self">
+				<a href="logout" title="{{t
+						'Logout'}}" target="_self">
 					<span class="icon-logout"></span>
 				</a>
 			</li>
 		</ul>
 
-		<ul class="big-menu collapsible as-accordion">
+		<!--<ul class="big-menu collapsible as-accordion">
 			{{{menuHTML}}}
+		</ul>-->
+
+		<ul class="big-menu collapsible as-accordion">
+			<li ng-repeat="(_id,menu) in menus | object2Array | orderBy:'position'" ng-class="{'with-right-arrow' : menu.submenus}">
+				<span ng-if="menu.submenus">\{{menu.title}}</span>
+				<ul ng-if="menu.submenus" class="big-menu grey-gradient">
+					<li ng-repeat="(_id, menu) in menu.submenus  | object2Array | orderBy:'position'" ng-class="{'with-right-arrow' : menu.submenus}">
+						<span ng-if="menu.submenus">\{{menu.title}}</span>
+						<ul ng-if="menu.submenus" class="big-menu anthracite-gradient">
+							<li ng-repeat="(_id, menu) in menu.submenus  | object2Array | orderBy:'position'">
+								<a ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
+							</li>
+						</ul>
+						<a ng-if="!menu.submenus" ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
+					</li>
+				</ul>
+				<a ng-if="!menu.submenus" ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
+			</li>
 		</ul>
 
 		<ul class="unstyled-list">
@@ -63,7 +84,8 @@
 			<li>
 				<ul class="calendar-menu">
 					<li>
-						<a href="agenda/fiche.php?id={{this._id}}", title="{{t 'Open'}}">
+						<a href="agenda/fiche.php?id={{this._id}}", title="{{t
+								'Open'}}">
 							<time datetime="{{this.event.datetime}}">
 								<b>{{this.event.day}}</b>
 								<p>{{this.event.month}}</p>

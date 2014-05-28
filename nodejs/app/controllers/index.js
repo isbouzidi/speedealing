@@ -49,7 +49,7 @@ var AgendaModel = mongoose.model('agenda');
  */
 
 var map_reduce = {};
-map_reduce.menuList = {};
+/*map_reduce.menuList = {};
 map_reduce.menuList.map = function() {
 	if (this.menus) {
 		this.menus.forEach(function(tag) {
@@ -73,7 +73,7 @@ map_reduce.menuList.query = {enabled: true};
  console.log(err);
  });*/
 
-map_reduce.submenuList = {};
+/*map_reduce.submenuList = {};
 map_reduce.submenuList.map = function() {
 	if (this.menus) {
 		this.menus.forEach(function(tag) {
@@ -280,7 +280,8 @@ exports.render = function(req, res) {
 				], function() {
 			//console.log(JSON.stringify(topmenu));
 			//console.log(JSON.stringify(submenu));
-			var menuHTML = "";
+			
+		/*	var menuHTML = "";
 			var idsel;
 
 			var selected;
@@ -366,7 +367,7 @@ exports.render = function(req, res) {
 				menuHTML += '</li>';
 
 				return selectnow;
-			}
+			}*/
 
 			// To hide menus
 			var withMenu = "";

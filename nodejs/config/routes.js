@@ -1,5 +1,6 @@
 var async = require('async'),
 		ip = require('ip'),
+		modules = require('../app/controllers/modules'),
 		config = require(__dirname + '/config');
 
 module.exports = function(app, passport, auth) {
@@ -117,6 +118,8 @@ module.exports = function(app, passport, auth) {
 
 	//app.get('/users/me', users.me);
 	//app.get('/users/:userId', users.show);
+	
+	app.get('/menus', auth.requiresLogin, modules.menus);
 
 	//Setting the facebook oauth routes
 	app.get('/auth/facebook', passport.authenticate('facebook', {

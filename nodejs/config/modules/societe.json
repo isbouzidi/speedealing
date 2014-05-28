@@ -1,0 +1,199 @@
+{
+	"boxes": [
+		"box_clients.php",
+		"box_prospect.php",
+		"box_contacts.php",
+		"box_activity.php"
+	],
+	"const": [
+		[
+			"SOCIETE_CODECLIENT_ADDON",
+			"chaine",
+			"mod_codeclient_leopard",
+			"Module to control third parties codes",
+			0
+		],
+		[
+			"SOCIETE_CODECOMPTA_ADDON",
+			"chaine",
+			"mod_codecompta_panicum",
+			"Module to control third parties codes",
+			0
+		],
+		[
+			"SOCIETE_FISCAL_MONTH_START",
+			"chaine",
+			"0",
+			"Mettre le numero du mois du debut d\\'annee fiscale, ex: 9 pour septembre",
+			0
+		],
+		[
+			"MAIN_SEARCHFORM_SOCIETE",
+			"yesno",
+			"1",
+			"Show form for quick company search",
+			0
+		],
+		[
+			"MAIN_SEARCHFORM_CONTACT",
+			"yesno",
+			"1",
+			"Show form for quick contact search",
+			0
+		],
+		[
+			"COMPANY_ADDON_PDF_ODT_PATH",
+			"chaine",
+			"DOL_DATA_ROOT/doctemplates/thirdparties",
+			"",
+			0
+		]
+	],
+	"rights": {
+		"societe": [
+			{
+				"desc": "Lire les societes",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer modifier les societes",
+				"perm": {
+					"write": false
+				}
+			},
+			{
+				"desc": "Supprimer les societes",
+				"perm": {
+					"delete": false
+				}
+			},
+			{
+				"desc": "Exporter les societes",
+				"perm": {
+					"export": false
+				}
+			},
+			{
+				"desc": "Consulter tous les tiers par utilisateurs internes (sinon uniquement si contact commercial). Non effectif pour utilisateurs externes (tjs limités à eux-meme).",
+				"perm": {
+					"seeAll": false
+				}
+			}
+		],
+		"contact": [
+			{
+				"desc": "Lire les contacts",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer modifier les contacts",
+				"perm": {
+					"write": false
+				}
+			},
+			{
+				"desc": "Supprimer les contacts",
+				"perm": {
+					"delete": false
+				}
+			},
+			{
+				"desc": "Exporter les contacts",
+				"perm": {
+					"export": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"family": "crm",
+	"name": "Societe",
+	"description": "Gestion des societes et contacts",
+	"version": "speedealing",
+	"const_name": "MAIN_MODULE_SOCIETE",
+	"config_page_url": [
+		"societe.php@societe"
+	],
+	"picto": "company",
+	"depends": [],
+	"requiredby": [
+		"modExpedition",
+		"modFacture",
+		"modFournisseur",
+		"modFicheinter",
+		"modPropale",
+		"modContrat",
+		"modCommande"
+	],
+	"menus": {
+		"menu:companies": {
+			"position": 2,
+			"perms": "user.rights.societe.read",
+			"enabled": "conf.societe.enabled || conf.fournisseur.enabled",
+			"usertype": 2,
+			"title": "companies:ThirdParties",
+			"submenus": {
+				"menu:thirdpartyenable": {
+					"position": 2,
+					"url": "#!/societes",
+					"perms": "$user->rights->societe->lire",
+					"enabled": "$conf->societe->enabled",
+					"usertype": 2,
+					"title": "companies:ListOfThirdParties",
+					"fk_menu": "menu:companies"
+				},
+				"menu:contactsenable": {
+					"position": 11,
+					"url": "/contact/list.php",
+					"perms": "$user->rights->societe->lire",
+					"enabled": "$conf->societe->enabled",
+					"usertype": 2,
+					"title": "companies:ListOfContactsEnable",
+					"fk_menu": "menu:companies"
+				},
+				"menu:contactsdisable": {
+					"position": 12,
+					"url": "/contact/list.php?disable=true",
+					"perms": "user.rights.societe.read",
+					"enabled": "conf.societe.enabled",
+					"usertype": 2,
+					"title": "companies:ListOfContactsDisable",
+					"fk_menu": "menu:companies"
+				}
+			}
+		}
+	},
+	"export": [
+		{
+			"code": "societe_0",
+			"label": "ExportDataset_company_1",
+			"icon": "company",
+			"permission": "$user->societe->export"
+		},
+		{
+			"code": "societe_1",
+			"label": "ExportDataset_company_2",
+			"icon": "contact",
+			"permission": "$user->societe->contact->export",
+			"class": "Contact"
+		}
+	],
+	"import": [
+		{
+			"code": "societe_0",
+			"label": "ImportDataset_company_1",
+			"icon": "company"
+		},
+		{
+			"code": "societe_1",
+			"label": "ImportDataset_company_2",
+			"icon": "contact"
+		}
+	],
+	"_id": "module:Societe",
+	"enabled": true
+}

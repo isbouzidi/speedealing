@@ -14,6 +14,17 @@ angular.module('mean.system').filter('euro', function() {
 	};
 });
 
+angular.module('mean.system').filter('object2Array', function() {
+	return function(input) {
+		var out = [];
+		for (var i in input) {
+			input[i].id = i;
+			out.push(input[i]);
+		}
+		return out;
+	};
+});
+
 angular.module('mean.system').filter('capitalize', function() {
 	return function(input, scope) {
 		if (input == null)
@@ -21,7 +32,7 @@ angular.module('mean.system').filter('capitalize', function() {
 
 		input = input.toLowerCase();
 		return input.substring(0, 1).toUpperCase() + input.substring(1);
-	}
+	};
 });
 
 angular.module('mean.system').filter('phone', function() {

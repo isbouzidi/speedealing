@@ -2,6 +2,7 @@ angular.module('mean.system').controller('MenuController', ['$scope', '$routePar
 		$scope.global = Global;
 
 		$scope.ticketCpt = 0;
+		$scope.menus = {};
 
 		//socket.emit('user', Global.user._id);
 
@@ -16,6 +17,12 @@ angular.module('mean.system').controller('MenuController', ['$scope', '$routePar
 		$scope.selectedMenu = function(id) {
 			if($routeParams.idmenu === id)
 				return "current collapsible-current";
+		};
+		
+		$scope.init = function(){
+			$http({method: 'GET', url: '/menus'}).success(function(data, status) {
+					$scope.menus = data;
+				});
 		};
 
 		/*socket.on('news', function(data) {
