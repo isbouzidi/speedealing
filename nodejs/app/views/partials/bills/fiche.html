@@ -18,8 +18,7 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Status'}}</th>
-									<td><span class="tag small glossy" data-ng-class="bill.status.css" editable-select="bill.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in Status.values">
-											\{{bill.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>
+									<td><span class="tag small glossy" data-ng-class="bill.status.css">\{{bill.status.name}}</span>
 									</td>
 								</tr>
 								<tr>
@@ -28,9 +27,10 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'bills:BillTo'}}</th>
-									<td><a href="#" editable-text="bill.client" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no"  onbeforesave="updateAddress($data)" onaftersave="update()">
+									<td><a href="#" ng-show="editable" editable-text="bill.client" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no"  onbeforesave="updateAddress($data)" onaftersave="update()">
 											\{{bill.client.name|| "Non defini"}}
 										</a>
+										<span ng-hide="editable">\{{bill.client.name|| "Non defini"}}</span>
 									</td>
 								</tr>
 								<tr>
@@ -46,7 +46,7 @@
 											<span editable-text="bill.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{bill.zip}}</span> <span editable-text="bill.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{bill.town}}</span>
 											\{{bill.country}}
 											<!-- button to show form -->
-											<span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible"></span>
+											<span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible && editable"></span>
 
 
 											<div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
@@ -87,6 +87,11 @@
 								</tr>
 							</tbody>
 						</table>
+						<div class="button-height">
+							<div class="float-right">
+								<button ng-show="editable" class="button orange-gradient" data-ng-click="changeStatus('NOT_PAID')">{{t 'Validate'}}</button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="eight-columns">
@@ -104,7 +109,7 @@
 												<tr>
 													<th scope="row">{{t 'Type'}}</th>
 													<td><span editable-select="bill.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in type.values">
-															\{{showStatus('type')}}</span> <span class="icon-pencil grey" ng-click="typeBtnForm.$show()" ng-hide="typeBtnForm.$visible"></span>
+															\{{showStatus('type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
 													</td>
 												</tr>
 												<tr>
@@ -137,9 +142,11 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'commercial:Commercial'}}</th>
-													<td ><a href="#" editable-text="bill.commercial_id" e-typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+													<td ><a href="#" ng-show="editable" editable-text="bill.commercial_id" e-typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
 															\{{bill.commercial_id.name|| "Non defini"}}
-														</a></td>
+														</a>
+														<span ng-hide="editable">\{{bill.commercial_id.name|| "Non defini"}}</span>
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -170,7 +177,7 @@
 													<td class="no-padding" colspan="2">
 														<table class="info-table">
 															<tbody>
-																<tr ng-repeat="vat in bill.total_tva| orderBy:'tva_tx'">
+																<tr ng-repeat="vat in bill.total_tva | orderBy:'tva_tx'">
 																	<th class="align-right">\{{vat.tva_tx| number:2}} %</th>
 																	<td class="align-right">\{{vat.total| currency}}</td>
 																</tr>
@@ -338,7 +345,7 @@
 
 									<div class="six-columns">
 										<div class="scroll" style="height:200px">
-											<div data-ng-repeat="vnote in bill.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+											<div data-ng-repeat="vnote in bill.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
 													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>

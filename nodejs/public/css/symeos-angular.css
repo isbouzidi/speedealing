@@ -669,3 +669,7 @@ tags-input .tags {
 	line-height: 12px;
 	text-align: right;
 }
+
+.boxed .button-height{
+	height: 26px;
+}

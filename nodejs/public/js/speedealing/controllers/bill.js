@@ -2,6 +2,8 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 		pageTitle.setTitle('Liste des factures');
 
+		$scope.editable = false;
+
 		$scope.bill = {
 			lines: [],
 			notes: []
@@ -47,6 +49,11 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 			bill.$update(function(response) {
 				pageTitle.setTitle('Facture ' + bill.ref);
+				
+				if(response.Status == "DRAFT")
+					$scope.editable = true;
+				else
+					$scope.editable = false;
 			});
 		};
 
@@ -63,6 +70,11 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			}, function(bill) {
 				//console.log(bill);
 				$scope.bill = bill;
+				
+				if(bill.Status == "DRAFT")
+					$scope.editable = true;
+				else
+					$scope.editable = false;
 
 				$http({method: 'GET', url: 'api/ticket', params:
 							{
@@ -264,12 +276,12 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			columnDefs: [
 				{field: 'product.name', width: "60%", displayName: 'Désignation', cellTemplate: '<div class="ngCellText"><span class="blue strong icon-cart">{{row.getProperty(col.field)}}</span> - {{row.getProperty(\'product.label\')}}<pre class="no-padding">{{row.getProperty(\'description\')}}</pre></div>'},
 				{field: 'group', displayName: "Groupe", visible: false},
-				{field: 'tva_tx', displayName: 'TVA', cellClass: "align-right"},
-				{field: 'pu_ht', displayName: 'P.U. HT', cellClass: "align-right", cellFilter: "currency"},
 				{field: 'qty', displayName: 'Qté', cellClass: "align-right"},
+				{field: 'pu_ht', displayName: 'P.U. HT', cellClass: "align-right", cellFilter: "currency"},
+				{field: 'tva_tx', displayName: 'TVA', cellClass: "align-right"},
 				//{field: '', displayName: 'Réduc'},
 				{field: 'total_ht', displayName: 'Total HT', cellFilter: "currency", cellClass: "align-right"},
-				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-click="editLine(row)"></button></button><button class="button orange-gradient icon-trash" title="Supprimer" ng-click="removeLine(row)"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-disabled="!editable" ng-click="editLine(row)"></button></button><button class="button orange-gradient icon-trash" title="Supprimer" ng-disabled="!editable" ng-click="removeLine(row)"></button></div></div>'}
 			],
 			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
 					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}}</span><br/><span class=\"anthracite strong\">Total HT: {{aggFunc(row,'total_ht') | currency}}</span></span>" +
@@ -341,6 +353,11 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					$scope.save.pending = false;
 				}, 500);
 			}
+		};
+		
+		$scope.changeStatus = function(Status) {
+			$scope.bill.Status = Status;
+			$scope.update();
 		};
 
 

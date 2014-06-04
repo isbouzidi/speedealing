@@ -639,12 +639,12 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 				id: "MESSAGERIE"
 			},
 			from: {
-				zip:"",
-				town:""
+				zip: "",
+				town: ""
 			},
 			to: {
-				zip:"",
-				town:""
+				zip: "",
+				town: ""
 			}
 		};
 
@@ -1369,6 +1369,19 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 
 		};
 
+		$scope.createBills = function() {
+			$http({method: 'GET', url: 'api/europexpress/billing', params: {
+					month: parseInt($routeParams.id1) - 1,
+					year: parseInt($routeParams.id2),
+					entity: $scope.global.user.entity
+				}
+			}).success(function(data, status) {
+				if (status == 200) {
+					console.log(data);
+				}
+			});
+		};
+
 		$scope.today = function() {
 			var d = new Date();
 			d.setHours(0, 0, 0);
@@ -1423,7 +1436,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 				//jqueryUIDraggable: true,
 				i18n: 'fr',
 				groups: ['client.name'],
-				groupsCollapsedByDefault: false,
+				//groupsCollapsedByDefault: false,
 				enableColumnResize: true,
 				//plugins: [new ngGridFlexibleHeightPlugin()],
 				columnDefs: [
@@ -1434,7 +1447,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 					{field: 'total_ht', width: "20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
 				],
 				aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
-						"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.totalChildren()}} {{entryMaybePlural(row)}} {{row.label CUSTOM_FILTERS}}</span> <span class=\"red strong\">Total HT: {{aggFunc(row,'total_ht') | euro}}</span></span>" +
+						"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}} : {{row.totalChildren()}} {{entryMaybePlural(row)}}</span> <span class=\"red strong\">Total HT: {{aggFunc(row,'total_ht') | euro}}</span></span>" +
 						"    <div class=\"{{row.aggClass()}}\"></div>" +
 						"</div>" +
 						""
@@ -1480,7 +1493,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			enableColumnResize: true,
 			i18n: 'fr',
 			groups: ['fournisseur.name'],
-			groupsCollapsedByDefault: false,
+			//groupsCollapsedByDefault: false,
 			columnDefs: [
 				{field: 'fournisseur.name', width: "25%", displayName: 'Sous-traitant', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', width: "15%", displayName: 'Id'},
@@ -1490,7 +1503,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 				{field: 'chargesExt', width: "15%", displayName: 'Charges extenes', cellFilter: "euro", cellClass: "align-right"}
 			],
 			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
-					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.totalChildren()}} {{entryMaybePlural(row)}} {{row.label CUSTOM_FILTERS}}</span> <span class=\"red strong\">Total HT: {{aggFunc(row,'total_soustraitant') | euro}}</span> / <span class=\"strong\">Total HT charges externes: {{aggFunc(row,'chargesExt') | euro}}</span></span>" +
+					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}} : {{row.totalChildren()}} {{entryMaybePlural(row)}}</span> <span class=\"red strong\">Total HT: {{aggFunc(row,'total_soustraitant') | euro}}</span> / <span class=\"strong\">Total HT charges externes: {{aggFunc(row,'chargesExt') | euro}}</span></span>" +
 					"    <div class=\"{{row.aggClass()}}\"></div>" +
 					"</div>" +
 					""

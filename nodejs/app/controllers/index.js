@@ -40,7 +40,6 @@ var ModuleModel = mongoose.model('module', moduleSchema, 'DolibarrModules');
  * GET home page.
  */
 
-//var ModuleModel = mongoose.model('module');
 var AgendaModel = mongoose.model('agenda');
 
 

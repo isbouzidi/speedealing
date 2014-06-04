@@ -289,7 +289,6 @@ Object.prototype = {
 
 					case "CHQ" :
 						tex = tex.replace(/--BK--/g, "A l'ordre de --ENTITY--");
-						console.log(req.entity);
 						break;
 
 					default :

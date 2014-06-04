@@ -45,8 +45,8 @@ var societeSchema = new Schema({
 	prospectlevel: {type: String, default: 'PL_NONE'},
 	brand: [String],
 	yearCreated: Number,
-	cond_reglement: String,
-	mode_reglement: String,
+	cond_reglement: {type: String, default: 'RECEP'},
+	mode_reglement: {type: String, default: 'CHQ'},
 	zonegeo: String,
 	Tag: [String],
 	segmentation: [{
