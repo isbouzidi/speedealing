@@ -1,6 +1,6 @@
-angular.module('mean.bills').controller('BillController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Bills', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
+angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'BillsSupplier', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
 
-		pageTitle.setTitle('Liste des factures');
+		pageTitle.setTitle('Liste des factures fournisseurs');
 
 		$scope.editable = false;
 
@@ -49,8 +49,8 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 			bill.$update(function(response) {
 				pageTitle.setTitle('Facture ' + bill.ref);
-				
-				if(response.Status == "DRAFT")
+
+				if (response.Status == "DRAFT")
 					$scope.editable = true;
 				else
 					$scope.editable = false;
@@ -70,8 +70,8 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			}, function(bill) {
 				//console.log(bill);
 				$scope.bill = bill;
-				
-				if(bill.Status == "DRAFT")
+
+				if (bill.Status == "DRAFT")
 					$scope.editable = true;
 				else
 					$scope.editable = false;
@@ -150,11 +150,11 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref.', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/bills/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Ref.', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/billsSupplier/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'datec', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'dater', displayName: 'Date échéance', cellFilter: "date:'dd-MM-yyyy'"},
-				{field: 'client.name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'client.id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'commercial_id.name', displayName: 'Commercial', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
+				{field: 'supplier.name', displayName: 'Fournisseur', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'supplier.id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				//{field: 'commercial_id.name', displayName: 'Commercial', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
 				{field: 'total_ttc', displayName: 'Total TTC', cellFilter: "currency"},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
@@ -163,15 +163,15 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 		$scope.addNewBill = function() {
 			var modalInstance = $modal.open({
-				templateUrl: '/partials/bills/create.html',
-				controller: "BillCreateController",
+				templateUrl: '/partials/billsSupplier/create.html',
+				controller: "BillSupplierCreateController",
 				windowClass: "steps"
 			});
 
 			modalInstance.result.then(function(bill) {
 				bill = new Bills(bill);
 				bill.$save(function(response) {
-					$location.path("bills/" + response._id);
+					$location.path("billsSupplier/" + response._id);
 				});
 			}, function() {
 			});
@@ -188,6 +188,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					},
 					options: function() {
 						return {
+							supplier: $scope.bill.supplier,
 							price_level: $scope.bill.price_level
 						};
 					}
@@ -214,6 +215,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					},
 					options: function() {
 						return {
+							supplier: $scope.bill.supplier,
 							price_level: $scope.bill.price_level
 						};
 					}
@@ -270,12 +272,9 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		$scope.gridOptionsLines = {
 			data: 'bill.lines',
 			enableRowSelection: false,
-			sortInfo: {fields: ["group"], directions: ["asc"]},
 			filterOptions: $scope.filterOptionsLines,
 			i18n: 'fr',
 			enableColumnResize: true,
-			groups: ['group'],
-			groupsCollapsedByDefault: false,
 			rowHeight: 50,
 			columnDefs: [
 				{field: 'product.name', width: "60%", displayName: 'Désignation', cellTemplate: '<div class="ngCellText"><span class="blue strong icon-cart">{{row.getProperty(col.field)}}</span> - {{row.getProperty(\'product.label\')}}<pre class="no-padding">{{row.getProperty(\'description\')}}</pre></div>'},
@@ -286,22 +285,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				//{field: '', displayName: 'Réduc'},
 				{field: 'total_ht', displayName: 'Total HT', cellFilter: "currency", cellClass: "align-right"},
 				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-disabled="!editable" ng-click="editLine(row)"></button></button><button class="button orange-gradient icon-trash" title="Supprimer" ng-disabled="!editable" ng-click="removeLine(row)"></button></div></div>'}
-			],
-			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
-					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}}</span><br/><span class=\"anthracite strong\">Total HT: {{aggFunc(row,'total_ht') | currency}}</span></span>" +
-					"    <div class=\"{{row.aggClass()}}\"></div>" +
-					"</div>" +
-					""
-		};
-
-		$scope.aggFunc = function(row, idx) {
-			var total = 0;
-			//console.log(row);
-			angular.forEach(row.children, function(cropEntry) {
-				if (cropEntry.entity[idx])
-					total += cropEntry.entity[idx];
-			});
-			return total;
+			]
 		};
 
 		/*
@@ -358,7 +342,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				}, 500);
 			}
 		};
-		
+
 		$scope.changeStatus = function(Status) {
 			$scope.bill.Status = Status;
 			$scope.update();
@@ -367,7 +351,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 	}]);
 
-angular.module('mean.bills').controller('BillCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function($scope, $http, $modalInstance, $upload, $route, Global) {
+angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function($scope, $http, $modalInstance, $upload, $route, Global) {
 		$scope.global = Global;
 
 		$scope.active = 1;
@@ -422,10 +406,10 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 
 		$scope.updateCoord = function(item, model, label) {
 			//console.log(item);
-			
-			if($scope.bill.client.name === "Accueil")
-				$scope.bill.client.isNameModified = true;
-			
+
+			if ($scope.bill.supplier.name === "Accueil")
+				$scope.bill.supplier.isNameModified = true;
+
 			$scope.bill.price_level = item.price_level;
 			$scope.bill.address = item.address.address;
 			$scope.bill.zip = item.address.zip;
@@ -453,6 +437,7 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				skip: '0',
 				page: '1',
 				pageSize: '5',
+				fournisseur: {"$in": ["SUPPLIER", "SUBCONTRACTOR"]},
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {

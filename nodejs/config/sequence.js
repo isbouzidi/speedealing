@@ -20,12 +20,15 @@ var sequenceSchema = new Schema({
  * Statics
  */
 sequenceSchema.statics = {
-	inc: function(name, cb) {
+	inc: function(name, date, cb) {
+		if (typeof date == "function") {
+			cb = date;
+			date = new Date();
+		}
+
 		this.findByIdAndUpdate(name, {$inc: {seq: 1}}, {upsert: true}, function(err, doc) {
 			if (err)
 				console.log(err);
-
-			var date = new Date();
 
 			return cb(numberFormat((date.getMonth() + 1), 2) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 6));
 		});

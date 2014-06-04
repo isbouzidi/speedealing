@@ -359,10 +359,11 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 
 	}]);
 
-angular.module('mean.system').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'price_level','object', function($scope, $http, $modalInstance, Global, price_level, object) {
+angular.module('mean.system').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object','options', function($scope, $http, $modalInstance, Global, object, options) {
 		$scope.global = Global;
 
 		$scope.line = object;
+		$scope.supplier = options && options.supplier;
 
 		$scope.init = function() {
 			var fields = ["tva_tx"];
@@ -406,7 +407,8 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
 				skip: 0,
 				page: 1,
 				pageSize: 5,
-				price_level: price_level,
+				price_level: options.price_level,
+				supplier:options.supplier,
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {

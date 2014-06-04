@@ -1368,6 +1368,14 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			});
 
 		};
+		
+		$scope.showCreate = function() {
+			var d = new Date();
+			d.setHours(0, 0, 0);
+			
+			if(d.getMonth() ==  parseInt($routeParams.id1) && d.getFullYear() ==  parseInt($routeParams.id2))
+				return true;
+		};
 
 		$scope.createBills = function() {
 			$http({method: 'GET', url: 'api/europexpress/billing', params: {

@@ -104,7 +104,7 @@
 			"perms": "$user->rights->facture->lire",
 			"enabled": "$conf->facture->enabled",
 			"usertype": 2,
-			"title": "bills:Bills",
+			"title": "compta:MenuFinancial",
 			"submenus": {
 				"menu:billslist": {
 					"position": 1,
@@ -112,7 +112,7 @@
 					"perms": "$user->rights->facture->lire",
 					"enabled": "$conf->facture->enabled",
 					"usertype": 2,
-					"title": "bills:List"
+					"title": "bills:CustomersInvoices"
 				}
 			}
 		}

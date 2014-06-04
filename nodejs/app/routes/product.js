@@ -45,19 +45,12 @@ module.exports = function(app, passport, auth) {
 				{label: new RegExp(req.body.filter.filters[0].value, "i")}
 			]
 		};
-
-		var price_level = 'BASE';
-		/*if (req.body.price_level) {
-			price_level = req.body.price_level;
-		}*/
-
-		//query['price.price_level'] = price_level;
-
-		/*if (req.query.fournisseur) {
-		 query.fournisseur = req.query.fournisseur;
-		 } else // customer Only
-		 query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};*/
-
+		
+		if(req.body.supplier)
+			query.Status = {'$in':["SELLBUY","BUY"]};
+		else
+			query.Status = {'$in':["SELL","SELLBUY"]};
+			
 		//console.log(query);
 		ProductModel.aggregate([
 			{$match: query},

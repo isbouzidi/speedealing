@@ -37,6 +37,11 @@
                    "label": "InvoiceStandard",
                    "cssClass": "grey-gradient"
                },
+			    "INVOICE_AUTO": {
+                   "enable": true,
+                   "label": "InvoiceAuto",
+                   "cssClass": "grey-gradient"
+               },
                "INVOICE_DEPOSIT": {
                    "enable": true,
                    "label": "InvoiceDeposit",
