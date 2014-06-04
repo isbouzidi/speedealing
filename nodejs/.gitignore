@@ -7,3 +7,4 @@ default.properties
 /node_modules/
 config.json
 wsdl/
+development.json
