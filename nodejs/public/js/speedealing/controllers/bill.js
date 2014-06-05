@@ -185,7 +185,9 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				windowClass: "steps",
 				resolve: {
 					object: function() {
-						return {};
+						return {
+							qty : 0
+						};
 					},
 					options: function() {
 						return {
