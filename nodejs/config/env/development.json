@@ -1,5 +1,5 @@
 {
-	"db": "mongodb://localhost/europexpress",
+	"db": "mongodb://localhost/chaumeil",
 	"replset": "symeos",
 	"app": {
 		"name": "Speedealing",

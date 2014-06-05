@@ -526,6 +526,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				}, 500);
 			}
 		};
+		
+		$scope.priceLevelAutoComplete = function(val, field) {
+			return $http.post('api/product/price_level/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data;
+			});
+		};
 
 
 	}]);

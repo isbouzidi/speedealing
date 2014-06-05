@@ -93,7 +93,7 @@
 					<h5 class="green underline">Les dernieres notes</h5>
 
 					<div class="scroll" style="height:120px">
-						<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
+						<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
 							<div class="with-small-padding silver-gradient no-margin-top">
 								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -324,7 +324,11 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:PriceLevel'}}</th>
-													<td>\{{societe.price_level}}</td>
+													<td>
+														<a href="#" editable-text="societe.price_level" e-typeahead="price_level.name for price_level in priceLevelAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+															\{{societe.price_level|| "Non defini"}}
+														</a>
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
@@ -489,7 +493,7 @@
 
 									<div class="six-columns">
 										<div class="scroll" style="height:360px">
-											<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+											<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
 													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -505,7 +509,7 @@
 						</tab>
 					</tabset>
 				</div>
-				
+
 				<div class="twelve-columns">
 					<h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
 
