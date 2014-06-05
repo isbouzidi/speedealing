@@ -73,7 +73,7 @@ var societeSchema = new Schema({
 	UGAP_Ref_Client: String,
 	datec: Date,
 	idporf1: String,
-	idprof2: {type: String, require: true, unique: true}, // SIRET
+	idprof2: {type: String, unique: true}, // SIRET
 	idprof3: String,
 	idprof4: String,
 	idprof5: String,
