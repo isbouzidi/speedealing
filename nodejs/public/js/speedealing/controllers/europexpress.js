@@ -1368,12 +1368,12 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			});
 
 		};
-		
+
 		$scope.showCreate = function() {
 			var d = new Date();
 			d.setHours(0, 0, 0);
-			
-			if(d.getMonth() ==  parseInt($routeParams.id1) && d.getFullYear() ==  parseInt($routeParams.id2))
+
+			if (d.getMonth() == parseInt($routeParams.id1) && d.getFullYear() == parseInt($routeParams.id2))
 				return true;
 		};
 
@@ -1850,7 +1850,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		$scope.today = function() {
 			var d = new Date();
 			d.setHours(0, 0, 0);
-			$location.path('module/europexpress/mouvementstock.html/' + (d.getMonth() + 1) + '/' + d.getFullYear());
+			$location.path('module/europexpress/mouvementstock.html/' + (d.getMonth()) + '/' + d.getFullYear());
 		};
 
 		$scope.next = function() {
@@ -1901,8 +1901,9 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 					});
 		}
 
-		var totaux = {};
-		function getTotaux() {
+		function getTotaux(cb) {
+			var totaux={};
+
 			if ($routeParams.id1 == null)
 				return;
 
@@ -1913,6 +1914,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 							totaux[data[i]._id] = data[i].total;
 						}
 						//console.log(totaux);
+						cb(totaux);
 					});
 		}
 
@@ -1921,7 +1923,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				return $scope.today();
 
 			initProducts();
-			getTotaux();
+			//getTotaux();
 
 			$scope.entrepots = [];
 
@@ -1952,28 +1954,28 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		};
 
 		$scope.find = function() {
-			//console.log("toto");
-			$scope.productsTab = [];
-			angular.forEach($scope.radio.entrepot.productId, function(code) {
-				var product = angular.copy($scope.productsBarCode[code]);
-				product.barCode = $scope.radio.entrepot.barCode + product.barCode;
-				product.qty = totaux[product.barCode];
+			getTotaux(function(totaux) {
+				$scope.productsTab = [];
+				angular.forEach($scope.radio.entrepot.productId, function(code) {
+					var product = angular.copy($scope.productsBarCode[code]);
+					product.barCode = $scope.radio.entrepot.barCode + product.barCode;
+					product.qty = totaux[product.barCode];
 
-				product.typeMove = {};
+					product.typeMove = {};
 
-				product.typeMove.id = product.barCode.slice(-3);
-				if (typeMove_list.values[product.typeMove.id]) {
-					product.typeMove.name = typeMove_list.values[product.typeMove.id].label;
-					product.typeMove.css = typeMove_list.values[product.typeMove.id].cssClass;
-				} else { // Value not present in extrafield
-					product.typeMove.name = product.typeMove.id;
-					product.typeMove.css = "";
-				}
+					product.typeMove.id = product.barCode.slice(-3);
+					if (typeMove_list.values[product.typeMove.id]) {
+						product.typeMove.name = typeMove_list.values[product.typeMove.id].label;
+						product.typeMove.css = typeMove_list.values[product.typeMove.id].cssClass;
+					} else { // Value not present in extrafield
+						product.typeMove.name = product.typeMove.id;
+						product.typeMove.css = "";
+					}
 
-				//console.log(product);
-				$scope.productsTab.push(product);
+					//console.log(product);
+					$scope.productsTab.push(product);
+				});
 			});
-			//$scope.products = 
 		};
 
 		$scope.update = function(row) {
