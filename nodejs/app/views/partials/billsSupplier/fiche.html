@@ -363,7 +363,7 @@
 						<div class="row">
 							<div class="col-sm-8">
 								<div class="button-group">
-									<button class="button icon-plus blue-gradient" data-ng-click="addNewLine()">{{t 'Add'}}</button>
+									<button class="button icon-plus blue-gradient"  ng-disabled="!editable" data-ng-click="addNewLine()">{{t 'Add'}}</button>
 									<button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
 								</div>
 							</div>
