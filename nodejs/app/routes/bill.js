@@ -302,8 +302,11 @@ Object.prototype = {
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
 					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/g, "\%").replace(/&/g, "\&") + "\\\\}&" + doc.lines[i].tva_tx + "\\% &" + latex.price(doc.lines[i].pu_ht) + "&" + doc.lines[i].qty + "&" + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
+					console.log(doc.lines[i].description.replace(/&/g, "\&"));
 				}
 				//console.log(products)
+				//console.log(tab_latex);
+				return;
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 

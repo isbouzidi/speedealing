@@ -96,6 +96,7 @@
 						<div class="button-height">
 							<div class="float-right">
 								<button ng-show="editable" class="button orange-gradient" data-ng-click="changeStatus('NOT_PAID')">{{t 'Validate'}}</button>
+								<button ng-hide="editable" class="button green-gradient" data-ng-click="changeStatus('DRAFT')">{{t 'DeValidate'}}</button>
 							</div>
 						</div>
 					</div>
