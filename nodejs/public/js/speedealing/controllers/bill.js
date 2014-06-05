@@ -151,6 +151,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			i18n: 'fr',
 			columnDefs: [
 				{field: 'ref', displayName: 'Ref.', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/bills/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'title.ref', displayName: 'Titre'},
 				{field: 'datec', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'dater', displayName: 'Date échéance', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'client.name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'client.id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
