@@ -114,7 +114,7 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.post('/api/product/storehouse', auth.requiresLogin, function(req, res) {
-		console.log(req.body);
+		//console.log(req.body);
 
 		req.body.name = req.body.name.toUpperCase();
 		if (!req.body.substock)

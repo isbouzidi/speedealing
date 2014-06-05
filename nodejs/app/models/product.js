@@ -83,7 +83,7 @@ var storehouseSchema = new Schema({
 storehouseSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incNumber("S", function(seq) {
+		SeqModel.incCpt("S",function(seq) {
 			self.barCode = seq;
 			next();
 		});
