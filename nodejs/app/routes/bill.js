@@ -306,7 +306,7 @@ Object.prototype = {
 				}
 				//console.log(products)
 				//console.log(tab_latex);
-				return;
+				//return;
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 
