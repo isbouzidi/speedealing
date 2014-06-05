@@ -271,7 +271,7 @@ Object.prototype = {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref);
-				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.client.name + "} \\\\" + doc.address + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}");
 				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
 				tex = tex.replace(/--TITLE--/g, doc.title);
 				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
