@@ -594,7 +594,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 				{field: 'commission', displayName: 'Comission', cellFilter: "currency", cellClass: "align-right"},
 				{field: 'bordereau', displayName: 'Bordereau'},
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"},
-				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a class="button icon-download" ng-href="api/europexpress/courses/pdf/{{row.getProperty(\'_id\')}}" target="_blank"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a class="button icon-pencil" title="Editer" ng-disabled="!editable" ng-href="#!/module/europexpress/transport_edit.html/{{row.getProperty(\'_id\')}}"></a><a class="button icon-download" ng-href="api/europexpress/courses/pdf/{{row.getProperty(\'_id\')}}" target="_blank"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
 		};
 
@@ -616,7 +616,28 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/europexpress/create_messagerie.html',
 				controller: "EETransportCreateController",
-				windowClass: "steps"
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							type: {
+								id: "MESSAGERIE",
+								name: "Messagerie"
+							},
+							Status: {
+								id: "NEW"
+							},
+							from: {
+								zip: "",
+								town: ""
+							},
+							to: {
+								zip: "",
+								town: ""
+							}
+						};
+					}
+				}
 			});
 
 			modalInstance.result.then(function(course) {
@@ -629,26 +650,61 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 			});
 		};
 
-	}]);
+		$scope.addNew = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/europexpress/create_transport.html',
+				controller: "EETransportCreateController",
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							type: {
+								id: "COURSE",
+								name: "Course"
+							},
+							Status: {
+								id: "NEW"
+							},
+							from: {
+								zip: "",
+								town: ""
+							},
+							to: {
+								zip: "",
+								town: ""
+							}
+						};
+					}
+				}
+			});
 
-angular.module('mean.europexpress').controller('EETransportCreateController', ['$scope', '$routeParams', '$location', '$route', '$modalInstance', 'Global', 'EETransport', '$http', '$timeout', function($scope, $routeParams, $location, $route, $modalInstance, Global, Object, $http, $timeout) {
-		$scope.global = Global;
-
-		$scope.course = {
-			type: {
-				id: "MESSAGERIE"
-			},
-			from: {
-				zip: "",
-				town: ""
-			},
-			to: {
-				zip: "",
-				town: ""
-			}
+			modalInstance.result.then(function(course) {
+				course = new Object(course);
+				course.$save(function(response) {
+					//$scope.transports.push(response);
+					//$scope.countTransports++;
+					 $location.path("module/europexpress/transport_edit.html/" + course._id);
+				});
+			}, function() {
+			});
 		};
 
+	}]);
+
+angular.module('mean.europexpress').controller('EETransportCreateController', ['$scope', '$routeParams', '$location', '$route', '$modalInstance', 'Global', 'EETransport', '$http', '$timeout', 'object', function($scope, $routeParams, $location, $route, $modalInstance, Global, Object, $http, $timeout, object) {
+		$scope.global = Global;
+
+		$scope.course = object;
+
 		$scope.validBorderau = true;
+
+		$scope.init = function() {
+			$http({method: 'GET', url: 'api/europexpress/courses/type/select'
+			}).success(function(data, status) {
+				$scope.type = data;
+				//console.log(data);
+			});
+		};
 
 		$scope.create = function() {
 			$modalInstance.close($scope.course);
@@ -1902,7 +1958,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		}
 
 		function getTotaux(cb) {
-			var totaux={};
+			var totaux = {};
 
 			if ($routeParams.id1 == null)
 				return;

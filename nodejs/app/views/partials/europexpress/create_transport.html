@@ -1,0 +1,60 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">Création \{{course.type.name}}</h3>
+
+	<!-- Each form step should be wrapped in a fieldset -->
+	<fieldset class="wizard-fieldset fields-list active">
+		<div class="field-block button-height">
+			<label for="type"><b>Type</b></label>
+			<select required class="form-control" id="type" data-ng-model="course.type" data-ng-options="c as c.name for c in type track by c.id"></select>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="client"><b>{{t 'companies:Company'}} / Client</b></label>
+			<input required type="text" data-ng-model="course.client" typeahead="societe as societe.name for societe in clientAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height" ng-show="course.client.isNameModified">
+			<label for="name"><b>{{t 'Name'}}</b></label>
+			<input type="text" data-ng-model="course.client.name" id="name" class="input" autocomplete="off">
+			<small class="icon-info blue input-info"> Mettre ici le nom de la société n'ayant pas de compte ou les nom et prénom du client.</small>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="ref_client"><b>Réf. du client</b></label>
+			<input type="text" data-ng-model="course.ref_client" id="ref_client" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height">
+			<label for="date_enlevement"><b>Date d'enlevement</b></label>
+			<input kendo-date-picker required id="date_enlevement" k-on-change="course.date_enlevement = kendoEvent.sender._value;" class="input"/>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="date_livraison"><b>Date de livraison</b></label>
+			<input kendo-date-picker id="date_livraison" k-on-change="course.date_livraison = kendoEvent.sender._value;" class="input"/>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="Status"><b>Status</b></label>
+			<select required data-ng-model="course.Status" id="Status" data-ng-init="selectStatus()" data-ng-options="S as S.name for S in status track by S.id" class="form-control"></select>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="fournisseur"><b>Sous-traitant</b></label>
+			<input type="text" required data-ng-model="course.fournisseur" typeahead="fournisseur as fournisseur.name for fournisseur in fournisseurAutoComplete($viewValue) | filter:{name:$viewValue}" id="fournisseur" class="input">
+		</div>
+
+		<div class="field-block button-height wizard-controls align-right">
+
+			<button type="submit" ng-disabled="!course.client.name" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				Créer
+			</button>
+
+		</div>
+
+	</fieldset>
+
+</form>

@@ -5,8 +5,6 @@
 
 	<!-- Each form step should be wrapped in a fieldset -->
 	<fieldset class="wizard-fieldset fields-list active">
-		\{{course}}
-		
 		<div class="field-block button-height">
 			<label for="bordereau"><b>Num de Bordereau</b></label>
 			<input type="text" data-ng-model="course.bordereau" data-ng-change="checkBordereau()" id="bordereau" class="input" autocomplete="off">
@@ -15,8 +13,8 @@
 		</div>
 
 		<div class="field-block button-height">
-			<label for="datec"><b>Date du bordereau</b></label>
-			<input kendo-date-picker required id="datec" k-on-change="course.datec = kendoEvent.sender._value;" class="input"/>
+			<label for="date_enlevement"><b>Date du bordereau</b></label>
+			<input kendo-date-picker required id="date_enlevement" k-on-change="course.date_enlevement = kendoEvent.sender._value;" class="input"/>
 		</div>
 
 		<div class="field-block button-height">
@@ -129,7 +127,7 @@
 
 		<div class="field-block button-height wizard-controls align-right">
 
-			<button type="submit" ng-disabled="!course.datec || !course.client.name || !validBorderau" class="button glossy mid-margin-right">
+			<button type="submit" ng-disabled="!course.client.name || !validBorderau" class="button glossy mid-margin-right">
 				<span class="button-icon"><span class="icon-tick"></span></span>
 				Créer
 			</button>
