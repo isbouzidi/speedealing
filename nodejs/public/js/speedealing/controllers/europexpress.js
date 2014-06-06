@@ -1449,7 +1449,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 		$scope.today = function() {
 			var d = new Date();
 			d.setHours(0, 0, 0);
-			$location.path('module/europexpress/facturation.html/' + (d.getMonth() + 1) + '/' + d.getFullYear());
+			$location.path('module/europexpress/facturation.html/' + (d.getMonth()) + '/' + d.getFullYear());
 		};
 
 		$scope.next = function() {
