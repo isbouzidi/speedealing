@@ -70,7 +70,7 @@ var billSchema = new Schema({
 			group: {type: String, default: "1. DEFAULT"},
 			title: String,
 			pu_ht: Number,
-			description: String,
+			description: {type: String, default: ""},
 			product_type: String,
 			product: {
 				id: {type: Schema.Types.ObjectId, ref: "Product"},
