@@ -423,6 +423,8 @@ Object.prototype = {
 						total_ht:ca[i]
 					});
 				}
+				
+				console.log(results);
 
 				res.json(200, result);
 			});
