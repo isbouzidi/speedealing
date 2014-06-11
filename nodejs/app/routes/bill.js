@@ -398,7 +398,7 @@ Object.prototype = {
 
 			//console.log(results);
 			async.each(results.caFamily, function(product, callback) {
-				//console.log(product);
+				console.log(product);
 				ProductModel.findOne({ref: product._id}, function(err, doc) {
 					product.caFamily = doc.caFamily;
 
