@@ -398,8 +398,11 @@ Object.prototype = {
 
 			//console.log(results);
 			async.each(results.caFamily, function(product, callback) {
-				console.log(product);
+				//console.log(product);
 				ProductModel.findOne({ref: product._id}, function(err, doc) {
+					if(!doc)
+						console.log(product);
+					
 					product.caFamily = doc.caFamily;
 
 					if (typeof ca[doc.caFamily] === "undefined")
