@@ -48,6 +48,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						//Status_ID: {from: "Status.id", defaultValue: "SELL"},
 						price_level: {type: "string", defaultValue: "BASE"},
 						ref_customer_code: {type: "string"},
+						caFamily:{type:"string"},
 						barCode: {type: "string"},
 						billingMode: {type: "string", defaultvalue: "QTY"},
 						compta_buy: {type: "string", defaultValue: ""},
@@ -136,6 +137,30 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 							transport: {
 								read: {
 									url: "api/product/price_level/autocomplete",
+									type: "POST",
+									dataType: "json"
+								}
+							}
+						}
+					});
+		};
+		
+		$scope.familyDropDownEditor = function(container, options) {
+			$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
+					.appendTo(container)
+					.kendoAutoComplete({
+						minLength: 1,
+						dataTextfield: "name",
+						filter: "contains",
+						autoBind: false,
+						suggest: true,
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/product/family/autocomplete",
 									type: "POST",
 									dataType: "json"
 								}

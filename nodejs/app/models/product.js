@@ -48,7 +48,8 @@ var productSchema = new Schema({
 			ref_customer_code: String,
 			price_level: String
 		}],
-	template: {type: String, default: "/partials/lines/classic.html"}
+	template: {type: String, default: "/partials/lines/classic.html"},
+	caFamily: {type: String, uppercase: true, default: "OTHER"}
 });
 
 productSchema.plugin(timestamps);
@@ -83,7 +84,7 @@ var storehouseSchema = new Schema({
 storehouseSchema.pre('save', function(next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incCpt("S",function(seq) {
+		SeqModel.incCpt("S", function(seq) {
 			self.barCode = seq;
 			next();
 		});

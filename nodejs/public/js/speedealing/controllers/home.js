@@ -47,7 +47,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 		};
 
 		$scope.familleCA = function() {
-			$http({method: 'GET', url: 'api/europexpress/courses/stats'
+			$http({method: 'GET', url: 'api/bill/caFamily'
 			}).success(function(ca, status) {
 				//console.log(ca);
 				$scope.familles = ca;

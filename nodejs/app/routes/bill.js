@@ -7,11 +7,13 @@ var mongoose = require('mongoose'),
 		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config'),
+		async = require('async'),
 		latex = require('../models/latex');
 
 var BillModel = mongoose.model('bill');
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
+var ProductModel = mongoose.model('product');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
@@ -21,6 +23,7 @@ module.exports = function(app, passport, auth) {
 	var object = new Object();
 
 	app.get('/api/bill', auth.requiresLogin, object.read);
+	app.get('/api/bill/caFamily', auth.requiresLogin, object.caFamily);
 	app.get('/api/bill/:billId', auth.requiresLogin, object.show);
 	app.post('/api/bill', auth.requiresLogin, object.create);
 	app.put('/api/bill/:billId', auth.requiresLogin, object.update);
@@ -348,6 +351,77 @@ Object.prototype = {
 						});
 					});
 				});
+			});
+		});
+	},
+	caFamily: function(req, res) {
+
+		var d = new Date();
+		d.setHours(0, 0, 0);
+		var dateStart = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
+
+		var ca = {};
+
+		async.parallel({
+			caFamily: function(cb) {
+				BillModel.aggregate([
+					{$match: {Status: {'$ne': 'DRAFT'}, entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
+					{$unwind: "$lines"},
+					{$project: {_id: 0, lines: 1}},
+					{$group: {_id: "$lines.product.id", total_ht: {"$sum": "$lines.total_ht"}}}
+				], function(err, doc) {
+					if (err) {
+						return cb(err);
+					}
+
+					//console.log(doc);
+					cb(null, doc);
+				});
+			}
+			/*familles: function(cb) {
+			 CoursesModel.aggregate([
+			 {$match: {Status: {'$ne': 'REFUSED'}, total_ht: {'$gt': 0}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}},
+			 {$project: {_id: 0, type: 1, total_ht: 1}},
+			 {$group: {_id: "$type", sum: {"$sum": "$total_ht"}}}
+			 ], function(err, doc) {
+			 if (doc.length == 0)
+			 return cb(0);
+			 
+			 //console.log(doc);
+			 cb(null, doc);
+			 });
+			 }*/
+		}, function(err, results) {
+			if (err)
+				return console.log(err);
+
+			//console.log(results);
+			async.each(results.caFamily, function(product, callback) {
+				//console.log(product);
+				ProductModel.findOne({_id: product._id}, function(err, doc) {
+					product.caFamily = doc.caFamily;
+
+					if (typeof ca[doc.caFamily] === "undefined")
+						ca[doc.caFamily] = 0;
+
+					ca[doc.caFamily] += product.total_ht;
+					//console.log(ca);
+
+					callback();
+				});
+
+			}, function(err) {
+				
+				var result = [];
+				for (var i in ca) {
+					result.push({
+						family:i,
+						total_ht:ca[i]
+					});
+				}
+
+				res.json(200, result);
 			});
 		});
 	}
