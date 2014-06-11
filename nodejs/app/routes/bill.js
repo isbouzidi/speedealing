@@ -400,6 +400,7 @@ Object.prototype = {
 			async.each(results.caFamily, function(product, callback) {
 				//console.log(product);
 				ProductModel.findOne({_id: product._id}, function(err, doc) {
+					console.log(product.name);
 					product.caFamily = doc.caFamily;
 
 					if (typeof ca[doc.caFamily] === "undefined")
