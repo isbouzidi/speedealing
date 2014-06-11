@@ -369,7 +369,7 @@ Object.prototype = {
 					{$match: {Status: {'$ne': 'DRAFT'}, entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
 					{$unwind: "$lines"},
 					{$project: {_id: 0, lines: 1}},
-					{$group: {_id: "$lines.product.id", total_ht: {"$sum": "$lines.total_ht"}}}
+					{$group: {_id: "$lines.product.ref", total_ht: {"$sum": "$lines.total_ht"}}}
 				], function(err, doc) {
 					if (err) {
 						return cb(err);
@@ -399,7 +399,7 @@ Object.prototype = {
 			//console.log(results);
 			async.each(results.caFamily, function(product, callback) {
 				console.log(product);
-				ProductModel.findOne({_id: product._id}, function(err, doc) {
+				ProductModel.findOne({ref: product._id}, function(err, doc) {
 					product.caFamily = doc.caFamily;
 
 					if (typeof ca[doc.caFamily] === "undefined")
