@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 var DictModel = mongoose.model('dict');
+var ExtrafieldModel = mongoose.model('extrafields');
 var EntityModel = mongoose.model('entity');
 
 /**
@@ -20,11 +21,10 @@ var EntityModel = mongoose.model('entity');
 var societeSchema = new Schema({
 	ref: String,
 	name: {type: String, require: true},
-	code_client: String,
+	code_client: {type: String, unique: true},
 	code_fournisseur: String,
 	barCode: String,
-	Status: {type: Schema.Types.Mixed, default: 'ST_PFROI'},
-	//status: {type: mongoose.VirtualType},
+	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
 	address: String,
 	zip: String,
 	town: String,
@@ -44,14 +44,15 @@ var societeSchema = new Schema({
 	civilite_id: {type: String, default: 'NO'},
 	price_level: {type: String, default: 'BASE', uppercase: true, trim: true},
 	prospectlevel: {type: String, default: 'PL_NONE'},
-	//prospectLevel: {type: Schema.Types.Mixed, virtual: true},
-	cond_reglement: String,
-	mode_reglement: String,
+	brand: [String],
+	yearCreated: Number,
+	cond_reglement: {type: String, default: 'RECEP'},
+	mode_reglement: {type: String, default: 'CHQ'},
 	zonegeo: String,
 	Tag: [String],
-	segmentation:[{
+	segmentation: [{
 			text: String
-	}],
+		}],
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},
@@ -65,20 +66,30 @@ var societeSchema = new Schema({
 	code_compta_fournisseur: String,
 	user_creat: String,
 	user_modif: String,
-	remise_client: String,
-	entity: String,
+	remise_client: Number,
+	entity: {type: String, default: "ALL"},
 	fournisseur: {type: String, default: 'NO'},
 	gps: [Number],
 	contractID: String,
 	UGAP_Ref_Client: String,
 	datec: Date,
 	idporf1: String,
-	idprof2: {type: String, require: true, unique: true}, // SIRET
+	idprof2: {type: String, unique: true}, // SIRET
 	idprof3: String,
 	idprof4: String,
 	idprof5: String,
 	idprof6: String,
-	checklist: mongoose.Schema.Types.Mixed
+	checklist: mongoose.Schema.Types.Mixed,
+	annualCA: [{
+			year: Number,
+			amount: Number
+		}],
+	annualEBE: [{
+			year: Number,
+			amount: Number
+		}],
+	risk: {type: String, default: 'NO'},
+	kompass_id: String
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
@@ -90,7 +101,9 @@ societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 
 societeSchema.pre('save', function(next) {
 	var self = this;
-	if (this.isNew && this.code_client == null) {
+
+	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
+
 		SeqModel.incNumber("C", 6, function(seq) {
 			self.barCode = "C" + seq;
 
@@ -122,44 +135,118 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 
 societeSchema.virtual('status')
 		.get(function() {
-	var res_status = {};
+			var res_status = {};
 
-	var status = this.Status;
+			var status = this.Status;
 
-	if (status && statusList.values[status].label) {
-		//console.log(this);
-		res_status.id = status;
-		//this.status.name = i18n.t("intervention." + statusList.values[status].label);
-		res_status.name = statusList.values[status].label;
-		res_status.css = statusList.values[status].cssClass;
-	} else { // By default
-		res_status.id = status;
-		res_status.name = status;
-		res_status.css = "";
-	}
-	return res_status;
+			if (status && statusList.values[status].label) {
+				//console.log(this);
+				res_status.id = status;
+				//this.status.name = i18n.t("intervention." + statusList.values[status].label);
+				res_status.name = statusList.values[status].label;
+				res_status.css = statusList.values[status].cssClass;
+			} else { // By default
+				res_status.id = status;
+				res_status.name = status;
+				res_status.css = "";
+			}
+			return res_status;
 
-});
+		});
 
 societeSchema.virtual('prospectLevel')
 		.get(function() {
-	var prospectLevel = {};
+			var prospectLevel = {};
 
-	var level = this.prospectlevel;
+			var level = this.prospectlevel;
 
-	if (level && prospectLevelList.values[level].cssClass) {
-		prospectLevel.id = level;
-		//prospectLevel.name = i18n.t("companies:" + level);
-		prospectLevel.name = i18n.t("companies:" + level);
-		//this.prospectLevel.name = prospectLevelList.values[level].label;
-		prospectLevel.css = prospectLevelList.values[level].cssClass;
-	} else { // By default
-		prospectLevel.id = level;
-		prospectLevel.name = level;
-		prospectLevel.css = "";
-	}
+			if (level && prospectLevelList.values[level].cssClass) {
+				prospectLevel.id = level;
+//		prospectLevel.name = i18n.t("companies:" + level);
+				prospectLevel.name = i18n.t("companies:" + level);
+				//this.prospectLevel.name = prospectLevelList.values[level].label;
+				prospectLevel.css = prospectLevelList.values[level].cssClass;
+			} else { // By default
+				prospectLevel.id = level;
+				prospectLevel.name = level;
+				prospectLevel.css = "";
+			}
 
-	return prospectLevel;
-});
+			return prospectLevel;
+		});
 
 mongoose.model('societe', societeSchema, 'Societe');
+
+/**
+ * Contact Schema
+ */
+var contactSchema = new Schema({
+	ref: String,
+	firstname: String,
+	lastname: String,
+	poste: String,
+	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
+	Status: {type: String, default: "ST_NEVER"},
+	address: String,
+	zip: String,
+	town: String,
+	country_id: String,
+	state_id: String,
+	DefaultLang: String,
+	phone: String,
+	phone_perso: String,
+	phone_mobile: String,
+	fax: String,
+	email: String,
+	civilite: String,
+	Tag: [String],
+	notes: String,
+	entity: String,
+	sex: {type: String, default: "H"},
+	birthday: Date,
+	datec: {type: Date},
+	user_creat: String,
+	user_modif: String
+}, {
+	toObject: {virtuals: true},
+	toJSON: {virtuals: true}
+});
+
+contactSchema.plugin(timestamps);
+
+contactSchema.virtual('name')
+		.get(function() {
+			return this.firstname + " " + this.lastname;
+		});
+
+var contactStatusList = {};
+ExtrafieldModel.findById('extrafields:Contact', function(err, doc) {
+	if (err) {
+		console.log(err);
+		return;
+	}
+	contactStatusList = doc.fields.Status;
+});
+
+contactSchema.virtual('status')
+		.get(function() {
+			var res_status = {};
+
+			var status = this.Status;
+
+			if (status && contactStatusList.values[status].label) {
+				//console.log(this);
+				res_status.id = status;
+				//this.status.name = i18n.t("intervention." + statusList.values[status].label);
+				res_status.name = contactStatusList.values[status].label;
+				res_status.css = contactStatusList.values[status].cssClass;
+			} else { // By default
+				res_status.id = status;
+				res_status.name = status;
+				res_status.css = "";
+			}
+			return res_status;
+
+		});
+
+mongoose.model('contact', contactSchema, 'Contact');

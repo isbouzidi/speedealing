@@ -399,11 +399,11 @@ class Societe extends nosqlDocument {
 			$this->error = $langs->trans("ErrorBadEMail", $this->email);
 			return -1;
 		}
-		/*if (!is_numeric($this->client) && !is_numeric($this->fournisseur)) {
-			$langs->load("errors");
-			$this->error = $langs->trans("BadValueForParameterClientOrSupplier");
-			return -1;
-		}*/
+		/* if (!is_numeric($this->client) && !is_numeric($this->fournisseur)) {
+		  $langs->load("errors");
+		  $this->error = $langs->trans("BadValueForParameterClientOrSupplier");
+		  return -1;
+		  } */
 
 		$customer = false;
 		if (!empty($allowmodcodeclient) && !empty($this->client)) {
@@ -619,8 +619,7 @@ class Societe extends nosqlDocument {
 				$this->error = $discount->error;
 				return -3;
 			}
-		}
-		else
+		} else
 			return 0;
 	}
 
@@ -1748,20 +1747,20 @@ class Societe extends nosqlDocument {
 				$params = array('group' => true);
 				//$result = $this->getView("count_status", $params);
 				$result = $this->mongodb->aggregate(array(
-					array('$match' => array('Status' => array('$ne'=> 'ST_NEVER'))),
+					array('$match' => array('Status' => array('$ne' => 'ST_NEVER'))),
 					array('$project' => array(
-						"Status" => 1
-					)),
+							"Status" => 1
+						)),
 					array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
 				//$filter = false;
 			} else {
 				//$params = array('group' => true, "startkey" => array($user->name), "endkey" => array($user->name, new stdClass()));
 				//$result = $this->getView("commercial_status", $params);
 				$result = $this->mongodb->aggregate(array(
-					array('$match' => array('commercial_id.id'=> $user->login, 'Status' => array('$ne'=> 'ST_NEVER'))),
+					array('$match' => array('commercial_id.id' => $user->login, 'Status' => array('$ne' => 'ST_NEVER'))),
 					array('$project' => array(
-						"Status" => 1
-					)),
+							"Status" => 1
+						)),
 					array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
 				//$filter = true;
 			}
@@ -1774,11 +1773,14 @@ class Societe extends nosqlDocument {
 				//if ($filter)
 				//	$key = $aRow->key[1];
 				//else
-				
+
 				$key = $aRow->_id;
 				//print_r($aRow);
-				$label = $langs->trans($this->fk_extrafields->fields->Status->values->$key->label);
-				
+				if ($key != null)
+					$label = $langs->trans($this->fk_extrafields->fields->Status->values->$key->label);
+				else
+					$label = $key;
+
 				if (empty($label)) {
 					$label = $langs->trans($aRow->_id);
 				}
@@ -1789,8 +1791,7 @@ class Societe extends nosqlDocument {
 					$output[$i]->y = $aRow->count;
 					$output[$i]->sliced = true;
 					$output[$i]->selected = true;
-				}
-				else
+				} else
 					$output[$i] = array($label, $aRow->count);
 				$i++;
 			}
@@ -1894,16 +1895,14 @@ class Societe extends nosqlDocument {
 			//$keystart[0] = $_GET["name"];
 			//$keyend[0] = $_GET["name"];
 			//$keyend[1] = new stdClass();
-
 			//$params = array('group' => true, 'group_level' => 2, 'startkey' => $keystart, 'endkey' => $keyend);
 			//$result = $this->getView("commercial_status", $params);
-			
 			$result = $this->mongodb->aggregate(array(
-					array('$match' => array('commercial_id.name'=> $_GET["name"])),
-					array('$project' => array(
+				array('$match' => array('commercial_id.name' => $_GET["name"])),
+				array('$project' => array(
 						"Status" => 1
 					)),
-					array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
+				array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
 
 			foreach ($this->fk_extrafields->fields->Status->values as $key => $aRow) {
 				//print_r($aRow);exit;
@@ -1914,9 +1913,9 @@ class Societe extends nosqlDocument {
 					$tab[$key]->value = 0;
 				}
 			}
-			
+
 			$result = json_decode(json_encode($result));
-			
+
 			//print_r($result);
 
 			foreach ($result->result as $aRow) { // Update counters from view
@@ -1951,22 +1950,22 @@ class Societe extends nosqlDocument {
 				//$result = $this->getView("commercial_status", $params);
 				$result = $this->mongodb->aggregate(array(
 					array('$project' => array(
-						"commercial_id.name" => 1
-					)),
+							"commercial_id.name" => 1
+						)),
 					array('$group' => array('_id' => '$commercial_id.name', 'count' => array('$sum' => 1)))));
 				$result = json_decode(json_encode($result));
 			} else {
 				$result->result[0]->_id = array($user->name);
 			}
 
-			//print_r($result);
+//print_r($result);
 
 			if (count($result->result)) {
 				foreach ($result->result as $aRow) {
-					if(empty($aRow->_id))
-						//$aRow->_id = "Non assigne";
+					if (empty($aRow->_id))
+					//$aRow->_id = "Non assigne";
 						continue;
-					
+
 					if ($i == 0)
 						echo "'" . $aRow->_id . "'";
 					else
@@ -2073,16 +2072,17 @@ class Societe extends nosqlDocument {
 }
 
 class Mysoc extends Societe {
-	
+
 	public function __construct($db = null) {
 		parent::__construct($db);
 
 		$this->fk_extrafields = new ExtraFields($db);
 		$this->fk_extrafields->fetch('Societe');
-		
-		$this->fk_extrafields->fields->_id->schema ='String';
+
+		$this->fk_extrafields->fields->_id->schema = 'String';
 
 		return 1;
 	}
+
 }
 ?>

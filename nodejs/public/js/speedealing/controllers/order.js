@@ -1,4 +1,4 @@
-angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', 'pageTitle', 'Global', 'Orders', function($scope, $location, $http, $routeParams, $modal, pageTitle, Global, Orders) {
+angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$timeout', 'pageTitle', 'Global', 'Orders', function($scope, $location, $http, $routeParams, $modal, $timeout, pageTitle, Global, Orders) {
 
 		pageTitle.setTitle('Liste des commandes');
 
@@ -38,6 +38,13 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				$scope.orders = orders;
 				$scope.count = orders.length;
 			});
+
+			$http({method: 'GET', url: '/api/commande/select', params: {
+					field: "Status"
+				}
+			}).success(function(data, status) {
+				$scope.status = data;
+			});
 		};
 
 		$scope.findOne = function() {
@@ -60,21 +67,23 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 
 		$scope.gridOptions = {
 			data: 'orders',
-			enableRowSelection: false,
 			filterOptions: $scope.filterOptions,
 			sortInfo: {fields: ["date_livraison"], directions: ["desc"]},
 			//showFilter:true,
+			enableCellSelection: false,
+			enableRowSelection: false,
+			enableCellEditOnFocus: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'client.name', displayName: 'Société'},
-				{field: 'ref_client', displayName: 'Ref. client'},
-				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
-				{field: 'date_livraison', displayName: 'Date livraison',width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
-				{field: 'total_ht', displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
-				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
-				{field: 'entity', displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
-				{displayName: "Actions", width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a ng-href="/api/commande/pdf/{{row.getProperty(\'_id\')}}" class="button icon-download" title="Bon de commande PDF"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
+				{field: 'ref', enableCellEdit: false, displayName: 'Ref', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'client.name', enableCellEdit: false, displayName: 'Société'},
+				{field: 'ref_client', enableCellEdit: false, displayName: 'Ref. client'},
+				{field: 'contact.name', enableCellEdit: false, displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
+				{field: 'date_livraison', enableCellEdit: false, displayName: 'Date livraison', width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'total_ht', enableCellEdit: false, displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
+				{field: 'status.name', enableCellEdit: true, displayName: 'Etat', headerClass: "blue", cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.label for c in status.values"></select>'},
+				{field: 'entity', enableCellEdit: false, displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
+				{displayName: "Actions", enableCellEdit: false, width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a ng-href="/api/commande/pdf/{{row.getProperty(\'_id\')}}" class="button icon-download" title="Bon de commande PDF"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
 		};
 
@@ -92,6 +101,21 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				$scope.count++;
 			}, function() {
 			});
+		};
+
+		$scope.updateInPlace = function(column, row) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					row.entity.$update();
+					$scope.save.pending = false;
+				}, 500);
+			}
 		};
 
 	}]);
@@ -113,6 +137,27 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 
 			$scope.order.optional = {};
 		};
+
+		$scope.shipping = {
+			default: "NONE",
+			values: [
+				{id: "NONE", label: "A diposition", address: false},
+				{id: "TNT", label: "TNT", address: true},
+				{id: "MAIL", label: "Courrier", address: true},
+				{id: "COURSIER", label: "Coursier", address: true},
+				{id: "TRANSPORTEUR", label: "Transporteur", address: true},
+			]
+		};
+
+		$scope.billing = {
+			default: "CHQ",
+			values: [
+				{id: "CPT", label: "En compte"},
+				{id: "MONEY", label: "Espèce"},
+				{id: "CHQ", label: "Chèque"},
+				{id: "CB", label: "Carte bancaire"},
+			]
+		}
 
 		$scope.create = function() {
 			if (this.order._id)
@@ -197,7 +242,7 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 			$scope.order.date_livraison.setDate($scope.order.date_livraison.getDate() + 5);
 
 			$scope.order.Status = "NEW"; // commande validee
-			
+
 			$scope.order.notes[0].note = $scope.order.notes[0].note.replace(/\n/g, '<br/>');
 
 			for (var i in this.order.bl) {
@@ -206,7 +251,7 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 				note += this.order.bl[i].contact + "<br/>"
 				note += this.order.bl[i].address + "<br/>";
 				note += this.order.bl[i].zip + " " + this.order.bl[i].town + "</p>";
-				
+
 				$scope.order.notes.push({
 					note: note,
 					title: "Destinataire " + (parseInt(i) + 1),
@@ -215,31 +260,31 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 			}
 
 			/*for (var j in $scope.order.optional.dossiers) {
-				// Add specific files
+			 // Add specific files
+			 
+			 var note = "";
+			 note += '<h4 class="green underline">' + "Liste des fichiers natifs</h4>";
+			 note += '<ul>';
+			 for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
+			 if ($scope.order.optional.dossiers[j].selectedFiles[i] != null) {
+			 note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
+			 note += '<span class="icon-extract">' + i +"_" +$scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
+			 note += '</a></li>';
+			 }
+			 }
+			 note += '</ul>';
+			 
+			 
+			 $scope.order.notes.push({
+			 note: note,
+			 title: "Fichiers webdoc dossier " + (parseInt(j) + 1),
+			 edit: false
+			 });
+			 //console.log(note);
+			 
+			 
+			 }*/
 
-				var note = "";
-				note += '<h4 class="green underline">' + "Liste des fichiers natifs</h4>";
-				note += '<ul>';
-				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
-					if ($scope.order.optional.dossiers[j].selectedFiles[i] != null) {
-						note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
-						note += '<span class="icon-extract">' + i +"_" +$scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
-						note += '</a></li>';
-					}
-				}
-				note += '</ul>';
-
-
-				$scope.order.notes.push({
-					note: note,
-					title: "Fichiers webdoc dossier " + (parseInt(j) + 1),
-					edit: false
-				});
-				//console.log(note);
-
-
-			}*/
-			
 			$scope.update();
 			$modalInstance.close($scope.order);
 		};

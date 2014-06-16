@@ -159,14 +159,14 @@ class modFacture extends DolibarrModules {
         $this->menus[$r]->_id = "menu:factures";
         $this->menus[$r]->type = "top";
         $this->menus[$r]->position = 42;
-        $this->menus[$r]->langs = "facture";
+        $this->menus[$r]->langs = "bills";
         $this->menus[$r]->perms = '$user->rights->facture->lire';
         $this->menus[$r]->enabled = '$conf->facture->enabled';
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->title = "Bills";
         $r++;
 
-		$this->menus[$r] = new stdClass();
+		/*$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:newfacture";
         $this->menus[$r]->position = 0;
         $this->menus[$r]->url = "/facture/fiche.php?action=create";
@@ -176,13 +176,13 @@ class modFacture extends DolibarrModules {
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->title = "NewBill";
         $this->menus[$r]->fk_menu = "menu:factures";
-        $r++;
+        $r++;*/
 
 		$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:billslist";
         $this->menus[$r]->position = 1;
-        $this->menus[$r]->url = "/facture/list.php";
-        $this->menus[$r]->langs = "facture";
+        $this->menus[$r]->url = "#!/bills";
+        $this->menus[$r]->langs = "bills";
         $this->menus[$r]->perms = '$user->rights->facture->lire';
         $this->menus[$r]->enabled = '$conf->facture->enabled';
         $this->menus[$r]->usertype = 2;
@@ -190,7 +190,7 @@ class modFacture extends DolibarrModules {
         $this->menus[$r]->fk_menu = "menu:factures";
         $r++;
 
-		$this->menus[$r] = new stdClass();
+		/*$this->menus[$r] = new stdClass();
         $this->menus[$r]->_id = "menu:billsstats";
         $this->menus[$r]->position = 2;
         $this->menus[$r]->url = "/facture/stats/index.php";
@@ -200,7 +200,7 @@ class modFacture extends DolibarrModules {
         $this->menus[$r]->usertype = 2;
         $this->menus[$r]->title = "BillsStatistics";
         $this->menus[$r]->fk_menu = "menu:factures";
-        $r++;
+        $r++;*/
 
 //        $r = 0;
 //        $this->menus[$r]->_id = "menu:accountancy";

@@ -9,6 +9,7 @@ var ProductModel = mongoose.model('product');
 var StorehouseModel = mongoose.model('storehouse');
 
 var ExtrafieldModel = mongoose.model('extrafields');
+var DictModel = mongoose.model('dict');
 
 module.exports = function(app, passport, auth) {
 
@@ -40,37 +41,56 @@ module.exports = function(app, passport, auth) {
 
 		var query = {
 			"$or": [
-				{name: new RegExp(req.body.filter.filters[0].value, "i")},
-				{ref: new RegExp(req.body.filter.filters[0].value, "i")}
+				{ref: new RegExp(req.body.filter.filters[0].value, "i")},
+				{label: new RegExp(req.body.filter.filters[0].value, "i")}
 			]
 		};
 
-		/*if (req.query.fournisseur) {
-		 query.fournisseur = req.query.fournisseur;
-		 } else // customer Only
-		 query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};*/
+		if (req.body.supplier)
+			query.Status = {'$in': ["SELLBUY", "BUY"]};
+		else
+			query.Status = {'$in': ["SELL", "SELLBUY"]};
 
 		//console.log(query);
-		ProductModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		ProductModel.aggregate([
+			{$match: query},
+			{$project: {name: "$ref", id: "$_id", label: 1, template: 1, price: 1, minPrice: 1, description: 1, family: 1}},
+			{$unwind: "$price"},
+			{$match: {'$or': [{'price.price_level': req.body.price_level}, {'price.price_level': 'BASE'}]}},
+			{$limit: req.body.take}], function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/autocomplete");
 				console.log(err);
 				return;
 			}
+			//console.log(docs);
 
-			var result = [];
-
-			if (docs !== null)
-				for (var i in docs) {
-					//console.log(docs[i].ref);
-					result[i] = {};
-					result[i].name = docs[i].name;
-					result[i].id = docs[i]._id;
-				}
-
-			return res.send(200, result);
+			return res.send(200, docs);
 		});
 	});
+
+	app.get('/api/product/fk_extrafields/select', auth.requiresLogin, object.select);
+	app.get('/api/product/convert_tva', auth.requiresLogin, function(req, res) {
+		DictModel.findOne({_id: "dict:fk_tva"}, function(err, docs) {
+			for (var i in docs.values) {
+				if (docs.values[i].label)
+					docs.values[i].value = docs.values[i].label;
+
+				if (docs.values[i].label == null && docs.values[i].value == null)
+					docs.values[i].value = 0;
+
+				delete docs.values[i].label;
+
+				//console.log(docs.values[i]);
+			}
+			docs.save(function(err, doc) {
+				//console.log(err);
+				res.json(doc);
+			});
+		});
+
+	});
+
 
 	app.post('/api/product', auth.requiresLogin, function(req, res) {
 		object.create(req, res);
@@ -94,7 +114,7 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.post('/api/product/storehouse', auth.requiresLogin, function(req, res) {
-		console.log(req.body);
+		//console.log(req.body);
 
 		req.body.name = req.body.name.toUpperCase();
 		if (!req.body.substock)
@@ -169,63 +189,63 @@ module.exports = function(app, passport, auth) {
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
 						.transform(function(row, index, callback) {
-					if (index === 0) {
-						tab = row; // Save header line
-						return callback();
-					}
-					//console.log(tab);
-					//console.log(row);
+							if (index === 0) {
+								tab = row; // Save header line
+								return callback();
+							}
+							//console.log(tab);
+							//console.log(row);
 
-					//console.log(row[0]);
+							//console.log(row[0]);
 
-					//return;
+							//return;
 
-					SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
-						if (err) {
-							console.log(err);
-							return callback();
-						}
+							SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
+								if (err) {
+									console.log(err);
+									return callback();
+								}
 
-						if (societe == null)
-							societe = new SocieteModel();
-
-
-						for (var i = 0; i < row.length; i++) {
-							societe[tab[i]] = row[i];
-						}
+								if (societe == null)
+									societe = new SocieteModel();
 
 
+								for (var i = 0; i < row.length; i++) {
+									societe[tab[i]] = row[i];
+								}
 
-						//console.log(row[10]);
-						//console.log(societe)
-						//console.log(societe.datec);
 
-						societe.save(function(err, doc) {
-							if (err)
-								console.log(err);
-							/*if (doc == null)
-							 console.log("null");
-							 else
-							 console.log(doc);*/
 
-							callback();
-						});
+								//console.log(row[10]);
+								//console.log(societe)
+								//console.log(societe.datec);
 
-					});
+								societe.save(function(err, doc) {
+									if (err)
+										console.log(err);
+									/*if (doc == null)
+									 console.log("null");
+									 else
+									 console.log(doc);*/
 
-					//return row;
-				}/*, {parallel: 1}*/)
+									callback();
+								});
+
+							});
+
+							//return row;
+						}/*, {parallel: 1}*/)
 						.on("end", function(count) {
-					console.log('Number of lines: ' + count);
-					fs.unlink(filename, function(err) {
-						if (err)
-							console.log(err);
-					});
-					return res.send(200, {count: count});
-				})
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function(err) {
+								if (err)
+									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
 						.on('error', function(error) {
-					console.log(error.message);
-				});
+							console.log(error.message);
+						});
 			}
 		}
 	});
@@ -240,6 +260,30 @@ module.exports = function(app, passport, auth) {
 		//console.dir(req.body);
 
 		ProductModel.aggregate([{$unwind: "$price"}, {'$group': {_id: '$price.price_level'}}, {'$project': {price_level: '$price.price_level'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
+			if (err) {
+				console.log("err : /api/product/price_level/autocomplete");
+				console.log(err);
+				return;
+			}
+
+			var result = [];
+
+			if (docs !== null)
+				for (var i in docs) {
+					//console.log(docs[i]);
+					result[i] = {};
+					result[i].name = docs[i]._id;
+					//result[i].id = docs[i]._id;
+				}
+
+			return res.send(200, result);
+		});
+	});
+	
+	app.post('/api/product/family/autocomplete', auth.requiresLogin, function(req, res) {
+		console.dir(req.body);
+
+		ProductModel.aggregate([{'$group': {_id: '$caFamily'}}, {'$project': {price_level: '$caFamily'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/price_level/autocomplete");
 				console.log(err);
@@ -384,7 +428,7 @@ Object.prototype = {
 		if (req.query.barCode)
 			query.barCode = {$exists: true};
 
-		ProductModel.find(query, "ref label barCode billingMode type", {limit: 50}, function(err, products) {
+		ProductModel.find(query, "ref label barCode billingMode type caFamily", {limit: 50}, function(err, products) {
 			if (err)
 				console.log(err);
 
@@ -415,7 +459,7 @@ Object.prototype = {
 
 		if (req.query.qty) {
 			query.push({$match: {'price.qtyMin': {'$lte': parseFloat(req.query.qty)}}});
-			query.push({$sort : { 'price.qtyMin' : -1}});
+			query.push({$sort: {'price.qtyMin': -1}});
 		}
 
 		//console.log(req.query);
@@ -459,6 +503,12 @@ Object.prototype = {
 				row.type = doc[i].type;
 				row.compta_buy = doc[i].compta_buy;
 				row.compta_sell = doc[i].compta_sell;
+				
+				if(doc[i].caFamily == null)
+					row.caFamily = "OTHER";
+				else
+					row.caFamily = doc[i].caFamily;
+				
 				if (doc[i].barCode == null)
 					row.barCode = "";
 				else
@@ -522,6 +572,7 @@ Object.prototype = {
 				obj.label = doc.label;
 				obj.barCode = doc.barCode;
 				obj.billingMode = doc.billingMode;
+				obj.caFamily = doc.caFamily;
 
 				var price = _.extend({_id: new mongoose.Types.ObjectId()}, obj);
 
@@ -536,7 +587,7 @@ Object.prototype = {
 					if (err)
 						console.log(err);
 
-					//console.log(obj);
+					//console.log(doc);
 				});
 			});
 			return;
@@ -551,10 +602,10 @@ Object.prototype = {
 
 		res.send(200, obj);
 
-		console.log(obj);
+		//console.log(obj);
 
 		if (obj._id)
-			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode}, $push: {history: obj}}, function(err) {
+			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode, caFamily: obj.caFamily }, $push: {history: obj}}, function(err) {
 				if (err)
 					console.log(err);
 				//console.log(obj);
@@ -579,5 +630,53 @@ Object.prototype = {
 			}
 		}
 		res.send(200, result);
+	},
+	select: function(req, res) {
+		ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			var result = [];
+			if (doc.fields[req.query.field].dict)
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+
+					if (docs) {
+						for (var i in docs.values) {
+							if (docs.values[i].enable) {
+								if (docs.values[i].pays_code && docs.values[i].pays_code != 'FR')
+									continue;
+								//console.log(docs.values[i]);
+								var val = {};
+								val.id = i;
+								if (docs.values[i].label)
+									val.label = docs.values[i].label;
+								else
+									val.label = req.i18n.t("bills:" + i);
+
+								if (docs.values[i].value !== null)
+									val.value = docs.values[i].value
+
+								result.push(val);
+							}
+						}
+						doc.fields[req.query.field].values = result;
+					}
+
+					res.json(doc.fields[req.query.field]);
+				});
+
+			for (var i in doc.fields[req.query.field].values) {
+				if (doc.fields[req.query.field].values[i].enable) {
+					var val = {};
+					val.id = i;
+					val.label = req.i18n.t("bills:" + doc.fields[req.query.field].values[i].label);
+					result.push(val);
+				}
+			}
+			doc.fields[req.query.field].values = result;
+
+			res.json(doc.fields[req.query.field]);
+		});
 	}
 };

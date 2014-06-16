@@ -1,6 +1,6 @@
 angular.module('mean.system').controller('HeaderController', ['$scope', '$http', '$route', 'Global', 'pageTitle', function($scope, $http, $route, Global, pageTitle) {
 		$scope.global = Global;
-
+		
 		$scope.title = pageTitle.getTitle();
 
 		$scope.withMenu = function() {
@@ -23,6 +23,6 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$http',
 			$scope.title = pageTitle.getTitle();
 			//Global.user.entity = $scope.entity.id;
 			$route.reload();
-		}
+		};
 
 	}]);

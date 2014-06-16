@@ -679,5 +679,6 @@
 	"Reply": "Répondre",
 	"TimeLeft":"Temps restant",
 	"Important" : "Important",
-	"Dashboard":"Tableau de bords"
+	"Dashboard":"Tableau de bords",
+	"DownloadPDF":"Télécharger PDF"
 }

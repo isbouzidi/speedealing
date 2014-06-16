@@ -544,9 +544,14 @@ ul.nav {
 	z-index: 500;
 }
 
+table.info-table {
+	width: 100%
+}
+
 .info-table > tbody > tr > th {
 	padding: 4px 10px;
 	color: black;
+	vertical-align: top;
 }
 
 .info-table > tbody > tr > td {
@@ -555,6 +560,10 @@ ul.nav {
 	font-style: italic;
 
 }
+
+/*html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
+	vertical-align: top;
+}*/
 
 /*
  * Modal Windows with steps
@@ -578,6 +587,21 @@ ul.nav {
 tags-input .tags .input {
 	height: 21px;
 	font-size: 12px;
+}
+
+.field-block-include { //For ng-include in product line
+					   margin-top: 10px;
+					   border-top: 1px solid #e0e0e0;
+					   border-bottom: 1px solid #e0e0e0;
+					   padding-top: 10px;
+					   margin-left: -20px;
+					   margin-right: -20px;
+					   padding-left: 20px;
+					   padding-right: 20px;
+					   padding-bottom: 10px;
+					   margin-bottom: 10px;
+
+					   //padding-left: 0px;
 }
 
 tags-input .tags .tag-item {
@@ -632,4 +656,20 @@ tags-input .tags {
 	background-color: transparent;
 	border: 0px;
 	box-shadow: initial;
+}
+
+.ngCellText pre{
+	font-size: x-small;
+}
+
+.indic-progress {
+	display: block;
+	padding-right: 5px;
+	font-size: small;
+	line-height: 12px;
+	text-align: right;
+}
+
+.boxed .button-height{
+	height: 26px;
 }

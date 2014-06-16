@@ -1,0 +1,106 @@
+{
+	"_id": "module:Fournisseur",
+	"enabled": true,
+	"rights": {
+		"supplier": [
+			{
+				"desc": "Consulter les fournisseurs",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Consulter les commandes fournisseur",
+				"perm": {
+					"readOrder": false
+				}
+			},
+			{
+				"desc": "Creer une commande fournisseur",
+				"perm": {
+					"createOrder": false
+				}
+			},
+			{
+				"desc": "Valider une commande fournisseur",
+				"perm": {
+					"validateOrder": false
+				}
+			},
+			{
+				"desc": "Approuver une commande fournisseur",
+				"perm": {
+					"approuved": false
+				}
+			},
+			{
+				"desc": "Envoyer la commande fournisseur",
+				"perm": {
+					"sendOrder": false
+				}
+			},
+			{
+				"desc": "Supprimer une commande fournisseur",
+				"perm": {
+					"deleteOrder": false
+				}
+			},
+			{
+				"desc": "Consulter les factures fournisseur",
+				"perm": {
+					"readBill": false
+				}
+			},
+			{
+				"desc": "Creer une facture fournisseur",
+				"perm": {
+					"createBill": false
+				}
+			},
+			{
+				"desc": "Valider une facture fournisseur",
+				"perm": {
+					"validateBill": false
+				}
+			},
+			{
+				"desc": "Supprimer une facture fournisseur",
+				"perm": {
+					"deleteBill": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"family": "products",
+	"name": "Founisseur",
+	"description": "Gestion des fournisseurs",
+	"version": "speedealing",
+	"const_name": "MAIN_MODULE_FACTURE",
+	"picto": "company",
+	"depends": [
+		"modSociete"
+	],
+	"requiredby": [
+		"modComptabilite",
+		"modAccounting"
+	],
+	"conflictwith": [],
+	"config_page_url": [
+		"facture.php"
+	],
+	"menus": {
+		"menu:factures": {
+			"submenus": {
+				"menu:billssupplierlist": {
+					"position": 2,
+					"url": "#!/billsSupplier",
+					"perms": "$user->rights->facture->lire",
+					"enabled": "$conf->facture->enabled",
+					"usertype": 2,
+					"title": "suppliers:SuppliersInvoices"
+				}
+			}
+		}
+	}
+}

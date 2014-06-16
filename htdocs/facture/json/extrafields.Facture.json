@@ -37,6 +37,11 @@
                    "label": "InvoiceStandard",
                    "cssClass": "grey-gradient"
                },
+			    "INVOICE_AUTO": {
+                   "enable": true,
+                   "label": "InvoiceAuto",
+                   "cssClass": "grey-gradient"
+               },
                "INVOICE_DEPOSIT": {
                    "enable": true,
                    "label": "InvoiceDeposit",
@@ -164,7 +169,8 @@
        "tva_tx": {
            "type": "text",
            "enable": true,
-           "label": "VAT"
+           "label": "VAT",
+		   "dict": "dict:fk_tva"
        },
        "remise": {
            "type": "text",

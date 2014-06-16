@@ -30,12 +30,24 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 
 			$http({method: 'GET', url: 'api/europexpress/planning/countHSupp'
 			}).success(function(cpt, status) {
-				$scope.indicateurs.hsupp = cpt.sum;
+
+				$scope.indicateurs.hsupp = cpt;
 			});
 		};
 
+		$scope.indicatorHSupp = function() {
+			if (!$scope.indicateurs.hsupp[0])
+				return 0;
+
+			//var d = new Date();
+			//var oldHSupp = $scope.indicateurs.hsupp[0] / new Date(d.getFullYear(), d.getMonth(), 0).getDate();
+			//console.log(oldHSupp);
+
+			return ($scope.indicateurs.hsupp[1] - $scope.indicateurs.hsupp[0]) / $scope.indicateurs.hsupp[0] * 100;
+		};
+
 		$scope.familleCA = function() {
-			$http({method: 'GET', url: 'api/europexpress/courses/stats'
+			$http({method: 'GET', url: 'api/bill/caFamily'
 			}).success(function(ca, status) {
 				//console.log(ca);
 				$scope.familles = ca;
@@ -138,15 +150,16 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 				$scope.absences = absences;
 			});
 		};
-		
-		$scope.absenceAddTick = function(idx) {
-			$scope.absences[idx].closed = true;
-			$scope.absences[idx].$update();
-			$scope.absences.splice(idx, 1);
+
+		$scope.absenceAddTick = function(user) {
+			user.closed = true;
+			//console.log(user);
+			user.$update();
+			$scope.absences.splice($scope.absences.indexOf(user),1);
 		};
-		
-		$scope.late= function(date) {
-			if(new Date(date) <= new Date)
+
+		$scope.late = function(date) {
+			if (new Date(date) <= new Date)
 				return "red";
 		};
 

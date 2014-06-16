@@ -96,6 +96,7 @@ module.exports = function(app, passport, auth) {
 					//result[i].name = docs[i].name;
 					result[i].name = docs[i].firstname + " " + docs[i].lastname;
 					result[i].id = docs[i]._id;
+					result[i].entity = docs[i].entity;
 				}
 
 			return res.send(200, result);

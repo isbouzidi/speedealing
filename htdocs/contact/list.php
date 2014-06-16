@@ -99,19 +99,19 @@ print'<th class="essential">';
 print $langs->trans("Lastname");
 print'</th>';
 $obj->aoColumns[$i] = new stdClass();
-$obj->aoColumns[$i]->mDataProp = "name";
+$obj->aoColumns[$i]->mDataProp = "lastname";
 $obj->aoColumns[$i]->bUseRendered = false;
 $obj->aoColumns[$i]->bSearchable = true;
-$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("name", "url");
+$obj->aoColumns[$i]->fnRender = $object->datatablesFnRender("lastname", "url");
 $i++;
-/* print'<th class="essential">';
-  print $langs->trans("Firstname");
-  print'</th>';
-  $obj->aoColumns[$i]->mDataProp = "firstname";
-  $obj->aoColumns[$i]->bUseRendered = false;
-  $obj->aoColumns[$i]->bSearchable = true;
-  $obj->aoColumns[$i]->sDefaultContent = "";
-  $i++; */
+print'<th class="essential">';
+print $langs->trans("Firstname");
+print'</th>';
+$obj->aoColumns[$i]->mDataProp = "firstname";
+$obj->aoColumns[$i]->bUseRendered = false;
+$obj->aoColumns[$i]->bSearchable = true;
+$obj->aoColumns[$i]->sDefaultContent = "";
+$i++;
 print'<th class="essential">';
 print $langs->trans("PostOrFunction");
 print'</th>';
@@ -238,18 +238,18 @@ print "</table>";
 
 //$obj->bServerSide = true;
 if ($_GET["disable"])
-	//$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
-	$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+//$obj->sAjaxSource = "core/ajax/listdatatables.php?json=listDisable&class=" . get_class($object);
+	$obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
 			{"name": "query", "value": "{\"$or\":[{\"Status\": \"ST_DISABLE\"},{\"Status\": \"ST_NEVER\"}]}"}]';
 else
-	$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+	$obj->aoAjaxData = '[{name :"class",value:"' . get_class($object) . '"},
 			{"name": "query", "value": "{\"Status\": \"ST_ENABLE\"}"}]';
 
-/*if (!$user->rights->societe->client->voir)
-	$obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
-			{"name": "query", "value": "{\"Status\":{\"$ne\":\"DONE\"},\"$or\":[{\"usertodo.id\":\"'.$user->id.'\"},{\"author.id\":\"'.$user->id.'\"}]}"}]';
-	$obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list&class=" . get_class($object) . "&key=" . $user->id . "&disable=" . ($_GET["disable"] ? "true" : "false");
-*/
+/* if (!$user->rights->societe->client->voir)
+  $obj->aoAjaxData = '[{name :"class",value:"'. get_class($object).'"},
+  {"name": "query", "value": "{\"Status\":{\"$ne\":\"DONE\"},\"$or\":[{\"usertodo.id\":\"'.$user->id.'\"},{\"author.id\":\"'.$user->id.'\"}]}"}]';
+  $obj->sAjaxSource = $_SERVER["PHP_SELF"] . "?json=list&class=" . get_class($object) . "&key=" . $user->id . "&disable=" . ($_GET["disable"] ? "true" : "false");
+ */
 $object->datatablesCreate($obj, "list_contacts", true, true);
 
 print '</div>'; // end

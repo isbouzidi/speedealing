@@ -1,0 +1,134 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">{{t 'bills:NewBill'}} <span class="blue">\{{bill.ref}}</span></h3>
+\{{bill}}
+	<ul class="wizard-steps">
+		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span> Références</li>
+		<!--<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Produits/services</li>-->
+		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Adresse</li>
+		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Règlement</li>
+	</ul>
+
+	<!-- Each form step should be wrapped in a fieldset -->
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+		<div class="field-block">
+			<h4>{{t 'Hello'}}</h4>
+			<p>Bienvenue sur la plateforme de création des factures fournisseurs en ligne.</p>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="client"><b>{{t 'suppliers:Supplier'}}</b></label>
+			<input required type="text" data-ng-model="bill.supplier" typeahead-on-select="updateCoord($item, $model, $label)" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
+		</div>
+		
+		<div class="field-block button-height" ng-show="bill.supplier.isNameModified">
+			<label for="name"><b>{{t 'Name'}}</b></label>
+			<input type="text" data-ng-model="bill.supplier.name" id="namw" class="input" autocomplete="off">
+			<small class="icon-info blue input-info"> Mettre ici le nom de la société n'ayant pas de compte ou les nom et prénom du client.</small>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="ref_supplier"><b>{{t 'compta:InvoiceRef'}}</b></label>
+			<input type="text" data-ng-model="bill.ref_supplier" id="ref_supplier" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height">
+			<label for="datec"><b>Date de facture</b></label>
+			<input kendo-date-picker required id="datec" k-on-change="bill.datec = kendoEvent.sender._value;" class="input"/>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button" data-ng-disabled="!(bill.datec && bill.supplier.id)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<!--<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
+				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
+		</div>
+
+	</fieldset>
+
+	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
+
+		<div class="field-block">
+			<h4>Ajout des produits / services</h4>
+			<p>Détails des prestations</p>
+		</div>
+
+		<div class="field-block clearfix">
+			<label for="desgination"><b>Détails de la commande</b></label>
+			<input type="hidden" data-ng-init="bill.notes[0].title='Prestations'"/>
+			<textarea id="desgination" required cols="30" rows="5" data-ng-model="bill.notes[0].note" class="input full-width"></textarea>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' data-ng-disabled='!bill.notes[0].note' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>-->
+
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
+
+		<div class="field-block">
+			<h4>Adresse de facturation</h4>
+			<p></p>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="address"><b>{{t 'bills:BillAddress'}}</b></label>
+			<div class='columns'>
+				<div class='seven-columns'>
+					<input type="text" data-ng-model="bill.supplier.name" class="input" placeholder="Nom"/><br/>
+					<input type="text" data-ng-model="bill.contact.name" class="input" placeholder="Nom du contact"/><br/>
+					<textarea class='input' rows='3' data-ng-model="bill.address" placeholder="Adresse"></textarea><br/>
+					<input type="text" class="input" placeholder="Code postal" data-ng-model="bill.zip" size="8"/>
+					<input type="text" class="input" data-ng-model="bill.town" placeholder="Ville"/>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button" data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t
+				'Previous'}}</button>
+			<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
+				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>
+
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
+
+		<div class="field-block">
+			<h4>Paiement</h4>
+			<p></p>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="paiment"><b>{{t 'bills:PaymentMode'}}</b></label>
+			<select class="form-control margin-bottom" id="paiment" required data-ng-model="bill.mode_reglement_code" data-ng-options="p.id as p.label for p in mode_reglement_code.values"></select>
+
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="rglt"><b>{{t 'bills:PaymentConditions'}}</b></label>
+			<select class="form-control margin-bottom" id="rglt" required data-ng-model="bill.cond_reglement_code" data-ng-options="p.id as p.label for p in cond_reglement_code.values"></select>
+		</div>
+
+		<div class="field-block button-height wizard-controls align-right">
+
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
+				<span class="button-icon anthracite-gradient">
+					<span class="icon-backward"></span>
+				</span>{{t 'Previous'}}
+			</button>
+
+			<button type="submit" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				{{t 'bills:CreateBill'}}
+			</button>
+
+		</div>
+
+	</fieldset>
+
+</form>

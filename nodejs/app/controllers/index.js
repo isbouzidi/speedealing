@@ -40,7 +40,6 @@ var ModuleModel = mongoose.model('module', moduleSchema, 'DolibarrModules');
  * GET home page.
  */
 
-//var ModuleModel = mongoose.model('module');
 var AgendaModel = mongoose.model('agenda');
 
 
@@ -49,7 +48,7 @@ var AgendaModel = mongoose.model('agenda');
  */
 
 var map_reduce = {};
-map_reduce.menuList = {};
+/*map_reduce.menuList = {};
 map_reduce.menuList.map = function() {
 	if (this.menus) {
 		this.menus.forEach(function(tag) {
@@ -73,7 +72,7 @@ map_reduce.menuList.query = {enabled: true};
  console.log(err);
  });*/
 
-map_reduce.submenuList = {};
+/*map_reduce.submenuList = {};
 map_reduce.submenuList.map = function() {
 	if (this.menus) {
 		this.menus.forEach(function(tag) {
@@ -194,6 +193,7 @@ exports.render = function(req, res) {
 
 									for (var i in docs) {
 										var menu = docs[i].value;
+										
 
 										var newTabMenu = verifyMenu(menu, req);
 										//console.log(newTabMenu);
@@ -279,7 +279,8 @@ exports.render = function(req, res) {
 				], function() {
 			//console.log(JSON.stringify(topmenu));
 			//console.log(JSON.stringify(submenu));
-			var menuHTML = "";
+			
+		/*	var menuHTML = "";
 			var idsel;
 
 			var selected;
@@ -311,12 +312,20 @@ exports.render = function(req, res) {
 
 					if (typeof menuFather.position === 'undefined')
 						menuFather.position = 0;
+					
+					//if (!empty($this->idmenu) && $this->menuSelected($menuFather))
+				//$classname = "current collapsible-current";
 
 					menu.classname = "";
 					menu.url = menuFather.url;
 					menu.title = menuFather.title;
+					
+					if (menu.url.match(/\?/) === null)
+						menu.url += '?idmenu=' + menuFather._id;
+					else
+						menu.url += '&idmenu=' + menuFather._id;
 
-					menuHTML += '<a class="' + menu.classname + '" href="' + menu.url + '" target="_self">';
+					menuHTML += '<a ng-class="selectedMenu(\''+ menuFather._id+'\')" href="' + menu.url + '" target="_self">';
 					menuHTML += menuFather.title;
 					menuHTML += '</a>';
 					menuHTML += '</li>';
@@ -357,7 +366,7 @@ exports.render = function(req, res) {
 				menuHTML += '</li>';
 
 				return selectnow;
-			}
+			}*/
 
 			// To hide menus
 			var withMenu = "";

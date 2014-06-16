@@ -5,10 +5,9 @@
 
 	<ul class="wizard-steps">
 		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span> Références</li>
-		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Adresse facturation</li>
-		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Adresses livraison</li>
-		<!--<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Fichiers</li>-->
-		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">4</span> Produits/services</li>
+		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Produits/services</li>
+		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Livraison</li>
+		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">4</span> Paiement</li>
 	</ul>
 
 	<!-- Each form step should be wrapped in a fieldset -->
@@ -25,27 +24,38 @@
 		</div>
 
 		<div class="field-block button-height">
-			<label for="contact"><b>Contact</b></label>
-			<input type="text" data-ng-model="order.contact.name" id="contact" class="input" autocomplete="off">
+			<label for="contact"><b>Demandeur</b></label>
+			<input type="text" required data-ng-model="order.contact.name" id="contact" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
-			<label for="ref_client"><b>Référence du client</b></label>
-			<input type="text" data-ng-model="order.ref_client" id="ref_client" class="input" autocomplete="off">
+			<label for="ref_client"><b>Référence / Nom de l'affaire</b></label>
+			<input type="text" required data-ng-model="order.ref_client" id="ref_client" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height">
+			<label for="phone"><b>{{t 'companies:Phone'}}</b></label>
+			<input type="text" required data-ng-model="order.contact.phone" id="phone" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height">
+			<label for="email"><b>{{t 'Email'}}</b></label>
+			<input type="email" data-ng-model="order.contact.email" id="email" class="input" autocomplete="off">
 		</div>
 
 		<div class="field-block button-height">
 			<label for="date_commande"><b>Date de commande</b></label>
 			<input kendo-date-picker required id="date_commande" k-on-change="order.datec = kendoEvent.sender._value;" class="input"/>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="date_livraison"><b>Date de livraison</b></label>
 			<input kendo-date-picker required id="date_livraison" k-on-change="order.date_livraison = kendoEvent.sender._value;" class="input"/>
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button" data-ng-disabled="!(order.datec && order.date_livraison && order.client.id)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button" data-ng-disabled="!(order.datec && order.contact.phone && order.ref_client && order.contact.name && order.date_livraison && order.client.id)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<!--<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
 		</div>
 
 	</fieldset>
@@ -53,50 +63,36 @@
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
 
 		<div class="field-block">
-			<h4>Adresse de facturation</h4>
-			<p></p>
+			<h4>Ajout des produits / services</h4>
+			<p>Détails des prestations</p>
 		</div>
 
-		<div class="field-block button-height">
-			<label><b>Adresse facturation</b></label>
-			<div class='columns'>
-				<div class='seven-columns'>
-					<input type="text" data-ng-model="order.billing.name" class="input" placeholder="Nom"/><br/>
-					<input type="text" data-ng-model="order.billing.contact" class="input" placeholder="Nom du contact"/><br/>
-					<textarea class='input' rows='3' data-ng-model="order.billing.address" placeholder="Adresse"></textarea><br/>
-					<input type="text" class="input" placeholder="Code postal" data-ng-model="order.billing.zip" size="8"/>
-					<input type="text" class="input" data-ng-model="order.billing.town" placeholder="Ville"/>
-				</div>
-				<div class="five-columns">
-					<!--<div class='margin-bottom'>
-						<small class="input-info black">Nombre d'exemplaires papier</small>
-						<input type="number" data-ng-model='bl.products[0].qty' data-ng-change="countExemplaires()" integer class="input small">
-					</div>
-					<div class='margin-bottom'>
-						<small class="input-info black">Nombre d'exemplaires CD</small>
-						<input type="number" data-ng-model='bl.products[1].qty' data-ng-change="countExemplaires()" integer class="input small">
-					</div>-->
-				</div>
-			</div>
+		<div class="field-block clearfix">
+			<label for="desgination"><b>Détails de la commande</b></label>
+			<input type="hidden" data-ng-init="order.notes[0].title='Prestations'"/>
+			<textarea id="desgination" required cols="30" rows="5" data-ng-model="order.notes[0].note" class="input full-width"></textarea>
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
 			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
-			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button"  data-ng-click='next()' data-ng-disabled='!order.notes[0].note' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
 	</fieldset>
-	
+
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
 
 		<div class="field-block">
-			<h4>Adresses de livraison</h4>
+			<h4>Livraison</h4>
 			<p></p>
 		</div>
 
 		<div class="field-block button-height" data-ng-repeat="bl in order.bl">
-			<label><b>Adresse destinataire \{{$index + 1}}</b></label>
-			<div class='columns'>
+			<label for="delivery"><b>Mode de livraison \{{$index + 1}}</b></label>
+			<select class="form-control margin-bottom" id="delivery" required data-ng-model="bl.shipping" data-ng-options="c as c.label for c in shipping.values"></select>
+
+			<label data-ng-show="bl.shipping.id && bl.shipping.address"><b>Adresse destinataire \{{$index + 1}}</b></label>
+			<div data-ng-show="bl.shipping.id && bl.shipping.address" class='columns'>
 				<div class='seven-columns'>
 					<input type="hidden" data-ng-init="bl.label='Destinataire '+($index+1)"/> 
 					<input type="text" data-ng-model="bl.name" class="input" placeholder="Nom"/><br/>
@@ -123,8 +119,8 @@
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
-			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button" data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button" data-ng-disabled='!order.bl[0].shipping.id' data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
 	</fieldset>
@@ -231,20 +227,43 @@
 		</div>
 
 	</fieldset>-->
-	
+
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
 
 		<div class="field-block">
-			<h4>Ajout des produits / services</h4>
-			<p>Détails des prestations</p>
+			<h4>Paiement</h4>
+			<p></p>
 		</div>
 
-		<div class="field-block clearfix">
-			<label for="desgination"><b>Détails de la commande</b></label>
-			<input type="hidden" data-ng-init="order.notes[0].title='Prestations'"/>
-			<textarea id="desgination" cols="30" rows="5" data-ng-model="order.notes[0].note" class="input full-width"></textarea>
+		<div class="field-block button-height">
+			<label for="paiment"><b>Mode de paiement</b></label>
+			<select class="form-control margin-bottom" id="paiment" required data-ng-model="order.billing.paiment" data-ng-options="p as p.label for p in billing.values"></select>
+
+			<label data-ng-show="order.billing.paiment && order.billing.paiment.id != 'CPT'"><b>Facturation</b></label>
+			<div data-ng-show="order.billing.paiment && order.billing.paiment.id != 'CPT'">
+				<input type="radio" ng-model="order.billing.mode" value="TICKET" /> Recu <input type="radio" ng-model="order.billing.mode" value="BILL" /> Facture
+			</div>
+			<div data-ng-show="order.billing.paiment && order.billing.paiment.id != 'CPT' && order.billing.mode && order.billing.mode == 'BILL'" class='columns'>
+				<div class='seven-columns'>
+					<input type="text" data-ng-model="order.billing.name" class="input" placeholder="Nom"/><br/>
+					<input type="text" data-ng-model="order.billing.contact" class="input" placeholder="Nom du contact"/><br/>
+					<textarea class='input' rows='3' data-ng-model="order.billing.address" placeholder="Adresse"></textarea><br/>
+					<input type="text" class="input" placeholder="Code postal" data-ng-model="order.billing.zip" size="8"/>
+					<input type="text" class="input" data-ng-model="order.billing.town" placeholder="Ville"/>
+				</div>
+				<div class="five-columns">
+					<!--<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires papier</small>
+						<input type="number" data-ng-model='bl.products[0].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>
+					<div class='margin-bottom'>
+						<small class="input-info black">Nombre d'exemplaires CD</small>
+						<input type="number" data-ng-model='bl.products[1].qty' data-ng-change="countExemplaires()" integer class="input small">
+					</div>-->
+				</div>
+			</div>
 		</div>
-		
+
 		<div class="field-block button-height wizard-controls align-right">
 
 			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
@@ -252,14 +271,15 @@
 					<span class="icon-backward"></span>
 				</span>{{t 'Previous'}}</button>
 
-			<button type="submit" data-ng-disabled='!order.notes[0].note' class="button glossy mid-margin-right">
+
+
+			<button type="submit" class="button glossy mid-margin-right">
 				<span class="button-icon"><span class="icon-tick"></span></span>
 				Valider commande
 			</button>
 
 		</div>
 
-		
 	</fieldset>
 
 	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>

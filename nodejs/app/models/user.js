@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
 var UserSchema = new Schema({
 	_id: String,
 	Status: mongoose.Schema.Types.Mixed,
-	name: {type: String, require: true},
+	name: {type: String, required: true},
 	email: String,
 	admin: Boolean,
 	lastname: String,

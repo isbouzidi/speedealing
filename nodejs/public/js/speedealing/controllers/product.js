@@ -48,6 +48,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						//Status_ID: {from: "Status.id", defaultValue: "SELL"},
 						price_level: {type: "string", defaultValue: "BASE"},
 						ref_customer_code: {type: "string"},
+						caFamily:{type:"string"},
 						barCode: {type: "string"},
 						billingMode: {type: "string", defaultvalue: "QTY"},
 						compta_buy: {type: "string", defaultValue: ""},
@@ -78,94 +79,118 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
-				autoBind: false,
-				dataSource: {
-					transport: {
-						read: {
-							url: "api/product/status/select",
-							type: "GET",
-							dataType: "json"
+						autoBind: false,
+						dataSource: {
+							transport: {
+								read: {
+									url: "api/product/status/select",
+									type: "GET",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 		$scope.typeDropDownEditor = function(container, options) {
 			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
-				autoBind: false,
-				dataSource: {
-					data: [{id: "PRODUCT", name: "Produit", css: "blue-gradient"},
-						{id: "SERVICE", name: "Service", css: "green-gradient"}]
-				}
-			});
+						autoBind: false,
+						dataSource: {
+							data: [{id: "PRODUCT", name: "Produit", css: "blue-gradient"},
+								{id: "SERVICE", name: "Service", css: "green-gradient"}]
+						}
+					});
 		};
 
 		$scope.entityDropDownEditor = function(container, options) {
 			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
-				autoBind: false,
-				dataSource: {
-					transport: {
-						read: {
-							url: "api/user/entity/select",
-							type: "GET",
-							dataType: "json"
+						autoBind: false,
+						dataSource: {
+							transport: {
+								read: {
+									url: "api/user/entity/select",
+									type: "GET",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 		$scope.priceLevelDropDownEditor = function(container, options) {
 			$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoAutoComplete({
-				minLength: 1,
-				dataTextfield: "name",
-				filter: "contains",
-				autoBind: false,
-				suggest: true,
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/product/price_level/autocomplete",
-							type: "POST",
-							dataType: "json"
+						minLength: 1,
+						dataTextfield: "name",
+						filter: "contains",
+						autoBind: false,
+						suggest: true,
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/product/price_level/autocomplete",
+									type: "POST",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
+		};
+		
+		$scope.familyDropDownEditor = function(container, options) {
+			$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
+					.appendTo(container)
+					.kendoAutoComplete({
+						minLength: 1,
+						dataTextfield: "name",
+						filter: "contains",
+						autoBind: false,
+						suggest: true,
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/product/family/autocomplete",
+									type: "POST",
+									dataType: "json"
+								}
+							}
+						}
+					});
 		};
 
 		$scope.refDropDownEditor = function(container, options) {
 			$('<input data-text-field="name" required data-value-field="name" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoAutoComplete({
-				minLength: 1,
-				dataTextfield: "name",
-				filter: "contains",
-				autoBind: false,
-				suggest: true,
-				dataSource: {
-					serverFiltering: true,
-					serverPaging: true,
-					pageSize: 5,
-					transport: {
-						read: {
-							url: "api/product/ref/autocomplete",
-							type: "POST",
-							dataType: "json"
+						minLength: 1,
+						dataTextfield: "name",
+						filter: "contains",
+						autoBind: false,
+						suggest: true,
+						dataSource: {
+							serverFiltering: true,
+							serverPaging: true,
+							pageSize: 5,
+							transport: {
+								read: {
+									url: "api/product/ref/autocomplete",
+									type: "POST",
+									dataType: "json"
+								}
+							}
 						}
-					}
-				}
-			});
+					});
 		};
 
 		$scope.textareaEditor = function(container, options) {
@@ -268,11 +293,11 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 				}
 			}).
 					success(function(data, status) {
-				$scope.products = data;
-				for (var i in data) {
-					$scope.productsBarCode[data[i]._id] = data[i];
-				}
-			});
+						$scope.products = data;
+						for (var i in data) {
+							$scope.productsBarCode[data[i]._id] = data[i];
+						}
+					});
 		}
 
 		function numberFormat(number, width) {
@@ -287,34 +312,34 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 			$http({method: 'GET', url: 'api/product/storehouse'
 			}).
 					success(function(entrepot, status) {
-				//$scope.products = data;
+						//$scope.products = data;
 
-				for (var i = 0; i < entrepot.length; i++) {
-					for (var j = 0; j < entrepot[i].subStock.length; j++) {
-						var stock = {};
-						stock.client = entrepot[i].societe.name;
-						//stock.barCode = entrepot[i].societe.barCode;
-						stock.stock = entrepot[i].name;
-						//stock.stockCode = entrepot[i].barCode;
-						stock.barCode = numberFormat(entrepot[i].barCode, 4);
+						for (var i = 0; i < entrepot.length; i++) {
+							for (var j = 0; j < entrepot[i].subStock.length; j++) {
+								var stock = {};
+								stock.client = entrepot[i].societe.name;
+								//stock.barCode = entrepot[i].societe.barCode;
+								stock.stock = entrepot[i].name;
+								//stock.stockCode = entrepot[i].barCode;
+								stock.barCode = numberFormat(entrepot[i].barCode, 4);
 
-						var codeBar = stock.barCode;
+								var codeBar = stock.barCode;
 
-						stock.subStock = entrepot[i].subStock[j].name;
-						stock.subStockCode = entrepot[i].subStock[j].barCode;
-						stock.barCode = codeBar + numberFormat(entrepot[i].subStock[j].barCode, 2);
-						stock.productId = entrepot[i].subStock[j].productId;
-						$scope.stocks.push(stock);
+								stock.subStock = entrepot[i].subStock[j].name;
+								stock.subStockCode = entrepot[i].subStock[j].barCode;
+								stock.barCode = codeBar + numberFormat(entrepot[i].subStock[j].barCode, 2);
+								stock.productId = entrepot[i].subStock[j].productId;
+								$scope.stocks.push(stock);
 
-						$scope.isChecked[stock.barCode] = {};
+								$scope.isChecked[stock.barCode] = {};
 
-						for (var k = 0; k < entrepot[i].subStock[j].productId.length; k++) {
-							$scope.isChecked[stock.barCode][entrepot[i].subStock[j].productId[k]] = true;
+								for (var k = 0; k < entrepot[i].subStock[j].productId.length; k++) {
+									$scope.isChecked[stock.barCode][entrepot[i].subStock[j].productId[k]] = true;
+								}
+							}
+
 						}
-					}
-
-				}
-			});
+					});
 		}
 
 		$scope.updateCheck = function(product, stock) {
@@ -325,8 +350,8 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 				}
 			}).
 					success(function(data, status) {
-				console.log("ok");
-			});
+						console.log("ok");
+					});
 		};
 
 		$scope.initList = function() {
@@ -351,10 +376,70 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 			$http({method: 'POST', url: 'api/product/storehouse', data: $scope.storehouse
 			}).
 					success(function(data, status) {
-				//$scope.products = data;
-				$scope.initList();
+						//$scope.products = data;
+						$scope.initList();
+					});
+		};
+
+
+	}]);
+
+angular.module('mean.system').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object','options', function($scope, $http, $modalInstance, Global, object, options) {
+		$scope.global = Global;
+
+		$scope.line = object;
+		$scope.supplier = options && options.supplier;
+
+		$scope.init = function() {
+			var fields = ["tva_tx"];
+
+			angular.forEach(fields, function(field) {
+				$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
+						field: field
+					}
+				}).success(function(data, status) {
+					$scope[field] = data;
+					//console.log(data);
+				});
 			});
 		};
 
+		$scope.addOrUpdate = function() {
+			$scope.line.total_ht = $scope.line.pu_ht * $scope.line.qty;
+			$scope.line.total_tva = $scope.line.total_ht * $scope.line.tva_tx / 100;
+			$scope.line.total_ttc = $scope.line.total_ht + $scope.line.total_tva;
+			
+			$modalInstance.close($scope.line);
+		};
+
+		$scope.updateLine = function(data) {
+			if(!data.template)
+				$scope.line.product.template = "/partials/lines/classic.html";
+			
+			if(!$scope.line.description)
+				$scope.line.description = data.description;
+			
+			$scope.line.minPrice = data.minPrice;
+			$scope.line.pu_ht = data.price.pu_ht;
+			$scope.line.tva_tx = data.price.tva_tx;
+			
+			//console.log(data);
+		};
+
+		$scope.productAutoComplete = function(val) {
+			return $http.post('api/product/autocomplete', {
+				take: 5,
+				skip: 0,
+				page: 1,
+				pageSize: 5,
+				price_level: options.price_level,
+				supplier:options.supplier,
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				//console.log(res.data);
+				return res.data
+			});
+		};
 
 	}]);

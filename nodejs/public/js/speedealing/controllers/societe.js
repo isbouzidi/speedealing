@@ -1,8 +1,10 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
-		
+
 		$scope.societe = {};
+		$scope.societes = [];
+		$scope.gridOptionsSociete = {};
 
 		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
@@ -13,7 +15,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
 
 		$scope.init = function() {
-			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code"];
+			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement"];
 
 			angular.forEach(fields, function(field) {
 				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
@@ -25,7 +27,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				});
 			});
 		};
-		
+
 		$scope.segmentationAutoComplete = function(val) {
 			return $http.post('api/societe/segmentation/autocomplete', {
 				take: 5,
@@ -42,14 +44,25 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 		$scope.showStatus = function(idx) {
 			if (!($scope[idx] && $scope.societe[idx]))
-				return;
+				return 'Non défini';
 			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
 
-			return ($scope.societe[idx] && selected.length) ? selected[0].label : 'Non défini';
+			return ($scope.societe[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
 		$scope.remove = function(societe) {
 			societe.$remove();
+
+		};
+
+		$scope.checkCodeClient = function(data) {
+			return $http.get('api/societe/' + data).then(function(societe) {
+				//console.log(societe.data);
+				if (societe.data._id && $scope.societe._id !== societe.data._id)
+					return "Existe deja !";
+				else
+					return true;
+			});
 
 		};
 
@@ -66,7 +79,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 		$scope.find = function() {
-			Societe.query({query: this.type.id}, function(societes) {
+			Societe.query({query: this.type.id, entity: Global.user.entity}, function(societes) {
 				$scope.societes = societes;
 				$scope.countSocietes = societes.length;
 			});
@@ -78,6 +91,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			}, function(societe) {
 				$scope.societe = societe;
 				
+				$http({method: 'GET', url: 'api/societe/contact', params:
+							{
+								find: {"societe.id": societe._id},
+								fields: "name firstname lastname updatedAt Status phone email poste"
+							}
+				}).success(function(data, status) {
+					if (status == 200)
+						$scope.contacts = data;
+
+					$scope.countContact = $scope.contacts.length;
+				});
+
 				$http({method: 'GET', url: 'api/ticket', params:
 							{
 								find: {"linked.id": societe._id},
@@ -106,12 +131,22 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 					});
 					$scope.countBuy = $scope.requestBuy.length;
 				});
-				
+
 				pageTitle.setTitle('Fiche ' + $scope.societe.name);
 				$scope.checklist = 0;
 				for (var i in societe.checklist)
 					if (societe.checklist[i])
 						$scope.checklist++;
+			}, function(err) {
+				if (err.status == 401)
+					$location.path("401.html");
+			});
+
+			$http({method: 'GET', url: '/api/europexpress/buy/status/select', params: {
+					field: "Status"
+				}
+			}).success(function(data, status) {
+				$scope.status = data;
 			});
 		};
 
@@ -130,6 +165,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			filterOptions: $scope.filterOptionsSociete,
 			sortInfo: {fields: ["name"], directions: ["asc"]},
 			//showFilter:true,
+			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
 				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
@@ -140,7 +176,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
-				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
+				{field: 'entity', displayName: 'Entité', cellClass: "align-center"}
+				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
 		};
 
@@ -327,10 +364,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			$http({method: 'GET', url: 'dict/filesIcons'
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					iconsFilesList = data;
-				}
-			});
+						if (status == 200) {
+							iconsFilesList = data;
+						}
+					});
 		};
 
 		$scope.onFileSelect = function($files) {
@@ -368,10 +405,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			$http({method: 'DELETE', url: 'api/societe/file/' + id + '/' + fileName
 			}).
 					success(function(data, status) {
-				if (status == 200) {
-					$scope.societe.files.splice(idx, 1);
-				}
-			});
+						if (status == 200) {
+							$scope.societe.files.splice(idx, 1);
+						}
+					});
 		};
 
 		$scope.fileType = function(name) {
@@ -379,6 +416,32 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				return iconsFilesList["default"];
 
 			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
+		};
+		
+		/*
+		 * NG-GRID for contact list
+		 */
+
+		$scope.filterOptionsContact = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsContact = {
+			data: 'contacts',
+			enableRowSelection: false,
+			sortInfo: {fields: ["name"], directions: ["asc"]},
+			filterOptions: $scope.filterOptionsContact,
+			i18n: 'fr',
+			enableColumnResize: true,
+			columnDefs: [
+				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'poste', displayName: 'Fonction'},
+				{field: 'phone', displayName: 'Téléphone', cellFilter:"phone"},
+				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
+				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
+				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
+			]
 		};
 
 		/*
@@ -396,9 +459,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			sortInfo: {fields: ["updatedAt"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsTicket,
 			i18n: 'fr',
+			enableColumnResize: true,
 			columnDefs: [
-				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-ticket"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'ref', displayName: 'Id'},
+				{field: 'name', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-ticket"></span> {{row.getProperty("ref")}} - {{row.getProperty(col.field)}}</a>'},
+				{field: 'task', displayName: 'Tâche'},
 				{field: 'percentage', displayName: 'Etat', cellTemplate: '<div class="ngCellText"><progressbar class="progress-striped thin" value="row.getProperty(col.field)" type="success"></progressbar></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
 			]
@@ -419,14 +483,61 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			sortInfo: {fields: ["ref"], directions: ["desc"]},
 			filterOptions: $scope.filterOptionsBuy,
 			i18n: 'fr',
-			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
+			enableColumnResize: true,
+			enableCellEditOnFocus: true,
+			enableCellSelection: false,
 			columnDefs: [
-				{field: 'title', displayName: 'Titre', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'ref', displayName: 'Id'},
-				{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
-				{field: 'datec', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
-				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+				{field: 'title', displayName: 'Titre', enableCellEdit: false, cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Id', enableCellEdit: false},
+				//{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+				{field: 'Status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'Status.css\')}} glossy">{{row.getProperty(\'Status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(\'/api/europexpress/buy\',\'Status\', row)" ng-input="row.entity.Status" data-ng-options="c.id as c.name for c in status"></select>'},
+				{field: 'datec', displayName: 'Date création', enableCellEdit: false, cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(\'/api/europexpress/buy\',\'total_ht\', row)"/>'}
 			]
+		};
+
+		$scope.updateInPlace = function(api, field, row) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
+						data: {
+							value: row.entity[field]
+						}
+					}).
+							success(function(data, status) {
+								if (status == 200) {
+									if (data.value) {
+										if (data.field === "Status")
+											for (var i = 0; i < $scope.status.length; i++) {
+												if ($scope.status[i].id === data.value)
+													row.entity.Status = $scope.status[i];
+											}
+									}
+								}
+							});
+
+					$scope.save.pending = false;
+				}, 500);
+			}
+		};
+		
+		$scope.priceLevelAutoComplete = function(val, field) {
+			return $http.post('api/product/price_level/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data;
+			});
 		};
 
 
@@ -437,7 +548,9 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 
 		$scope.active = 1;
 		$scope.validSiret = false;
-		$scope.societe = {};
+		$scope.societe = {
+			entity: Global.user.entity
+		};
 		$scope.siretFound = "";
 
 		$scope.isActive = function(idx) {

@@ -1,26 +1,30 @@
 {
-	"name": "Speedealing",
-	"version": "0.3.2",
-	"main": "public/lib",
-	"dependencies": {
-		"angular": "1.2.15",
-		"angular-resource": "1.2.15",
-		"angular-cookies": "1.2.15",
-		"angular-mocks": "1.2.15",
-		"angular-sanitize": "1.2.15",
-		"angular-route": "1.2.15",
-		"angular-animate": "1.2.15",
-		"bootstrap": "latest",
-		"angular-bootstrap": "latest",
-		"angular-ui-utils": "latest",
-		"kendo-ui": "2013.3.1119",
-		"jquery": "1.10.2",
-		"angular-kendo": "https://github.com/kendo-labs/angular-kendo.git",
-		"ng-file-upload": "latest",
-		"ng-grid": "2.0.8",
-		"angular-xeditable":"latest",
-		"highcharts":"latest",
-		"highcharts-ng":"latest",
-		"ng-tags-input":"latest"
-	}
+  "name": "Speedealing",
+  "version": "0.3.2",
+  "main": "public/lib",
+  "dependencies": {
+    "angular": "1.2.15",
+    "angular-resource": "1.2.15",
+    "angular-cookies": "1.2.15",
+    "angular-mocks": "1.2.15",
+    "angular-sanitize": "1.2.15",
+    "angular-route": "1.2.15",
+    "angular-animate": "1.2.15",
+    "bootstrap": "latest",
+    "angular-bootstrap": "latest",
+    "angular-ui-utils": "latest",
+    "kendo-ui": "2013.3.1119",
+    "jquery": "1.10.2",
+    "angular-kendo": "https://github.com/kendo-labs/angular-kendo.git",
+    "ng-file-upload": "latest",
+    "ng-grid": "https://github.com/symeos/ng-grid.git",
+    "angular-xeditable": "latest",
+    "highcharts": "latest",
+    "highcharts-ng": "latest",
+    "ng-tags-input": "latest",
+    "angular-bootstrap-datetimepicker": "latest"
+  },
+  "resolutions": {
+    "angular": "1.2.15"
+  }
 }
