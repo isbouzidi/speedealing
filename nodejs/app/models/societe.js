@@ -149,7 +149,7 @@ societeSchema.virtual('prospectLevel')
 
 	if (level && prospectLevelList.values[level].cssClass) {
 		prospectLevel.id = level;
-//		prospectLevel.name = i18n.t("companies:" + level);
+		//prospectLevel.name = i18n.t("companies:" + level);
 		prospectLevel.name = i18n.t("companies:" + level);
 		//this.prospectLevel.name = prospectLevelList.values[level].label;
 		prospectLevel.css = prospectLevelList.values[level].cssClass;

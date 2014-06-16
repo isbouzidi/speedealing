@@ -15,7 +15,8 @@ window.app = angular.module('mean', ['ngRoute',
 	'mean.orders',
 	'mean.users',
 	'mean.articles',
-	'mean.europexpress'
+	'mean.europexpress',
+	'mean.rh'
 ]);
 
 angular.module('mean.system', []);
@@ -24,6 +25,7 @@ angular.module('mean.orders', []);
 angular.module('mean.users', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
+angular.module('mean.rh', []);
 
 /*window.app.run(function(editableOptions) {
  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'

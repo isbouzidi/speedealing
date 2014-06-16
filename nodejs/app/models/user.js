@@ -25,6 +25,7 @@ var UserSchema = new Schema({
 	salt: String,
 	entity: String,
 	photo: String,
+        telMobile: String,
 	facebook: {},
 	twitter: {},
 	github: {},

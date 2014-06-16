@@ -1,7 +1,7 @@
-angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', 'pageTitle', 'Global', 'Users', function($scope, $routeParams, $location, $route, $modal, $timeout, $http, pageTitle, Global, Users) {
+angular.module('mean.system').controller('UserAbsencesRhController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', 'pageTitle', 'Global', 'Users', function($scope, $routeParams, $location, $route, $modal, $timeout, $http, pageTitle, Global, Users) {
 		$scope.global = Global;
 
-		pageTitle.setTitle('Gestion des absences');
+		pageTitle.setTitle('Gestion des Absences');
 
 		$scope.types = [{name: "En cours", id: "NOW"},
 			{name: "Clos", id: "CLOSED"}];
@@ -15,8 +15,8 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 			});
 
 			$http({method: 'GET', url: '/api/user/absence/status/select', params: {
-					field: "Status"
-				}
+				field: "Status"
+			}
 			}).success(function(data, status) {
 				$scope.status = data;
 			});
@@ -31,7 +31,7 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 			useExternalFilter: false
 		};
 
-		$scope.gridOptions = {
+		$scope.gridOptionsAbsence = {
 			data: 'absences',
 			filterOptions: $scope.filterOptions,
 			sortInfo: {fields: ["dateStart"], directions: ["asc"]},
@@ -62,8 +62,8 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 
 		$scope.addNew = function() {
 			var modalInstance = $modal.open({
-				templateUrl: '/partials/user/create_absence.html',
-				controller: "UserRhAbsenceCreateController",
+				templateUrl: '/partials/user/create.html',
+				controller: "UserRhCreateController",
 				windowClass: "steps"
 			});
 
@@ -91,11 +91,121 @@ angular.module('mean.system').controller('UserRhAbsenceController', ['$scope', '
 
 	}]);
 
-angular.module('mean.users').controller('UserRhAbsenceCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Users', function($scope, $http, $modalInstance, $upload, $route, Global, Users) {
+
+angular.module('mean.users').controller('UserRhController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', 'pageTitle', 'Global', 'Users', function($scope, $routeParams, $location, $route, $modal, $timeout, $http, pageTitle, Global, Users) {
+		$scope.global = Global;
+
+		pageTitle.setTitle('Gestion des collaborateurs');
+
+		$scope.find = function() {
+			Users.query(function(users) {
+				$scope.users = users;
+				$scope.countUsers = '33'; //users.length;
+			});			
+		};
+
+		/*
+		 * NG-GRID for order list
+		 */
+
+		$scope.filterOptions = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptions = {
+			data: 'users',
+			filterOptions: $scope.filterOptions,
+			sortInfo: {fields: ["firstname"], directions: ["asc"]},
+			//showFilter:true,
+			i18n: 'fr',
+			enableCellSelection: false,
+			enableRowSelection: false,
+			enableCellEditOnFocus: true,
+			columnDefs: [
+				{field: 'firstname', enableCellEdit: false, displayName: 'Nom', cellTemplate: '<div class="ngCellText"><span><span class="icon-user"></span> {{row.getProperty(col.field)}}</span>'},
+				{field: 'lastname', enableCellEdit: false, displayName: 'Prénom', cellTemplate: '<div class="ngCellText"><span><span class="icon-user"></span> {{row.getProperty(col.field)}}</span>'},
+				]
+		};
+
+		$scope.addTick = function(row) {
+			row.entity.closed = true;
+			row.entity.$update();
+			var index = row.rowIndex;
+			$scope.gridOptions.selectItem(index, false);
+			$scope.absences.splice(index, 1);
+		};
+
+		$scope.addNew = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/user/create.html',
+				controller: "UserRhCreateController",
+				windowClass: "steps"
+			});
+
+			modalInstance.result.then(function(absence) {
+				$scope.absences.push(absence);
+				$scope.count++;
+			}, function() {
+			});
+		};
+
+		$scope.updateInPlace = function(column, row) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					row.entity.$update();
+					$scope.save.pending = false;
+				}, 500);
+			}
+		};
+
+	}]);
+
+
+
+angular.module('mean.users').controller('UserRhCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Users', function($scope, $http, $modalInstance, $upload, $route, Global, Users) {
 		$scope.global = Global;
 
 		$scope.absence = {
 			entity: Global.user.entity
+		};
+		
+		$scope.Civilites = [
+			    {name:'Monsieur', shade:'Monsieur'},
+			    {name:'Madame', shade:'Madame'},
+			    {name:'Mademoiselle', shade:'Mademoiselle'},
+			   ];
+
+		$scope.active = 1;
+		//$scope.validSiret = false;
+		//$scope.societe = {};
+		//$scope.siretFound = "";
+
+		$scope.isActive = function(idx) {
+			if (idx == $scope.active)
+				return "active";
+		};
+
+		$scope.next = function() {
+			$scope.active++;
+		};
+
+		$scope.previous = function() {
+			$scope.active--;
+		};
+
+		$scope.goto = function(idx) {
+			if ($scope.active == 7)
+				return;
+
+			if (idx < $scope.active)
+				$scope.active = idx;
 		};
 
 		$scope.init = function() {

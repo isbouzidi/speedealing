@@ -35,8 +35,7 @@ function putGridFile(buf, name, options, fn) {
 			file.write(buf, true, fn);
 		//TODO: Should we gridStore.close() manully??
 	});
-}
-;
+};
 
 function putGridFileByPath(path, name, original, options, fn) {
 	var db = mongoose.connection.db,
@@ -118,7 +117,7 @@ exports.pluginGridFs = function(schema, opt) {
 
 				var update = false;
 				for (var i = 0; i < _this.files.length; i++)
-					if (_this.files[i].name == result.filename) {
+					if (_this.files[i].name === result.filename) {
 						_this.files[i] = files;
 						update = true;
 					}
@@ -156,7 +155,7 @@ exports.pluginGridFs = function(schema, opt) {
 
 			var found = false;
 			for (var i = 0; i < _this.files.length; i++)
-				if (_this.files[i].name == file) {
+				if (_this.files[i].name === file) {
 					return getGridFile(_this.files[i]._id.toString(), options, function(err, store) {
 						if (err) {
 							console.log(err);
@@ -177,8 +176,7 @@ exports.addFile = function(Model, id, file, callback) {
 	if (fs.existsSync(filename)) {
 		//console.log(filename);
 		Model.findOne({_id: id}, function(err, doc) {
-
-			if (err || doc == null) {
+			if (err || doc === null) {
 				console.log(err);
 				return callback({status: "Id not found"});
 			}
@@ -190,6 +188,7 @@ exports.addFile = function(Model, id, file, callback) {
 					_id: id
 				}
 			};
+	
 
 			doc.addFile(file, opts, callback);
 		});
@@ -200,7 +199,7 @@ exports.addFile = function(Model, id, file, callback) {
 exports.getFile = function(Model, id, fileName, callback) {
 	Model.findOne({_id: id}, function(err, doc) {
 
-		if (err || doc == null) {
+		if (err || doc === null) {
 			console.log(err);
 			return callback({status: "Id not found"}, null);
 		}

@@ -45,7 +45,7 @@ module.exports = function(app, passport, auth) {
 
 			/* CheckExternalIP */
 			console.log(req.headers['x-real-ip']);
-			if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
+			if (req.headers['x-real-ip'] && !(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
 				res.json({success: false, errors: "Internet access denied"}, 500);
 				return users.signout;
 			}

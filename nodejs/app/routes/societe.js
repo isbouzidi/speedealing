@@ -195,8 +195,8 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
 		//console.log(id);
-
-		if (req.files && id) {
+                
+                if (req.files && id) {
 			//console.log(req.files);
 
 			gridfs.addFile(SocieteModel, id, req.files.file, function(err, result, file, update) {
