@@ -31,7 +31,7 @@ module.exports = function(app, passport, auth) {
 		return;
 	});
 
-	// Specific for autocomplete
+	// Specific for select
 	app.get('/api/user/select', auth.requiresLogin, function(req, res) {
 		UserModel.find({Status: "ENABLE"}, function(err, docs) {
 			if (err) {
@@ -50,8 +50,14 @@ module.exports = function(app, passport, auth) {
 						result[i].text = docs[i].firstname + " " + docs[i].lastname;
 						result[i].value = docs[i]._id;
 						result[i].color = object.colors[i];
+					} else if (req.query.lastname) {
+						result[i] = {};
+						result[i].name = docs[i].lastname;
+						result[i].id = docs[i]._id;
 					} else {
 						result[i] = {};
+						result[i].firstname = docs[i].firstname;
+						result[i].lastname = docs[i].lastname;
 						result[i].name = docs[i].firstname + " " + docs[i].lastname;
 						result[i].id = docs[i]._id;
 						//console.log(result[i]);
@@ -92,10 +98,17 @@ module.exports = function(app, passport, auth) {
 					//console.log(docs[i]);
 
 					result[i] = {};
-					//result[i].name = docs[i].name;
-					result[i].name = docs[i].firstname + " " + docs[i].lastname;
-					result[i].id = docs[i]._id;
-					result[i].entity = docs[i].entity;
+					if (req.query.lastname) {
+						result[i] = {};
+						result[i].name = docs[i].lastname;
+						result[i].id = docs[i]._id;
+						result[i].entity = docs[i].entity;
+					} else {
+						//result[i].name = docs[i].name;
+						result[i].name = docs[i].firstname + " " + docs[i].lastname;
+						result[i].id = docs[i]._id;
+						result[i].entity = docs[i].entity;
+					}
 				}
 
 			return res.send(200, result);

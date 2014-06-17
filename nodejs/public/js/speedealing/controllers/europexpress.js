@@ -94,7 +94,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		 */
 
 		$scope.driverAutoComplete = function(val) {
-			return $http.post('api/user/name/autocomplete', {
+			return $http.post('api/user/name/autocomplete?lastname=1', {
 				take: '5',
 				skip: '0',
 				page: '1',
@@ -683,7 +683,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 				course.$save(function(response) {
 					//$scope.transports.push(response);
 					//$scope.countTransports++;
-					 $location.path("module/europexpress/transport_edit.html/" + course._id);
+					$location.path("module/europexpress/transport_edit.html/" + course._id);
 				});
 			}, function() {
 			});
