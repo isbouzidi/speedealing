@@ -92,9 +92,9 @@ exports.compileDoc = function(id, doc, callback) {
 				// compile the document (or at least try) 
 				exec("pdflatex -interaction=nonstopmode " + inputPath + " > /dev/null 2>&1"
 						, function() {
-					exec("pdflatex -interaction=nonstopmode " + inputPath + " > /dev/null 2>&1"
-							, afterCompile);
-				});
+							exec("pdflatex -interaction=nonstopmode " + inputPath + " > /dev/null 2>&1"
+									, afterCompile);
+						});
 			});
 		});
 	});
@@ -142,21 +142,21 @@ exports.getPDF = function(id, callback) {
 /**
  * Replace --MYSOC-- and create FOOTER
  */
-exports.headfoot = function(entity, tex, callback) { 
+exports.headfoot = function(entity, tex, callback) {
 	mongoose.connection.db.collection('Mysoc', function(err, collection) {
 		collection.findOne({_id: entity}, function(err, doc) {
 
-			tex = tex.replace(/--MYSOC--/g, "\\textbf{\\large "+doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town + "\\\\Tel : " + doc.phone + "\\\\ Fax : " + doc.fax );
+			tex = tex.replace(/--MYSOC--/g, "\\textbf{\\large " + doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town + "\\\\Tel : " + doc.phone + "\\\\ Fax : " + doc.fax + "\\\\ TVA Intra. : " + doc.tva_intra);
 			tex = tex.replace(/--FOOT--/g, "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town + " T\\'el.: " + doc.phone + " R.C.S. " + doc.idprof1);
 
-			tex = tex.replace(/--ENTITY--/g, "\\textbf{"+doc.name + "}");
-			if(doc.iban)
+			tex = tex.replace(/--ENTITY--/g, "\\textbf{" + doc.name + "}");
+			if (doc.iban)
 				tex = tex.replace(/--IBAN--/g, doc.iban.name + "\\\\RIB : " + doc.iban.rib + "\\\\ IBAN : " + doc.iban.iban + "\\\\ BIC : " + doc.iban.bic);
 			else
 				tex = tex.replace(/--IBAN--/g, "RIB sur demande.");
 
-			tex = tex.replace(/é/g,"\\'e");
-			tex = tex.replace(/è/g,"\\`e");
+			tex = tex.replace(/é/g, "\\'e");
+			tex = tex.replace(/è/g, "\\`e");
 			callback(tex);
 		});
 	});
@@ -166,5 +166,5 @@ exports.headfoot = function(entity, tex, callback) {
  * Number price Format
  */
 exports.price = function(price) {
-	return accounting.formatMoney(price, { symbol: "€",  format: "%v %s",decimal : ",", thousand: " ", precision : 2   });
+	return accounting.formatMoney(price, {symbol: "€", format: "%v %s", decimal: ",", thousand: " ", precision: 2});
 };
