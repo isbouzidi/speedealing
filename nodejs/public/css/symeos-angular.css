@@ -673,3 +673,7 @@ tags-input .tags {
 .boxed .button-height{
 	height: 26px;
 }
+
+.tab-content .simple-table {
+	background-color: white;
+}
