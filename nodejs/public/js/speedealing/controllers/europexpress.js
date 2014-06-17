@@ -589,7 +589,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 				{field: 'date_livraison', displayName: 'Date Liv.', cellTemplate: '<div class="ngCellText" ng-class="{red: row.getProperty(col.field) == 10 }">{{row.getProperty(col.field) | date:\'dd-MM-yyyy HH:mm\'}}</div>'},
 				{field: 'fournisseur.name', displayName: 'Sous-Traitant'},
 				{field: 'total_soustraitant', displayName: 'Montant ST', cellFilter: "currency", cellClass: "align-right"},
-				{field: 'StatusCss.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'StatusCss.css\')}} glossy">{{row.getProperty(\'StatusCss.name\')}}</small></div>'},
+				//{field: 'StatusCss.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'StatusCss.css\')}} glossy">{{row.getProperty(\'StatusCss.name\')}}</small></div>'},
 				{field: 'total_ht', displayName: 'Total HT', cellFilter: "currency", cellClass: "align-right"},
 				{field: 'commission', displayName: 'Comission', cellFilter: "currency", cellClass: "align-right"},
 				{field: 'bordereau', displayName: 'Bordereau'},
@@ -625,7 +625,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 								name: "Messagerie"
 							},
 							Status: {
-								id: "NEW"
+								id: "LIV"
 							},
 							from: {
 								zip: "",
@@ -663,7 +663,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 								name: "Course"
 							},
 							Status: {
-								id: "NEW"
+								id: "LIV"
 							},
 							from: {
 								zip: "",
