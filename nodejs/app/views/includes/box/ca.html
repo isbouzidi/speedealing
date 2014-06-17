@@ -2,22 +2,41 @@
 	<div class="block large-margin-bottom">
 
 		<div class="block-title">
-			<h3>CA HT par famille</h3>
+			<h3>Chiffres d'affaires HT</h3>
 		</div>
 
-		<ul class="events" data-ng-init="familleCA()">
+		<table class="simple-table responsive-table responsive-table-on" data-ng-init="familleCA()">
 
-			<li data-ng-repeat="ca in familles">
-				<span class="event-date">
-					\{{ca.total_ht/1000 | number:1}} <span class="event-hour">k€</span>
-				</span>
-				<div class="event-description">
-					<h4>\{{ca.family}}</h4>
-					<p>Total du mois dernier</p>
-				</div>
-			</li>
+			<thead>
+				<tr>
+					<th scope="col" class="header">Familles</th>
+					<th scope="col" width="33%" class="header align-right">Mai</th>
+					<th scope="col" width="33%" class="header align-right"><i>Juin</i></th>
+				</tr>
+			</thead>
 
-		</ul>
+			<tfoot>
+				<tr>
+					<td colspan="2" class="align-right">
+						CA Mai : <strong>\{{total_ca.real | currency}}</strong>
+					</td>
+					<td class="align-right">
+						Prev. : <i>\{{total_ca.prev | currency}}</i>
+					</td>
+				</tr>
+			</tfoot>
+
+			<tbody>
+				<tr data-ng-repeat="ca in familles">
+					<th scope="row">
+						\{{ca.family}}
+					</th>
+					<td class="align-right">\{{ca.total_ht | currency}}</td>
+					<td class="align-right "><i>0.00</i></td>
+				</tr>
+			</tbody>
+
+		</table>
 
 	</div>
 </div>

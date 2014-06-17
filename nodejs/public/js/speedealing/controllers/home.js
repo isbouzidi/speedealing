@@ -6,7 +6,14 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 		$scope.dateNow = new Date();
 		$scope.userConnection = [];
 		$scope.indicateurs = {};
-		$scope.familles = {};
+		$scope.familles = {
+		//	prev : {},
+		//	real : {}
+		};
+		$scope.total_ca = {
+			prev : 0,
+			real : 0
+		};
 
 		if (Global.user.url) {
 			return $location.path(Global.user.url.substr(2)); // Go to default url
@@ -47,10 +54,22 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 		};
 
 		$scope.familleCA = function() {
+			/*$http({method: 'GET', url: 'api/europexpress/billing/ca'
+			}).success(function(ca, status) {
+				console.log(ca);
+				$scope.familles.prev = ca;
+			});*/
+			
 			$http({method: 'GET', url: 'api/bill/caFamily'
 			}).success(function(ca, status) {
 				//console.log(ca);
 				$scope.familles = ca;
+				
+				$scope.total_ca.real = 0;
+				angular.forEach(ca,function(data){
+					$scope.total_ca.real += data.total_ht;
+				});
+				
 			});
 		};
 

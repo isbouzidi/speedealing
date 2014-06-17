@@ -144,7 +144,7 @@ th.button-height {
 /* Simple table style */
 .simple-table {
 	width: 100%;
-	background-color: #ffffff;
+	//background-color: #ffffff;
 	}
 	.simple-table > thead > tr > th,
 	.simple-table > thead > tr > td,
