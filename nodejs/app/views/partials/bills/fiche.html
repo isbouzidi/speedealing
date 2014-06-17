@@ -390,8 +390,8 @@
 							<div class="boxed relative large-box-shadow">
 								<ul class="list spaced">
 									<li ng-repeat="order in bill.orders">
-										<a ng-href="#!/bills/\{{order._id}}" class="list-link icon-bag" title="Click to show">
-											<strong>$index</strong>
+										<a ng-href="#!/bills/\{{order}}" class="list-link icon-bag" title="Click to show">
+											<strong>\{{$index}}</strong>
 										</a>
 									</li>
 								</ul>
