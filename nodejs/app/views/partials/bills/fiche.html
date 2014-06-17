@@ -387,18 +387,15 @@
 								<span class="icon-bag">{{t 'orders:Orders'}}<span class="count green-bg right">\{{bill.orders.length}}</span></span>
 							</tab-heading>
 
-							<ul class="list spaced">
-								<li ng-repeat="order in bill.orders">
-									<a href="#" class="list-link icon-user" title="Click to edit">
-										<span class="meter orange-gradient"></span>
-										<span class="meter orange-gradient"></span>
-										<span class="meter"></span>
-										<span class="meter"></span>
-
-										<strong>John</strong> Doe
-									</a>
-								</li>
-							</ul>
+							<div class="boxed relative large-box-shadow">
+								<ul class="list spaced">
+									<li ng-repeat="order in bill.orders">
+										<a ng-href="#!/bills/\{{order._id}}" class="list-link icon-bag" title="Click to show">
+											<strong>$index</strong>
+										</a>
+									</li>
+								</ul>
+							</div>
 
 						</tab>
 					</tabset>
