@@ -27,7 +27,7 @@
 			</tfoot>
 
 			<tbody>
-				<tr data-ng-repeat="ca in familles">
+				<tr data-ng-repeat="ca in familles | orderBy:family">
 					<th scope="row">
 						\{{ca.family}}
 					</th>
