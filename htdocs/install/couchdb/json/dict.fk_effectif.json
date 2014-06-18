@@ -22,13 +22,25 @@
            "enable": true,
            "label": "51 - 100"
        },
-       "EF100-500": {
+       "EF101-250": {
            "enable": true,
-           "label": "100 - 500"
+           "label": "101 - 250"
        },
-       "EF500-": {
+	   "EF251-500": {
            "enable": true,
-           "label": "> 500"
+           "label": "251 - 500"
+       },
+       "EF501-1000": {
+           "enable": true,
+           "label": "501 - 1000"
+       },
+	   "EF1001-5000": {
+           "enable": true,
+           "label": "1001 - 5000"
+       },
+	   "EF5000+": {
+           "enable": true,
+           "label": "5000+"
        }
    }
 }

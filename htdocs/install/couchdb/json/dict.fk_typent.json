@@ -1,46 +1,50 @@
 {
-   "_id": "dict:fk_typent",
-   "class": "Dict",
-   "values": {
-       "TE_UNKNOWN": {
-           "enable": true,
-           "label": "-"
-       },
-       "TE_ADMIN": {
-           "enable": true,
-           "label": "Administration"
-       },
-       "TE_OTHER": {
-           "enable": true,
-           "label": "Autres"
-       },
-       "TE_GROUP": {
-           "enable": true,
-           "label": "Grand groupe"
-       },
-       "TE_WHOLE": {
-           "enable": false,
-           "label": "Grossiste"
-       },
-       "TE_PRIVATE": {
-           "enable": true,
-           "label": "Particulier"
-       },
-       "TE_MEDIUM": {
-           "enable": true,
-           "label": "PME/PMI"
-       },
-       "TE_RETAIL": {
-           "enable": false,
-           "label": "Revendeur"
-       },
-       "TE_STARTUP": {
-           "enable": false,
-           "label": "Start-up"
-       },
-       "TE_SMALL": {
-           "enable": true,
-           "label": "TPE"
-       }
-   }
+	"_id": "dict:fk_typent",
+	"class": "Dict",
+	"values": {
+		"TE_UNKNOWN": {
+			"enable": true,
+			"label": "-"
+		},
+		"TE_ADMIN": {
+			"enable": true,
+			"label": "Administration"
+		},
+		"TE_OTHER": {
+			"enable": true,
+			"label": "Autres"
+		},
+		"TE_GROUP": {
+			"enable": true,
+			"label": "Grand groupe"
+		},
+		"TE_WHOLE": {
+			"enable": false,
+			"label": "Grossiste"
+		},
+		"TE_PRIVATE": {
+			"enable": true,
+			"label": "Particulier"
+		},
+		"TE_MEDIUM": {
+			"enable": true,
+			"label": "PME/PMI"
+		},
+		"TE_RETAIL": {
+			"enable": false,
+			"label": "Revendeur"
+		},
+		"TE_STARTUP": {
+			"enable": false,
+			"label": "Start-up"
+		},
+		"TE_SMALL": {
+			"enable": true,
+			"label": "TPE"
+		},
+		"TE_PUBLIC": {
+			"enable": true,
+			"label": "Publique / Administration"
+		}
+	}
 }

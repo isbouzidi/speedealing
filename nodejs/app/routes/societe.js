@@ -212,7 +212,7 @@ module.exports = function(app, passport, auth) {
 				"Plus de 5 000": "EF5000+"
 			},
 			sex: {
-				"":null,
+				"": null,
 				"Homme": "H",
 				"Femme": "F"
 			},
@@ -228,10 +228,10 @@ module.exports = function(app, passport, auth) {
 				"Publique / Administration": "TE_PUBLIC"
 			},
 			forme_juridique_code: {
-				"":null,
-				"59":null,
-				"60":null,
-				"62":null,
+				"": null,
+				"59": null,
+				"60": null,
+				"62": null,
 				"Affaire Personnelle (AF.PERS)": "11",
 				"Association sans but lucratif (AS 1901)": "92",
 				"Coopérative (COOPE.)": "51",
@@ -259,13 +259,13 @@ module.exports = function(app, passport, auth) {
 				"Sté Expl Libérale Resp Limitée (SELARL)": "15",
 				"Sté par Action Simplifiée (S.A.S.)": "57",
 				"Syndicat (SYND.)": "91",
-				"Sté Intérêt Collectif Agrico (Sica)":"63",
-				"Sté Coop Production Anonyme (SCPA)":"51",
-				"Sté nationalisée droit public (SNDP)":"41",
-				"S.A.R.L. Coopérative (SARL COOP.)":"51",
-				"Société de Fait (STE FAIT)":"22",
-				"Sté nationalisée droit comm. (SNADC)":"41",
-				"S.A. Conseil de Surveillance (SA C.SURV.)":"56"
+				"Sté Intérêt Collectif Agrico (Sica)": "63",
+				"Sté Coop Production Anonyme (SCPA)": "51",
+				"Sté nationalisée droit public (SNDP)": "41",
+				"S.A.R.L. Coopérative (SARL COOP.)": "51",
+				"Société de Fait (STE FAIT)": "22",
+				"Sté nationalisée droit comm. (SNADC)": "41",
+				"S.A. Conseil de Surveillance (SA C.SURV.)": "56"
 			}
 		};
 
@@ -431,8 +431,9 @@ module.exports = function(app, passport, auth) {
 										societe = new SocieteModel(data);
 										societe.Status = "ST_NEVER";
 										isNew = true;
-									} else
-										societe = _.extend(societe, data);
+									}
+
+									societe = _.extend(societe, data);
 
 									//console.log(row[10]);
 									//console.log(societe)
@@ -465,10 +466,324 @@ module.exports = function(app, passport, auth) {
 												contact.societe.id = societe.id;
 												contact.societe.name = societe.name;
 
-											} else
-												contact = _.extend(contact, data);
+											}
+
+											contact = _.extend(contact, data);
 
 											//console.log(contact);
+
+											if (!contact.firstname && !contact.lastname)
+												return callback();
+
+											contact.save(function(err, doc) {
+												callback();
+											});
+										});
+									} else
+										callback();
+
+								});
+
+								//return row;
+							});
+						}/*, {parallel: 1}*/)
+						.on("end", function(count) {
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function(err) {
+								if (err)
+									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
+						.on('error', function(error) {
+							console.log(error.message);
+						});
+			}
+		}
+	});
+
+	app.post('/api/societe/import/horsAntenne', /*ensureAuthenticated,*/ function(req, res) {
+
+		var conv = [
+			false,
+			false,
+			"ha_id",
+			"civilite",
+			"firstname",
+			"lastname",
+			'poste',
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			false,
+			"contact_phone",
+			"phone",
+			"contact_fax",
+			"fax",
+			"contact_email",
+			"email",
+			"name",
+			false,
+			false,
+			false,
+			false,
+			"address",
+			"address1",
+			'zip',
+			"town",
+			false,
+			"url",
+			"segmentation",
+			"segmentation",
+			"segmentation",
+			"effectif_id", // Nombre d'habitants
+			false,
+			"idprof2",
+			"idprof1"
+		];
+
+		var conv_id = {
+			civilite: {
+				"": "NO",
+				"MME": "MME",
+				"MLLE": "MLE",
+				"M.": "MR",
+				"COLONEL": "COLONEL",
+				"DOCTEUR": "DR",
+				"GENERAL": "GENERAL",
+				"PROFESSEUR": "PROF"
+			},
+			effectif_id: {
+				"0": "EF0",
+				"1": "EF1-5",
+				"6": "EF6-10",
+				"11": "EF11-50",
+				"51": "EF51-100",
+				"101": "EF101-250",
+				"251": "EF251-500",
+				"501": "EF501-1000",
+				"1001": "EF1001-5000",
+				"5001": "EF5000+"
+			},
+			typent_id: {
+				"Siège": "TE_SIEGE",
+				"Etablissement": "TE_ETABL",
+				"Publique / Administration": "TE_PUBLIC"
+			}
+		};
+
+		var is_Array = [
+			"segmentation"
+		];
+
+		var convertRow = function(row, index, cb) {
+			var societe = {};
+			societe.typent_id = "TE_PUBLIC";
+			societe.country_id = "FR";
+			societe.segmentation = [];
+			societe.remise_client = 0;
+
+			for (var i = 0; i < row.length; i++) {
+				if (conv[i] === false)
+					continue;
+
+				if (conv[i] != "effectif_id" && typeof conv_id[conv[i]] !== 'undefined') {
+					if (conv_id[conv[i]][row[i]] === undefined) {
+						console.log("error : unknown " + conv[i] + "->" + row[i] + " ligne " + index);
+						return;
+					}
+
+					row[i] = conv_id[conv[i]][row[i]];
+				}
+
+				switch (conv[i]) {
+					case "address1":
+						if (row[i])
+							societe.address += "\n" + row[i];
+						break;
+					case "BP":
+						if (row[i]) {
+							societe.address += "\n" + row[i].substr(0, row[i].indexOf(','));
+						}
+						break;
+					case "brand" :
+						if (row[i])
+							societe[conv[i]] = row[i].split(',');
+						break;
+					case "segmentation" :
+						if (row[i]) {
+							var seg = row[i].split(',');
+							for (var j = 0; j < seg.length; j++) {
+								seg[j] = seg[j].replace(/\./g, "");
+								seg[j] = seg[j].trim();
+
+								societe[conv[i]].push({text: seg[j]});
+							}
+						}
+						break;
+					case "capital" :
+						if (row[i])
+							societe[conv[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
+						break;
+					case "yearCreated" :
+						if (row[i])
+							societe[conv[i]] = parseInt(row[i]) || null;
+						break;
+					case "phone":
+						if (row[i])
+							societe[conv[i]] = row[i].replace(/ /g, "");
+						break;
+					case "fax":
+						if (row[i])
+							societe[conv[i]] = row[i].replace(/ /g, "");
+						break;
+					case "contact_phone":
+						if (row[i])
+							societe[conv[i]] = row[i].replace(/ /g, "");
+						break;
+					case "contact_fax":
+						if (row[i])
+							societe[conv[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof2":
+						societe[conv[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof1":
+						societe[conv[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof3":
+						societe[conv[i]] = row[i].replace(/ /g, "");
+						break;
+					case "effectif_id":
+						societe[conv[i]] = "EF0";
+
+						for (var idx in conv_id[conv[i]]) {
+							if (parseInt(idx) <= parseInt(row[i]))
+								societe[conv[i]] = conv_id[conv[i]][idx];
+						}
+						break;
+					default :
+						if (row[i])
+							societe[conv[i]] = row[i];
+				}
+			}
+			//console.log(societe);
+			cb(societe);
+		};
+
+		var is_imported = {};
+
+
+		if (req.files) {
+			var filename = req.files.filedata.path;
+			if (fs.existsSync(filename)) {
+
+				var tab = [];
+
+				csv()
+						.from.path(filename, {delimiter: ';', escape: '"'})
+						.transform(function(row, index, callback) {
+							if (index === 0) {
+								tab = row; // Save header line
+
+								//for (var i = 0; i < tab.length; i++)
+								//	if (conv[i] !== false)
+								//		console.log(i + ". " + tab[i] + "->" + conv[i]);
+
+								return callback();
+							}
+
+							var alreadyImport = false;
+							if (is_imported[row[0]])
+								alreadyImport = true;
+
+							is_imported[row[0]] = true;
+
+							//console.log(row);
+
+							//console.log(row[0]);
+
+							convertRow(row, index, function(data) {
+
+								//callback();
+
+								//return;
+
+								var query;
+								//console.log(data.idprof2);
+								if (data.idprof2)
+									query = {$or: [{ha_id: data.ha_id}, {idprof2: data.idprof2}]};
+								else
+									query = {ha_id: data.ha_id};
+
+								SocieteModel.findOne(query, function(err, societe) {
+									if (err) {
+										console.log(err);
+										return callback();
+									}
+
+									var isNew = false;
+									if (societe == null) {
+										societe = new SocieteModel(data);
+										societe.Status = "ST_NEVER";
+										isNew = true;
+									}
+									//console.log(data);
+									societe = _.extend(societe, data);
+
+									//console.log(row[10]);
+									//console.log(societe)
+									//console.log(societe.datec);
+									//callback();
+									//return;
+
+									if (!alreadyImport)
+										societe.save(function(err, doc) {
+											if (err)
+												console.log(err);
+											
+											/*if (doc == null)
+											 console.log("null");
+											 else
+											 console.log(doc);*/
+
+											callback();
+										});
+
+									if (!isNew) {
+										ContactModel.findOne({'societe.id': societe._id, firstname: data.firstname, lastname: data.lastname}, function(err, contact) {
+											if (err) {
+												console.log(err);
+												return callback();
+											}
+
+											if (contact == null) {
+												contact = new ContactModel(data);
+
+												contact.societe.id = societe.id;
+												contact.societe.name = societe.name;
+
+											}
+
+											contact = _.extend(contact, data);
+
+											//console.log(data);
+											if (data.contact_phone)
+												contact.phone = data.contact_phone;
+											if (data.contact_fax)
+												contact.fax = data.contact_fax;
+											if (data.contact_email)
+												contact.email = data.contact_email;
+
+											//console.log(contact);
+
+											if (!contact.firstname || !contact.lastname)
+												return callback();
 
 											contact.save(function(err, doc) {
 												callback();

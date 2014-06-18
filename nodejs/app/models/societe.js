@@ -72,9 +72,9 @@ var societeSchema = new Schema({
 	contractID: String,
 	UGAP_Ref_Client: String,
 	datec: Date,
-	idporf1: String,
+	idprof1: String,
 	idprof2: {type: String, unique: true}, // SIRET
-	idprof3: String,
+	idprof3: String, // NAF
 	idprof4: String,
 	idprof5: String,
 	idprof6: String,
@@ -88,7 +88,9 @@ var societeSchema = new Schema({
 			amount: Number
 		}],
 	risk: {type: String, default: 'NO'},
-	kompass_id: String
+	kompass_id: String,
+	ha_id: String,
+	optional : mongoose.Schema.Types.Mixed
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
