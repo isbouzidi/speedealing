@@ -48,11 +48,16 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			});
 		};
 
-		$scope.update = function() {
+		$scope.update = function(cb) {
 			var order = $scope.order;
 
 			order.$update(function(response) {
 				$scope.order = response;
+				
+				if(response && typeof cb == "function") {
+					console.log("Commande validee !");
+					cb();
+				}
 			});
 		};
 
@@ -205,8 +210,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 			}
 
-			$scope.update();
-			$scope.next();
+			$scope.update($scope.next);
 
 		};
 
