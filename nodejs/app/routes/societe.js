@@ -699,10 +699,10 @@ module.exports = function(app, passport, auth) {
 							}
 
 							var alreadyImport = false;
-							if (is_imported[row[0]])
+							if (is_imported[row[2]])
 								alreadyImport = true;
 
-							is_imported[row[0]] = true;
+							is_imported[row[2]] = true;
 
 							//console.log(row);
 
@@ -737,7 +737,7 @@ module.exports = function(app, passport, auth) {
 									societe = _.extend(societe, data);
 
 									//console.log(row[10]);
-									//console.log(societe)
+									//console.log(societe);
 									//console.log(societe.datec);
 									//callback();
 									//return;
@@ -745,7 +745,7 @@ module.exports = function(app, passport, auth) {
 									if (!alreadyImport)
 										societe.save(function(err, doc) {
 											if (err)
-												console.log(err);
+												console.log("societe : "+JSON.stringify(err));
 											
 											/*if (doc == null)
 											 console.log("null");
@@ -786,6 +786,9 @@ module.exports = function(app, passport, auth) {
 												return callback();
 
 											contact.save(function(err, doc) {
+												if(err)
+													console.log("contact : " + err);
+												
 												callback();
 											});
 										});
