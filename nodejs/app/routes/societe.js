@@ -713,6 +713,9 @@ module.exports = function(app, passport, auth) {
 								//callback();
 
 								//return;
+								
+								if(!data.idprof2) // Pas de SIRET
+									return callback();
 
 								var query;
 								//console.log(data.idprof2);
