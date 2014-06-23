@@ -593,6 +593,10 @@ module.exports = function(app, passport, auth) {
 					continue;
 
 				if (conv[i] != "effectif_id" && typeof conv_id[conv[i]] !== 'undefined') {
+					
+					if(conv[i] == "civilite" && conv_id[conv[i]][row[i]] === undefined)
+						row[i] = "";
+					
 					if (conv_id[conv[i]][row[i]] === undefined) {
 						console.log("error : unknown " + conv[i] + "->" + row[i] + " ligne " + index);
 						return;
