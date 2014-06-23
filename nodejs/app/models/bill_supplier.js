@@ -94,8 +94,6 @@ DictModel.findOne({_id: "dict:fk_payment_term"}, function(err, docs) {
  */
 billSupplierSchema.pre('save', function(next) {
 
-	this.calculate_date_lim_reglement();
-
 	this.total_ht = 0;
 	this.total_tva = [];
 	this.total_ttc = 0;
