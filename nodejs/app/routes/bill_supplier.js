@@ -255,7 +255,7 @@ Object.prototype = {
 						return cb(err);
 					}
 
-					console.log(doc);
+					//console.log(doc);
 					cb(null, doc);
 				});
 			}
@@ -283,7 +283,7 @@ Object.prototype = {
 					total_ht: results.costFamily[i].total_ht
 				});
 			}
-			console.log(results);
+			//console.log(results);
 
 			res.json(200, result);
 		});
