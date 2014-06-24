@@ -3,23 +3,51 @@
 	<h2 class="relative thin">
 		{{t 'Result'}}
 	</h2>
-	<div class="facts clearfix">
-<!--
-		<div class="fact">
-			<span class="fact-value">
-				50 <span class="fact-unit">Min</span>
-			</span>
-			Average time per session<br>
-			<span class="fact-progress red">-5% ▼</span>
-		</div>
+	<div>
 
-		<div class="fact">
-			<span class="fact-value">
-				25 <span class="fact-unit">%</span>
-			</span>
-			Traffic growth over 30 days<br>
-			<span class="fact-progress green">+7.1% ▲</span>
-		</div>
--->
+		<table class="simple-table responsive-table responsive-table-on">
+
+			<thead>
+				<tr>
+					<th scope="col" class="header"></th>
+					<th scope="col" width="33%" class="header align-right">Mai</th>
+					<th scope="col" width="33%" class="header align-right"><i>Juin</i></th>
+				</tr>
+			</thead>
+
+			<tfoot>
+				<tr>
+					<td colspan="2" class="align-right">
+						Resultat : <strong>\{{total_ca.real - total_cost.real | currency}}</strong>
+					</td>
+					<td class="align-right">
+						Prev. : <i>\{{total_ca.prev - total_cost.prev | currency}}</i>
+					</td>
+				</tr>
+			</tfoot>
+
+			<tbody>
+				<tr>
+					<th scope="row">
+						CA HT
+					</th>
+					<td class="align-right"><strong>\{{total_ca.real | currency}}</strong></td>
+					<td class="align-right">
+						<i>\{{total_ca.prev | currency}}</i>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">
+						Charges HT
+					</th>
+					<td class="align-right"><strong>\{{total_cost.real | currency}}</strong></td>
+					<td class="align-right">
+						<i>\{{total_cost.prev | currency}}</i>
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+
 	</div>
 </div>
