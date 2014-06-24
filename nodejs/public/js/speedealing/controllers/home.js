@@ -14,6 +14,11 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 			prev : 0,
 			real : 0
 		};
+		
+		$scope.total_cost = {
+			prev : 0,
+			real : 0
+		};
 
 		if (Global.user.url) {
 			return $location.path(Global.user.url.substr(2)); // Go to default url

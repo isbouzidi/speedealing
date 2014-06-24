@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 		csv = require('csv'),
 		_ = require('underscore'),
 		dateFormat = require('dateformat'),
+		async = require('async'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config'),
 		latex = require('../models/latex');
@@ -21,7 +22,7 @@ module.exports = function(app, passport, auth) {
 	var object = new Object();
 
 	app.get('/api/billSupplier', auth.requiresLogin, object.read);
-	app.get('/api/bill/costFamily', auth.requiresLogin, object.costFamily);
+	app.get('/api/billSupplier/costFamily', auth.requiresLogin, object.costFamily);
 	app.get('/api/billSupplier/:billSupplierId', auth.requiresLogin, object.show);
 	app.post('/api/billSupplier', auth.requiresLogin, object.create);
 	app.put('/api/billSupplier/:billSupplierId', auth.requiresLogin, object.update);
@@ -175,9 +176,9 @@ Object.prototype = {
 		bill = _.extend(bill, req.body);
 
 		bill.save(function(err, doc) {
-			if(err)
+			if (err)
 				console.log(err);
-			
+
 			//console.log(doc);
 			res.json(doc);
 		});
@@ -239,15 +240,13 @@ Object.prototype = {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
-		var ca = {};
-
 		async.parallel({
-			caFamily: function(cb) {
+			costFamily: function(cb) {
 				BillModel.aggregate([
-					{$match: {Status: {'$ne': 'DRAFT'}, entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
+					{$match: {entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
 					{$unwind: "$lines"},
 					{$project: {_id: 0, lines: 1}},
 					{$group: {_id: "$lines.product.name", total_ht: {"$sum": "$lines.total_ht"}}}
@@ -256,7 +255,7 @@ Object.prototype = {
 						return cb(err);
 					}
 
-					//console.log(doc);
+					console.log(doc);
 					cb(null, doc);
 				});
 			}
@@ -277,38 +276,16 @@ Object.prototype = {
 			if (err)
 				return console.log(err);
 
-			//console.log(results);
-			async.each(results.caFamily, function(product, callback) {
-				//console.log(product);
-				ProductModel.findOne({ref: product._id}, function(err, doc) {
-					if(!doc)
-						console.log(product);
-					
-					product.caFamily = doc.caFamily;
-
-					if (typeof ca[doc.caFamily] === "undefined")
-						ca[doc.caFamily] = 0;
-
-					ca[doc.caFamily] += product.total_ht;
-					//console.log(ca);
-
-					callback();
+			var result = [];
+			for (var i in results.costFamily) {
+				result.push({
+					family: results.costFamily[i]._id,
+					total_ht: results.costFamily[i].total_ht
 				});
+			}
+			console.log(results);
 
-			}, function(err) {
-				
-				var result = [];
-				for (var i in ca) {
-					result.push({
-						family:i,
-						total_ht:ca[i]
-					});
-				}
-				
-				console.log(results);
-
-				res.json(200, result);
-			});
+			res.json(200, result);
 		});
 	}
 };

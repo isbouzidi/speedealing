@@ -358,7 +358,7 @@ Object.prototype = {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		var ca = {};
@@ -424,7 +424,7 @@ Object.prototype = {
 					});
 				}
 				
-				console.log(results);
+				//console.log(results);
 
 				res.json(200, result);
 			});
