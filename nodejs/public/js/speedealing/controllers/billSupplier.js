@@ -61,6 +61,12 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 			Bills.query({query: this.type.id, entity: Global.user.entity}, function(bills) {
 				$scope.bills = bills;
 				$scope.countBills = bills.length;
+				
+				$scope.totalBills = 0;
+				angular.forEach(bills, function(bill) {
+					$scope.totalBills += bill.total_ttc;
+				});
+				
 			});
 		};
 

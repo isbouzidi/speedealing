@@ -37,6 +37,9 @@
 		</div>
 		<div class="gridStyle"  data-ng-grid="gridOptionsBill" ng-style="style(170)" resize></div>
 		<div class="table-footer silver-gradient">
+			<div class="float-right strong">
+				Total TTC à payer : \{{TotalBills | currency}}  
+			</div>
 			\{{countBills}} ligne(s)
 		</div>
 
