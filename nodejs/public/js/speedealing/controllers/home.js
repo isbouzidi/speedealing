@@ -72,6 +72,26 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 				
 			});
 		};
+		
+		$scope.familleCOST = function() {
+			/*$http({method: 'GET', url: 'api/europexpress/billing/ca'
+			}).success(function(ca, status) {
+				console.log(ca);
+				$scope.familles.prev = ca;
+			});*/
+			
+			$http({method: 'GET', url: 'api/billSupplier/costFamily'
+			}).success(function(cost, status) {
+				//console.log(ca);
+				$scope.famillesCost = cost;
+				
+				$scope.total_cost.real = 0;
+				angular.forEach(cost,function(data){
+					$scope.total_cost.real += data.total_ht;
+				});
+				
+			});
+		};
 
 		$scope.initCharts = function() {
 			$http({method: 'GET', url: '/api/europexpress/billing/ca', params: {

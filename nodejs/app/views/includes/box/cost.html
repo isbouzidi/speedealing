@@ -6,34 +6,38 @@
 			<h3>Détails des charges</h3>
 		</div>
 
-		<ul class="events">
+		<table class="simple-table responsive-table responsive-table-on" data-ng-init="familleCOST()">
 
-		<!--	<li>
-				<span class="event-date orange">8</span>
-				<a href="#" class="event-description">
-					<h4>Event title</h4>
-					<p>Event description text</p>
-				</a>
-			</li>
+			<thead>
+				<tr>
+					<th scope="col" class="header">Familles</th>
+					<th scope="col" width="33%" class="header align-right">Mai</th>
+					<th scope="col" width="33%" class="header align-right"><i>Juin</i></th>
+				</tr>
+			</thead>
 
-			<li>
-				<span class="event-date">15</span>
-				<span class="event-description">
-					<h4>Another event</h4>
-					<p>Other event description text, other event description text</p>
-				</span>
-				<span class="ribbon tiny"><span class="ribbon-inner red-gradient">High</span></span>
-			</li>
+			<tfoot>
+				<tr>
+					<td colspan="2" class="align-right">
+						CA Mai : <strong>\{{total_cost.real | currency}}</strong>
+					</td>
+					<td class="align-right">
+						Prev. : <i>\{{total_cost.prev | currency}}</i>
+					</td>
+				</tr>
+			</tfoot>
 
-			<li>
-				<span class="event-date with-month">
-					8 <span class="event-month">April</span>
-				</span>
-				<h4>Next month event</h4>
-				<p>Another description text</p>
-			</li>-->
+			<tbody>
+				<tr data-ng-repeat="cost in famillesCost | orderBy:'family'">
+					<th scope="row">
+						\{{cost.family}}
+					</th>
+					<td class="align-right">\{{cost.total_ht | currency}}</td>
+					<td class="align-right "><i>-</i></td>
+				</tr>
+			</tbody>
 
-		</ul>
+		</table>
 
 	</div>
 </div>

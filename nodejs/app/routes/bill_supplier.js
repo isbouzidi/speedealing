@@ -21,6 +21,7 @@ module.exports = function(app, passport, auth) {
 	var object = new Object();
 
 	app.get('/api/billSupplier', auth.requiresLogin, object.read);
+	app.get('/api/bill/costFamily', auth.requiresLogin, object.costFamily);
 	app.get('/api/billSupplier/:billSupplierId', auth.requiresLogin, object.show);
 	app.post('/api/billSupplier', auth.requiresLogin, object.create);
 	app.put('/api/billSupplier/:billSupplierId', auth.requiresLogin, object.update);
@@ -232,6 +233,82 @@ Object.prototype = {
 			doc.fields[req.query.field].values = result;
 
 			res.json(doc.fields[req.query.field]);
+		});
+	},
+	costFamily: function(req, res) {
+
+		var d = new Date();
+		d.setHours(0, 0, 0);
+		var dateStart = new Date(d.getFullYear(), d.getMonth() - 1, 1);
+		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
+
+		var ca = {};
+
+		async.parallel({
+			caFamily: function(cb) {
+				BillModel.aggregate([
+					{$match: {Status: {'$ne': 'DRAFT'}, entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
+					{$unwind: "$lines"},
+					{$project: {_id: 0, lines: 1}},
+					{$group: {_id: "$lines.product.name", total_ht: {"$sum": "$lines.total_ht"}}}
+				], function(err, doc) {
+					if (err) {
+						return cb(err);
+					}
+
+					//console.log(doc);
+					cb(null, doc);
+				});
+			}
+			/*familles: function(cb) {
+			 CoursesModel.aggregate([
+			 {$match: {Status: {'$ne': 'REFUSED'}, total_ht: {'$gt': 0}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}},
+			 {$project: {_id: 0, type: 1, total_ht: 1}},
+			 {$group: {_id: "$type", sum: {"$sum": "$total_ht"}}}
+			 ], function(err, doc) {
+			 if (doc.length == 0)
+			 return cb(0);
+			 
+			 //console.log(doc);
+			 cb(null, doc);
+			 });
+			 }*/
+		}, function(err, results) {
+			if (err)
+				return console.log(err);
+
+			//console.log(results);
+			async.each(results.caFamily, function(product, callback) {
+				//console.log(product);
+				ProductModel.findOne({ref: product._id}, function(err, doc) {
+					if(!doc)
+						console.log(product);
+					
+					product.caFamily = doc.caFamily;
+
+					if (typeof ca[doc.caFamily] === "undefined")
+						ca[doc.caFamily] = 0;
+
+					ca[doc.caFamily] += product.total_ht;
+					//console.log(ca);
+
+					callback();
+				});
+
+			}, function(err) {
+				
+				var result = [];
+				for (var i in ca) {
+					result.push({
+						family:i,
+						total_ht:ca[i]
+					});
+				}
+				
+				console.log(results);
+
+				res.json(200, result);
+			});
 		});
 	}
 };
