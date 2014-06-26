@@ -93,31 +93,50 @@
 			</p>
 			{{/if}}
 
-			<form name="login" action="login" method="post" id="form-login">
-				<input type="hidden" name="token" value="token" />
-				<input type="hidden" name="loginfunction" value="loginfunction" />
-				<!-- Add fields to send local user information -->
-				<input type="hidden" name="tz" id="tz" value="" />
-				<input type="hidden" name="dst_observed" id="dst_observed" value="" />
-				<input type="hidden" name="dst_first" id="dst_first" value="" />
-				<input type="hidden" name="dst_second" id="dst_second" value="" />
-				<input type="hidden" name="screenwidth" id="screenwidth" value="" />
-				<input type="hidden" name="screenheight" id="screenheight" value="" />
-				<div class="elVal">
-					<ul class="inputs black-input large">
-						<!-- The autocomplete="off" attributes is the only way to prevent webkit browsers from filling the inputs with yellow -->
-						<li>
-							<span class="icon-user mid-margin-right"></span>
-							<input type="text" name="username" id="login" value="" class="input-unstyled" placeholder="{{t 'User'}}" autocomplete="off" />
-						</li>
-						<li>
-							<span class="icon-lock mid-margin-right"></span>
-							<input type="password" name="password" id="pass" value="" class="input-unstyled" placeholder="{{t 'Password'}}" autocomplete="off" />
-						</li>
-					</ul>
-					<button type="submit" class="button glossy full-width huge">{{t 'Connection'}}</button>
-				</div>
-			</form>
+
+			<!--<form method="post" action="" id="form-login" class="input-wrapper blue-gradient glossy" title="Login">
+				<ul class="inputs black-input large">
+					<li><span class="icon-user mid-margin-right"></span><input type="text" name="login" id="login" value="" class="input-unstyled" placeholder="Login" autocomplete="off"></li>
+					<li><span class="icon-lock mid-margin-right"></span><input type="password" name="pass" id="pass" value="" class="input-unstyled" placeholder="Password" autocomplete="off"></li>
+				</ul>
+
+				<p class="button-height">
+					<button type="submit" class="button glossy float-right" id="login">Login</button>
+					<span class="switch tiny mid-margin-right with-tooltip checked replacement" title="Enable auto-login" tabindex="0"><span class="switch-on"><span>ON</span></span><span class="switch-off"><span>OFF</span></span><span class="switch-button"></span><input type="checkbox" name="remind" id="remind" value="1" checked="checked" class="" title="Enable auto-login" tabindex="-1"></span>
+					<label for="remind">Remind me</label>
+				</p>
+			</form>-->
+
+			<div id="form-block" class="scratch-metal">
+				<form name="login" action="login" method="post" class="input-wrapper blue-gradient glossy" id="form-login">
+					<input type="hidden" name="token" value="token" />
+					<input type="hidden" name="loginfunction" value="loginfunction" />
+					<!-- Add fields to send local user information -->
+					<input type="hidden" name="tz" id="tz" value="" />
+					<input type="hidden" name="dst_observed" id="dst_observed" value="" />
+					<input type="hidden" name="dst_first" id="dst_first" value="" />
+					<input type="hidden" name="dst_second" id="dst_second" value="" />
+					<input type="hidden" name="screenwidth" id="screenwidth" value="" />
+					<input type="hidden" name="screenheight" id="screenheight" value="" />
+					<div class="elVal">
+						<ul class="inputs black-input large">
+							<!-- The autocomplete="off" attributes is the only way to prevent webkit browsers from filling the inputs with yellow -->
+							<li>
+								<span class="icon-user mid-margin-right"></span>
+								<input type="text" name="username" id="login" value="" class="input-unstyled" placeholder="{{t 'User'}}" autocomplete="off" />
+							</li>
+							<li>
+								<span class="icon-lock mid-margin-right"></span>
+								<input type="password" name="password" id="pass" value="" class="input-unstyled" placeholder="{{t 'Password'}}" autocomplete="off" />
+							</li>
+						</ul>
+						<div class="button-height">
+							<button type="submit" class="button glossy float-right">{{t 'Connection'}}</button>
+							<a href="auth/google" title="Connexion Google"><img height="28" src="img/social_google_box_icon2.png"></a> 
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
 
 		<script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
@@ -131,182 +150,180 @@
 		<script src="js/developr.tooltip.js"></script>
 
 		<script>
-			$(document).ready(function() {
-				// Elements
-				var doc = $('html').addClass('js-login'),
-						container = $('#container'),
-						formLogin = $('#form-login'),
-						// If layout is centered
-						centered;
+$(document).ready(function() {
+	// Elements
+	var doc = $('html').addClass('js-login'),
+			container = $('#container'),
+			formLogin = $('#form-login'),
+			// If layout is centered
+			centered;
 
-				formLogin.submit(function(event) {
-					// Values
-					var login = $.trim($('#login').val()).toLowerCase(),
-							pass = $.trim($('#pass').val());
+	formLogin.submit(function(event) {
+		// Values
+		var login = $.trim($('#login').val()).toLowerCase(),
+				pass = $.trim($('#pass').val());
 
-					// Check inputs
-					if (login.length === 0) {
-						// Display message
-						displayError("{{t 'errors:ErrorEnterYourLogin'}}");
-						return false;
-					} else if (pass.length === 0) {
-						// Remove empty login message if displayed
-						formLogin.clearMessages();
-						// Display message
-						displayError("{{t 'errors:ErrorEnterYourPassword'}}");
-						return false;
+		// Check inputs
+		if (login.length === 0) {
+			// Display message
+			displayError("{{t 'errors:ErrorEnterYourLogin'}}");
+			return false;
+		} else if (pass.length === 0) {
+			// Remove empty login message if displayed
+			formLogin.clearMessages();
+			// Display message
+			displayError("{{t 'errors:ErrorEnterYourPassword'}}");
+			return false;
+		} else {
+			// Remove previous messages
+			formLogin.clearMessages();
+			// Show progress
+			displayLoading("{{t 'ControllingPassword'}}");
+			event.preventDefault();
+
+			//var base="";
+			// if (document.getElementsByTagName('base').length > 0) {
+			//	 base = document.getElementsByTagName('base')[0].href;
+			// }
+
+			// if(base.charAt( base.length-1 ) == "/")
+			//	 base = "";
+
+			// Stop normal behavior
+			event.preventDefault();
+			$.ajax({
+				type: "POST", url: "login", dataType: "json",
+				data: {name: login, password: pass},
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('Accept', 'application/json');
+				},
+				complete: function(req) {
+					var resp = $.parseJSON(req.responseText);
+					if (req.status == 200) {
+						//console.log(document.location.href);
+						//console.log(document.location.href.indexOf('/login'));
+						//console.log(document.location.href.substr(32));
+						//console.log(req);
+						if (req.responseJSON.url)
+							document.location.href = '/' + req.responseJSON.url; //Default page in user profile
+						else
+							document.location.href = '/' + document.location.href.substr(document.location.href.indexOf('/login') + 6); // redirect to old page
 					} else {
-						// Remove previous messages
 						formLogin.clearMessages();
-						// Show progress
-						displayLoading("{{t 'ControllingPassword'}}");
-						event.preventDefault();
-
-						//var base="";
-						// if (document.getElementsByTagName('base').length > 0) {
-						//	 base = document.getElementsByTagName('base')[0].href;
-						// }
-
-						// if(base.charAt( base.length-1 ) == "/")
-						//	 base = "";
-
-						// Stop normal behavior
-						event.preventDefault();
-						$.ajax({
-							type: "POST", url: "login", dataType: "json",
-							data: {name: login, password: pass},
-							beforeSend: function(xhr) {
-								xhr.setRequestHeader('Accept', 'application/json');
-							},
-							complete: function(req) {
-								var resp = $.parseJSON(req.responseText);
-								if (req.status == 200) {
-									//console.log(document.location.href);
-									//console.log(document.location.href.indexOf('/login'));
-									//console.log(document.location.href.substr(32));
-									//console.log(req);
-									if (req.responseJSON.url)
-										document.location.href = '/' + req.responseJSON.url; //Default page in user profile
-									else
-										document.location.href = '/' + document.location.href.substr(document.location.href.indexOf('/login') + 6); // redirect to old page
-								} else {
-									formLogin.clearMessages();
-									displayError(req.responseJSON.errors);
-								}
-							},
-							error: function() {
-								formLogin.clearMessages();
-								displayError("{{t 'ErrorServiceUnavailableTryLater'}}");
-							}
-						});
+						displayError(req.responseJSON.errors);
 					}
-				});
-
-				// Handle resizing (mostly for debugging)
-				function handleLoginResize() {
-					// Detect mode
-					centered = (container.css('position') === 'absolute');
-
-					// Set min-height for mobile layout
-					if (!centered) {
-						container.css('margin-top', '');
-					} else {
-						if (parseInt(container.css('margin-top'), 10) === 0)
-							centerForm(false);
-					}
+				},
+				error: function() {
+					formLogin.clearMessages();
+					displayError("{{t 'ErrorServiceUnavailableTryLater'}}");
 				}
-				;
-
-				// Register and first call
-				$(window).bind('normalized-resize', handleLoginResize);
-				handleLoginResize();
-
-				/*
-				 * Center function
-				 * @param boolean animate whether or not to animate the position change
-				 * @param string|element|array any jQuery selector, DOM element or set of DOM elements which should be ignored
-				 * @return void
-				 */
-				function centerForm(animate, ignore) {
-					// If layout is centered
-					if (centered) {
-						var siblings = formLogin.siblings(),
-								finalSize = formLogin.outerHeight();
-
-						// Ignored elements
-						if (ignore)
-							siblings = siblings.not(ignore);
-
-						// Get other elements height
-						siblings.each(function(i) {
-							finalSize += $(this).outerHeight(true);
-						});
-
-						// Setup
-						container[animate ? 'animate' : 'css']({marginTop: -Math.round(finalSize / 2) + 'px'});
-					}
-				}
-				;
-
-				// Initial vertical adjust
-				centerForm(false);
-
-				/**
-				 * Function to display error messages
-				 * @param string message the error to display
-				 */
-				function displayError(message) {
-					// Show message
-					var message = formLogin.message(message, {
-						append: false,
-						arrow: 'bottom',
-						classes: ['red-gradient'],
-						animate: false					// We'll do animation later, we need to know the message height first
-					});
-
-					// Vertical centering (where we need the message height)
-					centerForm(true, 'fast');
-
-					// Watch for closing and show with effect
-					message.bind('endfade', function(event) {
-						// This will be called once the message has faded away and is removed
-						centerForm(true, message.get(0));
-					}).hide().slideDown('fast');
-				}
-
-				/**
-				 * Function to display loading messages
-				 * @param string message the message to display
-				 */
-				function displayLoading(message) {
-					// Show message
-					var message = formLogin.message('<strong>' + message + '</strong>', {
-						append: false,
-						arrow: 'bottom',
-						classes: ['blue-gradient', 'align-center'],
-						stripes: true,
-						darkStripes: false,
-						closable: false,
-						animate: false					// We'll do animation later, we need to know the message height first
-					});
-
-					// Vertical centering (where we need the message height)
-					centerForm(true, 'fast');
-
-					// Watch for closing and show with effect
-					message.bind('endfade', function(event) {
-						// This will be called once the message has faded away and is removed
-						centerForm(true, message.get(0));
-					}).hide().slideDown('fast');
-				}
-
-				$(".sl_link").click(function(event) {
-					$('.l_pane').slideToggle('normal').toggleClass('dn');
-					$('.sl_link,.lb_ribbon').children('span').toggle();
-					event.preventDefault();
-				});
-
 			});
+		}
+	});
+
+	// Handle resizing (mostly for debugging)
+	function handleLoginResize() {
+		// Detect mode
+		centered = (container.css('position') === 'absolute');
+
+		// Set min-height for mobile layout
+		if (!centered) {
+			container.css('margin-top', '');
+		} else {
+			if (parseInt(container.css('margin-top'), 10) === 0)
+				centerForm(false);
+		}
+	}
+
+	// Register and first call
+	$(window).bind('normalized-resize', handleLoginResize);
+	handleLoginResize();
+
+	/*
+	 * Center function
+	 * @param boolean animate whether or not to animate the position change
+	 * @param string|element|array any jQuery selector, DOM element or set of DOM elements which should be ignored
+	 * @return void
+	 */
+	function centerForm(animate, ignore) {
+		// If layout is centered
+		if (centered) {
+			var siblings = formLogin.siblings(),
+					finalSize = formLogin.outerHeight();
+
+			// Ignored elements
+			if (ignore)
+				siblings = siblings.not(ignore);
+
+			// Get other elements height
+			siblings.each(function(i) {
+				finalSize += $(this).outerHeight(true);
+			});
+
+			// Setup
+			container[animate ? 'animate' : 'css']({marginTop: -Math.round(finalSize) + 'px'});
+		}
+	}
+
+	// Initial vertical adjust
+	centerForm(false);
+
+	/**
+	 * Function to display error messages
+	 * @param string message the error to display
+	 */
+	function displayError(message) {
+		// Show message
+		var message = formLogin.message(message, {
+			append: false,
+			arrow: 'bottom',
+			classes: ['red-gradient'],
+			animate: false					// We'll do animation later, we need to know the message height first
+		});
+
+		// Vertical centering (where we need the message height)
+		centerForm(true, 'fast');
+
+		// Watch for closing and show with effect
+		message.bind('endfade', function(event) {
+			// This will be called once the message has faded away and is removed
+			centerForm(true, message.get(0));
+		}).hide().slideDown('fast');
+	}
+
+	/**
+	 * Function to display loading messages
+	 * @param string message the message to display
+	 */
+	function displayLoading(message) {
+		// Show message
+		var message = formLogin.message('<strong>' + message + '</strong>', {
+			append: false,
+			arrow: 'bottom',
+			classes: ['blue-gradient', 'align-center'],
+			stripes: true,
+			darkStripes: false,
+			closable: false,
+			animate: false					// We'll do animation later, we need to know the message height first
+		});
+
+		// Vertical centering (where we need the message height)
+		centerForm(true, 'fast');
+
+		// Watch for closing and show with effect
+		message.bind('endfade', function(event) {
+			// This will be called once the message has faded away and is removed
+			centerForm(true, message.get(0));
+		}).hide().slideDown('fast');
+	}
+
+	$(".sl_link").click(function(event) {
+		$('.l_pane').slideToggle('normal').toggleClass('dn');
+		$('.sl_link,.lb_ribbon').children('span').toggle();
+		event.preventDefault();
+	});
+
+});
 		</script>
 	</body>
 </html>

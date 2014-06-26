@@ -374,7 +374,11 @@ exports.render = function(req, res) {
 				withMenu = 'with-menu';
 
 			var random = Math.random().toString(36).substring(7);
-			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, random: random, version: config.version, angular: angular});
+			
+			var ttlSession = new Date(req.session.cookie._expires).getTime();
+			console.log(req.session.cookie._expires);
+			
+			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, random: random, ttlSession: ttlSession, version: config.version, angular: angular});
 		});
 	});
 };

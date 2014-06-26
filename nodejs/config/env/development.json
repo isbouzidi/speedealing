@@ -23,9 +23,9 @@
 		"callbackURL": "http://localhost:3000/auth/github/callback"
 	},
 	"google": {
-		"clientID": "APP_ID",
-		"clientSecret": "APP_SECRET",
-		"callbackURL": "http://localhost:3000/auth/google/callback"
+		"clientID": "1052846639873-7lhqolitbk3fagv61p50om75a58occvq.apps.googleusercontent.com",
+		"clientSecret": "6Ygp02V5G96hXYd0xU3SpsoZ",
+		"callbackURL": "http://chaumeil.symeos.net/auth/google/callback"
 	},
 	"autologin": {
 		"key": "1943oFLvc6A7MVV"

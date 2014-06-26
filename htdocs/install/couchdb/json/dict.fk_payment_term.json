@@ -1,46 +1,214 @@
 {
-   "_id": "dict:fk_payment_term",
-   "class": "Dict",
-   "values": {
-       "RECEP": {
-           "enable": true,
-           "label": "A réception",
-           "label_pdf": "Réception de facture",
-           "fdm": false,
-           "nbjour": 0,
-           "decalage": 0
-       },
-       "30D": {
-           "enable": true,
-           "label": "30 jours",
-           "label_pdf": "Réglement à 30 jours",
-           "fdm": false,
-           "nbjour": 30,
-           "decalage": 0
-       },
-       "30DENDMONTH": {
-           "enable": true,
-           "label": "30 jours fin de mois",
-           "label_pdf": "Réglement à 30 jours fin de mois",
-           "fdm": true,
-           "nbjour": 30,
-           "decalage": 0
-       },
-       "60D": {
-           "enable": true,
-           "label": "60 jours",
-           "label_pdf": "Réglement à 60 jours",
-           "fdm": false,
-           "nbjour": 60,
-           "decalage": 0
-       },
-       "60DENDMONTH": {
-           "enable": true,
-           "label": "60 jours fin de mois",
-           "label_pdf": "Réglement à 60 jours fin de mois",
-           "fdm": true,
-           "nbjour": 60,
-           "decalage": 0
-       }
-   }
+	"_id": "dict:fk_payment_term",
+	"class": "Dict",
+	"values": {
+		"RECEP": {
+			"enable": true,
+			"label": "A réception",
+			"label_pdf": "Réception de facture",
+			"fdm": false,
+			"nbjour": 0,
+			"decalage": 0
+		},
+		"8D": {
+			"enable": false,
+			"label": "8 jours",
+			"label_pdf": "Réglement à 8 jours",
+			"fdm": false,
+			"nbjour": 8,
+			"decalage": 0
+		},
+		"10D": {
+			"enable": true,
+			"label": "10 jours",
+			"label_pdf": "Réglement à 10 jours",
+			"fdm": false,
+			"nbjour": 10,
+			"decalage": 0
+		},
+		"10DENDMONTH": {
+			"enable": false,
+			"label": "10 jours fin de mois",
+			"label_pdf": "Réglement à 10 jours fin de mois",
+			"fdm": true,
+			"nbjour": 10,
+			"decalage": 0
+		},
+		"20D": {
+			"enable": false,
+			"label": "20 jours",
+			"label_pdf": "Réglement à 20 jours",
+			"fdm": false,
+			"nbjour": 20,
+			"decalage": 0
+		},
+		"30D": {
+			"enable": true,
+			"label": "30 jours",
+			"label_pdf": "Réglement à 30 jours",
+			"fdm": false,
+			"nbjour": 30,
+			"decalage": 0
+		},
+		"30DENDMONTH": {
+			"enable": true,
+			"label": "30 jours fin de mois",
+			"label_pdf": "Réglement à 30 jours fin de mois",
+			"fdm": true,
+			"nbjour": 30,
+			"decalage": 0
+		},
+		"30D5": {
+			"enable": true,
+			"label": "30 jours le 5",
+			"label_pdf": "Réglement à 30 jours le 5",
+			"fdm": true,
+			"nbjour": 30,
+			"decalage": 5
+		},
+		"30D10": {
+			"enable": true,
+			"label": "30 jours le 10",
+			"label_pdf": "Réglement à 30 jours le 10",
+			"fdm": true,
+			"nbjour": 30,
+			"decalage": 10
+		},
+		"30D15": {
+			"enable": true,
+			"label": "30 jours le 15",
+			"label_pdf": "Réglement à 30 jours le 15",
+			"fdm": true,
+			"nbjour": 30,
+			"decalage": 15
+		},
+		"30D25": {
+			"enable": true,
+			"label": "30 jours le 25",
+			"label_pdf": "Réglement à 30 jours le 25",
+			"fdm": true,
+			"nbjour": 30,
+			"decalage": 25
+		},
+		"40D": {
+			"enable": false,
+			"label": "40 jours",
+			"label_pdf": "Réglement à 40 jours",
+			"fdm": false,
+			"nbjour": 40,
+			"decalage": 0
+		},
+		"45D": {
+			"enable": true,
+			"label": "45 jours",
+			"label_pdf": "Réglement à 45 jours",
+			"fdm": false,
+			"nbjour": 45,
+			"decalage": 0
+		},
+		"45DENDMONTH": {
+			"enable": true,
+			"label": "45 jours fin de mois",
+			"label_pdf": "Réglement à 45 jours fin de mois",
+			"fdm": true,
+			"nbjour": 45,
+			"decalage": 0
+		},
+		"60D": {
+			"enable": true,
+			"label": "60 jours",
+			"label_pdf": "Réglement à 60 jours",
+			"fdm": false,
+			"nbjour": 60,
+			"decalage": 0
+		},
+		"60DENDMONTH": {
+			"enable": true,
+			"label": "60 jours fin de mois",
+			"label_pdf": "Réglement à 60 jours fin de mois",
+			"fdm": true,
+			"nbjour": 60,
+			"decalage": 0
+		},
+		"60D5": {
+			"enable": true,
+			"label": "60 jours le 5",
+			"label_pdf": "Réglement à 60 jours le 5",
+			"fdm": true,
+			"nbjour": 60,
+			"decalage": 5
+		},
+		"60D10": {
+			"enable": true,
+			"label": "60 jours le 10",
+			"label_pdf": "Réglement à 60 jours le 10",
+			"fdm": true,
+			"nbjour": 60,
+			"decalage": 10
+		},
+		"60D15": {
+			"enable": true,
+			"label": "60 jours le 15",
+			"label_pdf": "Réglement à 60 jours le 15",
+			"fdm": true,
+			"nbjour": 60,
+			"decalage": 15
+		},
+		"60D20": {
+			"enable": true,
+			"label": "60 jours le 20",
+			"label_pdf": "Réglement à 60 jours le 20",
+			"fdm": true,
+			"nbjour": 60,
+			"decalage": 20
+		},
+		"90D": {
+			"enable": true,
+			"label": "90 jours",
+			"label_pdf": "Réglement à 90 jours",
+			"fdm": false,
+			"nbjour": 90,
+			"decalage": 0
+		},
+		"90DENDMONTH": {
+			"enable": true,
+			"label": "90 jours fin de mois",
+			"label_pdf": "Réglement à 90 jours fin de mois",
+			"fdm": true,
+			"nbjour": 90,
+			"decalage": 0
+		},
+		"90D5": {
+			"enable": true,
+			"label": "90 jours le 5",
+			"label_pdf": "Réglement à 90 jours le 5",
+			"fdm": true,
+			"nbjour": 90,
+			"decalage": 5
+		},
+		"90D10": {
+			"enable": true,
+			"label": "90 jours le 10",
+			"label_pdf": "Réglement à 90 jours le 10",
+			"fdm": true,
+			"nbjour": 90,
+			"decalage": 10
+		},
+		"90D15": {
+			"enable": true,
+			"label": "90 jours le 15",
+			"label_pdf": "Réglement à 90 jours le 15",
+			"fdm": true,
+			"nbjour": 90,
+			"decalage": 15
+		},
+		"90D20": {
+			"enable": true,
+			"label": "90 jours le 20",
+			"label_pdf": "Réglement à 90 jours le 20",
+			"fdm": true,
+			"nbjour": 90,
+			"decalage": 20
+		}
+	}
 }

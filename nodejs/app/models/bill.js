@@ -92,7 +92,8 @@ var billSchema = new Schema({
 		title: String,
 		createdAt: {type: Date},
 		data: Buffer,
-	}
+	},
+	feeBilling: {type: Boolean, default: true} // Frais de facturation
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}

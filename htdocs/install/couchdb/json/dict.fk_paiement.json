@@ -1,54 +1,58 @@
 {
-   "_id": "dict:fk_paiement",
-   "class": "Dict",
-   "values": {
-       "NONE": {
-           "enable": true,
-           "label": "-"
-       },
-       "CB": {
-           "enable": true,
-           "label": "Carte Bancaire"
-       },
-       "CHQ": {
-           "enable": true,
-           "label": "Chèque"
-       },
-       "FAC": {
-           "enable": false,
-           "label": "Factor"
-       },
-       "LCR": {
-           "enable": false,
-           "label": "LCR"
-       },
-       "LIQ": {
-           "enable": true,
-           "label": "Espèces"
-       },
-       "PRE": {
-           "enable": true,
-           "label": "Prélèvement"
-       },
-       "PRO": {
-           "enable": false,
-           "label": "Proforma"
-       },
-       "TIP": {
-           "enable": true,
-           "label": "TIP"
-       },
-       "TRA": {
-           "enable": false,
-           "label": "Traite"
-       },
-       "VAD": {
-           "enable": false,
-           "label": "Paiement en ligne"
-       },
-       "VIR": {
-           "enable": true,
-           "label": "Virement"
-       }
-   }
+	"_id": "dict:fk_paiement",
+	"class": "Dict",
+	"values": {
+		"NONE": {
+			"enable": true,
+			"label": "-"
+		},
+		"CB": {
+			"enable": true,
+			"label": "Carte Bancaire"
+		},
+		"CHQ": {
+			"enable": true,
+			"label": "Chèque"
+		},
+		"FAC": {
+			"enable": false,
+			"label": "Factor"
+		},
+		"LCR": {
+			"enable": false,
+			"label": "LCR"
+		},
+		"LIQ": {
+			"enable": true,
+			"label": "Espèces"
+		},
+		"PRE": {
+			"enable": true,
+			"label": "Prélèvement"
+		},
+		"PRO": {
+			"enable": false,
+			"label": "Proforma"
+		},
+		"TIP": {
+			"enable": true,
+			"label": "TIP"
+		},
+		"TRA": {
+			"enable": false,
+			"label": "Traite"
+		},
+		"VAD": {
+			"enable": false,
+			"label": "Paiement en ligne"
+		},
+		"VIR": {
+			"enable": true,
+			"label": "Virement"
+		},
+		"CR": {
+			"enable": false,
+			"label": "Contre remboursement"
+		}
+	}
 }

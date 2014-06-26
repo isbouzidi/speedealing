@@ -25,6 +25,8 @@ var societeSchema = new Schema({
 	code_fournisseur: String,
 	barCode: String,
 	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
+	dateLastStatus: {type: Date, default: Date.now},
+	blocked: Boolean, // Compte bloque
 	address: String,
 	zip: String,
 	town: String,
@@ -47,6 +49,9 @@ var societeSchema = new Schema({
 	yearCreated: Number,
 	cond_reglement: {type: String, default: 'RECEP'},
 	mode_reglement: {type: String, default: 'CHQ'},
+	en_compte: Boolean,
+	groupOrder: Boolean, // 1 bill for many order
+	groupDelivery: Boolean, // 1 bill for many delivery
 	zonegeo: String,
 	Tag: [String],
 	segmentation: [{
@@ -72,12 +77,16 @@ var societeSchema = new Schema({
 	contractID: String,
 	UGAP_Ref_Client: String,
 	datec: Date,
-	idprof1: String,
+	idprof1: String, // SIREN
 	idprof2: {type: String, unique: true}, // SIRET
 	idprof3: String, // NAF
 	idprof4: String,
 	idprof5: String,
-	idprof6: String,
+	idprof6: String, // TVA Intra
+	iban: {
+		bank: String,
+		id: String //FR76........
+	},
 	checklist: mongoose.Schema.Types.Mixed,
 	annualCA: [{
 			year: Number,
@@ -88,9 +97,10 @@ var societeSchema = new Schema({
 			amount: Number
 		}],
 	risk: {type: String, default: 'NO'},
-	kompass_id: String,
-	ha_id: String,
-	optional : mongoose.Schema.Types.Mixed
+	kompass_id: String, // Kompass
+	ha_id: String, // hors antenne
+	soldeOut: Number, // Situation comptable
+	optional: mongoose.Schema.Types.Mixed
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}

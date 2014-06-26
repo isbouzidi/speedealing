@@ -153,9 +153,12 @@ module.exports = function(passport) {
 		callbackURL: config.google.callbackURL
 	},
 	function(accessToken, refreshToken, profile, done) {
+		console.log(profile);
 		User.findOne({
-			'google.id': profile.id
+			//'google.id': profile.id
+			email:profile._json.email
 		}, function(err, user) {
+			
 			if (!user) {
 				user = new User({
 					name: profile.displayName,
@@ -170,7 +173,15 @@ module.exports = function(passport) {
 					return done(err, user);
 				});
 			} else {
-				return done(err, user);
+				user.LastConnection = user.NewConnection;
+				user.NewConnection = new Date();
+				
+				user.save(function(err){
+					if(err)
+						console.log(err);
+					
+					return done(err, user);
+				});
 			}
 		});
 	}

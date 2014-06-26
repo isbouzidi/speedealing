@@ -51,8 +51,14 @@
            "cssClass": "red-gradient"
        },
        "ST_CINF3": {
-           "enable": true,
+           "enable": false,
            "label": "Client -3 mois",
+           "type": "customer",
+           "cssClass": "orange-gradient"
+       },
+	   "ST_NEW": {
+           "enable": true,
+           "label": "Nouveau client",
            "type": "customer",
            "cssClass": "orange-gradient"
        },

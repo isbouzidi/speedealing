@@ -5,6 +5,9 @@
 		<div>
 			<span class='title'>\{{title.title}}</span>
 			<div class='float-right with-tooltip'>
+				<span class='margin-right'>
+					<!--<timer end-time="{{ttlSession}}">\{{hours}}:\{{mminutes}}:\{{sseconds}}</timer>-->
+				</span>
 				{{#if user.multiEntities}}
 				<span class='margin-right'>
 					<a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">

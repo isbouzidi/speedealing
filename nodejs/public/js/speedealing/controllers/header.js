@@ -1,5 +1,6 @@
 angular.module('mean.system').controller('HeaderController', ['$scope', '$http', '$route', 'Global', 'pageTitle', function($scope, $http, $route, Global, pageTitle) {
 		$scope.global = Global;
+		//console.log(Global);
 		
 		$scope.title = pageTitle.getTitle();
 
