@@ -286,7 +286,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 					enabled: false
 				},
 				xAxis: {
-					categories: ['Ne pas contacter', 'Non déterminé', 'Prospect froid', 'Prospect chaud', 'Client -3 mois', 'Client récurrent', 'Client fidèle'],
+					categories: ['Ne pas contacter', 'Non déterminé', 'Prospect froid', 'Prospect tiède','Prospect chaud', 'Client -3 mois', 'Client -6 mois', 'Client -18 mois','Client fidèle'],
 					maxZoom: 1
 							//labels: {rotation: 90, align: "left"}
 				},
