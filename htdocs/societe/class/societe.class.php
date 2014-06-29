@@ -1807,7 +1807,7 @@ class Societe extends nosqlDocument {
 
 			$i = 0;
 			foreach ($output as $aRow) {
-				error_log(print_r($aRow, true));
+				//error_log(print_r($aRow, true));
 
 				$output_final[$i] = $aRow->value;
 				$i++;
