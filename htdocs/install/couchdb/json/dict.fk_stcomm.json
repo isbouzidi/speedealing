@@ -39,7 +39,7 @@
            "cssClass": "blue-gradient"
        },
        "ST_PTIED": {
-           "enable": false,
+           "enable": true,
            "label": "Prospect tiède",
            "type": "prospect",
            "cssClass": "orange-gradient"
@@ -51,20 +51,20 @@
            "cssClass": "red-gradient"
        },
        "ST_CINF3": {
-           "enable": false,
-           "label": "Client -3 mois",
-           "type": "customer",
-           "cssClass": "orange-gradient"
-       },
-	   "ST_NEW": {
            "enable": true,
-           "label": "Nouveau client",
+           "label": "Client -3 mois",
            "type": "customer",
            "cssClass": "orange-gradient"
        },
        "ST_CREC": {
            "enable": true,
-           "label": "Client récurrent",
+           "label": "Client -6 mois",
+           "type": "customer",
+           "cssClass": "green-gradient"
+       },
+	   "ST_CPAR": {
+           "enable": true,
+           "label": "Client -18 mois",
            "type": "customer",
            "cssClass": "green-gradient"
        },
@@ -74,11 +74,11 @@
            "type": "customer",
            "cssClass": "green-gradient"
        },
-       "ST_CPAR": {
-           "enable": false,
-           "label": "Client partenaire",
+	   "ST_CVIP": {
+           "enable": true,
+           "label": "Client VIP",
            "type": "customer",
-           "cssClass": "green-gradient"
+           "cssClass": "orange-gradient"
        }
    }
 }
