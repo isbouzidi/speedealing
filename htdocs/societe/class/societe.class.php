@@ -1747,7 +1747,7 @@ class Societe extends nosqlDocument {
 				$params = array('group' => true);
 				//$result = $this->getView("count_status", $params);
 				$result = $this->mongodb->aggregate(array(
-					array('$match' => array('Status' => array('$nin' => array('ST_NEVER','ST_NO')))),
+					array('$match' => array('Status' => array('$nin' => array('ST_NO')))),
 					array('$project' => array(
 							"Status" => 1
 						)),
@@ -1757,7 +1757,7 @@ class Societe extends nosqlDocument {
 				//$params = array('group' => true, "startkey" => array($user->name), "endkey" => array($user->name, new stdClass()));
 				//$result = $this->getView("commercial_status", $params);
 				$result = $this->mongodb->aggregate(array(
-					array('$match' => array('commercial_id.id' => $user->login, 'Status' => array('$nin' => array('ST_NEVER','ST_NO')))),
+					array('$match' => array('commercial_id.id' => $user->login, 'Status' => array('$nin' => array('ST_NO')))),
 					array('$project' => array(
 							"Status" => 1
 						)),
