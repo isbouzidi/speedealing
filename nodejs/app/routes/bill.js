@@ -26,6 +26,7 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/bill/caFamily', auth.requiresLogin, object.caFamily);
 	app.get('/api/bill/:billId', auth.requiresLogin, object.show);
 	app.post('/api/bill', auth.requiresLogin, object.create);
+	app.post('/api/bill/:billId', auth.requiresLogin, object.create);
 	app.put('/api/bill/:billId', auth.requiresLogin, object.update);
 	app.del('/api/bill/:billId', auth.requiresLogin, object.destroy);
 	app.get('/api/bill/pdf/:billId', auth.requiresLogin, object.pdf);
@@ -155,7 +156,23 @@ Object.prototype = {
 		res.json(req.bill);
 	},
 	create: function(req, res) {
-		var bill = new BillModel(req.body);
+		var bill = {};
+		if(req.query.clone) {
+			bill = req.bill.toObject();
+			delete bill._id;
+			delete bill.__v;
+			delete bill.ref;
+			delete bill.createdAt;
+			delete bill.updatedAt;
+			bill.Status = "DRAFT";
+			bill.notes = [];
+			bill.latex = {};
+			bill.datec = new Date();
+			
+			bill = new BillModel(bill);
+		} else
+			bill = new BillModel(req.body);
+		
 		bill.author = {};
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;

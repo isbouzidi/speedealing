@@ -5,6 +5,12 @@ angular.module('mean.bills').factory("Bills", ['$resource', function($resource) 
     }, {
         update: {
             method: 'PUT'
-        }
+        },
+		clone:{
+			method:'POST',
+			params : {
+				clone:1
+			}
+		}
     });
 }]);

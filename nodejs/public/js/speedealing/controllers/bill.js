@@ -49,8 +49,8 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 			bill.$update(function(response) {
 				pageTitle.setTitle('Facture ' + bill.ref);
-				
-				if(response.Status == "DRAFT")
+
+				if (response.Status == "DRAFT")
 					$scope.editable = true;
 				else
 					$scope.editable = false;
@@ -64,14 +64,20 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			});
 		};
 
+		$scope.clone = function() {
+			$scope.bill.$clone(function(response) {
+				$location.path("bills/" + response._id);
+			});
+		};
+
 		$scope.findOne = function() {
 			Bills.get({
 				Id: $routeParams.id
 			}, function(bill) {
 				//console.log(bill);
 				$scope.bill = bill;
-				
-				if(bill.Status == "DRAFT")
+
+				if (bill.Status == "DRAFT")
 					$scope.editable = true;
 				else
 					$scope.editable = false;
@@ -186,7 +192,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				resolve: {
 					object: function() {
 						return {
-							qty : 0
+							qty: 0
 						};
 					},
 					options: function() {
@@ -361,7 +367,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				}, 500);
 			}
 		};
-		
+
 		$scope.changeStatus = function(Status) {
 			$scope.bill.Status = Status;
 			$scope.update();
@@ -425,10 +431,10 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 
 		$scope.updateCoord = function(item, model, label) {
 			//console.log(item);
-			
-			if($scope.bill.client.name === "Accueil")
+
+			if ($scope.bill.client.name === "Accueil")
 				$scope.bill.client.isNameModified = true;
-			
+
 			$scope.bill.price_level = item.price_level;
 			$scope.bill.address = item.address.address;
 			$scope.bill.zip = item.address.zip;
