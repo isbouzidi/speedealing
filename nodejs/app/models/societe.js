@@ -206,7 +206,7 @@ societeSchema.virtual('attractivity')
 					if (tab_attractivity[i][this[i].text])
 						attractivity += tab_attractivity[i][this[i].text];
 
-					if (tab_attractivity[i][this[i]])
+					else if (tab_attractivity[i][this[i]])
 						attractivity += tab_attractivity[i][this[i]];
 				}
 			}
