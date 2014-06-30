@@ -163,7 +163,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			data: 'societes',
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptionsSociete,
-			sortInfo: {fields: ["name"], directions: ["asc"]},
+			sortInfo: {fields: ["attractivity"], directions: ["desc"]},
 			//showFilter:true,
 			enableColumnResize: true,
 			i18n: 'fr',
@@ -176,7 +176,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
-				{field: 'entity', displayName: 'Entité', cellClass: "align-center"}
+				{field: 'entity', displayName: 'Entité', cellClass: "align-center"},
+				{field: 'attractivity', displayName: 'Attractivité', cellClass:"align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
 		};
@@ -440,6 +441,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: 'phone', displayName: 'Téléphone', cellFilter:"phone"},
 				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
+				{field: 'attractivity', displayName: 'Attractivité', cellClass:"align-right"},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
 			]
 		};

@@ -57,6 +57,9 @@ var societeSchema = new Schema({
 	segmentation: [{
 			text: String
 		}],
+	familyProduct: [{
+			text: String
+		}],
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},
@@ -144,6 +147,73 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 	prospectLevelList = docs;
 });
 
+var tab_attractivity = {
+	effectif_id: {
+		"EF0": 1,
+		"EF1-5": 1,
+		"EF6-10": 1,
+		"EF11-50": 1,
+		"EF51-100": 1,
+		"EF101-250": 2,
+		"EF251-500": 2,
+		"EF501-1000": 3,
+		"EF1001-5000": 5,
+		"EF5000+": 5
+	},
+	typent_id: {
+		//"TE_PUBLIC": 3,
+		"TE_ETABL": 3,
+		"TE_SIEGE": 5
+	},
+	familyProduct: {
+		"Externalisation": 5,
+		"Imp Num": 4,
+		"Repro/plan": 2,
+		"Signalétique": 5,
+		"Numérisation": 5,
+		"Créa, Pao": 2,
+		"Dupli cd/dvd": 4
+	},
+	segmentation: {
+		"Finances": 5,
+		"Formation": 5,
+		"Cosmétique": 5,
+		"Labo pharma": 5,
+		"Cac 40": 5,
+		"BTP": 5,
+		"Arts graphique": 5,
+		"Franchise": 5,
+		"Industrie": 5,
+		"Services": 5
+	},
+	poste: {
+		"PDG": 5,
+		"DG": 4,
+		"DET": 4,
+		"DIR IMMO": 4,
+		"DirCO": 2,
+		"Dir COM": 3,
+		"DirMktg": 3
+	}
+};
+
+societeSchema.virtual('attractivity')
+		.get(function() {
+			var attractivity = 0;
+
+			for (var i in tab_attractivity) {
+				if (this[i]) {
+					if (tab_attractivity[i][this[i].text])
+						attractivity += tab_attractivity[i][this[i].text];
+
+					if (tab_attractivity[i][this[i]])
+						attractivity += tab_attractivity[i][this[i]];
+				}
+			}
+
+			return attractivity;
+		});
+
 societeSchema.virtual('status')
 		.get(function() {
 			var res_status = {};
@@ -173,9 +243,9 @@ societeSchema.virtual('prospectLevel')
 
 			if (level && prospectLevelList.values[level].cssClass) {
 				prospectLevel.id = level;
-//		prospectLevel.name = i18n.t("companies:" + level);
 				prospectLevel.name = i18n.t("companies:" + level);
-				//this.prospectLevel.name = prospectLevelList.values[level].label;
+				if (prospectLevelList.values[level].label)
+					prospectLevel.name = prospectLevelList.values[level].label;
 				prospectLevel.css = prospectLevelList.values[level].cssClass;
 			} else { // By default
 				prospectLevel.id = level;
@@ -258,6 +328,23 @@ contactSchema.virtual('status')
 			}
 			return res_status;
 
+		});
+
+contactSchema.virtual('attractivity')
+		.get(function() {
+			var attractivity = 0;
+
+			for (var i in tab_attractivity) {
+				if (this[i]) {
+					if (tab_attractivity[i][this[i].text])
+						attractivity += tab_attractivity[i][this[i].text];
+
+					if (tab_attractivity[i][this[i]])
+						attractivity += tab_attractivity[i][this[i]];
+				}
+			}
+
+			return attractivity;
 		});
 
 mongoose.model('contact', contactSchema, 'Contact');

@@ -7,16 +7,46 @@
            "cssClass": "grey-gradient"
        },
        "PL_LOW": {
-           "enable": true,
+           "enable": false,
            "cssClass": "blue-gradient"
        },
        "PL_MEDIUM": {
-           "enable": true,
+           "enable": false,
            "cssClass": "orange-gradient"
        },
        "PL_HIGH": {
-           "enable": true,
+           "enable": false,
            "cssClass": "red-gradient"
-       }
+       },
+	   "PL_0" : {
+		   "enable":true,
+		   "label":"0 CA",
+		   "cssClass":"anthracite-gradient"
+	   },
+	   "PL_1" : {
+		   "enable":true,
+		   "label":"0-50k CA",
+		   "cssClass":"blue-gradient"
+	   },
+	   "PL_2" : {
+		   "enable":true,
+		   "label":"50-100k CA",
+		   "cssClass":"green-gradient"
+	   },
+	   "PL_3" : {
+		   "enable":true,
+		   "label":"100-200k CA",
+		   "cssClass":"orange-gradient"
+	   },
+	   "PL_4" : {
+		   "enable":true,
+		   "label":"200-400k CA",
+		   "cssClass":"red-gradient"
+	   },
+	   "PL_5" : {
+		   "enable":true,
+		   "label":">400k CA",
+		   "cssClass":"red-gradient"
+	   }
    }
 }

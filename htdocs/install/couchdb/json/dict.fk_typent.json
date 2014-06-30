@@ -7,7 +7,7 @@
 			"label": "-"
 		},
 		"TE_ADMIN": {
-			"enable": true,
+			"enable": false,
 			"label": "Administration"
 		},
 		"TE_OTHER": {
@@ -15,7 +15,7 @@
 			"label": "Autres"
 		},
 		"TE_GROUP": {
-			"enable": true,
+			"enable": false,
 			"label": "Grand groupe"
 		},
 		"TE_WHOLE": {
@@ -23,11 +23,11 @@
 			"label": "Grossiste"
 		},
 		"TE_PRIVATE": {
-			"enable": true,
+			"enable": false,
 			"label": "Particulier"
 		},
 		"TE_MEDIUM": {
-			"enable": true,
+			"enable": false,
 			"label": "PME/PMI"
 		},
 		"TE_RETAIL": {
@@ -39,12 +39,20 @@
 			"label": "Start-up"
 		},
 		"TE_SMALL": {
-			"enable": true,
+			"enable": false,
 			"label": "TPE"
 		},
 		"TE_PUBLIC": {
 			"enable": true,
 			"label": "Publique / Administration"
+		},
+		"TE_ETABL": {
+			"enable": true,
+			"label": "Etablissement"
+		},
+		"TE_SIEGE": {
+			"enable": true,
+			"label": "Siège"
 		}
 	}
 }
