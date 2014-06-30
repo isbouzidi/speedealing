@@ -79,9 +79,24 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 		$scope.find = function() {
-			Societe.query({query: this.type.id, entity: Global.user.entity}, function(societes) {
+			var p = {
+				query: this.type.id,
+				entity: Global.user.entity,
+				//filter: $scope.filterOptionsSociete.filterText,
+				skip: $scope.pagingOptionsSociete.currentPage - 1,
+				limit: $scope.pagingOptionsSociete.pageSize
+						// sortInfo: sb.join("")
+			};
+
+			Societe.query(p, function(societes) {
 				$scope.societes = societes;
 				$scope.countSocietes = societes.length;
+			});
+
+			$http({method: 'GET', url: '/api/societe/statistic', params: p
+			}).success(function(data, status) {
+				$scope.totalCountSociete = data.count;
+				$scope.maxPageSociete = Math.ceil(data.count / 1000);
 			});
 		};
 
@@ -90,7 +105,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				Id: $routeParams.id
 			}, function(societe) {
 				$scope.societe = societe;
-				
+
 				$http({method: 'GET', url: 'api/societe/contact', params:
 							{
 								find: {"societe.id": societe._id},
@@ -159,11 +174,47 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			useExternalFilter: false
 		};
 
+		// paging
+		$scope.totalCountSociete = 0;
+		$scope.minPageSociete = 1;
+		$scope.maxPageSociete = 1;
+
+		$scope.pagingOptionsSociete = {
+			pageSizes: [1000, 5000, 10000],
+			pageSize: 1000,
+			currentPage: 1
+		};
+
+		$scope.pagingSociete = function(direction) {
+			if ($scope.pagingOptionsSociete.currentPage + direction > $scope.maxPageSociete || $scope.pagingOptionsSociete.currentPage + direction < $scope.minPageSociete)
+				return;
+
+			$scope.pagingOptionsSociete.currentPage += direction;
+			$scope.find();
+		};
+		
+		$scope.setPagingSociete = function(page) {
+			if(page != $scope.pagingOptionsSociete.currentPage)
+			$scope.pagingOptionsSociete.currentPage = page;
+			$scope.find();
+		};
+		
+		$scope.pagingSocieteFirst = function() {
+			$scope.pagingOptionsSociete.currentPage = $scope.minPageSociete;
+			$scope.find();
+		};
+		
+		$scope.pagingSocieteLast = function() {
+			$scope.pagingOptionsSociete.currentPage = $scope.maxPageSociete;
+			$scope.find();
+		};
+
 		$scope.gridOptionsSociete = {
 			data: 'societes',
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptionsSociete,
-			sortInfo: {fields: ["attractivity"], directions: ["desc"]},
+			pagingOptions: $scope.pagingOptionsSociete,
+			sortInfo: {fields: ["name"], directions: ["asc"]},
 			//showFilter:true,
 			enableColumnResize: true,
 			i18n: 'fr',
@@ -177,7 +228,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
 				{field: 'entity', displayName: 'Entité', cellClass: "align-center"},
-				{field: 'attractivity', displayName: 'Attractivité', cellClass:"align-right"}
+				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
 		};
@@ -287,7 +338,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 					enabled: false
 				},
 				xAxis: {
-					categories: ['Ne pas contacter', 'Non déterminé', 'Prospect froid', 'Prospect tiède','Prospect chaud', 'Client -3 mois', 'Client -6 mois', 'Client -18 mois','Client fidèle'],
+					categories: ['Ne pas contacter', 'Non déterminé', 'Prospect froid', 'Prospect tiède', 'Prospect chaud', 'Client -3 mois', 'Client -6 mois', 'Client -18 mois', 'Client fidèle'],
 					maxZoom: 1
 							//labels: {rotation: 90, align: "left"}
 				},
@@ -418,7 +469,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
 		};
-		
+
 		/*
 		 * NG-GRID for contact list
 		 */
@@ -438,10 +489,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			columnDefs: [
 				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'poste', displayName: 'Fonction'},
-				{field: 'phone', displayName: 'Téléphone', cellFilter:"phone"},
+				{field: 'phone', displayName: 'Téléphone', cellFilter: "phone"},
 				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
-				{field: 'attractivity', displayName: 'Attractivité', cellClass:"align-right"},
+				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right"},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
 			]
 		};
@@ -528,7 +579,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				}, 500);
 			}
 		};
-		
+
 		$scope.priceLevelAutoComplete = function(val, field) {
 			return $http.post('api/product/price_level/autocomplete', {
 				take: '5',

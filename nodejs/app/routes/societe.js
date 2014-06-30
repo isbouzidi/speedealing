@@ -20,6 +20,7 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
+	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
 	app.get('/api/societe/contact', auth.requiresLogin, contact.read);
 	app.get('/api/societe/contact/:contactId', auth.requiresLogin, contact.show);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
@@ -593,10 +594,10 @@ module.exports = function(app, passport, auth) {
 					continue;
 
 				if (conv[i] != "effectif_id" && typeof conv_id[conv[i]] !== 'undefined') {
-					
-					if(conv[i] == "civilite" && conv_id[conv[i]][row[i]] === undefined)
+
+					if (conv[i] == "civilite" && conv_id[conv[i]][row[i]] === undefined)
 						row[i] = "";
-					
+
 					if (conv_id[conv[i]][row[i]] === undefined) {
 						console.log("error : unknown " + conv[i] + "->" + row[i] + " ligne " + index);
 						return;
@@ -717,8 +718,8 @@ module.exports = function(app, passport, auth) {
 								//callback();
 
 								//return;
-								
-								if(!data.idprof2) // Pas de SIRET
+
+								if (!data.idprof2) // Pas de SIRET
 									return callback();
 
 								var query;
@@ -752,8 +753,8 @@ module.exports = function(app, passport, auth) {
 									if (!alreadyImport)
 										societe.save(function(err, doc) {
 											if (err)
-												console.log("societe : "+JSON.stringify(err));
-											
+												console.log("societe : " + JSON.stringify(err));
+
 											/*if (doc == null)
 											 console.log("null");
 											 else
@@ -793,9 +794,9 @@ module.exports = function(app, passport, auth) {
 												return callback();
 
 											contact.save(function(err, doc) {
-												if(err)
+												if (err)
 													console.log("contact : " + err);
-												
+
 												callback();
 											});
 										});
@@ -1061,7 +1062,7 @@ Object.prototype = {
 			}
 		}
 
-		SocieteModel.find(query, "-history -files", function(err, doc) {
+		SocieteModel.find(query, "-history -files", {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -1075,6 +1076,44 @@ Object.prototype = {
 	},
 	show: function(req, res) {
 		res.json(req.societe);
+	},
+	statistic: function(req, res) {
+		var query = {
+			$or: [{
+					entity: "ALL"
+				}, {
+					entity: req.query.entity
+				}]
+		};
+
+		if (req.query.query) {
+			switch (req.query.query) {
+				case "CUSTOMER" :
+					query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
+					break;
+				case "SUPPLIER" :
+					query.fournisseur = "SUPPLIER";
+					break;
+				case "SUBCONTRACTOR" :
+					query.fournisseur = "SUBCONTRACTOR";
+					break;
+				case "SUSPECT" :
+					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
+					break;
+				default :
+					break;
+			}
+		}
+
+		SocieteModel.count(query, function(err, doc) {
+			if (err) {
+				console.log(err);
+				res.send(500, doc);
+				return;
+			}
+
+			res.json(200, {count: doc});
+		});
 	},
 	create: function(req, res) {
 		var societe = new SocieteModel(req.body);
