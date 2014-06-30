@@ -45,6 +45,7 @@ var societeSchema = new Schema({
 	cptBilling: {id: {type: Schema.Types.ObjectId}, name: String},
 	price_level: {type: String, default: 'BASE', uppercase: true, trim: true},
 	prospectlevel: {type: String, default: 'PL_NONE'},
+	attractivity : {type:Number, default:0},
 	brand: [String],
 	yearCreated: Number,
 	cond_reglement: {type: String, default: 'RECEP'},
@@ -113,40 +114,6 @@ societeSchema.plugin(timestamps);
 
 societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 
-societeSchema.pre('save', function(next) {
-	var self = this;
-
-	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
-
-		SeqModel.incNumber("C", 6, function(seq) {
-			self.barCode = "C" + seq;
-
-			//console.log(seq);
-			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
-				if (err)
-					console.log(err);
-
-				if (entity && entity.cptRef)
-					self.code_client = entity.cptRef + "-" + seq;
-				else
-					self.code_client = "C" + seq;
-				next();
-			});
-		});
-	} else
-		next();
-});
-
-var statusList = {};
-DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, docs) {
-	statusList = docs;
-});
-
-var prospectLevelList = {};
-DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
-	prospectLevelList = docs;
-});
-
 var tab_attractivity = {
 	effectif_id: {
 		"EF0": 1,
@@ -197,22 +164,51 @@ var tab_attractivity = {
 	}
 };
 
-societeSchema.virtual('attractivity')
-		.get(function() {
-			var attractivity = 0;
+societeSchema.pre('save', function(next) {
+	var self = this;
 
-			for (var i in tab_attractivity) {
-				if (this[i]) {
-					if (tab_attractivity[i][this[i].text])
-						attractivity += tab_attractivity[i][this[i].text];
+	this.attractivity = 0;
 
-					if (tab_attractivity[i][this[i]])
-						attractivity += tab_attractivity[i][this[i]];
-				}
-			}
+	for (var i in tab_attractivity) {
+		if (this[i]) {
+			if (tab_attractivity[i][this[i].text])
+				this.attractivity += tab_attractivity[i][this[i].text];
 
-			return attractivity;
+			if (tab_attractivity[i][this[i]])
+				this.attractivity += tab_attractivity[i][this[i]];
+		}
+	}
+
+	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
+
+		SeqModel.incNumber("C", 6, function(seq) {
+			self.barCode = "C" + seq;
+
+			//console.log(seq);
+			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+				if (err)
+					console.log(err);
+
+				if (entity && entity.cptRef)
+					self.code_client = entity.cptRef + "-" + seq;
+				else
+					self.code_client = "C" + seq;
+				next();
+			});
 		});
+	} else
+		next();
+});
+
+var statusList = {};
+DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, docs) {
+	statusList = docs;
+});
+
+var prospectLevelList = {};
+DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
+	prospectLevelList = docs;
+});
 
 societeSchema.virtual('status')
 		.get(function() {
@@ -328,23 +324,6 @@ contactSchema.virtual('status')
 			}
 			return res_status;
 
-		});
-
-contactSchema.virtual('attractivity')
-		.get(function() {
-			var attractivity = 0;
-
-			for (var i in tab_attractivity) {
-				if (this[i]) {
-					if (tab_attractivity[i][this[i].text])
-						attractivity += tab_attractivity[i][this[i].text];
-
-					if (tab_attractivity[i][this[i]])
-						attractivity += tab_attractivity[i][this[i]];
-				}
-			}
-
-			return attractivity;
 		});
 
 mongoose.model('contact', contactSchema, 'Contact');
