@@ -11,15 +11,15 @@
 			<thead>
 				<tr>
 					<th scope="col" class="header">Familles</th>
-					<th scope="col" width="33%" class="header align-right">Mai</th>
-					<th scope="col" width="33%" class="header align-right"><i>Juin</i></th>
+					<th scope="col" width="33%" class="header align-right">\{{lastMonth}}</th>
+					<th scope="col" width="33%" class="header align-right"><i>\{{thisMonth}}</i></th>
 				</tr>
 			</thead>
 
 			<tfoot>
 				<tr>
 					<td colspan="2" class="align-right">
-						Charges HT Mai : <strong>\{{total_cost.real | currency}}</strong>
+						Charges HT \{{lastMonth}} : <strong>\{{total_cost.real | currency}}</strong>
 					</td>
 					<td class="align-right">
 						Prev. : <i>\{{total_cost.prev | currency}}</i>

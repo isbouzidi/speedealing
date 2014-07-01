@@ -19,6 +19,11 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 			prev : 0,
 			real : 0
 		};
+		
+		$scope.months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.") ;
+		
+		$scope.thisMonth = $scope.months[new Date().getMonth()];
+		$scope.lastMonth = $scope.months[new Date().getMonth()-1];
 
 		if (Global.user.url) {
 			return $location.path(Global.user.url.substr(2)); // Go to default url
