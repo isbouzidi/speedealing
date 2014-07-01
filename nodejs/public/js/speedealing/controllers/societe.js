@@ -79,13 +79,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 		$scope.find = function() {
+			var sb = {};
+			for (var i = 0; i < $scope.sortOptionsSociete.fields.length; i++) {
+				sb[$scope.sortOptionsSociete.fields[i]] = $scope.sortOptionsSociete.directions[i] === "desc" ? -1 : 1;
+			}
+
 			var p = {
 				query: this.type.id,
 				entity: Global.user.entity,
 				//filter: $scope.filterOptionsSociete.filterText,
 				skip: $scope.pagingOptionsSociete.currentPage - 1,
-				limit: $scope.pagingOptionsSociete.pageSize
-						// sortInfo: sb.join("")
+				limit: $scope.pagingOptionsSociete.pageSize,
+				sort: sb
 			};
 
 			Societe.query(p, function(societes) {
@@ -96,7 +101,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			$http({method: 'GET', url: '/api/societe/statistic', params: p
 			}).success(function(data, status) {
 				$scope.totalCountSociete = data.count;
-				$scope.maxPageSociete = Math.ceil(data.count / 1000);
+				$scope.maxPageSociete = Math.ceil(data.count / 500);
 			});
 		};
 
@@ -180,8 +185,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		$scope.maxPageSociete = 1;
 
 		$scope.pagingOptionsSociete = {
-			pageSizes: [1000, 5000, 10000],
-			pageSize: 1000,
+			pageSizes: [500, 1000, 5000],
+			pageSize: 500,
 			currentPage: 1
 		};
 
@@ -192,29 +197,34 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			$scope.pagingOptionsSociete.currentPage += direction;
 			$scope.find();
 		};
-		
+
 		$scope.setPagingSociete = function(page) {
-			if(page != $scope.pagingOptionsSociete.currentPage)
-			$scope.pagingOptionsSociete.currentPage = page;
+			if (page != $scope.pagingOptionsSociete.currentPage)
+				$scope.pagingOptionsSociete.currentPage = page;
 			$scope.find();
 		};
-		
+
 		$scope.pagingSocieteFirst = function() {
 			$scope.pagingOptionsSociete.currentPage = $scope.minPageSociete;
 			$scope.find();
 		};
-		
+
 		$scope.pagingSocieteLast = function() {
 			$scope.pagingOptionsSociete.currentPage = $scope.maxPageSociete;
 			$scope.find();
 		};
+
+		// sorting
+		$scope.sortOptionsSociete = {fields: ["name"], directions: ["asc"]};
 
 		$scope.gridOptionsSociete = {
 			data: 'societes',
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptionsSociete,
 			pagingOptions: $scope.pagingOptionsSociete,
-			sortInfo: {fields: ["name"], directions: ["asc"]},
+			sortInfo: $scope.sortOptionsSociete,
+			useExternalSorting: true,
+			enablePaging: true,
 			//showFilter:true,
 			enableColumnResize: true,
 			i18n: 'fr',
@@ -232,6 +242,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
 		};
+
+		$scope.$watch('filterOptionsSociete', function(newVal, oldVal) {
+			if (newVal !== oldVal) {
+				$scope.find();
+			}
+		}, true);
+
+		$scope.$watch('sortOptionsSociete', function(newVal, oldVal) {
+			if (newVal !== oldVal) {
+				$scope.find();
+			}
+		}, true);
 
 		$scope.initCharts = function() {
 			$http({method: 'GET', url: '/core/ajax/viewgraph.php?json=graphPieStatus&class=Societe'
