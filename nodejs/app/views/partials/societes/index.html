@@ -22,13 +22,12 @@
 				<div class="col-sm-4">
 					<div class="button-group">
 						<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
-						<button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
+						<button title="{{t 'Refresh'}}" class="button" data-ng-click="pagingSocieteFirst()"><span class="icon-redo"></span></button>
 					</div>
 
 				</div>
 				<div class="col-sm-4">
-					{{t
-							'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
+					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="pagingSocieteFirst()" class=""></select>
 				</div>
 				<div class="col-sm-4">
 					<div class="float-right">
