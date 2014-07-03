@@ -110,7 +110,10 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:Date'}}</th>
-													<td>\{{bill.datec| date:'dd/MM/yyyy'}}</td>
+													<td><a href="#" ng-show="editable" editable-bsdate="bill.datec" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+															\{{ (bill.datec | date:"dd/MM/yyyy") || 'empty'}}
+														</a>
+														<span ng-hide="editable">\{{ (bill.datec | date:"dd/MM/yyyy") || 'empty'}}</span></td>
 												</tr>												
 												<tr>
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
