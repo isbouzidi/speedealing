@@ -112,7 +112,7 @@
 							<span class="button-icon anthracite-gradient"><span class="icon-pages"></span></span>
 							{{t 'Clone'}}
 						</button>
-						
+
 						<!-- Right side -->
 						<button disabled class="button margin-left">
 							Delete
@@ -140,7 +140,9 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:Date'}}</th>
-													<td>\{{bill.datec| date:'dd/MM/yyyy'}}</td>
+													<td> <a href="#" editable-bsdate="bill.datec" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+															\{{ (bill.datec | date:"dd/MM/yyyy") || 'empty'}}
+														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'RefCustomer'}}</th>
