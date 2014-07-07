@@ -1,0 +1,63 @@
+{
+	"_id": "module:Accounting",
+	"enabled": true,
+	"boxes": [],
+	"const": [],
+	"rights": {
+		"accounting": [
+			{
+				"desc": "Lire les ecritures comptables",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Exporter les ecritures comptables",
+				"perm": {
+					"export": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"family": "financial",
+	"name": "Comptabilite",
+	"description": "Gestion des ecritures comptables",
+	"version": "speedealing",
+	"const_name": "MAIN_MODULE_FACTURE",
+	"picto": "bill",
+	"depends": [
+		"modFacture"
+	],
+	"requiredby": [
+		"modComptabilite",
+		"modAccounting"
+	],
+	"conflictwith": [],
+	"config_page_url": [
+		"facture.php"
+	],
+	"menus": {
+		"menu:factures": {
+			"submenus": {
+				"menu:accounting": {
+					"position": 10,
+					"perms": "$user->rights->accounting->read",
+					"enabled": "$conf->accounting->enabled",
+					"usertype": 2,
+					"title": "compta:Journaux",
+					"submenus": {
+						"menu:accountinglist": {
+							"position": 10,
+							"url": "#!/accounting",
+							"perms": "$user->rights->accounting->read",
+							"enabled": "$conf->accounting->enabled",
+							"usertype": 2,
+							"title": "compta:SellsJournal"
+						}
+					}
+				}
+			}
+		}
+	}
+}
