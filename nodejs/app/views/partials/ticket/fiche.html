@@ -88,8 +88,10 @@
 						<dl class="definition">
 							<dt data-ng-repeat-start="item in ticket.linked" data-ng-class="icon(item)">\{{item.title}}</dt>
 							<dd data-ng-repeat-end><a data-ng-href="\{{url(item)}}">\{{item.name || item.ref}} </a></dd>
-							<dt class="icon-paperclip">Fichiers</dt><dd data-ng-repeat="file in ticket.files">
-								<a href="api/ticket/file/\{{ticket._id}}/\{{file.name}}" class="icon-download">\{{file.name}}</a><br/></dd>
+							<dt class="icon-paperclip">Fichiers</dt>
+                                                        <dd data-ng-repeat="file in ticket.files">
+								<a href="api/ticket/file/\{{ticket._id}}/\{{file.name}}" class="icon-download">\{{file.name}}</a><br/>
+                                                        </dd>
 						</dl>
 						<input type="file" name="files" class="button compact" id="files" kendo-upload k-options="kendoUpload" />
 					</div>

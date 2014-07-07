@@ -18,7 +18,10 @@ window.app = angular.module('mean', ['ngRoute',
 	'mean.users',
 	'mean.articles',
 	'mean.europexpress',
-	'timer'
+	'timer',
+	'mean.rh',
+	'mean.userGroup',
+	'mean.contacts'
 ]);
 
 angular.module('mean.system', []);
@@ -28,6 +31,9 @@ angular.module('mean.users', []);
 angular.module('mean.bills', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
+angular.module('mean.rh', []);
+angular.module('mean.userGroup', []);
+angular.module('mean.contacts', []);
 
 window.app.run(function(editableOptions, editableThemes) {
 	// bootstrap3 theme. Can be also 'bs2', 'default'

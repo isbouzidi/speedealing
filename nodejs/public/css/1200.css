@@ -39,6 +39,7 @@
 .eleven-columns	{ width: 89.4167%; }
 .twelve-columns	{ width: 97.75%; }
 
+.twelve-columns th{ width: 33.33%;}
 /* Line breaks to ensure correct float */
 .new-row-tablet {
 	clear: none;

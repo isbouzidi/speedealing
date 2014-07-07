@@ -1,7 +1,10 @@
 var async = require('async'),
 		ip = require('ip'),
 		modules = require('../app/controllers/modules'),
-		config = require(__dirname + '/config');
+		config = require(__dirname + '/config'),
+                mongoose = require('mongoose');
+
+var ZipCodeModel = mongoose.model('zipCode');
 
 module.exports = function(app, passport, auth) {
 	//User Routes
@@ -46,7 +49,7 @@ module.exports = function(app, passport, auth) {
 
 			/* CheckExternalIP */
 			console.log(req.headers['x-real-ip']);
-			if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
+			if (req.headers['x-real-ip'] && !(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
 				res.json({success: false, errors: "Internet access denied"}, 500);
 				return users.signout;
 			}
@@ -255,7 +258,34 @@ module.exports = function(app, passport, auth) {
 		else
 			res.render('partials/' + view + "/fiche.html", {user: req.user}); // Mode fiche view 
 	});
-
+	
+	app.post('/api/zipcode/autocomplete', auth.requiresLogin, function(req, res){
+	    
+            
+            if (req.body.val === null)
+                return res.send(200, {});
+            
+            var val = req.body.val;
+            
+            var query = { "$or": [
+                            {code: new RegExp(val, "i")},
+                            {city: new RegExp(val, "i")}
+                        ]
+            };
+            
+            //var query = {$or: [{"code" : {$regex: /val.*/ }}, {"city" : { $regex: val, $options: 'i'}}]};
+            
+            ZipCodeModel.find(query, {}, {limit: 5}, function(err, doc){
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                
+                return res.send(200, doc);
+                
+            });
+            
+	});
 	/*app.get('/partials/module/:module/:view', auth.requiresLogin, function(req, res) {
 	 var module = req.params.module;
 	 var view = req.params.view;

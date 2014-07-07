@@ -20,7 +20,7 @@ var EntityModel = mongoose.model('entity');
  */
 var societeSchema = new Schema({
 	ref: String,
-	name: {type: String, required: true},
+	name: {type: String, require: true},
 	code_client: {type: String, unique: true},
 	code_fournisseur: String,
 	barCode: String,
@@ -346,5 +346,11 @@ contactSchema.virtual('attractivity')
 
 			return attractivity;
 		});
+
+contactSchema.virtual('fullAddress').get(function() {
+   
+    return this.address + ', ' + this.zip + ', ' + this.town; 
+    
+});
 
 mongoose.model('contact', contactSchema, 'Contact');

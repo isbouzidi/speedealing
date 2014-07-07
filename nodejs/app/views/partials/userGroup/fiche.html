@@ -1,0 +1,102 @@
+<section data-ng-controller="UserGroupController">
+    <div data-ng-init="findOne()">
+    <hgroup id="main-title" class="thin">
+        <h1>Fiche groupe : \{{userGroup.name}}</h1>
+    </hgroup>
+        <div class="with-padding" data-ng-init="init()">
+            <div class="columns">
+                <div style="margin-bottom: 10px; float: right;">
+                    <a ng-href="#" class="button" ng-click="retour()" title="Retour à la liste">
+                        Liste Groupes
+                        <span class="button-icon right-side"><span class="icon-list"></span></span>
+                    </a>
+                    <a ng-href="#" class="button" confirmed-click="deleteUserGroup()" ng-confirm-click="Supprimer le groupe ?" title="Supprimer le groupe">
+                        Supprimer
+                        <span class="button-icon right-side"><span class="icon-trash"></span></span>
+                    </a>
+                </div>
+            </div>
+            <div class="boxed relative" style="margin:20px 0">
+                <div class="columns">
+                    <div class="twelve-columns">
+                        <table class="simple-table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Nom du groupe</th>
+                                    <td>
+                                        <a 
+                                            href="#" 
+                                            class="blue h4" 
+                                            editable-text="userGroup.name" 
+                                            buttons="no" 
+                                            onaftersave="update()"
+                                            blur="submit"
+                                            e-form="userGroupName">
+                                                \{{userGroup.name}}
+                                        </a>
+                                        <span class="icon-pencil grey" ng-click="userGroupName.$show()" ng-hide="userGroupName.$visible"></span>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Crée le
+                                    </th>
+                                    <td>
+                                        \{{ (userGroup.createdAt | date:"dd/MM/yyyy") || 'Non déterminé' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        Nombre de collaborateurs affectés
+                                    </th>
+                                    <td>
+                                        \{{NbrListUsers}}
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Collaborateur non affecté au groupe :</th>
+                                    <td>                                                
+                                        <div style="float: left; margin-right: 10px">
+                                            <select id="validation-select" 
+                                                    name="validation-select" 
+                                                    class="select validate[required]" 
+                                                    ng-model="userGroup.newUser" 
+                                                    ng-options="u as u.fullname for u in listNoUsers">
+                                                    
+                                            </select>
+                                        </div>
+                                        <div style="float: left">
+                                            <a ng-href="#" class="button" ng-click="addNewUser()" title="Retour à la liste">
+                                                Ajouter
+                                                <span class="button-icon right-side"><span class="icon-download"></span></span>
+                                            </a>
+                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                                    
+            <div class="table-header silver-gradient glossy button-height">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-right">
+                                {{t 'Search'}} <input type="text" placeholder="..." data-ng-model="filterOptionsListUsers.filterText" class="input small mid-margin-left">
+
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="gridStyle"  data-ng-grid="gridListUserOptions" ng-style="style(170)"></div>
+            
+        </div>
+    </div>
+</section>

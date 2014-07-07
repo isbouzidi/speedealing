@@ -1,5 +1,5 @@
 angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Societe) {
-
+                $scope.global = Global;
 		pageTitle.setTitle('Liste des sociétés');
 
 		$scope.societe = {};
@@ -38,7 +38,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				}
 			}).then(function(res) {
 				//console.log(res.data);
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -110,17 +110,21 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				Id: $routeParams.id
 			}, function(societe) {
 				$scope.societe = societe;
-
-				$http({method: 'GET', url: 'api/societe/contact', params:
-							{
-								find: {"societe.id": societe._id},
-								fields: "name firstname lastname updatedAt Status phone email poste"
-							}
+                                Global.contactIdSociete = societe._id;
+                                Global.contactNameSociete = societe.name;				
+                                
+                                //$scope.findContact();
+				$http({method: 'GET', url: 'api/contacts', params:
+                                        {
+                                                find: {"societe.id": societe._id},
+												fields: "name firstname lastname updatedAt Status phone email poste"
+                                        }
 				}).success(function(data, status) {
 					if (status == 200)
 						$scope.contacts = data;
 
 					$scope.countContact = $scope.contacts.length;
+                                        
 				});
 
 				$http({method: 'GET', url: 'api/ticket', params:
@@ -141,12 +145,12 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 								fields: "title ref datec Status total_ht"
 							}
 				}).success(function(data, status) {
-					if (status == 200)
+					if (status === 200)
 						$scope.requestBuy = data;
 
 					$scope.TotalBuy = 0;
 					angular.forEach($scope.requestBuy, function(row) {
-						if (row.Status.id == "PAYED")
+						if (row.Status.id === "PAYED")
 							$scope.TotalBuy += row.total_ht;
 					});
 					$scope.countBuy = $scope.requestBuy.length;
@@ -417,7 +421,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 
@@ -491,7 +495,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
 		};
-
+		
 		/*
 		 * NG-GRID for contact list
 		 */
@@ -500,7 +504,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			filterText: "",
 			useExternalFilter: false
 		};
-
+                
+                $scope.toggle = false;
+                
 		$scope.gridOptionsContact = {
 			data: 'contacts',
 			enableRowSelection: false,
@@ -508,10 +514,27 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			filterOptions: $scope.filterOptionsContact,
 			i18n: 'fr',
 			enableColumnResize: true,
+                        
 			columnDefs: [
-				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'poste', displayName: 'Fonction'},
-				{field: 'phone', displayName: 'Téléphone', cellFilter: "phone"},
+				{field: 'name', displayName: 'Nom', cellTemplate: 
+                                            '<div class="ngCellText">\n\
+                                            <div ng-mouseEnter="toggle = !toggle" ng-mouseLeave="toggle = !toggle">\n\
+                                            <div class="popoverContact" ng-show="toggle">\n\
+                                            <div class="popoverContactBody">\n\
+                                            <h4>{{row.getProperty(\'name\')}}<span style="float: right; font-size: 12px" class="tag {{row.getProperty(\'status.css\')}}">{{row.getProperty(\'status.name\')}}</span></h4>\n\
+                                            <p><span class="icon-briefcase"></span>{{row.getProperty(\'poste\')}}</p>\n\
+                                            <p><span class="icon-mobile"></span>{{row.getProperty(\'phone_mobile\')}}</p>\n\
+                                            <p><span class="icon-phone"></span>{{row.getProperty(\'phone_perso\')}}</p>\n\
+                                            <p><span class="icon-home"></span>{{row.getProperty(\'fullAddress\')}}</p>\n\
+                                            </div>\n\
+                                            <div class="popoverContactFooter">\n\
+                                            <p><span style="float: left" class="icon-mail"></span>{{row.getProperty(\'email\')}}<a href="mailto:{{row.getProperty(\'email\')}}" target="_blank" style="float:right">Envoyer email</a></p>\n\
+                                            </div>\n\
+                                            </div>\n\
+                                            <a class="with-tooltip" ng-href="#!/contacts/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'>\n\
+                                            <span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div></div>'},
+                                {field: 'poste', displayName: 'Fonction'},
+				{field: 'phone_mobile', displayName: 'Téléphone'},
 				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right"},
@@ -601,7 +624,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				}, 500);
 			}
 		};
-
+		
 		$scope.priceLevelAutoComplete = function(val, field) {
 			return $http.post('api/product/price_level/autocomplete', {
 				take: '5',
@@ -612,6 +635,20 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				}
 			}).then(function(res) {
 				return res.data;
+			});
+		};
+                
+                $scope.addNewContact = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/contacts/create.html',
+				controller: "ContactCreateController",
+				windowClass: "steps"
+			});
+
+			modalInstance.result.then(function(contacts) {
+				$scope.contacts.push(contacts);
+				$scope.countContact++;
+			}, function() {
 			});
 		};
 

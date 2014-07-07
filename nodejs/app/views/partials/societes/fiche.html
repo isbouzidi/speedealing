@@ -15,7 +15,7 @@
 								<tr>
 									<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
 									<td><a href="#" class="blue h4" editable-text="societe.name" buttons="no" onaftersave="update()">
-											\{{societe.name|| "Non defini"}}
+											\{{societe.name || "Non defini"}}
 										</a>
 									</td>
 								</tr>
@@ -509,14 +509,23 @@
 						</tab>
 					</tabset>
 				</div>
-
-				<div class="twelve-columns">
+                            
+                                <div class="twelve-columns">
 					<h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
-
+                                        
 					<div class="table-header silver-gradient glossy button-height">
+                                            <div class="col-sm-6">
+                                                <div class="button-group">
+                                                    <button class="button icon-plus blue-gradient" data-ng-click="addNewContact()">{{t 'Add'}}</button>
+                                                    <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-sm-6">
 						<div class="float-right">
 							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
 						</div>
+                                            </div>
 					</div>
 					<div class="gridStyle"  data-ng-grid="gridOptionsContact"></div>
 					<div class="table-footer silver-gradient">
