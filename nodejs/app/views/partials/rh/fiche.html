@@ -1,7 +1,5 @@
 <section data-ng-controller="RhController">
        <div data-ng-init="findOne()">
-		
-            
 		<div class="with-padding" data-ng-init="init()">
                     <div class="columns">
                         <div style="margin-bottom: 10px; float: right;">
@@ -225,14 +223,11 @@
 													<th scope="row">{{t 'users:Date-Naissance'}}</th>
                                                                                                         <td>
                                                                                                             <a href="#"
-                                                                                                               class="input"
-                                                                                                               kendo-date-picker
-                                                                                                               k-on-change="userEdit.dateNaissance = kendoEvent.sender._value;" 
-                                                                                                               title="Date de Naissance"
                                                                                                                editable-date="userEdit.dateNaissance"
                                                                                                                buttons="no"
                                                                                                                onaftersave="update()"
                                                                                                                blur="submit">
+                                                                                                                
                                                                                                                 \{{ (userEdit.dateNaissance | date:"dd/MM/yyyy") || 'empty' }}</a>
                                                                                                             
                                                                                                         </td>
@@ -415,14 +410,19 @@
                                                                                                 <tr>
 													<th scope="row">{{t 'users:Groupe'}}</th>
                                                                                                         <td>
+                                                                                                            <a href="#" 
+                                                                                                               e-ng-options="g.name for g in userEdit.virtualUserGroup">
+                                                                                                               \{{ showUserGroup() }}
+                                                                                                          </a>
+                                                                                                        <!--
                                                                                                             <a 
                                                                                                                 href="#" 
                                                                                                                 editable-select="userEdit.groupe" 
                                                                                                                 buttons="no" 
                                                                                                                 e-ng-options="g.name as g.name for g in groupe" 
                                                                                                                 onaftersave="update()">
-                                                                                                                    \{{userEdit.groupe || "Non defini"}}
-                                                                                                            </a>
+                                                                                                                    \{{userEdit.virtualUserGroup.name || "Non defini"}}
+                                                                                                            </a>-->
                                                                                                         </td>
 												</tr>
                                                                                                 <tr>

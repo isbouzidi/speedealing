@@ -301,14 +301,14 @@
 			"submenus": {
 				"menu:team": {
 					"position": 3,
-					"url": "/user/index.php",
+					"url": "#!/rh",
 					"perms": "$user->rights->user->user->creer || $user->admin",
 					"usertype": 2,
 					"title": "users:Collaborators"
 				},
 				"menu:groups": {
 					"position": 4,
-					"url": "/user/group/index.php",
+					"url": "#!/userGroup",
 					"perms": "$user->rights->user->user->creer || $user->admin",
 					"usertype": 2,
 					"title": "users:Profiles"

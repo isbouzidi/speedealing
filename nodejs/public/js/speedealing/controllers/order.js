@@ -208,7 +208,8 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+                            
+                            return res.data;
 			});
 		};
 

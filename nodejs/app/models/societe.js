@@ -249,4 +249,10 @@ contactSchema.virtual('status')
 
 		});
 
+contactSchema.virtual('fullAddress').get(function() {
+   
+    return this.address + ', ' + this.zip + ', ' + this.town; 
+    
+});
+
 mongoose.model('contact', contactSchema, 'Contact');

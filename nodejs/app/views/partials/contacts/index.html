@@ -1,0 +1,26 @@
+<section data-ng-controller="ContactsController">
+	<hgroup id="main-title" class="thin">
+		<h1>Liste des contacts</h1>
+	</hgroup>
+
+	<div class="with-padding" data-ng-init="find()">
+
+		<div class="table-header silver-gradient glossy button-height">
+			<div class="row">
+				<div class="col-sm-6">
+					{{t 'Etat'}} <select id="validation-select" class="select validate[required]"  ng-model="etat" ng-options="e as e.name for e in etats track by e.id" data-ng-change="find()" ></select>
+                                
+				</div>
+				<div class="col-sm-6">
+					<div class="float-right">
+						{{t 'Search'}}<input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gridStyle"  data-ng-grid="gridOptionsContact" ng-style="style(100)" resize></div>
+		<div class="table-footer silver-gradient">
+			\{{countContact}} ligne(s)
+		</div>
+	</div>
+</section>

@@ -287,6 +287,17 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
              
         };
         
+        $scope.showUserGroup = function() {
+            
+            var selected = [];
+            angular.forEach($scope.userEdit.virtualUserGroup, function(s) { 
+                    
+                   selected.push(s.name);
+                
+            });
+            return selected.length ? selected.join(', ') : 'Not set';
+        };
+        
         $scope.addNote = function() {
 			if (!this.note)
 				return;

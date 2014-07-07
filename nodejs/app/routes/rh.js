@@ -19,7 +19,7 @@ module.exports = function(app, passport, auth) {
         
 	app.get('/api/rh', auth.requiresLogin, function(req, res) {
             
-            console.log("9ala9ellouche : " + req.user);
+            
             object.read(req, res);
 		return;
 	});
@@ -153,8 +153,6 @@ module.exports = function(app, passport, auth) {
 			res.send(500, "File not found");
 	});
 
-        
-        
         //ajout d'un nouveau collaborateur
         app.post('/api/rh', auth.requiresLogin, object.create);
         
@@ -194,22 +192,18 @@ Object.prototype = {
         
         console.log(req.query.query);
             
-//        var query = {};
-//        query = _.extend(query, req.query);
-            
         RhModel.find(function(err, doc) {
                 if (err) {
                         console.log(err);
                         res.json(500, doc);
                         return;
                 }
-
+                
                 res.send(200, doc);
         });
     },
     show: function(req, res) {
-        
-        
+        console.log("show : " + req.user);
         res.json(req.user);
     },
     
@@ -268,14 +262,14 @@ Object.prototype = {
 
         var login = "user:" + req.query.login;
         
-        console.log("9el9elouch : " + login);
+        
         RhModel.findOne({_id: login}, "lastname firstname", function(err, doc) {
                 if (err)
                         return next(err);
                 if (!doc)
                         return res.json({});
                 
-                console.log("9el9elouch : " + doc);
+                
                 res.json(doc);
         });
 

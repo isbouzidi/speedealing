@@ -14,6 +14,7 @@ var mongoose = require('mongoose'),
 
 var DictModel = mongoose.model('dict');
 var ExtrafieldModel = mongoose.model('extrafields');
+var UserGroupModel = mongoose.model('userGroup');
 
 /**
  * User Schema
@@ -66,7 +67,7 @@ var RhSchema = new Schema({
         dateDepart:  Date,
         poste: String,
         descriptionPoste: String,
-        groupe: String,
+        groupe: [String],
         contrat: String,
         periodeEssai: String,
         salaire: Number,
@@ -121,6 +122,34 @@ RhSchema.virtual('status')
 		res_status.css = "";
 	}
 	return res_status;
+
+});
+
+var userGroupList = {};
+
+UserGroupModel.find(function(err, docs) {
+    
+    userGroupList = docs;
+    
+});
+
+RhSchema.virtual('virtualUserGroup')
+		.get(function() {
+                    
+	var userGroup = [];
+        var group = [];
+	group = this.groupe;
+        //console.log("this.groupe : " + group[0]);
+        if(this.groupe){
+            for (var k = 0; k < group.length; k++){
+                for(var j in userGroupList){
+                    if(userGroupList[j]._id.indexOf(group[k]) > -1)
+                        userGroup.push({_id: userGroupList[j]._id, name: userGroupList[j].name});
+                }
+            }
+        }
+	
+        return userGroup;
 
 });
 

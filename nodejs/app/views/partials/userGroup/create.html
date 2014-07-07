@@ -1,0 +1,38 @@
+
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">{{t 'users:NewGroup'}}</h3>
+
+	<!-- Each form step should be wrapped in a fieldset -->
+	<!-- 1. Profile-->
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+		<div class="field-block">
+			<h4>{{t 'Hello'}}</h4>
+			<p>Bienvenue sur l'interface de création des groupes de collaborateurs.</p>
+		</div>
+
+                <div class="field-block button-height">
+			<label for="name"><b>{{t 'users:Groupe'}}</b></label>
+			<input required type="text" data-ng-model="userGroup.name" data-ng-change="isValidUserGroup()" id="name"  class="input" autocomplete="off">
+                        
+                        <small ng-show="userGroupFound" class="icon-warning red input-info">Ce groupe existe déjà !</small>
+			<small ng-show="userGroup.name!=null && !userGroupFound" class="icon-tick green input-info">Nom du groupe valide.</small>
+                        
+		</div>
+                <div class="field-block button-height">
+			<label for="notes"><b>{{t 'users:Notes'}}</b></label>
+			<textarea class='input' id="notes" rows='3' data-ng-model="userGroup.notes"></textarea>                                
+		</div>
+                
+		<div class="field-block button-height wizard-controls clearfix">
+                        <button type="submit" class="button glossy mid-margin-right float-right" data-ng-disabled="!(userGroup.name!=null && !userGroupFound)">
+                                <span class="button-icon"><span class="icon-tick"></span></span>
+                                {{t 'Create'}}
+                        </button>
+                </div>	
+	</fieldset>
+	
+</form>
+

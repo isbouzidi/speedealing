@@ -18,7 +18,9 @@ var userGroupSchema = new Schema({
 	members : [Number],
 	databases : [Number],
 	entity : String,
-	updatedAt : Date
+	_createdAt: {type: Date},
+	updatedAt : Date,
+        notes: String
 });
 
 userGroupSchema.plugin(timestamps);
