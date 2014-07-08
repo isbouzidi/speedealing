@@ -1,4 +1,5 @@
-window.app = angular.module('mean', ['ngRoute',
+window.app = angular.module('mean', [
+	'ngRoute',
 	'ngCookies',
 	'ngSanitize',
 	'ngResource',
@@ -16,6 +17,7 @@ window.app = angular.module('mean', ['ngRoute',
 	'mean.orders',
 	'mean.bills',
 	'mean.users',
+	'mean.accounting',
 	'mean.articles',
 	'mean.europexpress',
 	'timer',
@@ -29,6 +31,7 @@ angular.module('mean.societes', []);
 angular.module('mean.orders', []);
 angular.module('mean.users', []);
 angular.module('mean.bills', []);
+angular.module('mean.accounting', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
 angular.module('mean.rh', []);

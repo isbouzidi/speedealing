@@ -42,7 +42,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 				$scope.order.optional.dossiers = [];
 				$scope.order.optional.dossiers[0] = {};
-				
+
 				$scope.countExemplaires();
 
 			});
@@ -53,8 +53,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 			order.$update(function(response) {
 				$scope.order = response;
-				
-				if(response && typeof cb == "function") {
+
+				if (response && typeof cb == "function") {
 					console.log("Commande validee !");
 					cb();
 				}
@@ -102,11 +102,11 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				}
 			}).
 					success(function(data, status) {
-				$scope.assistantes = data;
-				$timeout(function() {
-					angular.element('select').change();
-				}, 300);
-			});
+						$scope.assistantes = data;
+						$timeout(function() {
+							angular.element('select').change();
+						}, 300);
+					});
 		};
 
 		$scope.updateAssistante = function() {
@@ -193,7 +193,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
 					if ($scope.order.optional.dossiers[j].selectedFiles[i] != null) {
 						note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
-						note += '<span class="icon-extract">' + i +"_" +$scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
+						note += '<span class="icon-extract">' + i + "_" + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
 						note += '</a></li>';
 					}
 				}
@@ -236,7 +236,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
 					}).progress(function(evt) {
-						$scope.filePercentage[idx] = parseInt(100.0 * evt.loaded / evt.total);
+						$scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+						//console.log(evt);
 					}).success(function(data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
@@ -245,11 +246,23 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 						$scope.order.files = data.files;
 						$scope.order.__v = data.__v; // for update
 
-						$scope.filePercentage[idx] = 100;
+						//$scope.filePercentage[idx] = 100;
 						$scope.fileName[idx] = file.name;
 					});
 				//.error(...)
-				//.then(success, error, progress); 
+				/*		.then(function(response) {
+				 $timeout(function() {
+				 //	$scope.uploadResult.push(response.data);
+				 console.log(response);
+				 });
+				 }, function(response) {
+				 console.log(response);
+				 if (response.status > 0)
+				 $scope.errorMsg = response.status + ': ' + response.data;
+				 }, function(evt) {
+				 console.log(evt);
+				 $scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+				 });*/
 			}
 		};
 
@@ -268,6 +281,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 					$scope.order.__v = data.__v; // for update
 
 					$scope.filePercentage[idx] = 0;
+					$scope.fileName[idx] = "";
 
 				}
 			});

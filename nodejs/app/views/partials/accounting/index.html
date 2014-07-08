@@ -1,19 +1,12 @@
-<section data-ng-controller="BillController">
+<section data-ng-controller="AccountingController">
 	<hgroup id="main-title" class="thin">
-		<h1>{{t 'bills:List'}}</h1>
-	</hgroup>
-
-	<!--<div class="dashboard" data-ng-init="initCharts()">
-		<div class="columns">
-			<div class="four-columns twelve-columns-mobile graph">
-				<highchart id="pieChart" config="pieChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>
-			</div>
-
-			<div class="eight-columns twelve-columns-mobile new-row-mobile graph">
-				<highchart id="barChart" config="barChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>
-			</div>
+		<h1>{{t 'compta:DescSellsJournal'}} - <i>\{{month}}</i></h1>
+		<div class="button-group absolute-right margin-right compact children-tooltip">
+			<a href data-ng-click="previous()" class="button" title="{{t 'PreviousMonth'}}" ><span class="icon-left-fat"></span></a>
+			<a href data-ng-click="today()" class="button" >{{t 'Today'}}</a>
+			<a href data-ng-click="next()" class="button" title="{{t 'NextMonth'}}"><span class="icon-right-fat"></span></a>
 		</div>
-	</div>-->
+	</hgroup>
 
 	<div class="with-padding" data-ng-init="find()">
 
@@ -21,23 +14,26 @@
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="button-group">
-						<button class="button icon-plus blue-gradient" data-ng-click="addNewBill()">{{t 'Add'}}</button>
 						<button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
+						<a ng-href="api/accounting?entity=\{{global.user.entity}}&month=\{{params.month}}&year=\{{params.year}}&csv" class="button icon-download green-gradient" data-ng-click="genCSV()">{{t 'Download'}}</a>
 					</div>
 				</div>
 				<div class="col-sm-4">
-					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
+					<!--{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>-->
 				</div>
 				<div class="col-sm-4">
 					<div class="float-right">
-						{{t 'Search'}} <input type="text" data-ng-model="filterOptionsBill.filterText" class="input small mid-margin-left">
+						{{t 'Search'}} <input type="text" data-ng-model="filterOptions.filterText" class="input small mid-margin-left">
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="gridStyle"  data-ng-grid="gridOptionsBill" ng-style="style(170)" resize></div>
+		<div class="gridStyle"  data-ng-grid="gridOptions" ng-style="style(170)" resize></div>
 		<div class="table-footer silver-gradient">
-			\{{countBills}} ligne(s)
+			<div class="float-right strong">
+				Débit : \{{sum.debit | currency}} / crédit : \{{sum.credit | currency}}
+			</div>
+			\{{count}} ligne(s)
 		</div>
 
 	</div>
