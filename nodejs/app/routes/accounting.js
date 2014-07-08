@@ -167,6 +167,10 @@ Object.prototype = {
 				if (err)
 					console.log(err);
 				//console.log(doc);
+				
+				
+				
+				
 				res.json(200, result);
 			});
 		});

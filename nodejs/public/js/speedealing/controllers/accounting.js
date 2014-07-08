@@ -5,6 +5,10 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 		var months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.");
 
 		$scope.month = months[parseInt($routeParams.id1) - 1] + ' ' + $routeParams.id2;
+		$scope.params = {
+			month: parseInt($routeParams.id1),
+			year: parseInt($routeParams.id2)
+		};
 
 		$scope.gridOptions = {};
 		$scope.journal = [];
