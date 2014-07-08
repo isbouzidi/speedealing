@@ -281,6 +281,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 					$scope.order.__v = data.__v; // for update
 
 					$scope.filePercentage[idx] = 0;
+					$scope.fileName[idx] = "";
 
 				}
 			});
