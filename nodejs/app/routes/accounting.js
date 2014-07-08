@@ -90,7 +90,7 @@ Object.prototype = {
 					if (bill.total_ttc > 0)
 						line.debit = bill.total_ttc;
 					else
-						line.credit = bill.total_ttc;
+						line.credit = Math.abs(bill.total_ttc);
 
 					result.push(line);
 
@@ -129,7 +129,7 @@ Object.prototype = {
 							if (lineBill.total_ht > 0)
 								line.credit = lineBill.total_ht;
 							else
-								line.debit = lineBill.total_ht;
+								line.debit = Math.abs(lineBill.total_ht);
 
 							//console.log(line);
 							result.push(line);
@@ -155,7 +155,7 @@ Object.prototype = {
 							if (bill.total_tva[i].total > 0)
 								line.credit = bill.total_tva[i].total;
 							else
-								line.debit = bill.total_tva[i].total;
+								line.debit = Math.abs(bill.total_tva[i].total);
 
 							result.push(line);
 						}
