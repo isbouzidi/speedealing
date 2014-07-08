@@ -420,7 +420,10 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
 				$scope.line.description = data.description;
 			
 			$scope.line.minPrice = data.minPrice;
-			$scope.line.pu_ht = data.price.pu_ht;
+			
+			if(!$scope.line.pu_ht)
+				$scope.line.pu_ht = data.price.pu_ht;
+			
 			$scope.line.tva_tx = data.price.tva_tx;
 			
 			//console.log(data);
