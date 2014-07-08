@@ -215,7 +215,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 		};
 
 		$scope.onFileSelect = function($files, idx) {
-			$scope.filePercentage[idx] = 1;
+			$scope.filePercentage[idx] = 0;
 			//console.log(idx);
 			//$files: an array of files selected, each file has name, size, and type.
 			for (var i = 0; i < $files.length; i++) {
