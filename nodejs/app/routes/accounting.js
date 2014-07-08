@@ -98,6 +98,12 @@ Object.prototype = {
 
 						//lignes produit
 						ProductModel.findOne({_id: lineBill.product.id}, "", function(err, product) {
+							if(err)
+								return cb(err);
+								
+							if(product == null)
+								return cb();
+							
 							var line = {
 								datec: bill.datec,
 								journal: "VTE",
@@ -119,6 +125,9 @@ Object.prototype = {
 							cb();
 						});
 					}, function(err) {
+						if(err)
+							return callback(err);
+						
 						//lignes TVA
 						for (var i=0; i<bill.total_tva.length;i++) {
 							var line = {
@@ -144,6 +153,8 @@ Object.prototype = {
 					});
 				});
 			}, function(err) {
+				if(err)
+					console.log(err);
 				//console.log(doc);
 				res.json(200, result);
 			});
