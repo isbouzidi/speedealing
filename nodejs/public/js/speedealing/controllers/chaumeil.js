@@ -223,7 +223,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 				//console.log(file);
 				if ($scope.order)
-					$scope.upload = $upload.upload({
+					$scope.upload = $upload.http({
 						url: 'api/commande/file/' + $scope.order._id,
 						method: 'POST',
 						// headers: {'headerKey': 'headerValue'},
