@@ -241,16 +241,18 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 					}).success(function(data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
-						//console.log(data);
+						console.log(data);
 
 						$scope.order.files = data.files;
 						$scope.order.__v = data.__v; // for update
 
 						$scope.filePercentage[idx] = 100;
 						$scope.fileName[idx] = file.name;
-					});
+					})
 				//.error(...)
-				//.then(success, error, progress); 
+				.then(null, null, function(evt){
+					console.log(evt);
+				}); 
 			}
 		};
 
