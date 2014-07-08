@@ -42,7 +42,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 				$scope.order.optional.dossiers = [];
 				$scope.order.optional.dossiers[0] = {};
-				
+
 				$scope.countExemplaires();
 
 			});
@@ -53,8 +53,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 			order.$update(function(response) {
 				$scope.order = response;
-				
-				if(response && typeof cb == "function") {
+
+				if (response && typeof cb == "function") {
 					console.log("Commande validee !");
 					cb();
 				}
@@ -102,11 +102,11 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				}
 			}).
 					success(function(data, status) {
-				$scope.assistantes = data;
-				$timeout(function() {
-					angular.element('select').change();
-				}, 300);
-			});
+						$scope.assistantes = data;
+						$timeout(function() {
+							angular.element('select').change();
+						}, 300);
+					});
 		};
 
 		$scope.updateAssistante = function() {
@@ -193,7 +193,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
 					if ($scope.order.optional.dossiers[j].selectedFiles[i] != null) {
 						note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
-						note += '<span class="icon-extract">' + i +"_" +$scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
+						note += '<span class="icon-extract">' + i + "_" + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
 						note += '</a></li>';
 					}
 				}
@@ -241,18 +241,18 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 					}).success(function(data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
-						console.log(data);
+						//console.log(data);
 
 						$scope.order.files = data.files;
 						$scope.order.__v = data.__v; // for update
 
 						$scope.filePercentage[idx] = 100;
 						$scope.fileName[idx] = file.name;
-					})
+					});
 				//.error(...)
-				.then(null, null, function(evt){
-					console.log(evt);
-				}); 
+				//.then(null, null, function(evt){
+				//	console.log(evt);
+				//}); 
 			}
 		};
 
