@@ -6,7 +6,6 @@ window.app = angular.module('mean', [
 	'ui.bootstrap',
 	'kendo.directives',
 	'ngAnimate',
-	'angularFileUpload',
 	'ngGrid',
 	"xeditable",
 	"highcharts-ng",
