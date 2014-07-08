@@ -237,6 +237,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 						//formDataAppender: function(formData, key, val){} 
 					}).progress(function(evt) {
 						$scope.filePercentage[idx] = parseInt(100.0 * evt.loaded / evt.total);
+						console.log(evt);
 					}).success(function(data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
