@@ -223,7 +223,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 				//console.log(file);
 				if ($scope.order)
-					$scope.upload = $upload.http({
+					$scope.upload = $upload.upload({
 						url: 'api/commande/file/' + $scope.order._id,
 						method: 'POST',
 						// headers: {'headerKey': 'headerValue'},
@@ -235,7 +235,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function(evt) {
+					})/*.progress(function(evt) {
 						$scope.filePercentage[idx] = parseInt(100.0 * evt.loaded / evt.total);
 						console.log(evt);
 					}).success(function(data, status, headers, config) {
@@ -248,11 +248,19 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 						$scope.filePercentage[idx] = 100;
 						$scope.fileName[idx] = file.name;
-					});
-				//.error(...)
-				//.then(null, null, function(evt){
-				//	console.log(evt);
-				//}); 
+					})*/
+							//.error(...)
+							.then(function(response) {
+								//$timeout(function() {
+								//	$scope.uploadResult.push(response.data);
+								//});
+							}, function(response) {
+								if (response.status > 0)
+									$scope.errorMsg = response.status + ': ' + response.data;
+							}, function(evt) {
+								console.log(evt);
+								$scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+							});
 			}
 		};
 
