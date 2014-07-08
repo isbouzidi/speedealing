@@ -12,8 +12,8 @@ var SeqModel = mongoose.model('Sequence');
  */
 var productSchema = new Schema({
 	ref: {type: String, require: true, unique: true, uppercase: true},
-	compta_buy: {type: String, default: ""},
-	compta_sell: {type: String, default: ""},
+	compta_buy: {type: String},
+	compta_sell: {type: String},
 	label: {type: String, default: ""},
 	description: {type: String, default: ""},
 	barCode: String,

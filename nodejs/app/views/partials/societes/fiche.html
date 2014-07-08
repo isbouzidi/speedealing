@@ -292,11 +292,15 @@
 											<tbody>
 												<tr>
 													<th scope="row">{{t 'compta:CustomerAccountancyCode'}}</th>
-													<td>\{{societe.customeraccountancycode}}</td>
+													<td><a href="#" editable-text="societe.code_compta" buttons="no" onaftersave="update()">
+															\{{societe.code_compta|| "Non défini"}}
+														</a></td>
 												</tr>
-												<tr>
+												<tr ng-hide="societe.fournisseur=='NO'">
 													<th scope="row">{{t 'compta:SupplierAccountancyCode'}}</th>
-													<td>\{{societe.code_compta_fournisseur}}</td>
+													<td><a href="#" editable-text="societe.code_compta_fournisseur" buttons="no" onaftersave="update()">
+															\{{societe.code_compta_fournisseur|| "Non défini"}}
+														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:VATIsUsed'}}</th>
