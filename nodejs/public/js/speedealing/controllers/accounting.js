@@ -1,16 +1,16 @@
 angular.module('mean.accounting').controller('AccountingController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Accounting', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Accounting) {
 
 		pageTitle.setTitle('Journal des ventes');
-		
-		var months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.") ;
-		
+
+		var months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.");
+
 		$scope.month = months[parseInt($routeParams.id1) - 1] + ' ' + $routeParams.id2;
 
 		$scope.gridOptions = {};
 		$scope.journal = [];
 		$scope.sum = {
-			debit:0,
-			credit:0
+			debit: 0,
+			credit: 0
 		};
 
 		$scope.today = function() {
@@ -23,15 +23,20 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 			if ($routeParams.id1 == null)
 				return $scope.today();
 
+			$scope.sum = {
+				debit: 0,
+				credit: 0
+			};
+
 			Accounting.query({entity: Global.user.entity, year: parseInt($routeParams.id2), month: parseInt($routeParams.id1)}, function(journal) {
 				$scope.journal = journal;
 				$scope.count = journal.length;
-				
-				angular.forEach(journal,function(data){
+
+				angular.forEach(journal, function(data) {
 					$scope.sum.credit += data.credit;
 					$scope.sum.debit += data.debit;
 				});
-				
+
 			});
 		};
 
@@ -79,20 +84,20 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 			//showFilter:true,
 			enableColumnResize: true,
 			i18n: 'fr',
-			rowTemplate:'<div style="height: 100%" ng-class="{\'orange-bg\': (row.getProperty(\'compte\') == null || row.getProperty(\'compte\') == \'\')}"><div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
-                           '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"> </div>' +
-                           '<div ng-cell></div>' +
-                     '</div></div>',
+			rowTemplate: '<div style="height: 100%" ng-class="{\'orange-bg\': (row.getProperty(\'compte\') == null || row.getProperty(\'compte\') == \'\')}"><div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
+					'<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"> </div>' +
+					'<div ng-cell></div>' +
+					'</div></div>',
 			columnDefs: [
 				{field: 'datec', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'journal', displayName: 'Journal'},
 				{field: 'compte', displayName: 'Compte'},
 				{field: 'piece', displayName: 'Numero de pièce', cellClass: "align-right"},
-				{field: 'libelle', displayName: 'Libelle', width:"300px"},
+				{field: 'libelle', displayName: 'Libelle', width: "300px"},
 				{field: 'debit', displayName: 'Débit', cellFilter: "currency", cellClass: "align-right"},
 				{field: 'credit', displayName: 'Crédit', cellFilter: "currency", cellClass: "align-right"},
-				{field: 'monnaie', displayName: 'Monnaie', width:"80px"}
+				{field: 'monnaie', displayName: 'Monnaie', width: "80px"}
 			]
 		};
-		
+
 	}]);
