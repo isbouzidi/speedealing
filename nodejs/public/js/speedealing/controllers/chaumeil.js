@@ -236,25 +236,27 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
 					})/*.progress(function(evt) {
-						$scope.filePercentage[idx] = parseInt(100.0 * evt.loaded / evt.total);
-						console.log(evt);
-					}).success(function(data, status, headers, config) {
-						// file is uploaded successfully
-						//$scope.myFiles = "";
-						//console.log(data);
-
-						$scope.order.files = data.files;
-						$scope.order.__v = data.__v; // for update
-
-						$scope.filePercentage[idx] = 100;
-						$scope.fileName[idx] = file.name;
-					})*/
+					 $scope.filePercentage[idx] = parseInt(100.0 * evt.loaded / evt.total);
+					 console.log(evt);
+					 }).success(function(data, status, headers, config) {
+					 // file is uploaded successfully
+					 //$scope.myFiles = "";
+					 //console.log(data);
+					 
+					 $scope.order.files = data.files;
+					 $scope.order.__v = data.__v; // for update
+					 
+					 $scope.filePercentage[idx] = 100;
+					 $scope.fileName[idx] = file.name;
+					 })*/
 							//.error(...)
 							.then(function(response) {
-								//$timeout(function() {
-								//	$scope.uploadResult.push(response.data);
-								//});
+								$timeout(function() {
+									//	$scope.uploadResult.push(response.data);
+									console.log(response);
+								});
 							}, function(response) {
+								console.log(response);
 								if (response.status > 0)
 									$scope.errorMsg = response.status + ': ' + response.data;
 							}, function(evt) {
