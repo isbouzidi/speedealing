@@ -98,22 +98,33 @@ Object.prototype = {
 
 						//lignes produit
 						ProductModel.findOne({_id: lineBill.product.id}, "", function(err, product) {
-							if(err)
+							if (err)
 								return cb(err);
-								
-							if(product == null)
-								return cb();
-							
-							var line = {
-								datec: bill.datec,
-								journal: "VTE",
-								compte: product.compta_sell,
-								piece: parseInt(bill.ref.substr(7)),
-								libelle: bill.ref + " " + societe.name,
-								debit: 0,
-								credit: 0,
-								monnaie: "E"
-							};
+
+							var line = {};
+
+							if (product == null)
+								line = {
+									datec: bill.datec,
+									journal: "VTE",
+									compte: null,
+									piece: parseInt(bill.ref.substr(7)),
+									libelle: bill.ref + lineBill.product.name + ' (INCONNU)',
+									debit: 0,
+									credit: 0,
+									monnaie: "E"
+								};
+							else
+								line = {
+									datec: bill.datec,
+									journal: "VTE",
+									compte: product.compta_sell,
+									piece: parseInt(bill.ref.substr(7)),
+									libelle: bill.ref + " " + societe.name,
+									debit: 0,
+									credit: 0,
+									monnaie: "E"
+								};
 
 							if (lineBill.total_ht > 0)
 								line.credit = lineBill.total_ht;
@@ -125,11 +136,11 @@ Object.prototype = {
 							cb();
 						});
 					}, function(err) {
-						if(err)
+						if (err)
 							return callback(err);
-						
+
 						//lignes TVA
-						for (var i=0; i<bill.total_tva.length;i++) {
+						for (var i = 0; i < bill.total_tva.length; i++) {
 							var line = {
 								datec: bill.datec,
 								journal: "VTE",
@@ -145,7 +156,7 @@ Object.prototype = {
 								line.credit = bill.total_tva[i].total;
 							else
 								line.debit = bill.total_tva[i].total;
-							
+
 							result.push(line);
 						}
 
@@ -153,7 +164,7 @@ Object.prototype = {
 					});
 				});
 			}, function(err) {
-				if(err)
+				if (err)
 					console.log(err);
 				//console.log(doc);
 				res.json(200, result);
