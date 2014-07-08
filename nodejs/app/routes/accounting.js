@@ -109,7 +109,7 @@ Object.prototype = {
 									journal: "VTE",
 									compte: null,
 									piece: parseInt(bill.ref.substr(7)),
-									libelle: bill.ref + lineBill.product.name + ' (INCONNU)',
+									libelle: bill.ref + ' ' + lineBill.product.name + ' (INCONNU)',
 									debit: 0,
 									credit: 0,
 									monnaie: "E"
