@@ -31,6 +31,7 @@ angular.module('mean.bills', []);
 angular.module('mean.accounting', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
+angular.module('fileUpload', [ 'angularFileUpload' ]);
 
 window.app.run(function(editableOptions, editableThemes) {
 	// bootstrap3 theme. Can be also 'bs2', 'default'
