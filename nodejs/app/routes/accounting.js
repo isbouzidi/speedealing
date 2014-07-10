@@ -188,7 +188,7 @@ Object.prototype = {
 
 					//entete
 					out += "Date;Journal;compte;Numéro de piéce;Libellé;Débit;Crédit;Monnaie\n";
-					
+
 					var debit = 0;
 					var credit = 0;
 
@@ -199,16 +199,16 @@ Object.prototype = {
 							out += ";" + tab_csv[i][j].compte;
 							out += ";" + tab_csv[i][j].piece;
 							out += ";" + tab_csv[i][j].libelle;
-							out += ";" + tab_csv[i][j].debit;
-							out += ";" + tab_csv[i][j].credit;
+							out += ";" + Math.round(tab_csv[i][j].debit * 100) / 100;
+							out += ";" + Math.round(tab_csv[i][j].credit * 100) / 100;
 							out += ";" + tab_csv[i][j].monnaie;
 							out += "\n";
-							
-							debit+=tab_csv[i][j].debit;
-							credit +=tab_csv[i][j].credit;
+
+							debit += tab_csv[i][j].debit;
+							credit += tab_csv[i][j].credit;
 						}
 					}
-					
+
 					console.log("Debit : " + debit);
 					console.log("Credit : " + credit);
 
