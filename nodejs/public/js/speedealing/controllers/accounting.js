@@ -1,7 +1,7 @@
 angular.module('mean.accounting').controller('AccountingController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Accounting', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Accounting) {
 
 		pageTitle.setTitle('Journal des ventes');
-		$scope.editable = true;
+		$scope.editable = false;
 
 		var months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.");
 
@@ -33,7 +33,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 				credit: 0
 			};
 			
-			$scope.editable = true;
+			$scope.editable = false;
 
 			Accounting.query({entity: Global.user.entity, year: parseInt($routeParams.id2), month: parseInt($routeParams.id1)}, function(journal) {
 				$scope.journal = journal;
@@ -43,7 +43,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 					$scope.sum.credit += data.credit;
 					$scope.sum.debit += data.debit;
 					if(data.compte == null)
-						$scope.editable=false;
+						$scope.editable=true;
 				});
 
 			});
