@@ -144,7 +144,7 @@ Object.prototype = {
 							var line = {
 								datec: bill.datec,
 								journal: "VTE",
-								compte: "445711",
+								compte: "445782",
 								piece: parseInt(bill.ref.substr(7)),
 								libelle: bill.ref + " " + societe.name,
 								debit: 0,
