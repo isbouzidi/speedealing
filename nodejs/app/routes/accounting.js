@@ -167,29 +167,54 @@ Object.prototype = {
 				if (err)
 					console.log(err);
 				//console.log(doc);
-				
-				if(req.query.csv) {
+
+				if (req.query.csv) {
+					var tab_csv = {};
+					for (var i = 0; i < result.length; i++) {
+						if (tab_csv[result[i].piece] == null) {
+							tab_csv[result[i].piece] = {};
+						}
+
+						if (tab_csv[result[i].piece][result[i].compte] == null) {
+							tab_csv[result[i].piece][result[i].compte] = result[i];
+						} else {
+							tab_csv[result[i].piece][result[i].compte].debit += result[i].debit;
+							tab_csv[result[i].piece][result[i].compte].credit += result[i].credit;
+						}
+					}
+
+
 					var out = "";
-					
+
 					//entete
 					out += "Date;Journal;compte;Numéro de piéce;Libellé;Débit;Crédit;Monnaie\n";
 					
-					for(var i=0; i<result.length;i++) {
-						
-						out+=dateFormat(result[i].datec, "dd/mm/yyyy");
-						out+= ";"+result[i].journal;
-						out+= ";"+result[i].compte;
-						out+= ";"+result[i].piece;
-						out+= ";"+result[i].libelle;
-						out+= ";"+result[i].debit;
-						out+= ";"+result[i].credit;
-						out+= ";"+result[i].monnaie;
-						out+= "\n";
+					var debit = 0;
+					var credit = 0;
+
+					for (var i in tab_csv) {
+						for (var j in tab_csv[i]) {
+							out += dateFormat(tab_csv[i][j].datec, "dd/mm/yyyy");
+							out += ";" + tab_csv[i][j].journal;
+							out += ";" + tab_csv[i][j].compte;
+							out += ";" + tab_csv[i][j].piece;
+							out += ";" + tab_csv[i][j].libelle;
+							out += ";" + tab_csv[i][j].debit;
+							out += ";" + tab_csv[i][j].credit;
+							out += ";" + tab_csv[i][j].monnaie;
+							out += "\n";
+							
+							debit+=tab_csv[i][j].debit;
+							credit +=tab_csv[i][j].credit;
+						}
 					}
 					
-					res.attachment('VTE_' + dateStart.getFullYear().toString() + "_" + (dateStart.getMonth()+1).toString() + ".csv");
+					console.log("Debit : " + debit);
+					console.log("Credit : " + credit);
+
+					res.attachment('VTE_' + dateStart.getFullYear().toString() + "_" + (dateStart.getMonth() + 1).toString() + ".csv");
 					res.send(200, out);
-					
+
 				} else
 					res.json(200, result);
 			});
