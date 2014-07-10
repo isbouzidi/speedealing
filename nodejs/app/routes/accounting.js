@@ -168,10 +168,30 @@ Object.prototype = {
 					console.log(err);
 				//console.log(doc);
 				
-				
-				
-				
-				res.json(200, result);
+				if(req.query.csv) {
+					var out = "";
+					
+					//entete
+					out += "Date;Journal;compte;Numéro de piéce;Libellé;Débit;Crédit;Monnaie\n";
+					
+					for(var i=0; i<result.length;i++) {
+						
+						out+=dateFormat(result[i].datec, "dd/mm/yyyy");
+						out+= ";"+result[i].journal;
+						out+= ";"+result[i].compte;
+						out+= ";"+result[i].piece;
+						out+= ";"+result[i].libelle;
+						out+= ";"+result[i].debit;
+						out+= ";"+result[i].credit;
+						out+= ";"+result[i].monnaie;
+						out+= "\n";
+					}
+					
+					res.attachment('VTE_' + dateStart.getFullYear().toString() + "_" + (dateStart.getMonth()+1).toString() + ".csv");
+					res.send(200, out);
+					
+				} else
+					res.json(200, result);
 			});
 		});
 	},

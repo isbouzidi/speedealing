@@ -8,3 +8,4 @@ default.properties
 config.json
 wsdl/
 development.json
+somefile.log
