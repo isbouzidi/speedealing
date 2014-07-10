@@ -15,7 +15,7 @@
 				<div class="col-sm-4">
 					<div class="button-group">
 						<button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
-						<a ng-href="api/accounting?entity=\{{global.user.entity}}&month=\{{params.month}}&year=\{{params.year}}&csv=1" class="button icon-download green-gradient" data-ng-click="genCSV()">{{t 'Download'}}</a>
+						<a ng-href="api/accounting?entity=\{{global.user.entity}}&month=\{{params.month}}&year=\{{params.year}}&csv=1" class="button icon-download green-gradient" data-ng-click="genCSV()" ng-disabled="!editable">{{t 'Download'}}</a>
 					</div>
 				</div>
 				<div class="col-sm-4">
