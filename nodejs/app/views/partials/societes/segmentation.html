@@ -1,0 +1,30 @@
+<section data-ng-controller="SocieteController">
+	<hgroup id="main-title" class="thin">
+		<h1>Segmentation des sociétés</h1>
+	</hgroup>
+
+	<div class="with-padding" data-ng-init="findSegmentation()">
+
+		<div class="table-header silver-gradient glossy button-height">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="button-group">
+						<button title="{{t 'Refresh'}}" class="button" data-ng-click="findSegmentation()"><span class="icon-redo"></span></button>
+					</div>
+				</div>
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+					<div class="float-right">
+						{{t 'Search'}} <input type="text" data-ng-model="filterOptionsSegmentation.filterText" class="input small mid-margin-left">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gridStyle"  data-ng-grid="gridOptionsSegementation" ng-style="style(170)" resize></div>
+		<div class="table-footer silver-gradient button-height">
+			\{{countSegmentations}} ligne(s)
+		</div>
+
+	</div>
+</section>

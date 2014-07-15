@@ -4,7 +4,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 		$scope.societe = {};
 		$scope.societes = [];
+		$scope.segementations = [];
 		$scope.gridOptionsSociete = {};
+		$scope.gridOptionsSegementation = {};
 
 		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
@@ -102,6 +104,14 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			}).success(function(data, status) {
 				$scope.totalCountSociete = data.count;
 				$scope.maxPageSociete = Math.ceil(data.count / 500);
+			});
+		};
+
+		$scope.findSegmentation = function() {
+			$http({method: 'GET', url: '/api/societe/segmentation'
+			}).success(function(data, status) {
+				$scope.segmentations = data;
+				$scope.countSegmentations = data.length;
 			});
 		};
 
@@ -254,6 +264,32 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$scope.find();
 			}
 		}, true);
+		
+		/*
+		 * NG-GRID for societe segmentation list
+		 */
+
+		$scope.filterOptionsSegmentation = {
+			filterText: "",
+			useExternalFilter: false
+		};
+		
+		$scope.gridOptionsSegementation = {
+			data: 'segmentations',
+			enableRowSelection: false,
+			filterOptions: $scope.filterOptionsSegmentation,
+			sortInfo: {fields: ["_id"], directions: ["asc"]},
+			//showFilter:true,
+			enableColumnResize: true,
+			i18n: 'fr',
+			columnDefs: [
+				{field: '_id', displayName: 'Segmentation'},
+				{field: 'count', displayName: 'Nombre', cellClass: "align-right"},
+				{field: 'point', displayName: 'Points', cellClass: "align-right"},
+				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
+			]
+		};
+
 
 		$scope.initCharts = function() {
 			$http({method: 'GET', url: '/core/ajax/viewgraph.php?json=graphPieStatus&class=Societe'

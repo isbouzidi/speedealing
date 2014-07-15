@@ -175,14 +175,14 @@ var tab_attractivity = {
 		"Dupli cd/dvd": 4
 	},
 	segmentation: {
-		"Finances": 5,
-		"Formation": 5,
-		"Cosmétique": 5,
-		"Labo pharma": 5,
-		"Cac 40": 5,
-		"BTP": 5,
-		"Arts graphique": 5,
-		"Franchise": 5,
+		"Finances": 5, //
+		"Formation": 5,//
+		"Cosmétique": 5,// ??
+		"Labo pharma": 5,// ??
+		"Cac 40": 5, //??
+		"BTP": 5,//??
+		"Arts graphique": 5,//
+		"Franchise": 5,//
 		"Industrie": 5,
 		"Services": 5
 	},

@@ -21,6 +21,7 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
+	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
 	app.get('/api/societe/contact', auth.requiresLogin, contact.read);
 	app.get('/api/societe/contact/:contactId', auth.requiresLogin, contact.show);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
@@ -1062,7 +1063,7 @@ Object.prototype = {
 			}
 		}
 
-		SocieteModel.find(query, "-history -files", {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort:JSON.parse(req.query.sort)}, function(err, doc) {
+		SocieteModel.find(query, "-history -files", {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -1206,6 +1207,26 @@ Object.prototype = {
 			doc.fields[req.query.field].values = result;
 
 			res.json(doc.fields[req.query.field]);
+		});
+	},
+	segmentation: function(req, res) {
+		SocieteModel.aggregate([
+			{$project: {_id: 0, segmentation: 1}},
+			{$unwind: "$segmentation"},
+			{$group: {_id: "$segmentation.text", count: {$sum: 1}}}
+		], function(err, docs) {
+			if (err) {
+				console.log("err : /api/societe/segmentation/autocomplete");
+				console.log(err);
+				return;
+			}
+
+			if (docs == null)
+				docs = [];
+
+			console.log(docs);
+
+			return res.send(200, docs);
 		});
 	}
 };
