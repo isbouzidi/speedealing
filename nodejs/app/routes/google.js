@@ -17,7 +17,9 @@ module.exports = function(app, passport, auth) {
 
 	var google = new Google();
 
-	app.get('/api/google/test', auth.requiresLogin, google.test);
+	app.get( '/api/google/test', auth.requiresLogin, google.test);
+// TODO: write 'app.post'
+//	app.get('/api/google/import/contact/:contactId', auth.requiresLogin, google.importContacts);
 
 };
 
@@ -30,4 +32,11 @@ Google.prototype = {
 		res.send("Hello world");
 		
 	}
+
+	/*,
+
+	importContacts: function(req, res) {
+		res.send("importContacts " + req.contact);
+	}*/
+
 };
