@@ -87,5 +87,22 @@ angular.module('mean.system').directive('ngBlur', function() {
 			scope.$apply(attrs.ngBlur);
 		});
 	};
-})
+});
 
+angular.module('mean.system').directive('ngConfirmClick', ['dialogs', function(dialogs) {
+		return {
+			restrict: 'A',
+			link: function(scope, element, attrs) {
+				element.bind('click', function() {
+					var message = attrs.ngConfirmClick || "Etes-vous sur ?";
+
+					var dlg = dialogs.confirm("Confirmation", message);
+					dlg.result.then(function(btn) {
+						scope.$eval(attrs.confirmedClick);
+					}, function(btn) {
+						// Button NO
+					});
+				});
+			}
+		};
+	}]);

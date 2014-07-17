@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, pageTitle, Global, Societe) {
 
 		pageTitle.setTitle('Liste des sociétés');
 
@@ -288,7 +288,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: '_id', displayName: 'Segmentation', enableCellEdit: false},
 				{field: 'count', displayName: 'Nombre', cellClass: "align-right", enableCellEdit: false},
 				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="updateSegmentation(row)"/>'},
-				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Renommer" ng-click="editLine(row)"></button></button><button class="button red-gradient icon-trash" title="Supprimer" ng-click="removeSegmentation(row)"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Renommer" ng-click="renameSegmentation(row)"></button></button><button class="button red-gradient icon-trash" title="Supprimer" "deleteContact()" ng-confirm-click="Supprimer la segmentation ?" confirmed-click="removeSegmentation(row)"></button></div></div>'}
 			]
 		};
 
@@ -319,6 +319,28 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 						$scope.segmentations.splice(i, 1);
 						$scope.countSegmentations--;
 					});
+					break;
+				}
+			}
+		};
+
+		$scope.renameSegmentation = function(row) {
+			var dlg = null;
+			for (var i = 0; i < $scope.segmentations.length; i++) {
+				if (row.entity._id === $scope.segmentations[i]._id) {
+					dlg = $dialogs.create('rename.html', 'SocieteSegmentationRenameController', row.entity, {key: false, back: 'static'});
+					dlg.result.then(function(newval) {
+						//console.log(newval);
+						$http({method: 'POST', url: 'api/societe/segmentation', data: {
+								old: row.entity._id,
+								new: newval
+							}
+						}).success(function(data, status) {
+							$scope.findSegmentation();
+						});
+					}, function() {
+					});
+
 					break;
 				}
 			}
@@ -866,3 +888,21 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				$scope.validSiret = isValide;
 		};
 	}]);
+
+angular.module('mean.societes').controller('SocieteSegmentationRenameController', function($scope, $modalInstance, data) {
+	$scope.data = {id : data._id};
+
+	$scope.cancel = function() {
+		$modalInstance.dismiss('canceled');
+	}; // end cancel
+
+	$scope.save = function() {
+		//console.log($scope.data.id);
+		$modalInstance.close($scope.data.id);
+	}; // end save
+
+	$scope.hitEnter = function(evt) {
+		if (angular.equals(evt.keyCode, 13) && !(angular.equals($scope.data.id, null) || angular.equals($scope.data.id, '')))
+			$scope.save();
+	}; // end hitEnter
+});

@@ -1,8 +1,10 @@
-angular.module('mean.system').controller('MenuController', ['$scope', '$routeParams', 'Global', 'socket', '$http', function($scope, $routeParams, Global, socket, $http) {
+angular.module('mean.system').controller('MenuController', ['$scope', '$routeParams', 'Global', 'socket', '$http', '$translate', function($scope, $routeParams, Global, socket, $http, $translate) {
 		$scope.global = Global;
 
 		$scope.ticketCpt = 0;
 		$scope.menus = {};
+		
+		$translate.use("fr-FR");
 
 		//socket.emit('user', Global.user._id);
 
@@ -15,14 +17,14 @@ angular.module('mean.system').controller('MenuController', ['$scope', '$routePar
 		});
 
 		$scope.selectedMenu = function(id) {
-			if($routeParams.idmenu === id)
+			if ($routeParams.idmenu === id)
 				return "current collapsible-current";
 		};
-		
-		$scope.init = function(){
+
+		$scope.init = function() {
 			$http({method: 'GET', url: '/menus'}).success(function(data, status) {
-					$scope.menus = data;
-				});
+				$scope.menus = data;
+			});
 		};
 
 		/*socket.on('news', function(data) {
@@ -39,8 +41,8 @@ angular.module('mean.system').controller('MenuController', ['$scope', '$routePar
 			$http({method: 'GET', url: 'api/ticket?count=1'
 			}).
 					success(function(data, status) {
-				$scope.ticketCpt = data.cpt;
-			});
+						$scope.ticketCpt = data.cpt;
+					});
 		};
 
 		socket.on('refreshTicket', function(data) {

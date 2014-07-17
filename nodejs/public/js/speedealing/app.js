@@ -4,6 +4,7 @@ window.app = angular.module('mean', [
 	'ngSanitize',
 	'ngResource',
 	'ui.bootstrap',
+	'dialogs.main',
 	'kendo.directives',
 	'ngAnimate',
 	'angularFileUpload',
@@ -20,7 +21,8 @@ window.app = angular.module('mean', [
 	'mean.accounting',
 	'mean.articles',
 	'mean.europexpress',
-	'timer'
+	'timer',
+	'pascalprecht.translate'
 ]);
 
 angular.module('mean.system', []);

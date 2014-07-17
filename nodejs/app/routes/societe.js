@@ -22,6 +22,7 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
 	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
+	app.post('/api/societe/segmentation', auth.requiresLogin, object.segmentationRename);
 	app.put('/api/societe/segmentation', auth.requiresLogin, object.segmentationUpdate);
 	app.del('/api/societe/segmentation', auth.requiresLogin, object.segmentationDelete);
 	app.get('/api/societe/contact', auth.requiresLogin, contact.read);
@@ -1270,9 +1271,33 @@ Object.prototype = {
 
 		});
 	},
-	segmentationDelete: function(req,res) {
-		// TODO Delete in database
-		res.send(500);
+	segmentationDelete: function(req, res) {
+		//console.log(req.body);
+		SocieteModel.update({'segmentation.text': req.body._id},
+		{$pull: {segmentation: {text: req.body._id}}},
+		{multi: true},
+		function(err) {
+			res.send(200);
+		});
+	},
+	segmentationRename: function(req, res) {
+		console.log(req.body);
+		SocieteModel.update({'segmentation.text': req.body.old},
+		{$push: {segmentation: {text: req.body.new}}},
+		{multi: true},
+		function(err) {
+			if (err)
+				return console.log(err);
+
+			SocieteModel.update({'segmentation.text': req.body.old},
+			{$pull: {segmentation: {text: req.body.old}}},
+			{multi: true},
+			function(err) {
+				if (err)
+					console.log(err);
+				res.send(200);
+			});
+		});
 	}
 };
 
