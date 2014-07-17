@@ -1,0 +1,59 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'reports:NewReport'}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block button-height">
+            <label for="category"><b>{{t 'reports:Category'}}</b></label>
+            <select class="form-control" 
+                    id="category" 
+                    data-ng-model="report.category" 
+                    data-ng-options="i as i.name for i in items" 
+                    ng-change="updateReportTemplate()">                                    
+            </select>
+        </div>
+        
+        <div class="field-block button-height">
+            <label for="date"><b>Date</b></label>
+            <span class="k-widget k-datepicker k-header input">
+                <span class="k-picker-wrap k-state-default">
+                    <input 
+                        kendo-date-picker required 
+                        id="date" 
+                        k-on-change="report.date = kendoEvent.sender._value;" 
+                        class="input"/>
+                </span>
+            </span>
+            
+        </div>
+        <div class="field-block button-height">
+            <label for="reports:duration"><b>Durée</b></label>
+            <!--<input required type="text" data-ng-model="report.duration" id="duration" class="input" autocomplete="off">-->
+                    
+            <p class="button-height">
+                    <span class="number input margin-right">
+                            <button type="button" class="button number-down">-</button>
+                            <input type="text" name="special-input-2" id="special-input-2" value="1" size="4" class="input-unstyled">
+                            <button type="button" class="button number-up">+</button>
+                    </span>
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label for="category"><b>Contact</b></label>
+            <input type="text" class="input" data-ng-model="report.contact" />
+            <a href="" class="button" ng-click="addNewContact()">
+                <span class="button-icon"><span class="icon-plus"></span></span>
+                Ajouter
+            </a>
+        </div>
+        <br/>
+        <div data-ng-include="report.template" class="field-block-include"></div>
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                Créer
+            </button>
+        </div>
+    </fieldset>
+</form>

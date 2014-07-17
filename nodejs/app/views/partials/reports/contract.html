@@ -1,0 +1,64 @@
+<div class="field-block">
+    <h4>Sujet</h4>
+</div>
+<div class="field-block button-height">
+    <label for="deploiement"><b>Déploiement</b></label>
+    <input type="checkbox" ng-model="report.deployment.training"> Formation
+    <input type="checkbox" ng-model="report.deployment.demo"> Demo
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Suivi</b></label>
+    <input type="checkbox" ng-model="report.suivi"> Bilan
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Enquête satisfaction</b></label>
+    <input type="checkbox" ng-model="report.satisfactionSurvey">
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>points progrés</b></label>
+    <input type="checkbox" ng-model="report.progressPoints.price"> Prix
+    <input type="checkbox" ng-model="report.progressPoints.quality"> Qualité
+    <input type="checkbox" ng-model="report.progressPoints.timeFrame"> Délai
+</div>
+<div class="field-block">
+    <h4>Actions</h4>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Rendez-vous</b></label>
+    <span class="k-widget k-datepicker k-header input">
+        <span class="k-picker-wrap k-state-default">
+            <input 
+                kendo-date-picker required 
+                id="dayAppointment" 
+                k-on-change="report.dayAppointment = kendoEvent.sender._value;" 
+                class="input"/>
+        </span>
+    </span>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Réunion interne</b></label>
+    <span class="k-widget k-datepicker k-header input">
+        <span class="k-picker-wrap k-state-default">
+            <input 
+                kendo-date-picker required 
+                id="internalMeeting" 
+                k-on-change="report.internalMeeting = kendoEvent.sender._value;" 
+                class="input"/>
+        </span>
+    </span>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Rapport</b></label>
+    <input type="checkbox" ng-model="report.report.process"> Prpcédures
+    <input type="checkbox" ng-model="report.report.statistic"> Statistiques
+</div>
+<div class="field-block">
+    <h4>Leads détectées</h4>
+</div>
+<div class="field-block">
+    <h4>Commentaires/observations</h4>
+</div>
+<div class="field-block button-height">
+    <label for="birthday"><b>Commentaires/observations</b></label>
+    <textarea class="input" rows="3" cols="60" data-ng-model="contact.address"></textarea><br/>
+</div>

@@ -652,7 +652,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			});
 		};
 
+                $scope.addNewReport = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/reports/create.html',
+				controller: "ReportCreateController",
+				windowClass: "steps"
+			});
 
+			modalInstance.result.then(function(reports) {
+				$scope.reports.push(reports);
+				$scope.countReport++;
+			}, function() {
+			});
+		};
 	}]);
 
 angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Societes', function($scope, $http, $modalInstance, $upload, $route, Global, Societes) {

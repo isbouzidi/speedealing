@@ -1,0 +1,44 @@
+<div class="field-block">
+    <h4>Affaire</h4>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Type Affaire</b></label>
+    <input type="radio" ng-model="report.business.type" value="Marché" class=""> Marché
+    <input type="radio" ng-model="report.business.type" value="Offre" class=""> Offre
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Produits</b></label>
+    <input type="checkbox" ng-model="report.Products.Externalisation"> Externalisation
+    <input type="checkbox" ng-model="report.Products.Imp"> Imp numérique
+    <input type="checkbox" ng-model="report.Products.Repro"> Repro  plan
+    <input type="checkbox" ng-model="report.Products.Signaletique"> Signalétique
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Offre</b></label>
+    <input type="text" ng-model="report.business.offer" id="phone" class="input" autocomplete="off">
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Etape</b></label>
+    <input type="radio" ng-model="report.business.step" value="Marché" class=""> Négociation
+    <input type="radio" ng-model="report.business.step" value="Offre" class=""> Signature
+    <input type="radio" ng-model="report.business.Step" value="Offre" class=""> Non retenu
+</div>
+<!--
+<div class="field-block button-height">
+    <label for="fonction"><b>Signature</b></label>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>Non retenu</b></label>
+</div>
+
+<div class="field-block button-height">
+    <label for="fonction"><b>Raison</b></label>
+</div>
+-->
+<div class="field-block">
+    <h4>Commentaires/observations</h4>
+</div>
+<div class="field-block button-height">
+    <label for="birthday"><b>Commentaires/observations</b></label>
+    <textarea class="input" rows="3" cols="60" data-ng-model="contact.address"></textarea><br/>
+</div>

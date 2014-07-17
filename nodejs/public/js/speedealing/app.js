@@ -23,7 +23,8 @@ window.app = angular.module('mean', [
 	'timer',
 	'mean.rh',
 	'mean.userGroup',
-	'mean.contacts'
+	'mean.contacts',
+        'mean.reports'
 ]);
 
 angular.module('mean.system', []);
@@ -37,6 +38,7 @@ angular.module('mean.europexpress', []);
 angular.module('mean.rh', []);
 angular.module('mean.userGroup', []);
 angular.module('mean.contacts', []);
+angular.module('mean.reports', []);
 
 window.app.run(function(editableOptions, editableThemes) {
 	// bootstrap3 theme. Can be also 'bs2', 'default'

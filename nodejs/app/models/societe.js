@@ -267,7 +267,7 @@ var contactSchema = new Schema({
 	lastname: String,
 	poste: String,
 	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
-	Status: {type: String, default: "ST_NEVER"},
+	Status: {type: String, default: "ST_ENABLE"},
 	address: String,
 	zip: String,
 	town: String,
