@@ -54,7 +54,8 @@
 		"ip": ">=0.3.0",
 		"ua-parser": ">=0.3.3",
 		"nodemailer":"latest",
-		"array-extended":"latest"
+		"array-extended":"latest",
+		"googleapis":"0.8.0"
 	},
 	"devDependencies": {
 		"supertest": "latest",
