@@ -264,7 +264,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$scope.find();
 			}
 		}, true);
-		
+
 		/*
 		 * NG-GRID for societe segmentation list
 		 */
@@ -273,7 +273,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			filterText: "",
 			useExternalFilter: false
 		};
-		
+
 		$scope.gridOptionsSegementation = {
 			data: 'segmentations',
 			enableRowSelection: false,
@@ -281,13 +281,47 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			sortInfo: {fields: ["_id"], directions: ["asc"]},
 			//showFilter:true,
 			enableColumnResize: true,
+			enableCellSelection: true,
+			enableCellEditOnFocus: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: '_id', displayName: 'Segmentation'},
-				{field: 'count', displayName: 'Nombre', cellClass: "align-right"},
-				{field: 'point', displayName: 'Points', cellClass: "align-right"},
-				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
+				{field: '_id', displayName: 'Segmentation', enableCellEdit: false},
+				{field: 'count', displayName: 'Nombre', cellClass: "align-right", enableCellEdit: false},
+				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="updateSegmentation(row)"/>'},
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Renommer" ng-click="editLine(row)"></button></button><button class="button red-gradient icon-trash" title="Supprimer" ng-click="removeSegmentation(row)"></button></div></div>'}
 			]
+		};
+
+		$scope.updateSegmentation = function(row) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			var d = new Date();
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					$http({method: 'PUT', url: 'api/societe/segmentation', data: row.entity
+					}).success(function(data, status) {
+						$scope.save.pending = false;
+					});
+				}, 200);
+			}
+		};
+
+		$scope.removeSegmentation = function(row) {
+			for (var i = 0; i < $scope.segmentations.length; i++) {
+				if (row.entity._id === $scope.segmentations[i]._id) {
+					$http({method: 'DELETE', url: 'api/societe/segmentation', data: row.entity
+					}).success(function(data, status) {
+						$scope.segmentations.splice(i, 1);
+						$scope.countSegmentations--;
+					});
+					break;
+				}
+			}
 		};
 
 

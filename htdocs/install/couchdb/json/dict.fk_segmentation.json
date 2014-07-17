@@ -1,0 +1,46 @@
+{
+   "_id": "dict:fk_segmentation",
+   "class": "Dict",
+   "values": {
+       "Finances": {
+           "label": "Finances",
+           "attractivity": 5
+       },
+	    "Formation": {
+           "label": "Formation",
+           "attractivity": 5
+       },
+	    "Cosmétiques": {
+           "label": "Cosmétiques",
+           "attractivity": 5
+       },
+	    "Laboratoire pharmaceutique": {
+           "label": "Laboratoire pharmaceutique",
+           "attractivity": 5
+       },
+	    "Entreprises du CAC 40": {
+           "label": "Entreprises du CAC 40",
+           "attractivity": 5
+       },
+	    "BTP": {
+           "label": "BTP",
+           "attractivity": 5
+       },
+	    "arts graphique": {
+           "label": "arts graphique",
+           "attractivity": 5
+       },
+	    "Franchise": {
+           "label": "Franchise",
+           "attractivity": 5
+       },
+	    "Industrie": {
+           "label": "Industrie",
+           "attractivity": 5
+       },
+	    "services": {
+           "label": "services",
+           "attractivity": 5
+       }
+   }
+}

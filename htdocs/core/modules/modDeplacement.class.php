@@ -114,23 +114,7 @@ class modDeplacement extends DolibarrModules
 		$this->rights[6][3] = 0;
 		$this->rights[6][4] = 'export';
 
-		// Exports
-		$r=0;
-
-		$r++;
-		$this->export_code[$r]='trips_'.$r;
-		$this->export_label[$r]='ListTripsAndExpenses';
-		$this->export_permission[$r]=array(array("deplacement","export"));
-        $this->export_fields_array[$r]=array('u.login'=>'Login','u.name'=>'Lastname','u.firstname'=>'Firstname','d.rowid'=>"TripId",'d.type'=>"Type",'d.km'=>"FeesKilometersOrAmout",'d.dated'=>"Date",'d.note'=>'NotePrivate','d.note_public'=>'NotePublic','s.nom'=>'ThirdParty');
-        $this->export_entities_array[$r]=array('u.login'=>'user','u.name'=>'user','u.firstname'=>'user','d.rowid'=>"trip",'d.type'=>"trip",'d.km'=>"trip",'d.dated'=>"trip",'d.note'=>'trip','d.note_public'=>'trip','s.nom'=>'company');
-        $this->export_dependencies_array[$r]=array('trip'=>'d.rowid'); // To add unique key if we ask a field of a child to avoid the DISTINCT to discard them
-
-		$this->export_sql_start[$r]='SELECT DISTINCT ';
-		$this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'user as u';
-		$this->export_sql_end[$r] .=', '.MAIN_DB_PREFIX.'deplacement as d';
-		$this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'societe as s ON d.fk_soc = s.rowid';
-		$this->export_sql_end[$r] .=' WHERE d.fk_user = u.rowid';
-		$this->export_sql_end[$r] .=' AND d.entity = '.$conf->entity;
+		
 	}
 
 

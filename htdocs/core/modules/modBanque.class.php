@@ -135,31 +135,6 @@ class modBanque extends DolibarrModules
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'cheque';
 
-
-
-		// Exports
-		//--------
-		$r=0;
-
-		$r++;
-		$this->export_code[$r]=$this->rights_class.'_'.$r;
-		$this->export_label[$r]='Ecritures bancaires et releves';
-		$this->export_permission[$r]=array(array("banque","export"));
-		$this->export_fields_array[$r]=array('b.rowid'=>'IdTransaction','ba.ref'=>'AccountRef','ba.label'=>'AccountLabel','b.datev'=>'DateValue','b.dateo'=>'DateOperation','b.label'=>'Label','b.num_chq'=>'ChequeOrTransferNumber','-b.amount'=>'Debit','b.amount'=>'Credit','b.num_releve'=>'AccountStatement','b.datec'=>"DateCreation","bu.url_id"=>"IdThirdParty","s.nom"=>"ThirdParty","s.code_compta"=>"CustomerAccountancyCode","s.code_compta_fournisseur"=>"SupplierAccountancyCode");
-		$this->export_entities_array[$r]=array('b.rowid'=>'account','ba.ref'=>'account','ba.label'=>'account','b.datev'=>'account','b.dateo'=>'account','b.label'=>'account','b.num_chq'=>'account','-b.amount'=>'account','b.amount'=>'account','b.num_releve'=>'account','b.datec'=>"account","bu.url_id"=>"company","s.nom"=>"company","s.code_compta"=>"company","s.code_compta_fournisseur"=>"company");
-		$this->export_special_array[$r]=array('-b.amount'=>'NULLIFNEG','b.amount'=>'NULLIFNEG');
-	    if (empty($conf->fournisseur->enabled))
-        {
-            unset($this->export_fields_array[$r]['s.code_compta_fournisseur']);
-            unset($this->export_entities_array[$r]['s.code_compta_fournisseur']);
-        }
-		$this->export_sql_start[$r]='SELECT DISTINCT ';
-		$this->export_sql_end[$r]  =' FROM ('.MAIN_DB_PREFIX.'bank_account as ba, '.MAIN_DB_PREFIX.'bank as b)';
-		$this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX."bank_url as bu ON (bu.fk_bank = b.rowid AND bu.type = 'company')";
-		$this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'societe as s ON bu.url_id = s.rowid';
-		$this->export_sql_end[$r] .=' WHERE ba.rowid = b.fk_account';
-		$this->export_sql_end[$r] .=' AND ba.entity = '.$conf->entity;
-		$this->export_sql_end[$r] .=' ORDER BY b.datev, b.num_releve';
 	}
 
 

@@ -164,33 +164,6 @@ class modProduct extends DolibarrModules {
         $r++;
 */
 
-        // Exports
-        //--------
-        $r = 0;
-		$this->export[$r] = new stdClass();
-        $this->export[$r]->code = $this->rights_class . '_' . $r;
-        $this->export[$r]->label = 'Products';
-        $this->export[$r]->icon = 'product';
-        $this->export[$r]->permission = '$user->product->export';
-
-        // Imports
-        //--------
-        $r = 0;
-
-        $r++;
-        $this->import_code[$r] = $this->rights_class . '_' . $r;
-        $this->import_label[$r] = "Products"; // Translation key
-        $this->import_icon[$r] = $this->picto;
-        $this->import_entities_array[$r] = array();  // We define here only fields that use another icon that the one defined into import_icon
-        $this->import_tables_array[$r] = array('p' => MAIN_DB_PREFIX . 'product', 'extra' => MAIN_DB_PREFIX . 'product_extrafields');
-        $this->import_tables_creator_array[$r] = array('p' => 'fk_user_author'); // Fields to store import user id
-        $this->import_fields_array[$r] = array('p.ref' => "Ref*", 'p.label' => "Label*", 'p.description' => "Description", 'p.accountancy_code_sell' => "ProductAccountancySellCode", 'p.accountancy_code_buy' => "ProductAccountancyBuyCode", 'p.note' => "Note", 'p.length' => "Length", 'p.surface' => "Surface", 'p.volume' => "Volume", 'p.weight' => "Weight", 'p.duration' => "Duration", 'p.customcode' => 'CustomCode', 'p.price' => "SellingPriceHT", 'p.price_ttc' => "SellingPriceTTC", 'p.tva_tx' => 'VAT', 'p.tosell' => "OnSell*", 'p.tobuy' => "OnBuy*", 'p.fk_product_type' => "Type*", 'p.finished' => 'Nature', 'p.datec' => 'DateCreation*');
-        // Add extra fields
-        $sql = "SELECT name, label FROM " . MAIN_DB_PREFIX . "extrafields WHERE elementtype = 'product'";
-        // End add extra fields
-        $this->import_fieldshidden_array[$r] = array('extra.fk_object' => 'lastrowid-' . MAIN_DB_PREFIX . 'product');    // aliastable.field => ('user->id' or 'lastrowid-'.tableparent)
-        $this->import_regex_array[$r] = array('p.ref' => '[^ ]', 'p.tosell' => '^[0|1]$', 'p.tobuy' => '^[0|1]$', 'p.fk_product_type' => '^[0|1]$', 'p.datec' => '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$');
-        $this->import_examplevalues_array[$r] = array('p.ref' => "PR123456", 'p.label' => "My product", 'p.description' => "This is a description example for record", 'p.note' => "Some note", 'p.price' => "100", 'p.price_ttc' => "110", 'p.tva_tx' => '10', 'p.tosell' => "0 or 1", 'p.tobuy' => "0 or 1", 'p.fk_product_type' => "0 for product/1 for service", 'p.finished' => '', 'p.duration' => "1y", 'p.datec' => '2008-12-31');
     }
 
     /**

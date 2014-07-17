@@ -22,6 +22,8 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
 	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
+	app.put('/api/societe/segmentation', auth.requiresLogin, object.segmentationUpdate);
+	app.del('/api/societe/segmentation', auth.requiresLogin, object.segmentationDelete);
 	app.get('/api/societe/contact', auth.requiresLogin, contact.read);
 	app.get('/api/societe/contact/:contactId', auth.requiresLogin, contact.show);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
@@ -1210,24 +1212,67 @@ Object.prototype = {
 		});
 	},
 	segmentation: function(req, res) {
-		SocieteModel.aggregate([
-			{$project: {_id: 0, segmentation: 1}},
-			{$unwind: "$segmentation"},
-			{$group: {_id: "$segmentation.text", count: {$sum: 1}}}
-		], function(err, docs) {
-			if (err) {
-				console.log("err : /api/societe/segmentation/autocomplete");
-				console.log(err);
-				return;
+		var segmentationList = {};
+		DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, docs) {
+			if (docs) {
+				segmentationList = docs.values;
 			}
 
-			if (docs == null)
-				docs = [];
+			SocieteModel.aggregate([
+				{$project: {_id: 0, segmentation: 1}},
+				{$unwind: "$segmentation"},
+				{$group: {_id: "$segmentation.text", count: {$sum: 1}}}
+			], function(err, docs) {
+				if (err) {
+					console.log("err : /api/societe/segmentation/autocomplete");
+					console.log(err);
+					return;
+				}
 
-			console.log(docs);
+				var result = [];
+				if (docs == null)
+					docs = [];
 
-			return res.send(200, docs);
+				for (var i = 0; i < docs.length; i++) {
+
+					result[i] = docs[i];
+					if (segmentationList[docs[i]._id])
+						result[i].attractivity = segmentationList[docs[i]._id].attractivity;
+				}
+
+				//console.log(result);
+
+				return res.send(200, result);
+			});
 		});
+	},
+	segmentationUpdate: function(req, res) {
+		DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, doc) {
+			if (doc == null)
+				return console.log("dict:fk_segmentation doesn't exist !");
+
+			if (req.body.attractivity)
+				doc.values[req.body._id] = {
+					label: req.body._id,
+					attractivity: req.body.attractivity
+				};
+			else if (doc.values[req.body._id])
+				delete doc.values[req.body._id];
+
+			doc.markModified('values');
+
+			doc.save(function(err, doc) {
+				if (err)
+					console.log(err);
+			});
+
+			res.send(200);
+
+		});
+	},
+	segmentationDelete: function(req,res) {
+		// TODO Delete in database
+		res.send(500);
 	}
 };
 

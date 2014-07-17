@@ -338,52 +338,6 @@
 			]
 		]
 	},
-	"export_fields_array": {
-		"1": {
-			"u.rowid": "Id",
-			"u.login": "Login",
-			"u.name": "Lastname",
-			"u.firstname": "Firstname",
-			"u.office_phone": "Telephone",
-			"u.office_fax": "Fax",
-			"u.email": "EMail",
-			"u.datec": "DateCreation",
-			"u.tms": "DateLastModification",
-			"u.admin": "Admin",
-			"u.statut": "Status",
-			"u.note": "Note",
-			"u.datelastlogin": "LastConnexion",
-			"u.datepreviouslogin": "PreviousConnexion",
-			"u.fk_socpeople": "IdContact",
-			"u.fk_societe": "IdCompany"
-		}
-	},
-	"export_entities_array": {
-		"1": {
-			"u.rowid": "user",
-			"u.login": "user",
-			"u.name": "user",
-			"u.firstname": "user",
-			"u.office_phone": "user",
-			"u.office_fax": "user",
-			"u.email": "user",
-			"u.datec": "user",
-			"u.tms": "user",
-			"u.admin": "user",
-			"u.statut": "user",
-			"u.note": "user",
-			"u.datelastlogin": "user",
-			"u.datepreviouslogin": "user",
-			"u.fk_socpeople": "contact",
-			"u.fk_societe": "company"
-		}
-	},
-	"export_sql_start": {
-		"1": "SELECT DISTINCT "
-	},
-	"export_sql_end": {
-		"1": " FROM llx_user as u WHERE u.entity IN (0,1)"
-	},
 	"_id": "module:User",
 	"enabled": true
 }

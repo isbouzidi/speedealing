@@ -147,6 +147,13 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 	prospectLevelList = docs;
 });
 
+var segmentationList = {};
+DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, docs) {
+	if (docs) {
+		segmentationList = docs.values;
+	}
+});
+
 var tab_attractivity = {
 	effectif_id: {
 		"EF0": 1,
@@ -174,18 +181,7 @@ var tab_attractivity = {
 		"Créa, Pao": 2,
 		"Dupli cd/dvd": 4
 	},
-	segmentation: {
-		"Finances": 5, //
-		"Formation": 5,//
-		"Cosmétique": 5,// ??
-		"Labo pharma": 5,// ??
-		"Cac 40": 5, //??
-		"BTP": 5,//??
-		"Arts graphique": 5,//
-		"Franchise": 5,//
-		"Industrie": 5,
-		"Services": 5
-	},
+	segmentation: segmentationList,
 	poste: {
 		"PDG": 5,
 		"DG": 4,
@@ -279,7 +275,7 @@ var contactSchema = new Schema({
 	phone_mobile: String,
 	fax: String,
 	email: String,
-	civilite: String,
+	civilite: String,// DICT
 	Tag: [String],
 	notes: String,
 	entity: String,
