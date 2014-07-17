@@ -60,6 +60,7 @@ Google.prototype = {
 		// generate consent page url
 	    var url = oauth2Client.generateAuthUrl({
 	        access_type: 'offline', // will return a refresh token
+	        approval_prompt: 'force',
 	        scope: 'https://www.googleapis.com/auth/plus.me'
 	    });
 
@@ -84,8 +85,20 @@ Google.prototype = {
 
 	oauth2callback: function(req, res) {
 		console.log(req.query);
+		var code = req.query.code;
 
-		res.send("oauth2callback");
+		// request access token
+        oauth2Client.getToken(code, function(err, tokens) {
+            // set tokens to the client
+            oauth2Client.setCredentials(tokens);
+            console.log("Err = ");
+            console.log(err);
+            console.log("Tokens = ");
+            console.log(tokens);
+            
+        });
+
+		res.send("oauth2callback <br/> code = " + code);
 	}
 
 };
