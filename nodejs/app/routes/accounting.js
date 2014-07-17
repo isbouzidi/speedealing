@@ -78,7 +78,7 @@ Object.prototype = {
 					// ligne client
 					var line = {
 						datec: bill.datec,
-						journal: "VTE",
+						journal: "VT",
 						compte: societe.code_compta,
 						piece: parseInt(bill.ref.substr(7)),
 						libelle: bill.ref + " " + societe.name,
@@ -106,7 +106,7 @@ Object.prototype = {
 							if (product == null)
 								line = {
 									datec: bill.datec,
-									journal: "VTE",
+									journal: "VT",
 									compte: null,
 									piece: parseInt(bill.ref.substr(7)),
 									libelle: bill.ref + ' ' + lineBill.product.name + ' (INCONNU)',
@@ -117,7 +117,7 @@ Object.prototype = {
 							else
 								line = {
 									datec: bill.datec,
-									journal: "VTE",
+									journal: "VT",
 									compte: product.compta_sell,
 									piece: parseInt(bill.ref.substr(7)),
 									libelle: bill.ref + " " + societe.name,
@@ -126,10 +126,7 @@ Object.prototype = {
 									monnaie: "E"
 								};
 
-							if (lineBill.total_ht > 0)
-								line.credit = lineBill.total_ht;
-							else
-								line.debit = Math.abs(lineBill.total_ht);
+							line.credit = lineBill.total_ht;
 
 							//console.log(line);
 							result.push(line);
@@ -143,7 +140,7 @@ Object.prototype = {
 						for (var i = 0; i < bill.total_tva.length; i++) {
 							var line = {
 								datec: bill.datec,
-								journal: "VTE",
+								journal: "VT",
 								compte: "445782",
 								piece: parseInt(bill.ref.substr(7)),
 								libelle: bill.ref + " " + societe.name,
@@ -152,10 +149,7 @@ Object.prototype = {
 								monnaie: "E"
 							};
 
-							if (bill.total_tva[i].total > 0)
-								line.credit = bill.total_tva[i].total;
-							else
-								line.debit = Math.abs(bill.total_tva[i].total);
+							line.credit = bill.total_tva[i].total;
 
 							result.push(line);
 						}
