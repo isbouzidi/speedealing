@@ -64,7 +64,44 @@ Google.prototype = {
 	        scope: 'https://www.googleapis.com/auth/plus.me'
 	    });
 
-		res.send("<a href='" + url + "'>Give access to google account !</a>");
+		res.send("<a href='" + url + "'>Hello " + req.user.name + ", give access to google account !</a>");
+	},
+
+	
+
+	oauth2callback: function(req, res) {
+		console.log(req.query);
+		var code = req.query.code;
+
+		// request access token
+        oauth2Client.getToken(code, function(err, tokens) {
+            if (err) {
+            	console.log("Err = ");
+            	console.log(err);
+            	return;
+            }
+            // set tokens to the client
+            oauth2Client.setCredentials(tokens);
+            
+            console.log("Tokens = ");
+            console.log(tokens);
+            
+            var user = req.user;
+	        user = _.extend(user, 
+	        {
+            	google: tokens
+            });
+	        
+	        user.save(function(err, doc) {
+	            if (err) {
+	                return console.log(err);
+	            }
+	            console.log("update");
+	        });
+		
+		});
+
+		res.send("oauth2callback <br/> code = " + code);
 	},
 
 	import: function(req, res) {
@@ -81,24 +118,6 @@ Google.prototype = {
 			res.send( doc );
 			
 		});
-	},
-
-	oauth2callback: function(req, res) {
-		console.log(req.query);
-		var code = req.query.code;
-
-		// request access token
-        oauth2Client.getToken(code, function(err, tokens) {
-            // set tokens to the client
-            oauth2Client.setCredentials(tokens);
-            console.log("Err = ");
-            console.log(err);
-            console.log("Tokens = ");
-            console.log(tokens);
-            
-        });
-
-		res.send("oauth2callback <br/> code = " + code);
 	}
 
 };

@@ -25,11 +25,14 @@ var UserSchema = new Schema({
 	salt: String,
 	entity: String,
 	photo: String,
-        telMobile: String,
+	telMobile: String,
 	facebook: {},
 	twitter: {},
 	github: {},
-	google: {},
+	google: {
+		access_token: String,
+		refresh_token: String
+	},
 	roles: [String],
 	_createdAt: {type: Date},
 	LastConnection: Date,
