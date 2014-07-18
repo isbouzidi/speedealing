@@ -5,23 +5,23 @@
 
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
-            <label for="category"><b>{{t 'reports:Category'}}</b></label>
+            <label for="category"><b>{{t 'reports:Model'}}</b></label>
             <select class="form-control" 
                     id="category" 
-                    data-ng-model="report.category" 
+                    data-ng-model="report.model" 
                     data-ng-options="i as i.name for i in items" 
                     ng-change="updateReportTemplate()">                                    
             </select>
         </div>
         
         <div class="field-block button-height">
-            <label for="date"><b>Date</b></label>
+            <label for="dateReport"><b>Date</b></label>
             <span class="k-widget k-datepicker k-header input">
                 <span class="k-picker-wrap k-state-default">
                     <input 
                         kendo-date-picker required 
-                        id="date" 
-                        k-on-change="report.date = kendoEvent.sender._value;" 
+                        id="dateReport" 
+                        k-on-change="report.dateReport = kendoEvent.sender._value;" 
                         class="input"/>
                 </span>
             </span>
@@ -34,18 +34,48 @@
             <p class="button-height">
                     <span class="number input margin-right">
                             <button type="button" class="button number-down">-</button>
-                            <input type="text" name="special-input-2" id="special-input-2" value="1" size="4" class="input-unstyled">
+                            <input type="text" name="special-input-2" data-ng-model="report.duration" id="special-input-2" value="1" size="4" class="input-unstyled">
                             <button type="button" class="button number-up">+</button>
                     </span>
             </p>
         </div>
         <div class="field-block button-height">
             <label for="category"><b>Contact</b></label>
-            <input type="text" class="input" data-ng-model="report.contact" />
+            
+            <input type="text" 
+                    data-ng-model="report.contact"
+                    typeahead= "contact as contact.name for contact in contactAutoComplete($viewValue)" 
+                    typeahead-on-select = "addContact()"
+                    class="input"
+                    autocomplete="on">
             <a href="" class="button" ng-click="addNewContact()">
                 <span class="button-icon"><span class="icon-plus"></span></span>
                 Ajouter
             </a>
+            
+            <!--<div class="gridStyle" ng-grid="gridOptions"></div>-->
+            <table class="simple-table responsive-table responsive-table-on">
+                <thead>
+                    <tr>
+                        <th class="header">Nom</th>
+                        <th class="header">Poste</th>
+                        <th width="15%" class="header">Actoin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in report.contacts">
+                        <td>\{{c.name}}</td>
+                        <td>\{{c.poste}}</td>
+                        <td>
+                            <a href="" class="button button-icon red-gradient" ng-click="delete($index)">
+                                <span class="icon-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            
         </div>
         <br/>
         <div data-ng-include="report.template" class="field-block-include"></div>
