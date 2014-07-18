@@ -30,8 +30,11 @@ var UserSchema = new Schema({
 	twitter: {},
 	github: {},
 	google: {
-		access_token: String,
-		refresh_token: String
+		user_id: String,
+		tokens: {
+			access_token: String,
+			refresh_token: String
+		}
 	},
 	roles: [String],
 	_createdAt: {type: Date},

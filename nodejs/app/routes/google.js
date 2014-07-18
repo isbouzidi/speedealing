@@ -57,11 +57,16 @@ Google.prototype = {
 	},
 
 	authorize : function(req, res) {
+		var scopes = [
+		  'https://www.googleapis.com/auth/userinfo.profile',
+		  'https://www.googleapis.com/auth/contacts'
+		];
+
 		// generate consent page url
 	    var url = oauth2Client.generateAuthUrl({
 	        access_type: 'offline', // will return a refresh token
 	        approval_prompt: 'force',
-	        scope: 'https://www.googleapis.com/auth/plus.me'
+	        scope: scopes.join(' ')
 	    });
 
 		res.send("<a href='" + url + "'>Hello " + req.user.name + ", give access to google account !</a>");
@@ -76,8 +81,7 @@ Google.prototype = {
 		// request access token
         oauth2Client.getToken(code, function(err, tokens) {
             if (err) {
-            	console.log("Err = ");
-            	console.log(err);
+            	console.log("Google - ", err);
             	return;
             }
             // set tokens to the client
@@ -85,39 +89,133 @@ Google.prototype = {
             
             console.log("Tokens = ");
             console.log(tokens);
-            
-            var user = req.user;
-	        user = _.extend(user, 
-	        {
-            	google: tokens
+
+            googleapis.discover('oauth2', 'v2')
+            .execute(function(err, client) {
+
+            	if (err)
+            		console.log("Google - ", err);
+
+
+            	client.oauth2.userinfo.v2.me.get()
+            	.withAuthClient(oauth2Client)
+            	.execute(function (err, userinfo) {
+
+            		if (err)
+            			console.log("Google - ", err);
+
+            		console.log("userinfo ", userinfo);
+
+            		var user = req.user;
+			        user = _.extend(user, 
+			        {
+		            	"google": {
+		            		"user_id": userinfo.id,
+		            		"tokens": tokens
+		            	}
+		            });
+			        
+			        user.save(function(err, doc) {
+			            if (err) {
+			                return console.log(err);
+			            }
+			            console.log("update");
+			        });
+
+            	});
+
+
+	            	
+
             });
-	        
-	        user.save(function(err, doc) {
-	            if (err) {
-	                return console.log(err);
-	            }
-	            console.log("update");
-	        });
+            
+	            
 		
 		});
 
 		res.send("oauth2callback <br/> code = " + code);
 	},
 
+
+
 	import: function(req, res) {
-		// res.send("import contacts ");
 
-		//console.log(query);
+		var stream = UserModel.find().stream();
 
-		UserModel.findOne({'name': 'admin'}, function(err, doc) {
-			if (err) {
-				res.send("Error");
-				return;
-			}
-			console.log(doc);
-			res.send( doc );
-			
+		stream.on('data', function (user) {
+		  // do something with the mongoose document
+		  console.log("Scan user : " + user._id);
+
+		  if (_isGoogleEmail(user.email)) {
+
+		  	console.log("User.google", user.google);
+		  	
+		  	if (_hasGrantedAccess(user)) {
+		  		console.log("Treat user : " + user._id + " - " + user.email);
+		  		_treatGmailUser(user);
+		  	} else {
+		  		console.log("    no access");
+		  	}
+		  } else {
+		  	console.log("    no gmail");
+		  }
+
+		}).on('error', function (err) {
+		  // handle the error
+		  console.log("Stream err", err);
+		}).on('close', function () {
+		  // the stream is closed
 		});
+
+		res.send("google.import : done");
 	}
 
 };
+
+
+
+
+function _isGmailEmail(email) {
+	return (email.toLowerCase().indexOf("@gmail.com") != -1)
+}
+
+
+function _hasGrantedAccess(user) {
+	return (user.google.tokens.access_token &&
+		user.google.tokens.refresh_token &&
+		user.google.user_id);
+}
+
+function _treatGmailUser(user) {
+	oauth2Client.setCredentials(user.google.tokens);
+
+
+	// load google plus v1 API resources and methods
+// googleapis
+// .discover('plus', 'v1')
+// .execute(function(err, client) {
+	
+	
+// 	var gid = 'me';//user.email.substring(0, user.email.indexOf("@"));
+
+//     // retrieve user profile
+//     getUserProfile(client, oauth2Client, gid, function(err, profile) {
+//         if (err) {
+//             console.log('An error occured', err);
+//             return;
+//         }
+//         console.log("profile", profile.id);
+//         console.log(profile.displayName, ':', profile.tagline);
+//         console.log("Credentials", oauth2Client.credentials);
+//     });
+	
+// });
+
+}
+
+
+function getUserProfile(client, authClient, userId, callback) {
+    client.plus.people.get({ userId: userId })
+    	.withAuthClient(authClient)
+        .execute(callback);
+}
