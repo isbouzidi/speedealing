@@ -7,20 +7,30 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
         $scope.global = Global;
         $scope.report = {};
-        $scope.report.contacts = [];
+        $scope.contacts = [];
         
         
         $scope.init = function() {
-            $scope.items = [{
-                    id: 'DISCOVERY',
-                    name: 'Découverte'},
-                {
-                    id: 'PRE-SIGN',
-                    name: 'Pré-Signature'},
-                {
-                    id: 'Contract',
-                    name: 'Suivi/Contrat Signé'
-                }];
+            
+            $http({method: 'GET', url: '/api/report/caFamily/select', params: {
+                    field: "caFamily"
+                }
+            }).success(function(data) {
+                console.log(data);
+                $scope.products = data;
+            });
+
+            var fields = ["potentialAttract", "model", "action.type", "action.method", "report.type", "business.type", "business.step"];
+
+            angular.forEach(fields, function(field) {
+                $http({method: 'GET', url: '/api/report/fk_extrafields/select', params: {
+                        field: field
+                    }
+                }).success(function(data) {
+                    console.log(data);
+                    $scope[field] = data;
+                });
+            });
             
         };
 
@@ -41,7 +51,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
         $scope.updateReportTemplate = function() {
 
-            var category = $scope.report.category.id;
+            var category = $scope.report.model.id;
 
             switch (category) {
                 case 'DISCOVERY' :
@@ -64,8 +74,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             return $http.post('api/report/autocomplete', {
                 val: val
             }).then(function(res) {
-                //console.log(res.data);
-
+                
                 return res.data;
             });
 
@@ -79,14 +88,13 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                     poste: $scope.report.contact.poste
                 };
             
-            $scope.report.contacts.push(add);
+            $scope.contacts.push(add);
             $scope.report.contact = "";
-            console.log($scope.report);
         };
         
         $scope.delete = function($index){
             
-            $scope.report.contacts.splice($index, 1);
+            $scope.contacts.splice($index, 1);
         };
             
     }]);

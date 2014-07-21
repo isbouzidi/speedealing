@@ -117,7 +117,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$http({method: 'GET', url: 'api/contacts', params:
                                         {
                                                 find: {"societe.id": societe._id},
-												fields: "name firstname lastname updatedAt Status phone email poste"
+                                                fields: "name firstname lastname updatedAt Status phone email poste"
                                         }
 				}).success(function(data, status) {
 					if (status == 200)
