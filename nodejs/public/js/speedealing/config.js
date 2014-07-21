@@ -58,7 +58,7 @@ window.app.config(['$httpProvider',
 // For dialog box
 window.app.config(['dialogsProvider','$translateProvider',function(dialogsProvider,$translateProvider){
 		dialogsProvider.useBackdrop('static');
-		dialogsProvider.useEscClose(false);
+		dialogsProvider.useEscClose(true);
 		dialogsProvider.useCopy(false);
 		dialogsProvider.setSize('sm');
 

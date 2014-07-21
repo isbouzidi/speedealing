@@ -22,7 +22,8 @@ window.app = angular.module('mean', [
 	'mean.articles',
 	'mean.europexpress',
 	'timer',
-	'pascalprecht.translate'
+	'pascalprecht.translate',
+	'jm.i18next'
 ]);
 
 angular.module('mean.system', []);
@@ -33,6 +34,27 @@ angular.module('mean.bills', []);
 angular.module('mean.accounting', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
+
+angular.module('jm.i18next').config(['$i18nextProvider', function ($i18nextProvider) {
+    $i18nextProvider.options = {
+        //lng: 'fr',
+        //useCookie: false,
+        useLocalStorage: false,
+        resGetPath: 'locales/__lng__/__ns__.json',
+		//resPostPath: 'locales/__lng__/new.__ns__.json',
+        defaultLoadingValue: '', // ng-i18next option, *NOT* directly supported by i18next
+		ns: {namespaces: ["main","bills"], defaultNs: 'main'},
+		supportedLngs: ['fr-FR','en-US'],
+		//load: 'current',
+		useCookie: false,
+		//cookie: 'speedealingLang',
+		detectLngFromHeaders: false,
+		saveMissing: true,
+		debug: false,
+		sendMissingTo: 'fallback',
+		fallbackLng: "fr-FR"
+    };
+}]);
 
 window.app.run(function(editableOptions, editableThemes) {
 	// bootstrap3 theme. Can be also 'bs2', 'default'

@@ -1,5 +1,6 @@
 var async = require('async'),
 		ip = require('ip'),
+		fs = require('fs'),
 		modules = require('../app/controllers/modules'),
 		config = require(__dirname + '/config');
 
@@ -55,15 +56,15 @@ module.exports = function(app, passport, auth) {
 				if (err) {
 					return next(err);
 				}
-				
+
 				user.LastConnection = user.NewConnection;
 				user.NewConnection = new Date();
-				
-				user.save(function(err){
-					if(err)
+
+				user.save(function(err) {
+					if (err)
 						console.log(err);
 				});
-				
+
 				return res.json({success: true, url: user.url}, 200);
 			});
 		})(req, res, next);
@@ -84,17 +85,17 @@ module.exports = function(app, passport, auth) {
 			//console.log('session : ' + req.user.name);
 
 			/*var user = {name: req.user.name,
-				firstname: req.user.firstname,
-				lastname: req.user.lastname,
-				email: req.user.email,
-				_id: req.user._id,
-				entity: req.user.entity,
-				photo: req.user.photo,
-				societe: req.user.societe,
-				right_menu: req.user.right_menu,
-				url: req.user.url,
-				LastConnection: req.user.LastConnection
-			};*/
+			 firstname: req.user.firstname,
+			 lastname: req.user.lastname,
+			 email: req.user.email,
+			 _id: req.user._id,
+			 entity: req.user.entity,
+			 photo: req.user.photo,
+			 societe: req.user.societe,
+			 right_menu: req.user.right_menu,
+			 url: req.user.url,
+			 LastConnection: req.user.LastConnection
+			 };*/
 
 			//console.log(req.user.photo);
 
@@ -118,7 +119,7 @@ module.exports = function(app, passport, auth) {
 
 	//app.get('/users/me', users.me);
 	//app.get('/users/:userId', users.show);
-	
+
 	app.get('/menus', auth.requiresLogin, modules.menus);
 
 	//Setting the facebook oauth routes
@@ -228,6 +229,21 @@ module.exports = function(app, passport, auth) {
 		};
 
 		res.send(200, iconList);
+	});
+
+	app.get('/locales/:lng/:jsonFile', auth.requiresLogin, function(req, res) {
+		var file = __dirname + '/../locales/' + req.params.lng + '/' + req.params.jsonFile;
+
+		fs.readFile(file, 'utf8', function(err, data) {
+			if (err) {
+				console.log('Error: ' + err);
+				return res.send(500);
+			}
+
+			data = JSON.parse(data);
+
+			res.json(data);
+		});
 	});
 
 	var index = require('../app/controllers/index');

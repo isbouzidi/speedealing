@@ -10,7 +10,7 @@ var express = require('express'),
 		flash = require('connect-flash'),
 		helpers = require('view-helpers'),
 		fs = require('fs'),
-		config = require(__dirname +'/config');
+		config = require(__dirname + '/config');
 
 module.exports = function(app, passport, db) {
 
@@ -39,8 +39,9 @@ module.exports = function(app, passport, db) {
 
 	i18n.init({
 		ns: {namespaces: namespaces, defaultNs: 'main'},
-		supportedLngs: ['fr','en'],
+		supportedLngs: ['fr', 'en'],
 		resSetPath: 'locales/__lng__/new.__ns__.json',
+		resGetPath: 'locales/__lng__/__ns__.json',
 		//load: 'current',
 		preload: ['fr-FR'],
 		useCookie: false,
@@ -52,6 +53,10 @@ module.exports = function(app, passport, db) {
 		fallbackLng: "fr-FR"
 	});
 
+	/*i18n.serveClientScript(app)
+			.serveDynamicResources(app)
+			.serveMissingKeyRoute(app);
+*/
 	hbs.registerHelper('t', function(i18n_key) {
 		var result = i18n.t(i18n_key);
 
@@ -143,7 +148,7 @@ module.exports = function(app, passport, db) {
 		app.use(flash());
 
 		//bodyParser should be above methodOverride
-		app.use(express.bodyParser({uploadDir: __dirname +'/../uploads'}));
+		app.use(express.bodyParser({uploadDir: __dirname + '/../uploads'}));
 		app.use(i18n.handle);
 		app.use(express.methodOverride());
 
@@ -211,5 +216,5 @@ module.exports = function(app, passport, db) {
 			.serveClientScript(app)
 			.serveDynamicResources(app)
 			.serveMissingKeyRoute(app);
-	
+
 };
