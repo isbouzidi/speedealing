@@ -27,7 +27,7 @@
 
 				</div>
 				<div class="col-sm-4">
-					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="pagingSocieteFirst()" class=""></select>
+					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
 				</div>
 				<div class="col-sm-4">
 					<div class="float-right">
@@ -39,19 +39,7 @@
 		<div class="gridStyle"  data-ng-grid="gridOptionsSociete" ng-style="style(100)" resize></div>
 		<div class="table-footer silver-gradient button-height">
 			<div class="float-right">
-				<div class="button-group">
-					<button ng-click="pagingSocieteFirst()" title="First page" class="button silver-gradient glossy"><span class="icon-previous"></span></button>
-					<button ng-click="pagingSociete(-1);" title="Previous page" class="button silver-gradient glossy"><span class="icon-backward"></span></button>
-				</div>
-
-				<div class="button-group">
-					<button data-ng-click="setPagingSociete(n)" ng-repeat="n in [minPageSociete, maxPageSociete]| makeRange" ng-class="{active: n == pagingOptionsSociete.currentPage}" title="Page \{{n}}" class="button silver-gradient glossy">\{{n}}</button>
-				</div>
-
-				<div class="button-group">
-					<button  ng-click="pagingSociete(1)" title="Next page" class="button silver-gradient glossy"><span class="icon-forward"></span></button>
-					<button ng-click="pagingSocieteLast()" title="Last page" class="button silver-gradient glossy"><span class="icon-next"></span></button>
-				</div>
+				 <pagination total-items="totalCountSociete" ng-model="pagingOptionsSociete.currentPage" max-size="10" items-per-page="pagingOptionsSociete.pageSize" class="pagination-sm no-margin-top" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
 			</div>
 			\{{countSocietes}}/\{{totalCountSociete}} ligne(s)
 		</div>

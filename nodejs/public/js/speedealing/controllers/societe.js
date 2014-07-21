@@ -191,38 +191,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 		// paging
 		$scope.totalCountSociete = 0;
-		$scope.minPageSociete = 1;
-		$scope.maxPageSociete = 1;
 
 		$scope.pagingOptionsSociete = {
 			pageSizes: [500, 1000, 5000],
 			pageSize: 500,
 			currentPage: 1
 		};
-
-		$scope.pagingSociete = function(direction) {
-			if ($scope.pagingOptionsSociete.currentPage + direction > $scope.maxPageSociete || $scope.pagingOptionsSociete.currentPage + direction < $scope.minPageSociete)
-				return;
-
-			$scope.pagingOptionsSociete.currentPage += direction;
-			$scope.find();
-		};
-
-		$scope.setPagingSociete = function(page) {
-			if (page != $scope.pagingOptionsSociete.currentPage)
-				$scope.pagingOptionsSociete.currentPage = page;
-			$scope.find();
-		};
-
-		$scope.pagingSocieteFirst = function() {
-			$scope.pagingOptionsSociete.currentPage = $scope.minPageSociete;
-			$scope.find();
-		};
-
-		$scope.pagingSocieteLast = function() {
-			$scope.pagingOptionsSociete.currentPage = $scope.maxPageSociete;
-			$scope.find();
-		};
+		
+		$scope.$watch('pagingOptionsSociete', function(newVal, oldVal) {
+			if (newVal.currentPage !== oldVal.currentPage) {
+				$scope.find();
+			}
+		}, true);
 
 		// sorting
 		$scope.sortOptionsSociete = {fields: ["name"], directions: ["asc"]};
