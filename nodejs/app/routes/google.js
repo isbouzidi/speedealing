@@ -11,6 +11,8 @@ var mongoose = require('mongoose'),
 var googleapis = require('googleapis');
 var OAuth2Client = googleapis.auth.OAuth2;
 
+var GoogleContacts = require('my-google-contacts').GoogleContacts;
+
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var UserModel = mongoose.model('user');
@@ -123,14 +125,7 @@ Google.prototype = {
 			        });
 
             	});
-
-
-	            	
-
-            });
-            
-	            
-		
+            }); 
 		});
 
 		res.send("oauth2callback <br/> code = " + code);
@@ -152,7 +147,7 @@ Google.prototype = {
 		  	
 		  	if (_hasGrantedAccess(user)) {
 		  		console.log("Treat user : " + user._id + " - " + user.email);
-		  		_treatGmailUser(user);
+		  		_treatGoogleUser(user);
 		  	} else {
 		  		console.log("    no access");
 		  	}
@@ -175,7 +170,7 @@ Google.prototype = {
 
 
 
-function _isGmailEmail(email) {
+function _isGoogleEmail(email) {
 	return (email.toLowerCase().indexOf("@gmail.com") != -1)
 }
 
@@ -186,36 +181,98 @@ function _hasGrantedAccess(user) {
 		user.google.user_id);
 }
 
-function _treatGmailUser(user) {
+function _refreshGoogleTokens(user) {
+
 	oauth2Client.setCredentials(user.google.tokens);
 
+	// execute a request to obtain 
+	// new access token if the current
+	// access token has expired
+	googleapis
+	.discover('oauth2', 'v2')
+	.execute(function(err, client) {
 
-	// load google plus v1 API resources and methods
-// googleapis
-// .discover('plus', 'v1')
-// .execute(function(err, client) {
-	
-	
-// 	var gid = 'me';//user.email.substring(0, user.email.indexOf("@"));
+		if (err)
+			console.log("Google - ", err);
 
-//     // retrieve user profile
-//     getUserProfile(client, oauth2Client, gid, function(err, profile) {
-//         if (err) {
-//             console.log('An error occured', err);
-//             return;
-//         }
-//         console.log("profile", profile.id);
-//         console.log(profile.displayName, ':', profile.tagline);
-//         console.log("Credentials", oauth2Client.credentials);
-//     });
-	
-// });
+		client.oauth2.userinfo.v2.me.get()
+		.withAuthClient(oauth2Client)
+		.execute(function (err, userinfo) {
+
+			if (err)
+				console.log("Google - ", err);
+
+			//console.log("userinfo.name ", userinfo.name);
+
+			console.log("Credentials", oauth2Client.credentials);
+
+			var new_access_token = oauth2Client.credentials.access_token;
+
+			if (new_access_token && 
+				new_access_token != user.google.tokens.access_token) {
+				// update user's access token in database
+				
+		        user = _.extend(user, 
+		        {
+	            	"google": {
+	            		"tokens": {
+	            			"access_token": new_access_token
+	            		}
+	            	}
+	            });
+		        
+		        user.save(function(err, doc) {
+		            if (err) {
+		                return console.log(err);
+		            }
+		            console.log("Google - access token updated");
+		        });
+
+			}
+
+		});
+	}); 
+
 
 }
 
 
-function getUserProfile(client, authClient, userId, callback) {
-    client.plus.people.get({ userId: userId })
-    	.withAuthClient(authClient)
-        .execute(callback);
+
+
+/* @return contacts
+*/
+function _getGoogleContacts(user) {
+
+	var result_contacts = [];
+
+	var c = new GoogleContacts({
+		consumerKey: GOOGLE_CLIENT_ID,
+		consumerSecret: GOOGLE_CLIENT_SECRET,
+		token: user.google.tokens.access_token,
+		refreshToken: user.google.tokens.refresh_token,
+	});
+
+	c.getContacts({
+		//email: 'etudiant.beaumont@gmail.com'
+		email: user.email
+
+	}, function(err, contacts) {
+		if (err) {
+			console.log("Google - ", err);
+		} else {
+			console.log(contacts);
+			console.log(contacts.length);
+		}
+	});
+	
+	// c.getContactGroups('thin', 200);
+
+
 }
+
+function _treatGoogleUser(user) {
+	_refreshGoogleTokens(user);
+
+	var contacts = _getGoogleContacts(user);
+}
+
