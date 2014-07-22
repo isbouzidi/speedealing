@@ -11,6 +11,10 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         $scope.report.products = [];
         $scope.report.optional = {};
         $scope.report.optional.business = {};
+        $scope.report.optional.subject = {};
+        $scope.report.optional.reports = [];
+        $scope.report.optional.subject.deployment = [];
+        $scope.report.optional.subject.progressPoints = [];
         $scope.report.optional.business.reason = [];
 
         $scope.init = function() {
@@ -22,7 +26,19 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 $scope.products = data;
             });
 
-            var fields = ["potentialAttract", "model", "typeaAction", "methodAction", "typeReport", "typeBusiness", "stepBusiness", "reasonBusiness"];
+            var fields = [
+                "potentialAttract", 
+                "model", 
+                "typeaAction", 
+                "methodAction", 
+                "typeReport", 
+                "typeBusiness", 
+                "stepBusiness", 
+                "reasonBusiness",
+                "deployment",
+                "progressPoints",
+                "reports"
+            ];
 
             angular.forEach(fields, function(field) {
                 $http({method: 'GET', url: '/api/report/fk_extrafields/select', params: {
@@ -36,7 +52,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
         };
 
-        $scope.toggleSelection = function toggleSelection(product) {
+        $scope.productSelection = function productSelection(product) {
             var idx = $scope.report.products.indexOf(product);
 
             if (idx > -1) {
@@ -58,6 +74,45 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
             else {
                 $scope.report.optional.business.reason.push(reason);
+            }
+        };
+        
+        $scope.deploymentSelection = function deploymentSelection(reason) {
+            
+            var idx = $scope.report.optional.subject.deployment.indexOf(reason);
+            
+            if (idx > -1) {
+                $scope.report.optional.subject.deployment.splice(idx, 1);
+            }
+
+            else {
+                $scope.report.optional.subject.deployment.push(reason);
+            }
+        };
+        
+        $scope.progressPointsSelection = function progressPointsSelection(reason) {
+            
+            var idx = $scope.report.optional.subject.progressPoints.indexOf(reason);
+
+            if (idx > -1) {
+                $scope.report.optional.subject.progressPoints.splice(idx, 1);
+            }
+
+            else {
+                $scope.report.optional.subject.progressPoints.push(reason);
+            }
+        };
+        
+        $scope.reportSelection = function reportSelection(reason) {
+            
+            var idx = $scope.report.optional.reports.indexOf(reason);
+
+            if (idx > -1) {
+                $scope.report.optional.reports.splice(idx, 1);
+            }
+
+            else {
+                $scope.report.optional.reports.push(reason);
             }
         };
 

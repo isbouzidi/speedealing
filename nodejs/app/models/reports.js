@@ -34,7 +34,7 @@ var ReportSchema = new Schema({
             realised : Boolean
 	}],
 	optional : Schema.Types.Mixed,
-	comments: String,
+	comment: String,
 	author:{
             _id: String,
             name: String

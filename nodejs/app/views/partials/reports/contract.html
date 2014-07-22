@@ -3,26 +3,33 @@
 </div>
 <div class="field-block button-height">
     <label for="deploiement"><b>Déploiement</b></label>
-    <input type="checkbox" ng-model="report.deployment.training"> Formation
-    <input type="checkbox" ng-model="report.deployment.demo"> Demo
-</div>
-<div class="field-block button-height">
-    <label for="fonction"><b>Suivi</b></label>
-    <input type="checkbox" ng-model="report.suivi"> Bilan
+    
+    <span ng-repeat="d in deployment">
+        <input type="checkbox" 
+               name="selectedDeployment[]" 
+               value="\{{d.id}}" 
+               ng-checked="report.optional.subject.deployment.indexOf(d.id) > -1" 
+               ng-click="deploymentSelection(d.id)"> \{{d.label}}
+    </span>
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>Enquête satisfaction</b></label>
-    <input type="checkbox" ng-model="report.satisfactionSurvey">
+    <input type="checkbox" ng-model="report.optional.subject.satisfactionSurvey" ng-true-value=true ng-false-value=false>
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>points progrés</b></label>
-    <input type="checkbox" ng-model="report.progressPoints.price"> Prix
-    <input type="checkbox" ng-model="report.progressPoints.quality"> Qualité
-    <input type="checkbox" ng-model="report.progressPoints.timeFrame"> Délai
+    <span ng-repeat="p in progressPoints">
+        <input type="checkbox" 
+               name="selectedProgressPoints[]" 
+               value="\{{p.id}}" 
+               ng-checked="report.optional.subject.progressPoints.indexOf(p.id) > -1" 
+               ng-click="progressPointsSelection(p.id)"> \{{p.label}}
+    </span>
 </div>
 <div class="field-block">
     <h4>Actions</h4>
 </div>
+<!--
 <div class="field-block button-height">
     <label for="fonction"><b>Rendez-vous</b></label>
     <span class="k-widget k-datepicker k-header input">
@@ -47,10 +54,16 @@
         </span>
     </span>
 </div>
+-->
 <div class="field-block button-height">
     <label for="fonction"><b>Rapport</b></label>
-    <input type="checkbox" ng-model="report.report.process"> Prpcédures
-    <input type="checkbox" ng-model="report.report.statistic"> Statistiques
+    <span ng-repeat="r in reports">
+        <input type="checkbox" 
+               name="selectedReport[]" 
+               value="\{{r.id}}" 
+               ng-checked="report.optional.reports.indexOf(p.id) > -1" 
+               ng-click="reportSelection(r.id)"> \{{r.label}}
+    </span>
 </div>
 <div class="field-block">
     <h4>Leads détectées</h4>
@@ -60,5 +73,9 @@
 </div>
 <div class="field-block button-height">
     <label for="birthday"><b>Commentaires/observations</b></label>
-    <textarea class="input" rows="3" cols="60" data-ng-model="contact.address"></textarea><br/>
+    <textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea><br/>
+</div>
+<div class="field-block button-height">
+    <label for="birthday"><b>Resultat</b></label>
+    <pre>\{{report | json}}</pre>
 </div>
