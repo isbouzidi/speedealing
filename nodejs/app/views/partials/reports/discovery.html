@@ -1,66 +1,86 @@
 <div class="field-block button-height">
     <label for="fonction"><b>Potentiel attractivité/an</b></label>
-    <input type="radio" ng-model="report.potentialAttract" value="0" class=""> 0
+    <span ng-repeat="p in potentialAttract">
+        <input type="radio" ng-model="report.potentialAttract" value="\{{p.id}}" class="">\{{p.label}}
+    </span>
 </div>
 <div class="field-block">
     <h4>Sujet</h4>
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>Produit</b></label>
-    <input type="checkbox" ng-model="report.Products.Externalisation"> Externalisation
-    <input type="checkbox" ng-model="report.Products.Imp"> Imp numérique
-    <input type="checkbox" ng-model="report.Products.Repro"> Repro  plan
-    <input type="checkbox" ng-model="report.Products.Signaletique"> Signalétique
+    <span ng-repeat="p in products"  class="checkbox-inline">
+        
+        <input type="checkbox" 
+               name="selectedProducts[]" 
+               value="\{{p}}" 
+               ng-checked="report.products.indexOf(p) > -1" 
+               ng-click="toggleSelection(p)"> 
+                \{{p}}
+    </span>
+    
 </div>
 <div class="field-block">
     <h4>Actions à faire</h4>
 </div>
 <div class="field-block button-height">
     <label for="report.sendBooklet.date"><b>Envoi plaquette</b></label>
-    <input type="checkbox" ng-model="checkedSendBooklet" class="input">
+    <input type="checkbox" ng-model="report.actions[0].type" value="plaquette" ng-true-value="plaquette" ng-change="test(0)">
     <br/>
-    <div ng-show="checkedSendBooklet">
+    <div ng-show="report.actions[0].type">
         <span class="k-widget k-datepicker k-header input">
             <span class="k-picker-wrap k-state-default">
                 <input 
                     kendo-date-picker required 
                     id="sendBooklet.date" 
-                    k-on-change="report.sendBooklet.date = kendoEvent.sender._value;" 
+                    k-on-change="report.actions[0].date = kendoEvent.sender._value;" 
                     class="input"/>
             </span>
         </span>
         <br/>
-        <input type="radio" ng-model="report.sendBooklet.method" value="Par mail" class=""> Par mail
-        <input type="radio" ng-model="report.sendBooklet.method" value="Par courrier" class=""> Par courrier
-        <input type="radio" ng-model="report.sendBooklet.method" value="Déplacement" class=""> Déplacement
+        <input type="radio" ng-model="report.actions[0].method" value="Par mail" class=""> Par mail
+        <input type="radio" ng-model="report.actions[0].method" value="Par courrier" class=""> Par courrier
+        <input type="radio" ng-model="report.actions[0].method" value="Déplacement" class=""> Déplacement
     </div>
-    
+    <pre>\{{report.actions}}</pre>
 </div>
 <div class="field-block button-height">
     <label for="sendOffer.date"><b>Envoi offre</b></label>
-    <input type="checkbox" ng-model="checkedSendOffer" class="input">
+    <input type="checkbox" ng-model="report.actions[1].type" ng-true-value="offre" ng-change="test(0)">
     <br/>
-    <div ng-show="checkedSendOffer">
+    <div ng-show="report.actions[1].type">
         <span class="k-widget k-datepicker k-header input">
             <span class="k-picker-wrap k-state-default">
                 <input 
                     kendo-date-picker required 
                     id="sendOffer.date" 
-                    k-on-change="report.sendOffer.date = kendoEvent.sender._value;" 
+                    k-on-change="report.actions[1].date = kendoEvent.sender._value;" 
                     class="input"/>
             </span>
         </span><br/>
-        <input type="radio" ng-model="report.sendOffer.method" value="Par mail" class=""> Par mail
-        <input type="radio" ng-model="report.sendOffer.method" value="Par courrier" class=""> Par courrier
-        <input type="radio" ng-model="report.sendOffer.method" value="Déplacement" class=""> Déplacement
+        <input type="radio" ng-model="report.actions[1].method" value="Par mail" class=""> Par mail
+        <input type="radio" ng-model="report.actions[1].method" value="Par courrier" class=""> Par courrier
+        <input type="radio" ng-model="report.actions[1].method" value="Déplacement" class=""> Déplacement
     </div>
 </div>
 <div class="field-block button-height">
     <label for="nextAction"><b>Prochaine action</b></label>
-    <input type="radio" ng-model="report.nextAction" value="Relance" class=""> Relance
-    <input type="radio" ng-model="report.nextAction" value="Rendez-vous" class=""> Rendez-vous
-    <input type="radio" ng-model="report.nextAction" value="Envoie propal" class=""> Envoie propal
-    <input type="radio" ng-model="report.nextAction" value="Relance mail" class=""> Relance mail
+    <input type="checkbox" ng-model="report.actions[2].type" ng-true-value="offre" ng-change="test(0)">
+    <div ng-show="report.actions[2].type">
+        <span class="k-widget k-datepicker k-header input">
+            <span class="k-picker-wrap k-state-default">
+                <input 
+                    kendo-date-picker required 
+                    id="sendOffer.date" 
+                    k-on-change="report.actions[1].date = kendoEvent.sender._value;" 
+                    class="input"/>
+            </span>
+        </span><br/>
+        <input type="radio" ng-model="report.nextAction" value="Relance" class=""> Relance
+        <input type="radio" ng-model="report.nextAction" value="Rendez-vous" class=""> Rendez-vous
+        <input type="radio" ng-model="report.nextAction" value="Envoie propal" class=""> Envoie propal
+        <input type="radio" ng-model="report.nextAction" value="Relance mail" class=""> Relance mail
+    </div>
 </div>
 <div class="field-block button-height">
     <label for="dayVisitWorkshop"><b>Visite atelier</b></label>

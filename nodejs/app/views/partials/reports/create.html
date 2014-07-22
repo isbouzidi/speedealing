@@ -1,4 +1,4 @@
-<form data-ng-init='init()' data-ng-submit='create()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+<form data-ng-init='init()' data-ng-submit='createReport()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <!-- Block style is optional, you can use any layout -->
     <h3 class="block-title">{{t 'reports:NewReport'}}</h3>
@@ -9,7 +9,7 @@
             <select class="form-control" 
                     id="category" 
                     data-ng-model="report.model" 
-                    data-ng-options="i as i.name for i in items" 
+                    data-ng-options="m as m.label for m in model" 
                     ng-change="updateReportTemplate()">                                    
             </select>
         </div>
@@ -36,14 +36,14 @@
                             <button type="button" class="button number-down">-</button>
                             <input type="text" name="special-input-2" data-ng-model="report.duration" id="special-input-2" value="1" size="4" class="input-unstyled">
                             <button type="button" class="button number-up">+</button>
-                    </span>
+                    </span> Jour(s)
             </p>
         </div>
         <div class="field-block button-height">
-            <label for="category"><b>Contact</b></label>
+            <label for="Contact"><b>Contact</b></label>
             
             <input type="text" 
-                    data-ng-model="report.contact"
+                    data-ng-model="report.cont"
                     typeahead= "contact as contact.name for contact in contactAutoComplete($viewValue)" 
                     typeahead-on-select = "addContact()"
                     class="input"
@@ -71,12 +71,13 @@
             
         </div>
         <br/>
-        <div data-ng-include="report.template" class="field-block-include"></div>
+        <div data-ng-include="template" class="field-block-include"></div>
         <div class="field-block button-height wizard-controls clearfix">
             <button type="submit" class="button glossy mid-margin-right float-right">
                 <span class="button-icon"><span class="icon-tick"></span></span>
                 Créer
             </button>
+            
         </div>
     </fieldset>
 </form>

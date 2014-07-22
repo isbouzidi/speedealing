@@ -26,10 +26,7 @@ var ReportSchema = new Schema({
             name: String,
             poste: String
             }],
-	products:[{
-            id:Schema.Types.ObjectId,
-            name:String
-            }],
+	products:[String],
 	actions:[{
             type: String,
             method: String,

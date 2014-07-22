@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
         gridfs = require('../controllers/gridfs'),
         config = require('../../config/config');
 
+var ReportModel = mongoose.model('report');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 var ExtrafieldModel = mongoose.model('extrafields');
@@ -57,7 +58,9 @@ module.exports = function(app, passport, auth) {
     });
 
     app.get('/api/report/fk_extrafields/select', auth.requiresLogin, object.select);
-
+    
+    //add new report
+    app.post('/api/reports', auth.requiresLogin, object.create);
 };
 
 function Object() {
@@ -85,6 +88,20 @@ Object.prototype = {
                 }
                 
                 res.json(result);
+        });
+    },
+    create: function(req, res) {
+        
+        console.log("ach ka : " + req.body);
+        var reportModel = new ReportModel(req.body);
+
+        reportModel.save(function(err, doc) {
+            if (err) {
+                //return res.json(500, err);
+                return console.log(err);
+            }
+
+            res.json(200, doc);
         });
     }
 };

@@ -2,43 +2,48 @@
     <h4>Affaire</h4>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>Type Affaire</b></label>
-    <input type="radio" ng-model="report.business.type" value="Marché" class=""> Marché
-    <input type="radio" ng-model="report.business.type" value="Offre" class=""> Offre
-</div>
-<div class="field-block button-height">
     <label for="fonction"><b>Produits</b></label>
-    <input type="checkbox" ng-model="report.Products.Externalisation"> Externalisation
-    <input type="checkbox" ng-model="report.Products.Imp"> Imp numérique
-    <input type="checkbox" ng-model="report.Products.Repro"> Repro  plan
-    <input type="checkbox" ng-model="report.Products.Signaletique"> Signalétique
+    <span ng-repeat="p in products">
+        
+        <input type="checkbox" 
+               name="selectedProducts[]" 
+               value="\{{p}}" 
+               ng-checked="report.products.indexOf(p) > -1"
+               ng-click="toggleSelection(p)"> \{{p}}
+    </span>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>Offre</b></label>
-    <input type="text" ng-model="report.business.offer" id="phone" class="input" autocomplete="off">
+    <label for="fonction"><b>Type Affaire</b></label>
+    <span ng-repeat="tb in typeBusiness">
+        <input type="radio" ng-model="report.optional.business.type" value="\{{tb.id}}" class=""> \{{tb.label}}
+    </span>
+</div>
+<div class="field-block button-height">
+    <label for="ofre"><b>Offre</b></label>
+    <input type="text" ng-model="report.optional.business.offer" id="offre" class="input" autocomplete="off">
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>Etape</b></label>
-    <input type="radio" ng-model="report.business.step" value="Marché" class=""> Négociation
-    <input type="radio" ng-model="report.business.step" value="Offre" class=""> Signature
-    <input type="radio" ng-model="report.business.Step" value="Offre" class=""> Non retenu
+    <span ng-repeat="sb in stepBusiness">
+        <input type="radio" ng-model="report.optional.business.step" ng-change="showReason()" value="\{{sb.id}}" class=""> \{{sb.label}}
+    </span>
+    <br/>
+    <span ng-show="showReasonValue">
+        <span ng-repeat="rb in reasonBusiness">
+        <input type="checkbox" 
+               name="selectedReason[]" 
+               value="\{{rb.id}}" 
+               ng-checked="report.optional.business.reason.indexOf(rb.id) > -1" 
+               ng-click="reasonSelection(rb.id)"> \{{rb.label}}
+        
+        </span>
+    </span>
+    
 </div>
-<!--
-<div class="field-block button-height">
-    <label for="fonction"><b>Signature</b></label>
-</div>
-<div class="field-block button-height">
-    <label for="fonction"><b>Non retenu</b></label>
-</div>
-
-<div class="field-block button-height">
-    <label for="fonction"><b>Raison</b></label>
-</div>
--->
 <div class="field-block">
     <h4>Commentaires/observations</h4>
 </div>
 <div class="field-block button-height">
-    <label for="birthday"><b>Commentaires/observations</b></label>
-    <textarea class="input" rows="3" cols="60" data-ng-model="contact.address"></textarea><br/>
+    <label for="comment"><b>Commentaires/observations</b></label>
+    <textarea class="input" rows="3" cols="60" ng-model="report.comment"></textarea><br/>
 </div>
