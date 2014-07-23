@@ -317,50 +317,83 @@ function _getGoogleContacts(user, callback) {
 }
 
 
-function _insertContact (icontact) {
+function _updateContact(contact, icontact) {
+
+	 contact = _.extend(contact, icontact);
+
+	 console.log("Contact to up/ins. = ", contact);
+
+	// contact.firstname	= contact.firstname || icontact.firstname;
+	// contact.lastname	= contact.lastname || icontact.lastname;
+	// contact.email		= contact.email || icontact.email;
+	// contact.phone		= contact.phone || icontact.phone;
+
+
+	// contact.organization 	= contact.organization || icontact.organization;
+
+	// console.log("icontact.organization ", icontact.organization);
+
+	contact.save(function(err, doc) {
+		if (err)
+			console.log(err);
+		else
+			console.log("Contact updated/inserted - ", doc);
+	});
 
 }
 
-function _updateContact(contact, icontact) {
 
+function _mergeOneByEmail(icontact, else_callback) {
+	
+	if (icontact.email) {
+		ContactModel.find({email: icontact.email},
+		function (err, contacts) {
+			if (contacts.length > 0) { 
+				for (var i = 0; i < contacts.length ; ++i) {
+					_updateContact(contacts[i], icontact);
+				}					
+
+			} else { // no result
+				else_callback(icontact);
+			}
+		});
+	} else {
+		else_callback(icontact);
+	}
+}
+
+function _mergeOneByPhone(icontact, else_callback) {
+	if (icontact.phone) {
+		ContactModel.find({phone: icontact.phone},
+		function (err, contacts) {
+			if (contacts.length > 0) { 
+				for (var i = 0; i < contacts.length ; ++i) {
+					_updateContact(contacts[i], icontact);
+				}					
+
+			} else { // no result
+				else_callback(icontact);
+			}
+		});
+	} else {
+		else_callback(icontact);
+	}
+}
+
+
+function _insertNewContact(icontact) {
+	var contact = new ContactModel({});
+	_updateContact(contact, icontact);
 }
 
 /* 
 */
 function _mergeOneContact (icontact) {
-	ContactModel.find({email: icontact.email},
-		function (err, contacts) {
-//			console.log(contacts);
-
-			if (contacts.length > 0) { 
-
-
-			} else { // no result on email
-
-				contacts = ContactModel.find({phone_pro: icontact.phone},
-					function (err, contacts) {
-						if (contacts.length == 0) {
-							// insert the new contact
-
-							var contact = new ContactModel(
-							{
-								firstname: 	icontact.firstname,
-								lastname: 	icontact.lastname,
-								email: 		icontact.email,
-								phone_pro: 	icontact.phone
-							});
-
-							contact.save(function(err, doc) {
-								if (err)
-									console.log(err);
-								else
-									console.log("Contact inserted - ", doc);
-
-							});
-						}
-					});
-			}
-		});
+	_mergeOneByEmail(icontact,
+		function (icontact) {
+			_mergeOneByPhone(icontact, _insertNewContact);
+		}
+	);
 }
 
 /* @param icontacts Imported contacts
