@@ -6,7 +6,8 @@ var mongoose = require('mongoose'),
 		_ = require('underscore'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config'),
-		timestamps = require('mongoose-timestamp');
+		timestamps = require('mongoose-timestamp'),
+		xml2js = require('xml2js');
 
 var googleapis = require('googleapis');
 var OAuth2Client = googleapis.auth.OAuth2;
@@ -38,7 +39,7 @@ module.exports = function(app, passport, auth) {
 
 	app.get( '/api/google/oauth2callback', auth.requiresLogin, google.oauth2callback)
 
-
+	app.post('/api/google/test_import', auth.requiresLogin, google.test_import);
 	//oauth2tokencallback
 };
 
@@ -134,20 +135,34 @@ Google.prototype = {
 
 
 	import: function(req, res) {
+		/* 
+		 * For each user
+		 *     If he has a google email
+		 *     and has granted access, then
+		 *         Get all his google contact list
+		 *         For each contact
+		 *             Merge him into Contact database
+		 */
+		
+		var status = 'success';
+		var msg_error = '';
+		var nb_user_treated = 0;
 
 		var stream = UserModel.find().stream();
-
 		stream.on('data', function (user) {
-		  // do something with the mongoose document
-		  console.log("Scan user : " + user._id);
+		  console.log(">> Scan user : " + user._id);
 
 		  if (_isGoogleEmail(user.email)) {
 
-		  	console.log("User.google", user.google);
+		  	//console.log("User.google", user.google);
 		  	
 		  	if (_hasGrantedAccess(user)) {
 		  		console.log("Treat user : " + user._id + " - " + user.email);
+		  		
 		  		_treatGoogleUser(user);
+		  		
+		  		nb_user_treated++;
+
 		  	} else {
 		  		console.log("    no access");
 		  	}
@@ -155,18 +170,50 @@ Google.prototype = {
 		  	console.log("    no gmail");
 		  }
 
+		  console.log("");
+
 		}).on('error', function (err) {
 		  // handle the error
 		  console.log("Stream err", err);
+		  status = 'error';
+		  msg_error = err.toString();
+
 		}).on('close', function () {
 		  // the stream is closed
+
+		  var json_response = {
+				status: status, // 'success' or 'error' 
+				error: msg_error,
+				// number of user treated (with granted google account)
+				treated: nb_user_treated
+			};
+
+			console.log(json_response);
+			res.send( (status=='success')? 200 : 500, 
+				json_response);
 		});
 
-		res.send("google.import : done");
+
+		
+	},
+
+
+	test_import: function(req, res) {
+		ContactModel.find({email: 'devtestglobuloz@gmail.com'},
+			function (err, contacts){
+				console.log(contacts);		
+			});
+		
+
+		res.send("ok");
 	}
 
 };
 
+
+/*
+ * ****************** IMPORT ************************************************************
+ */
 
 
 
@@ -181,7 +228,7 @@ function _hasGrantedAccess(user) {
 		user.google.user_id);
 }
 
-function _refreshGoogleTokens(user) {
+function _refreshGoogleTokens(user, callback) {
 
 	oauth2Client.setCredentials(user.google.tokens);
 
@@ -193,57 +240,60 @@ function _refreshGoogleTokens(user) {
 	.execute(function(err, client) {
 
 		if (err)
-			console.log("Google - ", err);
+			return callback(err);
 
 		client.oauth2.userinfo.v2.me.get()
 		.withAuthClient(oauth2Client)
 		.execute(function (err, userinfo) {
 
 			if (err)
-				console.log("Google - ", err);
+				return callback(err);
+
 
 			//console.log("userinfo.name ", userinfo.name);
-
-			console.log("Credentials", oauth2Client.credentials);
+			//console.log("Credentials", oauth2Client.credentials);
 
 			var new_access_token = oauth2Client.credentials.access_token;
+			console.log("Old access_token = ", user.google.tokens.access_token);
+			console.log("New access_token = ", new_access_token);
 
-			if (new_access_token && 
-				new_access_token != user.google.tokens.access_token) {
+			if (new_access_token != user.google.tokens.access_token) {
 				// update user's access token in database
 				
 		        user = _.extend(user, 
 		        {
 	            	"google": {
+	            		"user_id": user.google.user_id,
 	            		"tokens": {
-	            			"access_token": new_access_token
+	            			"access_token": new_access_token,
+	            			"refresh_token": user.google.tokens.refresh_token
 	            		}
 	            	}
 	            });
 		        
 		        user.save(function(err, doc) {
 		            if (err) {
-		                return console.log(err);
+		                callback(err);
+		            } else {
+		            	console.log("Google - access token updated");
+		            	callback(null);
 		            }
-		            console.log("Google - access token updated");
 		        });
 
+		        
+			} else {
+				callback(null);
 			}
-
 		});
 	}); 
-
-
 }
 
 
 
 
-/* @return contacts
+/* 
 */
-function _getGoogleContacts(user) {
-
-	var result_contacts = [];
+function _getGoogleContacts(user, callback) {
 
 	var c = new GoogleContacts({
 		consumerKey: GOOGLE_CLIENT_ID,
@@ -253,26 +303,96 @@ function _getGoogleContacts(user) {
 	});
 
 	c.getContacts({
-		//email: 'etudiant.beaumont@gmail.com'
 		email: user.email
-
 	}, function(err, contacts) {
 		if (err) {
-			console.log("Google - ", err);
+			console.log("Google error - ", err);
 		} else {
+			console.log("_getGoogleContacts ; contacts = ");
 			console.log(contacts);
 			console.log(contacts.length);
+			callback(contacts);
 		}
 	});
+}
+
+
+function _insertContact (icontact) {
+
+}
+
+function _updateContact(contact, icontact) {
+
+}
+
+/* 
+*/
+function _mergeOneContact (icontact) {
+	ContactModel.find({email: icontact.email},
+		function (err, contacts) {
+//			console.log(contacts);
+
+			if (contacts.length > 0) { 
+
+
+			} else { // no result on email
+
+				contacts = ContactModel.find({phone_pro: icontact.phone},
+					function (err, contacts) {
+						if (contacts.length == 0) {
+							// insert the new contact
+
+							var contact = new ContactModel(
+							{
+								firstname: 	icontact.firstname,
+								lastname: 	icontact.lastname,
+								email: 		icontact.email,
+								phone_pro: 	icontact.phone
+							});
+
+							contact.save(function(err, doc) {
+								if (err)
+									console.log(err);
+								else
+									console.log("Contact inserted - ", doc);
+
+							});
+						}
+					});
+			}
+		});
+}
+
+/* @param icontacts Imported contacts
+*/
+function _mergeImportedContacts(icontacts) {
+	var ic_length = icontacts.length;
 	
-	// c.getContactGroups('thin', 200);
-
-
+	for(var i = 0; i < ic_length; ++i) {
+		_mergeOneContact(icontacts[i]);		
+	}
 }
 
 function _treatGoogleUser(user) {
-	_refreshGoogleTokens(user);
-
-	var contacts = _getGoogleContacts(user);
+	_refreshGoogleTokens(user, 
+		function (err) {
+		if (err)
+			console.log("Google error - ", err);
+		else
+			_getGoogleContacts(user, _mergeImportedContacts);	
+	});
 }
+
+
+
+
+
+
+
+
+
+/*
+ * ****************** EXPORT ***********************************************************
+ */
+
 
