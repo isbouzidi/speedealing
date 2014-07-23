@@ -92,7 +92,7 @@ Object.prototype = {
     },
     create: function(req, res) {
         
-        console.log("ach ka : " + req.body);
+        
         var reportModel = new ReportModel(req.body);
 
         reportModel.save(function(err, doc) {

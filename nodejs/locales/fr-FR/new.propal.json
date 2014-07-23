@@ -96,6 +96,6 @@
     "DocModelJauneDescription": "Modèle de proposition Jaune",
     "Numbershort": "N°",
     "LinkdedOrders": "Commandes jointes",
-    "List": "propal:List"
-}    "Statistics": "propal:Statistics"
+    "List": "propal:List",
+    "Statistics": "propal:Statistics"
 }

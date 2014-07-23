@@ -31,7 +31,7 @@ var ReportSchema = new Schema({
             type: String,
             method: String,
             date: Date,
-            realised : Boolean
+            realised : Boolean, default: false
 	}],
 	optional : Schema.Types.Mixed,
 	comment: String,

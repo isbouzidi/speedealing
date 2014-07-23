@@ -6,19 +6,35 @@ angular.module('mean.reports').controller('ReportController', ['$scope', '$locat
 angular.module('mean.reports').controller('ReportCreateController', ['$scope', '$http', '$modalInstance', '$modal', '$upload', '$route', 'Global', 'Reports', function($scope, $http, $modalInstance, $modal, $upload, $route, Global, Reports) {
 
         $scope.global = Global;
-        $scope.report = {};
-        $scope.report.contacts = [];
-        $scope.report.products = [];
-        $scope.report.optional = {};
-        $scope.report.optional.business = {};
-        $scope.report.optional.subject = {};
-        $scope.report.optional.reports = [];
-        $scope.report.optional.subject.deployment = [];
-        $scope.report.optional.subject.progressPoints = [];
-        $scope.report.optional.business.reason = [];
+        $scope.report = {
+            contacts: [],
+            products: [],
+            actions: [],
+            optional: {
+                reports: [],
+                business: {
+                    reason: []
+                },
+                subject: {
+                    deployment: [],
+                    progressPoints: []
+                }
+            }
+        };
+        $scope.actionMethod = [];
+//        $scope.report.contacts = [];
+//        $scope.report.products = [];
+//        $scope.report.actions = [];
+//        $scope.report.optional = {};
+//        $scope.report.optional.business = {};
+//        $scope.report.optional.subject = {};
+//        $scope.report.optional.reports = [];
+//        $scope.report.optional.subject.deployment = [];
+//        $scope.report.optional.subject.progressPoints = [];
+//        $scope.report.optional.business.reason = [];
 
         $scope.init = function() {
-
+            
             $http({method: 'GET', url: '/api/report/caFamily/select', params: {
                     field: "caFamily"
                 }
@@ -115,7 +131,41 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 $scope.report.optional.reports.push(reason);
             }
         };
+        
+        $scope.actionSelection = function actionSelection(action) {
+            
+            var found = false;
+            var idx;
+            var actionObj = {};
+            
+            for(var i = 0; i < $scope.report.actions.length; i++) {
+                if ($scope.report.actions[i].type === action) {
+                    found = true;
+                    $scope.report.actions.splice(i, 1);
+                    break;
+                }
+            }
+            
+            if(!found){
+                
+                actionObj = {
+                  type: action,
+                  method: null
+                };
+                
+                $scope.report.actions.push(actionObj);
+            };
+                
+        };
 
+        $scope.addActionMethod = function(action){
+            
+            for(var i = 0; i < $scope.report.actions.length; i++)
+                if($scope.report.actions[i].type === action)
+                    $scope.report.actions[i].method = $scope.actionMethod[action];
+            
+        };
+        
         $scope.createReport = function() {
             
             $scope.report.author = {
@@ -127,8 +177,9 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 name: $scope.global.contactNameSociete,
                 _id: $scope.global.contactIdSociete
             };
-
-            $scope.report.model = $scope.report.model.id;
+            console.log("actions : " + $scope.report.actions);
+            
+            $scope.report.model = $scope.report.modelTemp.id;
 
             var report = new Reports(this.report);
             
@@ -137,19 +188,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
             });
         };
-
-//        $scope.test = function(index) {
-//
-//            angular.forEach($scope.report.actions, function(action) {
-//                if (action.type === $scope.report.actions.type) {
-//                    $scope.category = category;
-//                }
-//            });
-//            if ($scope.report.actions[index].type === false)
-//                $scope.report.actions.splice(index, 1);
-//
-//        };
-
+        
         $scope.addNewContact = function() {
 
             var modalInstance = $modal.open({
@@ -166,10 +205,10 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         };
 
         $scope.updateReportTemplate = function() {
+            
+            var model = $scope.report.modelTemp.id;
 
-            var category = $scope.report.model.id;
-
-            switch (category) {
+            switch (model) {
                 case 'DISCOVERY' :
                     $scope.template = "/partials/reports/discovery.html";
                     break;

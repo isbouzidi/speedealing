@@ -5,11 +5,11 @@
 
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
-            <label for="category"><b>{{t 'reports:Model'}}</b></label>
+            <label for="model"><b>Model</b></label>
             <select class="form-control" 
-                    id="category" 
-                    data-ng-model="report.model" 
-                    data-ng-options="m as m.label for m in model" 
+                    id="model" 
+                    ng-model="report.modelTemp" 
+                    ng-options="m as m.label for m in model" 
                     ng-change="updateReportTemplate()">                                    
             </select>
         </div>
@@ -53,15 +53,14 @@
                 Ajouter
             </a>
             
-            <!--<div class="gridStyle" ng-grid="gridOptions"></div>-->
-            <table class="simple-table responsive-table responsive-table-on">
+            <table class="table table-condensed">
                 <tbody>
-                    <tr ng-repeat="c in report.contacts">
+                    <tr ng-repeat="c in report.contacts" class="active">
                         <td>\{{c.name}}</td>
                         <td>\{{c.poste}}</td>
                         <td>
-                            <a href="" class="button button-icon red-gradient" ng-click="delete($index)">
-                                <span class="icon-trash"></span>
+                            <a href="" ng-click="delete($index)">
+                                supprimer
                             </a>
                         </td>
                     </tr>
