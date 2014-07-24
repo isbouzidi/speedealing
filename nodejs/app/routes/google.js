@@ -316,7 +316,10 @@ function _getGoogleContacts(user, callback) {
 	});
 }
 
-
+/* Merge native contact with imported contact
+ * @param contact Native contact
+ * @param icontact Imported contact
+ */
 function _updateContact(contact, icontact) {
 
 	 contact = _.extend(contact, icontact);
@@ -327,10 +330,7 @@ function _updateContact(contact, icontact) {
 	// contact.lastname	= contact.lastname || icontact.lastname;
 	// contact.email		= contact.email || icontact.email;
 	// contact.phone		= contact.phone || icontact.phone;
-
-
 	// contact.organization 	= contact.organization || icontact.organization;
-
 	// console.log("icontact.organization ", icontact.organization);
 
 	contact.save(function(err, doc) {
@@ -342,7 +342,9 @@ function _updateContact(contact, icontact) {
 
 }
 
-
+/* @param icontact Imported contact
+ * @param else_callback Function to call if can't merge
+*/
 function _mergeOneByEmail(icontact, else_callback) {
 	
 	if (icontact.email) {
@@ -352,7 +354,6 @@ function _mergeOneByEmail(icontact, else_callback) {
 				for (var i = 0; i < contacts.length ; ++i) {
 					_updateContact(contacts[i], icontact);
 				}					
-
 			} else { // no result
 				else_callback(icontact);
 			}
@@ -362,6 +363,9 @@ function _mergeOneByEmail(icontact, else_callback) {
 	}
 }
 
+/* @param icontact Imported contact
+ * @param else_callback Function to call if can't merge
+*/
 function _mergeOneByPhone(icontact, else_callback) {
 	if (icontact.phone) {
 		ContactModel.find({phone: icontact.phone},
@@ -370,7 +374,6 @@ function _mergeOneByPhone(icontact, else_callback) {
 				for (var i = 0; i < contacts.length ; ++i) {
 					_updateContact(contacts[i], icontact);
 				}					
-
 			} else { // no result
 				else_callback(icontact);
 			}
@@ -380,13 +383,14 @@ function _mergeOneByPhone(icontact, else_callback) {
 	}
 }
 
-
+/* @param icontact Imported contact
+*/
 function _insertNewContact(icontact) {
 	var contact = new ContactModel({});
 	_updateContact(contact, icontact);
 }
 
-/* 
+/* @param icontact Imported contact
 */
 function _mergeOneContact (icontact) {
 	_mergeOneByEmail(icontact,
@@ -406,14 +410,19 @@ function _mergeImportedContacts(icontacts) {
 	}
 }
 
+
+
+/* Main function to treat a google user 
+*/
 function _treatGoogleUser(user) {
 	_refreshGoogleTokens(user, 
 		function (err) {
-		if (err)
-			console.log("Google error - ", err);
-		else
-			_getGoogleContacts(user, _mergeImportedContacts);	
-	});
+			if (err)
+				console.log("Google error - ", err);
+			else
+				_getGoogleContacts(user, _mergeImportedContacts);	
+		}
+	);
 }
 
 
