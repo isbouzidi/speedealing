@@ -425,10 +425,10 @@ Object.prototype = {
 					else
 						product.caFamily = "OTHER";
 
-					if (typeof ca[doc.caFamily] === "undefined")
-						ca[doc.caFamily] = 0;
+					if (typeof ca[product.caFamily] === "undefined")
+						ca[product.caFamily] = 0;
 
-					ca[doc.caFamily] += product.total_ht;
+					ca[product.caFamily] += product.total_ht;
 					//console.log(ca);
 
 					callback();
