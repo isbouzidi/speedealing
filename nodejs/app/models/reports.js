@@ -17,26 +17,23 @@ var ReportSchema = new Schema({
         model: String,
 	dateReport: Date,	
 	societe: {
-		_id: {type: Schema.Types.ObjectId},
+		id: Schema.Types.ObjectId,
 		name: String
 	},
 	duration: Number,
-	contacts:[{
-            _id: Schema.Types.ObjectId,
-            name: String,
-            poste: String
-            }],
+	contacts: Schema.Types.Mixed,
 	products:[String],
-	actions:[{
-            type: String,
+        actions : Schema.Types.Mixed,
+        /*actions:[{
+            type: {type: String},
             method: String,
             date: Date,
-            realised : Boolean, default: false
-	}],
+            realised : {type: Boolean}, default: false
+	}],*/
 	optional : Schema.Types.Mixed,
 	comment: String,
 	author:{
-            _id: String,
+            id: String,
             name: String
     }
 });

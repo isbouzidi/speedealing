@@ -1,7 +1,7 @@
 <div class="field-block button-height">
     <label for="fonction"><b>Potentiel attractivité/an</b></label>
     <span ng-repeat="p in potentialAttract">
-        <input type="radio" ng-model="potentialAttract" value="\{{p.id}}" class="">\{{p.label}}
+        <input type="radio" ng-model="potentialAttract" value="\{{p.label}}" class="">\{{p.label}}
     </span>
 </div>
 <div class="field-block">
@@ -11,10 +11,9 @@
     <label for="fonction"><b>Produit</b></label>
     <span ng-repeat="p in products"  class="checkbox-inline">
         
-        <input type="checkbox" 
-               name="selectedProducts[]" 
+        <input type="checkbox"
                value="\{{p}}"  
-               ng-click="productSelection(p)"> 
+               ng-click="productSelection(p)">
                 \{{p}}
     </span>
     
@@ -23,16 +22,17 @@
     <h4>Actions à faire</h4>
 </div>
 <div class="field-block button-height">
+    
     <label for="senBooklet"><b>Envoi plaquette</b></label>
-    <input type="checkbox" name="selectedAction[]" ng-model="plaquette" ng-click="actionSelection('plaquette')" value="plaquette">
+    <input type="checkbox" ng-model="plaquette" ng-click="actionSelection('plaquette')" value="plaquette">
     <br/>
     <span ng-show="plaquette">
         <span class="k-widget k-datepicker k-header input">
             <span class="k-picker-wrap k-state-default">
                 <input 
                     kendo-date-picker 
-                    id="sendBooklet.date" 
-                    k-on-change="report.actionDate['plaquette'] = kendoEvent.sender._value;" 
+                    k-ng-model = "actionDate['plaquette']"
+                    k-on-change="onDateSelected(kendoEvent, 'plaquette')" 
                     class="input"/>
             </span>
         </span>
@@ -46,35 +46,35 @@
 </div>
 <div class="field-block button-height">
     <label for="sendOffer"><b>Envoi offre</b></label>
-    <input type="checkbox" name="selectedAction[]" ng-model="offre" ng-click="actionSelection('offre')" value="offre">
+    <input type="checkbox" ng-model="offre" ng-click="actionSelection('offre')" value="offre">
     <br/>
     <span ng-show="offre">
         <span class="k-widget k-datepicker k-header input">
             <span class="k-picker-wrap k-state-default">
                 <input 
-                    kendo-date-picker 
-                    id="sendOffer.date" 
-                    k-on-change="report.actionDate['offre'] = kendoEvent.sender._value;"
-                    
+                    kendo-date-picker
+                    ng-model = "actionDate['offre']"
+                    k-on-change="onDateSelected(kendoEvent, 'offre')"
                     class="input"/>
             </span>
         </span><br/>
         <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Par mail" class=""> Par mail
         <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Par courrier" class=""> Par courrier
         <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Déplacement" class=""> Déplacement
-        <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Téléphone" class=""> Déplacement
+        <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Téléphone" class=""> Téléphone
     </span>
 </div>
 <div class="field-block button-height">
     <label for="nextAction"><b>Prochaine action</b></label>
-    <input type="checkbox" name="selectedAction[]" ng-model="nextAction" ng-click="actionSelection('prochaine action')">
+    <input type="checkbox" ng-model="nextAction" ng-click="actionSelection('prochaine action')">
+    <br/>
     <span ng-show="nextAction">
         <span class="k-widget k-datepicker k-header input">
             <span class="k-picker-wrap k-state-default">
                 <input 
-                    kendo-date-picker 
-                    id="sendOffer.date" 
-                    k-on-change="report.action.date = kendoEvent.sender._value;" 
+                    kendo-date-picker
+                    ng-model = "actionDate['prochaine action']"
+                    k-on-change="onDateSelected(kendoEvent, 'prochaine action')" 
                     class="input"/>
             </span>
         </span>
@@ -87,14 +87,15 @@
 </div>
 <div class="field-block button-height">
     <label for="dayVisitWorkshop"><b>Visite atelier</b></label>
-    <input type="checkbox" name="selectedAction[]" ng-model="visitAtelier" ng-click="actionSelection('visite atelier')">
+    <input type="checkbox" ng-model="visitAtelier" ng-click="actionSelection('visite atelier')">
+    <br/>
     <span ng-show="visitAtelier">
     <span class="k-widget k-datepicker k-header input">
         <span class="k-picker-wrap k-state-default">
             <input 
                 kendo-date-picker 
-                id="dayVisitWorkshop" 
-                k-on-change="report.dayVisitWorkshop = kendoEvent.sender._value;" 
+                k-ng-model = "actionDate['visite atelier']"
+                k-on-change="onDateSelected(kendoEvent, 'visite atelier')"  
                 class="input"/>
         </span>
     </span>
@@ -102,13 +103,23 @@
 </div>
 <div class="field-block button-height">
     <label for="nextAppointment"><b>Prochain rendez-vous</b></label>
-    <input type="checkbox" name="selectedAction[]" ng-model="nextAppointment" ng-click="actionSelection('prochain rendez-vous')">
-    <span ng-show="nextAppointment">
-        
+    <input type="checkbox" ng-model="nextAppointment" ng-click="actionSelection('prochain rendez-vous')">
+    <br/>
+    <div ng-show="nextAppointment">
+        <span class="k-widget k-datepicker k-header input">
+        <span class="k-picker-wrap k-state-default">
+            <input 
+                kendo-date-picker 
+                ng-model = "actionDate['prochain rendez-vous']"
+                k-on-change="onDateSelected(kendoEvent, 'prochain rendez-vous')"  
+                class="input"/>
+        </span>
+        </span>
+        <br/>
         <input type="radio" ng-model="actionMethod['prochain rendez-vous']" ng-change="addActionMethod('prochain rendez-vous')"  value="Remise offre" class=""> Remise offre
         <input type="radio" ng-model="actionMethod['prochain rendez-vous']" ng-change="addActionMethod('prochain rendez-vous')" value="Déjeuner" class=""> Déjeuner
         <input type="radio" ng-model="actionMethod['prochain rendez-vous']" ng-change="addActionMethod('prochain rendez-vous')" value="Démo" class=""> Démo
-    </span>
+    </div>
 </div>
 <div class="field-block">
     <h4>Leads détectées</h4>
@@ -119,6 +130,4 @@
 <div class="field-block button-height">
     <label for="comment"><b>Commentaires/observations</b></label>
     <textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea>
-    <br>
-    <pre>\{{report | json}}</pre>
 </div>

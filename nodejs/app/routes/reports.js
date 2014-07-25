@@ -58,9 +58,12 @@ module.exports = function(app, passport, auth) {
     });
 
     app.get('/api/report/fk_extrafields/select', auth.requiresLogin, object.select);
-    
+
     //add new report
     app.post('/api/reports', auth.requiresLogin, object.create);
+    
+    //get all report of a company
+    app.get('/api/report', auth.requiresLogin, object.read);
 };
 
 function Object() {
@@ -74,10 +77,9 @@ Object.prototype = {
                 console.log(err);
                 return;
             }
-            
+
             var result = [];
             if (doc.fields[req.query.field])
-
                 for (var i in doc.fields[req.query.field].values) {
                     if (doc.fields[req.query.field].values[i].enable) {
                         var val = {};
@@ -86,15 +88,15 @@ Object.prototype = {
                         result.push(val);
                     }
                 }
-                
-                res.json(result);
+
+            res.json(result);
         });
     },
     create: function(req, res) {
-        
-        
-        var reportModel = new ReportModel(req.body);
 
+
+        var reportModel = new ReportModel(req.body);
+        console.log("log " + req.body.report);
         reportModel.save(function(err, doc) {
             if (err) {
                 //return res.json(500, err);
@@ -103,5 +105,27 @@ Object.prototype = {
 
             res.json(200, doc);
         });
+    },
+    read: function(req, res) {
+
+        
+            var query = {};
+            var fields = {};
+            
+            query = JSON.parse(req.query.find);
+            
+            if (req.query.fields) {
+                fields = req.query.fields;
+            }
+
+            ReportModel.find(query, fields, function(err, doc) {
+                if (err) {
+                    console.log(err);
+                    res.send(500, doc);
+                    return;
+                }
+
+                res.send(200, doc);
+            });
     }
 };

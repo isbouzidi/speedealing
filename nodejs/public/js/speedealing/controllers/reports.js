@@ -7,6 +7,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
         $scope.global = Global;
         $scope.report = {
+            duration: 1,
             contacts: [],
             products: [],
             actions: [],
@@ -21,17 +22,9 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 }
             }
         };
+        
         $scope.actionMethod = [];
-//        $scope.report.contacts = [];
-//        $scope.report.products = [];
-//        $scope.report.actions = [];
-//        $scope.report.optional = {};
-//        $scope.report.optional.business = {};
-//        $scope.report.optional.subject = {};
-//        $scope.report.optional.reports = [];
-//        $scope.report.optional.subject.deployment = [];
-//        $scope.report.optional.subject.progressPoints = [];
-//        $scope.report.optional.business.reason = [];
+        $scope.actionDate = [];
 
         $scope.init = function() {
             
@@ -45,7 +38,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             var fields = [
                 "potentialAttract", 
                 "model", 
-                "typeaAction", 
+                "typeAction", 
                 "methodAction", 
                 "typeReport", 
                 "typeBusiness", 
@@ -142,6 +135,8 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 if ($scope.report.actions[i].type === action) {
                     found = true;
                     $scope.report.actions.splice(i, 1);
+                    $scope.actionMethod[action] = false;
+                    $scope.actionDate[action] = null;
                     break;
                 }
             }
@@ -149,8 +144,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             if(!found){
                 
                 actionObj = {
-                  type: action,
-                  method: null
+                  type: action
                 };
                 
                 $scope.report.actions.push(actionObj);
@@ -166,20 +160,28 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             
         };
         
+        $scope.onDateSelected = function(e, action) {
+            var datePicker = e.sender;
+            $scope.selected = true;
+            
+            for(var i = 0; i < $scope.report.actions.length; i++)
+                if($scope.report.actions[i].type === action)
+                    $scope.report.actions[i].date = datePicker.value();
+          };
+        
         $scope.createReport = function() {
             
             $scope.report.author = {
-                _id: $scope.global.user._id,
+                id: $scope.global.user._id,
                 name: $scope.global.user.firstname + ' ' + $scope.global.user.lastname
             };
 
             $scope.report.societe = {
                 name: $scope.global.contactNameSociete,
-                _id: $scope.global.contactIdSociete
+                id: $scope.global.contactIdSociete
             };
-            console.log("actions : " + $scope.report.actions);
             
-            $scope.report.model = $scope.report.modelTemp.id;
+            $scope.report.model = $scope.report.modelTemp.label;
 
             var report = new Reports(this.report);
             
@@ -238,7 +240,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         $scope.addContact = function() {
 
             var add = {
-                _id: $scope.report.cont._id,
+                id: $scope.report.cont._id,
                 name: $scope.report.cont.name,
                 poste: $scope.report.cont.poste
             };
@@ -262,4 +264,5 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             }
             
         };
+        
     }]);
