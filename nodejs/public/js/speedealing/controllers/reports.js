@@ -200,8 +200,8 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             });
 
             modalInstance.result.then(function(contacts) {
-                $scope.contacts.push(contacts);
-                $scope.countContact++;
+                $scope.report.contacts.push(contacts);
+                
             }, function() {
             });
         };
