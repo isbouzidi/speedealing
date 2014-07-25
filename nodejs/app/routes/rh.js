@@ -210,7 +210,7 @@ Object.prototype = {
 
         var rhUser = new RhModel(req.body);
 
-        //rhUser.name = req.body.login.toLowerCase();
+        rhUser.name = req.body.login.toLowerCase();
         var login = req.body.login;
         rhUser._id = 'user:' + login;
 
