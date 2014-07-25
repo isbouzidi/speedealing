@@ -426,7 +426,7 @@ Object.prototype = {
 			query.type = req.query.type;
 
 		if (req.query.barCode)
-			query.barCode = {$exists: true};
+			query.barCode = {$ne: null};
 
 		ProductModel.find(query, "ref label barCode billingMode type caFamily", {limit: 50}, function(err, products) {
 			if (err)
