@@ -420,7 +420,9 @@ Object.prototype = {
 		});
 	},
 	read: function(req, res) {
-		var query = {};
+		var query = {
+			Status: {$in:["SELL","SELLBUY"]}
+		};
 
 		if (req.query.type)
 			query.type = req.query.type;

@@ -2036,7 +2036,6 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		};
 
 		$scope.update = function(row) {
-			console.log("update");
 			if (!$scope.productsTab[row.rowIndex].qtyAdd)
 				return;
 
