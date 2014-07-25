@@ -84,6 +84,7 @@ angular.module('mean.system').directive('ngEnter', function() {
 angular.module('mean.system').directive('ngBlur', function() {
 	return function(scope, elem, attrs) {
 		elem.bind('blur', function(event) {
+			console.log("blur");
 			scope.$apply(attrs.ngBlur);
 		});
 	};
