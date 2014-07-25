@@ -1,6 +1,6 @@
-<section data-ng-controller="OrderController">
+<section data-ng-controller="OrderSupplierController">
 	<hgroup id="main-title" class="thin">
-		<h1>\{{'orders:ListOfOrders'| i18next}}</h1>
+		<h1>\{{'orders:ListOfOrdersSupplier'| i18next}}</h1>
 	</hgroup>
 
 	<!--<div class="dashboard">
@@ -26,8 +26,7 @@
 					</div>
 				</div>
 				<div class="col-sm-4">
-					{{t
-							'Mode'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
+					{{t 'Mode'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
 				</div>
 				<div class="col-sm-4">
 					<div class="float-right">

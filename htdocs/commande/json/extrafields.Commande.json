@@ -93,6 +93,14 @@
 			},
 			"dict": "dict:fk_order_status"
 		},
+		"StatusSupplier" : {
+            "type" : "select",
+            "enable" : true,
+            "default" : "NEW",
+            "status" : true,
+            "label" : "Etat",
+			"dict": "dict:fk_order_status_supplier"
+        },
 		"cond_reglement_code": {
 			"schema": {"type": "String", "default": "RECEP"},
 			"type": "select",

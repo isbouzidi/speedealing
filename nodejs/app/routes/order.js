@@ -38,6 +38,8 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
+	
+	app.get('/api/order/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	//Finish with setting up the orderId param
 	app.param('orderId', object.order);

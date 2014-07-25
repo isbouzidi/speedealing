@@ -89,7 +89,8 @@
     "OrdersStatisticsSuppliers": "Statistiques des commandes fournisseurs",
     "NumberOfOrdersByMonth": "Nombre de commandes par mois",
     "AmountOfOrdersByMonthHT": "Montant total de commandes par mois (HT)",
-    "ListOfOrders": "Liste des commandes",
+    "ListOfOrders": "Commandes clients",
+	"ListOfOrdersSupplier": "Commandes fournisseurs",
     "CloseOrder": "Clôturer commande",
     "ConfirmCloseOrder": "Êtes-vous sûr de vouloir clôturer cette commande ? Une fois une commande clôturée, elle peut être facturée.",
     "ConfirmCloseOrderIfSending": "Êtes-vous sûr de vouloir clôturer cette commande ? Vous ne devez clôturer une commande qu'une fois les produits expédiés.",
@@ -106,6 +107,7 @@
     "RelatedOrders": "Commandes rattachées",
     "OnProcessOrders": "Commandes en cours de traitement",
     "RefOrder": "Réf. commande",
+	"RefOrderSupplier": "Réf. commande fournisseur",
     "RefCustomerOrder": "Réf. commande client",
     "RefCustomerOrderShort": "Réf. com. client",
     "SendOrderByMail": "Envoi commande par mail",
@@ -158,6 +160,5 @@
     "CloseProcessedOrdersAutomatically": "Classer automatiquement à \"Traitées\" les commandes sélectionnées.",
     "LinkedInvoices": "Factures jointes",
     "LinkedProposals": "Propositions commerciales jointes",
-    "ShippingHT": "Frais de transport",
-	"List": "Liste"
+    "ShippingHT": "Frais de transport"
 }

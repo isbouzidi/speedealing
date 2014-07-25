@@ -16,6 +16,7 @@ window.app = angular.module('mean', [
 	'mean.system',
 	'mean.societes',
 	'mean.orders',
+	'mean.ordersSupplier',
 	'mean.bills',
 	'mean.users',
 	'mean.accounting',
@@ -29,6 +30,7 @@ window.app = angular.module('mean', [
 angular.module('mean.system', []);
 angular.module('mean.societes', []);
 angular.module('mean.orders', []);
+angular.module('mean.ordersSupplier', []);
 angular.module('mean.users', []);
 angular.module('mean.bills', []);
 angular.module('mean.accounting', []);
@@ -43,7 +45,7 @@ angular.module('jm.i18next').config(['$i18nextProvider', function ($i18nextProvi
         resGetPath: 'locales/__lng__/__ns__.json',
 		//resPostPath: 'locales/__lng__/new.__ns__.json',
         defaultLoadingValue: '', // ng-i18next option, *NOT* directly supported by i18next
-		ns: {namespaces: ["main","bills"], defaultNs: 'main'},
+		ns: {namespaces: ["main","bills","orders"], defaultNs: 'main'},
 		supportedLngs: ['fr-FR','en-US'],
 		//load: 'current',
 		useCookie: false,
