@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config'),
 		timestamps = require('mongoose-timestamp'),
-		xml2js = require('xml2js');
+		xml2js = require('xml2js'),
+		array = require("array-extended");
 
 var googleapis = require('googleapis');
 var OAuth2Client = googleapis.auth.OAuth2;
@@ -211,22 +212,22 @@ Google.prototype = {
 };
 
 
-/*
- * ****************** IMPORT ************************************************************
- */
-
-
+/* *** */
 
 function _isGoogleEmail(email) {
 	return (email.toLowerCase().indexOf("@gmail.com") != -1)
 }
-
 
 function _hasGrantedAccess(user) {
 	return (user.google.tokens.access_token &&
 		user.google.tokens.refresh_token &&
 		user.google.user_id);
 }
+
+/*
+ * ****************** IMPORT ************************************************************
+ */
+
 
 function _refreshGoogleTokens(user, callback) {
 
@@ -289,11 +290,10 @@ function _refreshGoogleTokens(user, callback) {
 }
 
 
-
-
 /* 
 */
 function _getGoogleContacts(user, callback) {
+	console.log("\n\n*** GETTING CONTACTS PROCESS ***\n\n");
 
 	var c = new GoogleContacts({
 		consumerKey: GOOGLE_CLIENT_ID,
@@ -308,12 +308,59 @@ function _getGoogleContacts(user, callback) {
 		if (err) {
 			console.log("Google error - ", err);
 		} else {
-			console.log("_getGoogleContacts ; contacts = ");
-			console.log(contacts);
-			console.log(contacts.length);
+			// console.log("_getGoogleContacts ; contacts = ");
+			// console.log(contacts);
+			// console.log(contacts.length);
 			callback(contacts);
 		}
 	});
+}
+
+/* *** */
+
+/*
+* Recursively merge properties of two objects 
+*/
+function _recursivelyMerging(obj1, obj2) {
+
+	for (var p in obj2) {
+		if (p != "_id") {
+			try {
+				// Property in destination object set; update its value.
+				if ( obj2[p].constructor == Object ) {
+					obj1[p] = _recursivelyMerging(obj1[p], obj2[p]);
+				} else {
+					obj1[p] = obj2[p];
+				}
+			} catch(e) {
+				// Property in destination object not set; create it and set its value.
+				obj1[p] = obj2[p];
+			}
+		}
+	}
+	return obj1;
+}
+
+
+/* Input array need to be sorted.
+* @param arr_in Array to treat. Not changed.
+* @param result array
+*/
+function _array_unique(arr_in, fct_are_equal) {
+    var len = arr_in.length;
+    if (len < 2)
+        return arr_in;
+    var result = [];
+    for (var i=0; i < len; ) {
+        result.push(arr_in[i]);
+
+        var j = i+1;
+        while(j < len && fct_are_equal(arr_in[i], arr_in[j]))
+            ++j;
+
+        i = j;
+    }
+    return result;
 }
 
 /* Merge native contact with imported contact
@@ -322,87 +369,104 @@ function _getGoogleContacts(user, callback) {
  */
 function _updateContact(contact, icontact) {
 
-	 contact = _.extend(contact, icontact);
+	//contact = _recursivelyMerging(contact, icontact);
 
-	 console.log("Contact to up/ins. = ", contact);
+	var emails = [];
 
-	// contact.firstname	= contact.firstname || icontact.firstname;
-	// contact.lastname	= contact.lastname || icontact.lastname;
-	// contact.email		= contact.email || icontact.email;
-	// contact.phone		= contact.phone || icontact.phone;
-	// contact.organization 	= contact.organization || icontact.organization;
-	// console.log("icontact.organization ", icontact.organization);
+	if (icontact.emails) {
+        emails = _array_unique(
+            array(icontact.emails).union(contact.emails).sort("address").value()
+            
+            ,function (a, b) {
+                return a.address == b.address && a.type == b.type;
+            });
+    }
+
+    contact = _.extend(contact, icontact);
+    contact.emails = emails;
+
+	console.log("Contact to up/ins. = ", contact);
 
 	contact.save(function(err, doc) {
 		if (err)
 			console.log(err);
-		else
-			console.log("Contact updated/inserted - ", doc);
+		// else
+		 //	console.log("Contact updated/inserted - ", doc, "\n");
 	});
-
 }
 
-/* @param icontact Imported contact
- * @param else_callback Function to call if can't merge
-*/
-function _mergeOneByEmail(icontact, else_callback) {
-	
-	if (icontact.email) {
-		ContactModel.find({email: icontact.email},
-		function (err, contacts) {
-			if (contacts.length > 0) { 
-				for (var i = 0; i < contacts.length ; ++i) {
-					_updateContact(contacts[i], icontact);
-				}					
-			} else { // no result
-				else_callback(icontact);
-			}
-		});
-	} else {
-		else_callback(icontact);
+function _updateContacts(contacts, icontact) {
+
+	if (contacts && contacts.length > 0) { 
+		for (var i = 0; i < contacts.length ; ++i) {
+			_updateContact(contacts[i], icontact);
+		}	
+		return true;				
+	} else { // no result
+		return false;
 	}
 }
 
-/* @param icontact Imported contact
- * @param else_callback Function to call if can't merge
-*/
-function _mergeOneByPhone(icontact, else_callback) {
-	if (icontact.phone) {
-		ContactModel.find({phone: icontact.phone},
-		function (err, contacts) {
-			if (contacts.length > 0) { 
-				for (var i = 0; i < contacts.length ; ++i) {
-					_updateContact(contacts[i], icontact);
-				}					
-			} else { // no result
-				else_callback(icontact);
-			}
-		});
-	} else {
-		else_callback(icontact);
-	}
-}
 
 /* @param icontact Imported contact
 */
 function _insertNewContact(icontact) {
-	var contact = new ContactModel({});
+	console.log("INSERT NEW CONTACT " + icontact.firstname);
+	var contact = new ContactModel({
+		Status: "ST_ENABLE"
+	});
 	_updateContact(contact, icontact);
 }
 
 /* @param icontact Imported contact
 */
 function _mergeOneContact (icontact) {
-	_mergeOneByEmail(icontact,
-		function (icontact) {
-			_mergeOneByPhone(icontact, _insertNewContact);
-		}
-	);
+
+	if (icontact.emails && icontact.emails.length > 0) {
+		
+		var addresses = array(icontact.emails).pluck('address').value();
+		//console.log("addresses = ", addresses);
+
+		ContactModel.find({ 'emails.address': { $in : addresses }},
+			function (err, contacts) {
+				if (err)
+					console.log("Google - merge - ", err);
+				if (!err && !_updateContacts(contacts, icontact)) {
+					_insertNewContact(icontact);
+				}					
+			});
+
+	} else if (icontact.phone ||
+		icontact.phone_perso ||
+		icontact.phone_mobile) {
+		
+		var phone = icontact.phone || '';
+		var phone_perso = icontact.phone_perso || '';
+		var phone_mobile = icontact.phone_mobile || '';
+
+		ContactModel.find({ 
+				$or: [
+					{phone: 		phone},
+					{phone_perso: 	phone_perso},
+					{phone_mobile: 	phone_mobile}
+				]
+			},
+			function (err, contacts) {
+				if (err)
+					console.log("Google - merge - ", err);
+				if (!err && !_updateContacts(contacts, icontact)) {
+					_insertNewContact(icontact);
+				}					
+			});
+	}
+
+
 }
 
 /* @param icontacts Imported contacts
 */
 function _mergeImportedContacts(icontacts) {
+	console.log("\n\n*** MERGE PROCESS ***\n\n");
 	var ic_length = icontacts.length;
 	
 	for(var i = 0; i < ic_length; ++i) {
