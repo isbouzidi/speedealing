@@ -31,6 +31,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/societe', auth.requiresLogin, object.create);
 	app.put('/api/societe/:societeId', auth.requiresLogin, object.update);
 	app.del('/api/societe/:societeId', auth.requiresLogin, object.destroy);
+	app.put('/api/societe/:societeId/:field', auth.requiresLogin, object.updateField);
 	app.get('/api/societe/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
@@ -1158,6 +1159,18 @@ Object.prototype = {
 		societe.save(function(err, doc) {
 			res.json(doc);
 		});
+	},
+	updateField: function(req, res) {
+		if (req.body.value && typeof req.body.value === "string") {
+			var societe = req.societe;
+
+			societe[req.params.field] = req.body.value;
+
+			societe.save(function(err, doc) {
+				res.json(doc);
+			});
+		} else
+			res.send({});
 	},
 	destroy: function(req, res) {
 		var societe = req.societe;

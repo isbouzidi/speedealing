@@ -197,7 +197,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			pageSize: 500,
 			currentPage: 1
 		};
-		
+
 		$scope.$watch('pagingOptionsSociete', function(newVal, oldVal) {
 			if (newVal.currentPage !== oldVal.currentPage) {
 				$scope.find();
@@ -220,12 +220,17 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			i18n: 'fr',
 			columnDefs: [
 				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'commercial_id.name', displayName: 'Commerciaux', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
+				{field: 'commercial_id.name', displayName: 'Commerciaux',
+					cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'
+				},
 				{field: 'zip', displayName: 'Code Postal'},
 				{field: 'town', displayName: 'Ville'},
 				{field: 'idprof3', displayName: 'APE'},
 				{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
-				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
+				{field: 'status.name', width: '150px', displayName: 'Etat',
+					//cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
+					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')" editable-select="row.getProperty(\'Status\')" buttons="no" e-form="StatusBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'Status\', row, $data)" e-ng-options="s.id as s.label for s in Status.values">{{row.getProperty(\'status.name\')}}</small> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>'
+				},
 				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
 				{field: 'entity', displayName: 'Entité', cellClass: "align-center"},
 				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right"}
@@ -244,6 +249,36 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$scope.find();
 			}
 		}, true);
+		
+		$scope.updateInPlace = function(api, field, row, newdata) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
+						data: {
+							oldvalue: row.entity[field],
+							value: newdata
+						}
+					}).
+							success(function(data, status) {
+								if (status == 200) {
+									if (data) {
+										row.entity = data;
+									}
+								}
+							});
+
+					$scope.save.pending = false;
+				}, 200);
+			}
+
+			return false;
+		};
 
 		/*
 		 * NG-GRID for societe segmentation list
@@ -313,7 +348,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 						//console.log(newval);
 						$http({method: 'POST', url: 'api/societe/segmentation', data: {
 								old: row.entity._id,
-								new: newval
+								new : newval
 							}
 						}).success(function(data, status) {
 							$scope.findSegmentation();
@@ -643,37 +678,6 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			]
 		};
 
-		$scope.updateInPlace = function(api, field, row) {
-			if (!$scope.save) {
-				$scope.save = {promise: null, pending: false, row: null};
-			}
-			$scope.save.row = row.rowIndex;
-
-			if (!$scope.save.pending) {
-				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
-					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
-						data: {
-							value: row.entity[field]
-						}
-					}).
-							success(function(data, status) {
-								if (status == 200) {
-									if (data.value) {
-										if (data.field === "Status")
-											for (var i = 0; i < $scope.status.length; i++) {
-												if ($scope.status[i].id === data.value)
-													row.entity.Status = $scope.status[i];
-											}
-									}
-								}
-							});
-
-					$scope.save.pending = false;
-				}, 500);
-			}
-		};
-
 		$scope.priceLevelAutoComplete = function(val, field) {
 			return $http.post('api/product/price_level/autocomplete', {
 				take: '5',
@@ -870,7 +874,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 	}]);
 
 angular.module('mean.societes').controller('SocieteSegmentationRenameController', function($scope, $modalInstance, data) {
-	$scope.data = {id : data._id};
+	$scope.data = {id: data._id};
 
 	$scope.cancel = function() {
 		$modalInstance.dismiss('canceled');

@@ -1,4 +1,4 @@
-<section data-ng-controller="SocieteController">
+<section data-ng-controller="SocieteController" data-ng-init="init()">
 	<hgroup id="main-title" class="thin">
 		<h1>Liste des sociétés</h1>
 	</hgroup>
@@ -22,7 +22,7 @@
 				<div class="col-sm-4">
 					<div class="button-group">
 						<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
-						<button title="{{t 'Refresh'}}" class="button" data-ng-click="pagingSocieteFirst()"><span class="icon-redo"></span></button>
+						<button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
 					</div>
 
 				</div>
