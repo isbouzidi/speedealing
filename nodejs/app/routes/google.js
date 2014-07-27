@@ -418,25 +418,8 @@ function _insertNewContact(icontact) {
 	_updateContact(contact, icontact);
 }
 
-/* @param icontact Imported contact
-*/
-function _mergeOneContact (icontact) {
-
-	if (icontact.emails && icontact.emails.length > 0) {
-		
-		var addresses = array(icontact.emails).pluck('address').value();
-		//console.log("addresses = ", addresses);
-
-		ContactModel.find({ 'emails.address': { $in : addresses }},
-			function (err, contacts) {
-				if (err)
-					console.log("Google - merge - ", err);
-				if (!err && !_updateContacts(contacts, icontact)) {
-					_insertNewContact(icontact);
-				}					
-			});
-
-	} else if (icontact.phone ||
+function _mergeByPhone(icontact) {
+	if (icontact.phone ||
 		icontact.phone_perso ||
 		icontact.phone_mobile) {
 		
@@ -458,6 +441,37 @@ function _mergeOneContact (icontact) {
 					_insertNewContact(icontact);
 				}					
 			});
+	} else {
+		_insertNewContact(icontact);
+	}
+}
+
+function _mergeByMail(icontact) {
+	var addresses = array(icontact.emails).pluck('address').value();
+	//console.log("addresses = ", addresses);
+
+	ContactModel.find({ 'emails.address': { $in : addresses }},
+		function (err, contacts) {
+			if (err)
+				console.log("Google - merge - ", err);
+			if (!err && !_updateContacts(contacts, icontact)) {
+				_mergeByPhone(icontact);
+			}					
+		});
+}
+
+/* @param icontact Imported contact
+*/
+function _mergeOneContact (icontact) {
+
+	if (icontact.emails && icontact.emails.length > 0) {
+		_mergeByMail(icontact);		
+
+	} else if (icontact.phone ||
+		icontact.phone_perso ||
+		icontact.phone_mobile) {
+		
+		_mergeByPhone(icontact);		
 	}
 
 
