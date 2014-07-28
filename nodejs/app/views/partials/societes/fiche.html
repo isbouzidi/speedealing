@@ -196,9 +196,9 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'commercial:Commercial'}}</th>
-													<td ><span class="icon-user"> </span><a href="#" editable-text="societe.commercial_id" buttons="no" e-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" onaftersave="update()">
+													<td ><span class="icon-user"> </span><span editable-text="societe.commercial_id" buttons="no" e-form="CommercialIdBtnForm" e-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" onaftersave="update()">
 															 \{{societe.commercial_id.name}}
-														</a></td>
+														</span> <span class="icon-pencil grey" ng-click="CommercialIdBtnForm.$show()" ng-hide="CommercialIdBtnForm.$visible"></span></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'zonegeo'}}</th>

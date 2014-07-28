@@ -1166,7 +1166,7 @@ Object.prototype = {
 		});
 	},
 	updateField: function(req, res) {
-		if (req.body.value && typeof req.body.value === "string") {
+		if (req.body.value) {
 			var societe = req.societe;
 
 			societe[req.params.field] = req.body.value;
@@ -1175,7 +1175,7 @@ Object.prototype = {
 				res.json(doc);
 			});
 		} else
-			res.send({});
+			res.send(500);
 	},
 	destroy: function(req, res) {
 		var societe = req.societe;
