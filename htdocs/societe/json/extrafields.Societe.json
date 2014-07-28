@@ -121,11 +121,11 @@
 			"enable": false
 		},
 		"Status": {
-			"schema": {"type": "Mixed", "default": "ST_NEVER"},
+			"schema": {"type": "Mixed", "default": "ST_CINF3"},
 			"type": "select",
 			"label": "Status",
 			"enable": true,
-			"default": "ST_NEVER",
+			"default": "ST_CINF3",
 			"status": true,
 			"dict": "dict:fk_stcomm",
 			"list": {

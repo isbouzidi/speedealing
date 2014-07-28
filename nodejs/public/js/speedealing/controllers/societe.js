@@ -222,7 +222,6 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			columnDefs: [
 				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'commercial_id.name', displayName: 'Commerciaux',
-					//cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'
 					cellTemplate: '<div class="ngCellText align-center"><span editable-text="row.getProperty(\'commercial_id\')" buttons="no" e-form="CommercialIdBtnForm" e-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" e-typeahead-on-select="updateInPlace(\'/api/societe\',\'commercial_id\', row, $item); CommercialIdBtnForm.$cancel();" ><span class="icon-user" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="CommercialIdBtnForm.$show()" ng-hide="CommercialIdBtnForm.$visible"></span>'
 				},
 				{field: 'zip', displayName: 'Code Postal', width:'80px'},
