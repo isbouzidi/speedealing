@@ -1066,8 +1066,13 @@ Object.prototype = {
 					break;
 			}
 		}
+		
+		var fields = "-history -files";
+		
+		if(req.query.fields)
+			fields = req.query.fields;
 
-		SocieteModel.find(query, "-history -files", {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
+		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);

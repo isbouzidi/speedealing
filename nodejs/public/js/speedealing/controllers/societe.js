@@ -87,6 +87,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			}
 
 			var p = {
+				fields: "_id commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id",
 				query: this.type.id,
 				entity: Global.user.entity,
 				//filter: $scope.filterOptionsSociete.filterText,
@@ -194,7 +195,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 		$scope.pagingOptionsSociete = {
 			pageSizes: [500, 1000, 5000],
-			pageSize: 500,
+			pageSize: 5000,
 			currentPage: 1
 		};
 
@@ -219,21 +220,23 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'commercial_id.name', displayName: 'Commerciaux',
 					cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'
 				},
-				{field: 'zip', displayName: 'Code Postal'},
+				{field: 'zip', displayName: 'Code Postal', width:'80px'},
 				{field: 'town', displayName: 'Ville'},
-				{field: 'idprof3', displayName: 'APE'},
-				{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
+				{field: 'idprof3', displayName: 'APE', width: '40px'},
+				//{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'status.name', width: '150px', displayName: 'Etat',
-					//cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')" editable-select="row.getProperty(\'Status\')" buttons="no" e-form="StatusBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'Status\', row, $data)" e-ng-options="s.id as s.label for s in Status.values">{{row.getProperty(\'status.name\')}}</small> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>'
 				},
-				{field: 'prospectLevel.name', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
-				{field: 'entity', displayName: 'Entité', cellClass: "align-center"},
-				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right"}
+				{field: 'prospectLevel.name', displayName: 'Potentiel', width: '130px',
+					//cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
+					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'prospectLevel.css\')" editable-select="row.getProperty(\'prospectlevel\')" buttons="no" e-form="ProspectLevelBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'prospectlevel\', row, $data)" e-ng-options="s.id as s.label for s in prospectlevel.values">{{row.getProperty(\'prospectLevel.name\')}}</small> <span class="icon-pencil grey" ng-click="ProspectLevelBtnForm.$show()" ng-hide="ProspectLevelBtnForm.$visible"></span>'
+				},
+				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width:'100px'},
+				{field: 'attractivity', width: "50px", displayName: 'Attractivité', cellClass: "align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
 		};
@@ -249,7 +252,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$scope.find();
 			}
 		}, true);
-		
+
 		$scope.updateInPlace = function(api, field, row, newdata) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
@@ -691,6 +694,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			});
 		};
 
+		$scope.userAutoComplete = function(val) {
+			return $http.post('api/user/name/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data;
+			});
+		};
+
 
 	}]);
 
@@ -774,7 +790,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			$scope.societe.commercial_id = {
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
-			}
+			};
 
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "forme_juridique_code"
@@ -808,7 +824,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -821,7 +837,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 

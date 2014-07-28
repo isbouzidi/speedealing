@@ -1747,7 +1747,7 @@ class Societe extends nosqlDocument {
 				$params = array('group' => true);
 				//$result = $this->getView("count_status", $params);
 				$result = $this->mongodb->aggregate(array(
-					array('$match' => array('Status' => array('$nin' => array('ST_NO')))),
+					array('$match' => array('Status' => array('$nin' => array('ST_NO', 'ST_NEVER')))),
 					array('$project' => array(
 							"Status" => 1
 						)),
@@ -1802,7 +1802,7 @@ class Societe extends nosqlDocument {
 			function cmp($a, $b) {
 				return ($a->order > $b->order);
 			}
-			
+
 			usort($output, "cmp");
 
 			$i = 0;
@@ -1917,15 +1917,16 @@ class Societe extends nosqlDocument {
 			//$result = $this->getView("commercial_status", $params);
 			$result = $this->mongodb->aggregate(array(
 				array('$match' => array('commercial_id.name' => $_GET["name"])),
+				array('$match' => array('Status' => array('$nin' => array('ST_NO', 'ST_NEVER')))),
 				array('$project' => array(
-						"Status" => 1
+						"Status" => 1, "commercial_id" => 1
 					)),
 				array('$group' => array('_id' => '$Status', 'count' => array('$sum' => 1)))));
 
 			foreach ($this->fk_extrafields->fields->Status->values as $key => $aRow) {
 				//print_r($aRow);exit;
 				$label = $langs->trans($key);
-				if ($aRow->enable) {
+				if ($aRow->enable == true) {
 					$tab[$key] = new stdClass();
 					$tab[$key]->label = $label;
 					$tab[$key]->value = 0;
@@ -2034,7 +2035,7 @@ class Societe extends nosqlDocument {
 				$label = $langs->trans($aRow->label);
 				if (empty($label))
 					$label = $langs->trans($key);
-				if ($aRow->enable) {
+				if ($aRow->enable == true) {
 					if ($i == 0)
 						echo "'" . $label . "'";
 					else

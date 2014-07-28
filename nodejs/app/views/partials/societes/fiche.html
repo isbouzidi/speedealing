@@ -196,7 +196,9 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'commercial:Commercial'}}</th>
-													<td >\{{societe.commercial_id.name}}</td>
+													<td ><span class="icon-user"> </span><a href="#" editable-text="societe.commercial_id" buttons="no" e-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" onaftersave="update()">
+															 \{{societe.commercial_id.name}}
+														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'zonegeo'}}</th>
