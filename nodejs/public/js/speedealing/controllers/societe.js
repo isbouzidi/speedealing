@@ -195,7 +195,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 
 		$scope.pagingOptionsSociete = {
 			pageSizes: [500, 1000, 2500, 5000],
-			pageSize: 2500,
+			pageSize: 1000,
 			currentPage: 1
 		};
 
