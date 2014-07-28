@@ -677,3 +677,7 @@ tags-input .tags {
 .tab-content .simple-table {
 	background-color: white;
 }
+
+.jqplot-target {
+	color: inherit;
+}

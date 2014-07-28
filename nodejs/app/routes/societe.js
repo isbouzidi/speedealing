@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('underscore'),
+		async = require('async'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -20,6 +21,7 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
+	app.get('/api/societe/count', auth.requiresLogin, object.count);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
 	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
 	app.post('/api/societe/segmentation', auth.requiresLogin, object.segmentationRename);
@@ -1066,10 +1068,10 @@ Object.prototype = {
 					break;
 			}
 		}
-		
+
 		var fields = "-history -files";
-		
-		if(req.query.fields)
+
+		if (req.query.fields)
 			fields = req.query.fields;
 
 		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
@@ -1087,7 +1089,7 @@ Object.prototype = {
 	show: function(req, res) {
 		res.json(req.societe);
 	},
-	statistic: function(req, res) {
+	count: function(req, res) {
 		var query = {
 			$or: [{
 					entity: "ALL"
@@ -1315,6 +1317,104 @@ Object.prototype = {
 					console.log(err);
 				res.send(200);
 			});
+		});
+	},
+	statistic: function(req, res) {
+		console.log(req.query);
+
+		async.parallel({
+			own: function(cb) {
+				DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, dict) {
+					SocieteModel.aggregate([
+						{$match: {entity: {$in: ["ALL", req.query.entity]}, Status: {$nin: ["ST_NO"]}, "commercial_id.id": "user:" + req.query.name}},
+						{$project: {_id: 0, "Status": 1}},
+						{$group: {_id: "$Status", count: {$sum: 1}}}
+					], function(err, docs) {
+
+						for (var i = 0; i < docs.length; i++) {
+							docs[i]._id = dict.values[docs[i]._id];
+						}
+
+						cb(err, docs || []);
+					});
+				});
+			},
+			commercial: function(cb) {
+				SocieteModel.aggregate([
+					{$match: {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}}},
+					{$project: {_id: 0, "commercial_id.name": 1}},
+					{$group: {_id: "$commercial_id.name", count: {$sum: 1}}},
+					{$sort: {"_id.commercial": 1}}
+				], function(err, docs) {
+					cb(err, docs || []);
+				});
+			},
+			status: function(cb) {
+				SocieteModel.aggregate([
+					{$match: {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}}},
+					{$project: {_id: 0, "commercial_id.name": 1, "Status": 1}},
+					{$group: {_id: {commercial: "$commercial_id.name", Status: "$Status"}, count: {$sum: 1}}}
+				], function(err, docs) {
+					cb(err, docs || []);
+				});
+			},
+			fk_status: function(cb) {
+				DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, doc) {
+					var result = [];
+
+					for (var i in doc.values) {
+
+						if (doc.values[i].enable && doc.values[i].order) {
+							doc.values[i].id = i;
+							result.push(doc.values[i]);
+						}
+					}
+
+					result.sort(function(a, b) {
+						return a.order > b.order;
+					});
+
+					cb(err, result);
+				});
+			}
+		},
+		function(err, results) {
+			if (err)
+				return console.log(err);
+
+			var output = {
+				data: [],
+				commercial: results.commercial,
+				status: results.fk_status,
+				own: results.own
+			};
+
+			for (var i = 0; i < results.commercial.length; i++) {
+				for (var j = 0; j < results.fk_status.length; j++) {
+
+					if (j == 0)
+						output.data[i] = [];
+
+					output.data[i][j] = 0;
+
+					for (var k = 0; k < results.status.length; k++) {
+						//console.log(results.commercial[i]);
+						//console.log(results.fk_status[j]);
+						//console.log(results.status[k]);
+						//console.log("----------------------------");
+
+						if (results.commercial[i]._id === results.status[k]._id.commercial &&
+								results.fk_status[j].id === results.status[k]._id.Status) {
+							output.data[i][j] = results.status[k].count;
+							break;
+						}
+
+					}
+				}
+			}
+
+			//console.log(output);
+			res.json(output);
 		});
 	}
 };

@@ -6,11 +6,13 @@
 	<div class="dashboard" data-ng-init="initCharts()">
 		<div class="columns">
 			<div class="four-columns twelve-columns-mobile graph">
-				<highchart id="pieChart" config="pieChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>
+				<!--<highchart id="pieChart" config="pieChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>-->
+				<div ui-chart="chartFunnelData" chart-options="chartFunnelOptions" style="width: 350px; height: 240px; margin: 0 auto;" class="chart"></div>
 			</div>
 
 			<div class="eight-columns twelve-columns-mobile new-row-mobile graph">
-				<highchart id="barChart" config="barChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>
+				<!--<highchart id="barChart" config="barChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>-->
+				<div ui-chart="chartData" chart-options="chartOptions" style="width: 700px; height: 240px; margin: 0 auto;" class="chart"></div>
 			</div>
 		</div>
 	</div>

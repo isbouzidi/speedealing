@@ -26,7 +26,8 @@
     "angular-timer": "latest",
     "angular-dialog-service": "latest",
 	"angular-translate":"2.1.x",
-	"ng-i18next":"latest"
+	"ng-i18next":"latest",
+	"angular-ui-chart": "latest"
   },
   "resolutions": {
     "kendo-ui": "2013.3.1119",

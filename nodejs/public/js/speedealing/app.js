@@ -24,7 +24,8 @@ window.app = angular.module('mean', [
 	'mean.europexpress',
 	'timer',
 	'pascalprecht.translate',
-	'jm.i18next'
+	'jm.i18next',
+	'ui.chart'
 ]);
 
 angular.module('mean.system', []);

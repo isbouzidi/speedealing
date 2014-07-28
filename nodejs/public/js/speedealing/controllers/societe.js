@@ -101,7 +101,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$scope.countSocietes = societes.length;
 			});
 
-			$http({method: 'GET', url: '/api/societe/statistic', params: p
+			$http({method: 'GET', url: '/api/societe/count', params: p
 			}).success(function(data, status) {
 				$scope.totalCountSociete = data.count;
 				$scope.maxPageSociete = Math.ceil(data.count / 500);
@@ -224,7 +224,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: 'commercial_id.name', displayName: 'Commerciaux',
 					cellTemplate: '<div class="ngCellText align-center"><span editable-text="row.getProperty(\'commercial_id\')" buttons="no" e-form="CommercialIdBtnForm" e-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" e-typeahead-on-select="updateInPlace(\'/api/societe\',\'commercial_id\', row, $item); CommercialIdBtnForm.$cancel();" ><span class="icon-user" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="CommercialIdBtnForm.$show()" ng-hide="CommercialIdBtnForm.$visible"></span>'
 				},
-				{field: 'zip', displayName: 'Code Postal', width:'80px'},
+				{field: 'zip', displayName: 'Code Postal', width: '80px'},
 				{field: 'town', displayName: 'Ville'},
 				{field: 'idprof3', displayName: 'APE', width: '40px'},
 				//{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
@@ -235,7 +235,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 					//cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'prospectLevel.css\')" editable-select="row.getProperty(\'prospectlevel\')" buttons="no" e-form="ProspectLevelBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'prospectlevel\', row, $data)" e-ng-options="s.id as s.label for s in prospectlevel.values">{{row.getProperty(\'prospectLevel.name\')}}</small> <span class="icon-pencil grey" ng-click="ProspectLevelBtnForm.$show()" ng-hide="ProspectLevelBtnForm.$visible"></span>'
 				},
-				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width:'100px'},
+				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width: '100px'},
 				{field: 'attractivity', width: "50px", displayName: 'Attractivité', cellClass: "align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
@@ -365,145 +365,167 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 
-		$scope.initCharts = function() {
-			$http({method: 'GET', url: '/core/ajax/viewgraph.php?json=graphPieStatus&class=Societe'
-			}).success(function(data, status) {
-				console.log(data);
-				$scope.pieChartConfig.series[0] = {
-					data: data,
-					type: "funnel",
-					name: "Quantité",
-					//size: 100
-				};
-			});
+		//$scope.chartFunnelData = [[]];
 
-			$http({method: 'GET', url: '/core/ajax/viewgraph.php', params: {
-					json: "graphBarStatus",
-					class: "Societe",
+		$scope.initCharts = function() {
+			$http({method: 'GET', url: '/api/societe/statistic', params: {
+					entity: Global.user.entity,
 					name: Global.user.name
 				}
 			}).success(function(data, status) {
-				console.log(data);
-				$scope.barChartConfig.series = [];
+				//console.log(data);
+				$scope.chartData = data.data;
 
-
-				$scope.barChartConfig.series[0] = {
-					data: data,
-					name: "admin"
-				};
-			});
-		}
-
-
-		/**
-		 * Highcharts Pie
-		 */
-
-		$scope.pieChartConfig = {
-			options: {
-				chart: {
-					type: 'funnel',
-					//margin: 0,
-					plotBackgroundColor: null,
-					plotBorderWidth: null,
-					plotShadow: false,
-					marginRight: 120
-				},
-				legend: {
-					enabled: false
-				},
-				tooltip: {
-					enabled: true,
-					formatter: function() {
-						return '<b>' + this.point.name + '</b>: ' + Math.round(this.percentage * 100) / 100 + ' %';
-					}
-				},
-				//navigator: {
-				//	margin: 30
-				//},
-				plotOptions: {
-					/*pie: {
-					 allowPointSelect: true,
-					 cursor: 'pointer',
-					 dataLabels: {
-					 enabled: true,
-					 color: '#FFF',
-					 connectorColor: '#FFF',
-					 distance: 30,
-					 formatter: function() {
-					 return '<b>' + this.point.name + '</b><br> ' + Math.round(this.percentage) + ' %';
-					 }
-					 }
-					 },*/
-					series: {
-						dataLabels: {
-							enabled: true,
-							format: '<b>{point.name}</b> ({point.y:,.0f})',
-							color: '#FFF',
-							connectorColor: '#FFF',
-							softConnector: true
-						},
-						neckWidth: '30%',
-						neckHeight: '25%'
-
-								//-- Other available options
-								// height: pixels or percent
-								// width: pixels or percent
-					}
+				var series = [];
+				for (var i = 0; i < data.commercial.length; i++) {
+					series.push({label: data.commercial[i]._id});
 				}
-			},
-			title: {
-				text: null
-			},
-			series: []
+
+				$scope.chartOptions.series = series;
+
+				var xaxis = [];
+				for (var i = 0; i < data.status.length; i++) {
+					xaxis.push(data.status[i].label);
+				}
+
+				$scope.chartOptions.axes.xaxis.ticks = xaxis;
+
+				var funnelData = [];
+				$scope.chartFunnelData = [];
+				for (var i = 0; i < data.own.length; i++) {
+					var tab = [];
+					tab.push(data.own[i]._id.label);
+					tab.push(data.own[i].count);
+
+					funnelData.push(tab);
+				}
+				//console.log(funnelData);
+				$scope.chartFunnelData.push(funnelData);
+
+			});
 		};
 
-		$scope.barChartConfig = {
-			options: {
-				chart: {
-					renderTo: 'bar-status',
-					defaultSeriesType: "column",
-					zoomType: "x",
-					marginBottom: 30
+		$scope.chartOptions = {
+			// The "seriesDefaults" option is an options object that will
+			// be applied to all series in the chart.
+			seriesDefaults: {
+				renderer: jQuery.jqplot.BarRenderer,
+				rendererOptions: {fillToZero: true, barPadding: 4}
+				//pointLabels: {show: true, location: 'n', edgeTolerance: -15}
+			},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series: [],
+			seriesColors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
+				"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+			textColor: "#fff",
+			// Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+				show: true,
+				placement: 'insideGrid'
+			},
+			axes: {
+				// Use a category axis on the x axis and use our custom ticks.
+				xaxis: {
+					renderer: jQuery.jqplot.CategoryAxisRenderer,
+					ticks: []
 				},
-				credits: {
-					enabled: false
-				},
-				xAxis: {
-					categories: ['Ne pas contacter', 'Non déterminé', 'Prospect froid', 'Prospect tiède', 'Prospect chaud', 'Client -3 mois', 'Client -6 mois', 'Client -18 mois', 'Client fidèle'],
-					maxZoom: 1
-							//labels: {rotation: 90, align: "left"}
-				},
-				yAxis: {
-					title: {text: "Total"},
-					allowDecimals: false,
-					min: 0
-				},
-				legend: {
-					layout: 'vertical',
-					align: 'right',
-					verticalAlign: 'top',
-					x: -5,
-					y: 5,
-					floating: true,
-					borderWidth: 1,
-					backgroundColor: Highcharts.theme.legendBackgroundColor || '#FFFFFF',
-					shadow: true
-				},
-				tooltip: {
-					enabled: true,
-					formatter: function() {
-						//return this.point.name + ' : ' + this.y;
-						return '<b>' + this.x + '</b><br/>' +
-								this.series.name + ': ' + this.y;
-					}
+				// Pad the y axis jsust a little so bars can get close to, but
+				// not touch, the grid boundaries.  1.2 is the default padding.
+				yaxis: {
+					pad: 1.05,
+					padMin: 0,
+					tickOptions: {formatString: '%d', color: 'white'}
 				}
 			},
-			title: {
-				//text: "<?php echo $langs->trans("SalesRepresentatives"); ?>"
-				text: null
+			grid: {
+				backgroundColor: 'transparent',
+				drawGridlines: false,
+				drawBorder: false
 			},
-			series: []
+			highlighter: {
+				sizeAdjust: 0,
+				tooltipLocation: 'n',
+				tooltipAxes: 'y',
+				tooltipFormatString: '<b><span>%d</span></b>',
+				useAxesFormatters: false,
+				show: true
+			},
+			/*highlighter: {
+			 show: true,
+			 sizeAdjust: 7.5
+			 },*/
+			cursor: {
+				show: false
+			}
+		};
+
+		$scope.chartFunnelOptions = {
+			// The "seriesDefaults" option is an options object that will
+			// be applied to all series in the chart.
+			seriesDefaults: {
+				renderer: jQuery.jqplot.FunnelRenderer,
+				rendererOptions: {
+					sectionMargin: 1,
+					widthRatio: 0.3,
+					showDataLabels: true
+				}
+
+				//pointLabels: {show: true, location: 'n', edgeTolerance: -15}
+			},
+			// Custom labels for the series are specified with the "label"
+			// option on the series option.  Here a series option object
+			// is specified for each series.
+			series: [],
+			seriesColors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
+				"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+			textColor: "#fff",
+			// Show the legend and put it outside the grid, but inside the
+			// plot container, shrinking the grid to accomodate the legend.
+			// A value of "outside" would not shrink the grid and allow
+			// the legend to overflow the container.
+			legend: {
+				show: true,
+				placement: 'insideGrid'
+			},
+			/*axes: {
+			 // Use a category axis on the x axis and use our custom ticks.
+			 xaxis: {
+			 renderer: jQuery.jqplot.CategoryAxisRenderer,
+			 ticks: []
+			 },
+			 // Pad the y axis jsust a little so bars can get close to, but
+			 // not touch, the grid boundaries.  1.2 is the default padding.
+			 yaxis: {
+			 pad: 1.05,
+			 padMin: 0,
+			 tickOptions: {formatString: '%d', color: 'white'}
+			 }
+			 },*/
+			grid: {
+				backgroundColor: 'transparent',
+				drawGridlines: false,
+				drawBorder: false
+			},
+			/*highlighter: {
+			 sizeAdjust: 0,
+			 tooltipLocation: 'n',
+			 tooltipAxes: 'y',
+			 tooltipFormatString: '<b><span>%d</span></b>',
+			 useAxesFormatters: false,
+			 show: true
+			 },*/
+			/*highlighter: {
+			 show: true,
+			 sizeAdjust: 7.5
+			 },*/
+			cursor: {
+				show: false
+			}
 		};
 
 		$scope.addNew = function() {
