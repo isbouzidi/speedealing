@@ -380,6 +380,8 @@ function _updateContact(contact, icontact) {
             ,function (a, b) {
                 return a.address == b.address && a.type == b.type;
             });
+    } else {
+    	emails = contact.emails;
     }
 
     contact = _.extend(contact, icontact);
