@@ -36,7 +36,7 @@ var UserSchema = new Schema({
 			refresh_token: String
 		},
 		contacts: {
-			latestImport: String // date format AAAA-MM-DDT00:00:00
+			latestImport: String // date format YYYY-MM-DD
 		}
 	},
 	roles: [String],

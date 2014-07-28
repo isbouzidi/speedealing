@@ -8,7 +8,8 @@ var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		timestamps = require('mongoose-timestamp'),
 		xml2js = require('xml2js'),
-		array = require("array-extended");
+		array = require("array-extended"),
+		dateFormat = require("dateformat");
 
 var googleapis = require('googleapis');
 var OAuth2Client = googleapis.auth.OAuth2;
@@ -111,12 +112,16 @@ Google.prototype = {
             		console.log("userinfo ", userinfo);
 
             		var user = req.user;
+
+            		var google = _.extend(user.google,
+					{
+						"user_id": userinfo.id,
+		            	"tokens": tokens,
+					});
+
 			        user = _.extend(user, 
 			        {
-		            	"google": {
-		            		"user_id": userinfo.id,
-		            		"tokens": tokens
-		            	}
+		            	"google": google
 		            });
 			        
 			        user.save(function(err, doc) {
@@ -260,17 +265,16 @@ function _refreshGoogleTokens(user, callback) {
 
 			if (new_access_token != user.google.tokens.access_token) {
 				// update user's access token in database
+
+				var google = _.extend(user.google,
+				{
+					"tokens": {
+            			"access_token": new_access_token,
+            			"refresh_token": user.google.tokens.refresh_token
+            		}
+				});
 				
-		        user = _.extend(user, 
-		        {
-	            	"google": {
-	            		"user_id": user.google.user_id,
-	            		"tokens": {
-	            			"access_token": new_access_token,
-	            			"refresh_token": user.google.tokens.refresh_token
-	            		}
-	            	}
-	            });
+		        user.google = google;
 		        
 		        user.save(function(err, doc) {
 		            if (err) {
@@ -300,6 +304,7 @@ function _getGoogleContacts(user, callback) {
 		consumerSecret: GOOGLE_CLIENT_SECRET,
 		token: user.google.tokens.access_token,
 		refreshToken: user.google.tokens.refresh_token,
+		updatedMin: user.google.contacts.latestImport
 	});
 
 	c.getContacts({
@@ -311,7 +316,7 @@ function _getGoogleContacts(user, callback) {
 			// console.log("_getGoogleContacts ; contacts = ");
 			// console.log(contacts);
 			// console.log(contacts.length);
-			callback(contacts);
+			callback(user, contacts);
 		}
 	});
 }
@@ -481,13 +486,29 @@ function _mergeOneContact (icontact) {
 
 /* @param icontacts Imported contacts
 */
-function _mergeImportedContacts(icontacts) {
+function _mergeImportedContacts(user, icontacts) {
 	console.log("\n\n*** MERGE PROCESS ***\n\n");
 	var ic_length = icontacts.length;
 	
 	for(var i = 0; i < ic_length; ++i) {
 		_mergeOneContact(icontacts[i]);		
 	}
+ 
+ 	// update the date of the latest import
+ 	var now = new Date();
+	var google_contacts = _.extend(user.google.contacts,
+		{
+			latestImport: dateFormat(now, "yyyy-mm-dd")
+		});
+
+	user.google.contacts = google_contacts;
+
+	user.save(function(err, doc) {
+        if (err)
+            console.log("Google - ", err);
+        else
+        	console.log("Google - info - user.google.contacts.latestImport updated.");
+    });
 }
 
 
