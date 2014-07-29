@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', 'Global', 'pageTitle', 'Users', function($scope, $location, $http, Global, pageTitle, Users) {
+angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', 'Users', 'Reports', function($scope, $location, $http, $anchorScroll, Global, pageTitle, Users, Reports) {
 		$scope.global = Global;
 
 		pageTitle.setTitle('Accueil');
@@ -6,6 +6,8 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 		$scope.dateNow = new Date();
 		$scope.userConnection = [];
 		$scope.indicateurs = {};
+                $scope.limitReport = 0;
+                
 		$scope.familles = {
 		//	prev : {},
 		//	real : {}
@@ -20,7 +22,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 			real : 0
 		};
 		
-		$scope.months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.") ;
+                $scope.months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.") ;
 		
 		$scope.thisMonth = $scope.months[new Date().getMonth()];
 		$scope.lastMonth = $scope.months[new Date().getMonth()-1];
@@ -199,7 +201,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 				$scope.absences = absences;
 			});
 		};
-
+                
 		$scope.absenceAddTick = function(user) {
 			user.closed = true;
 			//console.log(user);
@@ -211,5 +213,17 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 			if (new Date(date) <= new Date)
 				return "red";
 		};
-
+                
+                $scope.findReports = function(){
+                    
+                    $scope.limitReport = $scope.limitReport + 3; 
+                    
+                    $http({method: 'GET', url: '/api/reports/listReports', params: {
+                                user: Global.user._id,
+                                limit: $scope.limitReport
+                            }
+                    }).success(function(data, status) {
+                            $scope.reports = data;
+                    });
+                };
 	}]);

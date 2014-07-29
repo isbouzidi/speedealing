@@ -64,6 +64,9 @@ module.exports = function(app, passport, auth) {
     
     //get all report of a company
     app.get('/api/report', auth.requiresLogin, object.read);
+    
+    //get reports of other users
+    app.get('/api/reports/listReports', auth.requiresLogin, object.listReports);
 };
 
 function Object() {
@@ -127,5 +130,23 @@ Object.prototype = {
 
                 res.send(200, doc);
             });
+    },
+    listReports: function(req, res){
+        
+        var user = req.query.user;
+        
+        var query = {
+            "author.id": {
+                "$nin": [user]
+            }};
+        ReportModel.find(query, {}, {limit: req.query.limit}, function(err, doc) {
+            if (err) {
+                console.log(err);
+                res.send(500, doc);
+                return;
+            }
+            
+            res.send(200, doc);
+        });
     }
 };
