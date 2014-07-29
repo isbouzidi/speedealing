@@ -845,12 +845,12 @@ module.exports = function(app, passport, auth) {
 								tab = row; // Save header line
 								return callback();
 							}
-							//console.log(tab);
-							//console.log(row);
+							console.log(tab);
+							console.log(row);
 
 							//console.log(row[0]);
 
-							//return;
+							return;
 
 							SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
 								if (err) {
