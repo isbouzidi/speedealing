@@ -242,13 +242,13 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		};
 
 		$scope.$watch('filterOptionsSociete', function(newVal, oldVal) {
-			if (newVal !== oldVal) {
+			if (newVal.filterText !== oldVal.filterText) {
 				$scope.find();
 			}
 		}, true);
 
 		$scope.$watch('sortOptionsSociete', function(newVal, oldVal) {
-			if (newVal !== oldVal) {
+			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
 				$scope.find();
 			}
 		}, true);
