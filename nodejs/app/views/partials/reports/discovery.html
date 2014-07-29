@@ -1,5 +1,5 @@
 <div class="field-block button-height">
-    <label for="fonction"><b>Potentiel attractivité/an</b></label>
+    <label for="fonction"><b>{{t "reports:Potential Attract"}}</b></label>
     <span ng-repeat="p in potentialAttract">
         <input type="radio" ng-model="potentialAttract" value="\{{p.label}}" class="">\{{p.label}}
     </span>
@@ -8,7 +8,7 @@
     <h4>Sujet</h4>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>Produit</b></label>
+    <label for="fonction"><b>{{t "reports:Products"}}</b></label>
     <span ng-repeat="p in products"  class="checkbox-inline">
         
         <input type="checkbox"
@@ -23,7 +23,7 @@
 </div>
 <div class="field-block button-height">
     
-    <label for="senBooklet"><b>Envoi plaquette</b></label>
+    <label for="senBooklet"><b>{{t "reports:Send Booklet"}}</b></label>
     <input type="checkbox" ng-model="plaquette" ng-click="actionSelection('plaquette')" value="plaquette">
     <br/>
     <span ng-show="plaquette">
@@ -45,7 +45,7 @@
     
 </div>
 <div class="field-block button-height">
-    <label for="sendOffer"><b>Envoi offre</b></label>
+    <label for="sendOffer"><b>{{t "reports:Send Offer"}}</b></label>
     <input type="checkbox" ng-model="offre" ng-click="actionSelection('offre')" value="offre">
     <br/>
     <span ng-show="offre">
@@ -65,7 +65,7 @@
     </span>
 </div>
 <div class="field-block button-height">
-    <label for="nextAction"><b>Prochaine action</b></label>
+    <label for="nextAction"><b>{{t "reports:Next Action"}}</b></label>
     <input type="checkbox" ng-model="nextAction" ng-click="actionSelection('prochaine action')">
     <br/>
     <span ng-show="nextAction">
@@ -86,7 +86,7 @@
     </span>
 </div>
 <div class="field-block button-height">
-    <label for="dayVisitWorkshop"><b>Visite atelier</b></label>
+    <label for="dayVisitWorkshop"><b>{{t "reports:Visit Workshop"}}</b></label>
     <input type="checkbox" ng-model="visitAtelier" ng-click="actionSelection('visite atelier')">
     <br/>
     <span ng-show="visitAtelier">
@@ -102,7 +102,7 @@
     </span>
 </div>
 <div class="field-block button-height">
-    <label for="nextAppointment"><b>Prochain rendez-vous</b></label>
+    <label for="nextAppointment"><b>{{t "reports:Next Appointment"}}</b></label>
     <input type="checkbox" ng-model="nextAppointment" ng-click="actionSelection('prochain rendez-vous')">
     <br/>
     <div ng-show="nextAppointment">
@@ -125,9 +125,9 @@
     <h4>Leads détectées</h4>
 </div>
 <div class="field-block">
-    <h4>Commentaires/observations</h4>
+    <h4>{{t "reports:Comment"}}</h4>
 </div>
 <div class="field-block button-height">
-    <label for="comment"><b>Commentaires/observations</b></label>
+    <label for="comment"><b>{{t "reports:Comment"}}</b></label>
     <textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea>
 </div>

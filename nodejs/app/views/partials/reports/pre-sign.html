@@ -2,7 +2,7 @@
     <h4>Affaire</h4>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>Produits</b></label>
+    <label for="fonction"><b>{{t "reports:Products"}}</b></label>
     <span ng-repeat="p in products">
         
         <input type="checkbox" 
@@ -13,17 +13,17 @@
     </span>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>Type Affaire</b></label>
+    <label for="fonction"><b>{{t "reports:Business Type"}}</b></label>
     <span ng-repeat="tb in typeBusiness">
         <input type="radio" ng-model="report.optional.business.type" value="\{{tb.id}}" class=""> \{{tb.label}}
     </span>
 </div>
 <div class="field-block button-height">
-    <label for="ofre"><b>Offre</b></label>
+    <label for="offre"><b>{{t "reports:Business Offer"}}</b></label>
     <input type="text" ng-model="report.optional.business.offer" id="offre" class="input" autocomplete="off">
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>Etape</b></label>
+    <label for="fonction"><b>{{t "reports:Business Step"}}</b></label>
     <span ng-repeat="sb in stepBusiness">
         <input type="radio" ng-model="report.optional.business.step" ng-change="showReason()" value="\{{sb.id}}" class=""> \{{sb.label}}
     </span>
@@ -41,9 +41,9 @@
     
 </div>
 <div class="field-block">
-    <h4>Commentaires/observations</h4>
+    <h4>{{t "reports:Comment"}}</h4>
 </div>
 <div class="field-block button-height">
-    <label for="comment"><b>Commentaires/observations</b></label>
+    <label for="comment"><b>{{t "reports:Comment"}}</b></label>
     <textarea class="input" rows="3" cols="60" ng-model="report.comment"></textarea><br/>
 </div>

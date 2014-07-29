@@ -1,11 +1,11 @@
 <form data-ng-init='init()' data-ng-submit='createReport()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <!-- Block style is optional, you can use any layout -->
-    <h3 class="block-title">{{t 'reports:NewReport'}}</h3>
+    <h3 class="block-title">{{t 'reports:New Report'}}</h3>
 
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
-            <label for="model"><b>Model</b></label>
+            <label for="model"><b>{{t "reports:Model"}}</b></label>
             <select class="form-control" 
                     id="model" 
                     ng-model="report.modelTemp" 
@@ -15,7 +15,7 @@
         </div>
         
         <div class="field-block button-height">
-            <label for="dateReport"><b>Date</b></label>
+            <label for="dateReport"><b>{{t "reports:Date Report"}}</b></label>
                 
             <span class="k-widget k-datepicker k-header input">
                 <span class="k-picker-wrap k-state-default">
@@ -30,7 +30,7 @@
             
         </div>
         <div class="field-block button-height">
-            <label for="reports:duration"><b>Durée</b></label>
+            <label for="reports:duration"><b>{{t "reports:Duration"}}</b></label>
             <!--<input required type="text" data-ng-model="report.duration" id="duration" class="input" autocomplete="off">-->
                     
             <p class="button-height">
@@ -47,7 +47,7 @@
             </p>
         </div>
         <div class="field-block button-height">
-            <label for="Contact"><b>Contact</b></label>
+            <label for="Contact"><b>{{t "reports:Contacts"}}</b></label>
             
             <input type="text" 
                     data-ng-model="report.cont"

@@ -2,7 +2,7 @@
     <h4>Sujet</h4>
 </div>
 <div class="field-block button-height">
-    <label for="deploiement"><b>Déploiement</b></label>
+    <label for="deploiement"><b>{{t "reports:Deployment"}}</b></label>
     
     <span ng-repeat="d in deployment">
         <input type="checkbox"
@@ -12,11 +12,11 @@
     </span>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>Enquête satisfaction</b></label>
+    <label for="fonction"><b>{{t "reports:Satisfaction Survey"}}</b></label>
     <input type="checkbox" ng-model="report.optional.subject.satisfactionSurvey" ng-true-value=true ng-false-value=false>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>points progrés</b></label>
+    <label for="fonction"><b>{{t "reports:Progress Points"}}</b></label>
     <span ng-repeat="p in progressPoints">
         <input type="checkbox"
                value="\{{p.label}}" 
@@ -28,7 +28,7 @@
     <h4>Actions</h4>
 </div>
 <div class="field-block button-height">
-    <label for="nextAppointment"><b>Rendez-vous</b></label>
+    <label for="nextAppointment"><b>{{t "reports:Appointment"}}</b></label>
     <input type="checkbox" ng-model="Appointment" ng-click="actionSelection('Rendez-vous')">
     <br/>
     <div ng-show="Appointment">
@@ -44,7 +44,7 @@
     </div>
 </div>
 <div class="field-block button-height">
-    <label for="InternalMeeting"><b>Réunion interne</b></label>
+    <label for="InternalMeeting"><b>{{t "reports:Internal Meeting"}}</b></label>
     <input type="checkbox" ng-model="InternalMeeting" ng-click="actionSelection('Réunion interne')">
     <br/>
     <div ng-show="InternalMeeting">
@@ -60,7 +60,7 @@
     </div>
 </div>
 <div class="field-block button-height">
-    <label for="repport"><b>Rapport</b></label>
+    <label for="repport"><b>{{t "reports:Report"}}</b></label>
     <span ng-repeat="r in reports">
         <input type="checkbox"
                value="\{{r.label}}" 
@@ -69,9 +69,9 @@
     </span>
 </div>
 <div class="field-block">
-    <h4>Commentaires/observations</h4>
+    <h4>{{t "reports:Comment"}}</h4>
 </div>
 <div class="field-block button-height">
-    <label for="birthday"><b>Commentaires/observations</b></label>
+    <label for="birthday"><b>{{t "reports:Comment"}}</b></label>
     <textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea>
 </div>
