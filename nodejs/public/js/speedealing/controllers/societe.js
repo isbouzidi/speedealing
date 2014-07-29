@@ -467,6 +467,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 		$scope.chartFunnelOptions = {
 			// The "seriesDefaults" option is an options object that will
 			// be applied to all series in the chart.
+			title: 'Situation de mon porte-feuille',
 			seriesDefaults: {
 				renderer: jQuery.jqplot.FunnelRenderer,
 				rendererOptions: {

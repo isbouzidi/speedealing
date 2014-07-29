@@ -1320,7 +1320,7 @@ Object.prototype = {
 		});
 	},
 	statistic: function(req, res) {
-		console.log(req.query);
+		//console.log(req.query);
 
 		async.parallel({
 			own: function(cb) {
