@@ -832,6 +832,139 @@ module.exports = function(app, passport, auth) {
 
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
 
+		var conv_id = {
+			civilite: {
+				"": "NO",
+				"MME": "MME",
+				"MLLE": "MLE",
+				"M.": "MR",
+				"COLONEL": "COLONEL",
+				"DOCTEUR": "DR",
+				"GENERAL": "GENERAL",
+				"PROFESSEUR": "PROF"
+			},
+			effectif_id: {
+				"0": "EF0",
+				"1": "EF1-5",
+				"6": "EF6-10",
+				"11": "EF11-50",
+				"51": "EF51-100",
+				"101": "EF101-250",
+				"251": "EF251-500",
+				"501": "EF501-1000",
+				"1001": "EF1001-5000",
+				"5001": "EF5000+"
+			},
+			typent_id: {
+				"Siège": "TE_SIEGE",
+				"Etablissement": "TE_ETABL",
+				"Publique / Administration": "TE_PUBLIC"
+			}
+		};
+
+		var is_Array = [
+			"segmentation"
+		];
+
+		var convertRow = function(tab, row, index, cb) {
+			var societe = {};
+			societe.typent_id = "TE_PUBLIC";
+			societe.country_id = "FR";
+			societe.segmentation = [];
+			societe.remise_client = 0;
+
+			for (var i = 0; i < row.length; i++) {
+				if (tab[i] === "false")
+					continue;
+
+				if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
+
+					if (tab[i] == "civilite" && conv_id[tab[i]][row[i]] === undefined)
+						row[i] = "";
+
+					if (conv_id[tab[i]][row[i]] === undefined) {
+						console.log("error : unknown " + tab[i] + "->" + row[i] + " ligne " + index);
+						return;
+					}
+
+					row[i] = conv_id[tab[i]][row[i]];
+				}
+
+				switch (conv[i]) {
+					case "address1":
+						if (row[i])
+							societe.address += "\n" + row[i];
+						break;
+					case "BP":
+						if (row[i]) {
+							societe.address += "\n" + row[i].substr(0, row[i].indexOf(','));
+						}
+						break;
+					case "brand" :
+						if (row[i])
+							societe[tab[i]] = row[i].split(',');
+						break;
+					case "segmentation" :
+						if (row[i]) {
+							var seg = row[i].split(',');
+							for (var j = 0; j < seg.length; j++) {
+								seg[j] = seg[j].replace(/\./g, "");
+								seg[j] = seg[j].trim();
+
+								societe[tab[i]].push({text: seg[j]});
+							}
+						}
+						break;
+					case "capital" :
+						if (row[i])
+							societe[tab[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
+						break;
+					case "yearCreated" :
+						if (row[i])
+							societe[tab[i]] = parseInt(row[i]) || null;
+						break;
+					case "phone":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "fax":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "contact_phone":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "contact_fax":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof2":
+						societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof1":
+						societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof3":
+						societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "effectif_id":
+						societe[tab[i]] = "EF0";
+
+						for (var idx in conv_id[tab[i]]) {
+							if (parseInt(idx) <= parseInt(row[i]))
+								societe[tab[i]] = conv_id[tab[i]][idx];
+						}
+						break;
+					default :
+						if (row[i])
+							societe[tab[i]] = row[i];
+				}
+			}
+			console.log(societe);
+			cb(societe);
+		};
+
 		if (req.files) {
 			var filename = req.files.filedata.path;
 			if (fs.existsSync(filename)) {
@@ -852,37 +985,33 @@ module.exports = function(app, passport, auth) {
 
 							//return;
 
-							SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
-								if (err) {
-									console.log(err);
-									return callback();
-								}
+							convertRow(tab, row, index, function(data) {
 
-								if (societe == null)
-									societe = new SocieteModel();
-
-
-								for (var i = 0; i < row.length; i++) {
-									societe[tab[i]] = row[i];
-								}
-
-
-
-								//console.log(row[10]);
-								console.log(societe)
-								//console.log(societe.datec);
-
-								/*societe.save(function(err, doc) {
-									if (err)
+								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+									if (err) {
 										console.log(err);
-									/*if (doc == null)
+										return callback();
+									}
+
+									if (societe == null)
+										societe = new SocieteModel(data);
+
+									//console.log(row[10]);
+									//console.log(societe)
+									//console.log(societe.datec);
+
+									/*societe.save(function(err, doc) {
+									 if (err)
+									 console.log(err);
+									 /*if (doc == null)
 									 console.log("null");
 									 else
 									 console.log(doc);*/
 
 									callback();
-								//});
+									//});
 
+								});
 							});
 
 							//return row;
