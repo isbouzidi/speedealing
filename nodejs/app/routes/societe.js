@@ -972,7 +972,7 @@ module.exports = function(app, passport, auth) {
 							societe[tab[i]] = row[i];
 				}
 			}
-			//console.log(societe);
+			console.log(societe);
 			cb(societe);
 		};
 
@@ -1008,7 +1008,7 @@ module.exports = function(app, passport, auth) {
 										societe = new SocieteModel(data);
 
 									//console.log(row[10]);
-									console.log(societe)
+									//console.log(societe)
 									//console.log(societe.datec);
 
 									/*societe.save(function(err, doc) {
