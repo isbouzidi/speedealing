@@ -276,7 +276,9 @@ var contactSchema = new Schema({
 	fax: String,
 	email: String,
 	civilite: String,// DICT
-	Tag: [String],
+	tag: [{
+			text: String
+		}],
 	notes: String,
 	entity: String,
 	sex: {type: String, default: "H"},

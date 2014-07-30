@@ -833,16 +833,6 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
 
 		var conv_id = {
-			civilite: {
-				"": "NO",
-				"MME": "MME",
-				"MLLE": "MLE",
-				"M.": "MR",
-				"COLONEL": "COLONEL",
-				"DOCTEUR": "DR",
-				"GENERAL": "GENERAL",
-				"PROFESSEUR": "PROF"
-			},
 			effectif_id: {
 				"0": "EF0",
 				"1": "EF1-5",
@@ -1057,6 +1047,236 @@ module.exports = function(app, passport, auth) {
 
 										callback();
 									});
+
+								});
+							});
+
+							//return row;
+						}/*, {parallel: 1}*/)
+						.on("end", function(count) {
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function(err) {
+								if (err)
+									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
+						.on('error', function(error) {
+							console.log(error.message);
+						});
+			}
+		}
+	});
+
+	app.post('/api/contact/import', /*ensureAuthenticated,*/ function(req, res) {
+
+		var conv_id = {
+			civilite: {
+				"": "NO",
+				"MME": "MME",
+				"MLLE": "MLE",
+				"M.": "MR",
+				"COLONEL": "COLONEL",
+				"DOCTEUR": "DR",
+				"GENERAL": "GENERAL",
+				"PROFESSEUR": "PROF"
+			},
+			effectif_id: {
+				"0": "EF0",
+				"1": "EF1-5",
+				"6": "EF6-10",
+				"11": "EF11-50",
+				"51": "EF51-100",
+				"101": "EF101-250",
+				"251": "EF251-500",
+				"501": "EF501-1000",
+				"1001": "EF1001-5000",
+				"5001": "EF5000+"
+			},
+			typent_id: {
+				"Siège": "TE_SIEGE",
+				"Etablissement": "TE_ETABL",
+				"Publique / Administration": "TE_PUBLIC"
+			},
+			Status: {
+				"": "ST_NEVER",
+				"Moins de 3 mois": "ST_CINF3",
+				"OK Sensibilisation": "ST_NEW",
+				"Bonne relation": "ST_NEW",
+				"Peu visité": "ST_NEW",
+				"Recontacter dans 2 mois": "ST_NEW",
+				"Ne pas recontacter": "ST_NO",
+				"Chaud": "ST_PCHAU",
+				"Tiède": "ST_PTIED",
+				"Froid": "ST_PFROI",
+				"Non Déterminé": "ST_NEVER"
+			},
+			prospectlevel: {
+				"": "PL_NONE",
+				"Niveau 3": "PL_HIGH",
+				"Niveau 2": "PL_MEDIUM",
+				"Niveau 1": "PL_LOW",
+				"Niveau 0": "PL_NONE"
+			}
+		};
+
+		var is_Array = [
+			"tag"
+		];
+
+		var convertRow = function(tab, row, index, cb) {
+			var contact = {
+				tag: []
+			};
+			contact.country_id = "FR";
+
+			for (var i = 0; i < row.length; i++) {
+				if (tab[i] === "false")
+					continue;
+
+				/* optional */
+				if (tab[i].indexOf(".") >= 0) {
+					var split = tab[i].split(".");
+
+					if (row[i]) {
+						if (typeof contact[split[0]] === "undefined")
+							contact[split[0]] = {};
+
+						contact[split[0]][split[1]] = row[i];
+					}
+					continue;
+				}
+
+				if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
+
+					if (tab[i] == "civilite" && conv_id[tab[i]][row[i]] === undefined)
+						row[i] = "";
+
+					if (conv_id[tab[i]][row[i]] === undefined) {
+						console.log("error : unknown " + tab[i] + "->" + row[i] + " ligne " + index);
+						return;
+					}
+
+					row[i] = conv_id[tab[i]][row[i]];
+				}
+
+				switch (tab[i]) {
+					case "name" :
+						var name = row[i].split(" ");
+						contact.firstname = name[0];
+
+						if (name[1]) {
+							contact.lastname = name[1];
+							for (var j = 2; j < name.length; j++)
+								contact.lastname += " " + name[j];
+						}
+
+						break;
+					case "address1":
+						if (row[i])
+							contact.address += "\n" + row[i];
+						break;
+					case "BP":
+						if (row[i]) {
+							contact.address += "\n" + row[i].substr(0, row[i].indexOf(','));
+						}
+						break;
+					case "tag" :
+						if (row[i]) {
+							var seg = row[i].split(',');
+							for (var j = 0; j < seg.length; j++) {
+								seg[j] = seg[j].replace(/\./g, "");
+								seg[j] = seg[j].trim();
+
+								contact[tab[i]].push({text: seg[j]});
+							}
+						}
+						break;
+					case "phone":
+						if (row[i])
+							contact[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "fax":
+						if (row[i])
+							contact[tab[i]] = row[i].replace(/ /g, "");
+						break;
+
+					case "notes":
+						if (row[i]) {
+							if (typeof contact.notes != "array")
+								contact.notes = [];
+
+							contact[tab[i]].push({
+								author: {
+									name: "Inconnu"
+								},
+								datec: new Date(0),
+								note: row[i]
+							});
+						}
+
+						break;
+					default :
+						if (row[i])
+							contact[tab[i]] = row[i];
+				}
+			}
+			//console.log(contact);
+			cb(contact);
+		};
+
+		if (req.files) {
+			var filename = req.files.filedata.path;
+			if (fs.existsSync(filename)) {
+
+				var tab = [];
+
+				csv()
+						.from.path(filename, {delimiter: ';', escape: '"'})
+						.transform(function(row, index, callback) {
+							if (index === 0) {
+								tab = row; // Save header line
+								return callback();
+							}
+							//console.log(tab);
+							//console.log(row);
+
+							//console.log(row[0]);
+
+							//return;
+
+							convertRow(tab, row, index, function(data) {
+
+								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+									if (err) {
+										console.log(err);
+										return callback();
+									}
+
+									if (societe == null)
+										return callback();
+									
+									data.societe = {
+										id: societe._id,
+										name: societe.name
+									};
+									
+									console.log(data);
+
+									//console.log(row[10]);
+									//console.log(societe)
+									//console.log(societe.datec);
+
+									/*	societe.save(function(err, doc) {
+									 if (err)
+									 console.log(err);
+									 /*if (doc == null)
+									 console.log("null");
+									 else
+									 console.log(doc);*/
+
+									callback();
+									//});
 
 								});
 							});
