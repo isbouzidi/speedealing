@@ -1,0 +1,77 @@
+<div class="field-block">
+    <h4>Sujet</h4>
+</div>
+<div class="field-block button-height">
+    <label for="deploiement"><b>{{t "reports:Deployment"}}</b></label>
+    
+    <span ng-repeat="d in deployment">
+        <input type="checkbox"
+               value="\{{d.label}}" 
+               ng-checked="report.optional.subject.deployment.indexOf(d.label) > -1" 
+               ng-click="deploymentSelection(d.label)"> \{{d.label}}
+    </span>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>{{t "reports:Satisfaction Survey"}}</b></label>
+    <input type="checkbox" ng-model="report.optional.subject.satisfactionSurvey" ng-true-value=true ng-false-value=false>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>{{t "reports:Progress Points"}}</b></label>
+    <span ng-repeat="p in progressPoints">
+        <input type="checkbox"
+               value="\{{p.label}}" 
+               ng-checked="report.optional.subject.progressPoints.indexOf(p.label) > -1" 
+               ng-click="progressPointsSelection(p.label)"> \{{p.label}}
+    </span>
+</div>
+<div class="field-block">
+    <h4>Actions</h4>
+</div>
+<div class="field-block button-height">
+    <label for="nextAppointment"><b>{{t "reports:Appointment"}}</b></label>
+    <input type="checkbox" ng-model="Appointment" ng-click="actionSelection('Rendez-vous')">
+    <br/>
+    <div ng-show="Appointment">
+        <span class="k-widget k-datepicker k-header input">
+            <span class="k-picker-wrap k-state-default">
+                <input 
+                    kendo-date-picker 
+                    ng-model = "actionDate['Rendez-vous']"
+                    k-on-change="onDateSelected(kendoEvent, 'Rendez-vous')"  
+                    class="input"/>
+            </span>
+        </span>
+    </div>
+</div>
+<div class="field-block button-height">
+    <label for="InternalMeeting"><b>{{t "reports:Internal Meeting"}}</b></label>
+    <input type="checkbox" ng-model="InternalMeeting" ng-click="actionSelection('Réunion interne')">
+    <br/>
+    <div ng-show="InternalMeeting">
+        <span class="k-widget k-datepicker k-header input">
+            <span class="k-picker-wrap k-state-default">
+                <input 
+                    kendo-date-picker 
+                    ng-model = "actionDate['Réunion interne']"
+                    k-on-change="onDateSelected(kendoEvent, 'Réunion interne')"  
+                    class="input"/>
+            </span>
+        </span>
+    </div>
+</div>
+<div class="field-block button-height">
+    <label for="repport"><b>{{t "reports:Report"}}</b></label>
+    <span ng-repeat="r in reports">
+        <input type="checkbox"
+               value="\{{r.label}}" 
+               ng-checked="report.optional.reports.indexOf(p.label) > -1" 
+               ng-click="reportSelection(r.label)"> \{{r.label}}
+    </span>
+</div>
+<div class="field-block">
+    <h4>{{t "reports:Comment"}}</h4>
+</div>
+<div class="field-block button-height">
+    <label for="birthday"><b>{{t "reports:Comment"}}</b></label>
+    <textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea>
+</div>
