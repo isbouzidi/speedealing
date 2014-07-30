@@ -54,7 +54,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                         field: field
                     }
                 }).success(function(data) {
-                    console.log(data);
+                    
                     $scope[field] = data;
                 });
             });
@@ -186,8 +186,16 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             var report = new Reports(this.report);
             
             report.$save(function(response) {
+                if($scope.report.pAttract){
+                   $http({method: 'PUT', url: '/api/report/addPotentialAttract', params: {
+                        pAttract: $scope.report.pAttract,
+                        societe: $scope.global.contactIdSociete
+                    }
+                    }).success(function(status, response) {
+                        
+                    }); 
+                }
                 $modalInstance.close(response);
-
             });
         };
         

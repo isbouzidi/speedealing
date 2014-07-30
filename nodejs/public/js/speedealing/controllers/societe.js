@@ -145,7 +145,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
                                 fields: "dateReport model author.name comment"
                             }
                 }).success(function(data, status) {
-                    console.log("reppppport : " + data);
+                    
                     $scope.reports = data;
 
                     $scope.countReports = $scope.reports.length;

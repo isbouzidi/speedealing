@@ -11,6 +11,7 @@ var ReportModel = mongoose.model('report');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 var ExtrafieldModel = mongoose.model('extrafields');
+var SocieteModel = mongoose.model('societe');
 
 module.exports = function(app, passport, auth) {
 
@@ -20,7 +21,7 @@ module.exports = function(app, passport, auth) {
 
         if (req.body.val === null)
             return res.send(200, {});
-        console.log("contact : " + req.body.val);
+        
         var val = req.body.val;
 
         var query = {"$or": [
@@ -55,6 +56,25 @@ module.exports = function(app, passport, auth) {
         });
 
         return;
+    });
+    
+    // add or update potential attract
+    app.put('/api/report/addPotentialAttract', auth.requiresLogin, function(req, res) {
+            
+        var potentialAttract = req.query.pAttract;
+        var societe = req.query.societe;
+        
+        SocieteModel.update({_id: societe}, {$set: {potential_attract: potentialAttract}}, function(err, doc){
+        
+            if (err) {
+                return console.log('Erreur : ' + err);
+            } else {
+                
+                res.json(200, doc);
+            }
+        });
+        
+        
     });
 
     app.get('/api/report/fk_extrafields/select', auth.requiresLogin, object.select);

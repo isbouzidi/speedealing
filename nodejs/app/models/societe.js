@@ -103,7 +103,8 @@ var societeSchema = new Schema({
 	kompass_id: String, // Kompass
 	ha_id: String, // hors antenne
 	soldeOut: Number, // Situation comptable
-	optional: mongoose.Schema.Types.Mixed
+	optional: mongoose.Schema.Types.Mixed,
+        potential_attract: String
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
