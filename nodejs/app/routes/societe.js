@@ -1332,7 +1332,7 @@ module.exports = function(app, passport, auth) {
 								author: {
 									name: "Inconnu"
 								},
-								datec: new Date(),
+								datec: new Date().now(),
 								note: row[i]
 							});
 						}
@@ -1368,6 +1368,9 @@ module.exports = function(app, passport, auth) {
 							//return;
 
 							convertRow(tab, row, index, function(data) {
+								
+								if(!data.notes.note)
+									return callback();
 
 								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
 									if (err) {
