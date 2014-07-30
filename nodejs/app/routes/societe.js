@@ -1382,7 +1382,7 @@ module.exports = function(app, passport, auth) {
 
 									societe.notes.push(data.notes);
 									
-									console.log(societe);
+									//console.log(societe);
 
 									/*societe.save(function(err, doc) {
 										if (err)
