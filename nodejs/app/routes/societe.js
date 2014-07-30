@@ -1325,18 +1325,15 @@ module.exports = function(app, passport, auth) {
 				switch (tab[i]) {
 					case "notes":
 						if (row[i]) {
-							if (typeof societe.notes != "array")
-								societe.notes = [];
-
-							societe[tab[i]].push({
+							
+							societe[tab[i]] = {
 								author: {
 									name: "Inconnu"
 								},
 								datec: new Date(),
 								note: row[i]
-							});
+							};
 						}
-
 						break;
 					default :
 						if (row[i])
