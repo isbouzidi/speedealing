@@ -1126,7 +1126,7 @@ module.exports = function(app, passport, auth) {
 
 		var convertRow = function(tab, row, index, cb) {
 			var contact = {
-				Status : "ST_ENABLE",
+				Status: "ST_ENABLE",
 				tag: []
 			};
 			contact.country_id = "FR";
@@ -1278,19 +1278,19 @@ module.exports = function(app, passport, auth) {
 										//console.log(data);
 
 										//console.log(row[10]);
-										console.log(contact);
+										//console.log(contact);
 										//console.log(societe.datec);
 
-										/*	societe.save(function(err, doc) {
-										 if (err)
-										 console.log(err);
-										 /*if (doc == null)
-										 console.log("null");
-										 else
-										 console.log(doc);*/
+										contact.save(function(err, doc) {
+											if (err)
+												console.log(err);
+											/*if (doc == null)
+											 console.log("null");
+											 else
+											 console.log(doc);*/
 
-										callback();
-										//});
+											callback();
+										});
 									});
 
 								});
