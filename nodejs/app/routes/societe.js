@@ -1382,9 +1382,9 @@ module.exports = function(app, passport, auth) {
 
 									societe.notes.push(data.notes);
 									
-									console.log(societe);
+									//console.log(societe);
 
-									/*societe.save(function(err, doc) {
+									societe.save(function(err, doc) {
 										if (err)
 											console.log(err);
 										/*if (doc == null)
@@ -1393,7 +1393,7 @@ module.exports = function(app, passport, auth) {
 										 console.log(doc);*/
 
 										callback();
-									//});
+									});
 
 								});
 							});
