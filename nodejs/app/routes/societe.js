@@ -1367,7 +1367,6 @@ module.exports = function(app, passport, auth) {
 							convertRow(tab, row, index, function(data) {
 								
 								if(!data.notes.note) {
-									console.log(data.notes);
 									return callback();
 								}
 
@@ -1384,7 +1383,7 @@ module.exports = function(app, passport, auth) {
 
 									societe.notes.push(data.notes);
 									
-									console.log(societe);
+									//console.log(societe);
 
 									societe.save(function(err, doc) {
 										if (err)
