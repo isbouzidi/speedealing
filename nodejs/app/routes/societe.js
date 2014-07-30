@@ -1313,6 +1313,108 @@ module.exports = function(app, passport, auth) {
 		}
 	});
 
+	app.post('/api/societe/notes/import', /*ensureAuthenticated,*/ function(req, res) {
+
+		var convertRow = function(tab, row, index, cb) {
+			var societe = {};
+
+			for (var i = 0; i < row.length; i++) {
+				if (tab[i] === "false")
+					continue;
+
+				switch (tab[i]) {
+					case "notes":
+						if (row[i]) {
+							if (typeof societe.notes != "array")
+								societe.notes = [];
+
+							societe[tab[i]].push({
+								author: {
+									name: "Inconnu"
+								},
+								datec: new Date(),
+								note: row[i]
+							});
+						}
+
+						break;
+					default :
+						if (row[i])
+							contact[tab[i]] = row[i];
+				}
+			}
+			console.log(societe);
+			cb(societe);
+		};
+
+		if (req.files) {
+			var filename = req.files.filedata.path;
+			if (fs.existsSync(filename)) {
+
+				var tab = [];
+
+				csv()
+						.from.path(filename, {delimiter: ';', escape: '"'})
+						.transform(function(row, index, callback) {
+							if (index === 0) {
+								tab = row; // Save header line
+								return callback();
+							}
+							//console.log(tab);
+							//console.log(row);
+
+							//console.log(row[0]);
+
+							//return;
+
+							convertRow(tab, row, index, function(data) {
+
+								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+									if (err) {
+										console.log(err);
+										return callback();
+									}
+
+									if (societe == null) {
+										console.log("Societe not found : " + data.code_client);
+										return callback();
+									}
+
+									societe.notes.push(data.notes);
+									
+									console.log(societe);
+
+									/*societe.save(function(err, doc) {
+										if (err)
+											console.log(err);
+										/*if (doc == null)
+										 console.log("null");
+										 else
+										 console.log(doc);*/
+
+										callback();
+									//});
+
+								});
+							});
+
+							//return row;
+						}/*, {parallel: 1}*/)
+						.on("end", function(count) {
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function(err) {
+								if (err)
+									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
+						.on('error', function(error) {
+							console.log(error.message);
+						});
+			}
+		}
+	});
+
 	app.post('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
 		var id = req.params.Id;
 		//console.log(id);
