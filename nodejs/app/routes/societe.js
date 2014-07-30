@@ -1340,7 +1340,7 @@ module.exports = function(app, passport, auth) {
 						break;
 					default :
 						if (row[i])
-							contact[tab[i]] = row[i];
+							societe[tab[i]] = row[i];
 				}
 			}
 			console.log(societe);
