@@ -861,6 +861,7 @@ module.exports = function(app, passport, auth) {
 				"Publique / Administration": "TE_PUBLIC"
 			},
 			Status: {
+				"": "ST_NEVER",
 				"Moins de 3 mois": "ST_CINF3",
 				"OK Sensibilisation": "ST_NEW",
 				"Bonne relation": "ST_NEW",
@@ -871,6 +872,13 @@ module.exports = function(app, passport, auth) {
 				"Tiède": "ST_PTIED",
 				"Froid": "ST_PFROI",
 				"Non Déterminé": "ST_NEVER"
+			},
+			prospectlevel: {
+				"": "PL_NONE",
+				"Niveau 3": "PL_HIGH",
+				"Niveau 2": "PL_MEDIUM",
+				"Niveau 1": "PL_LOW",
+				"Niveau 0": "PL_NONE"
 			}
 		};
 
@@ -887,6 +895,19 @@ module.exports = function(app, passport, auth) {
 			for (var i = 0; i < row.length; i++) {
 				if (tab[i] === "false")
 					continue;
+
+				/* optional */
+				if (tab[i].indexOf(".") >= 0) {
+					var split = tab[i].split(".");
+
+					if (row[i]) {
+						if (typeof societe[split[0]] === "undefined")
+							societe[split[0]] = {};
+
+						societe[split[0]][split[1]] = row[i];
+					}
+					continue;
+				}
 
 				if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
 
@@ -967,12 +988,27 @@ module.exports = function(app, passport, auth) {
 								societe[tab[i]] = conv_id[tab[i]][idx];
 						}
 						break;
+					case "notes":
+						if (row[i]) {
+							if (typeof societe.notes != "array")
+								societe.notes = [];
+
+							societe[tab[i]].push({
+								author: {
+									name: "Inconnu"
+								},
+								datec: new Date(0),
+								note: row[i]
+							});
+						}
+
+						break;
 					default :
 						if (row[i])
 							societe[tab[i]] = row[i];
 				}
 			}
-			console.log(societe);
+			//console.log(societe);
 			cb(societe);
 		};
 
@@ -1011,16 +1047,16 @@ module.exports = function(app, passport, auth) {
 									//console.log(societe)
 									//console.log(societe.datec);
 
-									/*societe.save(function(err, doc) {
-									 if (err)
-									 console.log(err);
-									 /*if (doc == null)
-									 console.log("null");
-									 else
-									 console.log(doc);*/
+									societe.save(function(err, doc) {
+										if (err)
+											console.log(err);
+										/*if (doc == null)
+										 console.log("null");
+										 else
+										 console.log(doc);*/
 
-									callback();
-									//});
+										callback();
+									});
 
 								});
 							});
