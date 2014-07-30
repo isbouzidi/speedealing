@@ -1343,7 +1343,7 @@ module.exports = function(app, passport, auth) {
 							societe[tab[i]] = row[i];
 				}
 			}
-			console.log(societe);
+			//console.log(societe);
 			cb(societe);
 		};
 
