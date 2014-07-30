@@ -1263,10 +1263,21 @@ module.exports = function(app, passport, auth) {
 										name: societe.name
 									};
 									
+									ContactModel.findOne({"societe.id":data.societe.id, lastname: data.lastname}, function(err, contact){
+									
+									if (err) {
+										console.log(err);
+										return callback();
+									}
+									
+									if (contact == null) {
+										contact = new ContactModel(data);
+									}
+									
 									//console.log(data);
 
 									//console.log(row[10]);
-									//console.log(societe)
+									console.log(contact);
 									//console.log(societe.datec);
 
 									/*	societe.save(function(err, doc) {
@@ -1279,6 +1290,7 @@ module.exports = function(app, passport, auth) {
 
 									callback();
 									//});
+									});
 
 								});
 							});
