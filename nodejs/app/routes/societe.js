@@ -1253,15 +1253,17 @@ module.exports = function(app, passport, auth) {
 										return callback();
 									}
 
-									if (societe == null)
+									if (societe == null) {
+										console.log("Societe not found : " + data.code_client);
 										return callback();
+									}
 									
 									data.societe = {
 										id: societe._id,
 										name: societe.name
 									};
 									
-									console.log(data);
+									//console.log(data);
 
 									//console.log(row[10]);
 									//console.log(societe)
