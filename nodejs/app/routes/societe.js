@@ -1369,8 +1369,10 @@ module.exports = function(app, passport, auth) {
 
 							convertRow(tab, row, index, function(data) {
 								
-								if(!data.notes.note)
+								if(!data.notes.note) {
+									console.log(data.notes);
 									return callback();
+								}
 
 								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
 									if (err) {
