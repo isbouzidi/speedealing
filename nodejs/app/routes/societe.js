@@ -890,7 +890,7 @@ module.exports = function(app, passport, auth) {
 					row[i] = conv_id[tab[i]][row[i]];
 				}
 
-				switch (conv[i]) {
+				switch (tab[i]) {
 					case "address1":
 						if (row[i])
 							societe.address += "\n" + row[i];
