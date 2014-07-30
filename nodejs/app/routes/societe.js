@@ -859,6 +859,18 @@ module.exports = function(app, passport, auth) {
 				"Siège": "TE_SIEGE",
 				"Etablissement": "TE_ETABL",
 				"Publique / Administration": "TE_PUBLIC"
+			},
+			Status: {
+				"Moins de 3 mois": "ST_CINF3",
+				"OK Sensibilisation": "ST_NEW",
+				"Bonne relation": "ST_NEW",
+				"Peu visité": "ST_NEW",
+				"Recontacter dans 2 mois": "ST_NEW",
+				"Ne pas recontacter": "ST_NO",
+				"Chaud": "ST_PCHAU",
+				"Tiède": "ST_PTIED",
+				"Froid": "ST_PFROI",
+				"Non Déterminé": "ST_NEVER"
 			}
 		};
 
@@ -868,7 +880,6 @@ module.exports = function(app, passport, auth) {
 
 		var convertRow = function(tab, row, index, cb) {
 			var societe = {};
-			societe.typent_id = "TE_PUBLIC";
 			societe.country_id = "FR";
 			societe.segmentation = [];
 			societe.remise_client = 0;
