@@ -1332,7 +1332,7 @@ module.exports = function(app, passport, auth) {
 								author: {
 									name: "Inconnu"
 								},
-								datec: new Date().now(),
+								datec: new Date(),
 								note: row[i]
 							});
 						}
