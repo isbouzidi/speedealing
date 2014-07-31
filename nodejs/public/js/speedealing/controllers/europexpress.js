@@ -1727,7 +1727,6 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 			//$location.path('ticket/'+rowItem.entity._id); //ouvre le ticket
 			showGroupPanel: false,
 			//jqueryUIDraggable: true,
-			plugins: [new ngGridFlexibleHeightPlugin()],
 			i18n: 'fr',
 			enableColumnResize: true,
 			//groups: ['fournisseur.name'],
