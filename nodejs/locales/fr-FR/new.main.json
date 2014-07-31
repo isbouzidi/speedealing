@@ -698,6 +698,7 @@
     "Gestion des tournées": "Gestion des tournées",
     "Planning des tournées": "Planning des tournées",
     "EMail": "EMail",
-    "Web": "Web",
-    "zonegeo": "zonegeo"
+    "DeValidate": "DeValidate",
+    "Clone": "Clone",
+    "Totaux": "Totaux"
 }
