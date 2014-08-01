@@ -391,6 +391,10 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
         $scope.supplier = options && options.supplier;
 
         $scope.init = function() {
+            
+            if($scope.callModule)
+                $scope.deliveryModule = true;
+            
             var fields = ["tva_tx"];
 
             angular.forEach(fields, function(field) {
@@ -399,11 +403,11 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
                     }
                 }).success(function(data, status) {
                     $scope[field] = data;
-                    //console.log(data);
+                    console.log("tva : " + data);
                 });
             });
         };
-
+        
         $scope.addOrUpdate = function() {
             $scope.line.total_ht = $scope.line.pu_ht * $scope.line.qty;
             $scope.line.total_tva = $scope.line.total_ht * $scope.line.tva_tx / 100;
@@ -444,5 +448,9 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
                 return res.data;
             });
         };
-
+        
+        $scope.$on('department', function() {
+            
+            alert(department);
+        });
     }]);

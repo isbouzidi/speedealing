@@ -84,7 +84,7 @@ var deliverySchema = new Schema({
 			total_ttc_without_discount: Number,
 			total_vat_without_discount: Number,
 			total_ht: Number,
-                        nbr_packages: Number
+                        no_package: Number
 					//pu_ttc: Number,
 					//pu_tva: Number
 		}],

@@ -1,4 +1,4 @@
-angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
+angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$location', '$http', '$routeParams', '$rootScope', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function($scope, $location, $http, $routeParams, $rootScope, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
 
 		pageTitle.setTitle('Liste des bons de livraison');
 
@@ -189,7 +189,14 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 		};
 
 		$scope.addNewLine = function() {
-                    
+                        
+                        /*
+                         * cette variable "$rootScope.module" est utilisé dans le controller "LineController"
+                         * pour determiner que l'url "/partials/lines" est appelé 
+                         * depuis le module delivery (bon de livraison)
+                         */
+                        $rootScope.callModule = 'delivery';
+                        
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",
@@ -292,9 +299,10 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 			groupsCollapsedByDefault: false,
 			rowHeight: 50,
 			columnDefs: [
-				{field: 'product.name', width: "60%", displayName: 'Désignation', cellTemplate: '<div class="ngCellText"><span class="blue strong icon-cart">{{row.getProperty(col.field)}}</span> - {{row.getProperty(\'product.label\')}}<pre class="no-padding">{{row.getProperty(\'description\')}}</pre></div>'},
+				{field: 'product.name', width: "50%", displayName: 'Désignation', cellTemplate: '<div class="ngCellText"><span class="blue strong icon-cart">{{row.getProperty(col.field)}}</span> - {{row.getProperty(\'product.label\')}}<pre class="no-padding">{{row.getProperty(\'description\')}}</pre></div>'},
 				{field: 'group', displayName: "Groupe", visible: false},
 				{field: 'qty', displayName: 'Qté', cellClass: "align-right"},
+                                {field: 'no_package', displayName: 'No. Colis', cellClass: "align-right"},
 				{field: 'pu_ht', displayName: 'P.U. HT', cellClass: "align-right", cellFilter: "currency"},
 				{field: 'tva_tx', displayName: 'TVA', cellClass: "align-right"},
 				//{field: '', displayName: 'Réduc'},

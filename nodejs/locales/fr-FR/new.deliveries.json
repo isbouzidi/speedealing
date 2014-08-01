@@ -1,5 +1,6 @@
 {
     "CHARSET": "UTF-8",
+    "NewDelivery": "Nouveau Bon de Livraison",
     "Delivery": "Livraison",
     "Deliveries": "Livraisons",
     "DeliveryCard": "Fiche réception",
@@ -43,6 +44,7 @@
     "CorrectionDelivery": "Correction bon livraison",
     "CreateDelivery": "Creer Bon Livraison",
     "Details": "Dètails Bon Livraison",
+    "NoPackage": "Nombre de colis",
     "BillStatusDraft": "deliveries:BillStatusDraft",
     "BillStatusNotPaid": "deliveries:BillStatusNotPaid",
     "BillStatusStarted": "deliveries:BillStatusStarted",

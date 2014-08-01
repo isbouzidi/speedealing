@@ -5,6 +5,7 @@
 	<textarea id="description" cols="30" rows="5" data-ng-model="line.description" class="input full-width"></textarea>
 </div>
 
+
 <div class="field-block button-height">
 	<label for="qty"><b>{{t 'Qty'}}</b></label>
 	<input required type="number" step="0.001" data-ng-model="line.qty" id="qty" class="input" autocomplete="off">
@@ -24,4 +25,8 @@
 <div class="field-block button-height">
 	<label for="total_ht"><b>{{t 'AmountHT'}}</b></label>
 	\{{line.pu_ht * line.qty || 0 | currency}}
+</div>
+<div ng-show = "deliveryModule" class="field-block button-height">
+	<label for="no_package"><b>{{t 'deliveries:NoPackage'}}</b></label>
+	<input required type="text" data-ng-model="line.no_package" id="no_package" class="input" autocomplete="off">
 </div>
