@@ -44,5 +44,18 @@
 	"CorrectionDelivery": "Correction bon livraison",
     "CreateDelivery": "Creer Bon Livraison",
     "Details": "Dètails Bon Livraison",
-    "NoPackage" : "Nombre de colis"
+    "NoPackage" : "Nombre de colis",
+    "DeliveryStatus": "État du Bon de Livraison",
+	"DeliveryStatusDraft": "Brouillon (à valider)",
+	"DeliveryStatusPaid": "Payée",
+	"DeliveryStatusPaidBackOrConverted": "Remboursé ou converti en réduction",
+	"DeliveryStatusPaidBack": "Remboursé",
+	"DeliveryStatusConvertedToReduc": "Converti en réduction",
+	"DeliveryStatusConverted": "Payée",
+	"DeliveryStatusCanceled": "Abandonnée",
+	"DeliveryStatusValidated": "Validée (à payer)",
+	"DeliveryStatusStarted": "Règlement commencé",
+	"DeliveryStatusNotPaid": "Impayée",
+	"DeliveryStatusClosedUnpaid": "Fermée (impayée)",
+	"DeliveryStatusClosedPaidPartially": "Payée (partiellement)"
 }

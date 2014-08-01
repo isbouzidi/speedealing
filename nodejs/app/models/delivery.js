@@ -269,7 +269,7 @@ deliverySchema.methods = {
 };
 
 var statusList = {};
-ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
+ExtrafieldModel.findById('extrafields:BonLivraison', function(err, doc) {
     if (err) {
         console.log(err);
         return;
