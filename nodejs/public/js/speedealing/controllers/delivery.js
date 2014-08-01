@@ -1,6 +1,6 @@
 angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$location', '$http', '$routeParams', '$rootScope', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function($scope, $location, $http, $routeParams, $rootScope, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
 
-		pageTitle.setTitle('Liste des bons de livraison');
+		pageTitle.setTitle('Liste bons de livraison');
 
 		$scope.editable = false;
 

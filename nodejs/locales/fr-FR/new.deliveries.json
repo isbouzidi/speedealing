@@ -46,6 +46,7 @@
     "Details": "Dètails Bon Livraison",
     "NoPackage": "Nombre de colis",
     "BillStatusDraft": "deliveries:BillStatusDraft",
+    "BillAddress": "deliveries:BillAddress",
     "BillStatusNotPaid": "deliveries:BillStatusNotPaid",
     "BillStatusStarted": "deliveries:BillStatusStarted",
     "BillStatusPaid": "deliveries:BillStatusPaid",
