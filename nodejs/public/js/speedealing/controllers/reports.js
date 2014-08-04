@@ -186,9 +186,9 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             var report = new Reports(this.report);
             
             report.$save(function(response) {
-                if($scope.report.pAttract){
-                   $http({method: 'PUT', url: '/api/report/addPotentialAttract', params: {
-                        pAttract: $scope.report.pAttract,
+                if($scope.report.prospectLevel){
+                   $http({method: 'PUT', url: '/api/report/addProspectLevel', params: {
+                        prospectLevel: $scope.report.prospectLevel,
                         societe: $scope.global.contactIdSociete
                     }
                     }).success(function(status, response) {

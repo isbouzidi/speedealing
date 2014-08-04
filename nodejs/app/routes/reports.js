@@ -59,12 +59,12 @@ module.exports = function(app, passport, auth) {
     });
     
     // add or update potential attract
-    app.put('/api/report/addPotentialAttract', auth.requiresLogin, function(req, res) {
+    app.put('/api/report/addProspectLevel', auth.requiresLogin, function(req, res) {
             
-        var potentialAttract = req.query.pAttract;
+        var prospectLevel = req.query.prospectLevel;
         var societe = req.query.societe;
         
-        SocieteModel.update({_id: societe}, {$set: {potential_attract: potentialAttract}}, function(err, doc){
+        SocieteModel.update({_id: societe}, {$set: {prospectlevel: prospectLevel}}, function(err, doc){
         
             if (err) {
                 return console.log('Erreur : ' + err);
