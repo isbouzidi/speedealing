@@ -1,6 +1,6 @@
-angular.module('mean.system').controller('MenuController', ['$scope', '$routeParams', 'Global', 'socket', '$http', function($scope, $routeParams, Global, socket, $http) {
+angular.module('mean.system').controller('MenuController', ['$rootScope', '$scope', '$routeParams', 'Global', 'socket', '$http', function($rootScope, $scope, $routeParams, Global, socket, $http) {
 		$scope.global = Global;
-
+	
 		$scope.ticketCpt = 0;
 		$scope.menus = {};
 
@@ -19,7 +19,19 @@ angular.module('mean.system').controller('MenuController', ['$scope', '$routePar
 				return "current collapsible-current";
 		};
 		
+                $scope.searchQuery = function(){
+                    if($scope.searchQueryItem){
+                        $rootScope.searchIsActive = true;
+                        $rootScope.searchItem = $scope.searchQueryItem;
+                        
+                    }else{
+                        $rootScope.searchIsActive = false;
+                    }
+                    
+                };
 		$scope.init = function(){
+			$rootScope.searchIsActive = false;
+                        
 			$http({method: 'GET', url: '/menus'}).success(function(data, status) {
 					$scope.menus = data;
 				});

@@ -22,6 +22,9 @@ module.exports = function(app, passport, auth) {
     //get all contacts of a given company
     app.get('/api/contact', auth.requiresLogin, contact.showAll);
     
+    //get all contacts for search engine
+    app.get('/api/contact/searchEngine', auth.requiresLogin, contact.showList);
+    
     //get a contact
     app.get('/api/contact/:contactId', auth.requiresLogin, contact.findOne);
     
@@ -44,7 +47,7 @@ module.exports = function(app, passport, auth) {
     app.post('/api/contact/autocomplete', auth.requiresLogin, function(req, res) {
         console.dir(req.body.filter);
 
-        if (req.body.filter == null)
+        if (req.body.filter === null)
                 return res.send(200, {});
 
         var query = {
@@ -163,6 +166,20 @@ Contact.prototype = {
                 query = {"Status": req.query.Status};
             
             ContactModel.find(query, function(err, doc) {
+                if (err) {
+                        console.log(err);
+                        res.send(500, doc);
+                        return;
+                }
+                
+                res.json(200, doc);
+            });
+	},
+        showList: function(req, res) {
+            
+            var query = {name: new RegExp(req.query.item, "i")};
+            
+            ContactModel.find(query, {}, function(err, doc) {
                 if (err) {
                         console.log(err);
                         res.send(500, doc);

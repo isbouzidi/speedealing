@@ -449,8 +449,4 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
             });
         };
         
-        $scope.$on('department', function() {
-            
-            alert(department);
-        });
     }]);
