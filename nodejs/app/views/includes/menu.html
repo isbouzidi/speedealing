@@ -1,112 +1,114 @@
 <div data-ng-controller="MenuController" ng-init="init()">
-	<div id="menu-content">
-		<header>
-			<form id="search_box" action='search.php' method='post'>
-				<input class="ac_input focus" id="query" name='query' type='text' size='40' placeholder="{{t 'SearchOf'}}" autocomplete="off">
-			</form>
-		</header>
+    
+        
+    <div id="menu-content">
+        <header>
+            <form id="search_box" action='search.php' method='post'>
+                <input ng-model="searchQueryItem" ng-change="searchQuery()" class="ac_input focus" id="query" type='text' size='40' placeholder="{{t 'SearchOf'}}" autocomplete="off">
+            </form>
+        </header>
 
-		<div id="profile">
-			<div ng-if="global.user.photo">
-				<img alt="User name" ng-src="viewimage.php?modulepart=userphoto&entity=\{{global.user.entity}}&file=\{{global.user.photo}}&cache=1&id=\{{global.user._id}}" width="64" class="user-icon">
-			</div>
-			<div ng-if="!global.user.photo">
-				<img src="img/user.png" width="64" class="user-icon" alt="User name">
-			</div>
+        <div id="profile">
+            <div ng-if="global.user.photo">
+                <img alt="User name" ng-src="viewimage.php?modulepart=userphoto&entity=\{{global.user.entity}}&file=\{{global.user.photo}}&cache=1&id=\{{global.user._id}}" width="64" class="user-icon">
+            </div>
+            <div ng-if="!global.user.photo">
+                <img src="img/user.png" width="64" class="user-icon" alt="User name">
+            </div>
 
-			<p> {{t 'Hello'}}
-				<span class="name">\{{global.user.firstname}} 
-					<b> \{{global.user.lastname}}</b>
-				</span>
-			</p>
-		</div>
+            <p> {{t 'Hello'}}
+                <span class="name">\{{global.user.firstname}} 
+                    <b> \{{global.user.lastname}}</b>
+                </span>
+            </p>
+        </div>
+        <ul class="children-tooltip" id="access">
+            <li style="width: 20%;">
+                <a href='#!/' title="{{t
+                        'Home'}}" >
+                    <span class="icon-home"></span>
+                </a>
+            </li>
+            <li style="width: 20%;" data-ng-init="ticketCounter()">
+                <a href='#!/ticket' title="{{t 'TicketCenter'}}" >
+                    <span class="icon-inbox"></span>
+                    <span data-ng-if="ticketCpt" class="count">\{{ticketCpt}}</span>
+                </a>
+            </li>
+            <li style="width: 20%;">
+                <a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t
+                                'Agenda'}}" target="_self">
+                    <span class="icon-calendar"></span>
+                    {{#if agenda.count}}
+                    <span class="count">{{agenda.count}}</span>
+                    {{/if}}
+                </a>
+            </li>
+            <li style="width: 20%;">
+                <a href="user/fiche.php?id={{user.id}}"  title="{{t
+                        'Parameters'}}" target="_self">
+                    <span class="icon-gear"></span>
+                </a>
+            </li>
+            <li style="width: 20%;">
+                <a href="logout" title="{{t
+                        'Logout'}}" target="_self">
+                    <span class="icon-logout"></span>
+                </a>
+            </li>
+        </ul>
 
-		<ul class="children-tooltip" id="access">
-			<li style="width: 20%;">
-				<a href='#!/' title="{{t
-						'Home'}}" >
-					<span class="icon-home"></span>
-				</a>
-			</li>
-			<li style="width: 20%;" data-ng-init="ticketCounter()">
-				<a href='#!/ticket' title="{{t 'TicketCenter'}}" >
-					<span class="icon-inbox"></span>
-					<span data-ng-if="ticketCpt" class="count">\{{ticketCpt}}</span>
-				</a>
-			</li>
-			<li style="width: 20%;">
-				<a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t
-						'Agenda'}}" target="_self">
-					<span class="icon-calendar"></span>
-					{{#if agenda.count}}
-					<span class="count">{{agenda.count}}</span>
-					{{/if}}
-				</a>
-			</li>
-			<li style="width: 20%;">
-				<a href="user/fiche.php?id={{user.id}}"  title="{{t 'Parameters'}}" target="_self">
-					<span class="icon-gear"></span>
-				</a>
-			</li>
-			<li style="width: 20%;">
-				<a href="logout" title="{{t
-						'Logout'}}" target="_self">
-					<span class="icon-logout"></span>
-				</a>
-			</li>
-		</ul>
+        <!--<ul class="big-menu collapsible as-accordion">
+                {{{menuHTML}}}
+        </ul>-->
 
-		<!--<ul class="big-menu collapsible as-accordion">
-			{{{menuHTML}}}
-		</ul>-->
+        <ul class="big-menu collapsible as-accordion">
+            <li ng-repeat="(_id,menu) in menus | object2Array | orderBy:'position'" ng-class="{'with-right-arrow' : menu.submenus}">
+                <span ng-if="menu.submenus">\{{menu.title}}</span>
+                <ul ng-if="menu.submenus" class="big-menu grey-gradient">
+                    <li ng-repeat="(_id, menu) in menu.submenus  | object2Array | orderBy:'position'" ng-class="{'with-right-arrow' : menu.submenus}">
+                        <span ng-if="menu.submenus">\{{menu.title}}</span>
+                        <ul ng-if="menu.submenus" class="big-menu anthracite-gradient">
+                            <li ng-repeat="(_id, menu) in menu.submenus  | object2Array | orderBy:'position'">
+                                <a ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
+                            </li>
+                        </ul>
+                        <a ng-if="!menu.submenus" ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
+                    </li>
+                </ul>
+                <a ng-if="!menu.submenus" ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
+            </li>
+        </ul>
 
-		<ul class="big-menu collapsible as-accordion">
-			<li ng-repeat="(_id,menu) in menus | object2Array | orderBy:'position'" ng-class="{'with-right-arrow' : menu.submenus}">
-				<span ng-if="menu.submenus">\{{menu.title}}</span>
-				<ul ng-if="menu.submenus" class="big-menu grey-gradient">
-					<li ng-repeat="(_id, menu) in menu.submenus  | object2Array | orderBy:'position'" ng-class="{'with-right-arrow' : menu.submenus}">
-						<span ng-if="menu.submenus">\{{menu.title}}</span>
-						<ul ng-if="menu.submenus" class="big-menu anthracite-gradient">
-							<li ng-repeat="(_id, menu) in menu.submenus  | object2Array | orderBy:'position'">
-								<a ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
-							</li>
-						</ul>
-						<a ng-if="!menu.submenus" ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
-					</li>
-				</ul>
-				<a ng-if="!menu.submenus" ng-class="selectedMenu(menu.id)" href="\{{menu.url}}?idmenu=\{{menu.id}}" target="_self">\{{menu.title}}</a>
-			</li>
-		</ul>
+        <ul class="unstyled-list">
+            <li class="title-menu">{{t 'agenda:EventOnFullDay'}}</li>
+            {{#each agenda.task}}
+            <li>
+                <ul class="calendar-menu">
+                    <li>
+                        <a href="agenda/fiche.php?id={{this._id}}", title="{{t
+                                'Open'}}">
+                            <time datetime="{{this.event.datetime}}">
+                                <b>{{this.event.day}}</b>
+                                <p>{{this.event.month}}</p>
+                            </time>
+                            <small class="green">{{this.event.hour}}</small>
+                            <p>{{this.label}} 
+                                <i>({{this.societe}})</i>
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {{else}}
+            <p>{{t 'agenda:NoMeeting'}}</p>
+            {{/each}}
+        </ul>
+    </div>
 
-		<ul class="unstyled-list">
-			<li class="title-menu">{{t 'agenda:EventOnFullDay'}}</li>
-			{{#each agenda.task}}
-			<li>
-				<ul class="calendar-menu">
-					<li>
-						<a href="agenda/fiche.php?id={{this._id}}", title="{{t
-								'Open'}}">
-							<time datetime="{{this.event.datetime}}">
-								<b>{{this.event.day}}</b>
-								<p>{{this.event.month}}</p>
-							</time>
-							<small class="green">{{this.event.hour}}</small>
-							<p>{{this.label}} 
-								<i>({{this.societe}})</i>
-							</p>
-						</a>
-					</li>
-				</ul>
-			</li>
-			{{else}}
-			<p>{{t 'agenda:NoMeeting'}}</p>
-			{{/each}}
-		</ul>
-	</div>
-
-	<footer id="menu-footer">
-		<div>
-			<p>Speedealing v{{version}}</p>
-		</div>
-	</footer>
+    <footer id="menu-footer">
+        <div>
+            <p>Speedealing v{{version}}</p>
+        </div>
+    </footer>
 </div>

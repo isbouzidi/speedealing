@@ -3,8 +3,10 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$http',
 		//console.log(Global);
 		
 		$scope.title = pageTitle.getTitle();
-
-		$scope.withMenu = function() {
+                $scope.currentPage = 0;
+                $scope.pageSize = 5;
+                
+                $scope.withMenu = function() {
 			//console.log(Global);
 			if (Global && Global.user.right_menu)
 				return "with-menu";
@@ -25,5 +27,31 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$http',
 			//Global.user.entity = $scope.entity.id;
 			$route.reload();
 		};
+                
+                $scope.$watch('searchItem', function(item){
+                    
+                    if(item){
+                        
+                        $http({ method: 'GET', url: '/api/contact/searchEngine', 
+                                params: { item: item }
+
+                                }).success(function(data) {
+
+                                    $scope.results = data;
+                         });
+                         
+                        $scope.numberOfPages=function(){
+                            return Math.ceil($scope.results.length/$scope.pageSize);          
+                        };
+                        
+                    }
+                });
 
 	}]);
+    
+        app.filter('startFrom', function() {
+            return function(input, start) {
+                start = +start;
+                return input.slice(start);
+            };
+        });

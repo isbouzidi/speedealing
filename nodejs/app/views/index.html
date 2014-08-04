@@ -37,8 +37,46 @@
 	</a>-->
 
 	<!-- Main content -->
-	<section id="main" role="main">
+        <section id="main" role="main">
+            
+            <div data-ng-show="searchIsActive" style="padding: 8px 14px 12px">
+                <h2>Resultat Recherche : <span class="thin">\{{searchItem}}</span></h2>
+                <ul class="unstyled-list">
+                
+                <li>
+                    <ul class="message-menu">
+                        <li ng-repeat="result in results | startFrom:currentPage*pageSize | limitTo:pageSize">
+                                
+                            <a href="">
+                                    <h3 class="thin green">\{{result.name}}</h3>
+                                    <div class="anthracite margin-top">Status  <small class="tag \{{result.status.css}} glossy">\{{result.status.name || 'indéfini'}}</small></div>
+                                    <div class="anthracite margin-top">Travail <strong class="blue">\{{result.poste || 'indéfini'}}</strong> chez : <strong class="blue">\{{result.entity || 'indéfini'}}</strong></div>
+                                    <div class="anthracite margin-top">Habite à <strong class="blue">\{{result.zip || 'indéfini'}}</strong>, <strong class="blue">\{{result.town || 'indéfini'}}</strong></div>
+                                </a>
+                        </li>
+                        <li>
+                            <button type="button" class="button glossy" ng-disabled="currentPage === 0" ng-click="currentPage=currentPage-1">
+				<span class="button-icon"><span class="icon-previous"></span></span>
+				précédent
+                            </button>
+                            <button class="button white-gradient disabled" disabled="">
+                                \{{currentPage+1}}/\{{numberOfPages()}}
+                            </button>
+                            <button type="button" class="button" ng-disabled="currentPage >= results.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                    Suivant
+                                    <span class="button-icon right-side"><span class="icon-next"></span></span>
+                            </button>
+                            
+                        </li>
+                    </ul>
+                    
+                </li>
+            </ul>
+            </div>
+            
+            <div data-ng-hide="searchIsActive">
 		<section data-ng-view></section>
+            </div>
 	</section>
 	<script type="text/javascript">
 		window.user = JSON.parse($.ajax({

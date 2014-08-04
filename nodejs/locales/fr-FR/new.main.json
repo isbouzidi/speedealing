@@ -684,6 +684,18 @@
     "PreviousMonth": "Mois précédent",
     "NextMonth": "Mois suivant",
     "Download": "Télécharger",
-    "RH": "RH",
-    "Gestion des conges / absences": "Gestion des conges / absences"
+    "Retour de tournées": "Retour de tournées",
+    "Planning": "Planning",
+    "Archives planning": "Archives planning",
+    "Saisie des transports": "Saisie des transports",
+    "Saisie des mouvements stocks": "Saisie des mouvements stocks",
+    "Liste des mouvements stocks": "Liste des mouvements stocks",
+    "Véhicules": "Véhicules",
+    "Cartes Gazoil": "Cartes Gazoil",
+    "Demandes d'achats": "Demandes d'achats",
+    "Gestion des tournées": "Gestion des tournées",
+    "Planning des tournées": "Planning des tournées",
+    "EMail": "EMail",
+    "Web": "Web",
+    "zonegeo": "zonegeo"
 }
