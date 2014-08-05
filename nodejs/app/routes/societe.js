@@ -831,7 +831,8 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
-
+		req.connection.setTimeout(300000);
+		
 		var conv_id = {
 			effectif_id: {
 				"0": "EF0",
@@ -1069,7 +1070,8 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.post('/api/contact/import', /*ensureAuthenticated,*/ function(req, res) {
-
+		req.connection.setTimeout(300000);
+		
 		var conv_id = {
 			civilite: {
 				"": "NO",
