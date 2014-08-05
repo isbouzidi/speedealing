@@ -87,7 +87,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			}
 
 			var p = {
-				fields: "_id commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id",
+				fields: "_id commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client",
 				query: this.type.id,
 				entity: Global.user.entity,
 				//filter: $scope.filterOptionsSociete.filterText,
@@ -220,7 +220,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'code_client', displayName: 'Code Client', visible: false, width: '110px'},
+				{field: 'name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'code_client\')">({{row.getProperty(\'code_client\')}})</small></a>'},
 				{field: 'commercial_id.name', displayName: 'Commerciaux',
 					cellTemplate: '<div class="ngCellText align-center"><span editable-text="row.getProperty(\'commercial_id\')" buttons="no" e-form="CommercialIdBtnForm" e-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" e-typeahead-on-select="updateInPlace(\'/api/societe\',\'commercial_id\', row, $item); CommercialIdBtnForm.$cancel();" ><span class="icon-user" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="CommercialIdBtnForm.$show()" ng-hide="CommercialIdBtnForm.$visible"></span>'
 				},
