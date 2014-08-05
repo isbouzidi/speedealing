@@ -684,6 +684,8 @@
     "PreviousMonth": "Mois précédent",
     "NextMonth": "Mois suivant",
     "Download": "Télécharger",
+    "RH": "RH",
+    "Gestion des conges / absences": "Gestion des conges / absences",
     "Retour de tournées": "Retour de tournées",
     "Planning": "Planning",
     "Archives planning": "Archives planning",
@@ -697,5 +699,6 @@
     "Planning des tournées": "Planning des tournées",
     "EMail": "EMail",
     "Web": "Web",
-    "zonegeo": "zonegeo"
+    "zonegeo": "zonegeo",
+    "Etat": "Etat"
 }

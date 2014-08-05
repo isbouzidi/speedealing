@@ -1,102 +1,112 @@
 {{> header}}
 
 <body class="clearfix" data-ng-controller="HeaderController" data-ng-class="withMenu()">
-	<header id="title-bar" role='banner'>
-		<div>
-			<span class='title'>\{{title.title}}</span>
-			<div class='float-right with-tooltip'>
-				<span class='margin-right'>
-					<!--<timer end-time="{{ttlSession}}">\{{hours}}:\{{mminutes}}:\{{sseconds}}</timer>-->
-				</span>
-				{{#if user.multiEntities}}
-				<span class='margin-right'>
-					<a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
-						\{{global.user.entity}}
-					</a>
-					<!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->
-				</span>
-				{{/if}}
-				<a  class='' href="logout" title="Déconnexion" target="_self">
+    <header id="title-bar" role='banner'>
+        <div>
+            <span class='title'>\{{title.title}}</span>
+            <div class='float-right with-tooltip'>
+                <span class='margin-right'>
+                    <!--<timer end-time="{{ttlSession}}">\{{hours}}:\{{mminutes}}:\{{sseconds}}</timer>-->
+                </span>
+                {{#if user.multiEntities}}
+                <span class='margin-right'>
+                    <a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
+                        \{{global.user.entity}}
+                    </a>
+                    <!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->
+                </span>
+                {{/if}}
+                <a  class='' href="logout" title="Déconnexion" target="_self">
 
-					\{{global.user.name}}  <span class="icon-logout"></span>
-				</a>
-			</div>
-		</div>
-	</header>
+                    \{{global.user.name}}  <span class="icon-logout"></span>
+                </a>
+            </div>
+        </div>
+    </header>
 
-	<!-- Button to open/hide menu --> 
-	{{#if user.right_menu}}
-	<a id="open-menu" href='#'>
-		<span>Menu</span>
-	</a>
-	{{/if}}
+    <!-- Button to open/hide menu --> 
+    {{#if user.right_menu}}
+    <a id="open-menu" href='#'>
+        <span>Menu</span>
+    </a>
+    {{/if}}
 
-	<!-- Button to open/hide shortcuts -->
-	<!--<a id="open-shortcuts" href='#'>
-		<span class="icon-thumbs"></span>
-	</a>-->
+    <!-- Button to open/hide shortcuts -->
+    <!--<a id="open-shortcuts" href='#'>
+            <span class="icon-thumbs"></span>
+    </a>-->
 
-	<!-- Main content -->
-        <section id="main" role="main">
-            
-            <div data-ng-show="searchIsActive" style="padding: 8px 14px 12px">
-                <h2>Resultat Recherche : <span class="thin">\{{searchItem}}</span></h2>
-                <ul class="unstyled-list">
+    <!-- Main content -->
+    <section id="main" role="main">
+
+        <div data-ng-show="searchIsActive" style="padding: 8px 14px 12px">
+            <h2>Resultat Recherche : <span class="thin">\{{searchItem}}</span></h2>
+            <div ng-if="results.length !== 0" class="six-columns twelve-columns-tablet">
                 
-                <li>
-                    <ul class="message-menu">
-                        <li ng-repeat="result in results | startFrom:currentPage*pageSize | limitTo:pageSize">
-                                
-                            <a href="">
+                <ul class="unstyled-list">
+
+                    <li>
+                        <ul class="message-menu">
+                            <li ng-repeat="result in filteredResults">
+
+                                <a href="">
                                     <h3 class="thin green">\{{result.name}}</h3>
-                                    <div class="anthracite margin-top">Status  <small class="tag \{{result.status.css}} glossy">\{{result.status.name || 'indéfini'}}</small></div>
-                                    <div class="anthracite margin-top">Travail <strong class="blue">\{{result.poste || 'indéfini'}}</strong> chez : <strong class="blue">\{{result.entity || 'indéfini'}}</strong></div>
-                                    <div class="anthracite margin-top">Habite à <strong class="blue">\{{result.zip || 'indéfini'}}</strong>, <strong class="blue">\{{result.town || 'indéfini'}}</strong></div>
+                                    <div class="anthracite margin-top">Status  <small class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</small></div>
+                                    <div class="anthracite margin-top">Travail <span class="blue">\{{result.poste|| 'indéfini'}}</span> chez : <span class="blue">\{{result.entity|| 'indéfini'}}</span></div>
+                                    <div class="anthracite margin-top">N° Tél. <span class="blue">\{{result.phone_pro|| 'indéfini'}}</span></div>
+                                    <div class="anthracite margin-top">Email <a href="mailto:\{{result.email}}" class="red" target="_blank">\{{result.email|| 'indéfini'}}</a></div>
                                 </a>
-                        </li>
-                        <li>
-                            <button type="button" class="button glossy" ng-disabled="currentPage === 0" ng-click="currentPage=currentPage-1">
-				<span class="button-icon"><span class="icon-previous"></span></span>
-				précédent
-                            </button>
-                            <button class="button white-gradient disabled" disabled="">
-                                \{{currentPage+1}}/\{{numberOfPages()}}
-                            </button>
-                            <button type="button" class="button" ng-disabled="currentPage >= results.length/pageSize - 1" ng-click="currentPage=currentPage+1">
-                                    Suivant
-                                    <span class="button-icon right-side"><span class="icon-next"></span></span>
-                            </button>
-                            
-                        </li>
-                    </ul>
-                    
-                </li>
-            </ul>
-            </div>
-            
-            <div data-ng-hide="searchIsActive">
-		<section data-ng-view></section>
-            </div>
-	</section>
-	<script type="text/javascript">
-		window.user = JSON.parse($.ajax({
-		url: "api/session",
-		dataType: "json",
-		async: false
-		}).responseText);
-	</script>
-	<!-- include menuleft-->
+                            </li>
+                            <li>
 
-	<!-- Menu content-->
-	{{#if user.right_menu}}
-	<section id="menu" role='complementary'>
-		{{> menu}}
-		<!--<div data-ng-include data-src="'partials/menu.html'"></div>-->
-	</section>
-	{{/if}}
+                                <pagination 
+                                    total-items="resultsCount" 
+                                    ng-model="currentPage" 
+                                    max-size="maxSize" 
+                                    class="pagination-sm" 
+                                    boundary-links="true" 
+                                    items-per-page="numPerPage"
+                                    previous-text ="Précédent" next-text="Suivant"
+                                    first-text="Premier" last-text="Dernier">
+                                </pagination>
 
-	<footer id="footer">
-		{{> footer}}
-	</footer>
+                            </li>
+
+                        </ul>
+
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="results.length == 0" class="six-columns twelve-columns-tablet">
+                <p class="message small-margin-bottom">
+                    <strong>0</strong> résultats trouvés pour <strong>\{{searchItem}}</strong>
+                </p>
+            </div>
+        </div>
+
+        <div data-ng-hide="searchIsActive">
+            <section data-ng-view></section>
+        </div>
+    </section>
+    <script type="text/javascript">
+                    window.user = JSON.parse($.ajax({
+                        url: "api/session",
+                        dataType: "json",
+                        async: false
+                    }).responseText);
+    </script>
+    <!-- include menuleft-->
+
+    <!-- Menu content-->
+    {{#if user.right_menu}}
+    <section id="menu" role='complementary'>
+        {{> menu}}
+        <!--<div data-ng-include data-src="'partials/menu.html'"></div>-->
+    </section>
+    {{/if}}
+
+    <footer id="footer">
+        {{> footer}}
+    </footer>
 </body>
 </html>
