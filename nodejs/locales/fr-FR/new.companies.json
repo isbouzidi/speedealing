@@ -428,6 +428,5 @@
     "Tel-Fixe": "Téléphone Fixe",
     "email": "Email",
     "ContactStatut": "Status",
-    "zip": "companies:zip",
-    "town": "companies:town"
+    "PL_0": "companies:PL_0"
 }
