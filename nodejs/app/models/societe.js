@@ -88,7 +88,8 @@ var societeSchema = new Schema({
 	idprof6: String, // TVA Intra
 	iban: {
 		bank: String,
-		id: String //FR76........
+		id: String, //FR76........
+		swift: String
 	},
 	checklist: mongoose.Schema.Types.Mixed,
 	annualCA: [{
