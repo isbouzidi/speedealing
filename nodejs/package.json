@@ -55,7 +55,8 @@
 		"ua-parser": ">=0.3.3",
 		"nodemailer":"latest",
 		"array-extended":"latest",
-		"googleapis":"0.8.0"
+		"googleapis":"0.8.0",
+		"xml-writer":">=1.4.1"
 	},
 	"devDependencies": {
 		"supertest": "latest",

@@ -32,8 +32,6 @@ module.exports = function(app, passport, auth) {
 
 	var google = new Google();
 
-	app.get( '/api/google/ping', auth.requiresLogin, google.ping);
-
 	app.post('/api/google/import', auth.requiresLogin, google.import);
 
 	// The user wants to authorize the application to access to his account
@@ -41,8 +39,9 @@ module.exports = function(app, passport, auth) {
 
 	app.get( '/api/google/oauth2callback', auth.requiresLogin, google.oauth2callback)
 
-	app.post('/api/google/test_import', auth.requiresLogin, google.test_import);
-	//oauth2tokencallback
+	app.post('/api/google/export', auth.requiresLogin, google.export);
+
+	app.post('/api/google/test', auth.requiresLogin, google.test);
 };
 
 
@@ -56,10 +55,6 @@ function Google() {
 }
 
 Google.prototype = {
-	ping: function(req, res) {
-	//	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		res.send("Hello world !");
-	},
 
 	authorize : function(req, res) {
 		var scopes = [
@@ -76,8 +71,6 @@ Google.prototype = {
 
 		res.send("<a href='" + url + "'>Hello " + req.user.name + ", give access to google account !</a>");
 	},
-
-	
 
 	oauth2callback: function(req, res) {
 		console.log(req.query);
@@ -138,8 +131,6 @@ Google.prototype = {
 		res.send("oauth2callback <br/> code = " + code);
 	},
 
-
-
 	import: function(req, res) {
 		/* 
 		 * For each user
@@ -149,7 +140,6 @@ Google.prototype = {
 		 *         For each contact
 		 *             Merge him into Contact database
 		 */
-		
 		var status = 'success';
 		var msg_error = '';
 		var nb_user_treated = 0;
@@ -198,19 +188,87 @@ Google.prototype = {
 			res.send( (status=='success')? 200 : 500, 
 				json_response);
 		});
-
-
-		
 	},
 
+	export: function(req, res) {
+		// pour tout user (ayant changé de société)
+		// 		lister les contacts google avec leurs id
+		//		si le user a accès à ce contact 
+		//		(car le contact appartient à la société dont le commercial est le user),
+		//			on le laisse
+		//		sinon
+		//			on supprime le contact
 
-	test_import: function(req, res) {
-		ContactModel.find({email: 'devtestglobuloz@gmail.com'},
-			function (err, contacts){
-				console.log(contacts);		
-			});
+		// pout tout user
+		//     lister ses contacts google
+		//         (théorique) si le contact n'est pas trouvé ou n'est pas associé à une socité
+		//            on le laisse
+		//         sinon (il est associé à une société)
+		//            on le supprime
+		//     
+		//     lister les sociétés
+		//         si le user est commercial_id
+		//             lister les contacts de la société
+		//                  insérer les contacts dans google
+
+		var status = 'success';
+		var msg_error = '';
+		var nb_user_treated = 0;
+
+		var stream = UserModel.find().stream();
+		stream.on('data', function (user) {
+		  console.log(">> Scan user : " + user._id);
+
+		  if (_isGoogleEmail(user.email)) {
+
+		  	//console.log("User.google", user.google);
+		  	
+		  	if (_hasGrantedAccess(user)) {
+		  		console.log("Treat user : " + user._id + " - " + user.email);
+		  		
+		  		var params = {
+		  			user: user
+		  		};
+
+		  		_exp_treatGoogleUser(params);
+		  		
+		  		nb_user_treated++;
+
+		  	} else {
+		  		console.log("    no access");
+		  	}
+		  } else {
+		  	console.log("    no gmail");
+		  }
+
+		  console.log("");
+
+		}).on('error', function (err) {
+		  // handle the error
+		  console.log("Stream err", err);
+		  status = 'error';
+		  msg_error = err.toString();
+
+		}).on('close', function () {
+		  // the stream is closed
+
+		  var json_response = {
+				status: status, // 'success' or 'error' 
+				error: msg_error,
+				// number of user treated (with granted google account)
+				treated: nb_user_treated
+			};
+
+			console.log(json_response);
+			res.send( (status=='success')? 200 : 500, 
+				json_response);
+		});
+
+
+	},
+
+	test: function(req, res) {
 		
-
 		res.send("ok");
 	}
 
@@ -323,28 +381,6 @@ function _getGoogleContacts(user, callback) {
 
 /* *** */
 
-/*
-* Recursively merge properties of two objects 
-*/
-function _recursivelyMerging(obj1, obj2) {
-
-	for (var p in obj2) {
-		if (p != "_id") {
-			try {
-				// Property in destination object set; update its value.
-				if ( obj2[p].constructor == Object ) {
-					obj1[p] = _recursivelyMerging(obj1[p], obj2[p]);
-				} else {
-					obj1[p] = obj2[p];
-				}
-			} catch(e) {
-				// Property in destination object not set; create it and set its value.
-				obj1[p] = obj2[p];
-			}
-		}
-	}
-	return obj1;
-}
 
 
 /* Input array need to be sorted.
@@ -373,8 +409,6 @@ function _array_unique(arr_in, fct_are_equal) {
  * @param icontact Imported contact
  */
 function _updateContact(contact, icontact) {
-
-	//contact = _recursivelyMerging(contact, icontact);
 
 	var emails = [];
 
@@ -467,6 +501,7 @@ function _mergeByMail(icontact) {
 		});
 }
 
+
 /* @param icontact Imported contact
 */
 function _mergeOneContact (icontact) {
@@ -480,8 +515,6 @@ function _mergeOneContact (icontact) {
 		
 		_mergeByPhone(icontact);		
 	}
-
-
 }
 
 /* @param icontacts Imported contacts
@@ -513,7 +546,7 @@ function _mergeImportedContacts(user, icontacts) {
 
 
 
-/* Main function to treat a google user 
+/* Main function to treat a google user in order to import contacts
 */
 function _treatGoogleUser(user) {
 	_refreshGoogleTokens(user, 
@@ -537,5 +570,259 @@ function _treatGoogleUser(user) {
 /*
  * ****************** EXPORT ***********************************************************
  */
+
+
+
+
+/* callback format : fct(err, icontact, contacts)
+*/
+function _findNearestContactsByPhone(icontact, callback) {
+	if (icontact.phone ||
+		icontact.phone_perso ||
+		icontact.phone_mobile) {
+		
+		var phone = icontact.phone || '';
+		var phone_perso = icontact.phone_perso || '';
+		var phone_mobile = icontact.phone_mobile || '';
+
+		ContactModel.find({ 
+				$or: [
+					{phone: 		phone},
+					{phone_perso: 	phone_perso},
+					{phone_mobile: 	phone_mobile}
+				]
+			},
+			function (err, contacts) {
+				if (err)
+					console.log("Google - merge - ", err);
+				else
+					callback(null, icontact, contacts);					
+			});
+	} else {
+		callback(null, icontact, null);
+	}
+}
+
+/* callback format : fct(err, icontact, contacts)
+*/
+function _findNearestContactsByMail(icontact, callback) {
+	var addresses = array(icontact.emails).pluck('address').value();
+
+	ContactModel.find({ 'emails.address': { $in : addresses }},
+		function (err, contacts) {
+			if (err)
+				console.log("Google - merge - ", err);
+			else
+				_findNearestContactsByPhone(icontact, callback);
+		});
+}
+
+/* callback format : fct(err, icontact, contacts)
+*/
+function _findNearestContacts(icontact, callback) {
+	if (icontact.emails && icontact.emails.length > 0) {
+		_findNearestContactsByMail(icontact, callback);		
+
+	} else if (icontact.phone ||
+		icontact.phone_perso ||
+		icontact.phone_mobile) {
+		
+		_findNearestContactsByPhone(icontact, callback);		
+	} else {
+		callback("No email or phone.", icontact, null);
+	}
+}
+
+
+// @return boolean which indicates if the contact
+// belongs to a Societe object
+function _belongsToSociete(contact) {
+	return contact && contact.societe && contact.societe.id;
+}
+
+function _getSocietyCommercialIdByContact(contact, callback) {
+	if (!_belongsToSociete(contact)) {
+		callback(null);
+	} else {
+		SocieteModel.findOne({_id: contact.societe.id},
+			function (err, doc) {
+				if (err) {
+					console.log("Google export - societe err - ", err);
+					callback(null);
+				} else if (doc) {
+					if (doc.commercial_id && doc.commercial_id.id)
+						callback(doc.commercial_id.id);
+					else
+						callback(null);
+				}
+			});
+	}
+}
+
+function _exp_deleteGoogleContact(params, icontact) {
+	console.log("\n\n*** DELETING CONTACT ***\n\n");
+
+	var c = new GoogleContacts({
+		consumerKey: GOOGLE_CLIENT_ID,
+		consumerSecret: GOOGLE_CLIENT_SECRET,
+		token: params.user.google.tokens.access_token,
+		refreshToken: params.user.google.tokens.refresh_token,
+	});
+
+	c.deleteContact(icontact.id,
+		{ email: params.user.email }, 
+
+		function (err) {
+			if (err) {
+				console.log("Google - deleting contact " + icontact.id + " - ", err);
+			} else {
+				console.log("Google - deleting contact " + icontact.id + " - OK");
+			}
+		});
+}
+
+
+function _exp_checkOneGoogleContact(params, icontact) {
+	_findNearestContacts(icontact, 
+		function (err, icontact, contacts) {
+			if (err)
+				return console.log("Google export err - ", err);
+			console.log(contacts);
+			if (contacts) {
+				var deleted = false;
+				for (var i = 0; i < contacts.length && !deleted ; ++i) {
+					var contact = contacts[i];
+
+					if (_belongsToSociete(contact)) {
+						_exp_deleteGoogleContact(params, icontact);
+						deleted = true;
+					}
+
+					// _getSocietyCommercialIdByContact(contact,
+					// 	function (commercial_id) {
+					// 		console.log("commercial_id = ", commercial_id);
+					// 		console.log("user_id = ", params.user.id);
+
+					// 		if (commercial_id != params.user.id) {
+					// 			// no more access to this google contact
+					// 			_exp_deleteGoogleContact(params, icontact);
+					// 		}
+					// 	});					
+				};
+				
+			}
+		});
+}
+
+
+
+function _exp_checkGoogleContacts(params, icontacts) {
+	// console.log("_exp_checkGoogleContacts ; icontacts = ");
+	// console.log(icontacts);
+	// console.log(icontacts.length);
+
+	for (var i = 0; i < icontacts.length; ++i) {
+		_exp_checkOneGoogleContact(params, icontacts[i]);
+	}
+}
+
+/* 
+*/
+function _exp_getGoogleContacts(params, callback) {
+	console.log("\n\n*** GETTING CONTACTS PROCESS ***\n\n");
+
+	var c = new GoogleContacts({
+		consumerKey: GOOGLE_CLIENT_ID,
+		consumerSecret: GOOGLE_CLIENT_SECRET,
+		token: params.user.google.tokens.access_token,
+		refreshToken: params.user.google.tokens.refresh_token,
+	});
+
+	c.getContacts({
+		email: params.user.email,
+		storeContactId: true
+
+	}, function(err, contacts) {
+		if (err)
+			console.log("Google export error - ", err);
+		else
+			callback(params, contacts);
+	});
+}
+
+
+function _exp_insertGoogleContact(params, contact) {
+	console.log("\n\n*** INSERTING CONTACT ***\n\n");
+
+	var c = new GoogleContacts({
+		consumerKey: GOOGLE_CLIENT_ID,
+		consumerSecret: GOOGLE_CLIENT_SECRET,
+		token: params.user.google.tokens.access_token,
+		refreshToken: params.user.google.tokens.refresh_token,
+	});
+
+	c.insertContact(contact,
+		{ email: params.user.email }, 
+
+		function (err) {
+			if (err) {
+				console.log("Google - insert contact " + 
+					contact.name + "(" + contact.id + ") - ", err);
+			} else {
+				console.log("Google - insert contact " + 
+					contact.name + "(" + contact.id + ") - OK");
+			}
+		});
+}
+
+
+function _exp_listContactsBySociete(params, societe) {
+	var stream = ContactModel.find({ "societe.id": societe.id }).stream();
+	stream.on('data', function (contact) {
+		console.log(">> contact : " + contact.name);
+		
+		_exp_insertGoogleContact(params, contact);
+
+		console.log("");
+	}).on('error', function (err) {
+	  console.log("Stream Contact - err", err);
+	}).on('close', function () {
+	});
+}
+
+
+function _exp_listSocieteObjs(params) {
+
+	var stream = SocieteModel.find({ "commercial_id.id": params.user.id }).stream();
+	stream.on('data', function (societe) {
+		console.log(">> Scan societe : " + societe._id);
+		console.log("        name : " + societe.name);
+		console.log("        commercial id: " + societe.commercial_id.id);
+
+		_exp_listContactsBySociete(params, societe);
+
+		console.log("");
+	}).on('error', function (err) {
+	  console.log("Stream Societe - err", err);
+	}).on('close', function () {
+	});
+}
+
+
+
+/* Main function to treat a google user in order to export contacts
+*/
+function _exp_treatGoogleUser(params) {
+	_refreshGoogleTokens(params.user, 
+		function (err) {
+			if (err)
+				console.log("Google export error - ", err);
+			else {
+//				_exp_getGoogleContacts(params, _exp_checkGoogleContacts);	
+				_exp_listSocieteObjs(params);
+			}
+		}
+	);
+}
 
 
