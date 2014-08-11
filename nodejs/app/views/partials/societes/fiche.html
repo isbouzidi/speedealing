@@ -509,23 +509,7 @@
                                 </div>
                             </div>
                         </tab>
-                        <tab>
-                            <tab-heading>
-                                <span class="icon-newspaper">Comptes Rendus</span>
-                            </tab-heading>
-                            <div class="boxed relative large-box-shadow">
-                                <div class="twelve-columns">
-                                    <div class="button-group">
-                                        <button class="button icon-plus blue-gradient" data-ng-click="addNewReport()">{{t 'Add'}}</button>
-                                        <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOneReport()"><span class="icon-redo"></span></button>
-                                    </div>
-                                    <div class="gridStyle margin-top"  data-ng-grid="gridOptionsReports"></div>
-                                    <div class="table-footer silver-gradient">
-                                        \{{countReports}} ligne(s)
-                                    </div>
-                                </div>
-                            </div>                            
-                        </tab>
+                        
                     </tabset>
                 </div>
 
@@ -551,7 +535,26 @@
                         \{{countContact}} ligne(s)
                     </div>
                 </div>
+                
+                <div class="twelve-columns">
+                    <h5 class="green underline">Comptes Rendus</h5>
 
+                    <div class="table-header silver-gradient glossy button-height">
+                        <div class="col-sm-6">
+                            <div class="button-group">
+                                <button class="button icon-plus blue-gradient" data-ng-click="addNewReport()">{{t 'Add'}}</button>
+                                        <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOneReport()"><span class="icon-redo"></span></button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="gridStyle"  data-ng-grid="gridOptionsReports"></div>
+                    <div class="table-footer silver-gradient">
+                        \{{countReports}} ligne(s)
+                    </div>
+                </div>
+                
+                
                 <div class="twelve-columns">
                     <h5 class="green underline">Historique des tickets</h5>
 

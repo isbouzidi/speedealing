@@ -116,7 +116,7 @@ societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 societeSchema.pre('save', function(next) {
 	var self = this;
 
-	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
+	if (this.code_client === null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
 
 		SeqModel.incNumber("C", 6, function(seq) {
 			self.barCode = "C" + seq;

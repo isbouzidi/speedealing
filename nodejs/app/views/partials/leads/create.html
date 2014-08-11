@@ -1,0 +1,48 @@
+<form data-ng-init='init()' data-ng-submit='createLead()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'reports:New Lead'}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block button-height">
+            <label for="name"><b>{{t "reports:Name"}}</b></label>
+            <input type="text" ng-model="leads.name" id="name" class="input" autocomplete="off">
+        </div>
+        
+        <div class="field-block button-height">
+            <label for="potential"><b>{{t "reports:Potential"}}</b></label>
+            <span ng-repeat="p in potential" style="margin-left" >
+            <input type="radio" ng-model="leads.potential" value="\{{p.label || 'Aucun'}}">\{{p.label || 'Aucun'}}
+            
+            </span>
+        </div>
+        <div class="field-block button-height">
+            <label for="dueDate"><b>{{t "reports:Due Date"}}</b></label>
+            <span class="k-widget k-datepicker k-header input">
+                <span class="k-picker-wrap k-state-default">
+                    <input 
+                        kendo-date-picker required
+                        ng-model ="dueDate"
+                        id="dueDate"
+                        k-on-change="leads.dueDate = kendoEvent.sender._value;" 
+                        class="input"/>
+                </span>
+            </span>
+        </div>
+        <!--
+        <div class="field-block button-height">
+            <label><b>Etat</b></label>
+            <select class="form-control" 
+                    ng-model="leads.status" 
+                    ng-options="s.id as s.label for s in status">                                    
+            </select>
+        </div>
+        -->
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                Créer
+            </button>
+        </div>
+    </fieldset>
+</form>

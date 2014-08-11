@@ -12,8 +12,8 @@
     "Next Appointment": "Prochain rendez-vous",
     "Internal Meeting":"Réunion interne",
     "Report": "Rapport",
-    "Comment": "Commentaires/observations",
-    "Prospect Level": "Potentiel attractivité/an",
+    "Comment": "Commentaires",
+    "Prospect Level": "Potentiel",
     "Products": "Produits",
     "Send Booklet": "Envoi plaquette",
     "Send Offer": "Envoi offre",
@@ -21,5 +21,12 @@
     "Visit Workshop": "Visite atelier",
     "Business Type": "Type affiare",
     "Business Offer": "Offre",
-    "Business Step": "Etape"
+    "Business Step": "Etape",
+    "Duration Appointment": "Durée Rendez-vous",
+    "Due Date": "Date d'échéance",
+    "Leads": "Leads détectées",
+    "New Lead": "Nouveau Lead",
+    "Name": "Nom",
+    "Due Date": "Date d'échéance",
+    "Potential": "Potentiel"
 }

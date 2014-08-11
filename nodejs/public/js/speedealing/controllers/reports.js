@@ -8,6 +8,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         $scope.global = Global;
         $scope.report = {
             duration: 1,
+            durationAppointment: 1,
             contacts: [],
             products: [],
             actions: [],
@@ -25,7 +26,9 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         
         $scope.actionMethod = [];
         $scope.actionDate = [];
-
+        $scope.lead = [];
+        $scope.report.leads = [];
+        
         $scope.init = function() {
             
             $http({method: 'GET', url: '/api/report/caFamily/select', params: {
@@ -34,9 +37,17 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             }).success(function(data) {
                 $scope.products = data;
             });
-
+            
+            $http({method: 'GET', url: 'api/report/contacts', params: {
+                    societe: $scope.global.contactIdSociete
+                }
+            }).success(function(data) {
+                
+                $scope.contacts = data;
+            });
+            
             var fields = [
-                "potentialAttract", 
+                /*"potentialAttract", */
                 "model", 
                 "typeAction", 
                 "methodAction", 
@@ -48,7 +59,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 "progressPoints",
                 "reports"
             ];
-
+            
             angular.forEach(fields, function(field) {
                 $http({method: 'GET', url: '/api/report/fk_extrafields/select', params: {
                         field: field
@@ -58,7 +69,15 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                     $scope[field] = data;
                 });
             });
-
+            
+            $http({method: 'GET', url: 'api/report/leads', params: {
+                    societe: $scope.global.contactIdSociete
+                }
+            }).success(function(data) {
+                
+                $scope.leads = data;
+            });
+            
         };
 
         $scope.productSelection = function productSelection(product) {
@@ -213,6 +232,21 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             }, function() {
             });
         };
+        
+        $scope.addNewLead = function() {
+
+            var modalInstance = $modal.open({
+                templateUrl: '/partials/leads/create.html',
+                controller: "LeadCreateController",
+                windowClass: "steps"
+            });
+
+            modalInstance.result.then(function(leads) {
+                $scope.report.leads.push(leads);
+                
+            }, function() {
+            });
+        };
 
         $scope.updateReportTemplate = function() {
             
@@ -246,25 +280,42 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         };
 
         $scope.addContact = function() {
-
+            
             var add = {
                 id: $scope.report.cont._id,
                 name: $scope.report.cont.name,
-                poste: $scope.report.cont.poste
+                poste: $scope.report.cont.poste || 'Indéfini'
             };
 
             $scope.report.contacts.push(add);
-            $scope.report.cont = "";
+            
         };
+        
+        $scope.addLead = function() {
+            
+            var add = {
+                id: $scope.report.lead.id,
+                name: $scope.report.lead.name,
+                potential: $scope.report.lead.potential
+            };
 
+            $scope.report.leads.push(add);
+            
+        };
+        
         $scope.delete = function($index) {
 
             $scope.report.contacts.splice($index, 1);
         };
         
+        $scope.deleteLead = function($index) {
+
+            $scope.report.leads.splice($index, 1);
+        };
+        
         $scope.showReason = function(){
           
-            if($scope.report.optional.business.step === 'no'){
+            if($scope.report.optional.business.step === 'Non retenu'){
                 $scope.showReasonValue = true;
             }else{
                 $scope.showReasonValue = false;
