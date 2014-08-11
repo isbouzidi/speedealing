@@ -163,6 +163,15 @@
 					"usertype": 2,
 					"title": "companies:ListOfContactsDisable",
 					"fk_menu": "menu:companies"
+				},
+				"menu:companysegmentation": {
+					"position": 22,
+					"url": "#!/societes/segmentation.html",
+					"perms": "user.rights.societe.read",
+					"enabled": "conf.societe.enabled",
+					"usertype": 2,
+					"title": "companies:Segmentation",
+					"fk_menu": "menu:companies"
 				}
 			}
 		}

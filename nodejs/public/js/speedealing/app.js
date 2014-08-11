@@ -46,7 +46,7 @@ angular.module('jm.i18next').config(['$i18nextProvider', function ($i18nextProvi
         resGetPath: 'locales/__lng__/__ns__.json',
 		//resPostPath: 'locales/__lng__/new.__ns__.json',
         defaultLoadingValue: '', // ng-i18next option, *NOT* directly supported by i18next
-		ns: {namespaces: ["main","bills","orders"], defaultNs: 'main'},
+		ns: {namespaces: ["main","bills","orders","companies"], defaultNs: 'main'},
 		supportedLngs: ['fr-FR','en-US'],
 		//load: 'current',
 		useCookie: false,

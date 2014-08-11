@@ -68,7 +68,7 @@ productSchema.pre('save', function(next) {
 mongoose.model('product', productSchema, 'Product');
 
 /**
- * Product Schema
+ * Product Storehouse Schema
  */
 var storehouseSchema = new Schema({
 	name: {type: String, require: true, unique: true, uppercase: true},
@@ -94,3 +94,30 @@ storehouseSchema.pre('save', function(next) {
 });
 
 mongoose.model('storehouse', storehouseSchema, 'Storehouse');
+
+/**
+ * Product PriceLevel Schema
+ */
+var priceLevelSchema = new Schema({
+	price_level: {type: String, require: true},
+	product: {
+		id: {type: Schema.Types.ObjectId, ref: 'product'},
+		name: String
+	},
+	tms: Date,
+	pu_ht: Number,
+	qtyMin: {type: Number, default: 0},
+	user_mod: {id: String, name: String},
+	optional: Schema.Types.Mixed,
+	history: [{
+			tms: Date,
+			user_mod: Schema.Types.Mixed,
+			pu_ht: Number,
+			qtyMin: {type: Number, default: 0}
+		}]
+});
+
+priceLevelSchema.plugin(timestamps);
+
+mongoose.model('pricelevel', priceLevelSchema, 'PriceLevel');
+

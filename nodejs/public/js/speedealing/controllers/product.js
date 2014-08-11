@@ -48,7 +48,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						//Status_ID: {from: "Status.id", defaultValue: "SELL"},
 						price_level: {type: "string", defaultValue: "BASE"},
 						ref_customer_code: {type: "string"},
-						caFamily:{type:"string"},
+						caFamily: {type: "string"},
 						barCode: {type: "string"},
 						billingMode: {type: "string", defaultvalue: "QTY"},
 						compta_buy: {type: "string", defaultValue: ""},
@@ -144,7 +144,7 @@ angular.module('mean.system').controller('ProductController', ['$scope', '$route
 						}
 					});
 		};
-		
+
 		$scope.familyDropDownEditor = function(container, options) {
 			$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
@@ -384,7 +384,7 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 
 	}]);
 
-angular.module('mean.system').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object','options', function($scope, $http, $modalInstance, Global, object, options) {
+angular.module('mean.system').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object', 'options', function($scope, $http, $modalInstance, Global, object, options) {
 		$scope.global = Global;
 
 		$scope.line = object;
@@ -408,24 +408,24 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
 			$scope.line.total_ht = $scope.line.pu_ht * $scope.line.qty;
 			$scope.line.total_tva = $scope.line.total_ht * $scope.line.tva_tx / 100;
 			$scope.line.total_ttc = $scope.line.total_ht + $scope.line.total_tva;
-			
+
 			$modalInstance.close($scope.line);
 		};
 
 		$scope.updateLine = function(data) {
-			if(!data.template)
+			if (!data.template)
 				$scope.line.product.template = "/partials/lines/classic.html";
-			
-			if(!$scope.line.description)
+
+			if (!$scope.line.description)
 				$scope.line.description = data.description;
-			
+
 			$scope.line.minPrice = data.minPrice;
-			
-			if(!$scope.line.pu_ht)
+
+			if (!$scope.line.pu_ht)
 				$scope.line.pu_ht = data.price.pu_ht;
-			
+
 			$scope.line.tva_tx = data.price.tva_tx;
-			
+
 			//console.log(data);
 		};
 
@@ -436,13 +436,130 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
 				page: 1,
 				pageSize: 5,
 				price_level: options.price_level,
-				supplier:options.supplier,
+				supplier: options.supplier,
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
 				//console.log(res.data);
-				return res.data
+				return res.data;
 			});
 		};
+
+	}]);
+
+angular.module('mean.system').controller('ProductPriceLevelController', ['$scope', '$location', '$route', '$http', '$timeout', '$modal', 'Global', function($scope, $location, $route, $http, $timeout, $modal, Global) {
+
+		$scope.priceLevel = [];
+		$scope.price_level = null;
+		$scope.prices_level = [];
+
+		$scope.init = function() {
+
+			$http({method: 'GET', url: '/api/product/price_level/select'
+			}).success(function(data, status) {
+				$scope.prices_level = data;
+				//console.log(data);
+			});
+		};
+
+		$scope.find = function() {
+			$http({method: 'GET', url: '/api/product/price_level', params: {
+					price_level: $scope.price_level
+				}
+			}).success(function(data, status) {
+				$scope.priceLevel = data;
+			});
+		};
+
+		/*
+		 * NG-GRID for product priceLevel list
+		 */
+
+		$scope.filterOptions = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptions = {
+			data: 'priceLevel',
+			enableRowSelection: false,
+			filterOptions: $scope.filterOptions,
+			sortInfo: {fields: ["product.name"], directions: ["asc"]},
+			//showFilter:true,
+			enableColumnResize: true,
+			enableCellSelection: true,
+			enableCellEditOnFocus: true,
+			i18n: 'fr',
+			columnDefs: [
+				{field: 'product.name', displayName: 'Ref produit', width: "15%", enableCellEdit: false},
+				{field: 'product.id.label', displayName: 'Description', enableCellEdit: false},
+				{field: 'price_level', displayName: 'Liste de prix', width: "80px", enableCellEdit: false},
+				{field: 'qtyMin', displayName: 'Minimum de commande', cellClass: "align-right", width: "150px", enableCellEdit: false},
+				{field: 'pu_ht', displayName: 'Tarif HT', width: "80px", cellClass: "blue align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>'},
+				{field: 'tms', displayName: 'Date MAJ', width: "100px", cellFilter: "date:'dd/MM/yyyy'", enableCellEdit: false},
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer le tarif du produit ?" confirmed-click="remove(row)"></button></div></div>'}
+			]
+		};
+
+		$scope.update = function(row) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			var d = new Date();
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					$http({method: 'PUT', url: 'api/product/price_level', data: row.entity
+					}).success(function(data, status) {
+						$scope.save.pending = false;
+					});
+				}, 200);
+			}
+		};
+
+		$scope.remove = function(row) {
+			for (var i = 0; i < $scope.priceLevel.length; i++) {
+				if (row.entity._id === $scope.priceLevel[i]._id) {
+					$http({method: 'DELETE', url: 'api/product/price_level', data: row.entity
+					}).success(function(data, status) {
+						$scope.priceLevel.splice(i, 1);
+					});
+					break;
+				}
+			}
+		};
+
+		$scope.addNewPrice = function() {
+			var modalInstance = $modal.open({
+				templateUrl: 'addPrice.html',
+				controller: "ProductPriceLevelController",
+				//windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							qty: 0
+						};
+					},
+					options: function() {
+						return {
+							price_level: $scope.price_level
+						};
+					}
+				}
+			});
+
+			modalInstance.result.then(function(price) {
+				$scope.priceLevel.push(price);
+				//$scope.bill.$update(function(response) {
+				//	$scope.bill = response;
+				//});
+			}, function() {
+			});
+		};
+		
+		
 
 	}]);

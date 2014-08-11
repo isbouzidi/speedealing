@@ -56,6 +56,12 @@
 				"perm": {
 					"import": false
 				}
+			},
+			{
+				"desc": "Modifier les listes de prix",
+				"perm": {
+					"priceLevel": false
+				}
 			}
 		]
 	},
@@ -89,6 +95,14 @@
 					"perms": "$user->rights->produit->lire",
 					"enabled": "$conf->product->enabled",
 					"title": "products:ListProducts"
+				},
+				"menu:productpricelevel": {
+					"url": "#!/product/pricelevel.html",
+					"position": 10,
+					"usertype": 2,
+					"perms": "$user->rights->produit->lire",
+					"enabled": "$conf->product->enabled",
+					"title": "products:PriceLevel"
 				}
 			}
 		}

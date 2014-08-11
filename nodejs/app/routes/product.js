@@ -3,9 +3,11 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
+		async = require('async'),
 		_ = require('underscore');
 
 var ProductModel = mongoose.model('product');
+var PriceLevelModel = mongoose.model('pricelevel');
 var StorehouseModel = mongoose.model('storehouse');
 
 var ExtrafieldModel = mongoose.model('extrafields');
@@ -14,6 +16,7 @@ var DictModel = mongoose.model('dict');
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();
+	var pricelevel = new PriceLevel();
 
 	ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
 		if (err) {
@@ -250,16 +253,65 @@ module.exports = function(app, passport, auth) {
 		}
 	});
 
-	app.get('/api/product/status/select', auth.requiresLogin, function(req, res) {
-		//console.dir(req.query);
-		object.StatusSelect(req, res);
+	app.get('/api/product/status/select', auth.requiresLogin, object.StatusSelect);
+
+
+	app.get('/api/product/price_level', auth.requiresLogin, pricelevel.read);
+	app.put('/api/product/price_level', auth.requiresLogin, pricelevel.update);
+	app.del('/api/product/price_level', auth.requiresLogin, pricelevel.remove);
+	app.get('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
+	app.get('/api/product/price_level/upgrade', auth.requiresLogin, function(req, res) {
+		ProductModel.find(function(err, products) {
+			async.each(products, function(product, callback) {
+
+				for (var i = 0; i < product.price.length; i++) {
+					if (product.price[i].price_level != "BASE")
+						PriceLevelModel.update({"product.id": product._id, price_level: product.price[i].price_level},
+						{
+							product: {
+								id: product._id,
+								name: product.ref
+							},
+							price_level: product.price[i].price_level,
+							tms: product.price[i].tms,
+							pu_ht: product.price[i].pu_ht,
+							qtyMin: product.price[i].qtyMin,
+							user_mod: product.price[i].user_mod,
+							optional: {
+								ref_customer_code: product.price[i].ref_customer_code
+							},
+							$addToSet: {
+								history: {
+									tms: product.price[i].tms,
+									user_mod: product.price[i].user_mod,
+									pu_ht: product.price[i].pu_ht,
+									qtyMin: product.price[i].qtyMin
+								}
+							}
+						},
+						{upsert: true},
+						function(err, numberAffected, price) {
+							if (err)
+								return console.log(err);
+
+							//console.log(price);
+						});
+				}
+
+				callback();
+			}, function(err) {
+				if (err)
+					return res.json(err);
+				res.send(200);
+			});
+		});
 	});
 
 	// list for autocomplete
 	app.post('/api/product/price_level/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
 
-		ProductModel.aggregate([{$unwind: "$price"}, {'$group': {_id: '$price.price_level'}}, {'$project': {price_level: '$price.price_level'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
+		PriceLevelModel.aggregate([{'$group': {_id: '$price_level'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/price_level/autocomplete");
 				console.log(err);
@@ -279,7 +331,7 @@ module.exports = function(app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
-	
+
 	app.post('/api/product/family/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body);
 
@@ -421,14 +473,14 @@ Object.prototype = {
 	},
 	read: function(req, res) {
 		var query = {
-			Status: {$in:["SELL","SELLBUY"]}
+			Status: {$in: ["SELL", "SELLBUY"]}
 		};
 
 		if (req.query.type)
 			query.type = req.query.type;
 
 		if (req.query.barCode)
-			query.barCode = {$nin:[null, ""]};
+			query.barCode = {$nin: [null, ""]};
 
 		ProductModel.find(query, "ref label barCode billingMode type caFamily", {limit: 50}, function(err, products) {
 			if (err)
@@ -505,12 +557,12 @@ Object.prototype = {
 				row.type = doc[i].type;
 				row.compta_buy = doc[i].compta_buy;
 				row.compta_sell = doc[i].compta_sell;
-				
-				if(doc[i].caFamily == null)
+
+				if (doc[i].caFamily == null)
 					row.caFamily = "OTHER";
 				else
 					row.caFamily = doc[i].caFamily;
-				
+
 				if (doc[i].barCode == null)
 					row.barCode = "";
 				else
@@ -607,7 +659,7 @@ Object.prototype = {
 		//console.log(obj);
 
 		if (obj._id)
-			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode, caFamily: obj.caFamily }, $push: {history: obj}}, function(err) {
+			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode, caFamily: obj.caFamily}, $push: {history: obj}}, function(err) {
 				if (err)
 					console.log(err);
 				//console.log(obj);
@@ -679,6 +731,93 @@ Object.prototype = {
 			doc.fields[req.query.field].values = result;
 
 			res.json(doc.fields[req.query.field]);
+		});
+	}
+};
+
+function PriceLevel() {
+}
+
+PriceLevel.prototype = {
+	read: function(req, res) {
+		var query = {
+		};
+
+		if (req.query.price_level)
+			query.price_level = req.query.price_level;
+
+		PriceLevelModel.find(query, "-history")
+				.populate("product.id")
+				.exec(function(err, prices) {
+					if (err)
+						console.log(err);
+
+					//console.log(prices);
+					if (prices == null)
+						prices = [];
+
+					res.send(200, prices);
+				});
+	},
+	list: function(req, res) {
+		PriceLevelModel.aggregate([{'$group': {_id: '$price_level'}}, {'$sort': {_id: 1}}], function(err, docs) {
+			if (err) {
+				console.log("err : /api/product/price_level/select");
+				console.log(err);
+				return;
+			}
+
+			var result = [];
+
+			if (docs !== null)
+				for (var i in docs) {
+					//console.log(docs[i]);
+					result[i] = {};
+					result[i].name = docs[i]._id;
+					//result[i].id = docs[i]._id;
+				}
+
+			return res.send(200, result);
+		});
+	},
+	update: function(req, res) {
+		PriceLevelModel.update({_id: req.body._id},
+		{
+			tms: new Date,
+			pu_ht: req.body.pu_ht,
+			qtyMin: req.body.qtyMin,
+			user_mod: {
+				id: req.user._id,
+				name: req.user.name
+			},
+			optional: req.body.optional,
+			$addToSet: {
+				history: {
+					tms: new Date,
+					user_mod: {
+						id: req.user._id,
+						name: req.user.name
+					},
+					pu_ht: req.body.pu_ht,
+					qtyMin: req.body.qtyMin
+				}
+			}
+		},
+		{upsert: false},
+		function(err, numberAffected, price) {
+			if (err)
+				return console.log(err);
+
+			//console.log(price);
+			res.send(200);
+		});
+		//console.log(req.body);
+	},
+	remove: function(req, res) {
+		PriceLevelModel.remove({_id: req.body._id}, function(err) {
+			if (err)
+				return console.log(err);
+			res.send(200);
 		});
 	}
 };
