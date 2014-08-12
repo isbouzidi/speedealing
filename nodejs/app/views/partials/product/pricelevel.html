@@ -2,29 +2,51 @@
 	<hgroup id="main-title" class="thin">
 		<h1>Liste des tarifs</h1>
 	</hgroup>
-	
-	<script type="text/ng-template" id="addPrice.html">
-		<div class="modal-header">
-			<h4 class="modal-title">
-				<span class="icon-pencil"></span> Renommer segmentation</h4>
-			</div>
-			<div class="modal-body">
-				<ng-form name="nameDialog" novalidate role="form">
-					<div class="form-group input-group-lg">
-						<label class="control-label" for="data">Segmentation : </label>
-						<input type="text" class="input" name="data" id="data" ng-model="data.id" ng-keyup="hitEnter($event)" required>
-					</div>
-				</ng-form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" ng-click="cancel()">Annuler</button>
-				<button type="button" class="btn btn-primary" ng-click="save()">Enreg.</button>
-			</div>
-		</div>
-    </script>
 
 	<div class="with-padding" data-ng-init="init()">
 
+		<script type="text/ng-template" id="myModalContent.html">
+			<div class="modal-header">
+            <h3 class="no-margin-bottom">Nouveau tarif produit / service</h3>
+			</div>
+			<div class="modal-body">
+			
+            <p class="button-height inline-medium-label">
+				<label for="product">Ref. produit / service</label>
+				<input id="product" data-ng-model="price.product" typeahead="product as product.ref for product in productAutoComplete($viewValue) | filter:{ref:$viewValue}" class="input">
+			</p>
+			<p class="button-height inline-medium-label">
+				<label for="vehicule">Description</label>
+				\{{price.product.label}}
+			</p>
+			<p class="button-height inline-medium-label">
+				<label for="price_level">Grille de tarifs</label>
+				<input id="price_level" data-ng-model="price.price_level" typeahead="price_level.name as price_level.name for price_level in priceLevelAutoComplete($viewValue)" class="input">
+			</p>
+			<!--<p class="button-height inline-medium-label">
+				<label for="datec">Date</label>
+				<input kendo-date-picker id="datec" data-ng-model="datec" k-on-change="paiement.datec = kendoEvent.sender._value;" class="input">
+			</p>-->
+			<p class="button-height inline-medium-label">
+				<label for="pu_ht">Tarif HT</label>
+				<input type="number" min="0" step="any" id="pu_ht" data-ng-model="price.pu_ht" class="input">
+			</p>
+			<p class="button-height inline-medium-label">
+				<label for="discount">Remise</label>
+				<input type="number" min="0" step="any" id="discount" data-ng-model="price.discount" class="input">
+			</p>
+			
+			</div>
+			<div class="modal-footer">
+			
+			<button ng-click="ok()" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				{{t 'Add'}}
+			</button>
+			
+			</div>
+		</script>
+		
 		<div class="table-header silver-gradient glossy button-height">
 			<div class="row">
 				<div class="col-sm-4">

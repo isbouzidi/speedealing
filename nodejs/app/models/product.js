@@ -109,11 +109,13 @@ var priceLevelSchema = new Schema({
 	qtyMin: {type: Number, default: 0},
 	user_mod: {id: String, name: String},
 	optional: Schema.Types.Mixed,
+	discount: {type: Number, default: 0},
 	history: [{
 			tms: Date,
 			user_mod: Schema.Types.Mixed,
 			pu_ht: Number,
-			qtyMin: {type: Number, default: 0}
+			qtyMin: {type: Number, default: 0},
+			discount: {type: Number, default: 0}
 		}]
 });
 

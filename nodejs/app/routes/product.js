@@ -57,7 +57,7 @@ module.exports = function(app, passport, auth) {
 		//console.log(query);
 		ProductModel.aggregate([
 			{$match: query},
-			{$project: {name: "$ref", id: "$_id", label: 1, template: 1, price: 1, minPrice: 1, description: 1, family: 1}},
+			{$project: {name: "$ref", id: "$_id", ref: 1, label: 1, template: 1, price: 1, minPrice: 1, description: 1, family: 1}},
 			{$unwind: "$price"},
 			{$match: {'$or': [{'price.price_level': req.body.price_level}, {'price.price_level': 'BASE'}]}},
 			{$limit: req.body.take}], function(err, docs) {
@@ -258,6 +258,7 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/product/price_level', auth.requiresLogin, pricelevel.read);
 	app.put('/api/product/price_level', auth.requiresLogin, pricelevel.update);
+	app.post('/api/product/price_level', auth.requiresLogin, pricelevel.add);
 	app.del('/api/product/price_level', auth.requiresLogin, pricelevel.remove);
 	app.get('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
 	app.get('/api/product/price_level/upgrade', auth.requiresLogin, function(req, res) {
@@ -747,7 +748,7 @@ PriceLevel.prototype = {
 			query.price_level = req.query.price_level;
 
 		PriceLevelModel.find(query, "-history")
-				.populate("product.id")
+				.populate("product.id", "label price")
 				.exec(function(err, prices) {
 					if (err)
 						console.log(err);
@@ -786,6 +787,7 @@ PriceLevel.prototype = {
 			tms: new Date,
 			pu_ht: req.body.pu_ht,
 			qtyMin: req.body.qtyMin,
+			discount: req.body.discount,
 			user_mod: {
 				id: req.user._id,
 				name: req.user.name
@@ -799,7 +801,8 @@ PriceLevel.prototype = {
 						name: req.user.name
 					},
 					pu_ht: req.body.pu_ht,
-					qtyMin: req.body.qtyMin
+					qtyMin: req.body.qtyMin,
+					discount: req.body.discount
 				}
 			}
 		},
@@ -810,6 +813,34 @@ PriceLevel.prototype = {
 
 			//console.log(price);
 			res.send(200);
+		});
+		//console.log(req.body);
+	},
+	add: function(req, res) {
+		var price = new PriceLevelModel(req.body);
+
+		price.user_mod = {
+			id: req.user._id,
+			name: req.user.name
+		};
+
+		price.history.push({
+			tms: new Date,
+			user_mod: {
+				id: req.user._id,
+				name: req.user.name
+			},
+			pu_ht: req.body.pu_ht,
+			qtyMin: req.body.qtyMin,
+			discount: req.body.discount
+		});
+
+		price.save(function(err, price) {
+			if (err)
+				return console.log(err);
+
+			//console.log(price);
+			res.json(price);
 		});
 		//console.log(req.body);
 	},

@@ -463,6 +463,8 @@ angular.module('mean.system').controller('ProductPriceLevelController', ['$scope
 		};
 
 		$scope.find = function() {
+			$scope.init();
+			
 			$http({method: 'GET', url: '/api/product/price_level', params: {
 					price_level: $scope.price_level
 				}
@@ -496,8 +498,9 @@ angular.module('mean.system').controller('ProductPriceLevelController', ['$scope
 				{field: 'price_level', displayName: 'Liste de prix', width: "80px", enableCellEdit: false},
 				{field: 'qtyMin', displayName: 'Minimum de commande', cellClass: "align-right", width: "150px", enableCellEdit: false},
 				{field: 'pu_ht', displayName: 'Tarif HT', width: "80px", cellClass: "blue align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>'},
+				{field: 'discount', displayName: 'Remise', width: "80px", cellClass: "blue align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>'},
 				{field: 'tms', displayName: 'Date MAJ', width: "100px", cellFilter: "date:'dd/MM/yyyy'", enableCellEdit: false},
-				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer le tarif du produit ?" confirmed-click="remove(row)"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "60px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer le tarif du produit ?" confirmed-click="remove(row)"></button></div></div>'}
 			]
 		};
 
@@ -534,15 +537,10 @@ angular.module('mean.system').controller('ProductPriceLevelController', ['$scope
 
 		$scope.addNewPrice = function() {
 			var modalInstance = $modal.open({
-				templateUrl: 'addPrice.html',
-				controller: "ProductPriceLevelController",
+				templateUrl: 'myModalContent.html',
+				controller: ModalInstanceCtrl,
 				//windowClass: "steps",
 				resolve: {
-					object: function() {
-						return {
-							qty: 0
-						};
-					},
 					options: function() {
 						return {
 							price_level: $scope.price_level
@@ -552,14 +550,66 @@ angular.module('mean.system').controller('ProductPriceLevelController', ['$scope
 			});
 
 			modalInstance.result.then(function(price) {
-				$scope.priceLevel.push(price);
-				//$scope.bill.$update(function(response) {
-				//	$scope.bill = response;
-				//});
+				$http({method: 'POST', url: 'api/product/price_level', data: price
+				}).success(function(data, status) {
+					if(data.price_level === $scope.price_level)
+						$scope.priceLevel.push(data);
+					else {
+						$scope.price_level = data.price_level;
+						$scope.find();
+					}
+						
+				});
 			}, function() {
 			});
 		};
-		
-		
+
+		var ModalInstanceCtrl = function($scope, $modalInstance, options) {
+
+			$scope.price = {
+				product: {
+					ref: ""
+				},
+				pu_ht: 0,
+				discount: 0,
+				qtyMin: 0,
+				price_level: options.price_level,
+				tms: new Date
+			};
+
+			$scope.productAutoComplete = function(val) {
+				return $http.post('api/product/autocomplete', {
+					take: 5,
+					skip: 0,
+					page: 1,
+					pageSize: 5,
+					filter: {logic: 'and', filters: [{value: val}]
+					}
+				}).then(function(res) {
+					return res.data;
+				});
+			};
+
+			$scope.priceLevelAutoComplete = function(val) {
+				return $http.post('api/product/price_level/autocomplete', {
+					take: 5,
+					skip: 0,
+					page: 1,
+					pageSize: 5,
+					filter: {logic: 'and', filters: [{value: val}]
+					}
+				}).then(function(res) {
+					return res.data;
+				});
+			};
+
+			$scope.ok = function() {
+				$modalInstance.close($scope.price);
+			};
+
+			$scope.cancel = function() {
+				$modalInstance.dismiss('cancel');
+			};
+		};
 
 	}]);
