@@ -1305,11 +1305,11 @@
     "Definechartofaccounts": "Définir un plan comptable",
     "Selectchartofaccounts": "Sélection d'un plan comptable",
     "DoNotSuggestChart": "Ne pas suggérer de plan comptable",
+    "Sms": "admin:Sms",
     "Infos": "admin:Infos",
     "Memcached": "admin:Memcached",
     "PHPinfo": "admin:PHPinfo",
-    "Purge": "admin:Purge",
     "Triggers": "admin:Triggers",
     "About": "admin:About",
-    "Sms": "admin:Sms"
+    "Purge": "admin:Purge"
 }

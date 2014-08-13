@@ -57,5 +57,7 @@
 	"DeliveryStatusStarted": "Règlement commencé",
 	"DeliveryStatusNotPaid": "Impayée",
 	"DeliveryStatusClosedUnpaid": "Fermée (impayée)",
-	"DeliveryStatusClosedPaidPartially": "Payée (partiellement)"
+	"DeliveryStatusClosedPaidPartially": "Payée (partiellement)",
+    "DeliveryNotes": "Bons Livraisons",
+    "DeliveryNote": "Bon Livraison"
 }
