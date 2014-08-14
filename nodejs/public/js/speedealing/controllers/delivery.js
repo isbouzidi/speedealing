@@ -11,6 +11,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
         $scope.tickets = [];
         $scope.countTicket = 0;
         $scope.deliveries = [];
+        
         $scope.gridOptionsDeliveries = {};
 
         $scope.types = [{name: "Toutes", id: "ALL"}];
@@ -18,6 +19,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
         $scope.type = {name: "Toutes", id: "ALL"};
 
         $scope.init = function() {
+            $scope.pu=[];
             var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
 
             angular.forEach(fields, function(field) {
@@ -49,7 +51,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
                 skip: 0,
                 page: 1,
                 pageSize: 5,
-//                price_level: options.price_level,
+                price_level: $scope.delivery.price_level,
 //                supplier: options.supplier,
                 filter: {logic: 'and', filters: [{value: val}]
                 }
@@ -57,25 +59,42 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
                 return res.data;
             });
         };
-
+        
+        $scope.checkLine = function(data){
+            
+            if(!data)
+                return "La ligne produit ne peut pas être vide";
+        };
+        
         $scope.addProduct = function(data, index) {
             
             //angular.copy($scope.delivery.lines[index], data);
             //$scope.delivery.lines[index] = data;
             //$scope.delivery.lines[index].pu_ht = data.price.pu_ht;
-
-            $scope.delivery.lines[index]= {
-                pu_ht: data.price.pu_ht,
-                product: {
-                    id: data.id,
-                    name: data.name,
-                    label: data.label
-                },
-                isNew :true,
-                idLine: $scope.delivery.lines.length + 1
-            };
+            
+            
+            for(var i in $scope.delivery.lines){
+                if($scope.delivery.lines[i].idLine === index){
+                    $scope.delivery.lines[i] = { 
+                    pu_ht: data.price.pu_ht,
+                    product: {
+                        id: data.id,
+                        name: data.name,
+                        label: data.label
+                    },
+                    isNew: true,
+                    idLine: index
+                };
+                }
+            }
         };
         
+        
+        $scope.calculMontantHT = function(qty, pu, index){
+            
+            alert($scope.qty);
+            $scope.delivery.lines[index].total_ht = qty * pu;
+        };
         // filter lines to show
         $scope.filterLine = function(line) {
 
@@ -84,24 +103,27 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
         // mark line as deleted
         $scope.deleteLine = function(id) {
-            //var filtered = $filter('filter')($scope.delivery.lines, {id: id});
-            //    if (filtered.length) {
-            //      filtered[0].isDeleted = true;
-            //    }
+            var filtered = $filter('filter')($scope.delivery.lines, {idLine: id});
+                if (filtered.length) {
+                  filtered[0].isDeleted = true;
+                }
             
-            for(var i = 0; i < $scope.delivery.lines.length; i++){
-                if($scope.delivery.lines[i].idLine === id)
-                    if($scope.delivery.lines[i].isNew)
-                        $scope.delivery.lines.splice(i, 1);
-                    else
-                        $scope.delivery.lines[i].isDeleted = true;            
-            }
+//            for(var i = 0; i < $scope.delivery.lines.length; i++){
+//                if($scope.delivery.lines[i].idLine === id)
+//                    if($scope.delivery.lines[i].isNew)
+//                        $scope.delivery.lines.splice(i, 1);
+//                    else
+//                        $scope.delivery.lines[i].isDeleted = true;            
+//            }
         };
 
         // add line
         $scope.addLine = function() {
-            $scope.delivery.lines.push({});
-
+            $scope.delivery.lines.push({
+                isNew: true,
+                idLine: $scope.delivery.lines.length + 1
+            });
+        
         };
 
         // cancel all changes
@@ -119,7 +141,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
             }
             ;
         };
-
+        
         // save edits
         $scope.saveTable = function() {
 
@@ -171,11 +193,17 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
             delivery.$update(function(response) {
                 pageTitle.setTitle('Bon Livraison ' + delivery.ref);
-
+                
                 if (response.Status === "DRAFT")
                     $scope.editable = true;
                 else
                     $scope.editable = false;
+                
+                if(response.lines){
+                    for(var i in response.lines){
+                        $scope.delivery.lines[i].idLine = i;
+                    }
+                }
             });
         };
 
@@ -238,7 +266,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
                 filter: {logic: 'and', filters: [{value: val}]
                 }
             }).then(function(res) {
-                return res.data
+                return res.data;
             });
         };
 

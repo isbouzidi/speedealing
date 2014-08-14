@@ -1,5 +1,10 @@
 <section data-ng-controller="DeliveryController">
     <div data-ng-init="findOne()">
+        <script type="text/ng-template" id="searchproduct.html">
+            <a>
+                <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.label"></span> (\{{match.model.price.price_level}} : \{{match.model.price.pu_ht|currency}})
+            </a>
+	</script>
         <hgroup id="main-title" class="thin">
             <h1>Bon de Livraison \{{delivery.ref}} (\{{delivery.client.name}})</h1>
             <!--<span class="valign-top tag glossy" data-ng-class="delivery.status.css">\{{delivery.status.name}}</span>-->
@@ -302,7 +307,8 @@
     <table class="table table-bordered table-hover table-condensed">
       <tr style="font-weight: bold">
         <td >Code produit</td>
-        <td style="width:40%">Déscription</td>
+        <td>Label</td>
+        <td>Déscription</td>
         <td >Nbr de Colis</td>
         <td >Qté</td>
         <td >Prix de vente HT</td>
@@ -312,48 +318,52 @@
       </tr>
       <tr ng-repeat="line in delivery.lines | filter:filterLine">
         <td>
-          <!-- editable username (text with validation) -->
-          <span editable-text="line.product" 
-                e-typeahead="product as product.name for product in productAutoComplete($viewValue, 'name') | filter:{name:$viewValue}"
-                e-typeahead-on-select ="addProduct($item, $index)"
-                e-form="tableform">
+          <span editable-text="line.product.name" 
+                e-typeahead="product as product.name for product in productAutoComplete($viewValue, 'name')"
+                e-typeahead-template-url="searchproduct.html"
+                e-typeahead-on-select ="addProduct($item, line.idLine)"
+                e-form="tableform"
+                onbeforesave="checkLine($data)"
+                e-style="width: 140px">
             \{{ line.product.name || 'empty' }}
           </span>
           
         </td>
         <td>
+          <span editable-text="line.product.label" e-style="width: 140px" e-form="tableform">
+            \{{ line.product.label || 'empty' }}
+          </span>
+        </td>
+        <td>
           <!-- editable username (text with validation) -->
-          <span editable-text="line.description" e-form="tableform">
+          <span editable-text="line.description" e-style="width: 180px" e-form="tableform">
             \{{ line.description || 'empty' }}
           </span>
         </td>
         <td>
-          <!-- editable username (text with validation) -->
-          <span editable-text="line.no_package" e-style="width: 100px" e-form="tableform">
+          <span editable-number="line.no_package" e-min="0" e-style="width: 60px" e-form="tableform">
             \{{ line.no_package || 0 }}
           </span>
         </td>
         <td>
-          <!-- editable username (text with validation) -->
-          <span editable-text="line.qty" e-style="width: 100px" e-form="tableform">
+            <span editable-number="line.qty" ng-model="qty" e-ng-change="calculMontantHT($data, line.pu_ht, $index)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
             \{{ line.qty || 0 }}
-          </span>
+            </span>
+            
         </td>
         <td>
           <!-- editable username (text with validation) -->
-          <span editable-text="line.pu_ht" e-style="width: 100px" e-form="tableform">
+          <span editable-number="line.pu_ht" e-ng-change="calculMontantHT(line.qty, $data, $index)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
             \{{ line.pu_ht || 0 }}
           </span>
         </td>
         <td>
-          <!-- editable status (select-local) -->
-          <span editable-select="line.tva_tx" e-style="width: 100px" e-form="tableform" e-ng-options="c.value as c.value for c in tva_tx.values">
+          <span editable-select="line.tva_tx" e-style="width: 60px" e-form="tableform" e-ng-options="c.value as c.value for c in tva_tx.values">
             \{{ line.tva_tx }}
           </span>
         </td>
         <td>
-          <!-- editable username (text with validation) -->
-          <span  editable-text = "line.total_ht" e-form="tableform" e-style="width: 100px">
+            <span ng-model="montantHT[$index]" form="tableform" style="width: 60px"">
             \{{ line.total_ht | number:2 }}
           </span>
         </td>
