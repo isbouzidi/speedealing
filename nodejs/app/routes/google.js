@@ -647,7 +647,7 @@
 
 	/* 
 	*/
-	function _exp_getGoogleContacts(params, callback) {
+	function _exp_getGoogleContacts(params, callback, callback2) {
 		console.log("\n\n*** GETTING CONTACTS PROCESS ***\n\n");
 
 		var c = new GoogleContacts({
@@ -664,8 +664,10 @@
 		}, function(err, contacts) {
 			if (err)
 				console.log("Google export error - ", err);
-			else
+			else {
 				callback(params, contacts);
+				callback2(params);
+			}
 		});
 	}
 
@@ -731,8 +733,13 @@
 				if (err)
 					console.log("Google export error - ", err);
 				else {
-					_exp_getGoogleContacts(params, _exp_checkGoogleContacts);	
-					_exp_listSocieteObjs(params);
+					_exp_getGoogleContacts(
+						params, 
+						_exp_checkGoogleContacts,
+						_exp_listSocieteObjs
+					);	
+					
+					
 				}
 			}
 		);
