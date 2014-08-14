@@ -116,7 +116,7 @@ societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 societeSchema.pre('save', function(next) {
 	var self = this;
 
-	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
+	if (this.code_client === null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
 
 		SeqModel.incNumber("C", 6, function(seq) {
 			self.barCode = "C" + seq;
@@ -241,7 +241,7 @@ societeSchema.virtual('prospectLevel')
 
 			var level = this.prospectlevel;
 
-			if (level && prospectLevelList.values[level].cssClass) {
+			if (level && prospectLevelList.values[level] && prospectLevelList.values[level].cssClass) {
 				prospectLevel.id = level;
 				prospectLevel.name = i18n.t("companies:" + level);
 				if (prospectLevelList.values[level].label)
@@ -267,7 +267,7 @@ var contactSchema = new Schema({
 	lastname: String,
 	poste: String,
 	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
-	Status: {type: String, default: "ST_NEVER"},
+	Status: {type: String, default: "ST_ENABLE"},
 	address: String,
 	zip: String,
 	town: String,

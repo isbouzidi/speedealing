@@ -1,64 +1,103 @@
 {{> header}}
 
 <body class="clearfix" data-ng-controller="HeaderController" data-ng-class="withMenu()">
-	<header id="title-bar" role='banner'>
-		<div>
-			<span class='title'>\{{title.title}}</span>
-			<div class='float-right with-tooltip'>
-				<span class='margin-right'>
-					<!--<timer end-time="{{ttlSession}}">\{{hours}}:\{{mminutes}}:\{{sseconds}}</timer>-->
-				</span>
-				{{#if user.multiEntities}}
-				<span class='margin-right'>
-					<a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
-						\{{global.user.entity}}
-					</a>
-					<!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->
-				</span>
-				{{/if}}
-				<a  class='' href="logout" title="Déconnexion" target="_self">
+    <header id="title-bar" role='banner'>
+        <div>
+            <span class='title'>\{{title.title}}</span>
+            <div class='float-right with-tooltip'>
+                <span class='margin-right'>
+                    <!--<timer end-time="{{ttlSession}}">\{{hours}}:\{{mminutes}}:\{{sseconds}}</timer>-->
+                </span>
+                {{#if user.multiEntities}}
+                <span class='margin-right'>
+                    <a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
+                        \{{global.user.entity}}
+                    </a>
+                    <!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->
+                </span>
+                {{/if}}
+                <a  class='' href="logout" title="Déconnexion" target="_self">
 
-					\{{global.user.name}}  <span class="icon-logout"></span>
-				</a>
-			</div>
-		</div>
-	</header>
+                    \{{global.user.name}}  <span class="icon-logout"></span>
+                </a>
+            </div>
+        </div>
+    </header>
 
-	<!-- Button to open/hide menu --> 
-	{{#if user.right_menu}}
-	<a id="open-menu" href='#'>
-		<span>Menu</span>
-	</a>
-	{{/if}}
+    <!-- Button to open/hide menu --> 
+    {{#if user.right_menu}}
+    <a id="open-menu" href='#'>
+        <span>Menu</span>
+    </a>
+    {{/if}}
 
-	<!-- Button to open/hide shortcuts -->
-	<!--<a id="open-shortcuts" href='#'>
-		<span class="icon-thumbs"></span>
-	</a>-->
+    <!-- Button to open/hide shortcuts -->
+    <!--<a id="open-shortcuts" href='#'>
+            <span class="icon-thumbs"></span>
+    </a>-->
 
-	<!-- Main content -->
-	<section id="main" role="main">
-		<section data-ng-view></section>
-	</section>
-	<script type="text/javascript">
-		window.user = JSON.parse($.ajax({
-		url: "api/session",
-		dataType: "json",
-		async: false
-		}).responseText);
-	</script>
-	<!-- include menuleft-->
+    <!-- Main content -->
+    <section id="main" role="main">
+        <!-- ng require -->
+        <div data-ng-show="searchIsActive" style="padding: 8px 14px 12px">
+            <h2>Resultat Recherche : <span class="thin">\{{searchItem}}</span></h2>
+                <dl class="definition" ng-repeat="result in filteredResults">
+                        <dt>
+                            <strong class="blue">\{{result.name}}</strong>
+                            <span class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</span>
+                        </dt>
+                        <dd style="padding-left: 0 !important">
+                            <address style="font-style: normal; line-height: 1.5; font-size: 14px">
+                                <abbr title="Email">Email:</abbr> <a href="mailto:\{{result.email}}" class="green" target="_blank">\{{result.email|| 'indéfini'}}</a><br>
+                                <abbr title="Travail">Travail:</abbr> \{{result.poste|| 'indéfini'}} <abbr title="chez">chez:</abbr> \{{result.entity|| 'indéfini'}}<br>
+                                <abbr title="Phone">N° Tél:</abbr> \{{result.phone_pro|| 'indéfini'}}
+                            
+                            </address>
+                            
+                        </dd>
+                </dl>
+                <pagination 
+                    total-items="resultsCount" 
+                    ng-model="currentPage" 
+                    max-size="maxSize" 
+                    class="pagination-sm" 
+                    boundary-links="true" 
+                    items-per-page="numPerPage"
+                    previous-text ="Précédent" next-text="Suivant"
+                    first-text="Premier" last-text="Dernier">
+                </pagination>
 
-	<!-- Menu content-->
-	{{#if user.right_menu}}
-	<section id="menu" role='complementary'>
-		{{> menu}}
-		<!--<div data-ng-include data-src="'partials/menu.html'"></div>-->
-	</section>
-	{{/if}}
+            
+            <div ng-if="resultsCount === 0" class="six-columns twelve-columns-tablet">
+                <p class="message small-margin-bottom">
+                    <strong>0</strong> résultats trouvés pour <strong>\{{searchItem}}</strong>
+                </p>
+            </div>
+        </div>
 
-	<footer id="footer">
-		{{> footer}}
-	</footer>
+        <div data-ng-hide="searchIsActive">
+            <section data-ng-view></section>
+        </div>
+    </section>
+    <script type="text/javascript">
+                    window.user = JSON.parse($.ajax({
+                        url: "api/session",
+                        dataType: "json",
+                        async: false
+                    }).responseText);
+    </script>
+    <!-- include menuleft-->
+
+    <!-- Menu content-->
+    {{#if user.right_menu}}
+    <section id="menu" role='complementary'>
+        {{> menu}}
+        <!--<div data-ng-include data-src="'partials/menu.html'"></div>-->
+    </section>
+    {{/if}}
+
+    <footer id="footer">
+        {{> footer}}
+    </footer>
 </body>
 </html>

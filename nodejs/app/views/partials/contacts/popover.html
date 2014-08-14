@@ -1,0 +1,27 @@
+<div class="ngCellText">
+    <div ng-mouseEnter="toggle = !toggle" ng-mouseLeave="toggle = !toggle">
+        <div class="popoverContact" ng-show="toggle">
+            <div class="popoverContactBody">
+                <h4>
+                    \{{row.getProperty(\'name\')}}
+                    <span style="float: right; font-size: 12px" class="tag \{{row.getProperty(\'status.css\')}}">
+                        \{{row.getProperty(\'status.name\')}}
+                    </span>
+                </h4>
+                <p><span class="icon-briefcase"></span>\{{row.getProperty(\'poste\')}}</p>
+                <p><span class="icon-mobile"></span>\{{row.getProperty(\'phone_mobile\')}}</p>
+                <p><span class="icon-phone"></span>\{{row.getProperty(\'phone_perso\')}}</p>
+                <p><span class="icon-home"></span>\{{row.getProperty(\'fullAddress\')}}</p>
+            </div>
+            <div class="popoverContactFooter">
+                <p>
+                    <span style="float: left" class="icon-mail"></span>
+                    \{{row.getProperty(\'email\')}}
+                    <a href="mailto:\{{row.getProperty(\'email\')}}" target="_blank" style="float:right">
+                        Envoyer email
+                    </a>
+                </p>
+            </div>
+        </div>
+        <a class="with-tooltip" ng-href="#!/contacts/\{{row.getProperty(\'_id\')}}" data-tooltip-options="position:right">
+            <span class="icon-user"></span> \{{row.getProperty(col.field)}}</a></div></div>

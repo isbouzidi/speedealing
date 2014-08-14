@@ -87,5 +87,20 @@ angular.module('mean.system').directive('ngBlur', function() {
 			scope.$apply(attrs.ngBlur);
 		});
 	};
-})
+});
+
+angular.module('mean.system').directive('ngConfirmClick', [
+	function() {
+		return {
+			link: function(scope, element, attr) {
+				var msg = attr.ngConfirmClick || "Supprimer ?";
+				var clickAction = attr.confirmedClick;
+				element.bind('click', function(event) {
+					if (window.confirm(msg)) {
+						scope.$eval(clickAction);
+					}
+				});
+			}
+		};
+	}]);
 

@@ -1,12 +1,10 @@
-<div ng-hide="supplier" class="field-block button-height">
-	<label for="group"><b>{{t 'Group'}}</b></label>
-	<input data-ng-model="line.group" id="group" class="input" autocomplete="off">
-</div>
+
 
 <div class="field-block button-height">
 	<label for="description"><b>{{t 'Description'}}</b></label>
 	<textarea id="description" cols="30" rows="5" data-ng-model="line.description" class="input full-width"></textarea>
 </div>
+
 
 <div class="field-block button-height">
 	<label for="qty"><b>{{t 'Qty'}}</b></label>
@@ -27,4 +25,8 @@
 <div class="field-block button-height">
 	<label for="total_ht"><b>{{t 'AmountHT'}}</b></label>
 	\{{line.pu_ht * line.qty || 0 | currency}}
+</div>
+<div ng-show = "deliveryModule" class="field-block button-height">
+	<label for="no_package"><b>{{t 'deliveries:NoPackage'}}</b></label>
+	<input required type="text" data-ng-model="line.no_package" id="no_package" class="input" autocomplete="off">
 </div>
