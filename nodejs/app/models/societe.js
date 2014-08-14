@@ -276,7 +276,8 @@ var contactSchema = new Schema({
 	phone_mobile: String,
 	fax: String,
 	email: String,
-	civilite: String,// DICT
+	civilite: String, // DICT
+	Tag: [String], // Used by DSF
 	tag: [{
 			text: String
 		}],
