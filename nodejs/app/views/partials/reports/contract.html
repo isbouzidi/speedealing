@@ -30,34 +30,10 @@
 <div class="field-block button-height">
     <label for="nextAppointment"><b>{{t "reports:Appointment"}}</b></label>
     <input type="checkbox" ng-model="Appointment" ng-click="actionSelection('Rendez-vous')">
-    <br/>
-    <div ng-show="Appointment">
-        <span class="k-widget k-datepicker k-header input">
-            <span class="k-picker-wrap k-state-default">
-                <input 
-                    kendo-date-picker 
-                    ng-model = "actionDate['Rendez-vous']"
-                    k-on-change="onDateSelected(kendoEvent, 'Rendez-vous')"  
-                    class="input"/>
-            </span>
-        </span>
-    </div>
 </div>
 <div class="field-block button-height">
     <label for="InternalMeeting"><b>{{t "reports:Internal Meeting"}}</b></label>
     <input type="checkbox" ng-model="InternalMeeting" ng-click="actionSelection('Réunion interne')">
-    <br/>
-    <div ng-show="InternalMeeting">
-        <span class="k-widget k-datepicker k-header input">
-            <span class="k-picker-wrap k-state-default">
-                <input 
-                    kendo-date-picker 
-                    ng-model = "actionDate['Réunion interne']"
-                    k-on-change="onDateSelected(kendoEvent, 'Réunion interne')"  
-                    class="input"/>
-            </span>
-        </span>
-    </div>
 </div>
 <div class="field-block button-height">
     <label for="repport"><b>{{t "reports:Report"}}</b></label>
@@ -72,6 +48,6 @@
     <h4>{{t "reports:Comment"}}</h4>
 </div>
 <div class="field-block button-height">
-    <label for="birthday"><b>{{t "reports:Comment"}}</b></label>
+    <label for="comment"><b>{{t "reports:Comment"}}</b></label>
     <textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea>
 </div>

@@ -295,7 +295,88 @@
                         </tab>
                     </tabset>
                 </div>
+                <div class="twelve-columns">
+                    <h5 class="green underline">{{t 'deliveries:Details'}}</h5>
+                    <form editable-form name="tableform" onaftersave="saveTable()" oncancel="cancel()">
+    <!-- table -->
+    <table class="table table-bordered table-hover table-condensed">
+      <tr style="font-weight: bold">
+        <td >Code produit</td>
+        <td style="width:40%">Déscription</td>
+        <td >Nbr de Colis</td>
+        <td >Qté</td>
+        <td >Prix de vente HT</td>
+        <td >TVA %</td>
+        <td >Total HT</td>
+        <td ><span ng-show="tableform.$visible">Action</span></td>
+      </tr>
+      <tr ng-repeat="line in delivery.lines | filter:filterLine">
+        <td>
+          <!-- editable username (text with validation) -->
+          <span editable-text="line.product" 
+                e-typeahead="product as product.name for product in productAutoComplete($viewValue, 'name') | filter:{name:$viewValue}"
+                e-typeahead-on-select ="addProduct($item, $index)"
+                e-form="tableform">
+            \{{ line.product.name || 'empty' }}
+          </span>
+          
+        </td>
+        <td>
+          <!-- editable username (text with validation) -->
+          <span editable-text="line.description" e-form="tableform">
+            \{{ line.description || 'empty' }}
+          </span>
+        </td>
+        <td>
+          <!-- editable username (text with validation) -->
+          <span editable-text="line.no_package" e-style="width: 100px" e-form="tableform">
+            \{{ line.no_package || 0 }}
+          </span>
+        </td>
+        <td>
+          <!-- editable username (text with validation) -->
+          <span editable-text="line.qty" e-style="width: 100px" e-form="tableform">
+            \{{ line.qty || 0 }}
+          </span>
+        </td>
+        <td>
+          <!-- editable username (text with validation) -->
+          <span editable-text="line.pu_ht" e-style="width: 100px" e-form="tableform">
+            \{{ line.pu_ht || 0 }}
+          </span>
+        </td>
+        <td>
+          <!-- editable status (select-local) -->
+          <span editable-select="line.tva_tx" e-style="width: 100px" e-form="tableform" e-ng-options="c.value as c.value for c in tva_tx.values">
+            \{{ line.tva_tx }}
+          </span>
+        </td>
+        <td>
+          <!-- editable username (text with validation) -->
+          <span  editable-text = "line.total_ht" e-form="tableform" e-style="width: 100px">
+            \{{ line.total_ht | number:2 }}
+          </span>
+        </td>
+        <td><button type="button"  e-style="width: 100px" ng-show="tableform.$visible" ng-click="deleteLine(line.idLine)" class="btn btn-danger pull-right">Del</button></td>
+      </tr>
+    </table>
 
+    <!-- buttons -->
+    <div class="btn-edit">
+      <button type="button" class="btn btn-default" ng-show="!tableform.$visible" ng-click="tableform.$show()">
+        edit
+      </button>
+    </div>
+    <div class="btn-form" ng-show="tableform.$visible">
+      <button type="button" ng-disabled="tableform.$waiting" ng-click="addLine()" class="btn btn-default pull-right">add row</button>
+      <button type="submit" ng-disabled="tableform.$waiting" class="btn btn-primary">save</button>
+      <button type="button" ng-disabled="tableform.$waiting" ng-click="tableform.$cancel()" class="btn btn-default">cancel</button>
+    </div> 
+    
+  </form>
+</div>
+                
+                <!--
                 <div class="twelve-columns">
                     <h5 class="green underline">{{t 'deliveries:Details'}}</h5>
 
@@ -322,7 +403,7 @@
                         \{{delivery.lines.length}} ligne(s)
                     </div>
                 </div>
-                
+                -->
             </div>
         </div>
     </div>

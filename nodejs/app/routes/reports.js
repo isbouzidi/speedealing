@@ -11,31 +11,48 @@ var ReportModel = mongoose.model('report');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 var ExtrafieldModel = mongoose.model('extrafields');
+var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
+var LeadModel = mongoose.model('lead');
 
 module.exports = function(app, passport, auth) {
 
     var object = new Object();
 
-    app.post('/api/report/autocomplete', auth.requiresLogin, function(req, res) {
 
-        if (req.body.val === null)
+    app.get('/api/report/contacts', auth.requiresLogin, function(req, res) {
+        
+        if (req.query.societe === null)
             return res.send(200, {});
         
-        var val = req.body.val;
+        console.log("contacts : " + req.query.contacts);
+        var societe = req.query.societe;
 
-        var query = {"$or": [
-                {firstname: new RegExp(val, "i")},
-                {lastname: new RegExp(val, "i")}
-            ]
-        };
-
-        ContactModel.find(query, {}, {limit: 5}, function(err, doc) {
+        ContactModel.find({'societe.id': societe}, function(err, doc) {
             if (err) {
                 console.log(err);
                 return;
             }
+            ;
+            return res.send(200, doc);
 
+        });
+
+    });
+    
+    app.get('/api/report/leads', auth.requiresLogin, function(req, res) {
+        
+        if (req.query.societe === null)
+            return res.send(200, {});
+        
+        var societe = req.query.societe;
+
+        LeadModel.find({'societe.id': societe}, function(err, doc) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            ;
             return res.send(200, doc);
 
         });
@@ -76,7 +93,7 @@ module.exports = function(app, passport, auth) {
         
         
     });
-
+    
     app.get('/api/report/fk_extrafields/select', auth.requiresLogin, object.select);
 
     //add new report
@@ -116,7 +133,6 @@ Object.prototype = {
         });
     },
     create: function(req, res) {
-
 
         var reportModel = new ReportModel(req.body);
         console.log("log " + req.body.report);

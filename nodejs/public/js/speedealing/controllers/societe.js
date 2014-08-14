@@ -526,24 +526,26 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
             filterOptions: $scope.filterOptionsContact,
             i18n: 'fr',
             enableColumnResize: true,
+            cellClass: 'cellToolTip',
             columnDefs: [
-                {field: 'name', displayName: 'Nom', cellTemplate:
-                            '<div class="ngCellText">\n\
-                                            <div ng-mouseEnter="toggle = !toggle" ng-mouseLeave="toggle = !toggle">\n\
-                                            <div class="popoverContact" ng-show="toggle">\n\
-                                            <div class="popoverContactBody">\n\
-                                            <h4>{{row.getProperty(\'name\')}}<span style="float: right; font-size: 12px" class="tag {{row.getProperty(\'status.css\')}}">{{row.getProperty(\'status.name\')}}</span></h4>\n\
-                                            <p><span class="icon-briefcase"></span>{{row.getProperty(\'poste\')}}</p>\n\
-                                            <p><span class="icon-mobile"></span>{{row.getProperty(\'phone_mobile\')}}</p>\n\
-                                            <p><span class="icon-phone"></span>{{row.getProperty(\'phone_perso\')}}</p>\n\
-                                            <p><span class="icon-home"></span>{{row.getProperty(\'fullAddress\')}}</p>\n\
-                                            </div>\n\
-                                            <div class="popoverContactFooter">\n\
-                                            <p><span style="float: left" class="icon-mail"></span>{{row.getProperty(\'email\')}}<a href="mailto:{{row.getProperty(\'email\')}}" target="_blank" style="float:right">Envoyer email</a></p>\n\
-                                            </div>\n\
-                                            </div>\n\
-                                            <a class="with-tooltip" ng-href="#!/contacts/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'>\n\
-                                            <span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div></div>'},
+//                {field: 'name', displayName: 'Nom', cellTemplate:
+//                            '<div class="ngCellText" ng-mouseEnter="toggle = !toggle" ng-mouseLeave="toggle = !toggle">\n\
+//                                            <div >\n\
+//                                            <div class="popoverContact" ng-show="toggle">\n\
+//                                            <div class="popoverContactBody">\n\
+//                                            <h4>{{row.getProperty(\'name\')}}<span style="float: right; font-size: 12px" class="tag {{row.getProperty(\'status.css\')}}">{{row.getProperty(\'status.name\')}}</span></h4>\n\
+//                                            <p><span class="icon-briefcase"></span>{{row.getProperty(\'poste\')}}</p>\n\
+//                                            <p><span class="icon-mobile"></span>{{row.getProperty(\'phone_mobile\')}}</p>\n\
+//                                            <p><span class="icon-phone"></span>{{row.getProperty(\'phone_perso\')}}</p>\n\
+//                                            <p><span class="icon-home"></span>{{row.getProperty(\'fullAddress\')}}</p>\n\
+//                                            </div>\n\
+//                                            <div class="popoverContactFooter">\n\
+//                                            <p><span style="float: left" class="icon-mail"></span>{{row.getProperty(\'email\')}}<a href="mailto:{{row.getProperty(\'email\')}}" target="_blank" style="float:right">Envoyer email</a></p>\n\
+//                                            </div>\n\
+//                                            </div>\n\
+//                                            <a class="with-tooltip" ng-href="#!/contacts/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'>\n\
+//                                            <span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div></div>'},               
+                {field: 'name', displayName: 'Nom'},
                 {field: 'poste', displayName: 'Fonction'},
                 {field: 'phone_mobile', displayName: 'Téléphone'},
                 {field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},

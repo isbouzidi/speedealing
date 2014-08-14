@@ -38,52 +38,35 @@
 
     <!-- Main content -->
     <section id="main" role="main">
-
+        <!-- ng require -->
         <div data-ng-show="searchIsActive" style="padding: 8px 14px 12px">
             <h2>Resultat Recherche : <span class="thin">\{{searchItem}}</span></h2>
-                
-                <ul class="unstyled-list">
+                <dl class="definition" ng-repeat="result in filteredResults">
+                        <dt>
+                            <strong class="blue">\{{result.name}}</strong>
+                            <span class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</span>
+                        </dt>
+                        <dd style="padding-left: 0 !important">
+                            <address style="font-style: normal; line-height: 1.5; font-size: 14px">
+                                <abbr title="Email">Email:</abbr> <a href="mailto:\{{result.email}}" class="green" target="_blank">\{{result.email|| 'indéfini'}}</a><br>
+                                <abbr title="Travail">Travail:</abbr> \{{result.poste|| 'indéfini'}} <abbr title="chez">chez:</abbr> \{{result.entity|| 'indéfini'}}<br>
+                                <abbr title="Phone">N° Tél:</abbr> \{{result.phone_pro|| 'indéfini'}}
+                            
+                            </address>
+                            
+                        </dd>
+                </dl>
+                <pagination 
+                    total-items="resultsCount" 
+                    ng-model="currentPage" 
+                    max-size="maxSize" 
+                    class="pagination-sm" 
+                    boundary-links="true" 
+                    items-per-page="numPerPage"
+                    previous-text ="Précédent" next-text="Suivant"
+                    first-text="Premier" last-text="Dernier">
+                </pagination>
 
-                    <li>
-                        <ul class="message-menu">
-                            <li ng-repeat="result in filteredResults">
-
-                              
-                                    <!--
-                                    <h3 class="thin green">\{{result.name}}</h3>
-                                    <div class="anthracite margin-top">Status  <small class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</small></div>
-                                    <div class="anthracite margin-top">Travail <span class="blue">\{{result.poste|| 'indéfini'}}</span> chez : <span class="blue">\{{result.entity|| 'indéfini'}}</span></div>
-                                    <div class="anthracite margin-top">N° Tél. <span class="blue">\{{result.phone_pro|| 'indéfini'}}</span></div>
-                                    <div class="anthracite margin-top">Email <a href="mailto:\{{result.email}}" class="red" target="_blank">\{{result.email|| 'indéfini'}}</a></div>
-                                    -->
-                                    <address style="font-style: normal; line-height: 1.5; font-size: 14px">
-                                        <strong>\{{result.name}}</strong><br>
-                                        <abbr title="Travail">Travail:</abbr> \{{result.poste|| 'indéfini'}} <abbr title="chez">chez:</abbr> \{{result.entity|| 'indéfini'}}<br>
-                                        <abbr title="Phone">N° Tél:</abbr> \{{result.phone_pro|| 'indéfini'}}<br>                                   
-                                        <abbr title="Email">Email:</abbr> <a href="mailto:\{{result.email}}" target="_blank">\{{result.email|| 'indéfini'}}</a>
-                                    </address><br>
-                                    <span class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</span>
-                                
-                            </li>
-                            <li data-ng-show="showPagination">
-                                
-                                <pagination 
-                                    total-items="resultsCount" 
-                                    ng-model="currentPage" 
-                                    max-size="maxSize" 
-                                    class="pagination-sm" 
-                                    boundary-links="true" 
-                                    items-per-page="numPerPage"
-                                    previous-text ="Précédent" next-text="Suivant"
-                                    first-text="Premier" last-text="Dernier">
-                                </pagination>
-
-                            </li>
-
-                        </ul>
-
-                    </li>
-                </ul>
             
             <div ng-if="resultsCount === 0" class="six-columns twelve-columns-tablet">
                 <p class="message small-margin-bottom">

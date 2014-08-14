@@ -19,6 +19,10 @@
 	overflow: auto;
 	min-height: 20px;
 }
+/*.ngViewport {
+	overflow: visible;
+	min-height: 20px;
+}*/
 .ngViewport:focus {
 	outline: none;
 }
@@ -347,7 +351,7 @@
 	background-color: #c9dde1;
 }
 .ngCell {
-	overflow: hidden;
+	overflow: visible;
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -366,6 +370,7 @@
 	-o-text-overflow: ellipsis;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	z-index:1;
 }
 .ngSelectionCell {
 	margin-top: 9px;
@@ -452,4 +457,10 @@
 }
 .ngFooterTotalItems {
 	padding: 2px;
+}
+.cellToolTip {
+    overflow: visible;
+}
+.tooltip {
+  top: 0 !important;
 }

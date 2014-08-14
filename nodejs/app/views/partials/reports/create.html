@@ -13,10 +13,10 @@
                     ng-change="updateReportTemplate()">                                    
             </select>
         </div>
-        
+
         <div class="field-block button-height">
             <label for="dateReport"><b>{{t "reports:Date Report"}}</b></label>
-                
+
             <span class="k-widget k-datepicker k-header input">
                 <span class="k-picker-wrap k-state-default">
                     <input 
@@ -24,42 +24,72 @@
                         id="dateReport" 
                         k-on-change="report.dateReport = kendoEvent.sender._value;" 
                         class="input"/>
-                    
+
                 </span>
             </span>
-            
+
+        </div>
+        <div class="field-block button-height">
+            <label for="dueDate"><b>{{t "reports:Due Date"}}</b></label>
+
+            <span class="k-widget k-datepicker k-header input">
+                <span class="k-picker-wrap k-state-default">
+                    <input 
+                        kendo-date-picker required 
+                        id="dueDate" 
+                        k-on-change="report.dueDate = kendoEvent.sender._value;" 
+                        class="input"/>
+                </span>
+            </span>
+
         </div>
         <div class="field-block button-height">
             <label for="reports:duration"><b>{{t "reports:Duration"}}</b></label>
             <!--<input required type="text" data-ng-model="report.duration" id="duration" class="input" autocomplete="off">-->
-                    
+
             <p class="button-height">
-                    <span class="number input margin-right">
-                            <button type="button" class="button number-down">-</button>
-                            <input type="text" 
-                                   name="special-input-2" 
-                                   ng-model="report.duration"
-                                   id="special-input-2"
-                                   size="4" 
-                                   class="input-unstyled">
-                            <button type="button" class="button number-up">+</button>
-                    </span> Jour(s)
+                <span class="number input margin-right">
+                    <button type="button" class="button number-down">-</button>
+                    <input type="text" 
+                           name="special-input-2" 
+                           ng-model="report.duration"
+                           id="special-input-2"
+                           size="4" 
+                           class="input-unstyled">
+                    <button type="button" class="button number-up">+</button>
+                </span> Heure(s)
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label for="reports:durationAppointment"><b>{{t "reports:Duration Appointment"}}</b></label>
+
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <button type="button" class="button number-down">-</button>
+                    <input type="text" 
+                           name="special-input-2" 
+                           ng-model="report.durationAppointment"
+                           id="special-input-2"
+                           size="4" 
+                           class="input-unstyled">
+                    <button type="button" class="button number-up">+</button>
+                </span> Heure(s)
             </p>
         </div>
         <div class="field-block button-height">
             <label for="Contact"><b>{{t "reports:Contacts"}}</b></label>
-            
-            <input type="text" 
-                    data-ng-model="report.cont"
-                    typeahead= "contact as contact.name for contact in contactAutoComplete($viewValue)" 
-                    typeahead-on-select = "addContact()"
-                    class="input"
-                    autocomplete="on">
-            <a href="" class="button" ng-click="addNewContact()">
+
+            <select class="form-control margin-right margin-bottom" style="float :left" 
+                    id="contacts" 
+                    ng-model="report.cont" 
+                    ng-options="contact as contact.name for contact in contacts" 
+                    ng-change="addContact()">                                    
+            </select>
+            <a href="" class="button" style="float: left" ng-click="addNewContact()">
                 <span class="button-icon"><span class="icon-plus"></span></span>
                 Ajouter
             </a>
-            
+
             <table class="table table-condensed">
                 <tbody>
                     <tr ng-repeat="c in report.contacts" class="active">
@@ -73,17 +103,42 @@
                     </tr>
                 </tbody>
             </table>
-            
-            
+        </div>        
+        <div class="field-block button-height">
+            <label for="lead"><b>{{t "reports:Leads"}}</b></label>
+
+            <select class="form-control margin-right margin-bottom" style="float :left" 
+                    id="lead" 
+                    ng-model="report.lead"
+                    ng-options="lead as lead.name for lead in leads" 
+                    ng-change="addLead()">                                    
+            </select>
+            <a href="" class="button" style="float: left" ng-click="addNewLead()">
+                <span class="button-icon"><span class="icon-plus"></span></span>
+                Ajouter
+            </a>
+
+            <table class="table table-condensed">
+                <tbody>
+                    <tr ng-repeat="l in report.leads" class="active">
+                        
+                        <td>\{{l.name}}</td>
+                        <td>\{{l.potential}}</td>
+                        <td>
+                            <a href="" ng-click="deleteLead($index)">
+                                supprimer
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <br/>
-        <div data-ng-include="template" class="field-block-include"></div>
+        <div data-ng-include="template" class="field-block-include"></div>        
         <div class="field-block button-height wizard-controls clearfix">
             <button type="submit" class="button glossy mid-margin-right float-right">
                 <span class="button-icon"><span class="icon-tick"></span></span>
                 Créer
             </button>
-            
         </div>
     </fieldset>
 </form>

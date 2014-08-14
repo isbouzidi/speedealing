@@ -58,6 +58,7 @@
     "DeliveryStatusNotPaid": "Impayée",
     "DeliveryStatusClosedUnpaid": "Fermée (impayée)",
     "DeliveryStatusClosedPaidPartially": "Payée (partiellement)",
-    "BillAddress": "deliveries:BillAddress",
-    "BillStatusDraft": "deliveries:BillStatusDraft"
+    "DeliveryNotes": "Bons Livraisons",
+    "DeliveryNote": "Bon Livraison",
+    "BillAddress": "deliveries:BillAddress"
 }
