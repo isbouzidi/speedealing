@@ -30,13 +30,16 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
                     
                 };
 		$scope.init = function(){
-			$rootScope.searchIsActive = false;
-                        
-			$http({method: 'GET', url: '/menus'}).success(function(data, status) {
-					$scope.menus = data;
-				});
-		};
+                    $rootScope.searchIsActive = false;
 
+                    $http({method: 'GET', url: '/menus'}).success(function(data, status) {
+                            $scope.menus = data;
+                    });
+                  
+                    $scope.findTasks();
+		};
+                
+                
 		/*socket.on('news', function(data) {
 		 notify('<span class="icon-info-round"> </span><i>Philippe</i> : Appeler DHL', data.hello, {
 		 autoClose: true,
@@ -68,4 +71,5 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 				angular.element(window).resize();
 			}, 2000);
 		});
+                
 	}]);

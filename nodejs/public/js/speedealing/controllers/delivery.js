@@ -8,6 +8,8 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
             lines: [],
             notes: []
         };
+        
+        $scope.qty = [];
         $scope.tickets = [];
         $scope.countTicket = 0;
         $scope.deliveries = [];
@@ -91,8 +93,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
         
         
         $scope.calculMontantHT = function(qty, pu, index){
-            
-            alert($scope.qty);
+            //alert('test : '+ $scope.qty[index]);
             $scope.delivery.lines[index].total_ht = qty * pu;
         };
         // filter lines to show

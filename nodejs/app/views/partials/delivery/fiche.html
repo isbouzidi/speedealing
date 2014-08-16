@@ -59,7 +59,6 @@
                                             <!-- button to show form -->
                                             <span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible && editable"></span>
 
-
                                             <div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
                                                 <button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableFormAddress.$waiting"></button>
 
@@ -346,10 +345,9 @@
           </span>
         </td>
         <td>
-            <span editable-number="line.qty" ng-model="qty" e-ng-change="calculMontantHT($data, line.pu_ht, $index)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
+            <span editable-number="line.qty" e-ng-change="calculMontantHT($data, line.pu_ht, $index)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
             \{{ line.qty || 0 }}
             </span>
-            
         </td>
         <td>
           <!-- editable username (text with validation) -->

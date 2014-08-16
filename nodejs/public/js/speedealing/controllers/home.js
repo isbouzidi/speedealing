@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', 'Users', 'Reports', function($scope, $location, $http, $anchorScroll, Global, pageTitle, Users, Reports) {
+angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', '$timeout', 'Users', 'Reports', function($scope, $location, $http, $anchorScroll, Global, pageTitle, $timeout, Users, Reports) {
 		$scope.global = Global;
 
 		pageTitle.setTitle('Accueil');
@@ -7,6 +7,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 		$scope.userConnection = [];
 		$scope.indicateurs = {};
                 $scope.limitReport = 0;
+                $scope.isTaskRealised = false;
                 
 		$scope.familles = {
 		//	prev : {},
@@ -224,6 +225,46 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
                             }
                     }).success(function(data, status) {
                             $scope.reports = data;
+                    });
+                };
+                
+                $scope.findTasks = function(){
+                    $http({method: 'GET', url: '/api/reports/listTasks', params: {
+                                user: Global.user._id
+                            }
+                    }).success(function(data, status) {
+                            $scope.listTasks = data;
+                    });
+                };
+                
+                $scope.taskRealised = function(id){
+                    
+                    $http({method: 'PUT', url: '/api/reports/TaskRealised', params: {
+                                id: id
+                            }
+                    }).success(function(status) {
+                        $scope.findTasks();
+                        $scope.isTaskRealised = true;
+                        $scope.idTaskRealised = id;
+                        
+                        $scope.timer = $timeout(function() {
+            
+                            $scope.isTaskRealised = false;
+                        },5000);
+                    });
+                    
+                };
+                
+                $scope.cancelTaskReealised = function(){
+                  
+                    $timeout.cancel($scope.timer);
+                    
+                    $http({method: 'PUT', url: '/api/reports/cancelTaskRealised', params: {
+                            id: $scope.idTaskRealised
+                        }
+                    }).success(function(status) {
+                        $scope.findTasks();
+                        $scope.isTaskRealised = false;
                     });
                 };
 	}]);
