@@ -40,6 +40,7 @@ var productSchema = new Schema({
 			user_mod: Schema.Types.Mixed,
 			tva_tx: Number
 		}],
+	pu_ht: Number, // For base price
 	user_mod: {id: String, name: String},
 	history: [{
 			tms: Date,

@@ -42,7 +42,7 @@ module.exports = function(app, passport, auth) {
 			]
 		};
 
-		if (req.body.price_level)
+		if (req.body.price_level !== 'BASE')
 			return pricelevel.autocomplete(req.body, function(prices) {
 				res.json(200, prices);
 			});
@@ -55,12 +55,8 @@ module.exports = function(app, passport, auth) {
 
 
 		//console.log(query);
-		ProductModel.aggregate([
-			{$match: query},
-			{$project: {name: "$ref", id: "$_id", ref: 1, label: 1, template: 1, price: 1, minPrice: 1, description: 1, family: 1}},
-			{$unwind: "$price"},
-			{$match: {'$or': [{'price.price_level': req.body.price_level}, {'price.price_level': 'BASE'}]}},
-			{$limit: req.body.take}], function(err, docs) {
+		ProductModel.find(query, "ref _id label template pu_ht tva_tx minPrice description caFamily",
+				{limit: req.body.take}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/autocomplete");
 				console.log(err);
@@ -68,7 +64,23 @@ module.exports = function(app, passport, auth) {
 			}
 			//console.log(docs);
 
-			return res.send(200, docs);
+			var result = [];
+			for (var i = 0; i < docs.length; i++) {
+				var obj = {
+					pu_ht: docs[i].pu_ht,
+					price_level: 'BASE',
+					discount: 0,
+					qtyMin: 0,
+					product: {
+						id: docs[i],
+						name: docs[i].ref
+					}
+				};
+
+				result.push(obj);
+			}
+
+			return res.send(200, result);
 		});
 	});
 

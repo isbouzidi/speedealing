@@ -422,12 +422,12 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
 				$scope.line.pu_ht = data.pu_ht;
 
 			$scope.line.tva_tx = data.product.id.tva_tx;
-			
+
 			$scope.line.product = data.product.id;
-			
+
 			if (!data.template)
 				$scope.line.product.template = "/partials/lines/classic.html";
-			
+
 			$scope.line.product.id = data.product.id._id;
 			$scope.line.product.name = data.product.id.ref;
 			$scope.line.product.family = data.product.id.caFamily;
@@ -470,7 +470,7 @@ angular.module('mean.system').controller('ProductPriceLevelController', ['$scope
 
 		$scope.find = function() {
 			$scope.init();
-			
+
 			$http({method: 'GET', url: '/api/product/price_level', params: {
 					price_level: $scope.price_level
 				}
@@ -504,6 +504,7 @@ angular.module('mean.system').controller('ProductPriceLevelController', ['$scope
 				{field: 'price_level', displayName: 'Liste de prix', width: "80px", enableCellEdit: false},
 				{field: 'qtyMin', displayName: 'Minimum de commande', cellClass: "align-right", width: "150px", enableCellEdit: false},
 				{field: 'pu_ht', displayName: 'Tarif HT', width: "80px", cellClass: "blue align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>'},
+				{field: 'product.id.pu_ht', displayName: 'Base HT', width: "80px", cellClass: "grey align-right", enableCellEdit: false},
 				{field: 'discount', displayName: 'Remise', width: "80px", cellClass: "blue align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>'},
 				{field: 'tms', displayName: 'Date MAJ', width: "100px", cellFilter: "date:'dd/MM/yyyy'", enableCellEdit: false},
 				{displayName: "Actions", enableCellEdit: false, width: "60px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer le tarif du produit ?" confirmed-click="remove(row)"></button></div></div>'}
@@ -558,13 +559,13 @@ angular.module('mean.system').controller('ProductPriceLevelController', ['$scope
 			modalInstance.result.then(function(price) {
 				$http({method: 'POST', url: 'api/product/price_level', data: price
 				}).success(function(data, status) {
-					if(data.price_level === $scope.price_level)
+					if (data.price_level === $scope.price_level)
 						$scope.priceLevel.push(data);
 					else {
 						$scope.price_level = data.price_level;
 						$scope.find();
 					}
-						
+
 				});
 			}, function() {
 			});

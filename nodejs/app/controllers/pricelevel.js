@@ -14,7 +14,7 @@ exports.read = function(req, res) {
 		query.price_level = req.query.price_level;
 
 	PriceLevelModel.find(query, "-history")
-			.populate("product.id", "label price")
+			.populate("product.id", "label pu_ht")
 			.exec(function(err, prices) {
 				if (err)
 					console.log(err);
@@ -124,9 +124,7 @@ exports.remove = function(req, res) {
 
 exports.autocomplete = function(body, callback) {
 	var query = {
-		"$or": [
-			{"product.name": new RegExp(body.filter.filters[0].value, "i")}
-		],
+		"product.name": new RegExp(body.filter.filters[0].value, "i"),
 		price_level: body.price_level
 	};
 
@@ -138,7 +136,7 @@ exports.autocomplete = function(body, callback) {
 					console.log(err);
 					return;
 				}
-				//console.log(prices);
+				console.log(prices);
 				callback(prices);
 			});
 
@@ -149,38 +147,52 @@ exports.upgrade = function(req, res) {
 		async.each(products, function(product, callback) {
 
 			for (var i = 0; i < product.price.length; i++) {
-				PriceLevelModel.update({"product.id": product._id, price_level: product.price[i].price_level},
-				{
-					product: {
-						id: product._id,
-						name: product.ref
+				if (product.price[i].price_level === 'BASE')
+					ProductModel.update({_id: product._id}, {
+						pu_ht: product.price[i].pu_ht,
+						tva_tx: product.price[i].tva_tx,
+						tms: product.price[i].tms
 					},
-					price_level: product.price[i].price_level,
-					tms: product.price[i].tms,
-					pu_ht: product.price[i].pu_ht,
-					qtyMin: product.price[i].qtyMin,
-					user_mod: product.price[i].user_mod,
-					optional: {
-						ref_customer_code: product.price[i].ref_customer_code,
-						dsf_coef: product.price[i].dsf_coef,
-						dsf_time: product.price[i].dsf_time
-					},
-					$addToSet: {
-						history: {
-							tms: product.price[i].tms,
-							user_mod: product.price[i].user_mod,
-							pu_ht: product.price[i].pu_ht,
-							qtyMin: product.price[i].qtyMin
-						}
-					}
-				},
-				{upsert: true},
-				function(err, numberAffected, price) {
-					if (err)
-						return console.log(err);
+					{upsert: false},
+					function(err, numberAffected, price) {
+						if (err)
+							return console.log(err);
 
-					//console.log(price);
-				});
+						//console.log(price);
+					});
+				else
+					PriceLevelModel.update({"product.id": product._id, price_level: product.price[i].price_level},
+					{
+						product: {
+							id: product._id,
+							name: product.ref
+						},
+						price_level: product.price[i].price_level,
+						tms: product.price[i].tms,
+						pu_ht: product.price[i].pu_ht,
+						qtyMin: product.price[i].qtyMin,
+						user_mod: product.price[i].user_mod,
+						optional: {
+							ref_customer_code: product.price[i].ref_customer_code,
+							dsf_coef: product.price[i].dsf_coef,
+							dsf_time: product.price[i].dsf_time
+						},
+						$addToSet: {
+							history: {
+								tms: product.price[i].tms,
+								user_mod: product.price[i].user_mod,
+								pu_ht: product.price[i].pu_ht,
+								qtyMin: product.price[i].qtyMin
+							}
+						}
+					},
+					{upsert: true},
+					function(err, numberAffected, price) {
+						if (err)
+							return console.log(err);
+
+						//console.log(price);
+					});
 			}
 
 			callback();
