@@ -7,7 +7,6 @@ var mongoose = require('mongoose'),
 		_ = require('underscore');
 
 var ProductModel = mongoose.model('product');
-var PriceLevelModel = mongoose.model('pricelevel');
 var StorehouseModel = mongoose.model('storehouse');
 
 var ExtrafieldModel = mongoose.model('extrafields');
@@ -16,7 +15,7 @@ var DictModel = mongoose.model('dict');
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();
-	var pricelevel = new PriceLevel();
+	var pricelevel = require('../controllers/pricelevel.js');
 
 	ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
 		if (err) {
@@ -27,13 +26,7 @@ module.exports = function(app, passport, auth) {
 		object.fk_extrafields = doc;
 	});
 
-	app.get('/api/product', auth.requiresLogin, function(req, res) {
-		if (req.query.withNoPrice)
-			object.read(req, res);
-		else
-			object.readPrice(req, res);
-		return;
-	});
+	app.get('/api/product', auth.requiresLogin, object.read);
 
 	// list for autocomplete
 	app.post('/api/product/autocomplete', auth.requiresLogin, function(req, res) {
@@ -49,10 +42,17 @@ module.exports = function(app, passport, auth) {
 			]
 		};
 
+		if (req.body.price_level)
+			return pricelevel.autocomplete(req.body, function(prices) {
+				res.json(200, prices);
+			});
+
 		if (req.body.supplier)
 			query.Status = {'$in': ["SELLBUY", "BUY"]};
 		else
 			query.Status = {'$in': ["SELL", "SELLBUY"]};
+
+
 
 		//console.log(query);
 		ProductModel.aggregate([
@@ -261,52 +261,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/product/price_level', auth.requiresLogin, pricelevel.add);
 	app.del('/api/product/price_level', auth.requiresLogin, pricelevel.remove);
 	app.get('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
-	app.get('/api/product/price_level/upgrade', auth.requiresLogin, function(req, res) {
-		ProductModel.find(function(err, products) {
-			async.each(products, function(product, callback) {
-
-				for (var i = 0; i < product.price.length; i++) {
-					if (product.price[i].price_level != "BASE")
-						PriceLevelModel.update({"product.id": product._id, price_level: product.price[i].price_level},
-						{
-							product: {
-								id: product._id,
-								name: product.ref
-							},
-							price_level: product.price[i].price_level,
-							tms: product.price[i].tms,
-							pu_ht: product.price[i].pu_ht,
-							qtyMin: product.price[i].qtyMin,
-							user_mod: product.price[i].user_mod,
-							optional: {
-								ref_customer_code: product.price[i].ref_customer_code
-							},
-							$addToSet: {
-								history: {
-									tms: product.price[i].tms,
-									user_mod: product.price[i].user_mod,
-									pu_ht: product.price[i].pu_ht,
-									qtyMin: product.price[i].qtyMin
-								}
-							}
-						},
-						{upsert: true},
-						function(err, numberAffected, price) {
-							if (err)
-								return console.log(err);
-
-							//console.log(price);
-						});
-				}
-
-				callback();
-			}, function(err) {
-				if (err)
-					return res.json(err);
-				res.send(200);
-			});
-		});
-	});
+	app.get('/api/product/price_level/upgrade', auth.requiresLogin, pricelevel.upgrade);
 
 	// list for autocomplete
 	app.post('/api/product/price_level/autocomplete', auth.requiresLogin, function(req, res) {
@@ -732,123 +687,6 @@ Object.prototype = {
 			doc.fields[req.query.field].values = result;
 
 			res.json(doc.fields[req.query.field]);
-		});
-	}
-};
-
-function PriceLevel() {
-}
-
-PriceLevel.prototype = {
-	read: function(req, res) {
-		var query = {
-		};
-
-		if (req.query.price_level)
-			query.price_level = req.query.price_level;
-
-		PriceLevelModel.find(query, "-history")
-				.populate("product.id", "label price")
-				.exec(function(err, prices) {
-					if (err)
-						console.log(err);
-
-					//console.log(prices);
-					if (prices == null)
-						prices = [];
-
-					res.send(200, prices);
-				});
-	},
-	list: function(req, res) {
-		PriceLevelModel.aggregate([{'$group': {_id: '$price_level'}}, {'$sort': {_id: 1}}], function(err, docs) {
-			if (err) {
-				console.log("err : /api/product/price_level/select");
-				console.log(err);
-				return;
-			}
-
-			var result = [];
-
-			if (docs !== null)
-				for (var i in docs) {
-					//console.log(docs[i]);
-					result[i] = {};
-					result[i].name = docs[i]._id;
-					//result[i].id = docs[i]._id;
-				}
-
-			return res.send(200, result);
-		});
-	},
-	update: function(req, res) {
-		PriceLevelModel.update({_id: req.body._id},
-		{
-			tms: new Date,
-			pu_ht: req.body.pu_ht,
-			qtyMin: req.body.qtyMin,
-			discount: req.body.discount,
-			user_mod: {
-				id: req.user._id,
-				name: req.user.name
-			},
-			optional: req.body.optional,
-			$addToSet: {
-				history: {
-					tms: new Date,
-					user_mod: {
-						id: req.user._id,
-						name: req.user.name
-					},
-					pu_ht: req.body.pu_ht,
-					qtyMin: req.body.qtyMin,
-					discount: req.body.discount
-				}
-			}
-		},
-		{upsert: false},
-		function(err, numberAffected, price) {
-			if (err)
-				return console.log(err);
-
-			//console.log(price);
-			res.send(200);
-		});
-		//console.log(req.body);
-	},
-	add: function(req, res) {
-		var price = new PriceLevelModel(req.body);
-
-		price.user_mod = {
-			id: req.user._id,
-			name: req.user.name
-		};
-
-		price.history.push({
-			tms: new Date,
-			user_mod: {
-				id: req.user._id,
-				name: req.user.name
-			},
-			pu_ht: req.body.pu_ht,
-			qtyMin: req.body.qtyMin,
-			discount: req.body.discount
-		});
-
-		price.save(function(err, price) {
-			if (err)
-				return console.log(err);
-
-			//console.log(price);
-			res.json(price);
-		});
-		//console.log(req.body);
-	},
-	remove: function(req, res) {
-		PriceLevelModel.remove({_id: req.body._id}, function(err) {
-			if (err)
-				return console.log(err);
-			res.send(200);
 		});
 	}
 };

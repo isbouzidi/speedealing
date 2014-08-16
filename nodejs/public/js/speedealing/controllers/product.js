@@ -288,7 +288,6 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 
 		function initProducts() {
 			$http({method: 'GET', url: 'api/product', params: {
-					withNoPrice: 1,
 					barCode: 1
 				}
 			}).
@@ -413,18 +412,25 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
 		};
 
 		$scope.updateLine = function(data) {
-			if (!data.template)
-				$scope.line.product.template = "/partials/lines/classic.html";
 
 			if (!$scope.line.description)
 				$scope.line.description = data.description;
 
-			$scope.line.minPrice = data.minPrice;
+			$scope.line.minPrice = data.product.id.minPrice;
 
-			if (!$scope.line.pu_ht)
-				$scope.line.pu_ht = data.price.pu_ht;
+			if (data.pu_ht)
+				$scope.line.pu_ht = data.pu_ht;
 
-			$scope.line.tva_tx = data.price.tva_tx;
+			$scope.line.tva_tx = data.product.id.tva_tx;
+			
+			$scope.line.product = data.product.id;
+			
+			if (!data.template)
+				$scope.line.product.template = "/partials/lines/classic.html";
+			
+			$scope.line.product.id = data.product.id._id;
+			$scope.line.product.name = data.product.id.ref;
+			$scope.line.product.family = data.product.id.caFamily;
 
 			//console.log(data);
 		};
