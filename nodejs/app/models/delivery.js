@@ -150,56 +150,56 @@ deliverySchema.pre('save', function(next) {
     }
 
     var self = this;
-//    if (this.isNew) {
-//        SeqModel.inc("PROV", function(seq) {
-//            //console.log(seq);
-//            self.ref = "PROV" + seq;
-//            next();
-//        });
-//    } else {
-//        if (this.Status !== "DRAFT" && this.total_ht !== 0 && this.ref.substr(0, 4) === "PROV") {
-//            EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
-//                if (err)
-//                    console.log(err);
-//
-//                if (entity && entity.cptRef) {
-//                    SeqModel.inc("BL" + entity.cptRef, self.datec, function(seq) {
-//                        //console.log(seq);
-//                        self.ref = "BL" + entity.cptRef + seq;
-//                        next();
-//                    });
-//                } else {
-//                    SeqModel.inc("BL", self.datec, function(seq) {
-//                        //console.log(seq);
-//                        self.ref = "BL" + seq;
-//                        next();
-//                    });
-//                }
-//            });
-//        } else {
-//            if (this.total_ht === 0)
-//                this.Status = "DRAFT";
-//            next();
-//        }
-//    }
-    EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
-        if (err)
-            console.log(err);
+    if (this.isNew) {
+        SeqModel.inc("BL", function(seq) {
+            //console.log(seq);
+            self.ref = "BL" + seq;
+            next();
+        });
+    } else {
+        if (this.Status !== "DRAFT" && this.total_ht !== 0 && this.ref.substr(0, 4) === "BL") {
+            EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+                if (err)
+                    console.log(err);
 
-        if (entity && entity.cptRef) {
-            SeqModel.inc("BL" + entity.cptRef, self.datec, function(seq) {
-                //console.log(seq);
-                self.ref = "BL" + entity.cptRef + seq;
-                next();
+                if (entity && entity.cptRef) {
+                    SeqModel.inc("BL" + entity.cptRef, self.datec, function(seq) {
+                        //console.log(seq);
+                        self.ref = "BL" + entity.cptRef + seq;
+                        next();
+                    });
+                } else {
+                    SeqModel.inc("BL", self.datec, function(seq) {
+                        //console.log(seq);
+                        self.ref = "BL" + seq;
+                        next();
+                    });
+                }
             });
         } else {
-            SeqModel.inc("BL", self.datec, function(seq) {
-                //console.log(seq);
-                self.ref = "BL" + seq;
-                next();
-            });
+            if (this.total_ht === 0)
+                this.Status = "DRAFT";
+            next();
         }
-    });
+    }
+//    EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+//        if (err)
+//            console.log(err);
+//
+//        if (entity && entity.cptRef) {
+//            SeqModel.inc("BL" + entity.cptRef, self.datec, function(seq) {
+//                //console.log(seq);
+//                self.ref = "BL" + entity.cptRef + seq;
+//                next();
+//            });
+//        } else {
+//            SeqModel.inc("BL", self.datec, function(seq) {
+//                //console.log(seq);
+//                self.ref = "BL" + seq;
+//                next();
+//            });
+//        }
+//    });
     
 });
 

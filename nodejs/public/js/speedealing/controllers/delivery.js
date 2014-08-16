@@ -94,6 +94,8 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
         
         $scope.calculMontantHT = function(qty, pu, index){
             //alert('test : '+ $scope.qty[index]);
+            $scope.delivery.lines[index].pu_ht = pu;
+            $scope.delivery.lines[index].qty = qty;
             $scope.delivery.lines[index].total_ht = qty * pu;
         };
         // filter lines to show
@@ -139,8 +141,9 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
                 if (line.isNew) {
                     $scope.delivery.lines.splice(i, 1);
                 }
-            }
-            ;
+            };
+            
+            $scope.findOne();
         };
         
         // save edits

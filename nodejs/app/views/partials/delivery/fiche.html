@@ -189,7 +189,19 @@
                                             <tbody>
                                                 <tr>
                                                     <th>{{t 'AmountHT'}}</th>
-                                                    <td class="align-right">\{{delivery.shipping| currency}}</td>
+                                                    <td class="align-right">
+                                                        <a href="#" 
+                                                            editable-text="delivery.shipping"
+                                                            e-style="width: 80px"
+                                                            blur="submit"
+                                                            buttons="no"
+                                                            onaftersave="update()"
+                                                            e-form="shipping">
+                                                             \{{delivery.shipping| currency}}
+                                                         </a>
+                                                         <span class="icon-pencil grey" ng-click="shipping.$show()" ng-hide="shipping.$visible"></span>
+                                                       
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
