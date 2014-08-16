@@ -104,6 +104,15 @@ module.exports = function(app, passport, auth) {
     
     //get reports of other users
     app.get('/api/reports/listReports', auth.requiresLogin, object.listReports);
+    
+    //get all the task not realised of a user
+    app.get('/api/reports/listTasks', auth.requiresLogin, object.listTasks);
+    
+    //mark a task as realised
+    app.put('/api/reports/taskRealised', auth.requiresLogin, object.taskRealised);
+    
+    //cancel task as realised
+    app.put('/api/reports/cancelTaskRealised', auth.requiresLogin, object.cancelTaskRealised);
 };
 
 function Object() {
@@ -183,6 +192,53 @@ Object.prototype = {
             }
             
             res.send(200, doc);
+        });
+    },
+    listTasks: function(req, res){
+        
+        var user = req.query.user;
+        
+        var query = {
+            "author.id": {"$in": [user]},
+            "realised": false
+        };
+        ReportModel.find(query, "_id societe actions", function(err, doc) {
+            if (err) {
+                console.log(err);
+                res.send(500, doc);
+                return;
+            }
+            
+            res.send(200, doc);
+        });
+    },
+    taskRealised: function(req, res){
+        
+        var id = req.query.id;
+        
+        if(id)
+            ReportModel.update({"_id": id}, {$set: {"realised": true, dueDate: new Date()}}, function(err, doc){
+
+                if(err)
+                    return console.log(err);
+                
+                res.send(200);
+
+        });
+    }
+    ,
+    cancelTaskRealised: function(req, res){
+        
+        var id = req.query.id;
+        
+        if(id)
+            ReportModel.update({"_id": id}, {$set: {"realised": false, dueDate: null}}, function(err, doc){
+
+                if(err)
+                    return console.log(err);
+                
+                res.send(200);
+
         });
     }
 };
