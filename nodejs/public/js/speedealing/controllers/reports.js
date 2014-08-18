@@ -26,8 +26,8 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         
         $scope.actionMethod = [];
         $scope.actionDate = [];
-        $scope.lead = [];
-        $scope.report.leads = [];
+        $scope.lead = {};
+        $scope.report.leads = {};
         
         $scope.init = function() {
             
@@ -78,6 +78,14 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 $scope.leads = data;
             });
             
+            $http({method: 'GET', url: '/api/report/dict_fk/select', params: {
+                field: "prospectlevel"
+            }
+            }).success(function(data) {
+
+                $scope.potential = data;
+
+            });
         };
 
         $scope.productSelection = function productSelection(product) {
@@ -242,9 +250,11 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             });
 
             modalInstance.result.then(function(leads) {
+                console.log('hhhhhhh : ' + leads);
                 $scope.report.leads.push(leads);
                 
             }, function() {
+                
             });
         };
 

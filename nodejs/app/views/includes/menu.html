@@ -2,7 +2,7 @@
     
         
     <div id="menu-content">
-        <header>
+        <header ng-show="showSearchInput">
             <div id="search_box">
                 <input ng-model="searchQueryItem" ng-change="searchQuery()" class="ac_input focus" id="query" type='text' size='40' placeholder="{{t 'SearchOf'}}" autocomplete="off">
             </div>
@@ -24,8 +24,7 @@
         </div>
         <ul class="children-tooltip" id="access">
             <li style="width: 20%;">
-                <a href='#!/' title="{{t
-                        'Home'}}" >
+                <a href='#!/' title="{{t 'Home'}}" >
                     <span class="icon-home"></span>
                 </a>
             </li>

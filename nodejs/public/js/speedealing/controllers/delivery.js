@@ -92,11 +92,21 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
         };
         
         
-        $scope.calculMontantHT = function(qty, pu, index){
-            //alert('test : '+ $scope.qty[index]);
-            $scope.delivery.lines[index].pu_ht = pu;
-            $scope.delivery.lines[index].qty = qty;
-            $scope.delivery.lines[index].total_ht = qty * pu;
+        $scope.calculMontantHT = function(qty, pu, idLine){
+
+            for(var i in $scope.delivery.lines){
+                var line = $scope.delivery.lines[i];
+                if(line.idLine === idLine){
+                    
+                    line.pu_ht = pu;
+                    line.qty = qty;
+                    line.total_ht = qty * pu;
+                    
+                }
+            }
+            
+            
+            
         };
         // filter lines to show
         $scope.filterLine = function(line) {
@@ -110,14 +120,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
                 if (filtered.length) {
                   filtered[0].isDeleted = true;
                 }
-            
-//            for(var i = 0; i < $scope.delivery.lines.length; i++){
-//                if($scope.delivery.lines[i].idLine === id)
-//                    if($scope.delivery.lines[i].isNew)
-//                        $scope.delivery.lines.splice(i, 1);
-//                    else
-//                        $scope.delivery.lines[i].isDeleted = true;            
-//            }
         };
 
         // add line

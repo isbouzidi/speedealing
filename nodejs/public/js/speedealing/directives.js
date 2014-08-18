@@ -89,18 +89,16 @@ angular.module('mean.system').directive('ngBlur', function() {
 	};
 });
 
-angular.module('mean.system').directive('ngConfirmClick', [
-	function() {
-		return {
-			link: function(scope, element, attr) {
-				var msg = attr.ngConfirmClick || "Supprimer ?";
-				var clickAction = attr.confirmedClick;
-				element.bind('click', function(event) {
-					if (window.confirm(msg)) {
-						scope.$eval(clickAction);
-					}
-				});
-			}
-		};
-	}]);
+angular.module('mean.system').directive('myFocus', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            scope.$watch(attr.myFocus, function (n, o) {
+                if (n != 0 && n) {
+                    element[0].focus();
+                }
+            });
+        }
+    };
+});
 

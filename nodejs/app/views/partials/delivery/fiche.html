@@ -357,13 +357,13 @@
           </span>
         </td>
         <td>
-            <span editable-number="line.qty" e-ng-change="calculMontantHT($data, line.pu_ht, $index)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
+            <span editable-number="line.qty" e-ng-change="calculMontantHT($data, line.pu_ht, line.idLine)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
             \{{ line.qty || 0 }}
             </span>
         </td>
         <td>
           <!-- editable username (text with validation) -->
-          <span editable-number="line.pu_ht" e-ng-change="calculMontantHT(line.qty, $data, $index)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
+          <span editable-number="line.pu_ht" e-ng-change="calculMontantHT(line.qty, $data, line.idLine)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
             \{{ line.pu_ht || 0 }}
           </span>
         </td>
