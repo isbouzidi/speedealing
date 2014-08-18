@@ -1,9 +1,11 @@
-<!--<div class="field-block button-height">
-    <label for="fonction"><b>{{t "reports:Prospect Level"}}</b></label>
-    <span ng-repeat="p in potentialAttract">
-        <input type="radio" ng-model="report.prospectLevel" style="margin-left: 5px" value="\{{p.label}}">\{{p.label}}
+<div class="field-block button-height">
+    <label for="potential"><b>{{t "reports:Potential"}}</b></label>
+    <span ng-repeat="p in potential" style="margin-left" >
+    <input type="radio" ng-model="leads.potential" value="\{{p.label || 'Aucun'}}">\{{p.label || 'Aucun'}}
+
     </span>
-</div>-->
+</div>
+
 <div class="field-block">
     <h4>Sujet</h4>
 </div>

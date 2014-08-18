@@ -40,10 +40,10 @@ var ReportSchema = new Schema({
         id: String,
         name: String
     },
-    leads: [{
+    leads: {
         id: Schema.Types.ObjectId,
         name: String
-    }]
+    }
 });
 
 ReportSchema.plugin(timestamps);
