@@ -59,7 +59,9 @@ var orderSupplierSchema = new Schema({
 			product: {
 				id: {type: Schema.Types.ObjectId, ref: "Product"},
 				name: {type: String},
-				label: String
+				label: String,
+				template: {type: String, default: "/partials/lines/classic.html"},
+				family: String
 			},
 			total_tva: Number,
 			total_ttc: Number,
@@ -138,7 +140,8 @@ orderSupplierSchema.pre('save', function(next) {
 				});
 			}
 		});
-	}
+	} else
+		next();
 });
 
 var statusList = {};

@@ -26,6 +26,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/orderSupplier', auth.requiresLogin, object.create);
 	app.put('/api/orderSupplier/:orderSupplierId', auth.requiresLogin, object.update);
 	app.del('/api/orderSupplier/:orderSupplierId', auth.requiresLogin, object.destroy);
+	app.get('/api/orderSupplier/fk_extrafields/select', auth.requiresLogin, object.select);
 	
 	// list for autocomplete
 	app.post('/api/orderSupplier/autocomplete', auth.requiresLogin, function(req, res) {
@@ -173,7 +174,7 @@ Object.prototype = {
 		var order = req.order;
 		//console.log(req.body);
 		order = _.extend(order, req.body);
-
+		
 		order.save(function(err, doc) {
 			if (err)
 				console.log(err);
@@ -192,6 +193,48 @@ Object.prototype = {
 			} else {
 				res.json(order);
 			}
+		});
+	},
+	select: function(req, res) {
+		ExtrafieldModel.findById('extrafields:Commande', function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			var result = [];
+
+			if (doc.fields[req.query.field].dict)
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+
+					if (docs) {
+						for (var i in docs.values) {
+							if (docs.values[i].enable) {
+								var val = {};
+								val.id = i;
+								if (docs.values[i].label)
+									val.label = docs.values[i].label;
+								else
+									val.label = req.i18n.t("bills:" + i);
+								result.push(val);
+							}
+						}
+						doc.fields[req.query.field].values = result;
+					}
+
+					res.json(doc.fields[req.query.field]);
+				});
+
+			for (var i in doc.fields[req.query.field].values) {
+				if (doc.fields[req.query.field].values[i].enable) {
+					var val = {};
+					val.id = i;
+					val.label = req.i18n.t("bills:" + doc.fields[req.query.field].values[i].label);
+					result.push(val);
+				}
+			}
+			doc.fields[req.query.field].values = result;
+
+			res.json(doc.fields[req.query.field]);
 		});
 	}
 };

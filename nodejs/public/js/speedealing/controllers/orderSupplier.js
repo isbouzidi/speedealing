@@ -1,4 +1,4 @@
-angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'OrdersSupplier', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Orders) {
+angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'OrdersSupplier', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, OrdersSupplier) {
 
 		pageTitle.setTitle('Liste des commandes fournisseurs');
 
@@ -21,7 +21,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 			var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
 
 			angular.forEach(fields, function(field) {
-				$http({method: 'GET', url: '/api/order/fk_extrafields/select', params: {
+				$http({method: 'GET', url: '/api/orderSupplier/fk_extrafields/select', params: {
 						field: field
 					}
 				}).success(function(data, status) {
@@ -48,7 +48,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 			var order = $scope.order;
 
 			order.$update(function(response) {
-				pageTitle.setTitle('Facture ' + order.ref);
+				pageTitle.setTitle('Commande ' + order.ref);
 
 				if (response.Status == "NEW")
 					$scope.editable = true;
@@ -58,7 +58,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 		};
 
 		$scope.find = function() {
-			Orders.query({query: this.type.id, entity: Global.user.entity}, function(orders) {
+			OrdersSupplier.query({query: this.type.id, entity: Global.user.entity}, function(orders) {
 				$scope.orders = orders;
 				$scope.countOrders = orders.length;
 
@@ -71,7 +71,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 		};
 
 		$scope.findOne = function() {
-			Orders.get({
+			OrdersSupplier.get({
 				Id: $routeParams.id
 			}, function(order) {
 				//console.log(order);
@@ -94,7 +94,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 					$scope.countTicket = $scope.tickets.length;
 				});
 
-				pageTitle.setTitle('Facture ' + $scope.order.ref);
+				pageTitle.setTitle('Commande ' + $scope.order.ref);
 			}, function(err) {
 				if (err.status == 401)
 					$location.path("401.html");
@@ -126,17 +126,6 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 				return res.data;
 			});
 		};
-
-		$scope.updateAddress = function(data) {
-			$scope.order.address = data.address.address;
-			$scope.order.zip = data.address.zip;
-			$scope.order.town = data.address.town;
-
-			$scope.order.price_level = data.price_level;
-
-			return true;
-		};
-
 
 		/*
 		 * NG-GRID for order list
@@ -175,7 +164,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 			});
 
 			modalInstance.result.then(function(order) {
-				order = new Orders(order);
+				order = new OrdersSupplier(order);
 				order.$save(function(response) {
 					$location.path("ordersSupplier/" + response._id);
 				});

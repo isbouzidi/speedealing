@@ -1,85 +1,64 @@
-<section data-ng-controller="BillSupplierController">
+<section data-ng-controller="OrderSupplierController">
 	<div data-ng-init="findOne()">
 		<hgroup id="main-title" class="thin">
-			<h1>Facture \{{bill.ref}} (\{{bill.supplier.name}})</h1>
-			<!--<span class="valign-top tag glossy" data-ng-class="bill.status.css">\{{bill.status.name}}</span>-->
+			<h1>Commande \{{order.ref}} (\{{order.supplier.name}})</h1>
+			<!--<span class="valign-top tag glossy" data-ng-class="order.status.css">\{{order.status.name}}</span>-->
 		</hgroup>
 		<div class="with-padding" data-ng-init="init()">
 			<div class="columns">
 				<div class="four-columns twelve-columns-mobile">
 					<div class="boxed">
-						<p class="icon-info green underline">{{t 'bills:CardBill'}}</p>
+						<p class="icon-info green underline">{{t 'orders:CardBill'}}</p>
 
 						<table class="info-table">
 							<tbody>
 								<tr>
 									<th width="40%" scope="row">{{t 'Ref'}}</th>
-									<td class="">\{{bill.ref}}</td>
+									<td class="">\{{order.ref}}</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'compta:InvoiceRef'}}</th>
-									<td class="h4 blue"><a href="#" editable-text="bill.ref_supplier" buttons="no" onaftersave="update()">
-											\{{bill.ref_supplier|| "Non défini"}}
+									<td class="h4 blue"><a href="#" editable-text="order.ref_supplier" buttons="no" onaftersave="update()">
+											\{{order.ref_supplier|| "Non défini"}}
 										</a></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Status'}}</th>
-									<td><span class="tag small glossy" data-ng-class="bill.status.css">\{{bill.status.name}}</span>
+									<td><span class="tag small glossy" data-ng-class="order.status.css">\{{order.status.name}}</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'bills:DateMaxPayment'}}</th>
-									<td class="blue">\{{bill.dater|date:'dd/MM/yyyy'}}</td>
+									<td class="blue">\{{order.dater|date:'dd/MM/yyyy'}}</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'suppliers:Supplier'}}</th>
-									<td><a href="#" ng-show="editable" editable-text="bill.supplier" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no"  onbeforesave="updateAddress($data)" onaftersave="update()">
-											\{{bill.supplier.name|| "Non defini"}}
+									<td><a href="#" ng-show="editable" editable-text="order.supplier" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+											\{{order.supplier.name|| "Non defini"}}
 										</a>
-										<span ng-hide="editable">\{{bill.supplier.name|| "Non defini"}}</span>
+										<span ng-hide="editable">\{{order.supplier.name|| "Non defini"}}</span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Entity'}}</th>
-									<td><small class="tag anthracite-gradient glossy">\{{bill.entity}}</small></td>
-								</tr>
-								<tr>
-									<th scope="row">{{t 'companies:Address'}}</th>
-									<td>
-										<form editable-form name="editableFormAddress" onaftersave="update()">
-											<span editable-textarea="bill.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ bill.address ||  "Non defini" }}</pre></span>
-
-											<span editable-text="bill.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{bill.zip}}</span> <span editable-text="bill.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{bill.town}}</span>
-											\{{bill.country}}
-											<!-- button to show form -->
-											<span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible && editable"></span>
-
-
-											<div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
-												<button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableFormAddress.$waiting"></button>
-
-												<button type="button" class="button icon-cross-round white-gradient" ng-disabled="editableFormAddress.$waiting" title="{{t 'Cancel'}}" ng-click="editableFormAddress.$cancel()"></button>
-											</div>
-
-										</form>
-									</td>
+									<td><small class="tag anthracite-gradient glossy">\{{order.entity}}</small></td>
 								</tr>
 								<!--<tr>
 									<th scope="row">{{t 'companies:Phone'}}</th>
-									<td ><span editable-tel="bill.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{bill.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
+									<td ><span editable-tel="order.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{order.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Fax'}}</th>
-									<td><span editable-tel="bill.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{bill.fax|| "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
+									<td><span editable-tel="order.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{order.fax|| "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'EMail'}}</th> 
-									<td><a data-ng-href="mailto:\{{bill.email}}" target="_blank" editable-email="bill.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{bill.email|| "Non defini"}}</a>
+									<td><a data-ng-href="mailto:\{{order.email}}" target="_blank" editable-email="order.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{order.email|| "Non defini"}}</a>
 										<span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span></td>
 								</tr>-->
 								<tr>
 									<th scope="row">{{t 'DateLastModification'}}</th>
-									<td class="blue">\{{bill.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
+									<td class="blue">\{{order.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -95,7 +74,7 @@
 					<tabset>
 						<tab>
 							<tab-heading>
-								<span class="icon-tools">{{t 'bills:CardBill'}}</span>
+								<span class="icon-tools">{{t 'orders:CardBill'}}</span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
 								<div class="columns">
@@ -104,27 +83,27 @@
 											<tbody>
 												<tr>
 													<th scope="row">{{t 'Type'}}</th>
-													<td><span editable-select="bill.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in type.values">
+													<td><span editable-select="order.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in type.values">
 															\{{showStatus('type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:Date'}}</th>
-													<td><a href="#" ng-show="editable" editable-bsdate="bill.datec" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
-															\{{ (bill.datec | date:"dd/MM/yyyy") || 'empty'}}
+													<td><a href="#" ng-show="editable" editable-bsdate="order.datec" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+															\{{ (order.datec | date:"dd/MM/yyyy") || 'empty'}}
 														</a>
-														<span ng-hide="editable">\{{ (bill.datec | date:"dd/MM/yyyy") || 'empty'}}</span></td>
+														<span ng-hide="editable">\{{ (order.datec | date:"dd/MM/yyyy") || 'empty'}}</span></td>
 												</tr>												
 												<tr>
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
-													<td><a href="#" editable-select="bill.cond_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement_code.values" onaftersave="update()">
+													<td><a href="#" editable-select="order.cond_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement_code.values" onaftersave="update()">
 															\{{ showStatus('cond_reglement_code')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentMode'}}</th>
-													<td><a href="#" editable-select="bill.mode_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement_code.values" onaftersave="update()">
+													<td><a href="#" editable-select="order.mode_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement_code.values" onaftersave="update()">
 															\{{ showStatus('mode_reglement_code')}}
 														</a>
 													</td>
@@ -139,7 +118,7 @@
 											<tbody>
 												<tr>
 													<th>{{t 'AmountHT'}}</th>
-													<td class="align-right">\{{bill.shipping| currency}}</td>
+													<td class="align-right">\{{order.shipping| currency}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -149,7 +128,7 @@
 											<tbody>
 												<tr>
 													<th>{{t 'AmountHT'}}</th>
-													<td class="align-right">\{{bill.total_ht| currency}}</td>
+													<td class="align-right">\{{order.total_ht| currency}}</td>
 												</tr>
 												<tr>
 													<th>{{t 'AmountVAT'}}</th><td></td>
@@ -158,7 +137,7 @@
 													<td class="no-padding" colspan="2">
 														<table class="info-table">
 															<tbody>
-																<tr ng-repeat="vat in bill.total_tva| orderBy:'tva_tx'">
+																<tr ng-repeat="vat in order.total_tva| orderBy:'tva_tx'">
 																	<th class="align-right">\{{vat.tva_tx| number:2}} %</th>
 																	<td class="align-right">\{{vat.total| currency}}</td>
 																</tr>
@@ -168,7 +147,7 @@
 												</tr>
 												<tr>
 													<th>{{t 'AmountTTC'}}</th>
-													<td class="strong h5 blue align-right">\{{bill.total_ttc| currency}}</td>
+													<td class="strong h5 blue align-right">\{{order.total_ttc| currency}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -189,43 +168,43 @@
 											<tbody>
 												<tr>
 													<th scope="row">{{t 'compta:CustomerAccountancyCode'}}</th>
-													<td>\{{bill.customeraccountancycode}}</td>
+													<td>\{{order.customeraccountancycode}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'compta:SupplierAccountancyCode'}}</th>
-													<td>\{{bill.code_compta_fournisseur}}</td>
+													<td>\{{order.code_compta_fournisseur}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:VATIsUsed'}}</th>
-													<td >\{{bill.tva_assuj}}</td>
+													<td >\{{order.tva_assuj}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:VATIntra'}}</th>
-													<td>\{{bill.tva_intra}}</td>
+													<td>\{{order.tva_intra}}</td>
 												</tr>
 												<tr>
-													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
-													<td>\{{bill.cond_reglement}}</td>
+													<th scope="row">{{t 'orders:PaymentConditions'}}</th>
+													<td>\{{order.cond_reglement}}</td>
 												</tr>
 												<tr>
-													<th scope="row">{{t 'bills:PaymentMode'}}</th>
-													<td>\{{bill.mode_reglement}}</td>
+													<th scope="row">{{t 'orders:PaymentMode'}}</th>
+													<td>\{{order.mode_reglement}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:PriceLevel'}}</th>
-													<td>\{{bill.price_level}}</td>
+													<td>\{{order.price_level}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
-													<td>\{{bill.remise_client}}</td>
+													<td>\{{order.remise_client}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'banks:RIB'}}</th>
-													<td>\{{bill.iban}}</td>
+													<td>\{{order.iban}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyBilling'}}</th>
-													<td>\{{bill.cptBilling}}</td>
+													<td>\{{order.cptBilling}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -233,7 +212,7 @@
 								</div>
 							</div>
 						</tab>
-						<tab disabled="bill.fournisseur=='NO'">
+						<tab disabled="order.fournisseur=='NO'">
 							<tab-heading>
 								<span class="icon-box">Fournisseur</span>
 							</tab-heading>
@@ -244,7 +223,7 @@
 											<tbody>
 												<tr>
 													<th scope="row">{{t 'Categories'}}</th>
-													<td>\{{bill.Tag}}</td>
+													<td>\{{order.Tag}}</td>
 												</tr>
 
 											</tbody>
@@ -264,37 +243,37 @@
 											<tbody>
 												<tr>
 													<th width="90%" scope="row">Extrait KBIS (moins de 3 mois)</th>
-													<td><input type="checkbox" data-ng-model="bill.checklist.KBIS" data-ng-checked="bill.checklist.KBIS" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="order.checklist.KBIS" data-ng-checked="order.checklist.KBIS" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="bill.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="order.fournisseur=='SUBCONTRACTOR'">
 													<th scope="row">Licences nationale et communautaire</th>
-													<td><input type="checkbox" data-ng-model="bill.checklist.licencesNationaleCommunautaire" data-ng-checked="bill.checklist.licencesNationaleCommunautaire" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="order.checklist.licencesNationaleCommunautaire" data-ng-checked="order.checklist.licencesNationaleCommunautaire" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="bill.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="order.fournisseur=='SUBCONTRACTOR'">
 													<th scope="row">Attestation de régularité fiscale</th>
-													<td><input type="checkbox" data-ng-model="bill.checklist.attestationRegulFiscale" data-ng-checked="bill.checklist.attestationRegulFiscale" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="order.checklist.attestationRegulFiscale" data-ng-checked="order.checklist.attestationRegulFiscale" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="bill.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="order.fournisseur=='SUBCONTRACTOR'">
 													<th scope="row">Attestation URSAFF</th>
-													<td><input type="checkbox" data-ng-model="bill.checklist.attetationUrsaff" data-ng-checked="bill.checklist.attetationUrsaff" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="order.checklist.attetationUrsaff" data-ng-checked="order.checklist.attetationUrsaff" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="bill.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="order.fournisseur=='SUBCONTRACTOR'">
 													<th scope="row">Attestation d'assurance à jour - Responsabilité Civile et Marchandise Transportée</th>
-													<td><input type="checkbox" data-ng-model="bill.checklist.attestationAssurance" data-ng-checked="bill.checklist.attestationAssurance" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="order.checklist.attestationAssurance" data-ng-checked="order.checklist.attestationAssurance" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="bill.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="order.fournisseur=='SUBCONTRACTOR'">
 													<th scope="row">Attestation sur l'honneur</th>
-													<td><input type="checkbox" data-ng-model="bill.checklist.attestationHonneur" data-ng-checked="bill.checklist.attestationHonneur" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="order.checklist.attestationHonneur" data-ng-checked="order.checklist.attestationHonneur" data-ng-change="update()" />
 													</td>
 												</tr>
-												<tr ng-show="bill.fournisseur=='SUBCONTRACTOR'">
+												<tr ng-show="order.fournisseur=='SUBCONTRACTOR'">
 													<th scope="row">Copie Permis de conduire et Déclaration Unique d'Embauche (DUE)</th>
-													<td><input type="checkbox" data-ng-model="bill.checklist.permisConduireDUE" data-ng-checked="bill.checklist.permisConduireDUE" data-ng-change="update()" />
+													<td><input type="checkbox" data-ng-model="order.checklist.permisConduireDUE" data-ng-checked="order.checklist.permisConduireDUE" data-ng-change="update()" />
 													</td>
 												</tr>
 											</tbody>
@@ -305,7 +284,7 @@
 						</tab>-->
 						<tab>
 							<tab-heading>
-								<span class="icon-pencil">Notes<span ng-if='bill.notes.length' class="count orange-bg right">\{{bill.notes.length}}</span></span>
+								<span class="icon-pencil">Notes<span ng-if='order.notes.length' class="count orange-bg right">\{{order.notes.length}}</span></span>
 							</tab-heading>
 							<div class="boxed relative large-box-shadow">
 
@@ -326,7 +305,7 @@
 
 									<div class="six-columns">
 										<div class="scroll" style="height:200px">
-											<div data-ng-repeat="vnote in bill.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+											<div data-ng-repeat="vnote in order.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
 													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -360,7 +339,7 @@
 				</div>
 
 				<div class="twelve-columns">
-					<h5 class="green underline">{{t 'bills:Details'}}</h5>
+					<h5 class="green underline">{{t 'orders:Details'}}</h5>
 
 					<div class="table-header silver-gradient glossy button-height">
 						<div class="row">
@@ -380,9 +359,9 @@
 					<div class="gridStyle"  data-ng-grid="gridOptionsLines" ng-style="style(200)" resize></div>
 					<div class="table-footer silver-gradient">
 						<div class="float-right strong">
-							Total HT : \{{bill.total_ht| currency}}  
+							Total HT : \{{order.total_ht| currency}}  
 						</div>
-						\{{bill.lines.length}} ligne(s)
+						\{{order.lines.length}} ligne(s)
 					</div>
 				</div>
 
