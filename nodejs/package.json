@@ -53,8 +53,9 @@
 		"dateformat": "latest",
 		"ip": ">=0.3.0",
 		"ua-parser": ">=0.3.3",
-		"nodemailer":"latest",
-		"array-extended":"latest"
+		"nodemailer": "latest",
+		"nodemailer-smtp-transport": "latest",
+		"array-extended": "latest"
 	},
 	"devDependencies": {
 		"supertest": "latest",

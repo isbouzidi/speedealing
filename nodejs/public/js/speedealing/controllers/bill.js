@@ -291,7 +291,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				{field: 'group', displayName: "Groupe", visible: false},
 				{field: 'qty', displayName: 'Qté', cellClass: "align-right"},
 				{field: 'pu_ht', displayName: 'P.U. HT', cellClass: "align-right", cellFilter: "currency"},
-				{field: 'tva_tx', displayName: 'TVA', cellClass: "align-right"},
+				{field: 'tva_tx', displayName: 'TVA', cellClass: "align-right", cellFilter: "percent"},
 				//{field: '', displayName: 'Réduc'},
 				{field: 'total_ht', displayName: 'Total HT', cellFilter: "currency", cellClass: "align-right"},
 				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-disabled="!editable" ng-click="editLine(row)"></button></button><button class="button orange-gradient icon-trash" title="Supprimer" ng-disabled="!editable" ng-confirm-click="Supprimer la ligne ?" confirmed-click="removeLine(row)"></button></div></div>'}

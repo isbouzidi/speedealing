@@ -14,6 +14,22 @@ angular.module('mean.system').filter('euro', function() {
 	};
 });
 
+angular.module('mean.system').filter('percent', function() {
+	return function(text, size) {
+
+		size = size || 2;
+
+		if (isNaN(text))
+			return text;
+
+		text = Math.round(Math.pow(10, 2) * text) / Math.pow(10, 2);
+
+		text = text.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 ");
+		var t = text + ' %';
+		return t;
+	};
+});
+
 angular.module('mean.system').filter('object2Array', function() {
 	return function(input) {
 		var out = [];
