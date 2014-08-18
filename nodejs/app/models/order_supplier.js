@@ -50,7 +50,6 @@ var orderSupplierSchema = new Schema({
 	author: {id: String, name: String},
 	entity: {type: String},
 	lines: [{
-			//pu: Number,
 			qty: Number,
 			tva_tx: Number,
 			pu_ht: Number,
@@ -65,10 +64,8 @@ var orderSupplierSchema = new Schema({
 			},
 			total_tva: Number,
 			total_ttc: Number,
-			total_ht_without_discount: Number,
-			total_ttc_without_discount: Number,
-			total_vat_without_discount: Number,
 			total_ht: Number,
+			discount: {type: Number, default: 0},
 			optional: {}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
