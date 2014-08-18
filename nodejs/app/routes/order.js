@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		nodemailer = require("nodemailer"),
+		smtpTransport = require('nodemailer-smtp-transport'),
 		_ = require('underscore'),
 		dateFormat = require('dateformat'),
 		config = require(__dirname + '/../../config/config');
@@ -13,7 +14,7 @@ var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
 
-var smtpTransport = nodemailer.createTransport("SMTP", config.transport);
+var smtpTransporter = nodemailer.createTransport(smtpTransport(config.transport));
 
 module.exports = function(app, passport, auth) {
 
@@ -164,15 +165,15 @@ Object.prototype = {
 			mailOptions.text += "\n\n";
 
 			// send mail with defined transport object
-			smtpTransport.sendMail(mailOptions, function(error, response) {
+			smtpTransporter.sendMail(mailOptions, function(error, info) {
 				if (error) {
 					console.log(error);
 				} else {
-					console.log("Message sent: " + response.message);
+					console.log("Message sent: " + info.response);
 				}
 
 				// if you don't want to use this transport object anymore, uncomment following line
-				smtpTransport.close(); // shut down the connection pool, no more messages
+				smtpTransporter.close(); // shut down the connection pool, no more messages
 			});
 		}
 
