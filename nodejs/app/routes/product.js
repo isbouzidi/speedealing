@@ -42,7 +42,7 @@ module.exports = function(app, passport, auth) {
 			]
 		};
 
-		if (req.body.price_level !== 'BASE')
+		if (req.body.price_level && req.body.price_level !== 'BASE')
 			return pricelevel.autocomplete(req.body, function(prices) {
 				res.json(200, prices);
 			});
