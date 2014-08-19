@@ -1,9 +1,9 @@
 <div class="field-block button-height">
     <label for="potential"><b>{{t "reports:Potential"}}</b></label>
     <span ng-repeat="p in potential" style="margin-left" >
-    <input type="radio" ng-model="leads.potential" value="\{{p.label || 'Aucun'}}">\{{p.label || 'Aucun'}}
-
+    <input type="radio" name="selectedProspectLevel" ng-model="prospectLevel.selectedOption" value="\{{p.id}}">\{{p.label || 'Aucun'}}
     </span>
+    
 </div>
 
 <div class="field-block">
