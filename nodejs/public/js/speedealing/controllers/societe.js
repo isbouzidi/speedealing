@@ -40,7 +40,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				}
 			}).then(function(res) {
 				//console.log(res.data);
-				return res.data
+                return res.data;
 			});
 		};
 
@@ -122,7 +122,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			}, function(societe) {
 				$scope.societe = societe;
 
-				$http({method: 'GET', url: 'api/societe/contact', params:
+                $http({method: 'GET', url: 'api/contacts', params:
 							{
 								find: {"societe.id": societe._id},
 								fields: "name firstname lastname updatedAt Status phone email poste"
@@ -146,18 +146,29 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 					$scope.countTicket = $scope.tickets.length;
 				});
 
+                $http({method: 'GET', url: 'api/report', params:
+                            {
+                                find: {"societe.id": societe._id},
+                                fields: "dateReport model author.name comment"
+                            }
+                }).success(function(data, status) {
+                    
+                    $scope.reports = data;
+
+                    $scope.countReports = $scope.reports.length;
+                });
 				$http({method: 'GET', url: 'api/europexpress/buy', params:
 							{
 								find: {"fournisseur.id": societe._id},
 								fields: "title ref datec Status total_ht"
 							}
 				}).success(function(data, status) {
-					if (status == 200)
+                    if (status === 200)
 						$scope.requestBuy = data;
 
 					$scope.TotalBuy = 0;
 					angular.forEach($scope.requestBuy, function(row) {
-						if (row.Status.id == "PAYED")
+                        if (row.Status.id === "PAYED")
 							$scope.TotalBuy += row.total_ht;
 					});
 					$scope.countBuy = $scope.requestBuy.length;
@@ -551,7 +562,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+            note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 
@@ -634,6 +645,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			filterText: "",
 			useExternalFilter: false
 		};
+        $scope.toggle = false;
 
 		$scope.gridOptionsContact = {
 			data: 'contacts',
@@ -643,9 +655,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			i18n: 'fr',
 			enableColumnResize: true,
 			columnDefs: [
-				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/ticket/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/contacts/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'poste', displayName: 'Fonction'},
-				{field: 'phone', displayName: 'Téléphone', cellFilter: "phone"},
+                {field: 'phone_mobile', displayName: 'Téléphone'},
 				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right"},
@@ -674,6 +686,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				{field: 'task', displayName: 'Tâche'},
 				{field: 'percentage', displayName: 'Etat', cellTemplate: '<div class="ngCellText"><progressbar class="progress-striped thin" value="row.getProperty(col.field)" type="success"></progressbar></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"}
+            ]
+        };
+        
+        $scope.gridOptionsReports = {
+            data: 'reports',
+            enableRowSelection: false,
+            i18n: 'fr',
+            enableColumnResize: true,
+            columnDefs: [
+                {field: 'dateReport', displayName: 'Date', cellFilter: "date:'dd/MM/yyyy'"},
+                {field: 'model', displayName: 'Model'},
+                {field: 'author.name', displayName: 'Auteur'},
+                {field: 'comment', displayName: 'Commentaire'}
 			]
 		};
 
@@ -731,7 +756,47 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			});
 		};
 
+		$scope.addNewContact = function() {
+            var modalInstance = $modal.open({
+                templateUrl: '/partials/contacts/create.html',
+                controller: "ContactCreateController",
+                windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							societe: $scope.societe
+						};
+					}
+				}
+            });
 
+            modalInstance.result.then(function(contacts) {
+                $scope.contacts.push(contacts);
+                $scope.countContact++;
+            }, function() {
+            });
+        };
+
+        $scope.addNewReport = function() {
+            var modalInstance = $modal.open({
+                templateUrl: '/partials/reports/create.html',
+                controller: "ReportCreateController",
+                windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							societe: $scope.societe
+						};
+					}
+				}
+            });
+
+            modalInstance.result.then(function(reports) {
+                $scope.reports.push(reports);
+                $scope.countReports++;
+            }, function() {
+            });
+        };
 	}]);
 
 angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Societes', function($scope, $http, $modalInstance, $upload, $route, Global, Societes) {
@@ -745,7 +810,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		$scope.siretFound = "";
 
 		$scope.isActive = function(idx) {
-			if (idx == $scope.active)
+            if (idx === $scope.active)
 				return "active";
 		};
 

@@ -1,0 +1,79 @@
+<div class="field-block button-height">
+    <label for="potential"><b>{{t "reports:Potential"}}</b></label>
+    <span ng-repeat="p in potential" style="margin-left" >
+    <input type="radio" ng-model="leads.potential" value="\{{p.label || 'Aucun'}}">\{{p.label || 'Aucun'}}
+
+    </span>
+</div>
+
+<div class="field-block">
+    <h4>Sujet</h4>
+</div>
+<div class="field-block button-height">
+    <label for="fonction"><b>{{t "reports:Products"}}</b></label>
+    <span ng-repeat="p in products"  class="checkbox-inline">
+        
+        <input type="checkbox"
+               value="\{{p}}"  
+               ng-click="productSelection(p)">
+                \{{p}}
+    </span>
+    
+</div>
+<div class="field-block">
+    <h4>Actions à faire</h4>
+</div>
+<div class="field-block button-height">
+    
+    <label for="senBooklet"><b>{{t "reports:Send Booklet"}}</b></label>
+    <input type="checkbox" ng-model="plaquette" ng-click="actionSelection('plaquette')" value="plaquette">
+    <span ng-show="plaquette">
+        <input type="radio" ng-model="actionMethod['plaquette']" ng-change="addActionMethod('plaquette')" value="Par mail" class=""> Par mail
+        <input type="radio" ng-model="actionMethod['plaquette']" ng-change="addActionMethod('plaquette')" value="Par courrier" class=""> Par courrier
+        <input type="radio" ng-model="actionMethod['plaquette']" ng-change="addActionMethod('plaquette')" value="Déplacement" class=""> Par téléphone
+        <input type="radio" ng-model="actionMethod['plaquette']" ng-change="addActionMethod('plaquette')" value="Téléphone" class=""> Déplacement
+    </span>
+    
+</div>
+<div class="field-block button-height">
+    <label for="sendOffer"><b>{{t "reports:Send Offer"}}</b></label>
+    <input type="checkbox" ng-model="offre" ng-click="actionSelection('offre')" value="offre">
+    <span ng-show="offre">
+        <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Par mail" class=""> Par mail
+        <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Par courrier" class=""> Par courrier
+        <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Déplacement" class=""> Déplacement
+        <input type="radio" ng-model="actionMethod['offre']" ng-change="addActionMethod('offre')" value="Téléphone" class=""> Téléphone
+    </span>
+</div>
+<div class="field-block button-height">
+    <label for="nextAction"><b>{{t "reports:Next Action"}}</b></label>
+    <input type="checkbox" ng-model="nextAction" ng-click="actionSelection('prochaine action')">
+    <span ng-show="nextAction">
+        <input type="radio" ng-model="actionMethod['prochaine action']" ng-change="addActionMethod('prochaine action')" value="Relance" class=""> Relance
+        <input type="radio" ng-model="actionMethod['prochaine action']" ng-change="addActionMethod('prochaine action')" value="Rendez-vous" class=""> Rendez-vous
+        <input type="radio" ng-model="actionMethod['prochaine action']" ng-change="addActionMethod('prochaine action')" value="Envoie propal" class=""> Envoie propal
+        <input type="radio" ng-model="actionMethod['prochaine action']" ng-change="addActionMethod('prochaine action')" value="Relance mail" class=""> Relance mail
+    </span>
+</div>
+<div class="field-block button-height">
+    <label for="dayVisitWorkshop"><b>{{t "reports:Visit Workshop"}}</b></label>
+    <input type="checkbox" ng-model="visitAtelier" ng-click="actionSelection('visite atelier')">
+    
+</div>
+<div class="field-block button-height">
+    <label for="nextAppointment"><b>{{t "reports:Next Appointment"}}</b></label>
+    <input type="checkbox" ng-model="nextAppointment" ng-click="actionSelection('prochain rendez-vous')">
+    <div ng-show="nextAppointment">
+        <input type="radio" ng-model="actionMethod['prochain rendez-vous']" ng-change="addActionMethod('prochain rendez-vous')"  value="Remise offre" class=""> Remise offre
+        <input type="radio" ng-model="actionMethod['prochain rendez-vous']" ng-change="addActionMethod('prochain rendez-vous')" value="Déjeuner" class=""> Déjeuner
+        <input type="radio" ng-model="actionMethod['prochain rendez-vous']" ng-change="addActionMethod('prochain rendez-vous')" value="Démo" class=""> Démo
+    </div>
+</div>
+
+<div class="field-block">
+    <h4>{{t "reports:Comment"}}</h4>
+</div>
+<div class="field-block button-height">
+    <label for="comment"><b>{{t "reports:Comment"}}</b></label>
+    <textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea>
+</div>

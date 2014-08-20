@@ -185,6 +185,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		};
 
 		$scope.addNewLine = function() {
+                    
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",

@@ -148,7 +148,7 @@
 				},
 				"menu:contactsenable": {
 					"position": 11,
-					"url": "/contact/list.php",
+					"url": "#!/contacts",
 					"perms": "$user->rights->societe->lire",
 					"enabled": "$conf->societe->enabled",
 					"usertype": 2,

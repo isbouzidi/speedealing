@@ -20,7 +20,7 @@ var EntityModel = mongoose.model('entity');
  */
 var societeSchema = new Schema({
 	ref: String,
-	name: {type: String, required: true},
+	name: {type: String, require: true},
 	code_client: {type: String, unique: true},
 	code_fournisseur: String,
 	barCode: String,
@@ -117,7 +117,7 @@ societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 societeSchema.pre('save', function(next) {
 	var self = this;
 
-	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
+	if (this.code_client === null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
 
 		SeqModel.incNumber("C", 6, function(seq) {
 			self.barCode = "C" + seq;
@@ -346,5 +346,11 @@ contactSchema.virtual('attractivity')
 
 			return attractivity;
 		});
+
+contactSchema.virtual('fullAddress').get(function() {
+   
+    return this.address + ', ' + this.zip + ', ' + this.town; 
+    
+});
 
 mongoose.model('contact', contactSchema, 'Contact');

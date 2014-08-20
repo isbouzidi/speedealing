@@ -1,8 +1,9 @@
-angular.module('mean.system').controller('MenuController', ['$scope', '$routeParams', 'Global', 'socket', '$http', '$translate', function($scope, $routeParams, Global, socket, $http, $translate) {
+angular.module('mean.system').controller('MenuController', ['$rootScope', '$scope', '$routeParams', 'Global', 'socket', '$http', '$translate', function($rootScope, $scope, $routeParams, Global, socket, $http, $translate) {
 		$scope.global = Global;
 
 		$scope.ticketCpt = 0;
 		$scope.menus = {};
+		$rootScope.showSearchInput = true;
 		
 		$translate.use("fr-FR");
 
@@ -20,6 +21,22 @@ angular.module('mean.system').controller('MenuController', ['$scope', '$routePar
 			if ($routeParams.idmenu === id)
 				return "current collapsible-current";
 		};
+
+		 $scope.searchQuery = function(){
+                    if($scope.searchQueryItem.length){
+                        $rootScope.searchQuery = $scope.searchQueryItem;
+                        $location.path("/search");
+                        
+                        //$location.path('/search').search('q',$scope.searchQueryItem);
+                        $rootScope.showSearchInput = false;
+                        $scope.searchQueryItem = "";
+                        
+                    }else{
+                        
+                        $location.path(Global.lastPath);
+                    }
+                    
+                };
 
 		$scope.init = function() {
 			$http({method: 'GET', url: '/menus'}).success(function(data, status) {

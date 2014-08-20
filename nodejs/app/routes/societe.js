@@ -28,7 +28,6 @@ module.exports = function(app, passport, auth) {
 	app.put('/api/societe/segmentation', auth.requiresLogin, object.segmentationUpdate);
 	app.del('/api/societe/segmentation', auth.requiresLogin, object.segmentationDelete);
 	app.get('/api/societe/contact', auth.requiresLogin, contact.read);
-	app.get('/api/societe/contact/:contactId', auth.requiresLogin, contact.show);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
 	app.post('/api/societe', auth.requiresLogin, object.create);
 	app.put('/api/societe/:societeId', auth.requiresLogin, object.update);
@@ -39,7 +38,7 @@ module.exports = function(app, passport, auth) {
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body.filter);
-
+                
 		if (req.body.filter == null)
 			return res.send(200, {});
 
@@ -56,7 +55,6 @@ module.exports = function(app, passport, auth) {
 		} else // customer Only
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
-		console.log(query);
 		SocieteModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/societe/autocomplete");
@@ -1528,7 +1526,7 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.param('societeId', object.societe);
-	app.param('contactId', contact.contact);
+	//app.param('contactId', contact.contact);
 
 	//other routes..
 };
@@ -1676,6 +1674,7 @@ Object.prototype = {
 
 	},
 	update: function(req, res) {
+                
 		var societe = req.societe;
 		societe = _.extend(societe, req.body);
 
@@ -1939,40 +1938,16 @@ function Contact() {
 }
 
 Contact.prototype = {
-	contact: function(req, res, next, id) {
-		//TODO Check ACL here
-		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
-		var query = {};
-
-		if (checkForHexRegExp.test(id))
-			query = {_id: id};
-		else
-			query = {code_client: id};
-
-		//console.log(query);
-
-		ContactModel.findOne(query, function(err, doc) {
-			if (err)
-				return next(err);
-
-			req.contact = doc;
-			next();
-		});
-	},
 	read: function(req, res) {
-		ContactModel.find(JSON.parse(req.query.find), req.query.fields, function(err, doc) {
+            
+		ContactModel.find(JSON.parse(req.query.find), function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
 				return;
 			}
 
-			//console.log(doc);
-
 			res.json(200, doc);
 		});
-	},
-	show: function(req, res) {
-		res.json(req.societe);
 	}
 };

@@ -25,9 +25,10 @@ module.exports = function(app, passport, auth) {
 		object.fk_extrafields = doc;
 		absence.fk_extrafields = doc;
 	});
-
+        
 	app.get('/api/user', auth.requiresLogin, function(req, res) {
-		object.read(req, res);
+            
+            object.read(req, res);
 		return;
 	});
 
@@ -168,13 +169,13 @@ Object.prototype = {
 	read: function(req, res) {
 		var status_list = this.fk_extrafields.fields.Status;
 
-		StockModel.find({}, function(err, doc) {
+		UserModel.find({}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
 				return;
 			}
-
+/*
 			for (var i in doc) {
 				var status = {};
 
@@ -189,6 +190,7 @@ Object.prototype = {
 
 				doc[i].Status = status;
 			}
+*/
 			res.send(200, doc);
 		});
 	},
@@ -233,6 +235,7 @@ Absence.prototype = {
 	},
 	read: function(req, res) {
 		var query = {};
+                
 		console.log(req.query);
 		if (req.query.query) {
 			if (req.query.query == 'NOW')

@@ -1,0 +1,57 @@
+
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">{{t 'users:NewUser'}}</h3>
+
+	<ul class="wizard-steps">
+		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span>Profile</li>
+		
+	</ul>
+
+	<!-- Each form step should be wrapped in a fieldset -->
+	<!-- 1. Profile-->
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+		<div class="field-block">
+			<h4>{{t 'Hello'}}</h4>
+			<p>Bienvenue sur l'interface de création des collaborateurs.</p>
+		</div>
+
+                <div class="field-block button-height">
+			<label for="login"><b>{{t 'users:Login'}}</b></label>
+			<input required type="text" data-ng-model="user.login" data-ng-change="isValidLogin()" id="login"  class="input" autocomplete="off">
+                        
+                        <small ng-show="user.login==null" class="icon-info blue input-info">L'identifiant qui permet au collaborateur  de se connecter à l'application. (unique et sans espace)</small>
+                        <small ng-show="loginFound" class="icon-warning red input-info">Ce login existe déjà !</small>
+			<small ng-show="user.login!=null && !loginFound && validLogin" class="icon-tick green input-info">Login valide.</small>
+                        <small ng-show="user.login!=null && !loginFound && !validLogin" class="icon-tick red input-info">Login invalide.</small>
+                        
+		</div>
+            
+		<div class="field-block button-height">
+			<label for="nom"><b>{{t 'users:LastName'}}</b></label>
+			<input required type="text" id="nom" data-ng-model="user.lastname" class="input" autocomplete="off">		
+		</div>
+		<div class="field-block button-height">
+			<label for="prenom"><b>{{t 'users:FirstName'}}</b></label>
+			<input required type="text" id="prenom" data-ng-model="user.firstname" class="input" autocomplete="off">			
+		</div>
+		<div class="field-block button-height">
+			<label for="email"><b>{{t 'users:Email'}}</b></label>
+			<input type="email" data-ng-model="user.email" id="email" class="input" autocomplete="off">
+		</div>
+                <div class="field-block button-height">
+			<label for="password"><b>{{t 'users:Password'}}</b></label>
+			<input type="password" data-ng-model="user.password" id="password" class="input" autocomplete="off">
+		</div>
+                <div class="field-block button-height wizard-controls clearfix">
+                        <button type="submit" class="button glossy mid-margin-right float-right" data-ng-disabled="!(user.lastname && user.firstname && user.email && user.password && user.login!=null && !loginFound && validLogin)">
+                                <span class="button-icon"><span class="icon-tick"></span></span>
+                                {{t 'Create'}}
+                        </button>
+                </div>	
+	</fieldset>
+	
+</form>
+

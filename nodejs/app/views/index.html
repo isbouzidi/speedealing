@@ -1,64 +1,67 @@
 {{> header}}
 
 <body class="clearfix" data-ng-controller="HeaderController" data-ng-class="withMenu()">
-	<header id="title-bar" role='banner'>
-		<div>
-			<span class='title'>\{{title.title}}</span>
-			<div class='float-right with-tooltip'>
-				<span class='margin-right'>
-					<!--<timer end-time="{{ttlSession}}">\{{hours}}:\{{mminutes}}:\{{sseconds}}</timer>-->
-				</span>
-				{{#if user.multiEntities}}
-				<span class='margin-right'>
-					<a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
-						\{{global.user.entity}}
-					</a>
-					<!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->
-				</span>
-				{{/if}}
-				<a  class='' href="logout" title="Déconnexion" target="_self">
+    <header id="title-bar" role='banner'>
+        <div>
+            <span class='title'>\{{title.title}}</span>
+            <div class='float-right with-tooltip'>
+                <span class='margin-right'>
+                    <!--<timer end-time="{{ttlSession}}">\{{hours}}:\{{mminutes}}:\{{sseconds}}</timer>-->
+                </span>
+                {{#if user.multiEntities}}
+                <span class='margin-right'>
+                    <a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
+                        \{{global.user.entity}}
+                    </a>
+                    <!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->
+                </span>
+                {{/if}}
+                <a  class='' href="logout" title="Déconnexion" target="_self">
 
-					\{{global.user.name}}  <span class="icon-logout"></span>
-				</a>
-			</div>
-		</div>
-	</header>
+                    \{{global.user.name}}  <span class="icon-logout"></span>
+                </a>
+            </div>
+        </div>
+    </header>
 
-	<!-- Button to open/hide menu --> 
-	{{#if user.right_menu}}
-	<a id="open-menu" href='#'>
-		<span>Menu</span>
-	</a>
-	{{/if}}
+    <!-- Button to open/hide menu --> 
+    {{#if user.right_menu}}
+    <a id="open-menu" href='#'>
+        <span>Menu</span>
+    </a>
+    {{/if}}
 
-	<!-- Button to open/hide shortcuts -->
-	<!--<a id="open-shortcuts" href='#'>
-		<span class="icon-thumbs"></span>
-	</a>-->
+    <!-- Button to open/hide shortcuts -->
+    <!--<a id="open-shortcuts" href='#'>
+            <span class="icon-thumbs"></span>
+    </a>-->
 
-	<!-- Main content -->
-	<section id="main" role="main">
-		<section data-ng-view></section>
-	</section>
-	<script type="text/javascript">
-		window.user = JSON.parse($.ajax({
-		url: "api/session",
-		dataType: "json",
-		async: false
-		}).responseText);
-	</script>
-	<!-- include menuleft-->
+    <!-- Main content -->
+    <section id="main" role="main">
+        <!-- ng require -->
+        <div>
+            <section data-ng-view></section>
+        </div>
+    </section>
+    <script type="text/javascript">
+                    window.user = JSON.parse($.ajax({
+                        url: "api/session",
+                        dataType: "json",
+                        async: false
+                    }).responseText);
+    </script>
+    <!-- include menuleft-->
 
-	<!-- Menu content-->
-	{{#if user.right_menu}}
-	<section id="menu" role='complementary'>
-		{{> menu}}
-		<!--<div data-ng-include data-src="'partials/menu.html'"></div>-->
-	</section>
-	{{/if}}
+    <!-- Menu content-->
+    {{#if user.right_menu}}
+    <section id="menu" role='complementary'>
+        {{> menu}}
+        <!--<div data-ng-include data-src="'partials/menu.html'"></div>-->
+    </section>
+    {{/if}}
 
-	<footer id="footer">
-		{{> footer}}
-	</footer>
+    <footer id="footer">
+        {{> footer}}
+    </footer>
 </body>
 </html>

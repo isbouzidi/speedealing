@@ -4,9 +4,9 @@ angular.module('mean.users').factory("Users", ['$resource', function($resource) 
 			absences: $resource('api/user/absence/:Id', {
 				Id: '@_id'
 			}, {
-				update: {
-					method: 'PUT'
-				}
+                        update: {
+                                method: 'PUT'
+                        }
 			})
 		};
 	}]);

@@ -22,6 +22,12 @@ window.app = angular.module('mean', [
 	'mean.accounting',
 	'mean.articles',
 	'mean.europexpress',
+	'mean.rh',
+	'mean.userGroup',
+	'mean.contacts',
+	'mean.reports',
+	'mean.delivery',
+	'mean.lead',
 	'timer',
 	'pascalprecht.translate',
 	'jm.i18next',
@@ -37,27 +43,33 @@ angular.module('mean.bills', []);
 angular.module('mean.accounting', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
+angular.module('mean.rh', []);
+angular.module('mean.userGroup', []);
+angular.module('mean.contacts', []);
+angular.module('mean.reports', []);
+angular.module('mean.delivery', []);
+angular.module('mean.lead', []);
 
-angular.module('jm.i18next').config(['$i18nextProvider', function ($i18nextProvider) {
-    $i18nextProvider.options = {
-        //lng: 'fr',
-        //useCookie: false,
-        useLocalStorage: false,
-        resGetPath: 'locales/__lng__/__ns__.json',
-		//resPostPath: 'locales/__lng__/new.__ns__.json',
-        defaultLoadingValue: '', // ng-i18next option, *NOT* directly supported by i18next
-		ns: {namespaces: ["main","bills","orders","companies"], defaultNs: 'main'},
-		supportedLngs: ['fr-FR','en-US'],
-		//load: 'current',
-		useCookie: false,
-		//cookie: 'speedealingLang',
-		detectLngFromHeaders: false,
-		saveMissing: true,
-		debug: false,
-		sendMissingTo: 'fallback',
-		fallbackLng: "fr-FR"
-    };
-}]);
+angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
+		$i18nextProvider.options = {
+			//lng: 'fr',
+			//useCookie: false,
+			useLocalStorage: false,
+			resGetPath: 'locales/__lng__/__ns__.json',
+			//resPostPath: 'locales/__lng__/new.__ns__.json',
+			defaultLoadingValue: '', // ng-i18next option, *NOT* directly supported by i18next
+			ns: {namespaces: ["main", "bills", "orders", "companies"], defaultNs: 'main'},
+			supportedLngs: ['fr-FR', 'en-US'],
+			//load: 'current',
+			useCookie: false,
+			//cookie: 'speedealingLang',
+			detectLngFromHeaders: false,
+			saveMissing: true,
+			debug: false,
+			sendMissingTo: 'fallback',
+			fallbackLng: "fr-FR"
+		};
+	}]);
 
 window.app.run(function(editableOptions, editableThemes) {
 	// bootstrap3 theme. Can be also 'bs2', 'default'

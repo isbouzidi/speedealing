@@ -1,0 +1,70 @@
+<form data-ng-init='init()' data-ng-submit='createContact()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+    
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">{{t 'companies:NewContact'}}</h3>
+
+        <!-- Each form step should be wrapped in a fieldset -->
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+                <div class="field-block button-height">
+			<label for="lastname"><b>{{t 'companies:Lastname'}}</b></label>
+			<input required type="text" id="nom" data-ng-model="contact.lastname" class="input" autocomplete="off">		
+		</div>
+                <div class="field-block button-height">
+			<label for="firstName"><b>{{t 'companies:Firstname'}}</b></label>
+			<input required type="text" data-ng-model="contact.firstname" id="firstName" class="input" autocomplete="off">
+		</div>
+		<div class="field-block button-height">
+			<label for="birthday"><b>{{t 'companies:birthday'}}</b></label>
+			<span class="k-widget k-datepicker k-header input">
+				<span class="k-picker-wrap k-state-default">
+                                        <input 
+                                            kendo-date-picker 
+                                            id="birthday" 
+                                            k-on-change="contact.birthday = kendoEvent.sender._value;" 
+                                            class="input"/>
+				</span>
+			</span>			
+		</div>
+                <div class="field-block button-height">
+                    <label for="adress"><b>{{t 'companies:Address'}}</b></label>
+                    <div class='columns'>
+                        <div class='seven-columns'>
+
+                            <textarea class="input" rows="3" cols="30" data-ng-model="contact.address" placeholder="{{t 'users:Address'}}"></textarea><br/>
+                            <input type="text" 
+                                   data-ng-model="contact.zipCode"
+                                   placeholder="Code postal - Ville" 
+                                   typeahead="contact as contact.code +' - '+ contact.city for contact in contactAutoComplete($viewValue)" 
+                                   typeahead-on-select ="contact.town = contact.zipCode.city"
+                                   class="input"
+                                   autocomplete="on">
+                        </div>
+                        <div class="five-columns">
+                        </div>
+                    </div>			
+		</div>
+		<div class="field-block button-height">
+			<label for="phoneMob"><b>{{t 'companies:Tel-Mobile'}}</b></label>
+			<input type="text" data-ng-model="contact.phone_mobile" id="phoneMob" class="input" autocomplete="off">
+		</div>
+		<div class="field-block button-height">
+			<label for="phoneFix"><b>{{t 'companies:Tel-Fixe'}}</b></label>
+			<input type="text" data-ng-model="contact.phone_perso" id="phoneFix" class="input" autocomplete="off">			
+		</div>
+		<div class="field-block button-height">
+			<label for="email"><b>{{t 'companies:email'}}</b></label>
+			<input type="email" data-ng-model="contact.email" id="email" class="input" autocomplete="off">
+                        
+		</div>
+                <div class="field-block button-height">
+			<label for="poste"><b>{{t 'companies:PostOrFunction'}}</b></label>
+			<input required type="text" data-ng-model="contact.poste" id="poste" class="input" autocomplete="off">
+		</div>
+                <div class="field-block button-height wizard-controls clearfix">
+                    <button type="submit" class="button glossy mid-margin-right float-right">
+                        <span class="button-icon"><span class="icon-tick"></span></span>
+                        Créer
+                    </button>
+                </div>
+	</fieldset>		
+</form>

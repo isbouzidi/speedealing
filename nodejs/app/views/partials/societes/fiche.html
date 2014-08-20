@@ -517,18 +517,45 @@
 				</div>
 
 				<div class="twelve-columns">
-					<h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
+                    <h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
 
-					<div class="table-header silver-gradient glossy button-height">
-						<div class="float-right">
-							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
-						</div>
-					</div>
-					<div class="gridStyle"  data-ng-grid="gridOptionsContact"></div>
-					<div class="table-footer silver-gradient">
-						\{{countContact}} ligne(s)
-					</div>
-				</div>
+                    <div class="table-header silver-gradient glossy button-height">
+                        <div class="col-sm-6">
+                            <div class="button-group">
+                                <button class="button icon-plus blue-gradient" data-ng-click="addNewContact()">{{t 'Add'}}</button>
+                                <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-right">
+                                {{t 'Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gridStyle"  data-ng-grid="gridOptionsContact"></div>
+                    <div class="table-footer silver-gradient">
+                        \{{countContact}} ligne(s)
+                    </div>
+                </div>
+
+				 <div class="twelve-columns">
+                    <h5 class="green underline">Comptes Rendus</h5>
+
+                    <div class="table-header silver-gradient glossy button-height">
+                        <div class="col-sm-6">
+                            <div class="button-group">
+                                <button class="button icon-plus blue-gradient" data-ng-click="addNewReport()">{{t 'Add'}}</button>
+                                        <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOneReport()"><span class="icon-redo"></span></button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="gridStyle"  data-ng-grid="gridOptionsReports"></div>
+                    <div class="table-footer silver-gradient">
+                        \{{countReports}} ligne(s)
+                    </div>
+                </div>
 
 				<div class="twelve-columns">
 					<h5 class="green underline">Historique des tickets</h5>

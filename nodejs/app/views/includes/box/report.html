@@ -1,0 +1,36 @@
+<div class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+    <h2 class="relative thin">
+        Comptes Rendus
+    </h2>
+
+    <div style="height: 350px; min-height: 10px; overflow: auto;">
+        <div id="scrollArea" >
+
+            <ul class="unstyled-list">
+                
+                <li>
+                    <ul class="message-menu" ng-init="findReports()">
+                        <li ng-repeat="report in reports">
+                                <span class="message-info">
+                                        <span class="blue">\{{report.createdAt | date:'MMM dd'}}</span>
+                                </span>
+                                <a href="ajax-demo/inbox-message.html" title="Read message">
+                                        <strong class="blue">\{{report.author.name}}</strong><br>
+                                        \{{report.comment}}
+                                </a>
+                        </li>
+                        <li>
+                            <p style="text-align: center; cursor: pointer" ng-click="findReports()"><strong class="blue">Afficher plus</strong></p>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+            </ul>
+
+
+        </div>
+    </div>
+</div>

@@ -4520,3 +4520,49 @@ a:link {
 .invisible {
 	visibility: hidden;
 }
+
+.popoverContact {
+    background: #ffffff;
+    border: 1px solid #f3f3f3;
+    width: 360px;
+    height: 178px;
+    position: absolute;
+    z-index: 9999;
+    left: 80px;
+    top: 20px;
+    -webkit-box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    -webkit-transition: opacity .13s linear;
+    transition: opacity .13s linear;
+}
+
+.popoverContact h4 {
+    color: #333;
+    margin-bottom: 11px !important;
+    height: 20px;
+}
+.popoverContact p{
+    margin: 2px 0;
+}
+.popoverContact p span{
+    padding-right: 10px;
+}
+.popoverContactBody{
+    padding: 10px;
+    color: #333;
+    line-height: 20px;
+    word-wrap: break-word;
+}
+
+.popoverContactFooter{
+    background: #f9f9f9;
+    border-top-color: #bbb;
+    border-top-style: solid;
+    border-top-width: 1px;
+    padding: 8px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 9999999;
+    height:38px;
+}
+
