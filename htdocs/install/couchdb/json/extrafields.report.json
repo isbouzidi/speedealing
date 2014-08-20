@@ -1,0 +1,247 @@
+{
+    "_id" : "extrafields:Report",
+    "ico" : "icon-object-report",
+    "schemaMongoose" : {
+        "enabled" : false,
+        "name" : "report",
+        "collection" : "Report",
+        "plugins" : [ 
+            "mongoose-timestamp"
+        ]
+    },
+    "fields" : {
+        "model" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "DISCOVERY" : {
+                    "enable" : true,
+                    "label" : "Découverte",
+                    "cssClass" : "red-gradient"
+                },
+                "PRE-SIGN" : {
+                    "enable" : true,
+                    "label" : "Pré Signature",
+                    "cssClass" : "green-gradient"
+                },
+                "CONTRACT" : {
+                    "enable" : true,
+                    "label" : "Suivi/Contrat signé",
+                    "cssClass" : "blue-gradient"
+                }
+            }
+        },
+        "potentialAttract" : {
+            "schema" : "Mixed",
+            "type" : "radio",
+            "enable" : true,
+            "values" : {
+                "0" : {
+                    "enable" : true,
+                    "label" : "0"
+                },
+                "-50" : {
+                    "enable" : true,
+                    "label" : "1 à 50 K€"
+                },
+                "-100" : {
+                    "enable" : true,
+                    "label" : "51 à 100 K€"
+                },
+                "-200" : {
+                    "enable" : true,
+                    "label" : "101 à 200 K€"
+                },
+                "-400" : {
+                    "enable" : true,
+                    "label" : "201 à 400 K€"
+                },
+                "+400" : {
+                    "enable" : true,
+                    "label" : "+ 400 K€"
+                }
+            }
+        },
+        "typeAction" : {
+            "schema" : "String",
+            "type" : "select",
+            "enable" : true,
+            "values" : {
+                "booklet" : {
+                    "enable" : true,
+                    "label" : "Plaquette"
+                },
+                "offer" : {
+                    "enable" : true,
+                    "label" : "Offre"
+                },
+                "nextAppointment" : {
+                    "enable" : true,
+                    "label" : "Prochain rendez-vous"
+                },
+                "nextVisit" : {
+                    "enable" : true,
+                    "label" : "Prochaine visite"
+                },
+                "internalMeeting" : {
+                    "enable" : true,
+                    "label" : "Réunion interne"
+                }
+            }
+        },
+        "methodAction" : {
+            "schema" : "String",
+            "type" : "radio",
+            "enable" : true,
+            "values" : {
+                "mail" : {
+                    "enable" : true,
+                    "label" : "Courrier"
+                },
+                "email" : {
+                    "enable" : true,
+                    "label" : "Email"
+                },
+                "phone" : {
+                    "enable" : true,
+                    "label" : "Téléphone"
+                },
+                "meeting" : {
+                    "enable" : true,
+                    "label" : "Réunion"
+                }
+            }
+        },
+        "typeReport" : {
+            "schema" : "String",
+            "type" : "checkbox",
+            "enable" : true,
+            "values" : {
+                "process" : {
+                    "enable" : true,
+                    "label" : "Procédure"
+                },
+                "statistic" : {
+                    "enable" : true,
+                    "label" : "Statistique"
+                }
+            }
+        },
+        "typeBusiness" : {
+            "schema" : "String",
+            "type" : "radio",
+            "enable" : true,
+            "values" : {
+                "Market" : {
+                    "enable" : true,
+                    "label" : "Marché"
+                },
+                "Offer" : {
+                    "enable" : true,
+                    "label" : "Offre"
+                }
+            }
+        },
+        "stepBusiness" : {
+            "schema" : "String",
+            "type" : "radio",
+            "enable" : true,
+            "values" : {
+                "negotiation" : {
+                    "enable" : true,
+                    "label" : "Négotiation"
+                },
+                "signature" : {
+                    "enable" : true,
+                    "label" : "Signature"
+                },
+                "no" : {
+                    "enable" : true,
+                    "label" : "Non retenu"
+                }
+            }
+        },
+        "reasonBusiness" : {
+            "schema" : "String",
+            "type" : "checkbox",
+            "enable" : true,
+            "values" : {
+                "price" : {
+                    "enable" : true,
+                    "label" : "Prix"
+                },
+                "time" : {
+                    "enable" : true,
+                    "label" : "Délai"
+                },
+                "technic" : {
+                    "enable" : true,
+                    "label" : "Téchnique"
+                },
+                "doc" : {
+                    "enable" : true,
+                    "label" : "Dossier"
+                },
+                "quality" : {
+                    "enable" : true,
+                    "label" : "Qualité"
+                }
+            }
+        },
+        "deployment" : {
+            "schema" : "String",
+            "type" : "checkbox",
+            "enable" : true,
+            "values" : {
+                "demo" : {
+                    "enable" : true,
+                    "label" : "Démonstration"
+                },
+                "training" : {
+                    "enable" : true,
+                    "label" : "Formation"
+                }
+            }
+        },
+        "progressPoints" : {
+            "schema" : "String",
+            "type" : "checkbox",
+            "enable" : true,
+            "values" : {
+                "price" : {
+                    "enable" : true,
+                    "label" : "Prix"
+                },
+                "time" : {
+                    "enable" : true,
+                    "label" : "Délai"
+                },
+                "quality" : {
+                    "enable" : true,
+                    "label" : "Qualité"
+                }
+            }
+        },
+        "reports" : {
+            "schema" : "String",
+            "type" : "checkbox",
+            "enable" : true,
+            "values" : {
+                "process" : {
+                    "enable" : true,
+                    "label" : "Procédure"
+                },
+                "statistic" : {
+                    "enable" : true,
+                    "label" : "Statistique"
+                }
+            }
+        }
+    }
+}
