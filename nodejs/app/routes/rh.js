@@ -284,7 +284,7 @@ Object.prototype = {
             }
 
             var result = [];
-
+			console.log(req.query.field);
             if (doc.fields[req.query.field].dict)
                 return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
 
