@@ -154,7 +154,7 @@ Object.prototype = {
 			// Send an email
 			var mailOptions = {
 				from: "ERP Speedealing<no-reply@speedealing.com>",
-				to: "Plan 92 Chaumeil<plan92@chaumeil.net>",
+				to: "Plan 92 Chaumeil<plan92@imprimeriechaumeil.fr>",
 				cc: "herve.prot@symeos.com",
 				subject: "Nouvelle commande " + order.client.name + " - " + order.ref + " dans l'ERP"
 			};
