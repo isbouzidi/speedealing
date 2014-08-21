@@ -183,9 +183,10 @@ Object.prototype = {
 
 		var query = {
 			"author.id": {
-				"$nin": [user],
-				entity: req.query.entity
-			}};
+				"$nin": [user]
+			},
+			entity: req.query.entity
+		};
 		ReportModel.find(query, {}, {limit: req.query.limit}, function(err, doc) {
 			if (err) {
 				console.log(err);

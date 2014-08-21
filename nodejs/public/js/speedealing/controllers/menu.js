@@ -4,7 +4,7 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 		$scope.ticketCpt = 0;
 		$scope.menus = {};
 		$rootScope.showSearchInput = true;
-		
+
 		$translate.use("fr-FR");
 
 		//socket.emit('user', Global.user._id);
@@ -22,21 +22,21 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 				return "current collapsible-current";
 		};
 
-		 $scope.searchQuery = function(){
-                    if($scope.searchQueryItem.length){
-                        $rootScope.searchQuery = $scope.searchQueryItem;
-                        $location.path("/search");
-                        
-                        //$location.path('/search').search('q',$scope.searchQueryItem);
-                        $rootScope.showSearchInput = false;
-                        $scope.searchQueryItem = "";
-                        
-                    }else{
-                        
-                        $location.path(Global.lastPath);
-                    }
-                    
-                };
+		$scope.searchQuery = function() {
+			if ($scope.searchQueryItem.length) {
+				$rootScope.searchQuery = $scope.searchQueryItem;
+				$location.path("/search");
+
+				//$location.path('/search').search('q',$scope.searchQueryItem);
+				$rootScope.showSearchInput = false;
+				$scope.searchQueryItem = "";
+
+			} else {
+
+				$location.path(Global.lastPath);
+			}
+
+		};
 
 		$scope.init = function() {
 			$http({method: 'GET', url: '/menus'}).success(function(data, status) {
@@ -62,8 +62,18 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 					});
 		};
 
+		$scope.taskCounter = function() {
+			$http({method: 'GET', url: '/api/reports/listTasks', params: {
+					user: Global.user._id
+				}
+			}).success(function(data, status) {
+				$scope.tasksCpt = data.length;
+			});
+		};
+
 		socket.on('refreshTicket', function(data) {
 			$scope.ticketCounter();
+			$scope.taskCounter();
 		});
 
 		/* Resize all elements */
