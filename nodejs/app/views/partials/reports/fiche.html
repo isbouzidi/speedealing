@@ -1,0 +1,123 @@
+<div data-ng-init='initFicheReport()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'reports:Details Report'}}</h3>
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <label><b>{{t 'reports:Model'}}</b></label>
+            \{{report.model}}  <small class="tag \{{report.RealisedStatus.css}}">\{{report.RealisedStatus.id}}</small>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Author'}}</b></label>
+            \{{report.author.name}}
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Company'}}</b></label>
+            \{{report.societe.name}}
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Date Created'}}</b></label>
+            \{{report.createdAt |date:'dd/MM/yyyy HH:mm'}}
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Due Date'}}</b></label>
+            \{{report.dueDate |date:'dd/MM/yyyy'}}
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Duration'}}</b></label>
+            \{{report.durationAppointment || 'indéfini'}} Heure
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Lead'}}</b></label>
+            \{{report.leads.name || 'indéfinie'}}
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Contacts'}}</b></label>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Poste</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in report.contacts" class="active">
+                        <td>\{{c.name}}</td>
+                        <td>\{{c.poste}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="field-block" ng-if="report.actions.length > 0">
+            <label><b>{{t 'reports:Actions'}}</b></label>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Methode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="a in report.actions" class="active">
+                        <td>\{{a.type}}</td>
+                        <td>\{{a.method}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="field-block" ng-if="report.optional.subject.satisfactionSurvey">
+            <label><b>{{t 'reports:Satisfaction Survey'}}</b></label>
+            
+            \{{report.SatisfactionSurv}}
+        </div>
+        <div class="field-block" ng-if="report.optional.subject.progressPoints.length > 0">
+            <label><b>{{t 'reports:Progress Points'}}</b></label>
+            <ul style="margin-left:0px !important">
+                <li ng-repeat="p in report.optional.subject.progressPoints" style="display:inline; margin-right: 10px">
+                    \{{p}}
+                </li>
+            </ul>
+        </div>
+        <div class="field-block" ng-if="report.optional.subject.deployment.length > 0">
+            <label><b>{{t 'reports:Deployment'}}</b></label>
+            <ul style="margin-left:0px !important">
+                <li ng-repeat="p in report.optional.subject.deployment" style="display:inline; margin-right: 10px">
+                    \{{p}}
+                </li>
+            </ul>
+        </div>
+        <div class="field-block" ng-if="report.optional.report.length > 0">
+            <label><b>{{t 'reports:Report'}}</b></label>
+            <ul style="margin-left:0px !important">
+                <li ng-repeat="p in report.optional.report" style="display:inline; margin-right: 10px">
+                    \{{p}}
+                </li>
+            </ul>
+        </div>
+        <div class="field-block" ng-if="report.optional.business.type">
+            <label><b>{{t 'reports:Business Type'}}</b></label>
+            \{{report.optional.business.type}}
+        </div>
+        <div class="field-block" ng-if="report.optional.business.offer">
+            <label><b>{{t 'reports:Business Offer'}}</b></label>
+            \{{report.optional.business.offer}}
+        </div>
+        <div class="field-block" ng-if="report.optional.business.step">
+            <label><b>{{t 'reports:Business Step'}}</b></label>
+            \{{report.optional.business.step}}
+            <div ng-if="report.optional.business.step === 'Non retenu'">
+                <br><strong>Causes :</strong>
+                <ul style="margin-left:0px !important">
+                    <li ng-repeat="p in report.optional.business.reason" style="display:inline; margin-right: 10px">
+                        \{{p}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="field-block">
+            <label><b>{{t 'reports:Comment'}}</b></label>
+            <p class="padding">\{{report.comment || 'indéfini'}}</p>
+        </div>
+    </fieldset>
+</div>

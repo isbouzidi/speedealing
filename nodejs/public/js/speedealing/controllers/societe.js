@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Societes', function($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Societe) {
         $scope.global = Global;
         pageTitle.setTitle('Liste des sociétés');
 
@@ -518,7 +518,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
         };
 
         $scope.toggle = false;
-
+        
         $scope.gridOptionsContact = {
             data: 'contacts',
             enableRowSelection: false,
@@ -585,8 +585,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
             i18n: 'fr',
             enableColumnResize: true,
             columnDefs: [
+                {field: 'model', displayName: 'Model', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
                 {field: 'dateReport', displayName: 'Date', cellFilter: "date:'dd/MM/yyyy'"},
-                {field: 'model', displayName: 'Model'},
                 {field: 'author.name', displayName: 'Auteur'},
                 {field: 'comment', displayName: 'Commentaire'}
             ]
@@ -689,6 +689,16 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
                 $scope.reports.push(reports);
                 $scope.countReports++;
             }, function() {
+            });
+        };
+        
+        $scope.findReport = function(id) {
+            
+            $rootScope.idReport = id;
+            var modalInstance = $modal.open({
+                templateUrl: '/partials/reports/fiche.html',
+                controller: "ReportController",
+                windowClass: "steps"
             });
         };
     }]);
