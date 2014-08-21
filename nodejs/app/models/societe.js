@@ -216,7 +216,7 @@ societeSchema.virtual('status')
 			var res_status = {};
 
 			var status = this.Status;
-
+                        
 			if (status && statusList.values[status].label) {
 				//console.log(this);
 				res_status.id = status;

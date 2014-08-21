@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', '$timeout', 'Users', 'Reports', function($scope, $location, $http, $anchorScroll, Global, pageTitle, $timeout, Users, Reports) {
+angular.module('mean.system').controller('IndexHomeController', ['$scope', '$rootScope', '$modal', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', '$timeout', 'Users', 'Reports', function($scope, $rootScope, $modal, $location, $http, $anchorScroll, Global, pageTitle, $timeout, Users, Reports) {
 		$scope.global = Global;
 
 		pageTitle.setTitle('Accueil');
@@ -6,27 +6,27 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 		$scope.dateNow = new Date();
 		$scope.userConnection = [];
 		$scope.indicateurs = {};
-		$scope.limitReport = 0;
-		$scope.isTaskRealised = false;
-
+                $scope.limitReport = 0;
+                $scope.isTaskRealised = false;
+                
 		$scope.familles = {
-			//	prev : {},
-			//	real : {}
+		//	prev : {},
+		//	real : {}
 		};
 		$scope.total_ca = {
-			prev: 0,
-			real: 0
+			prev : 0,
+			real : 0
 		};
-
+		
 		$scope.total_cost = {
-			prev: 0,
-			real: 0
+			prev : 0,
+			real : 0
 		};
-
-		$scope.months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.");
-
+		
+                $scope.months = new Array("Janv.", "Fév.", "Mars", "Avril", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc.") ;
+		
 		$scope.thisMonth = $scope.months[new Date().getMonth()];
-		$scope.lastMonth = $scope.months[new Date().getMonth() - 1];
+		$scope.lastMonth = $scope.months[new Date().getMonth()-1];
 
 		if (Global.user.url) {
 			return $location.path(Global.user.url.substr(2)); // Go to default url
@@ -68,41 +68,41 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 
 		$scope.familleCA = function() {
 			/*$http({method: 'GET', url: 'api/europexpress/billing/ca'
-			 }).success(function(ca, status) {
-			 console.log(ca);
-			 $scope.familles.prev = ca;
-			 });*/
-
+			}).success(function(ca, status) {
+				console.log(ca);
+				$scope.familles.prev = ca;
+			});*/
+			
 			$http({method: 'GET', url: 'api/bill/caFamily'
 			}).success(function(ca, status) {
 				//console.log(ca);
 				$scope.familles = ca;
-
+				
 				$scope.total_ca.real = 0;
-				angular.forEach(ca, function(data) {
+				angular.forEach(ca,function(data){
 					$scope.total_ca.real += data.total_ht;
 				});
-
+				
 			});
 		};
-
+		
 		$scope.familleCOST = function() {
 			/*$http({method: 'GET', url: 'api/europexpress/billing/ca'
-			 }).success(function(ca, status) {
-			 console.log(ca);
-			 $scope.familles.prev = ca;
-			 });*/
-
+			}).success(function(ca, status) {
+				console.log(ca);
+				$scope.familles.prev = ca;
+			});*/
+			
 			$http({method: 'GET', url: 'api/billSupplier/costFamily'
 			}).success(function(cost, status) {
 				//console.log(ca);
 				$scope.famillesCost = cost;
-
+				
 				$scope.total_cost.real = 0;
-				angular.forEach(cost, function(data) {
+				angular.forEach(cost,function(data){
 					$scope.total_cost.real += data.total_ht;
 				});
-
+				
 			});
 		};
 
@@ -202,70 +202,80 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
 				$scope.absences = absences;
 			});
 		};
-
+                
 		$scope.absenceAddTick = function(user) {
 			user.closed = true;
 			//console.log(user);
 			user.$update();
-			$scope.absences.splice($scope.absences.indexOf(user), 1);
+			$scope.absences.splice($scope.absences.indexOf(user),1);
 		};
 
 		$scope.late = function(date) {
 			if (new Date(date) <= new Date)
 				return "red";
 		};
-
-		$scope.findReports = function() {
-
-			$scope.limitReport = $scope.limitReport + 3;
-
-			$http({method: 'GET', url: '/api/reports/listReports', params: {
-					user: Global.user._id,
-					entity: Global.user.entity,
-					limit: $scope.limitReport
-				}
-			}).success(function(data, status) {
-				$scope.reports = data;
-			});
-		};
-
-		$scope.findTasks = function() {
-			$http({method: 'GET', url: '/api/reports/listTasks', params: {
-					user: Global.user._id
-				}
-			}).success(function(data, status) {
-				$scope.listTasks = data;
-			});
-		};
-
-		$scope.taskRealised = function(id) {
-
-			$http({method: 'PUT', url: '/api/reports/TaskRealised', params: {
-					id: id
-				}
-			}).success(function(status) {
-				$scope.findTasks();
-				$scope.isTaskRealised = true;
-				$scope.idTaskRealised = id;
-
-				$scope.timer = $timeout(function() {
-
-					$scope.isTaskRealised = false;
-				}, 5000);
-			});
-
-		};
-
-		$scope.cancelTaskReealised = function() {
-
-			$timeout.cancel($scope.timer);
-
-			$http({method: 'PUT', url: '/api/reports/cancelTaskRealised', params: {
-					id: $scope.idTaskRealised
-				}
-			}).success(function(status) {
-				$scope.findTasks();
-				$scope.isTaskRealised = false;
-			});
-		};
+                
+                $scope.findReports = function(){
+                    
+                    $scope.limitReport = $scope.limitReport + 3; 
+                    
+                    $http({method: 'GET', url: '/api/reports/listReports', params: {
+                                user: Global.user._id,
+								entity: Global.user.entity,
+                                limit: $scope.limitReport
+                            }
+                    }).success(function(data, status) {
+                            $scope.reports = data;
+                    });
+                };
+                
+                $scope.showReport = function(id){
+                    
+                    $rootScope.idReport = id;
+                    var modalInstance = $modal.open({
+                        templateUrl: '/partials/reports/fiche.html',
+                        controller: "ReportController",
+                        windowClass: "steps"
+                    });
+                };
+                
+                $scope.findTasks = function(){
+                    $http({method: 'GET', url: '/api/reports/listTasks', params: {
+                                user: Global.user._id
+                            }
+                    }).success(function(data, status) {
+                            $scope.listTasks = data;
+                    });
+                };
+                
+                $scope.taskRealised = function(id){
+                    
+                    $http({method: 'PUT', url: '/api/reports/TaskRealised', params: {
+                                id: id
+                            }
+                    }).success(function(status) {
+                        $scope.findTasks();
+                        $scope.isTaskRealised = true;
+                        $scope.idTaskRealised = id;
+                        
+                        $scope.timer = $timeout(function() {
+            
+                            $scope.isTaskRealised = false;
+                        },5000);
+                    });
+                    
+                };
+                
+                $scope.cancelTaskReealised = function(){
+                  
+                    $timeout.cancel($scope.timer);
+                    
+                    $http({method: 'PUT', url: '/api/reports/cancelTaskRealised', params: {
+                            id: $scope.idTaskRealised
+                        }
+                    }).success(function(status) {
+                        $scope.findTasks();
+                        $scope.isTaskRealised = false;
+                    });
+                };
 	}]);
