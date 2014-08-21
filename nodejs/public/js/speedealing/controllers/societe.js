@@ -142,7 +142,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
                 $http({method: 'GET', url: 'api/report', params:
                             {
                                 find: {"societe.id": societe._id},
-                                fields: "dateReport model author.name comment"
+                                fields: "dateReport model author.name comment realised"
                             }
                 }).success(function(data, status) {
                     
@@ -588,6 +588,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
                 {field: 'model', displayName: 'Model', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
                 {field: 'dateReport', displayName: 'Date', cellFilter: "date:'dd/MM/yyyy'"},
                 {field: 'author.name', displayName: 'Auteur'},
+                {field: 'RealisedStatus.id', displayName: 'Status', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'RealisedStatus.css\')}} glossy">{{row.getProperty(\'RealisedStatus.id\')}}</small></div>'},
                 {field: 'comment', displayName: 'Commentaire'}
             ]
         };

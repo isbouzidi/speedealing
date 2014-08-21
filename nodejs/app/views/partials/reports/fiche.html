@@ -25,6 +25,10 @@
         </div>
         <div class="field-block">
             <label><b>{{t 'reports:Duration'}}</b></label>
+            \{{report.duration || 'indéfini'}} Heure
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'reports:Duration Appointment'}}</b></label>
             \{{report.durationAppointment || 'indéfini'}} Heure
         </div>
         <div class="field-block">
@@ -67,8 +71,7 @@
         </div>
         <div class="field-block" ng-if="report.optional.subject.satisfactionSurvey">
             <label><b>{{t 'reports:Satisfaction Survey'}}</b></label>
-            
-            \{{report.SatisfactionSurv}}
+            Oui
         </div>
         <div class="field-block" ng-if="report.optional.subject.progressPoints.length > 0">
             <label><b>{{t 'reports:Progress Points'}}</b></label>

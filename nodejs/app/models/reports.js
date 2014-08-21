@@ -52,17 +52,9 @@ var ReportSchema = new Schema({
 
 ReportSchema.plugin(timestamps);
 
-ReportSchema.virtual('SatisfactionSurv').get(function() {
-    if(this.satisfactionSurvey)
-        return 'OUI';
-    else
-        return 'NON';
-});
-
 ReportSchema.virtual('RealisedStatus').get(function() {
     
     var realisedStat = {};
-    
     if(this.realised)
         realisedStat = {id: 'Réalisé', css: 'green-gradient'};
     else
