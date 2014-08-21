@@ -312,8 +312,8 @@ Object.prototype = {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref.replace(/_/g, "\\_"));
-				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.billing.name + "} \\\\" + doc.billing.address + "\\\\ \\textsc{" + doc.billing.zip + " " + doc.billing.town + "}");
-				tex = tex.replace(/--CODECLIENT--/g, societe._id);
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
+				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
 				tex = tex.replace(/--TITLE--/g, doc.ref_client);
 				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
 				tex = tex.replace(/--DATEL--/g, dateFormat(doc.date_livraison, "dd/mm/yyyy"));
