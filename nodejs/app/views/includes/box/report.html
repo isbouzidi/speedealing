@@ -15,7 +15,7 @@
                                 <span class="message-info">
                                         <span class="blue">\{{report.createdAt | date:'MMM dd'}}</span>
                                 </span>
-                                <a href="ajax-demo/inbox-message.html" title="Read message">
+                                <a href="" ng-click="showReport(report._id)">
                                         <strong class="blue">\{{report.author.name}}</strong><br>
                                         \{{report.comment}}
                                 </a>
