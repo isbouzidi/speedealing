@@ -326,7 +326,7 @@ Object.prototype = {
 				var products = [];
 
 				for (var i = 0; i < doc.notes.length; i++)
-					products.push(doc.notes[i].replace(/_/g, "\\_"));
+					products.push(doc.notes[i]);
 
 				//console.log(product);
 
