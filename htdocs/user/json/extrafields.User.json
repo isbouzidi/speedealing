@@ -1,125 +1,425 @@
 {
-	"_id": "extrafields:User",
-	"class": "extrafields",
-	"ico": "icon-object-user",
-	"schemaMongoose": {
-		"enabled": true,
-		"name": "user",
-		"collection": "User",
-		"plugins": ["mongoose-timestamp"]
-	},
-	"langs": [
-		"users",
-		"admin"
-	],
-	"fields": {
-		"_id": {
-			"schema": "String",
-			"type": "text",
-			"enable": true,
-			"list": {
-				"visible": false,
-				"static": true
-			}
-		},
-		"Status": {
-			"schema": "Mixed",
-			"type": "select",
-			"enable": true,
-			"default": "DISABLE",
-			"status": true,
-			"aoColumns": {
-				"sClass": "center",
-				"bSearchable": true,
-				"bVisible": true
-			},
-			"values": {
-				"DISABLE": {
-					"enable": true,
-					"label": "Bloqué",
-					"cssClass": "red-gradient"
-				},
-				"ENABLE": {
-					"enable": true,
-					"label": "Actif",
-					"cssClass": "green-gradient"
-				},
-				"NOCONNECT": {
-					"enable": true,
-					"label": "Actif/Sans conex.",
-					"cssClass": "blue-gradient"
-				}
-			}
-		},
-		"StatusAbsence": {
-			"schema": "Mixed",
-			"type": "select",
-			"enable": true,
-			"default": "NOTJUSTIFIED",
-			"status": true,
-			"aoColumns": {
-				"sClass": "center",
-				"bSearchable": true,
-				"bVisible": true
-			},
-			"values": {
-				"REQUEST": {
-					"enable": false,
-					"label": "Demande",
-					"cssClass": "blue-gradient"},
-				"NOTJUSTIFIED": {
-					"enable": true,
-					"label": "Absence injustifiée",
-					"cssClass": "red-gradient"},
-				"HOLIDAY": {
-					"enable": true,
-					"label": "En conges",
-					"cssClass": "green-gradient"},
-				"ILL": {
-					"enable": true,
-					"label": "Absence maladie",
-					"cssClass": "orange-gradient"},
-				"REFUSED": {
-					"enable": false,
-					"label": "Refuse",
-					"cssClass": "red-gradient"}
-			}
-		},
-		"email": {
-			"schema": "String"
-		},
-		"admin": {
-			"schema": "Boolean"
-		},
-		"lastname": {
-			"schema": "String"
-		},
-		"firstname": {
-			"schema": "String"
-		},
-		"password": {
-			"schema": "String"
-		},
-		"name": {
-			"schema": {"type": "String", "require": true}
-		},
-		"roles": {
-			"schema": ["String"]
-		},
-		"email": {
-			"schema": "String"
-		},
-		"_createdAt": {
-			"schema": {"type": "Date"}
-		},
-		"LastConnection": {
-			"schema": "Date"
-		},
-		"NewConnection": {
-			"schema": "Date"
-		},
-		"photo": {
-			"schema": {"type": "String"}
-		},
-	}
+    "_id" : "extrafields:User",
+    "ico" : "icon-object-user",
+    "schemaMongoose" : {
+        "enabled" : false,
+        "name" : "user",
+        "collection" : "User",
+        "plugins" : [ 
+            "mongoose-timestamp"
+        ]
+    },
+    "langs" : [ 
+        "users", 
+        "admin"
+    ],
+    "fields" : {
+        "_id" : {
+            "schema" : "String",
+            "type" : "text",
+            "enable" : true,
+            "list" : {
+                "visible" : false,
+                "static" : true
+            }
+        },
+        "Status" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "DISABLE",
+            "status" : true,
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "DISABLE" : {
+                    "enable" : true,
+                    "label" : "Bloqué",
+                    "cssClass" : "red-gradient"
+                },
+                "ENABLE" : {
+                    "enable" : true,
+                    "label" : "Actif",
+                    "cssClass" : "green-gradient"
+                },
+                "NOCONNECT" : {
+                    "enable" : true,
+                    "label" : "Actif/Sans conex.",
+                    "cssClass" : "blue-gradient"
+                }
+            }
+        },
+        "Civilite" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "NO",
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "NO" : {
+                    "enable" : true,
+                    "label" : "-"
+                },
+                "DR" : {
+                    "enable" : true,
+                    "label" : "Docteur"
+                },
+                "MME" : {
+                    "enable" : true,
+                    "label" : "Madame"
+                },
+                "MLE" : {
+                    "enable" : true,
+                    "label" : "Mademoiselle"
+                },
+                "MTRE" : {
+                    "enable" : true,
+                    "label" : "Maître"
+                },
+                "MR" : {
+                    "enable" : true,
+                    "label" : "Monsieur"
+                }
+            }
+        },
+        "SituationFamiliale" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "CEL",
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "CEL" : {
+                    "enable" : true,
+                    "label" : "Celibataire"
+                },
+                "MAR" : {
+                    "enable" : true,
+                    "label" : "Marié"
+                },
+                "DIV" : {
+                    "enable" : true,
+                    "label" : "Divorcé"
+                },
+                "VEUF" : {
+                    "enable" : true,
+                    "label" : "Veuf"
+                }
+            }
+        },
+        "Contrat" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "NO",
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "NO" : {
+                    "enable" : true,
+                    "label" : "-"
+                },
+                "CDI" : {
+                    "enable" : true,
+                    "label" : "Contrat à durée indéterminée (CDI)"
+                },
+                "CDD" : {
+                    "enable" : true,
+                    "label" : "Contrat à durée déterminée (CDD)"
+                },
+                "CNE" : {
+                    "enable" : true,
+                    "label" : "Contrat nouvelle embauche (CNE)"
+                },
+                "Intérim" : {
+                    "enable" : true,
+                    "label" : "Travail temporaire (Intérim)"
+                },
+                "Apprenti" : {
+                    "enable" : true,
+                    "label" : "Contrat d'apprentissage"
+                },
+                "Prof" : {
+                    "enable" : true,
+                    "label" : "Contrat de professionnalisation"
+                },
+                "CAE" : {
+                    "enable" : true,
+                    "label" : "Contrat d'accompagnement dans l'emploi (CAE)"
+                },
+                "CJE" : {
+                    "enable" : true,
+                    "label" : "Contrat jeune en entreprise (CJE)"
+                }
+            }
+        },
+        "TempsTravail" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "TPL",
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "TPL" : {
+                    "enable" : true,
+                    "label" : "Temps Plein"
+                },
+                "TPA" : {
+                    "enable" : true,
+                    "label" : "Temps Partiel"
+                },
+                "MT" : {
+                    "enable" : true,
+                    "label" : "Mi-Temps"
+                },
+                "TL" : {
+                    "enable" : true,
+                    "label" : "Temps Libre"
+                }
+            }
+        },
+        "PeriodeEssai" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "1",
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "1" : {
+                    "enable" : true,
+                    "label" : "1 mois"
+                },
+                "2" : {
+                    "enable" : true,
+                    "label" : "2 mois"
+                },
+                "3" : {
+                    "enable" : true,
+                    "label" : "3 mois"
+                },
+                "4" : {
+                    "enable" : true,
+                    "label" : "4 mois"
+                },
+                "5" : {
+                    "enable" : true,
+                    "label" : "5 mois"
+                },
+                "6" : {
+                    "enable" : true,
+                    "label" : "6 mois"
+                }
+            }
+        },
+        "niveauEtude" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "NO",
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "NO" : {
+                    "enable" : true,
+                    "label" : "-"
+                },
+                "BAC" : {
+                    "enable" : true,
+                    "label" : "Bac"
+                },
+                "LIC" : {
+                    "enable" : true,
+                    "label" : "Licence"
+                },
+                "M1" : {
+                    "enable" : true,
+                    "label" : "Master 1"
+                },
+                "M2" : {
+                    "enable" : true,
+                    "label" : "Master 2"
+                },
+                "C1" : {
+                    "enable" : true,
+                    "label" : "Ecole de Commerce - Niveau 1"
+                },
+                "C2" : {
+                    "enable" : true,
+                    "label" : "Ecole de Commerce - Niveau 2"
+                },
+                "C3" : {
+                    "enable" : true,
+                    "label" : "Ecole de Commerce - Niveau 3"
+                },
+                "I1" : {
+                    "enable" : true,
+                    "label" : "Ecole d'Ingénieur - Niveau 1"
+                },
+                "I2" : {
+                    "enable" : true,
+                    "label" : "Ecole d'Ingénieur - Niveau 2"
+                },
+                "I3" : {
+                    "enable" : true,
+                    "label" : "Ecole d'Ingénieur - Niveau 3"
+                },
+                "PHD" : {
+                    "enable" : true,
+                    "label" : "Doctorat"
+                },
+                "MBA" : {
+                    "enable" : true,
+                    "label" : "Master of Business Administration (MBA)"
+                },
+                "CAP" : {
+                    "enable" : true,
+                    "label" : "CAP"
+                },
+                "BEP" : {
+                    "enable" : true,
+                    "label" : "BEP"
+                },
+                "BACPro" : {
+                    "enable" : true,
+                    "label" : "Bac Pro"
+                }
+            }
+        },
+        "Categorie" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "NO",
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "NO" : {
+                    "enable" : true,
+                    "label" : "-"
+                },
+                "Emp" : {
+                    "enable" : true,
+                    "label" : "Employé"
+                },
+                "Stag" : {
+                    "enable" : true,
+                    "label" : "Stagiaire"
+                }
+            }
+        },
+        "StatusAbsence" : {
+            "schema" : "Mixed",
+            "type" : "select",
+            "enable" : true,
+            "default" : "REQUEST",
+            "status" : true,
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "REQUEST" : {
+                    "enable" : false,
+                    "label" : "Demande",
+                    "cssClass" : "blue-gradient"
+                },
+                "NOTJUSTIFIED" : {
+                    "enable" : true,
+                    "label" : "Absence injustifiée",
+                    "cssClass" : "red-gradient"
+                },
+                "HOLIDAY" : {
+                    "enable" : true,
+                    "label" : "En conges",
+                    "cssClass" : "green-gradient"
+                },
+                "ILL" : {
+                    "enable" : true,
+                    "label" : "Absence maladie",
+                    "cssClass" : "orange-gradient"
+                },
+                "REFUSED" : {
+                    "enable" : false,
+                    "label" : "Refuse",
+                    "cssClass" : "red-gradient"
+                }
+            }
+        },
+        "email" : {
+            "schema" : "String",
+            "enable" : false
+        },
+        "admin" : {
+            "schema" : "Boolean",
+            "enable" : false
+        },
+        "lastname" : {
+            "schema" : "String",
+            "enable" : false
+        },
+        "firstname" : {
+            "schema" : "String",
+            "enable" : false
+        },
+        "password" : {
+            "schema" : "String",
+            "enable" : false
+        },
+        "name" : {
+            "schema" : {
+                "type" : "String",
+                "require" : true
+            },
+            "enable" : false
+        },
+        "roles" : {
+            "schema" : [ 
+                "String"
+            ],
+            "enable" : false
+        },
+        "_createdAt" : {
+            "schema" : {
+                "type" : "Date"
+            },
+            "enable" : false
+        },
+        "LastConnection" : {
+            "schema" : "Date",
+            "enable" : false
+        },
+        "NewConnection" : {
+            "schema" : "Date",
+            "enable" : false
+        }
+    }
 }
