@@ -313,7 +313,7 @@ Object.prototype = {
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref.replace(/_/g, "\\_"));
 				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
-				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
+				tex = tex.replace(/--CODECLIENT--/g, societe.code_client.replace(/_/g, "\\_"));
 				tex = tex.replace(/--TITLE--/g, doc.ref_client);
 				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
 				tex = tex.replace(/--DATEL--/g, dateFormat(doc.date_livraison, "dd/mm/yyyy"));
@@ -326,7 +326,7 @@ Object.prototype = {
 				var products = [];
 
 				for (var i = 0; i < doc.notes.length; i++)
-					products.push(doc.notes[i]);
+					products.push(doc.notes[i].replace(/_/g, "\\_"));
 
 				//console.log(product);
 
