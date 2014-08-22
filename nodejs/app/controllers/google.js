@@ -1,0 +1,900 @@
+"use strict";
+
+/**
+ * Module dependencies.
+ */
+var mongoose = require('mongoose'),
+    fs = require('fs'),
+		csv = require('csv'),
+		_ = require('underscore'),
+		gridfs = require('../controllers/gridfs'),
+		config = require('../../config/config'),
+		timestamps = require('mongoose-timestamp'),
+		xml2js = require('xml2js'),
+		array = require("array-extended"),
+		dateFormat = require("dateformat"),
+		googleapis = require('googleapis'),
+		async = require("async");
+
+    // Mongoose models
+	var SocieteModel = mongoose.model('societe');
+	var ContactModel = mongoose.model('contact');
+	var UserModel = mongoose.model('user');
+
+	// Global google configuration
+	var config = require(__dirname + '/../../config/config');
+
+	var GOOGLE_CLIENT_ID = config.google.clientID,
+		GOOGLE_CLIENT_SECRET = config.google.clientSecret,
+		GOOGLE_REDIRECT_URL = config.google.callbackURL;
+
+	var OAuth2Client = googleapis.auth.OAuth2;
+	var oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID,
+		GOOGLE_CLIENT_SECRET,
+		GOOGLE_REDIRECT_URL);
+	var GoogleContacts = require('my-google-contacts').GoogleContacts;
+
+
+/* Public declaration methods. See definition for documentation. */
+exports.generateAuthUrl = generateAuthUrl;
+
+exports.isGoogleUser = isGoogleUser;
+
+exports.isGoogleUserAndHasGrantedAccess = 
+		isGoogleUserAndHasGrantedAccess;
+
+exports.insertContacts = insertContacts;
+
+exports.insertContactsForOneUser =
+		insertContactsForOneUser;
+
+exports.insertOneContactForOneUser =
+		insertOneContactForOneUser;
+
+exports.setAccessCode = setAccessCode;
+
+exports.importAddressBooksOfAllUsers = 
+		importAddressBooksOfAllUsers;
+
+exports.updateGoogleUserAdressBook =
+		updateGoogleUserAdressBook;
+
+exports.updateAddressBooksOfAllUsers = 
+		updateAddressBooksOfAllUsers;
+
+exports.contactChanged = contactChanged;
+
+exports.updateSociete = updateSociete;
+
+exports.societeChanged = societeChanged;
+
+// test
+exports.createRemoteContactGroup =
+		createRemoteContactGroup;
+
+/* Methods definitions. */
+
+
+/* Generate url to google service to
+* request user consent to give access for our app.
+* @return url where to redirect the user
+*/
+function generateAuthUrl() {
+	var scopes = [
+	  'https://www.googleapis.com/auth/userinfo.profile',
+	  'https://www.googleapis.com/auth/contacts'
+	];
+	// generate consent page url
+    var url = oauth2Client.generateAuthUrl({
+        access_type: 'offline', // will return a refresh token
+        approval_prompt: 'force',
+        scope: scopes.join(' ')
+    });
+	return url;
+}
+
+
+
+function isGoogleUser(user) {
+	return (user.email.toLowerCase().indexOf("@gmail.com") != -1);
+}
+
+
+function isGoogleUserAndHasGrantedAccess(user) {
+	return isGoogleUser(user) &&
+		(user.google.tokens.access_token &&
+		user.google.tokens.refresh_token &&
+		user.google.user_id);
+}
+
+
+
+
+
+
+function setAccessCode(code, user, callback) {
+
+	// request access token
+    oauth2Client.getToken(code, 
+    	function(err, tokens) {
+        	if (err)
+        		return callback(err);
+        	
+	        // set tokens to the client
+	        oauth2Client.setCredentials(tokens);
+	        console.log("Tokens =", tokens);
+	        
+	        // Get the google user id
+	        googleapis.discover('oauth2', 'v2')
+	        .execute(
+	        	function(err, client) {
+		        	if (err)
+		        		return callback(err);
+
+		        	client.oauth2.userinfo.v2.me.get()
+		        	.withAuthClient(oauth2Client)
+		        	.execute(
+		        		function (err, userinfo) {
+			        		if (err)
+			        			return callback(err);
+
+			        		console.log("userinfo ", userinfo);
+
+					        user = _.extend(user, 
+					        {
+				            	"google": _.extend(user.google,
+								{
+									"user_id": userinfo.id,
+					            	"tokens": tokens
+								})
+				            });
+					        
+					        user.save(function(err, doc) {
+					            callback(err);
+					        });
+	        			}
+	        		);
+	        	}
+	        ); 
+		}
+	);
+}
+
+
+
+
+function importAddressBooksOfAllUsers (callback) {
+	/* 
+	 * For each user
+	 *     If he has a google email
+	 *     and has granted access, then
+	 *         Get all his google contact list
+	 *         For each contact
+	 *             Merge him into Contact database
+	 */
+	forEachGoogleUser(imp_treatGoogleUser, callback);
+}
+
+
+
+/*
+ * ****************** IMPORT *************************************
+ */
+
+	/* 
+	*/
+	function imp_getGoogleContacts(user, callback) {
+		console.log("\n\n*** GETTING CONTACTS PROCESS ***\n\n");
+
+		var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+		c.getContacts(
+			{
+				'email': user.email,
+				'updatedMin': user.google.contacts.latestImport
+		 	},
+		 callback);
+	}
+
+
+	/* *** */
+
+	/* Make array elements unique. Input array need to be sorted.
+	* @param arr_in Array to treat. Not changed.
+	* @return result array
+	*/
+	function _array_unique(arr_in, fct_are_equal) {
+	    var len = arr_in.length;
+	    if (len < 2)
+	        return arr_in;
+	    var result = [];
+	    for (var i=0; i < len; ) {
+	        result.push(arr_in[i]);
+
+	        var j = i+1;
+	        while(j < len && fct_are_equal(arr_in[i], arr_in[j]))
+	            ++j;
+
+	        i = j;
+	    }
+	    return result;
+	}
+
+	/* Merge native contact with imported contact
+	 * @param contact Native contact
+	 * @param gcontact Imported contact
+	 */
+	function imp_updateContact(contact, gcontact, callback) {
+		var emails = [];
+
+		if (gcontact.emails) {
+	        emails = _array_unique(
+	        	array(gcontact.emails).union(contact.emails).sort("address").value(),
+	            function (a, b) {
+	            	return a.address == b.address && a.type == b.type;
+	            });
+	    } else {
+	    	emails = contact.emails;
+	    }
+
+	    contact = _.extend(contact, gcontact);
+	    contact.emails = emails;
+
+		console.log("Contact to up/ins. = {" + contact.firstname + " "+contact.lastname+"}");
+
+		contact.save(function(err, doc) {
+			callback(err);
+		});
+	}
+
+	// *
+	function imp_updateContacts(contacts, gcontact, callback) {
+		if (contacts && contacts.length > 0) {
+			async.each(contacts, 
+				function (contact, cb) {
+					imp_updateContact(contact, gcontact, cb);
+				},
+				function (err) {
+					callback(err, true);
+				}
+			);
+		} else { // no result
+			callback(null, false);
+		}
+	}
+
+	/* @param gcontact Imported contact
+	*/
+	function imp_insertNewContact(gcontact, callback) {
+		console.log("INSERT NEW CONTACT " + gcontact.firstname);
+		var contact = new ContactModel({
+			Status: "ST_ENABLE"
+		});
+		imp_updateContact(contact, gcontact, 
+			function (err, found) {
+				callback(err);
+			}
+		);
+	}
+
+	function imp_mergeByPhone(gcontact, callback) {
+		var phone = gcontact.phone || '';
+		var phone_perso = gcontact.phone_perso || '';
+		var phone_mobile = gcontact.phone_mobile || '';
+
+		ContactModel.find({ 
+				$or: [
+					{phone: 		phone},
+					{phone_perso: 	phone_perso},
+					{phone_mobile: 	phone_mobile}
+				]
+			},
+			function (err, contacts) {
+				if (err)
+					return callback(err);
+				if (!contacts)
+					return callback(null, false);
+				imp_updateContacts(contacts, gcontact, callback);
+			});
+	}
+
+
+	/* Callback format : callback(err, merged)
+	*  err : can be null
+	*  merged : boolean, true if merge succeed
+	*/
+	function imp_mergeByMail(gcontact, callback) {
+		var addresses = array.pluck(gcontact.emails, 'address').value();
+		//console.log("addresses = ", addresses);
+		ContactModel.find({ 'emails.address': { $in : addresses }},
+			function (err, contacts) {
+				if (err)
+					return callback(err);
+				if (!contacts)
+					return callback(null, false);
+				imp_updateContacts(contacts, gcontact, callback);
+			}
+		);
+	}
+
+
+	/* @param gcontact Imported contact
+	*/
+	function imp_mergeOneContact (gcontact, callback) {
+		async.waterfall([
+			function (cb) {
+				if (gcontact.emails && gcontact.emails.length > 0)
+					return imp_mergeByMail(gcontact, cb);
+				cb(null, false);
+			},
+			function (found, cb) {
+				if (!found && (gcontact.phone 
+								|| gcontact.phone_perso 
+								|| gcontact.phone_mobile))
+					return imp_mergeByPhone(gcontact, cb);
+				cb(null, found);
+			}],
+			function (err, found) {
+				if (err)
+					callback(err);
+				else if (!found)
+					imp_insertNewContact(gcontact, callback);
+				else
+					callback();
+			}
+			
+		);
+	}
+
+
+	/* @param gcontacts Imported contacts
+	*/
+	function imp_mergeImportedContacts(user, gcontacts, callback) {
+		console.log("\n\n*** MERGE PROCESS ***\n\n");
+		
+		async.each(gcontacts,
+			function (gcontact, cb) {
+				imp_mergeOneContact(gcontact, cb);
+			},
+			function (err) {
+				if (err)
+					return callback(err);
+
+				// update the date of the latest import
+				user.google.contacts = _.extend(user.google.contacts,
+					{
+						latestImport: dateFormat(new Date(), "yyyy-mm-dd")
+					});
+
+				user.save(function(err, doc) { callback(err); });
+			}
+		);
+	}
+
+	/* Main function to treat a google user in order to import contacts
+	*/
+	function imp_treatGoogleUser(user, callback) {
+		googleAction(user,
+			function (cb_google) {
+				var my_gcontacts = [];
+				async.series([
+						function (cb) {
+							imp_getGoogleContacts(user,
+								function (err, gcontacts) {
+									my_gcontacts = gcontacts;
+									cb(err);
+								});
+						},
+						function (cb) {
+							imp_mergeImportedContacts(user, my_gcontacts, cb)
+						}
+					],
+					cb_google
+				);
+			},
+			callback
+		);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Insert contacts in users' google address book.
+ * @param contacts Array of contact to insert.
+ * @param users Users whose address book will be updated.
+ *              User who isn't a google user will be ignored.
+ * @param callback Function to call when the insertion is done.
+ *                 Prototype is callback(err). err could be null.
+ */
+function insertContacts (contacts, users, callback) {
+	async.each(users,
+		function(user, cb_user) {
+			if (isGoogleUserAndHasGrantedAccess(user))
+				insertContactsForOneUser(contacts, user, cb_user);
+			else
+				cb_user();
+		},
+		function (err) {
+			callback(err);
+		}
+	);
+}
+
+
+
+function insertContactsForOneUser(contacts, user, callback) {
+	async.each(contacts,
+		function (contact, cb_contact) {
+			insertOneContactForOneUser(contact, user, cb_contact);
+		},
+		function (err) {
+			callback(err);
+		}
+	);
+}
+
+
+function getDefaultGoogleContactsParams (user) {
+	return {
+		consumerKey: GOOGLE_CLIENT_ID,
+		consumerSecret: GOOGLE_CLIENT_SECRET,
+		token: user.google.tokens.access_token,
+		refreshToken: user.google.tokens.refresh_token,
+	};
+}
+
+function createRemoteContactGroup(user, callback) {
+	var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+	c.createGroup({'title': 'Speedealing'},
+		{'email':user.email},
+		function (err, group_href) {
+			if (err)
+				return callback(err);
+
+			user.google.contacts = _.extend(user.google.contacts,
+					{ 'group_href': group_href });
+			
+			user.save(callback);
+		} 
+	);
+}
+
+function hasRemoteContactGroup(user) {
+	return user && user.google &&
+		user.google.contacts &&
+		user.google.contacts.group_href;
+}
+
+function insertOneContactForOneUser (contact, user, callback) {
+	googleAction(user,
+		function (cb) {
+			async.series([
+				function (cb_sub) {
+					if (hasRemoteContactGroup(user))
+						cb_sub();
+					else
+						createRemoteContactGroup(user, cb_sub);
+				},
+				function (cb_sub) {
+					console.log("\n\n*** INSERTING CONTACT ***\n\n");
+					var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+					c.insertContact(contact, 
+						{'email':user.email, 
+						'group_href':user.google.contacts.group_href}, 
+						cb);
+				}],
+				cb);
+		},
+		callback
+	);
+}
+
+
+
+/* @return boolean which indicates if the contact
+* 					belongs to a Societe object.
+*/
+function belongsToSociete(contact) {
+	return contact && contact.societe && contact.societe.id;
+}
+
+
+function up_deleteGoogleContact(user, gcontact, callback) {
+	console.log("\n\n*** DELETING CONTACT ***\n\n");
+	var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+	c.deleteContact(gcontact.id, {'email':user.email}, callback);
+}
+
+function up_treatContacts(user, gcontact, contacts, callback) {
+	//console.log("contacts = ");
+
+	var _belongsToSociete = false;
+	contacts.forEach(
+		function (contact) {
+			//console.log("     {"+contact.firstname+" "+contact.lastname+"}");
+			if (!_belongsToSociete)
+				_belongsToSociete = belongsToSociete(contact);
+		}
+	);
+
+	if (_belongsToSociete)
+		up_deleteGoogleContact(user, gcontact, callback);
+	else
+		callback();
+}
+
+
+
+function up_checkGoogleContacts (user, gcontacts, callback) {
+	console.log("gcontacts =",gcontacts);
+	// old: .each
+	// seems to be too much requests
+	async.eachSeries(gcontacts,
+		function (gcontact, cb) {
+			console.log("   gcontact=", gcontact);
+			findNearestContacts(gcontact, 
+				function (err, contacts) {
+					console.log("      contacts=", contacts.length);
+					if (err || !contacts)
+						return cb(err);					
+					up_treatContacts(user, gcontact, contacts, cb);
+				}
+			);
+		},
+		callback
+	);
+}
+
+
+function up_listContactsBySociete(user, societe, callback) {
+	var my_contacts = []
+
+		var stream = ContactModel.find({ "societe.id": societe.id }).stream();
+		stream.on('data', function (contact) {
+			
+			console.log(">> contact : " + contact.name);
+			my_contacts.push(contact);
+			console.log("");
+
+		}).on('error', function (err) {
+		  console.log("Stream Contact - err", err);
+		}).on('close', function () {
+			// old: .each : seems to be too much requests
+			async.eachSeries(my_contacts,
+				function(contact, cb) {
+					insertOneContactForOneUser(contact, user, cb);
+				},
+				callback
+			);
+		});
+	}
+
+function up_insertContactsFromSociete(user, callback) {
+	var my_societes = []
+
+	var stream = SocieteModel.find({ "commercial_id.id": user.id }).stream();
+	stream.on('data', function (societe) {
+		console.log(">> Scan societe : " + societe._id);
+		console.log("        name : " + societe.name);
+		console.log("        commercial id: " + societe.commercial_id.id);
+
+		my_societes.push(societe);
+
+		console.log("");
+	}).on('error', function (err) {
+		callback(err);
+	}).on('close', function () {
+		// old: .each : seems to be too much requests
+		async.eachSeries(my_societes,
+			function (societe, cb) {
+				up_listContactsBySociete(user, societe, cb);
+			},
+			callback
+		);
+	});
+}
+
+
+function updateGoogleUserAdressBook (user, callback) {
+	console.log(user.id);
+	googleAction(user,
+		function (cb_google) {
+			var my_gcontacts = null;
+
+			async.series([
+
+				function (cb) {
+					var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+					c.getContacts({
+						email: user.email,
+						storeContactId: true
+					}, function(err, gcontacts) {
+						my_gcontacts = gcontacts;
+						console.log("*********** 563");
+						cb(err);
+					});
+				},
+
+				function (cb) {
+					// old: .parallel
+					// seem to be too much requests
+					async.series([
+						function (cb_sub) {
+							up_checkGoogleContacts(user, my_gcontacts, cb_sub);
+						},
+						function (cb_sub) {
+							up_insertContactsFromSociete(user, cb_sub);
+						}],
+						cb
+					);
+				}
+			],
+			function (err, results) {
+				cb_google(err);
+			});
+			
+		},
+		callback
+	);
+}
+
+
+
+
+
+
+
+/* Protected methods */
+
+function googleAction (user, strategy, callback) {
+	if (! isGoogleUserAndHasGrantedAccess(user))
+		return callback(new Error("The user isn't a google user or he doesn't granted access."));
+
+	async.series([
+			function (cb) {
+				refreshGoogleTokens(user, cb);
+			},
+			strategy
+		],
+		callback
+	);
+}
+
+function refreshGoogleTokens (user, callback) {
+	oauth2Client.setCredentials(user.google.tokens);
+
+	oauth2Client.refreshAccessToken(
+		function(err, tokens) {
+			if (err)
+				return callback(err);
+
+			var new_access_token = oauth2Client.credentials.access_token;
+			if (new_access_token != user.google.tokens.access_token) {
+				// update user's access token in database
+				user.google = _.extend(user.google,
+				{
+					"tokens": {
+	        			"access_token": new_access_token,
+	        			"refresh_token": user.google.tokens.refresh_token
+	        		}
+				});
+
+		        user.save(function(err, doc) { callback(err); });
+			} else { // no need to update
+				callback(null);
+			}
+		}
+	);	
+}
+
+
+
+
+
+
+
+
+
+
+/* callback format : fct(err, contacts)
+	*/
+function findNearestContactsByPhone(gcontact, callback) {
+	if (gcontact.phone ||
+		gcontact.phone_perso ||
+		gcontact.phone_mobile) {
+		
+		var phone = gcontact.phone || '';
+		var phone_perso = gcontact.phone_perso || '';
+		var phone_mobile = gcontact.phone_mobile || '';
+
+		ContactModel.find(
+			{ $or: [
+				{phone: 		phone},
+				{phone_perso: 	phone_perso},
+				{phone_mobile: 	phone_mobile}
+				]
+			},
+			callback
+		);
+	} else {
+		callback(null, []);
+	}
+}
+
+/* callback format : fct(err, contacts)
+*/
+function findNearestContactsByMail(gcontact, callback) {
+	if (gcontact.emails && gcontact.emails.length > 0) {
+		var addresses = array(gcontact.emails).pluck('address').value();
+		ContactModel.find({ 'emails.address': { $in : addresses }}, callback);
+	} else {
+		callback(null, []);
+	}
+}
+
+/* callback format : fct(err, contacts)
+*/
+function findNearestContacts(gcontact, callback) {
+	async.parallel([
+			function (cb) {
+				findNearestContactsByMail(gcontact, cb);
+			},
+			function (cb) {
+				findNearestContactsByPhone(gcontact, cb);
+			}
+		],
+		function (err, results) {
+			var nearest = array(results[0]).union(results[1]).value();
+			nearest = array.sort(nearest, "_id");
+			nearest = _array_unique(nearest, 
+				function (a, b) {
+					return a["_id"] == b["_id"];
+				});
+
+			callback(err, nearest);
+		}
+	);
+}
+
+
+
+
+function forEachGoogleUser(iterator, callback) {
+	var googleUsers = [];
+
+	var stream = UserModel.find().stream();
+	stream.on('data', function (user) {
+		console.log(">> Scan user : " + user._id);
+
+		if (isGoogleUserAndHasGrantedAccess(user)) {
+			console.log("Treat user : " + user._id + " - " + user.email);
+			googleUsers.push(user);
+		} 
+
+		console.log("");
+	}).on('error', function (err) {
+		callback(err);
+	}).on('close', function () {
+		async.each(googleUsers,
+				   iterator,
+				   callback);
+	});
+}
+
+
+
+
+/*
+ * ****************** EXPORT *********************************************
+ */
+
+
+/* update address books of all google user
+*/
+function updateAddressBooksOfAllUsers(callback) {
+	//	For each User
+	//		For each google contact
+	//			Find the nearest contact
+	//			If the contact is related to a Societe
+	//				Delete the google contact
+	//
+	//		For each Societe where User is the commercial
+	//			For each contact related to the Societe
+	//				Insert contact as a new google contact
+
+	forEachGoogleUser(updateGoogleUserAdressBook, callback);
+}
+
+
+
+/*
+ * Events
+*/
+
+function _updateUserById(user_id, callback) {
+	UserModel.findOne({_id: user_id},
+		function (err, user) {
+			if (err)
+				return callback(err);
+			updateGoogleUserAdressBook(user, callback);
+		}
+	);
+}
+
+function societeChanged(societe, old_commercial_id, new_commercial_id, callback) {
+	if (old_commercial_id == new_commercial_id)
+		return callback();
+
+	async.parallel([
+		function (cb) {
+			_updateUserById(old_commercial_id, cb);
+		},
+		function (cb) {
+			_updateUserById(new_commercial_id, cb);
+		}
+		],
+		callback
+	);
+}
+
+
+function updateSociete(societe, callback) {
+	var googleUsers = [];
+
+	// evolution : if commercial_id becomes an array,
+	// change the query.
+	var stream = UserModel.find({_id: societe.commercial_id.id}).stream();
+	stream.on('data', function (user) {
+		if (isGoogleUserAndHasGrantedAccess(user))
+			googleUsers.push(user);
+	}).on('error', function (err) {
+		callback(err);
+	}).on('close', function () {
+		// each = too much requests
+		async.eachSeries(googleUsers,
+				   updateGoogleUserAdressBook,
+				   callback);
+	});
+}
+
+
+function _updateSocieteById(societe_id, callback) {
+	SocieteModel.findOne({_id: societe_id},
+		function (err, societe) {
+			if (err)
+				return callback(err);
+			updateSociete(societe, callback);
+		}
+	);
+}
+
+function contactChanged (contact, old_societe_id, new_societe_id, callback) {
+	if (old_societe_id == new_societe_id)
+		return callback();
+
+	async.series([
+		function (cb) {
+			_updateSocieteById(old_societe_id, cb);
+		},
+		function (cb) {
+			_updateSocieteById(new_societe_id, cb);
+		}],
+		callback
+	);
+}
+

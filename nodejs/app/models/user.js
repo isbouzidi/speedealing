@@ -36,7 +36,8 @@ var UserSchema = new Schema({
 			refresh_token: String
 		},
 		contacts: {
-			latestImport: String // date format YYYY-MM-DD
+			latestImport: String, // date format YYYY-MM-DD
+			group_href: String 		// group which contains exported contacts
 		}
 	},
 	roles: [String],
