@@ -39,6 +39,7 @@
 		"async": ">= 0.2.9",
 		"hbs": ">=1.0.12",
 		"xml2js": ">=0.2.8",
+		"xml-writer":">=1.4.1",
 		"csv": "0.3.6",
 		"view-helpers": "latest",
 		"mean-logger": "latest",
@@ -53,9 +54,10 @@
 		"dateformat": "latest",
 		"ip": ">=0.3.0",
 		"ua-parser": ">=0.3.3",
-		"nodemailer": "latest",
+		"nodemailer":"latest",
 		"nodemailer-smtp-transport": "latest",
-		"array-extended": "latest"
+		"array-extended":"latest",
+		"googleapis":"0.8.0"
 	},
 	"devDependencies": {
 		"supertest": "latest",

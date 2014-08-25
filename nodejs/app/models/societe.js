@@ -271,11 +271,15 @@ var contactSchema = new Schema({
 	country_id: String,
 	state_id: String,
 	DefaultLang: String,
-	phone: String,
+	phone: String, // pro
 	phone_perso: String,
-	phone_mobile: String,
-	fax: String,
+	phone_mobile: String, // pro
+	fax: String, // pro
 	email: String,
+	emails: [{
+		type: {type: String, default:"pro"},
+		address:String
+		}],
 	civilite: String, // DICT
 	Tag: [String], // Used by DSF
 	tag: [{
