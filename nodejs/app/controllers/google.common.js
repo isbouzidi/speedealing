@@ -32,8 +32,6 @@ var mongoose = require('mongoose'),
 	var oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET,
 		GOOGLE_REDIRECT_URL);
-	var GoogleContacts = require('my-google-contacts').GoogleContacts;
-
 
 /* Public declaration methods. See definition for documentation. */
 exports.generateAuthUrl = generateAuthUrl;
