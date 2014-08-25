@@ -25,7 +25,8 @@ var ReportSchema = new Schema({
     durationAppointment: Number,
     contacts: [{
         id: Schema.Types.ObjectId,
-        name: String
+        name: String,
+        poste: String
     }],
     products: [String],
     realised: {type: Boolean, default: false},
@@ -44,9 +45,23 @@ var ReportSchema = new Schema({
         id: Schema.Types.ObjectId,
         name: String
     }
+}, {
+	toObject: {virtuals: true},
+	toJSON: {virtuals: true}
 });
 
 ReportSchema.plugin(timestamps);
+
+ReportSchema.virtual('RealisedStatus').get(function() {
+    
+    var realisedStat = {};
+    if(this.realised)
+        realisedStat = {id: 'Réalisé', css: 'green-gradient'};
+    else
+        realisedStat = {id: 'Non Réalisé', css: 'red-gradient'};
+    
+    return realisedStat;
+});
 
 ReportSchema.post('save', function (doc) {
     

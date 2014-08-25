@@ -113,12 +113,28 @@ module.exports = function(app, passport, auth) {
     
     //cancel task as realised
     app.put('/api/reports/cancelTaskRealised', auth.requiresLogin, object.cancelTaskRealised);
+    
+    //get report details
+    app.get('/api/reports/:reportId', auth.requiresLogin, object.show);
+    
+    app.param('reportId', object.report);
 };
 
 function Object() {
 }
 
 Object.prototype = {
+     report: function(req, res, next, id) {
+        ReportModel.findOne({_id: id}, function(err, doc) {
+            if (err)
+                return next(err);
+            if (!doc)
+                return next(new Error('Failed to load report ' + id));
+
+            req.report = doc;
+            next();
+        });
+    },
     select: function(req, res) {
 
         ExtrafieldModel.findById('extrafields:Report', function(err, doc) {
@@ -175,6 +191,10 @@ Object.prototype = {
 
                 res.send(200, doc);
             });
+    },
+    show: function(req, res) {
+        console.log("show : " + req.report);
+        res.json(req.report);
     },
     listReports: function(req, res){
         

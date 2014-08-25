@@ -2,6 +2,7 @@
 	"CHARSET": "UTF-8",
     "New Report": "Nouveau Compte Rendu",
     "Model": "Modèle",
+    "Date Created": "Date création",
     "Date Report": "Date",
     "Duration": "Durée",
     "Contacts": "Contacts",
@@ -25,8 +26,12 @@
     "Duration Appointment": "Durée Rendez-vous",
     "Due Date": "Date d'échéance",
     "Leads": "Leads détectées",
+    "Lead": "Lead",
     "New Lead": "Nouveau Lead",
     "Name": "Nom",
-    "Due Date": "Date d'échéance",
-    "Potential": "Potentiel"
+    "Potential": "Potentiel",
+    "Author": "Crée par",
+    "Company": "Société",
+    "Actions": "Actions",
+    "Details Report": "Fiche Compte Rendu"
 }

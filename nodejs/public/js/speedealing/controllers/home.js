@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('IndexHomeController', ['$scope', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', '$timeout', 'Users', 'Reports', function($scope, $location, $http, $anchorScroll, Global, pageTitle, $timeout, Users, Reports) {
+angular.module('mean.system').controller('IndexHomeController', ['$scope', '$rootScope', '$modal', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', '$timeout', 'Users', 'Reports', function($scope, $rootScope, $modal, $location, $http, $anchorScroll, Global, pageTitle, $timeout, Users, Reports) {
 		$scope.global = Global;
 
 		pageTitle.setTitle('Accueil');
@@ -225,6 +225,16 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$loc
                             }
                     }).success(function(data, status) {
                             $scope.reports = data;
+                    });
+                };
+                
+                $scope.showReport = function(id){
+                    
+                    $rootScope.idReport = id;
+                    var modalInstance = $modal.open({
+                        templateUrl: '/partials/reports/fiche.html',
+                        controller: "ReportController",
+                        windowClass: "steps"
                     });
                 };
                 
