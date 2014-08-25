@@ -274,11 +274,14 @@ var contactSchema = new Schema({
 	country_id: String,
 	state_id: String,
 	DefaultLang: String,
-	phone: String,
+	phone: String, // pro
 	phone_perso: String,
-	phone_mobile: String,
-	fax: String,
-	email: String,
+	phone_mobile: String, // pro
+	fax: String, // pro
+	emails: [{
+		type: {type: String, default:"pro"},
+		address:String
+	}],
 	civilite: String,
 	Tag: [String],
 	notes: String,
@@ -287,7 +290,11 @@ var contactSchema = new Schema({
 	birthday: Date,
 	datec: {type: Date},
 	user_creat: String,
-	user_modif: String
+	user_modif: String,
+	organization: {
+		name: String, // nom de la société
+		title: String // nom de la fonction occupée
+	}
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
