@@ -177,7 +177,16 @@ Contact.prototype = {
 	},
         showList: function(req, res) {
             
-            var query = {name: new RegExp(req.query.item, "i")};
+            //var query = {name: new RegExp(req.query.item, "i")};
+            
+            var query = {
+                "$or": [
+                        {"name": new RegExp(req.query.item, "i")},
+                        {"lastname": new RegExp(req.query.item, "i")},
+                        {"firstname": new RegExp(req.query.item, "i")},
+                        {"societe.name": new RegExp(req.query.item, "i")}
+                    ]
+            };
             
             ContactModel.find(query, {}, function(err, doc) {
                 if (err) {

@@ -40,10 +40,10 @@ var ReportSchema = new Schema({
         id: String,
         name: String
     },
-    leads: [{
+    leads: {
         id: Schema.Types.ObjectId,
         name: String
-    }]
+    }
 });
 
 ReportSchema.plugin(timestamps);
@@ -64,14 +64,12 @@ ReportSchema.post('save', function (doc) {
             
     };
     
-    for(var i = 0; i < doc.leads.length; i++){
+    
+    LeadModel.update({ _id: doc.leads.id }, {$set:{status: stat}}, { multi: false }, function(err) {
+
+        console.log('lead updated ');
+    });
         
-        LeadModel.update({ _id: doc.leads[i]._id }, {$set:{status: stat}}, { multi: false }, function(err) {
-                
-                console.log('lead updated ');
-        });
-        
-    }
     
 });
 

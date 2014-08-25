@@ -5,22 +5,14 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$loca
     $scope.init = function() {
 
         $scope.leads= {}; 
-        $http({method: 'GET', url: '/api/report/dict_fk/select', params: {
-                field: "prospectlevel"
-            }
-        }).success(function(data) {
-
-            $scope.potential = data;
-
-        });
         
         $http({method: 'GET', url: '/api/report/fk_extrafields/lead', params: {
-                        field: "Status"
-                    }
-                }).success(function(data) {
-                    
-                    $scope.status = data;
-                });
+                    field: "Status"
+                }
+            }).success(function(data) {
+
+                $scope.status = data;
+            });
 
     };
     

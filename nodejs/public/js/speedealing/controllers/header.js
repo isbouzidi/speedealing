@@ -31,35 +31,35 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$http',
         $scope.numPerPage = 3;
         $scope.maxSize = 5;
         
-        $scope.$watch('searchItem', function(item) {
-            $scope.currentPage = 1;
-            $scope.showPagination = false;
-            if (item) {
-
-                $http({method: 'GET', url: '/api/contact/searchEngine',
-                    params: {item: item}
-
-                }).success(function(data) {
-                    
-                    $scope.results = data;
-                    $scope.resultsCount = data.length;
-                    if (data.length > 0)
-                        $scope.showPagination = true;
-                    
-                    $scope.$watch('currentPage + numPerPage', function() {
-                        var begin = (($scope.currentPage - 1) * $scope.numPerPage);
-                        var end = begin + $scope.numPerPage;
-                        
-                        $scope.filteredResults = $scope.results.slice(begin, end);
-                    });
-                    
-                });
-                
-                $scope.numPages = function() {
-                    return Math.ceil($scope.results.length / $scope.numPerPage);
-                };
-
-            }
-        });
+//        $scope.$watch('searchItem', function(item) {
+//            $scope.currentPage = 1;
+//            $scope.showPagination = false;
+//            if (item) {
+//
+//                $http({method: 'GET', url: '/api/contact/searchEngine',
+//                    params: {item: item}
+//
+//                }).success(function(data) {
+//                    
+//                    $scope.results = data;
+//                    $scope.resultsCount = data.length;
+//                    if (data.length > 0)
+//                        $scope.showPagination = true;
+//                    
+//                    $scope.$watch('currentPage + numPerPage', function() {
+//                        var begin = (($scope.currentPage - 1) * $scope.numPerPage);
+//                        var end = begin + $scope.numPerPage;
+//                        
+//                        $scope.filteredResults = $scope.results.slice(begin, end);
+//                    });
+//                    
+//                });
+//                
+//                $scope.numPages = function() {
+//                    return Math.ceil($scope.results.length / $scope.numPerPage);
+//                };
+//
+//            }
+//        });
 
     }]);

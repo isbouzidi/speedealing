@@ -76,6 +76,7 @@
                 </span> Heure(s)
             </p>
         </div>
+        
         <div class="field-block button-height">
             <label for="Contact"><b>{{t "reports:Contacts"}}</b></label>
 
@@ -91,6 +92,13 @@
             </a>
 
             <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Poste</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr ng-repeat="c in report.contacts" class="active">
                         <td>\{{c.name}}</td>
@@ -103,7 +111,8 @@
                     </tr>
                 </tbody>
             </table>
-        </div>        
+        </div>
+        
         <div class="field-block button-height">
             <label for="lead"><b>{{t "reports:Leads"}}</b></label>
 
@@ -117,21 +126,29 @@
                 <span class="button-icon"><span class="icon-plus"></span></span>
                 Ajouter
             </a>
-
-            <table class="table table-condensed">
+            
+            <table class="table table-condensed" >
+                <thead>
+                    <tr>
+                        <th>Nom Lead</th>
+                        <th>Date échéance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
                 <tbody>
-                    <tr ng-repeat="l in report.leads" class="active">
+                    <tr class="active" ng-if="report.leads.name">
                         
-                        <td>\{{l.name}}</td>
-                        <td>\{{l.potential}}</td>
+                        <td>\{{report.leads.name}}</td>
+                        <td>\{{report.leads.dueDate |date:'dd/MM/yyyy'}}</td>
                         <td>
-                            <a href="" ng-click="deleteLead($index)">
+                            <a href="" ng-click="deleteLead()">
                                 supprimer
                             </a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            
         </div>
         <div data-ng-include="template" class="field-block-include"></div>        
         <div class="field-block button-height wizard-controls clearfix">

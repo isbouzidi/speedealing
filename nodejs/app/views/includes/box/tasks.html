@@ -1,0 +1,45 @@
+<div class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+    <div class="block large-margin-bottom">
+        <div class="block-title">
+            <h3 class="relative thin">
+                Actions à réaliser
+            </h3>
+        </div>
+        <p class="message orange-gradient" ng-show="isTaskRealised" style="font-weight: bold" >
+            Actions réalisées avec succès.
+            <a href="" ng-click="cancelTaskReealised()" style=" float: right; color: white; text-decoration: underline">Annuler</a>
+        </p>
+        <div style="height: 350px; min-height: 10px; overflow: auto;">
+
+            <div id="scrollArea" ng-init="findTasks()">
+
+                <ul class="unstyled-list">
+                    <li>
+                        <ul class="message-menu">
+                            <li ng-repeat="task in listTasks">
+                                <span class="message-info show-on-parent-hover">
+
+                                        <a href="javascript:void(0)" class="button icon-like green-gradient compact" ng-click="taskRealised(task._id)"></a>
+
+                                </span>
+
+                                <strong class="blue">\{{task.societe.name}}</strong><br>
+                                <dl class="definition">
+                                    <span ng-repeat="t in task.actions">
+                                        <dt>\{{t.type}}</dt>
+                                        <dd class="margin-left">\{{t.method}}</dd>
+                                    </span>
+                                </dl>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
