@@ -34,15 +34,10 @@ var mongoose = require('mongoose'),
 		GOOGLE_REDIRECT_URL);
 	var GoogleContacts = require('my-google-contacts').GoogleContacts;
 
+	var gcommon = require('./google.common');
+
 
 /* Public declaration methods. See definition for documentation. */
-exports.generateAuthUrl = generateAuthUrl;
-
-exports.isGoogleUser = isGoogleUser;
-
-exports.isGoogleUserAndHasGrantedAccess = 
-		isGoogleUserAndHasGrantedAccess;
-
 exports.insertContacts = insertContacts;
 
 exports.insertContactsForOneUser =
@@ -50,8 +45,6 @@ exports.insertContactsForOneUser =
 
 exports.insertOneContactForOneUser =
 		insertOneContactForOneUser;
-
-exports.setAccessCode = setAccessCode;
 
 exports.importAddressBooksOfAllUsers = 
 		importAddressBooksOfAllUsers;
@@ -68,97 +61,8 @@ exports.updateSociete = updateSociete;
 
 exports.societeChanged = societeChanged;
 
-// test
-exports.createRemoteContactGroup =
-		createRemoteContactGroup;
 
 /* Methods definitions. */
-
-
-/* Generate url to google service to
-* request user consent to give access for our app.
-* @return url where to redirect the user
-*/
-function generateAuthUrl() {
-	var scopes = [
-	  'https://www.googleapis.com/auth/userinfo.profile',
-	  'https://www.googleapis.com/auth/contacts'
-	];
-	// generate consent page url
-    var url = oauth2Client.generateAuthUrl({
-        access_type: 'offline', // will return a refresh token
-        approval_prompt: 'force',
-        scope: scopes.join(' ')
-    });
-	return url;
-}
-
-
-
-function isGoogleUser(user) {
-	return (user.email.toLowerCase().indexOf("@gmail.com") != -1);
-}
-
-
-function isGoogleUserAndHasGrantedAccess(user) {
-	return isGoogleUser(user) &&
-		(user.google.tokens.access_token &&
-		user.google.tokens.refresh_token &&
-		user.google.user_id);
-}
-
-
-
-
-
-
-function setAccessCode(code, user, callback) {
-
-	// request access token
-    oauth2Client.getToken(code, 
-    	function(err, tokens) {
-        	if (err)
-        		return callback(err);
-        	
-	        // set tokens to the client
-	        oauth2Client.setCredentials(tokens);
-	        console.log("Tokens =", tokens);
-	        
-	        // Get the google user id
-	        googleapis.discover('oauth2', 'v2')
-	        .execute(
-	        	function(err, client) {
-		        	if (err)
-		        		return callback(err);
-
-		        	client.oauth2.userinfo.v2.me.get()
-		        	.withAuthClient(oauth2Client)
-		        	.execute(
-		        		function (err, userinfo) {
-			        		if (err)
-			        			return callback(err);
-
-			        		console.log("userinfo ", userinfo);
-
-					        user = _.extend(user, 
-					        {
-				            	"google": _.extend(user.google,
-								{
-									"user_id": userinfo.id,
-					            	"tokens": tokens
-								})
-				            });
-					        
-					        user.save(function(err, doc) {
-					            callback(err);
-					        });
-	        			}
-	        		);
-	        	}
-	        ); 
-		}
-	);
-}
 
 
 
@@ -172,7 +76,7 @@ function importAddressBooksOfAllUsers (callback) {
 	 *         For each contact
 	 *             Merge him into Contact database
 	 */
-	forEachGoogleUser(imp_treatGoogleUser, callback);
+	gcommon.forEachGoogleUser(imp_treatGoogleUser, callback);
 }
 
 
@@ -373,7 +277,7 @@ function importAddressBooksOfAllUsers (callback) {
 	/* Main function to treat a google user in order to import contacts
 	*/
 	function imp_treatGoogleUser(user, callback) {
-		googleAction(user,
+		gcommon.googleAction(user,
 			function (cb_google) {
 				var my_gcontacts = [];
 				async.series([
@@ -424,7 +328,7 @@ function importAddressBooksOfAllUsers (callback) {
 function insertContacts (contacts, users, callback) {
 	async.each(users,
 		function(user, cb_user) {
-			if (isGoogleUserAndHasGrantedAccess(user))
+			if (gcommon.isGoogleUserAndHasGrantedAccess(user))
 				insertContactsForOneUser(contacts, user, cb_user);
 			else
 				cb_user();
@@ -481,7 +385,7 @@ function hasRemoteContactGroup(user) {
 }
 
 function insertOneContactForOneUser (contact, user, callback) {
-	googleAction(user,
+	gcommon.googleAction(user,
 		function (cb) {
 			async.series([
 				function (cb_sub) {
@@ -612,7 +516,7 @@ function up_insertContactsFromSociete(user, callback) {
 
 function updateGoogleUserAdressBook (user, callback) {
 	console.log(user.id);
-	googleAction(user,
+	gcommon.googleAction(user,
 		function (cb_google) {
 			var my_gcontacts = null;
 
@@ -660,53 +564,6 @@ function updateGoogleUserAdressBook (user, callback) {
 
 
 /* Protected methods */
-
-function googleAction (user, strategy, callback) {
-	if (! isGoogleUserAndHasGrantedAccess(user))
-		return callback(new Error("The user isn't a google user or he doesn't granted access."));
-
-	async.series([
-			function (cb) {
-				refreshGoogleTokens(user, cb);
-			},
-			strategy
-		],
-		callback
-	);
-}
-
-function refreshGoogleTokens (user, callback) {
-	oauth2Client.setCredentials(user.google.tokens);
-
-	oauth2Client.refreshAccessToken(
-		function(err, tokens) {
-			if (err)
-				return callback(err);
-
-			var new_access_token = oauth2Client.credentials.access_token;
-			if (new_access_token != user.google.tokens.access_token) {
-				// update user's access token in database
-				user.google = _.extend(user.google,
-				{
-					"tokens": {
-	        			"access_token": new_access_token,
-	        			"refresh_token": user.google.tokens.refresh_token
-	        		}
-				});
-
-		        user.save(function(err, doc) { callback(err); });
-			} else { // no need to update
-				callback(null);
-			}
-		}
-	);	
-}
-
-
-
-
-
-
 
 
 
@@ -774,30 +631,6 @@ function findNearestContacts(gcontact, callback) {
 
 
 
-function forEachGoogleUser(iterator, callback) {
-	var googleUsers = [];
-
-	var stream = UserModel.find().stream();
-	stream.on('data', function (user) {
-		console.log(">> Scan user : " + user._id);
-
-		if (isGoogleUserAndHasGrantedAccess(user)) {
-			console.log("Treat user : " + user._id + " - " + user.email);
-			googleUsers.push(user);
-		} 
-
-		console.log("");
-	}).on('error', function (err) {
-		callback(err);
-	}).on('close', function () {
-		async.each(googleUsers,
-				   iterator,
-				   callback);
-	});
-}
-
-
-
 
 /*
  * ****************** EXPORT *********************************************
@@ -817,7 +650,7 @@ function updateAddressBooksOfAllUsers(callback) {
 	//			For each contact related to the Societe
 	//				Insert contact as a new google contact
 
-	forEachGoogleUser(updateGoogleUserAdressBook, callback);
+	gcommon.forEachGoogleUser(updateGoogleUserAdressBook, callback);
 }
 
 
@@ -860,7 +693,7 @@ function updateSociete(societe, callback) {
 	// change the query.
 	var stream = UserModel.find({_id: societe.commercial_id.id}).stream();
 	stream.on('data', function (user) {
-		if (isGoogleUserAndHasGrantedAccess(user))
+		if (gcommon.isGoogleUserAndHasGrantedAccess(user))
 			googleUsers.push(user);
 	}).on('error', function (err) {
 		callback(err);

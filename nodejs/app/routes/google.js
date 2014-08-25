@@ -31,7 +31,9 @@
 		// TODO : generate redirect url ?
 		GOOGLE_REDIRECT_URL = config.google.callbackURL;
 
-	var googleController = require('../controllers/google');
+	var googleCommon =   require('../controllers/google.common');
+
+	var googleContacts = require('../controllers/google.contacts');
 
 	module.exports = function(app, passport, auth) {
 
@@ -71,7 +73,7 @@
 
 		authorize : function(req, res) {
 
-			var url = googleController.generateAuthUrl();
+			var url = googleCommon.generateAuthUrl();
 
 			res.send("<a href='" + url + "'>Hello " + req.user.name + ", give access to google account !</a>");
 		},
@@ -83,7 +85,7 @@
 
 			console.log("oauth2callback: user = "+user.id + " ; code = "+code);
 
-			googleController.setAccessCode(code, user,
+			googleCommon.setAccessCode(code, user,
 				function (err) {
 					if (err)
 						res.send(500, "ERR: " + err);
@@ -94,7 +96,7 @@
 		},
 
 		import: function(req, res) {
-			googleController.importAddressBooksOfAllUsers(
+			googleContacts.importAddressBooksOfAllUsers(
 				function (err) {
 					if (err)
 						res.send(500, "ERR: " + err);
@@ -105,7 +107,7 @@
 		},
 
 		export: function(req, res) {
-			googleController.updateAddressBooksOfAllUsers(
+			googleContacts.updateAddressBooksOfAllUsers(
 				function (err) {
 					if (err)
 						res.send(500, "ERR: " + err);
@@ -120,27 +122,27 @@
 			// ContactModel.findOne({'_id':"52721d60a4e3eb2c268b4567"},
 			// 	function (err, contact) {
 
-			// 		googleController.contactChanged(
+			// 		googleContacts.contactChanged(
 			// 			contact,
 			// 			"5220c606269148e7260002b5",
 			// 			"525efd0b2690f6b640000007",
 			// 			function (err) {res.send (err)}
 			// 		);
 									
-			// 		//googleController.societeChanged(contact);
+			// 		//googleContacts.societeChanged(contact);
 					
 			// 	}
 			// );
 
 
-			googleController.createRemoteContactGroup(req.user,
-				function (err) {
-					if (err)
-						res.send(500, "ERR: " + err);
-					else
-						res.send(200, "ok");
-				}
-			);
+			// googleContacts.createRemoteContactGroup(req.user,
+			// 	function (err) {
+			// 		if (err)
+			// 			res.send(500, "ERR: " + err);
+			// 		else
+			// 			res.send(200, "ok");
+			// 	}
+			// );
 
 			
 		}
