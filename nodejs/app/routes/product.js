@@ -450,7 +450,7 @@ Object.prototype = {
 		if (req.query.barCode)
 			query.barCode = {$nin: [null, ""]};
 
-		ProductModel.find(query, "ref label barCode billingMode type caFamily", {limit: 50}, function(err, products) {
+		ProductModel.find(query, "ref label barCode billingMode type caFamily Status tva_tx updatedAt", {limit: 50}, function(err, products) {
 			if (err)
 				console.log(err);
 
