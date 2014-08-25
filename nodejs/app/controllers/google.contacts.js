@@ -32,7 +32,7 @@ var mongoose = require('mongoose'),
 	var oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET,
 		GOOGLE_REDIRECT_URL);
-	
+
 
 	var gcommon = require('./google.common');
 
@@ -207,7 +207,9 @@ function importAddressBooksOfAllUsers (callback) {
 	*  merged : boolean, true if merge succeed
 	*/
 	function imp_mergeByMail(gcontact, callback) {
-		var addresses = array.pluck(gcontact.emails, 'address').value();
+		var addresses = array.pluck(gcontact.emails, 'address');
+		if (typeof addresses.value === 'function')
+			addresses = addresses.value();
 		//console.log("addresses = ", addresses);
 		ContactModel.find({ 'emails.address': { $in : addresses }},
 			function (err, contacts) {
@@ -597,7 +599,9 @@ function findNearestContactsByPhone(gcontact, callback) {
 */
 function findNearestContactsByMail(gcontact, callback) {
 	if (gcontact.emails && gcontact.emails.length > 0) {
-		var addresses = array(gcontact.emails).pluck('address').value();
+		var addresses = array(gcontact.emails).pluck('address');
+		if (typeof addresses.value === 'function')
+			addresses = addresses.value();
 		ContactModel.find({ 'emails.address': { $in : addresses }}, callback);
 	} else {
 		callback(null, []);
@@ -886,9 +890,9 @@ GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
           try { new_contact.firstname   = entry['gd$name']['gd$givenName']['$t']; } catch(e){}
           
           if (entry['gd$organization']) {
-            new_contact.organization = {};
-            try { new_contact.organization.name   = entry['gd$organization'][0]['gd$orgName']['$t']; } catch(e){}
-            try { new_contact.organization.title  = entry['gd$organization'][0]['gd$orgTitle']['$t']; } catch(e){}
+            new_contact.societe = {};
+            try { new_contact.societe.name   = entry['gd$organization'][0]['gd$orgName']['$t']; } catch(e){}
+            try { new_contact.poste = entry['gd$organization'][0]['gd$orgTitle']['$t']; } catch(e){}
           }
           
           /* - Emails - */
@@ -1157,7 +1161,7 @@ GoogleContacts.prototype._buildPathInsert = function (params) {
 };
 
 GoogleContacts.prototype._contactToXML = function (contact) {
-  x = new XMLWriter;
+  var x = new XMLWriter;
   
   x.startElement('atom:entry')
     .writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom')
