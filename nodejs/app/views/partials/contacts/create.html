@@ -1,5 +1,9 @@
 <form data-ng-init='init()' data-ng-submit='createContact()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
-    
+    <script type="text/ng-template" id="searchZipCode.html">
+        <a>
+            <span bind-html-unsafe="match.model.code | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.city"></span>
+        </a>
+    </script>
 	<!-- Block style is optional, you can use any layout -->
 	<h3 class="block-title">{{t 'companies:NewContact'}}</h3>
 
@@ -28,18 +32,26 @@
                 <div class="field-block button-height">
                     <label for="adress"><b>{{t 'companies:Address'}}</b></label>
                     <div class='columns'>
-                        <div class='seven-columns'>
+                        <div class='twelve-columns'>
 
                             <textarea class="input" rows="3" cols="30" data-ng-model="contact.address" placeholder="{{t 'users:Address'}}"></textarea><br/>
+                            
                             <input type="text" 
-                                   data-ng-model="contact.zipCode"
-                                   placeholder="Code postal - Ville" 
-                                   typeahead="contact as contact.code +' - '+ contact.city for contact in contactAutoComplete($viewValue)" 
-                                   typeahead-on-select ="contact.town = contact.zipCode.city"
+                                   data-ng-model="contact.zip"
+                                   placeholder="Code postal" 
+                                   typeahead="contact.code for contact in contactAutoComplete($viewValue)" 
+                                   typeahead-on-select ="generateZip($item)"
+                                   typeahead-template-url="searchZipCode.html"
                                    class="input"
                                    autocomplete="on">
-                        </div>
-                        <div class="five-columns">
+                            <input type="text" 
+                                   data-ng-model="contact.town"
+                                   placeholder="Ville" 
+                                   typeahead="contact.city for contact in contactAutoComplete($viewValue)"
+                                   typeahead-on-select ="generateZip($item)"
+                                   typeahead-template-url="searchZipCode.html"
+                                   class="input"
+                                   autocomplete="on">
                         </div>
                     </div>			
 		</div>
