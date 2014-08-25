@@ -364,7 +364,7 @@ function getDefaultGoogleContactsParams (user) {
 
 function createRemoteContactGroup(user, callback) {
 	var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
-	c.createGroup({'title': 'Speedealing'},
+	c.createGroup({'title': 'CRM'},
 		{'email':user.email},
 		function (err, group_href) {
 			if (err)

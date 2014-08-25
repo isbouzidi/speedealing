@@ -53,15 +53,28 @@ exports.forEachGoogleUser = forEachGoogleUser;
 /* Methods definitions. */
 
 
+function _arr_contains(array_in, element) {
+	return array_in.indexOf(element) >= 0;
+}
+
 /* Generate url to google service to
 * request user consent to give access for our app.
+* @param submodules Array with module's name to enable.
 * @return url where to redirect the user
 */
-function generateAuthUrl() {
+function generateAuthUrl(submodules) {
 	var scopes = [
 	  'https://www.googleapis.com/auth/userinfo.profile',
-	  'https://www.googleapis.com/auth/contacts'
 	];
+
+	if (_arr_contains(submodules,'contacts'))
+		scopes.append('https://www.googleapis.com/auth/contacts');
+	if (_arr_contains(submodules, 'tasks')) {
+		scopes.append('https://www.googleapis.com/auth/tasks');
+		scopes.append('https://www.googleapis.com/auth/tasks.readonly');
+	}
+
+
 	// generate consent page url
     var url = oauth2Client.generateAuthUrl({
         access_type: 'offline', // will return a refresh token

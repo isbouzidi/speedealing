@@ -73,7 +73,7 @@
 
 		authorize : function(req, res) {
 
-			var url = googleCommon.generateAuthUrl();
+			var url = googleCommon.generateAuthUrl(['contacts', 'tasks']);
 
 			res.send("<a href='" + url + "'>Hello " + req.user.name + ", give access to google account !</a>");
 		},
