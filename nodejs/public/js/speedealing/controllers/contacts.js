@@ -1,12 +1,12 @@
 angular.module('mean.contacts').controller('ContactCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Contacts', function($scope, $http, $modalInstance, $upload, $route, Global, Contacts) {
         
     $scope.global = Global;
-    
+    $scope.listCode = {};
     $scope.active = 1;
     
     $scope.init = function(){
         $scope.contact = {};
-        
+        $scope.searchAddress = {};
     };
     
     $scope.isActive = function(idx) {
@@ -23,11 +23,6 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
             "id": $scope.global.contactIdSociete
         };
         
-        if($scope.contact.zipCode){
-            $scope.contact.zip = $scope.contact.zipCode.code;
-            $scope.contact.town = $scope.contact.zipCode.city;
-        }
-        
         var contact = new Contacts(this.contact);
                 
         contact.$save(function(response) {
@@ -41,11 +36,19 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
             return $http.post('api/zipcode/autocomplete', {
                     val: val
             }).then(function(res) {
-                console.log(res.data);
+                $scope.listCode = res.data;
                 
                 return res.data;
             });
         
+    };
+    
+    $scope.generateZip = function(val){
+        
+        if(val){
+            $scope.contact.town = val.city;
+            $scope.contact.zip = val.code;
+        }
     };
     
 }]);
@@ -57,7 +60,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$lo
     };
     
     $scope.etats = [
-                {id: "ST_NEVER", name: "Non déterminé"},
+        {id: "ST_NEVER", name: "Non déterminé"},
         {id: "ST_ENABLE", name: "Actif"},
         {id: "ST_DISABLE", name: "Inactif"},
         {id: "ST_NO", name: "Ne pas contacter"},
