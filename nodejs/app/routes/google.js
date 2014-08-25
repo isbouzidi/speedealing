@@ -14,9 +14,7 @@
 		googleapis = require('googleapis'),
 		async = require("async");
 
-	
 	var OAuth2Client = googleapis.auth.OAuth2;
-	var GoogleContacts = require('my-google-contacts').GoogleContacts;
 
 // Mongoose models
 	var SocieteModel = mongoose.model('societe');
@@ -32,7 +30,6 @@
 		GOOGLE_REDIRECT_URL = config.google.callbackURL;
 
 	var googleCommon =   require('../controllers/google.common');
-
 	var googleContacts = require('../controllers/google.contacts');
 
 	module.exports = function(app, passport, auth) {
