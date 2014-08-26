@@ -116,3 +116,9 @@ angular.module('mean.system').filter('makeRange', function() {
 		return result;
 	};
 });
+
+angular.module('mean.system').filter('userGroupArrayFilter', function() {
+	return function(myArray) {
+    		return myArray.join(', ');
+  };
+});

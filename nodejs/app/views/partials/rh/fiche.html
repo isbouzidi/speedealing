@@ -408,22 +408,19 @@
                                                                                                         </td>
 												</tr>
                                                                                                 <tr>
-													<th scope="row">{{t 'users:Groupe'}}</th>
-                                                                                                        <td>
-                                                                                                            <a href="#" 
-                                                                                                               e-ng-options="g.name for g in userEdit.virtualUserGroup">
-                                                                                                               \{{ showUserGroup() }}
-                                                                                                          </a>
-                                                                                                        <!--
-                                                                                                            <a 
-                                                                                                                href="#" 
-                                                                                                                editable-select="userEdit.groupe" 
-                                                                                                                buttons="no" 
-                                                                                                                e-ng-options="g.name as g.name for g in groupe" 
-                                                                                                                onaftersave="update()">
-                                                                                                                    \{{userEdit.virtualUserGroup.name || "Non defini"}}
-                                                                                                            </a>-->
-                                                                                                        </td>
+                                                                                                    <th scope="row">{{t 'users:Groupe'}}</th>
+                                                                                                        
+												    <td>
+                                                                                                        <a href="#" editable-checklist="userEdit.groupe" 
+                                                                                                           e-ng-options="g._id as g.name for g in groupe"
+                                                                                                           buttons="no"
+                                                                                                           onaftersave="update()"
+                                                                                                           blur="submit"
+                                                                                                           e-form="groupFrm">
+                                                                                                            \{{ showUserGroup() }}
+                                                                                                        </a>
+                                                                                                        <span class="icon-pencil grey" ng-click="groupFrm.$show()" ng-hide="groupFrm.$visible"></span>
+                                                                                                    </td>
 												</tr>
                                                                                                 <tr>
 													<th scope="row">{{t 'users:Type-Contrat'}}</th>

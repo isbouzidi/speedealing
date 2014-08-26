@@ -133,7 +133,7 @@ UserGroupModel.find(function(err, docs) {
     
 });
 
-RhSchema.virtual('virtualUserGroup')
+RhSchema.virtual('userGroup')
 		.get(function() {
                     
 	var userGroup = [];
@@ -144,13 +144,12 @@ RhSchema.virtual('virtualUserGroup')
             for (var k = 0; k < group.length; k++){
                 for(var j in userGroupList){
                     if(userGroupList[j]._id.indexOf(group[k]) > -1)
-                        userGroup.push({_id: userGroupList[j]._id, name: userGroupList[j].name});
+                        userGroup.push(userGroupList[j].name);
                 }
             }
         }
 	
         return userGroup;
-
 });
 
 RhSchema.virtual('fullname').get(function() {

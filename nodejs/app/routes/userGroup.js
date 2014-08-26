@@ -18,6 +18,9 @@ module.exports = function(app, passport, auth) {
 	//afficher la liste des groupes de collaborateurs
         app.get('/api/userGroup', auth.requiresLogin, object.read);
         
+        //recuperer la liste des groupes
+        app.get('/api/userGroup/list', auth.requiresLogin, object.list);
+        
         //verifie si le nouveau groupe exite ou pas
         app.get('/api/userGroup/uniqName', auth.requiresLogin, object.uniqName);
         
@@ -218,6 +221,17 @@ Object.prototype = {
             if (err) {
                 return console.log(err);
             }
+            
+            res.json(200, doc);
+        });
+    },
+    list: function(req, res){
+        
+        var fields = req.query.fields;
+        
+        UserGroupModel.find("ALL" ,fields, function(err, doc){
+            if(err)
+                return res.send(500, err);
             
             res.json(200, doc);
         });

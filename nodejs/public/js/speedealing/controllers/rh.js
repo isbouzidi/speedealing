@@ -8,61 +8,6 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
             $location.path('/rh');
         };
         
-     
-        
-//            $scope.statuts = [
-//                {name: "Actif", id: "ENABLE"},
-//                {name: "Bloqué", id: "DISABLE"},
-//                {name: "Actif/Sans conex.", id: "NOCONNECT"},
-//                {name: "Tous", id: "ALL"}
-//            ];
-//
-//            $scope.statut = {name: "Tous", id: "ALL"};
-//
-//            $scope.contrats = [{name: "NO", id: "-"},
-//                            {name: "CDI", id: "CDI"},
-//                                {name: "CDD", id: "CDD"},
-//                            {name: "CNE", id: "CNE"},
-//                            {name: "Intérim", id: "Intérim"},
-//                            {name: "Apprenti", id: "Apprenti"},
-//                            {name: "Prof", id: "Prof"},
-//                            {name: "CAE", id: "CAE"},
-//                            {name: "CJE", id: "CJE"},
-//                            {name: "Tous", id: "ALL"}];
-//
-//            $scope.contrat = {name: "Tous", id: "ALL"};
-//
-//            $scope.groupes = [{name: "Non affecté", id: "NO_AFF"},
-//                            {name: "Administrator", id: "ADMIN"},
-//                            {name: "commerciaux", id: "COMM"},
-//                            {name: "production", id: "PROD"},
-//                            {name: "speedealing", id: "SPEED"},
-//                            {name: "Tous", id: "ALL"}];
-//
-//            $scope.groupe = {name: "Tous", id: "ALL"};
-//
-//            $scope.sites = [{name: "chaumeil", id: "chaumeil"},
-//                            {name: "clermont", id: "clermont"},
-//                            {name: "Tous", id: "ALL"}];
-//
-//            $scope.site = {name: "Tous", id: "ALL"};
-//            
-//            if($scope.status)
-//                var status = "ss";
-
-            //RH.query({query: this.statut.id},function(rh) {
-            
-//            $http({method: 'GET', url: '/api/rh'}).
-//                    success(function(rh, status) {
-//                        alert(status);
-//                        $scope.rh = rh;
-//                        $scope.countRH = rh.length;
-//                    });
-            
-                
-            //var prm = {'entity':'clermont', status:'ENABLE'};
-            
-        
         $scope.find = function() {
         
             RH.query(function(user) { 
@@ -87,8 +32,7 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
                         }).success(function(data, status, headers, config) {
                             if (!data.update) // if not file update, add file to files[]
                                 $scope.societe.files.push(data.file);
-                                
-                            console.log("tkherbi9 hada : " + data);                                        
+                                                                 
                         });                            
                 }
         };
@@ -185,7 +129,7 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
             columnDefs: [
                     {field: 'fullname', displayName: 'Employé', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/rh/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div>'},
                     {field: 'poste', displayName: 'Poste'},
-                    {field: 'groupe', displayName: 'Groupe'},
+                    {field: 'userGroup', displayName: 'Groupe', cellFilter: 'userGroupArrayFilter'},
                     {field: 'entity', displayName: 'Site'},
                     {field: 'contrat', displayName: 'Contrat'},
                     {field: 'status.name', displayName: 'Statut', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'}
@@ -222,14 +166,15 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
                     });
             });
            
-            $http({ method: 'GET', url: '/api/UserGroup/fk_extrafields/select', 
-                        params: { field: "name" }
+            $http({ method: 'GET', url: '/api/UserGroup/list', 
+                params: {fields: "name"}
 
-                        }).success(function(data) {
-                                    
-                            $scope.groupe = data;
-                 });
+                    }).success(function(data) {
+                        
+                        $scope.groupe = data;
+             });
                  
+            
                  
                  
             $http({ method: 'GET', url: '/api/site/fk_extrafields/select', 
@@ -279,23 +224,22 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
                     Id: $routeParams.id
             }, function(doc) {
                     $scope.userEdit = doc;
-                    
-                    pageTitle.setTitle('Fiche ' + $scope.userEdit.lastname + ' ' + $scope.userEdit.firstname);
+                    pageTitle.setTitle('Fiche ' + $scope.fullname);
                    
             });
-            
              
         };
         
         $scope.showUserGroup = function() {
             
             var selected = [];
-            angular.forEach($scope.userEdit.virtualUserGroup, function(s) { 
-                    
-                   selected.push(s.name);
-                
+            angular.forEach($scope.groupe, function(g) { 
+              if ($scope.userEdit.groupe.indexOf(g._id) >= 0) {
+                selected.push(g.name);
+              }
             });
-            return selected.length ? selected.join(', ') : 'Not set';
+            return selected.length ? selected.join(', ') : 'indéfini';
+              
         };
         
         $scope.addNote = function() {
@@ -316,8 +260,6 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
 			$scope.update();
 			this.note = "";
 		};
-        
-        
 }]);
 
 app.directive('ngConfirmClick', [

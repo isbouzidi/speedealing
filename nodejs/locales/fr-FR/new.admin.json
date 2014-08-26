@@ -1308,8 +1308,8 @@
     "Sms": "admin:Sms",
     "Infos": "admin:Infos",
     "Memcached": "admin:Memcached",
-    "PHPinfo": "admin:PHPinfo",
-    "Triggers": "admin:Triggers",
+    "PHPinfo": "admin:PHPinfo"
+}    "Triggers": "admin:Triggers",
     "About": "admin:About",
     "Purge": "admin:Purge"
 }

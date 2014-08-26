@@ -26,7 +26,8 @@ window.app = angular.module('mean', [
 	'mean.contacts',
         'mean.reports',
         'mean.delivery',
-        'mean.lead'
+        'mean.lead',
+	'checklist-model'
 ]);
 
 angular.module('mean.system', []);
