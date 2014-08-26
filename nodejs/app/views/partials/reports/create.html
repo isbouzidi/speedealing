@@ -88,7 +88,7 @@
             </select>
             <a href="" class="button" style="float: left" ng-click="addNewContact()">
                 <span class="button-icon"><span class="icon-plus"></span></span>
-                Ajouter
+                {{t "Create"}}
             </a>
 
             <table class="table table-condensed">
@@ -124,7 +124,7 @@
             </select>
             <a href="" class="button" style="float: left" ng-click="addNewLead()">
                 <span class="button-icon"><span class="icon-plus"></span></span>
-                Ajouter
+                {{t "Create"}}
             </a>
             
             <table class="table table-condensed" >
@@ -136,10 +136,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="active" ng-if="report.leads.name">
+                    <tr class="active" ng-if="report.lead.name">
                         
-                        <td>\{{report.leads.name}}</td>
-                        <td>\{{report.leads.dueDate |date:'dd/MM/yyyy'}}</td>
+                        <td>\{{report.lead.name}}</td>
+                        <td>\{{report.lead.dueDate |date:'dd/MM/yyyy'}}</td>
                         <td>
                             <a href="" ng-click="deleteLead()">
                                 supprimer

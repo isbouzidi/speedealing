@@ -44,7 +44,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         $scope.actionDate = [];
         $scope.lead = {};
         $scope.leads = [];
-        $scope.report.leads = {};
+        $scope.report.lead = {};
         
         $scope.prospectLevel = {selectedOption: null};
         
@@ -92,8 +92,8 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 });
             });
             
-            $http({method: 'GET', url: 'api/report/leads', params: {
-					societe: object.societe._id
+            $http({method: 'GET', url: 'api/lead', params: {
+					'societe.id': object.societe._id
                 }
             }).success(function(data) {
                 
@@ -281,8 +281,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             });
 
             modalInstance.result.then(function(leads) {
-                
-                $scope.report.leads = {
+                $scope.report.lead = {
                     id: leads._id,
                     name: leads.name,
                     dueDate: leads.dueDate
@@ -344,7 +343,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         
         $scope.addLead = function() {
             
-            $scope.report.leads = {
+            $scope.report.lead = {
                 id: $scope.report.lead._id,
                 name: $scope.report.lead.name,
 				dueDate: $scope.report.lead.dueDate
@@ -359,7 +358,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         
         $scope.deleteLead = function($index) {
 
-            $scope.report.leads = {};
+            $scope.report.lead = {};
         };
         
 		$scope.showReason = function() {

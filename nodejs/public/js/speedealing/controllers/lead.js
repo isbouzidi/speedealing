@@ -1,35 +1,36 @@
-angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$modalInstance', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Lead', function($scope, $location, $http, $routeParams, $modal, $modalInstance, $filter, $upload, $timeout, pageTitle, Global, Lead) {
+angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http', '$modalInstance', 'Global', 'Lead','object', function($scope, $http, $modalInstance, Global, Lead, object) {
 
-    $scope.global = Global;
+		$scope.global = Global;
 
-    $scope.init = function() {
+		$scope.lead = {
+			entity : Global.user.entity,
+			societe: {
+				name: object.societe.name,
+				id: object.societe.id
+			}
+		};
 
-        $scope.leads= {}; 
-        
-        $http({method: 'GET', url: '/api/report/fk_extrafields/lead', params: {
-                    field: "Status"
-                }
-            }).success(function(data) {
+		$scope.init = function() {
 
-                $scope.status = data;
-            });
+			$http({method: 'GET', url: '/api/report/fk_extrafields/lead', params: {
+					field: "Status"
+				}
+			}).success(function(data) {
 
-    };
-    
-    $scope.createLead = function(){
-        
-        $scope.leads.societe = {
-            name: $scope.global.contactNameSociete,
-            id: $scope.global.contactIdSociete
-        };
+				$scope.status = data;
+			});
 
-        var lead = new Lead(this.leads);
+		};
 
-        lead.$save(function(response) {
-            $modalInstance.close(response);
-            
-         });
+		$scope.createLead = function() {
 
-    };
-    
-}]);
+			var lead = new Lead(this.lead);
+
+			lead.$save(function(response) {
+				$modalInstance.close(response);
+
+			});
+
+		};
+
+	}]);

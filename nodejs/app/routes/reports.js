@@ -13,7 +13,6 @@ var ProductModel = mongoose.model('product');
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
-var LeadModel = mongoose.model('lead');
 
 module.exports = function(app, passport, auth) {
 
@@ -29,25 +28,6 @@ module.exports = function(app, passport, auth) {
         var societe = req.query.societe;
 
         ContactModel.find({'societe.id': societe}, function(err, doc) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            ;
-            return res.send(200, doc);
-
-        });
-
-    });
-    
-    app.get('/api/report/leads', auth.requiresLogin, function(req, res) {
-        
-        if (req.query.societe === null)
-            return res.send(200, {});
-        
-        var societe = req.query.societe;
-
-        LeadModel.find({'societe.id': societe}, function(err, doc) {
             if (err) {
                 console.log(err);
                 return;

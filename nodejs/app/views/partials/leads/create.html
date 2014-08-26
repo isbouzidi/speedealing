@@ -6,7 +6,7 @@
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
             <label for="name"><b>{{t "reports:Name"}}</b></label>
-            <input type="text" ng-model="leads.name" id="name" class="input" autocomplete="off">
+            <input type="text" ng-model="lead.name" id="name" class="input" autocomplete="off">
         </div>
         
         <div class="field-block button-height">
@@ -17,7 +17,7 @@
                         kendo-date-picker required
                         ng-model ="dueDate"
                         id="dueDate"
-                        k-on-change="leads.dueDate = kendoEvent.sender._value;" 
+                        k-on-change="lead.dueDate = kendoEvent.sender._value;" 
                         class="input"/>
                 </span>
             </span>

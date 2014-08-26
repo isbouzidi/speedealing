@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'pageTitle', 'Global', 'Societes', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'pageTitle', 'Global', 'Societes', function($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, pageTitle, Global, Societe) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des sociétés');
 
@@ -151,7 +151,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$http({method: 'GET', url: 'api/report', params:
 							{
 								find: {"societe.id": societe._id},
-								fields: "dateReport model author.name comment realised"
+								fields: "dateReport model author.name comment realised lead"
 							}
 				}).success(function(data, status) {
 
@@ -716,11 +716,11 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 			i18n: 'fr',
 			enableColumnResize: true,
 			columnDefs: [
-				{field: 'model', displayName: 'Model', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'model', displayName: 'Model', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'lead.name\')">(Affaire : {{row.getProperty(\'lead.name\')}})</small></a>'},
 				{field: 'dateReport', displayName: 'Date', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'author.name', displayName: 'Auteur'},
-				{field: 'RealisedStatus.id', displayName: 'Status', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'RealisedStatus.css\')}} glossy">{{row.getProperty(\'RealisedStatus.id\')}}</small></div>'},
-				{field: 'comment', displayName: 'Commentaire'}
+				{field: 'RealisedStatus.id', displayName: 'Etat des actions', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'RealisedStatus.css\')}} glossy">{{row.getProperty(\'RealisedStatus.id\')}}</small></div>'},
+				{field: 'comment', displayName: 'Commentaires'}
 			]
 		};
 
@@ -818,6 +818,16 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$loc
 				$scope.reports.push(reports);
 				$scope.countReports++;
 			}, function() {
+			});
+		};
+
+		$scope.findReport = function(id) {
+
+			$rootScope.idReport = id;
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/reports/fiche.html',
+				controller: "ReportController",
+				windowClass: "steps"
 			});
 		};
 	}]);
