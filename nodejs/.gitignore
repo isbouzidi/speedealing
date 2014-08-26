@@ -9,3 +9,4 @@ config.json
 wsdl/
 development.json
 somefile.log
+new.*.json

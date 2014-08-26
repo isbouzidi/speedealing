@@ -1,0 +1,50 @@
+<section data-ng-controller="SocieteController">
+	<hgroup id="main-title" class="thin">
+		<h1>Segmentation des sociétés</h1>
+	</hgroup>
+	
+	<script type="text/ng-template" id="rename.html">
+		<div class="modal-header">
+			<h4 class="modal-title">
+				<span class="icon-pencil"></span> Renommer segmentation</h4>
+			</div>
+			<div class="modal-body">
+				<ng-form name="nameDialog" novalidate role="form">
+					<div class="form-group input-group-lg">
+						<label class="control-label" for="data">Segmentation : </label>
+						<input type="text" class="input" name="data" id="data" ng-model="data.id" ng-keyup="hitEnter($event)" required>
+					</div>
+				</ng-form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" ng-click="cancel()">Annuler</button>
+				<button type="button" class="btn btn-primary" ng-click="save()">Enreg.</button>
+			</div>
+		</div>
+    </script>
+
+	<div class="with-padding" data-ng-init="findSegmentation()">
+
+		<div class="table-header silver-gradient glossy button-height">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="button-group">
+						<button title="{{t 'Refresh'}}" class="button" data-ng-click="findSegmentation()"><span class="icon-redo"></span></button>
+					</div>
+				</div>
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+					<div class="float-right">
+						{{t 'Search'}} <input type="text" data-ng-model="filterOptionsSegmentation.filterText" class="input small mid-margin-left">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gridStyle"  data-ng-grid="gridOptionsSegementation" ng-style="style(170)" resize></div>
+		<div class="table-footer silver-gradient button-height">
+			\{{countSegmentations}} ligne(s)
+		</div>
+
+	</div>
+</section>

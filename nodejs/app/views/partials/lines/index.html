@@ -4,7 +4,7 @@
 	<h3 class="block-title">{{t 'products:ProductOrService'}}</h3>
 	<script type="text/ng-template" id="searchproduct.html">
 	<a>
-      <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.label"></span> (\{{match.model.price.price_level}} : \{{match.model.price.pu_ht|currency}})
+      <span bind-html-unsafe="match.model.product.id.ref | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.product.id.label"></span> (\{{match.model.price_level}} : \{{match.model.pu_ht|currency}})
 	</a>
 	</script>
 

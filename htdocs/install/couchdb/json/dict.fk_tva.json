@@ -1,1346 +1,815 @@
 {
-   "_id": "dict:fk_tva",
-   "class": "Dict",
-   "values": [
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "AR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "IVA Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 10.5,
-           "pays_code": "AR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "IVA reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 21,
-           "pays_code": "AR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "IVA standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "AU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 10,
-           "pays_code": "AU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "AT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 10,
-           "pays_code": "AT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "AT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "BB",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "No VAT"
-       },
-       {
-           "enable": true,
-           "label": 7.5,
-           "pays_code": "BB",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 7.5%"
-       },
-       {
-           "enable": true,
-           "label": 15,
-           "pays_code": "BB",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 15%"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "BE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0 ou non applicable"
-       },
-       {
-           "enable": true,
-           "label": 6,
-           "pays_code": "BE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 12,
-           "pays_code": "BE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 21,
-           "pays_code": "BE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "BG",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 7,
-           "pays_code": "BG",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "BG",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "CA",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 7,
-           "pays_code": "CA",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "CL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 19,
-           "pays_code": "CL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "CN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 3,
-           "pays_code": "CN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super reduced rate 0"
-       },
-       {
-           "enable": true,
-           "label": 13,
-           "pays_code": "CN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate 0"
-       },
-       {
-           "enable": true,
-           "label": 17,
-           "pays_code": "CN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "DK",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 25,
-           "pays_code": "DK",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "FR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0 ou non applicable"
-       },
-       {
-           "enable": true,
-           "label": 2.1,
-           "pays_code": "FR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 5.5,
-           "pays_code": "FR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate (France hors DOM-TOM)"
-       },
-       {
-           "enable": false,
-           "label": 8.5,
-           "pays_code": "FR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin)"
-       },
-       {
-           "enable": false,
-           "label": 8.5,
-           "pays_code": "FR",
-           "recuperableonly": true,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin), non perçu par le vendeur mais récupérable par acheteur"
-       },
-       {
-           "enable": true,
-           "label": 19.6,
-           "pays_code": "FR",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate (France hors DOM-TOM)"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "DE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 7,
-           "pays_code": "DE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 19,
-           "pays_code": "DE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "HN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "No ISV"
-       },
-       {
-           "enable": true,
-           "label": 12,
-           "pays_code": "HN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "ISV 12%"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "IN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 1,
-           "pays_code": "IN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 4,
-           "pays_code": "IN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 12.5,
-           "pays_code": "IN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "IS",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT rate 0"
-       },
-       {
-           "enable": true,
-           "label": 7,
-           "pays_code": "IS",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 25.5,
-           "pays_code": "IS",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "IT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 4,
-           "pays_code": "IT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 10,
-           "pays_code": "IT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "IT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "JP",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 5,
-           "pays_code": "JP",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 5"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "LU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 3,
-           "pays_code": "LU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 6,
-           "pays_code": "LU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 12,
-           "pays_code": "LU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 15,
-           "pays_code": "LU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "MA",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 7,
-           "pays_code": "MA",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 10,
-           "pays_code": "MA",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 14,
-           "pays_code": "MA",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "MA",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "MU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 15,
-           "pays_code": "MU",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 15"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "MX",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "No VAT"
-       },
-       {
-           "enable": true,
-           "label": 10,
-           "pays_code": "MX",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Frontero"
-       },
-       {
-           "enable": true,
-           "label": 16,
-           "pays_code": "MX",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 16%"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "MC",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0 ou non applicable"
-       },
-       {
-           "enable": true,
-           "label": 2.1,
-           "pays_code": "MC",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": false,
-           "label": 5.5,
-           "pays_code": "MC",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate (France hors DOM-TOM)"
-       },
-       {
-           "enable": true,
-           "label": 7,
-           "pays_code": "MC",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": false,
-           "label": 8.5,
-           "pays_code": "MC",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin)"
-       },
-       {
-           "enable": false,
-           "label": 8.5,
-           "pays_code": "MC",
-           "recuperableonly": true,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin), non perçu par le vendeur mais récupérable par acheteur"
-       },
-       {
-           "enable": true,
-           "label": 19.6,
-           "pays_code": "MC",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate (France hors DOM-TOM)"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "NL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 6,
-           "pays_code": "NL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 19,
-           "pays_code": "NL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "NO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 8,
-           "pays_code": "NO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 14,
-           "pays_code": "NO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 25,
-           "pays_code": "NO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "NZ",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 15,
-           "pays_code": "NZ",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "PL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 3,
-           "pays_code": "PL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 7,
-           "pays_code": "PL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "PL",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "PT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 5,
-           "pays_code": "PT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 12,
-           "pays_code": "PT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "PT",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "RO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 5,
-           "pays_code": "RO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 9,
-           "pays_code": "RO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 24,
-           "pays_code": "RO",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "MF",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "PM",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "No VAT in SPM"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "SV",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "SIN IVA"
-       },
-       {
-           "enable": true,
-           "label": 13,
-           "pays_code": "SV",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "IVA 13"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "SK",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 10,
-           "pays_code": "SK",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 19,
-           "pays_code": "SK",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "SI",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 8.5,
-           "pays_code": "SI",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "SI",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "ES",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 4,
-           "pays_code": "ES",
-           "recuperableonly": false,
-           "localtax1": 0.5,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 8,
-           "pays_code": "ES",
-           "recuperableonly": false,
-           "localtax1": 1,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 18,
-           "pays_code": "ES",
-           "recuperableonly": false,
-           "localtax1": 4,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "CH",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 2.4,
-           "pays_code": "CH",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 3.6,
-           "pays_code": "CH",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 7.6,
-           "pays_code": "CH",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "SE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 6,
-           "pays_code": "SE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT super-reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 12,
-           "pays_code": "SE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 25,
-           "pays_code": "SE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "TN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 6,
-           "pays_code": "TN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 6%"
-       },
-       {
-           "enable": true,
-           "label": 7.5,
-           "pays_code": "TN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 6% Majoré à 25% (7.5%)"
-       },
-       {
-           "enable": true,
-           "label": 12,
-           "pays_code": "TN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 12%"
-       },
-       {
-           "enable": true,
-           "label": 15,
-           "pays_code": "TN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 12% Majoré à 25% (15%)"
-       },
-       {
-           "enable": true,
-           "label": 18,
-           "pays_code": "TN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 18%"
-       },
-       {
-           "enable": true,
-           "label": 22.5,
-           "pays_code": "TN",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 18% Majoré à 25% (22.5%)"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "GB",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT Rate 0"
-       },
-       {
-           "enable": true,
-           "label": 5,
-           "pays_code": "GB",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT reduced rate"
-       },
-       {
-           "enable": true,
-           "label": 17.5,
-           "pays_code": "GB",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate before 2011"
-       },
-       {
-           "enable": true,
-           "label": 20,
-           "pays_code": "GB",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT standard rate"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "US",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "No Sales Tax"
-       },
-       {
-           "enable": true,
-           "label": 4,
-           "pays_code": "US",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "Sales Tax 4%"
-       },
-       {
-           "enable": true,
-           "label": 6,
-           "pays_code": "US",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "Sales Tax 6%"
-       },
-       {
-           "enable": true,
-           "label": 0,
-           "pays_code": "VE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "No VAT"
-       },
-       {
-           "enable": true,
-           "label": 8,
-           "pays_code": "VE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 8%"
-       },
-       {
-           "enable": true,
-           "label": 12,
-           "pays_code": "VE",
-           "recuperableonly": false,
-           "localtax1": 0,
-           "localtax2": 0,
-           "accountancy_code": null,
-           "notes": "VAT 12%"
-       }
-   ]
+	"_id": "dict:fk_tva",
+	"values": [
+		{
+			"value": 0,
+			"notes": "IVA Rate 0",
+			"pays_code": "AR",
+			"enable": true
+		},
+		{
+			"value": 10.5,
+			"notes": "IVA reduced rate",
+			"pays_code": "AR",
+			"enable": true
+		},
+		{
+			"value": 21,
+			"notes": "IVA standard rate",
+			"pays_code": "AR",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "AU",
+			"enable": true
+		},
+		{
+			"value": 10,
+			"notes": "VAT standard rate",
+			"pays_code": "AU",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "AT",
+			"enable": true
+		},
+		{
+			"value": 10,
+			"notes": "VAT reduced rate",
+			"pays_code": "AT",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "AT",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "No VAT",
+			"pays_code": "BB",
+			"enable": true
+		},
+		{
+			"value": 7.5,
+			"notes": "VAT 7.5%",
+			"pays_code": "BB",
+			"enable": true
+		},
+		{
+			"value": 15,
+			"notes": "VAT 15%",
+			"pays_code": "BB",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0 ou non applicable",
+			"pays_code": "BE",
+			"enable": true
+		},
+		{
+			"value": 6,
+			"notes": "VAT reduced rate",
+			"pays_code": "BE",
+			"enable": true
+		},
+		{
+			"value": 12,
+			"notes": "VAT reduced rate",
+			"pays_code": "BE",
+			"enable": true
+		},
+		{
+			"value": 21,
+			"notes": "VAT standard rate",
+			"pays_code": "BE",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "BG",
+			"enable": true
+		},
+		{
+			"value": 7,
+			"notes": "VAT reduced rate",
+			"pays_code": "BG",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "BG",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "CA",
+			"enable": true
+		},
+		{
+			"value": 7,
+			"notes": "VAT standard rate",
+			"pays_code": "CA",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "CL",
+			"enable": true
+		},
+		{
+			"value": 19,
+			"notes": "VAT standard rate",
+			"pays_code": "CL",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "CN",
+			"enable": true
+		},
+		{
+			"value": 3,
+			"notes": "VAT super reduced rate 0",
+			"pays_code": "CN",
+			"enable": true
+		},
+		{
+			"value": 13,
+			"notes": "VAT reduced rate 0",
+			"pays_code": "CN",
+			"enable": true
+		},
+		{
+			"value": 17,
+			"notes": "VAT standard rate",
+			"pays_code": "CN",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "DK",
+			"enable": true
+		},
+		{
+			"value": 25,
+			"notes": "VAT standard rate",
+			"pays_code": "DK",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0 ou non applicable",
+			"pays_code": "FR",
+			"enable": true
+		},
+		{
+			"value": 2.1,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "FR",
+			"enable": true
+		},
+		{
+			"value": 5.5,
+			"notes": "VAT reduced rate (France hors DOM-TOM)",
+			"pays_code": "FR",
+			"enable": true
+		},
+		{
+			"value": 8.5,
+			"notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin)",
+			"pays_code": "FR"
+		},
+		{
+			"value": 8.5,
+			"notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin), non perçu par le vendeur mais récupérable par acheteur",
+			"recuperableonly": true,
+			"pays_code": "FR"
+		},
+		{
+			"value": 19.6,
+			"notes": "VAT standard rate (France hors DOM-TOM)",
+			"pays_code": "FR",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "New VAT standard rate (France hors DOM-TOM)",
+			"pays_code": "FR",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "DE",
+			"enable": true
+		},
+		{
+			"value": 7,
+			"notes": "VAT reduced rate",
+			"pays_code": "DE",
+			"enable": true
+		},
+		{
+			"value": 19,
+			"notes": "VAT standard rate",
+			"pays_code": "DE",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "No ISV",
+			"pays_code": "HN",
+			"enable": true
+		},
+		{
+			"value": 12,
+			"notes": "ISV 12%",
+			"pays_code": "HN",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "IN",
+			"enable": true
+		},
+		{
+			"value": 1,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "IN",
+			"enable": true
+		},
+		{
+			"value": 4,
+			"notes": "VAT reduced rate",
+			"pays_code": "IN",
+			"enable": true
+		},
+		{
+			"value": 12.5,
+			"notes": "VAT standard rate",
+			"pays_code": "IN",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT rate 0",
+			"pays_code": "IS",
+			"enable": true
+		},
+		{
+			"value": 7,
+			"notes": "VAT reduced rate",
+			"pays_code": "IS",
+			"enable": true
+		},
+		{
+			"value": 25.5,
+			"notes": "VAT standard rate",
+			"pays_code": "IS",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "IT",
+			"enable": true
+		},
+		{
+			"value": 4,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "IT",
+			"enable": true
+		},
+		{
+			"value": 10,
+			"notes": "VAT reduced rate",
+			"pays_code": "IT",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "IT",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "JP",
+			"enable": true
+		},
+		{
+			"value": 5,
+			"notes": "VAT Rate 5",
+			"pays_code": "JP",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "LU",
+			"enable": true
+		},
+		{
+			"value": 3,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "LU",
+			"enable": true
+		},
+		{
+			"value": 6,
+			"notes": "VAT reduced rate",
+			"pays_code": "LU",
+			"enable": true
+		},
+		{
+			"value": 12,
+			"notes": "VAT reduced rate",
+			"pays_code": "LU",
+			"enable": true
+		},
+		{
+			"value": 15,
+			"notes": "VAT standard rate",
+			"pays_code": "LU",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "MA",
+			"enable": true
+		},
+		{
+			"value": 7,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "MA",
+			"enable": true
+		},
+		{
+			"value": 10,
+			"notes": "VAT reduced rate",
+			"pays_code": "MA",
+			"enable": true
+		},
+		{
+			"value": 14,
+			"notes": "VAT reduced rate",
+			"pays_code": "MA",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "MA",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "MU",
+			"enable": true
+		},
+		{
+			"value": 15,
+			"notes": "VAT Rate 15",
+			"pays_code": "MU",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "No VAT",
+			"pays_code": "MX",
+			"enable": true
+		},
+		{
+			"value": 10,
+			"notes": "VAT Frontero",
+			"pays_code": "MX",
+			"enable": true
+		},
+		{
+			"value": 16,
+			"notes": "VAT 16%",
+			"pays_code": "MX",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0 ou non applicable",
+			"pays_code": "MC",
+			"enable": true
+		},
+		{
+			"value": 2.1,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "MC",
+			"enable": true
+		},
+		{
+			"value": 5.5,
+			"notes": "VAT reduced rate (France hors DOM-TOM)",
+			"pays_code": "MC"
+		},
+		{
+			"value": 7,
+			"notes": "VAT reduced rate",
+			"pays_code": "MC",
+			"enable": true
+		},
+		{
+			"value": 8.5,
+			"notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin)",
+			"pays_code": "MC"
+		},
+		{
+			"value": 8.5,
+			"notes": "VAT standard rate (DOM sauf Guyane et Saint-Martin), non perçu par le vendeur mais récupérable par acheteur",
+			"recuperableonly": true,
+			"pays_code": "MC"
+		},
+		{
+			"value": 19.6,
+			"notes": "VAT standard rate (France hors DOM-TOM)",
+			"pays_code": "MC",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "NL",
+			"enable": true
+		},
+		{
+			"value": 6,
+			"notes": "VAT reduced rate",
+			"pays_code": "NL",
+			"enable": true
+		},
+		{
+			"value": 19,
+			"notes": "VAT standard rate",
+			"pays_code": "NL",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "NO",
+			"enable": true
+		},
+		{
+			"value": 8,
+			"notes": "VAT reduced rate",
+			"pays_code": "NO",
+			"enable": true
+		},
+		{
+			"value": 14,
+			"notes": "VAT reduced rate",
+			"pays_code": "NO",
+			"enable": true
+		},
+		{
+			"value": 25,
+			"notes": "VAT standard rate",
+			"pays_code": "NO",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "NZ",
+			"enable": true
+		},
+		{
+			"value": 15,
+			"notes": "VAT standard rate",
+			"pays_code": "NZ",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "PL",
+			"enable": true
+		},
+		{
+			"value": 3,
+			"notes": "VAT reduced rate",
+			"pays_code": "PL",
+			"enable": true
+		},
+		{
+			"value": 7,
+			"notes": "VAT reduced rate",
+			"pays_code": "PL",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "PL",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "PT",
+			"enable": true
+		},
+		{
+			"value": 5,
+			"notes": "VAT reduced rate",
+			"pays_code": "PT",
+			"enable": true
+		},
+		{
+			"value": 12,
+			"notes": "VAT reduced rate",
+			"pays_code": "PT",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "PT",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "RO",
+			"enable": true
+		},
+		{
+			"value": 5,
+			"notes": "VAT reduced rate",
+			"pays_code": "RO",
+			"enable": true
+		},
+		{
+			"value": 9,
+			"notes": "VAT reduced rate",
+			"pays_code": "RO",
+			"enable": true
+		},
+		{
+			"value": 24,
+			"notes": "VAT standard rate",
+			"pays_code": "RO",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "MF",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "No VAT in SPM",
+			"pays_code": "PM",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "SIN IVA",
+			"pays_code": "SV",
+			"enable": true
+		},
+		{
+			"value": 13,
+			"notes": "IVA 13",
+			"pays_code": "SV",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "SK",
+			"enable": true
+		},
+		{
+			"value": 10,
+			"notes": "VAT reduced rate",
+			"pays_code": "SK",
+			"enable": true
+		},
+		{
+			"value": 19,
+			"notes": "VAT standard rate",
+			"pays_code": "SK",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "SI",
+			"enable": true
+		},
+		{
+			"value": 8.5,
+			"notes": "VAT reduced rate",
+			"pays_code": "SI",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "SI",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "ES",
+			"enable": true
+		},
+		{
+			"value": 4,
+			"notes": "VAT super-reduced rate",
+			"localtax1": 0.5,
+			"pays_code": "ES",
+			"enable": true
+		},
+		{
+			"value": 8,
+			"notes": "VAT reduced rate",
+			"localtax1": 1,
+			"pays_code": "ES",
+			"enable": true
+		},
+		{
+			"value": 18,
+			"notes": "VAT standard rate",
+			"localtax1": 4,
+			"pays_code": "ES",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "CH",
+			"enable": true
+		},
+		{
+			"value": 2.4,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "CH",
+			"enable": true
+		},
+		{
+			"value": 3.6,
+			"notes": "VAT reduced rate",
+			"pays_code": "CH",
+			"enable": true
+		},
+		{
+			"value": 7.6,
+			"notes": "VAT standard rate",
+			"pays_code": "CH",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "SE",
+			"enable": true
+		},
+		{
+			"value": 6,
+			"notes": "VAT super-reduced rate",
+			"pays_code": "SE",
+			"enable": true
+		},
+		{
+			"value": 12,
+			"notes": "VAT reduced rate",
+			"pays_code": "SE",
+			"enable": true
+		},
+		{
+			"value": 25,
+			"notes": "VAT standard rate",
+			"pays_code": "SE",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "TN",
+			"enable": true
+		},
+		{
+			"value": 6,
+			"notes": "VAT 6%",
+			"pays_code": "TN",
+			"enable": true
+		},
+		{
+			"value": 7.5,
+			"notes": "VAT 6% Majoré à 25% (7.5%)",
+			"pays_code": "TN",
+			"enable": true
+		},
+		{
+			"value": 12,
+			"notes": "VAT 12%",
+			"pays_code": "TN",
+			"enable": true
+		},
+		{
+			"value": 15,
+			"notes": "VAT 12% Majoré à 25% (15%)",
+			"pays_code": "TN",
+			"enable": true
+		},
+		{
+			"value": 18,
+			"notes": "VAT 18%",
+			"pays_code": "TN",
+			"enable": true
+		},
+		{
+			"value": 22.5,
+			"notes": "VAT 18% Majoré à 25% (22.5%)",
+			"pays_code": "TN",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "VAT Rate 0",
+			"pays_code": "GB",
+			"enable": true
+		},
+		{
+			"value": 5,
+			"notes": "VAT reduced rate",
+			"pays_code": "GB",
+			"enable": true
+		},
+		{
+			"value": 17.5,
+			"notes": "VAT standard rate before 2011",
+			"pays_code": "GB",
+			"enable": true
+		},
+		{
+			"value": 20,
+			"notes": "VAT standard rate",
+			"pays_code": "GB",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "No Sales Tax",
+			"pays_code": "US",
+			"enable": true
+		},
+		{
+			"value": 4,
+			"notes": "Sales Tax 4%",
+			"pays_code": "US",
+			"enable": true
+		},
+		{
+			"value": 6,
+			"notes": "Sales Tax 6%",
+			"pays_code": "US",
+			"enable": true
+		},
+		{
+			"value": 0,
+			"notes": "No VAT",
+			"pays_code": "VE",
+			"enable": true
+		},
+		{
+			"value": 8,
+			"notes": "VAT 8%",
+			"pays_code": "VE",
+			"enable": true
+		},
+		{
+			"value": 12,
+			"notes": "VAT 12%",
+			"pays_code": "VE",
+			"enable": true
+		}
+	]
 }

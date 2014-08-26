@@ -1,0 +1,69 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">\{{'orders:NewOrder' | i18next}} <span class="blue">\{{order.ref}}</span></h3>
+
+	<!-- Each form step should be wrapped in a fieldset -->
+	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+		<div class="field-block">
+			<h4>{{t 'Hello'}}</h4>
+			<p>Bienvenue sur la plateforme de création des commandes fournisseurs en ligne.</p>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="supplier"><b>{{t 'suppliers:Supplier'}}</b></label>
+			<input required type="text" data-ng-model="order.supplier" typeahead-on-select="updateCoord($item, $model, $label)" typeahead="societe as societe.name for societe in supplierAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="supplier" class="input" autocomplete="off">
+		</div>
+		
+		<div class="field-block button-height" ng-show="order.supplier.isNameModified">
+			<label for="name"><b>{{t 'Name'}}</b></label>
+			<input type="text" data-ng-model="order.supplier.name" id="namw" class="input" autocomplete="off">
+			<small class="icon-info blue input-info"> Mettre ici le nom de la société n'ayant pas de compte ou les nom et prénom du client.</small>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="ref_supplier"><b>{{t 'orders:RefOrderSupplier'}}</b></label>
+			<input type="text" data-ng-model="order.ref_supplier" id="ref_supplier" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height">
+			<label for="datec"><b>Date de commande</b></label>
+			<input kendo-date-picker required id="datec" k-on-change="order.datec = kendoEvent.sender._value;" class="input"/>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="client"><b>{{t 'companies:ThirdPartyCustomers'}}</b></label>
+			<input type="text" data-ng-model="order.optional.client" typeahead="societe as societe.name for societe in clientAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="submit" data-ng-disabled="!(order.datec && order.supplier.id)" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				{{t 'Create'}}
+			</button>
+		</div>
+
+	</fieldset>
+
+	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
+
+		<div class="field-block">
+			<h4>Ajout des produits / services</h4>
+			<p>Détails des prestations</p>
+		</div>
+
+		<div class="field-block clearfix">
+			<label for="desgination"><b>Détails de la commande</b></label>
+			<input type="hidden" data-ng-init="order.notes[0].title='Prestations'"/>
+			<textarea id="desgination" required cols="30" rows="5" data-ng-model="order.notes[0].note" class="input full-width"></textarea>
+		</div>
+
+		<div class="field-block button-height wizard-controls clearfix">
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' data-ng-disabled='!order.notes[0].note' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+		</div>
+
+	</fieldset>-->
+
+</form>

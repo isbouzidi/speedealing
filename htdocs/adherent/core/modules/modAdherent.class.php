@@ -272,69 +272,6 @@ class modAdherent extends DolibarrModules {
 		$this->menus[$r]->title = "CardMember";
 		$this->menus[$r]->fk_menu = "menu:members";
 		
-
-        // Exports
-        //--------
-		$r = 0;
-
-		// $this->export_code[$r]          Code unique identifiant l'export (tous modules confondus)
-		// $this->export_label[$r]         Libelle par defaut si traduction de cle "ExportXXX" non trouvee (XXX = Code)
-		// $this->export_permission[$r]    Liste des codes permissions requis pour faire l'export
-		// $this->export_fields_sql[$r]    Liste des champs exportables en codif sql
-		// $this->export_fields_name[$r]   Liste des champs exportables en codif traduction
-		// $this->export_sql[$r]           Requete sql qui offre les donnees a l'export
-
-        $r++;
-		$this->export_code[$r] = $this->rights_class . '_' . $r;
-		$this->export_label[$r] = 'MembersAndSubscriptions';
-		$this->export_permission[$r] = array(array("adherent", "export"));
-		$this->export_fields_array[$r] = array('a.rowid' => 'Id', 'a.civilite' => "UserTitle", 'a.nom' => "Lastname", 'a.prenom' => "Firstname", 'a.login' => "Login", 'a.morphy' => 'MorPhy', 'a.societe' => 'Company', 'a.adresse' => "Address", 'a.cp' => "Zip", 'a.ville' => "Town", 'a.pays' => "Country", 'a.phone' => "PhonePro", 'a.phone_perso' => "PhonePerso", 'a.phone_mobile' => "PhoneMobile", 'a.email' => "Email", 'a.naiss' => "Birthday", 'a.statut' => "Status", 'a.photo' => "Photo", 'a.note' => "Note", 'a.datec' => 'DateCreation', 'a.datevalid' => 'DateValidation', 'a.tms' => 'DateLastModification', 'a.datefin' => 'DateEndSubscription', 'ta.rowid' => 'MemberTypeId', 'ta.libelle' => 'MemberTypeLabel', 'c.rowid' => 'SubscriptionId', 'c.dateadh' => 'DateSubscription', 'c.cotisation' => 'Amount');
-		$this->export_entities_array[$r] = array('a.rowid' => 'member', 'a.civilite' => "member", 'a.nom' => "member", 'a.prenom' => "member", 'a.login' => "member", 'a.morphy' => 'member', 'a.societe' => 'member', 'a.adresse' => "member", 'a.cp' => "member", 'a.ville' => "member", 'a.pays' => "member", 'a.phone' => "member", 'a.phone_perso' => "member", 'a.phone_mobile' => "member", 'a.email' => "member", 'a.naiss' => "member", 'a.statut' => "member", 'a.photo' => "member", 'a.note' => "member", 'a.datec' => 'member', 'a.datevalid' => 'member', 'a.tms' => 'member', 'a.datefin' => 'member', 'ta.rowid' => 'member_type', 'ta.libelle' => 'member_type', 'c.rowid' => 'subscription', 'c.dateadh' => 'subscription', 'c.cotisation' => 'subscription');
-		/*// Add extra fields
-		$sql = "SELECT name, label FROM " . MAIN_DB_PREFIX . "extrafields WHERE elementtype = 'member'";
-		$resql = $this->db->query($sql);
-		while ($obj = $this->db->fetch_object($resql)) {
-			$fieldname = 'extra.' . $obj->name;
-			$fieldlabel = ucfirst($obj->label);
-			$this->export_fields_array[$r][$fieldname] = $fieldlabel;
-			$this->export_entities_array[$r][$fieldname] = 'member';
-		}*/
-		// End add axtra fields
-		$this->export_sql_start[$r] = 'SELECT DISTINCT ';
-		$this->export_sql_end[$r] = ' FROM (' . MAIN_DB_PREFIX . 'adherent_type as ta, ' . MAIN_DB_PREFIX . 'adherent as a)';
-		$this->export_sql_end[$r] .=' LEFT JOIN ' . MAIN_DB_PREFIX . 'adherent_extrafields as extra ON a.rowid = extra.fk_object';
-		$this->export_sql_end[$r] .=' LEFT JOIN ' . MAIN_DB_PREFIX . 'cotisation as c ON c.fk_adherent = a.rowid';
-		$this->export_sql_end[$r] .=' WHERE a.fk_adherent_type = ta.rowid';
-
-        // Imports
-        //--------
-		$r = 0;
-
-		$now = dol_now();
-		require_once(DOL_DOCUMENT_ROOT . "/core/lib/date.lib.php");
-
-        $r++;
-		$this->import_code[$r] = $this->rights_class . '_' . $r;
-		$this->import_label[$r] = "Members"; // Translation key
-		$this->import_icon[$r] = $this->picto;
-		$this->import_entities_array[$r] = array();  // We define here only fields that use another icon that the one defined into import_icon
-		$this->import_tables_array[$r] = array('a' => MAIN_DB_PREFIX . 'adherent', 'extra' => MAIN_DB_PREFIX . 'adherent_extrafields');
-		$this->import_tables_creator_array[$r] = array('a' => 'fk_user_author');	// Fields to store import user id
-		$this->import_fields_array[$r] = array('a.civilite' => "Civility", 'a.nom' => "Lastname*", 'a.prenom' => "Firstname", 'a.login' => "Login*", "a.pass" => "Password", "a.fk_adherent_type" => "MemberType*", 'a.morphy' => 'MorPhy*', 'a.societe' => 'Company', 'a.adresse' => "Address", 'a.cp' => "Zip", 'a.ville' => "Town", 'a.pays' => "Country", 'a.phone' => "PhonePro", 'a.phone_perso' => "PhonePerso", 'a.phone_mobile' => "PhoneMobile", 'a.email' => "Email", 'a.naiss' => "Birthday", 'a.statut' => "Status*", 'a.photo' => "Photo", 'a.note' => "Note", 'a.datec' => 'DateCreation', 'a.datefin' => 'DateEndSubscription');
-		/*// Add extra fields
-		$sql = "SELECT name, label FROM " . MAIN_DB_PREFIX . "extrafields WHERE elementtype = 'member'";
-		$resql = $this->db->query($sql);
-		if ($resql) {	// This can fail when class is used on old database (during migration for example)
-			while ($obj = $this->db->fetch_object($resql)) {
-				$fieldname = 'extra.' . $obj->name;
-				$fieldlabel = ucfirst($obj->label);
-				$this->import_fields_array[$r][$fieldname] = $fieldlabel;
-		    }
-		}*/
-		// End add extra fields
-		$this->import_fieldshidden_array[$r] = array('extra.fk_object' => 'lastrowid-' . MAIN_DB_PREFIX . 'adherent');	// aliastable.field => ('user->id' or 'lastrowid-'.tableparent)
-		$this->import_regex_array[$r] = array('a.civilite' => 'code@' . MAIN_DB_PREFIX . 'c_civilite', 'a.fk_adherent_type' => 'rowid@' . MAIN_DB_PREFIX . 'adherent_type', 'a.morphy' => '(phy|mor)', 'a.statut' => '^[0|1]', 'a.datec' => '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$', 'a.datefin' => '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$');
-		$this->import_examplevalues_array[$r] = array('a.civilite' => "MR", 'a.nom' => 'Smith', 'a.prenom' => 'John', 'a.login' => 'jsmith', 'a.pass' => 'passofjsmith', 'a.fk_adherent_type' => '1', 'a.morphy' => '"mor" or "phy"', 'a.societe' => 'JS company', 'a.adresse' => '21 jump street', 'a.cp' => '55000', 'a.ville' => 'New York', 'a.pays' => '1', 'a.email' => 'jsmith@example.com', 'a.naiss' => '1972-10-10', 'a.statut' => "0 or 1", 'a.note' => "This is a comment on member", 'a.datec' => dol_print_date($now, '%Y-%m-%d'), 'a.datefin' => dol_print_date(dol_time_plus_duree($now, 1, 'y'), '%Y-%m-%d'));
     }
 
     /**

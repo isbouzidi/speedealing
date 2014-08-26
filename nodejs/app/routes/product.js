@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
+		async = require('async'),
 		_ = require('underscore');
 
 var ProductModel = mongoose.model('product');
@@ -14,6 +15,7 @@ var DictModel = mongoose.model('dict');
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();
+	var pricelevel = require('../controllers/pricelevel.js');
 
 	ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
 		if (err) {
@@ -24,13 +26,7 @@ module.exports = function(app, passport, auth) {
 		object.fk_extrafields = doc;
 	});
 
-	app.get('/api/product', auth.requiresLogin, function(req, res) {
-		if (req.query.withNoPrice)
-			object.read(req, res);
-		else
-			object.readPrice(req, res);
-		return;
-	});
+	app.get('/api/product', auth.requiresLogin, object.read);
 
 	// list for autocomplete
 	app.post('/api/product/autocomplete', auth.requiresLogin, function(req, res) {
@@ -46,18 +42,21 @@ module.exports = function(app, passport, auth) {
 			]
 		};
 
+		if (req.body.price_level && req.body.price_level !== 'BASE')
+			return pricelevel.autocomplete(req.body, function(prices) {
+				res.json(200, prices);
+			});
+
 		if (req.body.supplier)
 			query.Status = {'$in': ["SELLBUY", "BUY"]};
 		else
 			query.Status = {'$in': ["SELL", "SELLBUY"]};
 
+
+
 		//console.log(query);
-		ProductModel.aggregate([
-			{$match: query},
-			{$project: {name: "$ref", id: "$_id", label: 1, template: 1, price: 1, minPrice: 1, description: 1, family: 1}},
-			{$unwind: "$price"},
-			{$match: {'$or': [{'price.price_level': req.body.price_level}, {'price.price_level': 'BASE'}]}},
-			{$limit: req.body.take}], function(err, docs) {
+		ProductModel.find(query, "ref _id label template pu_ht tva_tx minPrice description caFamily",
+				{limit: req.body.take}, function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/autocomplete");
 				console.log(err);
@@ -65,7 +64,23 @@ module.exports = function(app, passport, auth) {
 			}
 			//console.log(docs);
 
-			return res.send(200, docs);
+			var result = [];
+			for (var i = 0; i < docs.length; i++) {
+				var obj = {
+					pu_ht: docs[i].pu_ht,
+					price_level: 'BASE',
+					discount: 0,
+					qtyMin: 0,
+					product: {
+						id: docs[i],
+						name: docs[i].ref
+					}
+				};
+
+				result.push(obj);
+			}
+
+			return res.send(200, result);
 		});
 	});
 
@@ -250,16 +265,21 @@ module.exports = function(app, passport, auth) {
 		}
 	});
 
-	app.get('/api/product/status/select', auth.requiresLogin, function(req, res) {
-		//console.dir(req.query);
-		object.StatusSelect(req, res);
-	});
+	app.get('/api/product/status/select', auth.requiresLogin, object.StatusSelect);
+
+
+	app.get('/api/product/price_level', auth.requiresLogin, pricelevel.read);
+	app.put('/api/product/price_level', auth.requiresLogin, pricelevel.update);
+	app.post('/api/product/price_level', auth.requiresLogin, pricelevel.add);
+	app.del('/api/product/price_level', auth.requiresLogin, pricelevel.remove);
+	app.get('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
+	app.get('/api/product/price_level/upgrade', auth.requiresLogin, pricelevel.upgrade);
 
 	// list for autocomplete
 	app.post('/api/product/price_level/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
 
-		ProductModel.aggregate([{$unwind: "$price"}, {'$group': {_id: '$price.price_level'}}, {'$project': {price_level: '$price.price_level'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
+		PriceLevelModel.aggregate([{'$group': {_id: '$price_level'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
 			if (err) {
 				console.log("err : /api/product/price_level/autocomplete");
 				console.log(err);
@@ -279,7 +299,7 @@ module.exports = function(app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
-	
+
 	app.post('/api/product/family/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body);
 
@@ -420,15 +440,17 @@ Object.prototype = {
 		});
 	},
 	read: function(req, res) {
-		var query = {};
+		var query = {
+			Status: {$in: ["SELL", "SELLBUY"]}
+		};
 
 		if (req.query.type)
 			query.type = req.query.type;
 
 		if (req.query.barCode)
-			query.barCode = {$exists: true};
+			query.barCode = {$nin: [null, ""]};
 
-		ProductModel.find(query, "ref label barCode billingMode type caFamily", {limit: 50}, function(err, products) {
+		ProductModel.find(query, "ref label barCode billingMode type caFamily Status tva_tx updatedAt", {limit: 50}, function(err, products) {
 			if (err)
 				console.log(err);
 
@@ -503,12 +525,12 @@ Object.prototype = {
 				row.type = doc[i].type;
 				row.compta_buy = doc[i].compta_buy;
 				row.compta_sell = doc[i].compta_sell;
-				
-				if(doc[i].caFamily == null)
+
+				if (doc[i].caFamily == null)
 					row.caFamily = "OTHER";
 				else
 					row.caFamily = doc[i].caFamily;
-				
+
 				if (doc[i].barCode == null)
 					row.barCode = "";
 				else
@@ -605,7 +627,7 @@ Object.prototype = {
 		//console.log(obj);
 
 		if (obj._id)
-			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode, caFamily: obj.caFamily }, $push: {history: obj}}, function(err) {
+			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode, caFamily: obj.caFamily}, $push: {history: obj}}, function(err) {
 				if (err)
 					console.log(err);
 				//console.log(obj);

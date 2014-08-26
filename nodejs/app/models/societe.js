@@ -81,14 +81,15 @@ var societeSchema = new Schema({
 	UGAP_Ref_Client: String,
 	datec: Date,
 	idprof1: String, // SIREN
-	idprof2: {type: String, unique: true}, // SIRET
+	idprof2: {type: String}, // SIRET
 	idprof3: String, // NAF
 	idprof4: String,
 	idprof5: String,
 	idprof6: String, // TVA Intra
 	iban: {
 		bank: String,
-		id: String //FR76........
+		id: String, //FR76........
+		swift: String
 	},
 	checklist: mongoose.Schema.Types.Mixed,
 	annualCA: [{
@@ -147,6 +148,13 @@ DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 	prospectLevelList = docs;
 });
 
+var segmentationList = {};
+DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, docs) {
+	if (docs) {
+		segmentationList = docs.values;
+	}
+});
+
 var tab_attractivity = {
 	effectif_id: {
 		"EF0": 1,
@@ -174,18 +182,7 @@ var tab_attractivity = {
 		"Créa, Pao": 2,
 		"Dupli cd/dvd": 4
 	},
-	segmentation: {
-		"Finances": 5,
-		"Formation": 5,
-		"Cosmétique": 5,
-		"Labo pharma": 5,
-		"Cac 40": 5,
-		"BTP": 5,
-		"Arts graphique": 5,
-		"Franchise": 5,
-		"Industrie": 5,
-		"Services": 5
-	},
+	segmentation: segmentationList,
 	poste: {
 		"PDG": 5,
 		"DG": 4,
@@ -241,7 +238,7 @@ societeSchema.virtual('prospectLevel')
 
 			var level = this.prospectlevel;
 
-			if (level && prospectLevelList.values[level].cssClass) {
+			if (level && prospectLevelList.values[level] && prospectLevelList.values[level].cssClass) {
 				prospectLevel.id = level;
 				prospectLevel.name = i18n.t("companies:" + level);
 				if (prospectLevelList.values[level].label)
@@ -274,13 +271,20 @@ var contactSchema = new Schema({
 	country_id: String,
 	state_id: String,
 	DefaultLang: String,
-	phone: String,
+	phone: String, // pro
 	phone_perso: String,
-	phone_mobile: String,
-	fax: String,
+	phone_mobile: String, // pro
+	fax: String, // pro
 	email: String,
-	civilite: String,
-	Tag: [String],
+	emails: [{
+		type: {type: String, default:"pro"},
+		address:String
+		}],
+	civilite: String, // DICT
+	Tag: [String], // Used by DSF
+	tag: [{
+			text: String
+		}],
 	notes: String,
 	entity: String,
 	sex: {type: String, default: "H"},

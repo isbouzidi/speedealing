@@ -14,10 +14,11 @@ angular.module('mean.reports').controller('ReportController', ['$scope', '$rootS
         
     }]);
 
-angular.module('mean.reports').controller('ReportCreateController', ['$scope', '$http', '$modalInstance', '$modal', '$upload', '$route', 'Global', 'Reports', function($scope, $http, $modalInstance, $modal, $upload, $route, Global, Reports) {
+angular.module('mean.reports').controller('ReportCreateController', ['$scope', '$http', '$modalInstance', '$modal', '$upload', '$route', 'Global', 'Reports', 'object', function($scope, $http, $modalInstance, $modal, $upload, $route, Global, Reports, object) {
 
         $scope.global = Global;
         $scope.report = {
+			entity: Global.user.entity,
             duration: 1,
             durationAppointment: 1,
             contacts: [],
@@ -32,6 +33,10 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                     deployment: [],
                     progressPoints: []
                 }
+			},
+			societe: {
+				id: object.societe._id,
+				name: object.societe.name
             }
         };
         
@@ -39,7 +44,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         $scope.actionDate = [];
         $scope.lead = {};
         $scope.leads = [];
-        $scope.report.leads = {};
+        $scope.report.lead = {};
         
         $scope.prospectLevel = {selectedOption: null};
         
@@ -52,8 +57,11 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 $scope.products = data;
             });
             
-            $http({method: 'GET', url: 'api/report/contacts', params: {
-                    societe: $scope.global.contactIdSociete
+			$http({method: 'GET', url: 'api/contacts', params: {
+					find: {
+						"societe.id": object.societe._id
+					},
+					field: "_id firstname lastname name poste"
                 }
             }).success(function(data) {
                 
@@ -84,8 +92,8 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 });
             });
             
-            $http({method: 'GET', url: 'api/report/leads', params: {
-                    societe: $scope.global.contactIdSociete
+            $http({method: 'GET', url: 'api/lead', params: {
+					'societe.id': object.societe._id
                 }
             }).success(function(data) {
                 
@@ -172,7 +180,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             var idx;
             var actionObj = {};
             
-            for(var i = 0; i < $scope.report.actions.length; i++) {
+			for (var i = 0; i < $scope.report.actions.length; i++) {
                 if ($scope.report.actions[i].type === action) {
                     found = true;
                     $scope.report.actions.splice(i, 1);
@@ -182,21 +190,21 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 }
             }
             
-            if(!found){
+			if (!found) {
                 
                 actionObj = {
                   type: action
                 };
                 
                 $scope.report.actions.push(actionObj);
-            };
+			}
                 
         };
 
-        $scope.addActionMethod = function(action){
+		$scope.addActionMethod = function(action) {
             
-            for(var i = 0; i < $scope.report.actions.length; i++)
-                if($scope.report.actions[i].type === action)
+			for (var i = 0; i < $scope.report.actions.length; i++)
+				if ($scope.report.actions[i].type === action)
                     $scope.report.actions[i].method = $scope.actionMethod[action];
             
         };
@@ -205,8 +213,8 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             var datePicker = e.sender;
             $scope.selected = true;
             
-            for(var i = 0; i < $scope.report.actions.length; i++)
-                if($scope.report.actions[i].type === action)
+			for (var i = 0; i < $scope.report.actions.length; i++)
+				if ($scope.report.actions[i].type === action)
                     $scope.report.actions[i].date = datePicker.value();
           };
         
@@ -217,20 +225,15 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                 name: $scope.global.user.firstname + ' ' + $scope.global.user.lastname
             };
 
-            $scope.report.societe = {
-                name: $scope.global.contactNameSociete,
-                id: $scope.global.contactIdSociete
-            };
-            
             $scope.report.model = $scope.report.modelTemp.label;
 
             var report = new Reports(this.report);
             
             report.$save(function(response) {
-                if($scope.prospectLevel.selectedOption !== null){
+				if ($scope.prospectLevel.selectedOption !== null) {
                    $http({method: 'PUT', url: '/api/report/addProspectLevel', params: {
                         prospectLevel: $scope.prospectLevel.selectedOption,
-                        societe: $scope.global.contactIdSociete
+							societe: object.societe._id
                     }
                     }).success(function(status, response) {
                         
@@ -245,7 +248,14 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             var modalInstance = $modal.open({
                 templateUrl: '/partials/contacts/create.html',
                 controller: "ContactCreateController",
-                windowClass: "steps"
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							societe: object.societe
+						};
+					}
+				}
             });
 
             modalInstance.result.then(function(contacts) {
@@ -260,12 +270,18 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             var modalInstance = $modal.open({
                 templateUrl: '/partials/leads/create.html',
                 controller: "LeadCreateController",
-                windowClass: "steps"
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							societe: object.societe
+						};
+					}
+				}
             });
 
             modalInstance.result.then(function(leads) {
-                
-                $scope.report.leads = {
+                $scope.report.lead = {
                     id: leads._id,
                     name: leads.name,
                     dueDate: leads.dueDate
@@ -298,7 +314,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
                     break;
                 default :
                     $scope.template = "";
-            };
+			}
             
         };
 
@@ -327,10 +343,10 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         
         $scope.addLead = function() {
             
-            $scope.report.leads = {
+            $scope.report.lead = {
                 id: $scope.report.lead._id,
                 name: $scope.report.lead.name,
-                dueDate:$scope.report.lead.dueDate
+				dueDate: $scope.report.lead.dueDate
             };
 
         };
@@ -342,14 +358,14 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
         
         $scope.deleteLead = function($index) {
 
-            $scope.report.leads = {};
+            $scope.report.lead = {};
         };
         
-        $scope.showReason = function(){
+		$scope.showReason = function() {
           
-            if($scope.report.optional.business.step === 'Non retenu'){
+			if ($scope.report.optional.business.step === 'Non retenu') {
                 $scope.showReasonValue = true;
-            }else{
+			} else {
                 $scope.showReasonValue = false;
                 $scope.report.optional.business.reason.splice(0, $scope.report.optional.business.reason.length);
             }

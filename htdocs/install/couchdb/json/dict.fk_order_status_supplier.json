@@ -1,0 +1,36 @@
+{
+	"_id": "dict:fk_order_status_supplier",
+	"class": "Dict",
+	"values": {
+		"NEW": {
+			"enable": true,
+			"label": "Nouveau",
+			"cssClass": "orange-gradient"
+		},
+		"ACCEPTED": {
+			"label": "Accepte",
+			"enable": true,
+			"cssClass": "green-gradient"
+		},
+		"REFUSED": {
+			"label": "Refuse",
+			"enable": true,
+			"cssClass": "red-gradient"
+		},
+		"BILLED": {
+			"label": "Facturée",
+			"enable": true,
+			"cssClass": "anthracite-gradient"
+		},
+		"PAYED": {
+			"label": "Payée",
+			"enable": true,
+			"cssClass": "anthracite-gradient"
+		},
+		"PRINTED": {
+			"label": "Editée",
+			"enable": false,
+			"cssClass": "green-gradient"
+		}
+	}
+}

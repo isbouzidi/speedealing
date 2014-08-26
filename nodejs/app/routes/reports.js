@@ -13,7 +13,6 @@ var ProductModel = mongoose.model('product');
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
-var LeadModel = mongoose.model('lead');
 
 module.exports = function(app, passport, auth) {
 
@@ -29,25 +28,6 @@ module.exports = function(app, passport, auth) {
         var societe = req.query.societe;
 
         ContactModel.find({'societe.id': societe}, function(err, doc) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            ;
-            return res.send(200, doc);
-
-        });
-
-    });
-    
-    app.get('/api/report/leads', auth.requiresLogin, function(req, res) {
-        
-        if (req.query.societe === null)
-            return res.send(200, {});
-        
-        var societe = req.query.societe;
-
-        LeadModel.find({'societe.id': societe}, function(err, doc) {
             if (err) {
                 console.log(err);
                 return;
@@ -81,7 +61,7 @@ module.exports = function(app, passport, auth) {
         var prospectLevel = req.query.prospectLevel;
         var societe = req.query.societe;
         
-        SocieteModel.update({_id: societe}, {$set: {prospectlevel: prospectLevel}}, function(err, doc){
+		SocieteModel.update({_id: societe}, {$set: {prospectlevel: prospectLevel}}, function(err, doc) {
         
             if (err) {
                 return console.log('Erreur : ' + err);
@@ -161,6 +141,7 @@ Object.prototype = {
 
         var reportModel = new ReportModel(req.body);
         console.log("log " + req.body.report);
+
         reportModel.save(function(err, doc) {
             if (err) {
                 //return res.json(500, err);
@@ -203,7 +184,9 @@ Object.prototype = {
         var query = {
             "author.id": {
                 "$nin": [user]
-            }};
+			},
+			entity: req.query.entity
+		};
         ReportModel.find(query, {}, {limit: req.query.limit}, function(err, doc) {
             if (err) {
                 console.log(err);
@@ -214,7 +197,7 @@ Object.prototype = {
             res.send(200, doc);
         });
     },
-    listTasks: function(req, res){
+	listTasks: function(req, res) {
         
         var user = req.query.user;
         
@@ -232,14 +215,14 @@ Object.prototype = {
             res.send(200, doc);
         });
     },
-    taskRealised: function(req, res){
+	taskRealised: function(req, res) {
         
         var id = req.query.id;
         
-        if(id)
-            ReportModel.update({"_id": id}, {$set: {"realised": true, dueDate: new Date()}}, function(err, doc){
+		if (id)
+			ReportModel.update({"_id": id}, {$set: {"realised": true, dueDate: new Date()}}, function(err, doc) {
 
-                if(err)
+				if (err)
                     return console.log(err);
                 
                 res.send(200);
@@ -247,14 +230,14 @@ Object.prototype = {
         });
     }
     ,
-    cancelTaskRealised: function(req, res){
+	cancelTaskRealised: function(req, res) {
         
         var id = req.query.id;
         
-        if(id)
-            ReportModel.update({"_id": id}, {$set: {"realised": false, dueDate: null}}, function(err, doc){
+		if (id)
+			ReportModel.update({"_id": id}, {$set: {"realised": false, dueDate: null}}, function(err, doc) {
 
-                if(err)
+				if (err)
                     return console.log(err);
                 
                 res.send(200);

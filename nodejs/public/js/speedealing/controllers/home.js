@@ -221,6 +221,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
                     
                     $http({method: 'GET', url: '/api/reports/listReports', params: {
                                 user: Global.user._id,
+								entity: Global.user.entity,
                                 limit: $scope.limitReport
                             }
                     }).success(function(data, status) {

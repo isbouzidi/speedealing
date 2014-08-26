@@ -76,7 +76,8 @@ var billSchema = new Schema({
 				id: {type: Schema.Types.ObjectId, ref: "Product"},
 				name: {type: String},
 				label: String,
-				template: {type: String, default: "/partials/lines/classic.html"}
+				template: {type: String, default: "/partials/lines/classic.html"},
+				family: String
 			},
 			total_tva: Number,
 			total_ttc: Number,

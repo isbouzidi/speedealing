@@ -120,15 +120,15 @@
 					"perms": "$user->rights->commande->lire",
 					"enabled": "$conf->commande->enabled",
 					"usertype": 2,
-					"title": "orders:List"
+					"title": "orders:ListOfOrders"
 				},
-				"menu:ordersstats": {
+				"menu:orderslistsupplier": {
 					"position": 2,
-					"url": "/commande/stats/index.php",
+					"url": "#!/ordersSupplier",
 					"perms": "$user->rights->commande->lire",
 					"enabled": "$conf->commande->enabled",
 					"usertype": 2,
-					"title": "orders:OrdersStatistics"
+					"title": "orders:ListOfOrdersSupplier"
 				}
 			}
 		}

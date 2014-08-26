@@ -124,49 +124,6 @@ class modService extends DolibarrModules {
 		$this->menus[$r]->fk_menu = "menu:products";
 		$r++;
 
-		// Exports
-		//--------
-		$r = 0;
-
-		$r++;
-		$this->export_code[$r] = $this->rights_class . '_' . $r;
-		$this->export_label[$r] = "Services"; // Translation key (used only if key ExportDataset_xxx_z not found)
-		$this->export_permission[$r] = array(array("service", "export"));
-		$this->export_fields_array[$r] = array('p.rowid' => "Id", 'p.ref' => "Ref", 'p.label' => "Label", 'p.description' => "Description", 'p.accountancy_code_sell' => "ProductAccountancySellCode", 'p.accountancy_code_buy' => "ProductAccountancyBuyCode", 'p.note' => "Note", 'p.price_base_type' => "PriceBase", 'p.price' => "UnitPriceHT", 'p.price_ttc' => "UnitPriceTTC", 'p.tva_tx' => 'VATRate', 'p.tosell' => "OnSell", 'p.duration' => "Duration", 'p.datec' => 'DateCreation', 'p.tms' => 'DateModification');
-		if (!empty($conf->stock->enabled))
-			$this->export_fields_array[$r] = array_merge($this->export_fields_array[$r], array('p.stock' => 'Stock'));
-		$this->export_entities_array[$r] = array('p.rowid' => "service", 'p.ref' => "service", 'p.label' => "service", 'p.description' => "service", 'p.accountancy_code_sell' => 'service', 'p.accountancy_code_sell' => 'service', 'p.note' => "service", 'p.price_base_type' => "service", 'p.price' => "service", 'p.price_ttc' => "service", 'p.tva_tx' => "service", 'p.tosell' => "service", 'p.duration' => "service", 'p.datec' => "service", 'p.tms' => "service");
-		if (!empty($conf->stock->enabled))
-			$this->export_entities_array[$r] = array_merge($this->export_entities_array[$r], array('p.stock' => 'product'));
-		// Add extra fields
-		$sql = "SELECT name, label FROM " . MAIN_DB_PREFIX . "extrafields WHERE elementtype = 'product'";
-		// End add axtra fields
-
-		$this->export_sql_start[$r] = 'SELECT DISTINCT ';
-		$this->export_sql_end[$r] = ' FROM ' . MAIN_DB_PREFIX . 'product as p';
-		$this->export_sql_end[$r] .=' LEFT JOIN ' . MAIN_DB_PREFIX . 'product_extrafields as extra ON p.rowid = extra.fk_object';
-		$this->export_sql_end[$r] .=' WHERE p.fk_product_type = 1 AND p.entity IN (' . getEntity("product", 1) . ')';
-
-
-		// Imports
-		//--------
-		$r = 0;
-
-		$r++;
-		$this->import_code[$r] = $this->rights_class . '_' . $r;
-		$this->import_label[$r] = "Products"; // Translation key
-		$this->import_icon[$r] = $this->picto;
-		$this->import_entities_array[$r] = array();  // We define here only fields that use another icon that the one defined into import_icon
-		$this->import_tables_array[$r] = array('p' => MAIN_DB_PREFIX . 'product', 'extra' => MAIN_DB_PREFIX . 'product_extrafields');
-		$this->import_tables_creator_array[$r] = array('p' => 'fk_user_author'); // Fields to store import user id
-		$this->import_fields_array[$r] = array('p.ref' => "Ref*", 'p.label' => "Label*", 'p.description' => "Description", 'p.accountancy_code_sell' => "ProductAccountancySellCode", 'p.accountancy_code_buy' => "ProductAccountancyBuyCode", 'p.note' => "Note", 'p.length' => "Length", 'p.surface' => "Surface", 'p.volume' => "Volume", 'p.weight' => "Weight", 'p.duration' => "Duration", 'p.customcode' => 'CustomCode', 'p.price' => "SellingPriceHT", 'p.price_ttc' => "SellingPriceTTC", 'p.tva_tx' => 'VAT', 'p.tosell' => "OnSell*", 'p.tobuy' => "OnBuy*", 'p.fk_product_type' => "Type*", 'p.finished' => 'Nature', 'p.datec' => 'DateCreation*');
-		// Add extra fields
-		$sql = "SELECT name, label FROM " . MAIN_DB_PREFIX . "extrafields WHERE elementtype = 'product'";
-
-		// End add extra fields
-		$this->import_fieldshidden_array[$r] = array('extra.fk_object' => 'lastrowid-' . MAIN_DB_PREFIX . 'product');	// aliastable.field => ('user->id' or 'lastrowid-'.tableparent)
-		$this->import_regex_array[$r] = array('p.ref' => '[^ ]', 'p.tosell' => '^[0|1]$', 'p.tobuy' => '^[0|1]$', 'p.fk_product_type' => '^[0|1]$', 'p.datec' => '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$');
-		$this->import_examplevalues_array[$r] = array('p.ref' => "PR123456", 'p.label' => "My product", 'p.description' => "This is a description example for record", 'p.note' => "Some note", 'p.price' => "100", 'p.price_ttc' => "110", 'p.tva_tx' => '10', 'p.tosell' => "0 or 1", 'p.tobuy' => "0 or 1", 'p.fk_product_type' => "0 for product/1 for service", 'p.finished' => '', 'p.duration' => "1y", 'p.datec' => '2008-12-31');
 	}
 
 	/**

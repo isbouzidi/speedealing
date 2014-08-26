@@ -84,10 +84,28 @@ angular.module('mean.system').directive('ngEnter', function() {
 angular.module('mean.system').directive('ngBlur', function() {
 	return function(scope, elem, attrs) {
 		elem.bind('blur', function(event) {
-			scope.$apply(attrs.ngBlur);
+			scope.$eval(attrs.ngBlur);
 		});
 	};
 });
+
+angular.module('mean.system').directive('ngConfirmClick', ['dialogs', function(dialogs) {
+		return {
+			restrict: 'A',
+			link: function(scope, element, attrs) {
+				element.bind('click', function() {
+					var message = attrs.ngConfirmClick || "Etes-vous sur ?";
+
+					var dlg = dialogs.confirm("Confirmation", message);
+					dlg.result.then(function(btn) {
+						scope.$eval(attrs.confirmedClick);
+					}, function(btn) {
+						// Button NO
+					});
+				});
+			}
+		};
+	}]);
 
 angular.module('mean.system').directive('myFocus', function () {
     return {
@@ -101,4 +119,3 @@ angular.module('mean.system').directive('myFocus', function () {
         }
     };
 });
-

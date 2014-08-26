@@ -121,7 +121,7 @@ var orderSchema = new Schema({
 	latex: {
 		title: String,
 		createdAt: {type: Date},
-		data: Buffer,
+		data: Buffer
 	}
 }, {
 	toObject: {virtuals: true},

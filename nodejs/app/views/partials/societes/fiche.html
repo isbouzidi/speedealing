@@ -1,519 +1,522 @@
 <section data-ng-controller="SocieteController">
-    <div data-ng-init="findOne()">
-        <hgroup id="main-title" class="thin">
-            <h1>\{{societe.name}}</h1>
-            <!--<span class="valign-top tag glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span>-->
-        </hgroup>
-        <div class="with-padding" data-ng-init="init()">
-            <div class="columns">
-                <div class="four-columns twelve-columns-mobile">
-                    <div class="boxed">
-                        <p class="icon-info green underline">Infos société</p>
+	<div data-ng-init="findOne()">
+		<hgroup id="main-title" class="thin">
+			<h1>\{{societe.name}}</h1>
+			<!--<span class="valign-top tag glossy" data-ng-class="societe.status.css">\{{societe.status.name}}</span>-->
+		</hgroup>
+		<div class="with-padding" data-ng-init="init()">
+			<div class="columns">
+				<div class="four-columns twelve-columns-mobile">
+					<div class="boxed">
+						<p class="icon-info green underline">Infos société</p>
 
-                        <table class="info-table">
-                            <tbody>
-                                <tr>
-                                    <th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-                                    <td><a href="#" class="blue h4" editable-text="societe.name" buttons="no" onaftersave="update()">
-                                            \{{societe.name|| "Non defini"}}
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
-                                    <td><a href="#" editable-text="societe.code_client" buttons="no" onbeforesave="checkCodeClient($data)" onaftersave="update()">
-                                            \{{societe.code_client|| "Non defini"}}
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'Entity'}}</th>
-                                    <td><small class="tag anthracite-gradient glossy">\{{societe.entity}}</small></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'companies:ProspectCustomer'}}</th>
-                                    <td><span class="tag small glossy" data-ng-class="societe.status.css" editable-select="societe.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in Status.values">
-                                            \{{societe.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'companies:Supplier'}}</th>
-                                    <td><a href="#" editable-select="societe.fournisseur" buttons="no" e-ng-options="s.id as s.label for s in fournisseur.values" onaftersave="update()">
-                                            \{{ showStatus('fournisseur')}}
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'companies:Address'}}</th>
-                                    <td>
-                                        <form editable-form name="editableFormAddress" onaftersave="update()">
-                                            <span editable-textarea="societe.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ societe.address || 'empty' }}</pre></span>
+						<table class="info-table">
+							<tbody>
+								<tr>
+									<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+									<td><a href="#" class="blue h4" editable-text="societe.name" buttons="no" onaftersave="update()">
+											\{{societe.name|| "Non defini"}}
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
+									<td><a href="#" editable-text="societe.code_client" buttons="no" onbeforesave="checkCodeClient($data)" onaftersave="update()">
+											\{{societe.code_client|| "Non defini"}}
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'Entity'}}</th>
+									<td><small class="tag anthracite-gradient glossy">\{{societe.entity}}</small></td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
+									<td><span class="tag small glossy" data-ng-class="societe.status.css" editable-select="societe.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in Status.values">
+											\{{societe.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Supplier'}}</th>
+									<td><a href="#" editable-select="societe.fournisseur" buttons="no" e-ng-options="s.id as s.label for s in fournisseur.values" onaftersave="update()">
+											\{{ showStatus('fournisseur')}}
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Address'}}</th>
+									<td>
+										<form editable-form name="editableFormAddress" onaftersave="update()">
+											<span editable-textarea="societe.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ societe.address || 'empty' }}</pre></span>
 
-                                            <span editable-text="societe.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{societe.zip}}</span> <span editable-text="societe.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{societe.town}}</span>
-                                            \{{societe.country}}
-                                            <!-- button to show form -->
-                                            <span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible"></span>
-
-
-                                            <div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
-                                                <button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableFormAddress.$waiting"></button>
-
-                                                <button type="button" class="button icon-cross-round white-gradient" ng-disabled="editableFormAddress.$waiting" title="{{t 'Cancel'}}" ng-click="editableFormAddress.$cancel()"></button>
-                                            </div>
-
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'companies:Phone'}}</th>
-                                    <td ><span editable-tel="societe.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'companies:Fax'}}</th>
-                                    <td><span editable-tel="societe.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax|| "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'EMail'}}</th> 
-                                    <td><a data-ng-href="mailto:\{{societe.email}}" target="_blank" editable-email="societe.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{societe.email}}</a>
-                                        <span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'Web'}}</th>
-                                    <td><a data-ng-href="\{{societe.url}}" target="_blank" editable-url="societe.url" e-title="http://www.mysite.com" buttons="no" e-form="urlBtnForm" onaftersave="update()">\{{societe.url}}</a>
-                                        <span class="icon-pencil grey" ng-click="urlBtnForm.$show()" ng-hide="urlBtnForm.$visible"></span></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'DateLastModification'}}</th>
-                                    <td class="blue">\{{societe.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <h5 class="green underline">Les dernieres notes</h5>
-
-                    <div class="scroll" style="height:120px">
-                        <div data-ng-repeat="vnote in societe.notes| orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
-                            <div class="with-small-padding silver-gradient no-margin-top">
-                                <span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-                                <div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
-                            </div>
-                            <pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
-                        </div>
-                    </div>
-                </div>
-                <div class="eight-columns">
-
-                    <tabset>
-                        <!--<tab>
-                                <tab-heading>
-                                        <span class="icon-info">Infos société</span>
-                                </tab-heading>
-                                <div class="boxed relative large-box-shadow">
-
-                                        <div class="columns">
-                                                <div class="six-columns">
-                                                        <table class="simple-table">
-                                                                <tbody>
-                                                                        <tr>
-                                                                                <th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-                                                                                <td>
-                                                                                </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
-                                                                                <td>\{{societe.code_client}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:ProspectCustomer'}}</th>
-                                                                                <td><span class="tag small glossy"data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:Supplier'}}</th>
-                                                                                <td>\{{societe.fournisseur}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:Address'}}</th>
-                                                                                <td>\{{societe.address}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:Zip'}}</th>
-                                                                                <td>\{{societe.zip}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:Town'}}</th>
-                                                                                <td>\{{societe.town}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:Country'}}</th>
-                                                                                <td>\{{societe.country}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:Phone'}}</th>
-                                                                                <td >\{{societe.phone}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'companies:Fax'}}</th>
-                                                                                <td>\{{societe.fax}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'EMail'}}</th>
-                                                                                <td>\{{societe.email}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'Web'}}</th>
-                                                                                <td>\{{societe.url}}</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'DateLastModification'}}</th>
-                                                                                <td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
-                                                                        </tr> 
-                                                                        <tr>
-                                                                                <th scope="row">{{t 'Entity'}}</th>
-                                                                                <td>\{{societe.entity}}</td>
-                                                                        </tr>
-                                                                </tbody>
-                                                        </table>
-                                                </div>
-                                        </div>
-                                </div>
-                        </tab>-->
-
-                        <tab>
-                            <tab-heading>
-                                <span class="icon-cart">Client/prospect</span>
-                            </tab-heading>
-                            <div class="boxed relative large-box-shadow">
-                                <div class="columns">
-                                    <div class="six-columns">
-                                        <table class="simple-table">
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ProspectLevelShort'}}</th>
-                                                    <td><span class="tag small glossy" data-ng-class="societe.prospectLevel.css" editable-select="societe.prospectlevel" buttons="no" e-form="prospectlevelBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in prospectlevel.values">
-                                                            \{{societe.prospectLevel.name}}</span> <span class="icon-pencil grey" ng-click="prospectlevelBtnForm.$show()" ng-hide="prospectlevelBtnForm.$visible"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'commercial:Commercial'}}</th>
-                                                    <td >\{{societe.commercial_id.name}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'zonegeo'}}</th>
-                                                    <td><a href="#" editable-text="societe.zonegeo" buttons="no" onaftersave="update()">
-                                                            \{{societe.zonegeo|| "Non défini"}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ThirdPartyType'}}</th>
-                                                    <td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in typent_id.values" onaftersave="update()">
-                                                            \{{ showStatus('typent_id')}}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:Staff'}}</th>
-                                                    <td><a href="#" editable-select="societe.effectif_id" buttons="no" e-ng-options="s.id as s.label for s in effectif_id.values" onaftersave="update()">
-                                                            \{{ showStatus('effectif_id')}}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:JuridicalStatus'}}</th>
-                                                    <td>
-                                                        <a href="#" editable-select="societe.forme_juridique_code" buttons="no" e-ng-options="s.id as s.label for s in forme_juridique_code.values" onaftersave="update()">
-                                                            \{{ showStatus('forme_juridique_code') || "-"}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:Capital'}}</th>
-                                                    <td><a href="#" editable-text="societe.capital" buttons="no" onaftersave="update()">
-                                                            \{{societe.capital|| "Non défini" | euro}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ProfId1FR'}}</th>
-                                                    <td><a href="#" editable-text="societe.idprof1" buttons="no" onaftersave="update()">
-                                                            \{{societe.idprof1|| "Non défini"}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ProfId2FR'}}</th>
-                                                    <td><a href="#" editable-text="societe.idprof2" buttons="no" onaftersave="update()">
-                                                            \{{societe.idprof2|| "Non défini"}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ProfId3FR'}}</th>
-                                                    <td><a href="#" editable-text="societe.idprof3" buttons="no" onaftersave="update()">
-                                                            \{{societe.idprof3|| "Non défini"}}
-                                                        </a></td>
-                                                </tr>
-                                                <!--<tr>
-                                                        <th scope="row">{{t 'companies:ProfId4FR'}}</th>
-                                                        <td><a href="#" editable-text="societe.idprof4" buttons="no" onaftersave="update()">
-                                                                        \{{societe.idprof4 || "Aucun"}}
-                                                                </a></td>
-                                                </tr>-->
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ProfId5FR'}}</th>
-                                                    <td><a href="#" editable-text="societe.idprof5" buttons="no" onaftersave="update()">
-                                                            \{{societe.idprof5|| "Non défini"}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row" colspan="2">{{t 'companies:Segmentation'}}<br/>
-                                            <tags-input data-ng-model="societe.segmentation" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-                                                <auto-complete source="segmentationAutoComplete($query)" min-length="1" max-results-to-show="5"></auto-complete>
-                                            </tags-input>
-                                            </th>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" colspan="2">{{t 'companies:FamilyProduct'}}<br/>
-                                            <tags-input ng-model="Tag" placeholder="{{t 'Add'}}"></tags-input>
-                                            </th>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+											<span editable-text="societe.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{societe.zip}}</span> <span editable-text="societe.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{societe.town}}</span>
+											\{{societe.country}}
+											<!-- button to show form -->
+											<span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible"></span>
 
 
-                            </div>
-                        </tab>
-                        <tab>
-                            <tab-heading>
-                                <span class="icon-tools">Facturation</span>
-                            </tab-heading>
-                            <div class="boxed relative large-box-shadow">
-                                <div class="columns">
-                                    <div class="six-columns">
-                                        <table class="simple-table">
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">{{t 'compta:CustomerAccountancyCode'}}</th>
-                                                    <td><a href="#" editable-text="societe.code_compta" buttons="no" onaftersave="update()">
-                                                            \{{societe.code_compta|| "Non défini"}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr ng-hide="societe.fournisseur == 'NO'">
-                                                    <th scope="row">{{t 'compta:SupplierAccountancyCode'}}</th>
-                                                    <td><a href="#" editable-text="societe.code_compta_fournisseur" buttons="no" onaftersave="update()">
-                                                            \{{societe.code_compta_fournisseur|| "Non défini"}}
-                                                        </a></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:VATIsUsed'}}</th>
-                                                    <td >\{{societe.tva_assuj}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:VATIntra'}}</th>
-                                                    <td>\{{societe.tva_intra}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'bills:PaymentConditions'}}</th>
-                                                    <td>
-                                                        <a href="#" editable-select="societe.cond_reglement" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement.values" onaftersave="update()">
-                                                            \{{ showStatus('cond_reglement')}}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'bills:PaymentMode'}}</th>
-                                                    <td>
-                                                        <a href="#" editable-select="societe.mode_reglement" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement.values" onaftersave="update()">
-                                                            \{{ showStatus('mode_reglement')}}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:PriceLevel'}}</th>
-                                                    <td>
-                                                        <a href="#" editable-text="societe.price_level" e-typeahead="price_level.name for price_level in priceLevelAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
-                                                            \{{societe.price_level|| "Non defini"}}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
-                                                    <td>\{{societe.remise_client}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'banks:RIB'}}</th>
-                                                    <td>\{{societe.iban}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ThirdPartyBilling'}}</th>
-                                                    <td>\{{societe.cptBilling}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </tab>
-                        <tab disabled="societe.fournisseur=='NO'">
-                            <tab-heading>
-                                <span class="icon-box">Fournisseur</span>
-                            </tab-heading>
-                            <div class="boxed relative large-box-shadow">
-                                <div class="columns">
-                                    <div class="six-columns">
-                                        <table class="simple-table">
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">{{t 'Categories'}}</th>
-                                                    <td>\{{societe.Tag}}</td>
-                                                </tr>
+											<div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
+												<button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableFormAddress.$waiting"></button>
 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </tab>
-                        <tab>
-                            <tab-heading>
-                                <span class="icon-tick">Checklist<span ng-show='checklist' class="count right">\{{checklist}}</span></span>
-                            </tab-heading>
-                            <div class="boxed relative large-box-shadow">
-                                <div class="columns">
-                                    <div class="six-columns">
-                                        <table class="simple-table">
-                                            <tbody>
-                                                <tr>
-                                                    <th width="90%" scope="row">Extrait KBIS (moins de 3 mois)</th>
-                                                    <td><input type="checkbox" data-ng-model="societe.checklist.KBIS" data-ng-checked="societe.checklist.KBIS" data-ng-change="update()" />
-                                                    </td>
-                                                </tr>
-                                                <tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
-                                                    <th scope="row">Licences nationale et communautaire</th>
-                                                    <td><input type="checkbox" data-ng-model="societe.checklist.licencesNationaleCommunautaire" data-ng-checked="societe.checklist.licencesNationaleCommunautaire" data-ng-change="update()" />
-                                                    </td>
-                                                </tr>
-                                                <tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
-                                                    <th scope="row">Attestation de régularité fiscale</th>
-                                                    <td><input type="checkbox" data-ng-model="societe.checklist.attestationRegulFiscale" data-ng-checked="societe.checklist.attestationRegulFiscale" data-ng-change="update()" />
-                                                    </td>
-                                                </tr>
-                                                <tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
-                                                    <th scope="row">Attestation URSAFF</th>
-                                                    <td><input type="checkbox" data-ng-model="societe.checklist.attetationUrsaff" data-ng-checked="societe.checklist.attetationUrsaff" data-ng-change="update()" />
-                                                    </td>
-                                                </tr>
-                                                <tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
-                                                    <th scope="row">Attestation d'assurance à jour - Responsabilité Civile et Marchandise Transportée</th>
-                                                    <td><input type="checkbox" data-ng-model="societe.checklist.attestationAssurance" data-ng-checked="societe.checklist.attestationAssurance" data-ng-change="update()" />
-                                                    </td>
-                                                </tr>
-                                                <tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
-                                                    <th scope="row">Attestation sur l'honneur</th>
-                                                    <td><input type="checkbox" data-ng-model="societe.checklist.attestationHonneur" data-ng-checked="societe.checklist.attestationHonneur" data-ng-change="update()" />
-                                                    </td>
-                                                </tr>
-                                                <tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
-                                                    <th scope="row">Copie Permis de conduire et Déclaration Unique d'Embauche (DUE)</th>
-                                                    <td><input type="checkbox" data-ng-model="societe.checklist.permisConduireDUE" data-ng-checked="societe.checklist.permisConduireDUE" data-ng-change="update()" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </tab>
-                        <tab>
-                            <tab-heading>
-                                <span class="icon-folder">Fichiers<span ng-if='societe.files.length' class="count green-bg right">\{{societe.files.length}}</span></span>
-                            </tab-heading>
-                            <div class="boxed relative large-box-shadow">
+												<button type="button" class="button icon-cross-round white-gradient" ng-disabled="editableFormAddress.$waiting" title="{{t 'Cancel'}}" ng-click="editableFormAddress.$cancel()"></button>
+											</div>
 
-                                <div class="panel-content linen">
+										</form>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Phone'}}</th>
+									<td ><span editable-tel="societe.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'companies:Fax'}}</th>
+									<td><span editable-tel="societe.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax|| "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'EMail'}}</th> 
+									<td><a data-ng-href="mailto:\{{societe.email}}" target="_blank" editable-email="societe.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{societe.email}}</a>
+										<span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span></td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'Web'}}</th>
+									<td><a data-ng-href="\{{societe.url}}" target="_blank" editable-url="societe.url" e-title="http://www.mysite.com" buttons="no" e-form="urlBtnForm" onaftersave="update()">\{{societe.url}}</a>
+										<span class="icon-pencil grey" ng-click="urlBtnForm.$show()" ng-hide="urlBtnForm.$visible"></span></td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'DateLastModification'}}</th>
+									<td class="blue">\{{societe.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-                                    <div class="panel-control align-right">
-                                        <div class="float-right">
-                                            <div class="button-group">
-                                                <progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
-                                            </div>
-                                            <div class="button-group">
-                                                <div class="button-height">
-                                                    <input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
-                                                    <!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+					<h5 class="green underline">Les dernieres notes</h5>
 
-                                    <div id="panel-content" class="panel-load-target scrollable" style="height:500px">
-                                        <div class="with-padding">
-                                            <p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
-                                            <p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
+					<div class="scroll" style="height:120px">
+						<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
+							<div class="with-small-padding silver-gradient no-margin-top">
+								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+							</div>
+							<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+						</div>
+					</div>
+				</div>
+				<div class="eight-columns">
 
-                                            <ul class="files-icons on-dark" data-ng-init="getFileTypes()">
-                                                <!--<li>
-                                                        <a href="#" class="file-link">
-                                                                <span class="icon folder-net"></span>
-                                                                Dossier public
-                                                        </a>
-                                                </li>-->
-                                                <li data-ng-repeat="file in societe.files">
-                                                    <span class="icon" data-ng-class="fileType(file.name)"></span>
-                                                    <div class="controls">
-                                                        <span class="button-group compact children-tooltip">
-                                                            <a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
-                                                            <a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
-                                                            <button data-ng-click="suppressFile(societe._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
-                                                        </span>
-                                                    </div>
-                                                    <a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+					<tabset>
+						<!--<tab>
+							<tab-heading>
+								<span class="icon-info">Infos société</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
 
-                                </div>
-                            </div>
-                        </tab>
-                        <tab>
-                            <tab-heading>
-                                <span class="icon-pencil">Notes<span ng-if='societe.notes.length' class="count orange-bg right">\{{societe.notes.length}}</span></span>
-                            </tab-heading>
-                            <div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+													<td>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
+													<td>\{{societe.code_client}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
+													<td><span class="tag small glossy"data-ng-class="societe.status.css">\{{societe.status.name}}</span></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Supplier'}}</th>
+													<td>\{{societe.fournisseur}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Address'}}</th>
+													<td>\{{societe.address}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Zip'}}</th>
+													<td>\{{societe.zip}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Town'}}</th>
+													<td>\{{societe.town}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Country'}}</th>
+													<td>\{{societe.country}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Phone'}}</th>
+													<td >\{{societe.phone}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Fax'}}</th>
+													<td>\{{societe.fax}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'EMail'}}</th>
+													<td>\{{societe.email}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'Web'}}</th>
+													<td>\{{societe.url}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'DateLastModification'}}</th>
+													<td class="blue">\{{societe.updatedAt |date:'dd/MM/yyyy HH:mm'}}</td>
+												</tr> 
+												<tr>
+													<th scope="row">{{t 'Entity'}}</th>
+													<td>\{{societe.entity}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</tab>-->
 
-                                <div class="columns">
-                                    <div class="six-columns">
-                                        <div class="button-height block-label margin-bottom">
-                                            <h5 for="note" class="underline green">
-                                                Ajouter une note
-                                            </h5>
-                                            <textarea id="note" cols="30" rows="5" data-ng-model="note" class="input full-width"></textarea>
+						<tab>
+							<tab-heading>
+								<span class="icon-cart">Client/prospect</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th scope="row">{{t 'companies:ProspectLevelShort'}}</th>
+													<td><span class="tag small glossy" data-ng-class="societe.prospectLevel.css" editable-select="societe.prospectlevel" buttons="no" e-form="prospectlevelBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in prospectlevel.values">
+															\{{societe.prospectLevel.name}}</span> <span class="icon-pencil grey" ng-click="prospectlevelBtnForm.$show()" ng-hide="prospectlevelBtnForm.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'commercial:Commercial'}}</th>
+													<td ><span class="icon-user"> </span><span editable-text="societe.commercial_id" buttons="no" e-form="CommercialIdBtnForm" e-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" onaftersave="update()">
+															 \{{societe.commercial_id.name}}
+														</span> <span class="icon-pencil grey" ng-click="CommercialIdBtnForm.$show()" ng-hide="CommercialIdBtnForm.$visible"></span></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'zonegeo'}}</th>
+													<td><a href="#" editable-text="societe.zonegeo" buttons="no" onaftersave="update()">
+															\{{societe.zonegeo|| "Non défini"}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyType'}}</th>
+													<td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in typent_id.values" onaftersave="update()">
+															\{{ showStatus('typent_id')}}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Staff'}}</th>
+													<td><a href="#" editable-select="societe.effectif_id" buttons="no" e-ng-options="s.id as s.label for s in effectif_id.values" onaftersave="update()">
+															\{{ showStatus('effectif_id')}}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:JuridicalStatus'}}</th>
+													<td>
+														<a href="#" editable-select="societe.forme_juridique_code" buttons="no" e-ng-options="s.id as s.label for s in forme_juridique_code.values" onaftersave="update()">
+															\{{ showStatus('forme_juridique_code') || "-"}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Capital'}}</th>
+													<td><a href="#" editable-text="societe.capital" buttons="no" onaftersave="update()">
+															\{{societe.capital|| "Non défini" | euro}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProfId1FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof1" buttons="no" onaftersave="update()">
+															\{{societe.idprof1|| "Non défini"}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProfId2FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof2" buttons="no" onaftersave="update()">
+															\{{societe.idprof2|| "Non défini"}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ProfId3FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof3" buttons="no" onaftersave="update()">
+															\{{societe.idprof3|| "Non défini"}}
+														</a></td>
+												</tr>
+												<!--<tr>
+													<th scope="row">{{t 'companies:ProfId4FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof4" buttons="no" onaftersave="update()">
+															\{{societe.idprof4 || "Aucun"}}
+														</a></td>
+												</tr>-->
+												<tr>
+													<th scope="row">{{t 'companies:ProfId5FR'}}</th>
+													<td><a href="#" editable-text="societe.idprof5" buttons="no" onaftersave="update()">
+															\{{societe.idprof5|| "Non défini"}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row" colspan="2">{{t 'companies:Segmentation'}}<br/>
+											<tags-input data-ng-model="societe.segmentation" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+												<auto-complete source="segmentationAutoComplete($query)" min-length="1" max-results-to-show="5"></auto-complete>
+											</tags-input>
+											</th>
+											</tr>
+											<tr>
+												<th scope="row" colspan="2">{{t 'companies:FamilyProduct'}}<br/>
+											<tags-input ng-model="Tag" placeholder="{{t 'Add'}}"></tags-input>
+											</th>
+											</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 
-                                            <div class="margin-top button-height float-right">
-                                                <button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
-                                            </div>
-                                        </div>
-                                    </div>
+
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-tools">Facturation</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th scope="row">{{t 'compta:CustomerAccountancyCode'}}</th>
+													<td><a href="#" editable-text="societe.code_compta" buttons="no" onaftersave="update()">
+															\{{societe.code_compta|| "Non défini"}}
+														</a></td>
+												</tr>
+												<tr ng-hide="societe.fournisseur=='NO'">
+													<th scope="row">{{t 'compta:SupplierAccountancyCode'}}</th>
+													<td><a href="#" editable-text="societe.code_compta_fournisseur" buttons="no" onaftersave="update()">
+															\{{societe.code_compta_fournisseur|| "Non défini"}}
+														</a></td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:VATIsUsed'}}</th>
+													<td >\{{societe.tva_assuj}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:VATIntra'}}</th>
+													<td>\{{societe.tva_intra}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
+													<td>
+														<a href="#" editable-select="societe.cond_reglement" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement.values" onaftersave="update()">
+															\{{ showStatus('cond_reglement')}}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'bills:PaymentMode'}}</th>
+													<td>
+														<a href="#" editable-select="societe.mode_reglement" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement.values" onaftersave="update()">
+															\{{ showStatus('mode_reglement')}}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:PriceLevel'}}</th>
+													<td>
+														<a href="#" editable-text="societe.price_level" e-typeahead="price_level.name for price_level in priceLevelAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+															\{{societe.price_level|| "Non defini"}}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:CustomerRelativeDiscountShort'}}</th>
+													<td>\{{societe.remise_client}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'banks:RIB'}}</th>
+													<td>\{{societe.iban}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:ThirdPartyBilling'}}</th>
+													<td>\{{societe.cptBilling}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</tab>
+						<tab disabled="societe.fournisseur=='NO'">
+							<tab-heading>
+								<span class="icon-box">Fournisseur</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th scope="row">{{t 'Categories'}}</th>
+													<td>\{{societe.Tag}}</td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-tick">Checklist<span ng-show='checklist' class="count right">\{{checklist}}</span></span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="six-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th width="90%" scope="row">Extrait KBIS (moins de 3 mois)</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.KBIS" data-ng-checked="societe.checklist.KBIS" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
+													<th scope="row">Licences nationale et communautaire</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.licencesNationaleCommunautaire" data-ng-checked="societe.checklist.licencesNationaleCommunautaire" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
+													<th scope="row">Attestation de régularité fiscale</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attestationRegulFiscale" data-ng-checked="societe.checklist.attestationRegulFiscale" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
+													<th scope="row">Attestation URSAFF</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attetationUrsaff" data-ng-checked="societe.checklist.attetationUrsaff" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
+													<th scope="row">Attestation d'assurance à jour - Responsabilité Civile et Marchandise Transportée</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attestationAssurance" data-ng-checked="societe.checklist.attestationAssurance" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
+													<th scope="row">Attestation sur l'honneur</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.attestationHonneur" data-ng-checked="societe.checklist.attestationHonneur" data-ng-change="update()" />
+													</td>
+												</tr>
+												<tr ng-show="societe.fournisseur == 'SUBCONTRACTOR'">
+													<th scope="row">Copie Permis de conduire et Déclaration Unique d'Embauche (DUE)</th>
+													<td><input type="checkbox" data-ng-model="societe.checklist.permisConduireDUE" data-ng-checked="societe.checklist.permisConduireDUE" data-ng-change="update()" />
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-folder">Fichiers<span ng-if='societe.files.length' class="count green-bg right">\{{societe.files.length}}</span></span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+
+								<div class="panel-content linen">
+
+									<div class="panel-control align-right">
+										<div class="float-right">
+											<div class="button-group">
+												<progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
+											</div>
+											<div class="button-group">
+												<div class="button-height">
+													<input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
+													<!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div id="panel-content" class="panel-load-target scrollable" style="height:500px">
+										<div class="with-padding">
+											<p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
+											<p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
+
+											<ul class="files-icons on-dark" data-ng-init="getFileTypes()">
+												<!--<li>
+													<a href="#" class="file-link">
+														<span class="icon folder-net"></span>
+														Dossier public
+													</a>
+												</li>-->
+												<li data-ng-repeat="file in societe.files">
+													<span class="icon" data-ng-class="fileType(file.name)"></span>
+													<div class="controls">
+														<span class="button-group compact children-tooltip">
+															<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
+															<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
+															<button data-ng-click="suppressFile(societe._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
+														</span>
+													</div>
+													<a data-ng-href="api/societe/file/\{{societe._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-pencil">Notes<span ng-if='societe.notes.length' class="count orange-bg right">\{{societe.notes.length}}</span></span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+
+								<div class="columns">
+									<div class="six-columns">
+										<div class="button-height block-label margin-bottom">
+											<h5 for="note" class="underline green">
+												Ajouter une note
+											</h5>
+											<textarea id="note" cols="30" rows="5" data-ng-model="note" class="input full-width"></textarea>
+
+											<div class="margin-top button-height float-right">
+												<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
+											</div>
+										</div>
+									</div>
 
 
-                                    <div class="six-columns">
-                                        <div class="scroll" style="height:360px">
-                                            <div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
-                                                <div class="with-small-padding silver-gradient no-margin-top">
-                                                    <span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-                                                    <div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
-                                                </div>
-                                                <pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </tab>
-                        
-                    </tabset>
-                </div>
+									<div class="six-columns">
+										<div class="scroll" style="height:360px">
+											<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+												<div class="with-small-padding silver-gradient no-margin-top">
+													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+												</div>
+												<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+											</div>
+										</div>
+									</div>
+								</div>
 
-                <div class="twelve-columns">
+
+							</div>
+						</tab>
+					</tabset>
+				</div>
+
+				<div class="twelve-columns">
                     <h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
 
                     <div class="table-header silver-gradient glossy button-height">
@@ -535,8 +538,8 @@
                         \{{countContact}} ligne(s)
                     </div>
                 </div>
-                
-                <div class="twelve-columns">
+
+				 <div class="twelve-columns">
                     <h5 class="green underline">Comptes Rendus</h5>
 
                     <div class="table-header silver-gradient glossy button-height">
@@ -553,41 +556,40 @@
                         \{{countReports}} ligne(s)
                     </div>
                 </div>
-                
-                
-                <div class="twelve-columns">
-                    <h5 class="green underline">Historique des tickets</h5>
 
-                    <div class="table-header silver-gradient glossy button-height">
-                        <div class="float-right">
-                            {{t 'Search'}} <input type="text" data-ng-model="filterOptionsTicket.filterText" class="input small mid-margin-left">
-                        </div>
-                    </div>
-                    <div class="gridStyle"  data-ng-grid="gridOptionsTicket"></div>
-                    <div class="table-footer silver-gradient">
-                        \{{countTicket}} ligne(s)
-                    </div>
-                </div>
+				<div class="twelve-columns">
+					<h5 class="green underline">Historique des tickets</h5>
 
-                <div class="twelve-columns">
-                    <h5 class="green underline">Demandes d'achats</h5>
+					<div class="table-header silver-gradient glossy button-height">
+						<div class="float-right">
+							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsTicket.filterText" class="input small mid-margin-left">
+						</div>
+					</div>
+					<div class="gridStyle"  data-ng-grid="gridOptionsTicket"></div>
+					<div class="table-footer silver-gradient">
+						\{{countTicket}} ligne(s)
+					</div>
+				</div>
 
-                    <div class="table-header silver-gradient glossy button-height">
-                        <div class="float-right">
-                            {{t 'Search'}} <input type="text" data-ng-model="filterOptionsBuy.filterText" class="input small mid-margin-left">
-                        </div>
-                        \{{searchBuy}}
-                    </div>
-                    <div class="gridStyle"  data-ng-grid="gridOptionsBuyer"></div>
-                    <div class="table-footer silver-gradient">
-                        <div class="float-right strong">
-                            Total HT payé : \{{TotalBuy| euro}}  
-                        </div>
-                        \{{countBuy}} ligne(s)
-                    </div>
-                </div>
+				<div class="twelve-columns">
+					<h5 class="green underline">Demandes d'achats</h5>
 
-            </div>
-        </div>
-    </div>
+					<div class="table-header silver-gradient glossy button-height">
+						<div class="float-right">
+							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsBuy.filterText" class="input small mid-margin-left">
+						</div>
+						\{{searchBuy}}
+					</div>
+					<div class="gridStyle"  data-ng-grid="gridOptionsBuyer"></div>
+					<div class="table-footer silver-gradient">
+						<div class="float-right strong">
+							Total HT payé : \{{TotalBuy| euro}}  
+						</div>
+						\{{countBuy}} ligne(s)
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
 </section>

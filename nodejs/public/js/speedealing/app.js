@@ -4,6 +4,7 @@ window.app = angular.module('mean', [
 	'ngSanitize',
 	'ngResource',
 	'ui.bootstrap',
+	'dialogs.main',
 	'kendo.directives',
 	'ngAnimate',
 	'angularFileUpload',
@@ -15,6 +16,7 @@ window.app = angular.module('mean', [
 	'mean.system',
 	'mean.societes',
 	'mean.orders',
+	'mean.ordersSupplier',
 	'mean.bills',
 	'mean.users',
 	'mean.accounting',
@@ -26,13 +28,18 @@ window.app = angular.module('mean', [
 	'mean.contacts',
         'mean.reports',
         'mean.delivery',
-        'mean.lead',
+	'mean.lead',
+	'timer',
+	'pascalprecht.translate',
+	'jm.i18next',
+	'ui.chart',
 	'checklist-model'
 ]);
 
 angular.module('mean.system', []);
 angular.module('mean.societes', []);
 angular.module('mean.orders', []);
+angular.module('mean.ordersSupplier', []);
 angular.module('mean.users', []);
 angular.module('mean.bills', []);
 angular.module('mean.accounting', []);
@@ -45,6 +52,26 @@ angular.module('mean.reports', []);
 angular.module('mean.delivery', []);
 angular.module('mean.lead', []);
 
+angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
+		$i18nextProvider.options = {
+			//lng: 'fr',
+			//useCookie: false,
+			useLocalStorage: false,
+			resGetPath: 'locales/__lng__/__ns__.json',
+			//resPostPath: 'locales/__lng__/new.__ns__.json',
+			defaultLoadingValue: '', // ng-i18next option, *NOT* directly supported by i18next
+			ns: {namespaces: ["main", "bills", "orders", "companies"], defaultNs: 'main'},
+			supportedLngs: ['fr-FR', 'en-US'],
+			//load: 'current',
+			useCookie: false,
+			//cookie: 'speedealingLang',
+			detectLngFromHeaders: false,
+			saveMissing: true,
+			debug: false,
+			sendMissingTo: 'fallback',
+			fallbackLng: "fr-FR"
+		};
+	}]);
 window.app.run(function(editableOptions, editableThemes) {
 	// bootstrap3 theme. Can be also 'bs2', 'default'
 	editableThemes.bs3.inputClass = 'input-sm';

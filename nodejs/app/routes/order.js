@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		nodemailer = require("nodemailer"),
+		smtpTransport = require('nodemailer-smtp-transport'),
 		_ = require('underscore'),
 		dateFormat = require('dateformat'),
 		config = require(__dirname + '/../../config/config');
@@ -13,7 +14,7 @@ var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
 
-var smtpTransport = nodemailer.createTransport("SMTP", config.transport);
+var smtpTransporter = nodemailer.createTransport(smtpTransport(config.transport));
 
 module.exports = function(app, passport, auth) {
 
@@ -38,6 +39,8 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
+	
+	app.get('/api/order/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	//Finish with setting up the orderId param
 	app.param('orderId', object.order);
@@ -151,7 +154,7 @@ Object.prototype = {
 			// Send an email
 			var mailOptions = {
 				from: "ERP Speedealing<no-reply@speedealing.com>",
-				to: "Plan 92 Chaumeil<plan92@chaumeil.net>",
+				to: "Plan 92 Chaumeil<plan92@imprimeriechaumeil.fr>",
 				cc: "herve.prot@symeos.com",
 				subject: "Nouvelle commande " + order.client.name + " - " + order.ref + " dans l'ERP"
 			};
@@ -162,15 +165,15 @@ Object.prototype = {
 			mailOptions.text += "\n\n";
 
 			// send mail with defined transport object
-			smtpTransport.sendMail(mailOptions, function(error, response) {
+			smtpTransporter.sendMail(mailOptions, function(error, info) {
 				if (error) {
 					console.log(error);
 				} else {
-					console.log("Message sent: " + response.message);
+					console.log("Message sent: " + info.response);
 				}
 
 				// if you don't want to use this transport object anymore, uncomment following line
-				smtpTransport.close(); // shut down the connection pool, no more messages
+				smtpTransporter.close(); // shut down the connection pool, no more messages
 			});
 		}
 
@@ -309,8 +312,8 @@ Object.prototype = {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref.replace(/_/g, "\\_"));
-				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.billing.name + "} \\\\" + doc.billing.address + "\\\\ \\textsc{" + doc.billing.zip + " " + doc.billing.town + "}");
-				tex = tex.replace(/--CODECLIENT--/g, societe._id);
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
+				tex = tex.replace(/--CODECLIENT--/g, societe.code_client.replace(/_/g, "\\_"));
 				tex = tex.replace(/--TITLE--/g, doc.ref_client);
 				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
 				tex = tex.replace(/--DATEL--/g, dateFormat(doc.date_livraison, "dd/mm/yyyy"));

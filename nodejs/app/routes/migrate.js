@@ -8,7 +8,6 @@
 var cradle = require('cradle'),
 		mongoose = require('mongoose'),
 		mongodb = require('mongodb'),
-		acl = require('mongoose-acl'),
 		timestamps = require('mongoose-timestamp'),
 		config = require(__dirname +'/../../config/config'),
 		fs = require('fs');
@@ -23,16 +22,6 @@ var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.por
 });
 
 var couchdb = connection.database(config.couchdb.db);
-
-/**
- * Schema
- */
-var WidgetSchema = new mongoose.Schema({
-	id: {type: String},
-	from: {type: String},
-	to: {type: String}});
-WidgetSchema.plugin(acl.object);
-WidgetSchema.plugin(timestamps);
 
 module.exports = function(app, passport, auth) {
 
@@ -201,8 +190,6 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 };
-
-var ModelWidget = mongoose.model('widget', WidgetSchema);
 
 function Migrate(req, res) {
 

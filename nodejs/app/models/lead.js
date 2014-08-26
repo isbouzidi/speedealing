@@ -19,7 +19,8 @@ var leadSchema = new Schema({
         id: {type: Schema.Types.ObjectId, ref: 'societe'}, 
         name: String
     },
-    status: {type: String, default: 'NEG'}
+    status: {type: String, default: 'NEG'},
+	entity: String
 });
 
 leadSchema.plugin(timestamps);

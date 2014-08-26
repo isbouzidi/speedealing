@@ -262,21 +262,6 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
 		};
 }]);
 
-app.directive('ngConfirmClick', [
-    function(){
-        return {
-            link: function (scope, element, attr) {
-                var msg = attr.ngConfirmClick || "Supprimer le collaborateur ?";
-                var clickAction = attr.confirmedClick;
-                element.bind('click',function (event) {
-                    if ( window.confirm(msg) ) {
-                        scope.$eval(clickAction);
-                    }
-                });
-            }
-        };
-}]);
-
 angular.module('mean.rh').controller('RhCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'RH', function($scope, $http, $modalInstance, $upload, $route, Global, RH) {
     
         $scope.global = Global;

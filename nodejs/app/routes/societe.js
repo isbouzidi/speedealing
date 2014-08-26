@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('underscore'),
+		async = require('async'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -20,12 +21,18 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
+	app.get('/api/societe/count', auth.requiresLogin, object.count);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
+	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
+	app.post('/api/societe/segmentation', auth.requiresLogin, object.segmentationRename);
+	app.put('/api/societe/segmentation', auth.requiresLogin, object.segmentationUpdate);
+	app.del('/api/societe/segmentation', auth.requiresLogin, object.segmentationDelete);
 	app.get('/api/societe/contact', auth.requiresLogin, contact.read);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
 	app.post('/api/societe', auth.requiresLogin, object.create);
 	app.put('/api/societe/:societeId', auth.requiresLogin, object.update);
 	app.del('/api/societe/:societeId', auth.requiresLogin, object.destroy);
+	app.put('/api/societe/:societeId/:field', auth.requiresLogin, object.updateField);
 	app.get('/api/societe/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
@@ -822,6 +829,177 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
+		req.connection.setTimeout(300000);
+		
+		var conv_id = {
+			effectif_id: {
+				"0": "EF0",
+				"1": "EF1-5",
+				"6": "EF6-10",
+				"11": "EF11-50",
+				"51": "EF51-100",
+				"101": "EF101-250",
+				"251": "EF251-500",
+				"501": "EF501-1000",
+				"1001": "EF1001-5000",
+				"5001": "EF5000+"
+			},
+			typent_id: {
+				"Siège": "TE_SIEGE",
+				"Etablissement": "TE_ETABL",
+				"Publique / Administration": "TE_PUBLIC"
+			},
+			Status: {
+				"": "ST_NEVER",
+				"Moins de 3 mois": "ST_CINF3",
+				"OK Sensibilisation": "ST_NEW",
+				"Bonne relation": "ST_NEW",
+				"Peu visité": "ST_NEW",
+				"Recontacter dans 2 mois": "ST_NEW",
+				"Ne pas recontacter": "ST_NO",
+				"Chaud": "ST_PCHAU",
+				"Tiède": "ST_PTIED",
+				"Froid": "ST_PFROI",
+				"Non Déterminé": "ST_NEVER"
+			},
+			prospectlevel: {
+				"": "PL_NONE",
+				"Niveau 3": "PL_HIGH",
+				"Niveau 2": "PL_MEDIUM",
+				"Niveau 1": "PL_LOW",
+				"Niveau 0": "PL_NONE"
+			}
+		};
+
+		var is_Array = [
+			"segmentation"
+		];
+
+		var convertRow = function(tab, row, index, cb) {
+			var societe = {};
+			societe.country_id = "FR";
+			societe.segmentation = [];
+			societe.remise_client = 0;
+
+			for (var i = 0; i < row.length; i++) {
+				if (tab[i] === "false")
+					continue;
+
+				/* optional */
+				if (tab[i].indexOf(".") >= 0) {
+					var split = tab[i].split(".");
+
+					if (row[i]) {
+						if (typeof societe[split[0]] === "undefined")
+							societe[split[0]] = {};
+
+						societe[split[0]][split[1]] = row[i];
+					}
+					continue;
+				}
+
+				if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
+
+					if (tab[i] == "civilite" && conv_id[tab[i]][row[i]] === undefined)
+						row[i] = "";
+
+					if (conv_id[tab[i]][row[i]] === undefined) {
+						console.log("error : unknown " + tab[i] + "->" + row[i] + " ligne " + index);
+						return;
+					}
+
+					row[i] = conv_id[tab[i]][row[i]];
+				}
+
+				switch (tab[i]) {
+					case "address1":
+						if (row[i])
+							societe.address += "\n" + row[i];
+						break;
+					case "BP":
+						if (row[i]) {
+							societe.address += "\n" + row[i].substr(0, row[i].indexOf(','));
+						}
+						break;
+					case "brand" :
+						if (row[i])
+							societe[tab[i]] = row[i].split(',');
+						break;
+					case "segmentation" :
+						if (row[i]) {
+							var seg = row[i].split(',');
+							for (var j = 0; j < seg.length; j++) {
+								seg[j] = seg[j].replace(/\./g, "");
+								seg[j] = seg[j].trim();
+
+								societe[tab[i]].push({text: seg[j]});
+							}
+						}
+						break;
+					case "capital" :
+						if (row[i])
+							societe[tab[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
+						break;
+					case "yearCreated" :
+						if (row[i])
+							societe[tab[i]] = parseInt(row[i]) || null;
+						break;
+					case "phone":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "fax":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "contact_phone":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "contact_fax":
+						if (row[i])
+							societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof2":
+						societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof1":
+						societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "idprof3":
+						societe[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "effectif_id":
+						societe[tab[i]] = "EF0";
+
+						for (var idx in conv_id[tab[i]]) {
+							if (parseInt(idx) <= parseInt(row[i]))
+								societe[tab[i]] = conv_id[tab[i]][idx];
+						}
+						break;
+					case "notes":
+						if (row[i]) {
+							if (typeof societe.notes != "array")
+								societe.notes = [];
+
+							societe[tab[i]].push({
+								author: {
+									name: "Inconnu"
+								},
+								datec: new Date(0),
+								note: row[i]
+							});
+						}
+
+						break;
+					default :
+						if (row[i])
+							societe[tab[i]] = row[i];
+				}
+			}
+			//console.log(societe);
+			cb(societe);
+		};
 
 		if (req.files) {
 			var filename = req.files.filedata.path;
@@ -843,37 +1021,382 @@ module.exports = function(app, passport, auth) {
 
 							//return;
 
-							SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
-								if (err) {
+							convertRow(tab, row, index, function(data) {
+
+								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+									if (err) {
+										console.log(err);
+										return callback();
+									}
+
+									if (societe == null)
+										societe = new SocieteModel(data);
+
+									//console.log(row[10]);
+									//console.log(societe)
+									//console.log(societe.datec);
+
+									societe.save(function(err, doc) {
+										if (err)
+											console.log(err);
+										/*if (doc == null)
+										 console.log("null");
+										 else
+										 console.log(doc);*/
+
+										callback();
+									});
+
+								});
+							});
+
+							//return row;
+						}/*, {parallel: 1}*/)
+						.on("end", function(count) {
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function(err) {
+								if (err)
 									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
+						.on('error', function(error) {
+							console.log(error.message);
+						});
+			}
+		}
+	});
+
+	app.post('/api/contact/import', /*ensureAuthenticated,*/ function(req, res) {
+		req.connection.setTimeout(300000);
+		
+		var conv_id = {
+			civilite: {
+				"": "NO",
+				"MME": "MME",
+				"MLLE": "MLE",
+				"M.": "MR",
+				"COLONEL": "COLONEL",
+				"DOCTEUR": "DR",
+				"GENERAL": "GENERAL",
+				"PROFESSEUR": "PROF"
+			},
+			effectif_id: {
+				"0": "EF0",
+				"1": "EF1-5",
+				"6": "EF6-10",
+				"11": "EF11-50",
+				"51": "EF51-100",
+				"101": "EF101-250",
+				"251": "EF251-500",
+				"501": "EF501-1000",
+				"1001": "EF1001-5000",
+				"5001": "EF5000+"
+			},
+			typent_id: {
+				"Siège": "TE_SIEGE",
+				"Etablissement": "TE_ETABL",
+				"Publique / Administration": "TE_PUBLIC"
+			},
+			Status: {
+				"": "ST_NEVER",
+				"Moins de 3 mois": "ST_CINF3",
+				"OK Sensibilisation": "ST_NEW",
+				"Bonne relation": "ST_NEW",
+				"Peu visité": "ST_NEW",
+				"Recontacter dans 2 mois": "ST_NEW",
+				"Ne pas recontacter": "ST_NO",
+				"Chaud": "ST_PCHAU",
+				"Tiède": "ST_PTIED",
+				"Froid": "ST_PFROI",
+				"Non Déterminé": "ST_NEVER"
+			},
+			prospectlevel: {
+				"": "PL_NONE",
+				"Niveau 3": "PL_HIGH",
+				"Niveau 2": "PL_MEDIUM",
+				"Niveau 1": "PL_LOW",
+				"Niveau 0": "PL_NONE"
+			}
+		};
+
+		var is_Array = [
+			"tag"
+		];
+
+		var convertRow = function(tab, row, index, cb) {
+			var contact = {
+				Status: "ST_ENABLE",
+				tag: []
+			};
+			contact.country_id = "FR";
+
+			for (var i = 0; i < row.length; i++) {
+				if (tab[i] === "false")
+					continue;
+
+				/* optional */
+				if (tab[i].indexOf(".") >= 0) {
+					var split = tab[i].split(".");
+
+					if (row[i]) {
+						if (typeof contact[split[0]] === "undefined")
+							contact[split[0]] = {};
+
+						contact[split[0]][split[1]] = row[i];
+					}
+					continue;
+				}
+
+				if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
+
+					if (tab[i] == "civilite" && conv_id[tab[i]][row[i]] === undefined)
+						row[i] = "";
+
+					if (conv_id[tab[i]][row[i]] === undefined) {
+						console.log("error : unknown " + tab[i] + "->" + row[i] + " ligne " + index);
+						return;
+					}
+
+					row[i] = conv_id[tab[i]][row[i]];
+				}
+
+				switch (tab[i]) {
+					case "name" :
+						var name = row[i].split(" ");
+						contact.firstname = name[0];
+
+						if (name[1]) {
+							contact.lastname = name[1];
+							for (var j = 2; j < name.length; j++)
+								contact.lastname += " " + name[j];
+						}
+
+						break;
+					case "address1":
+						if (row[i])
+							contact.address += "\n" + row[i];
+						break;
+					case "BP":
+						if (row[i]) {
+							contact.address += "\n" + row[i].substr(0, row[i].indexOf(','));
+						}
+						break;
+					case "tag" :
+						if (row[i]) {
+							var seg = row[i].split(',');
+							for (var j = 0; j < seg.length; j++) {
+								seg[j] = seg[j].replace(/\./g, "");
+								seg[j] = seg[j].trim();
+
+								contact[tab[i]].push({text: seg[j]});
+							}
+						}
+						break;
+					case "phone":
+						if (row[i])
+							contact[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "fax":
+						if (row[i])
+							contact[tab[i]] = row[i].replace(/ /g, "");
+						break;
+
+					case "notes":
+						if (row[i]) {
+							if (typeof contact.notes != "array")
+								contact.notes = [];
+
+							contact[tab[i]].push({
+								author: {
+									name: "Inconnu"
+								},
+								datec: new Date(0),
+								note: row[i]
+							});
+						}
+
+						break;
+					default :
+						if (row[i])
+							contact[tab[i]] = row[i];
+				}
+			}
+			//console.log(contact);
+			cb(contact);
+		};
+
+		if (req.files) {
+			var filename = req.files.filedata.path;
+			if (fs.existsSync(filename)) {
+
+				var tab = [];
+
+				csv()
+						.from.path(filename, {delimiter: ';', escape: '"'})
+						.transform(function(row, index, callback) {
+							if (index === 0) {
+								tab = row; // Save header line
+								return callback();
+							}
+							//console.log(tab);
+							//console.log(row);
+
+							//console.log(row[0]);
+
+							//return;
+
+							convertRow(tab, row, index, function(data) {
+
+								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+									if (err) {
+										console.log(err);
+										return callback();
+									}
+
+									if (societe == null) {
+										console.log("Societe not found : " + data.code_client);
+										return callback();
+									}
+
+									data.societe = {
+										id: societe._id,
+										name: societe.name
+									};
+
+									ContactModel.findOne({"societe.id": data.societe.id, lastname: data.lastname}, function(err, contact) {
+
+										if (err) {
+											console.log(err);
+											return callback();
+										}
+
+										if (contact == null) {
+											contact = new ContactModel(data);
+										}
+
+										//console.log(data);
+
+										//console.log(row[10]);
+										//console.log(contact);
+										//console.log(societe.datec);
+
+										contact.save(function(err, doc) {
+											if (err)
+												console.log(err);
+											/*if (doc == null)
+											 console.log("null");
+											 else
+											 console.log(doc);*/
+
+											callback();
+										});
+									});
+
+								});
+							});
+
+							//return row;
+						}/*, {parallel: 1}*/)
+						.on("end", function(count) {
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function(err) {
+								if (err)
+									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
+						.on('error', function(error) {
+							console.log(error.message);
+						});
+			}
+		}
+	});
+
+	app.post('/api/societe/notes/import', /*ensureAuthenticated,*/ function(req, res) {
+
+		var convertRow = function(tab, row, index, cb) {
+			var societe = {};
+
+			for (var i = 0; i < row.length; i++) {
+				if (tab[i] === "false")
+					continue;
+
+				switch (tab[i]) {
+					case "notes":
+						if (row[i]) {
+							
+							societe[tab[i]] = {
+								author: {
+									name: "Inconnu"
+								},
+								datec: new Date(),
+								note: row[i]
+							};
+						}
+						break;
+					default :
+						if (row[i])
+							societe[tab[i]] = row[i];
+				}
+			}
+			//console.log(societe);
+			cb(societe);
+		};
+
+		if (req.files) {
+			var filename = req.files.filedata.path;
+			if (fs.existsSync(filename)) {
+
+				var tab = [];
+
+				csv()
+						.from.path(filename, {delimiter: ';', escape: '"'})
+						.transform(function(row, index, callback) {
+							if (index === 0) {
+								tab = row; // Save header line
+								return callback();
+							}
+							//console.log(tab);
+							//console.log(row);
+
+							//console.log(row[0]);
+
+							//return;
+
+							convertRow(tab, row, index, function(data) {
+								
+								if(!data.notes.note) {
 									return callback();
 								}
 
-								if (societe == null)
-									societe = new SocieteModel();
-
-
-								for (var i = 0; i < row.length; i++) {
-									societe[tab[i]] = row[i];
-								}
-
-
-
-								//console.log(row[10]);
-								//console.log(societe)
-								//console.log(societe.datec);
-
-								societe.save(function(err, doc) {
-									if (err)
+								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+									if (err) {
 										console.log(err);
-									/*if (doc == null)
-									 console.log("null");
-									 else
-									 console.log(doc);*/
+										return callback();
+									}
 
-									callback();
+									if (societe == null) {
+										console.log("Societe not found : " + data.code_client);
+										return callback();
+									}
+
+									societe.notes.push(data.notes);
+									
+									//console.log(societe);
+
+									societe.save(function(err, doc) {
+										if (err)
+											console.log(err);
+										/*if (doc == null)
+										 console.log("null");
+										 else
+										 console.log(doc);*/
+
+										callback();
+									});
+
 								});
-
 							});
 
 							//return row;
@@ -1060,7 +1583,12 @@ Object.prototype = {
 			}
 		}
 
-		SocieteModel.find(query, "-history -files", {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort:JSON.parse(req.query.sort)}, function(err, doc) {
+		var fields = "-history -files";
+
+		if (req.query.fields)
+			fields = req.query.fields;
+
+		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -1075,7 +1603,7 @@ Object.prototype = {
 	show: function(req, res) {
 		res.json(req.societe);
 	},
-	statistic: function(req, res) {
+	count: function(req, res) {
 		var query = {
 			$or: [{
 					entity: "ALL"
@@ -1154,6 +1682,18 @@ Object.prototype = {
 			res.json(doc);
 		});
 	},
+	updateField: function(req, res) {
+		if (req.body.value) {
+			var societe = req.societe;
+
+			societe[req.params.field] = req.body.value;
+
+			societe.save(function(err, doc) {
+				res.json(doc);
+			});
+		} else
+			res.send(500);
+	},
 	destroy: function(req, res) {
 		var societe = req.societe;
 		societe.remove(function(err) {
@@ -1205,6 +1745,191 @@ Object.prototype = {
 			doc.fields[req.query.field].values = result;
 
 			res.json(doc.fields[req.query.field]);
+		});
+	},
+	segmentation: function(req, res) {
+		var segmentationList = {};
+		DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, docs) {
+			if (docs) {
+				segmentationList = docs.values;
+			}
+
+			SocieteModel.aggregate([
+				{$project: {_id: 0, segmentation: 1}},
+				{$unwind: "$segmentation"},
+				{$group: {_id: "$segmentation.text", count: {$sum: 1}}}
+			], function(err, docs) {
+				if (err) {
+					console.log("err : /api/societe/segmentation/autocomplete");
+					console.log(err);
+					return;
+				}
+
+				var result = [];
+				if (docs == null)
+					docs = [];
+
+				for (var i = 0; i < docs.length; i++) {
+
+					result[i] = docs[i];
+					if (segmentationList[docs[i]._id])
+						result[i].attractivity = segmentationList[docs[i]._id].attractivity;
+				}
+
+				//console.log(result);
+
+				return res.send(200, result);
+			});
+		});
+	},
+	segmentationUpdate: function(req, res) {
+		DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, doc) {
+			if (doc == null)
+				return console.log("dict:fk_segmentation doesn't exist !");
+
+			if (req.body.attractivity)
+				doc.values[req.body._id] = {
+					label: req.body._id,
+					attractivity: req.body.attractivity
+				};
+			else if (doc.values[req.body._id])
+				delete doc.values[req.body._id];
+
+			doc.markModified('values');
+
+			doc.save(function(err, doc) {
+				if (err)
+					console.log(err);
+			});
+
+			res.send(200);
+
+		});
+	},
+	segmentationDelete: function(req, res) {
+		//console.log(req.body);
+		SocieteModel.update({'segmentation.text': req.body._id},
+		{$pull: {segmentation: {text: req.body._id}}},
+		{multi: true},
+		function(err) {
+			res.send(200);
+		});
+	},
+	segmentationRename: function(req, res) {
+		console.log(req.body);
+		SocieteModel.update({'segmentation.text': req.body.old},
+		{$push: {segmentation: {text: req.body.new}}},
+		{multi: true},
+		function(err) {
+			if (err)
+				return console.log(err);
+
+			SocieteModel.update({'segmentation.text': req.body.old},
+			{$pull: {segmentation: {text: req.body.old}}},
+			{multi: true},
+			function(err) {
+				if (err)
+					console.log(err);
+				res.send(200);
+			});
+		});
+	},
+	statistic: function(req, res) {
+		//console.log(req.query);
+
+		async.parallel({
+			own: function(cb) {
+				DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, dict) {
+					SocieteModel.aggregate([
+						{$match: {entity: {$in: ["ALL", req.query.entity]}, Status: {$nin: ["ST_NO"]}, "commercial_id.id": "user:" + req.query.name}},
+						{$project: {_id: 0, "Status": 1}},
+						{$group: {_id: "$Status", count: {$sum: 1}}}
+					], function(err, docs) {
+
+						for (var i = 0; i < docs.length; i++) {
+							docs[i]._id = dict.values[docs[i]._id];
+						}
+
+						cb(err, docs || []);
+					});
+				});
+			},
+			commercial: function(cb) {
+				SocieteModel.aggregate([
+					{$match: {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}}},
+					{$project: {_id: 0, "commercial_id.name": 1}},
+					{$group: {_id: "$commercial_id.name", count: {$sum: 1}}},
+					{$sort: {"_id.commercial": 1}}
+				], function(err, docs) {
+					cb(err, docs || []);
+				});
+			},
+			status: function(cb) {
+				SocieteModel.aggregate([
+					{$match: {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}}},
+					{$project: {_id: 0, "commercial_id.name": 1, "Status": 1}},
+					{$group: {_id: {commercial: "$commercial_id.name", Status: "$Status"}, count: {$sum: 1}}}
+				], function(err, docs) {
+					cb(err, docs || []);
+				});
+			},
+			fk_status: function(cb) {
+				DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, doc) {
+					var result = [];
+
+					for (var i in doc.values) {
+
+						if (doc.values[i].enable && doc.values[i].order) {
+							doc.values[i].id = i;
+							result.push(doc.values[i]);
+						}
+					}
+
+					result.sort(function(a, b) {
+						return a.order > b.order;
+					});
+
+					cb(err, result);
+				});
+			}
+		},
+		function(err, results) {
+			if (err)
+				return console.log(err);
+
+			var output = {
+				data: [],
+				commercial: results.commercial,
+				status: results.fk_status,
+				own: results.own
+			};
+
+			for (var i = 0; i < results.commercial.length; i++) {
+				for (var j = 0; j < results.fk_status.length; j++) {
+
+					if (j == 0)
+						output.data[i] = [];
+
+					output.data[i][j] = 0;
+
+					for (var k = 0; k < results.status.length; k++) {
+						//console.log(results.commercial[i]);
+						//console.log(results.fk_status[j]);
+						//console.log(results.status[k]);
+						//console.log("----------------------------");
+
+						if (results.commercial[i]._id === results.status[k]._id.commercial &&
+								results.fk_status[j].id === results.status[k]._id.Status) {
+							output.data[i][j] = results.status[k].count;
+							break;
+						}
+
+					}
+				}
+			}
+
+			//console.log(output);
+			res.json(output);
 		});
 	}
 };

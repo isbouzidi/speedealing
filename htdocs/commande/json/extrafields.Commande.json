@@ -1,533 +1,620 @@
 {
-	"_id": "extrafields:Commande",
-	"_rev": "125-99a19a85c4f567d7aa8c2ce01f26d4d0",
-	"class": "ExtraFields",
-	"ico": "icon-object-order",
-	"langs": [
-		"orders"
-	],
-	"schemaMongoose": {
-		"enabled": true,
-		"name": "commande",
-		"collection": "Commande",
-		"plugins": ["mongoose-timestamp"]
-	},
-	"history": true,
-	"models": [
-		"einstein"
-	],
-	"pluginsList": [
-		"RowAction",
-		"TrashNotification",
-		"FieldEditable",
-		"ColFilter"
-	],
-	"createList": [
-		"client",
-		"date_livraison",
-		"ref_client",
-		"Status"
-	],
-	"createLine": [
-		"product",
-		"product_type",
-		"description",
-		"pu_ht",
-		"qty",
-		"tva_tx",
-		"remise"
-	],
-	"longList": [
-		"_id",
-		"ref",
-		"client",
-		"ref_client",
-		"contact",
-		"date_livraison",
-		"total_ht",
-		"Status",
-		"Action"
-	],
-	"amountsBox": [
-		"shipping",
-		"total_ht",
-		"total_tva",
-		"total_ttc"
-	],
-	"fields": {
-		"_id": {
-			"schema": "ObjectId",
-			"type": "text",
-			"enable": true,
-			"list": {
-				"visible": false,
-				"static": true
-			}
-		},
-		"ref": {
-			"schema": "String",
-			"type": "text",
-			"enable": true,
-			"label": "Ref",
-			"list": {
-				"static": true
-			},
-			"render": {
-				"type": "url",
-				"ico": "icon-object-order"
-			}
-		},
-		"Status": {
-			"schema": {"type": "Mixed", "default": "DRAFT"},
-			"type": "select",
-			"enable": true,
-			"default": "DRAFT",
-			"label": "Status",
-			"status": true,
-			"list": {
-				"cssclass": "center",
-				"editable": true
-			},
-			"render": {
-				"type": "status"
-			},
-			"dict": "dict:fk_order_status"
-		},
-		"cond_reglement_code": {
-			"schema": {"type": "String", "default": "RECEP"},
-			"type": "select",
-			"enable": true,
-			"default": "RECEP",
-			"aoColumns": {
-				"bSearchable": true,
-				"bVisible": true
-			},
-			"dict": "dict:fk_payment_term",
-			"values": {
-				"RECEP": {
-					"enable": true,
-					"label": "A réception",
-					"label_pdf": "Réception de facture"
-				},
-				"30D": {
-					"enable": true,
-					"label": "30 jours",
-					"label_pdf": "Réglement à 30 jours",
-					"nbjour": 30
-				},
-				"30DENDMONTH": {
-					"enable": true,
-					"label": "30 jours fin de mois",
-					"label_pdf": "Réglement à 30 jours fin de mois",
-					"fdm": true,
-					"nbjour": 30
-				},
-				"60D": {
-					"enable": true,
-					"label": "60 jours",
-					"label_pdf": "Réglement à 60 jours",
-					"nbjour": 60
-				},
-				"60DENDMONTH": {
-					"enable": true,
-					"label": "60 jours fin de mois",
-					"label_pdf": "Réglement à 60 jours fin de mois",
-					"fdm": true,
-					"nbjour": 60
-				}
-			}
-		},
-		"mode_reglement_code": {
-			"schema": {"type": "String", "default": "TIP"},
-			"type": "select",
-			"enable": true,
-			"default": "TIP",
-			"aoColumns": {
-				"bSearchable": true,
-				"bVisible": true
-			},
-			"dict": "dict:fk_paiement",
-			"values": {
-				"NONE": {
-					"enable": true,
-					"label": "-"
-				},
-				"CB": {
-					"enable": true,
-					"label": "Carte Bancaire"
-				},
-				"CHQ": {
-					"enable": true,
-					"label": "Chèque"
-				},
-				"FAC": {
-					"label": "Factor"
-				},
-				"LCR": {
-					"label": "LCR"
-				},
-				"LIQ": {
-					"enable": true,
-					"label": "Espèces"
-				},
-				"PRE": {
-					"enable": true,
-					"label": "Prélèvement"
-				},
-				"PRO": {
-					"label": "Proforma"
-				},
-				"TIP": {
-					"enable": true,
-					"label": "TIP"
-				},
-				"TRA": {
-					"label": "Traite"
-				},
-				"VAD": {
-					"label": "Paiement en ligne"
-				},
-				"VIR": {
-					"enable": true,
-					"label": "Virement"
-				}
-			}
-		},
-		"availability_code": {
-			"schema": {"type": "String", "default": "AV_NOW"},
-			"type": "select",
-			"enable": true,
-			"default": "AV_NOW",
-			"aoColumns": {
-				"bSearchable": true,
-				"bVisible": true
-			},
-			"dict": "dict:fk_availability",
-			"values": {
-				"AV_NOW": {
-					"enable": true,
-					"label": "Immediate"
-				},
-				"AV_1W": {
-					"enable": true,
-					"label": "1 week"
-				},
-				"AV_2W": {
-					"enable": true,
-					"label": "2 weeks"
-				},
-				"AV_3W": {
-					"enable": true,
-					"label": "3 weeks"
-				}
-			}
-		},
-		"demand_reason_code": {
-			"schema": {"type": "String", "default": "SRC_CAMP_EMAIL"},
-			"type": "select",
-			"enable": true,
-			"default": "SRC_CAMP_EMAIL",
-			"aoColumns": {
-				"bSearchable": true,
-				"bVisible": true
-			},
-			"dict": "dict:fk_input_reason",
-			"values": {
-				"SRC_CAMP_EMAIL": {
-					"enable": true,
-					"label": "EMailing campaign"
-				},
-				"SRC_CAMP_FAX": {
-					"enable": true,
-					"label": "Fax campaign"
-				},
-				"SRC_CAMP_PHO": {
-					"enable": true,
-					"label": "Phone campaign"
-				},
-				"SRC_COMM": {
-					"enable": true,
-					"label": "Commercial contact"
-				},
-				"SRC_INTE": {
-					"enable": true,
-					"label": "Internet"
-				},
-				"SRC_SHOP": {
-					"enable": true,
-					"label": "Shop contact"
-				}
-			}
-		},
-		"client": {
-			"schema": {
-				"id": {"type": "ObjectId", "ref": "Societe"},
-				"name": "String"
-			},
-			"type": "select",
-			"enable": true,
-			"class": "Societe",
-			"view": "list",
-			"label": "Company",
-			"list": {
-				"editable": true
-			},
-			"render": {
-				"type": "url",
-				"ico": "icon-object-company"
-			}
-		},
-		"contact": {
-			"schema": {
-				"id": {"type": "ObjectId", "ref": "Contact"},
-				"name": "String"
-			},
-			"type": "select",
-			"enable": true,
-			"class": "Contact",
-			"view": "list",
-			"label": "Contact",
-			"list": {
-				"editable": true
-			},
-			"render": {
-				"type": "url",
-				"ico": "icon-object-user"
-			}
-		},
-		"ref_client": {
-			"schema": {"type": "String"},
-			"type": "text",
-			"enable": true,
-			"label": "RefCustomer"
-		},
-		"datec": {
-			"schema": {"type": "Date"},
-			"type": "date",
-			"enable": true,
-			"label": "Date",
-			"list": {
-				"editable": true
-			},
-			"render": {
-				"type": "date"
-			}
-		},
-		"date_livraison": {
-			"schema": "Date",
-			"type": "date",
-			"enable": true,
-			"label": "DateEnd",
-			"list": {
-				"editable": true
-			},
-			"render": {
-				"type": "date"
-			}
-		},
-		"notes": {
-			"schema": [
-				{
-					"title": "String",
-					"note": "String",
-					"public": {"type": "Boolean", "default": false},
-					"edit": {"type": "Boolean", "default": false}
-				}
-			],
-			"enable": true
-		},
-		"description": {
-			"type": "text",
-			"enable": true,
-			"label": "Description"
-		},
-		"Action": {
-			"type": "action",
-			"label": "Action",
-			"enable": true,
-			"list": {
-				"width": 45,
-				"cssclass": "center",
-				"sortable": false,
-				"searchable": false,
-				"static": true
-			},
-			"action": {
-				"edit": {
-					"label": "Edit",
-					"cssclass": "icon-action-edit action-edit"
-				},
-				"trash": {
-					"label": "Delete",
-					"cssclass": "icon-action-trash action-trash"
-				}
-			}
-		},
-		"Checkbox": {
-			"type": "checkbox",
-			"label": false,
-			"enable": true,
-			"list": {
-				"width": 8,
-				"sortable": false,
-				"searchable": false,
-				"static": true
-			},
-			"render": {
-			}
-		},
-		"pu_ht": {
-			"type": "text",
-			"enable": true,
-			"label": "PriceUHT"
-		},
-		"qty": {
-			"type": "text",
-			"enable": true,
-			"label": "Qty"
-		},
-		"tva_tx": {
-			"type": "text",
-			"enable": true,
-			"label": "VAT"
-		},
-		"remise": {
-			"type": "text",
-			"enable": true,
-			"label": "ReductionShort"
-		},
-		"product": {
-			"type": "select",
-			"enable": true,
-			"class": "Product",
-			"view": "list",
-			"label": "Product"
-		},
-		"product_type": {
-			"type": "select",
-			"enable": true,
-			"default": "PRODUCT",
-			"status": true,
-			"aoColumns": {
-				"sClass": "center",
-				"bSearchable": true,
-				"bVisible": true
-			},
-			"values": {
-				"PRODUCT": {
-					"enable": true,
-					"label": "Product",
-					"cssClass": "blue-gradient"
-				},
-				"SERVICE": {
-					"label": "Service",
-					"enable": true,
-					"cssClass": "green-gradient"
-				}
-			}
-		},
-		"total_ht": {
-			"schema": "Number",
-			"type": "text",
-			"settype": "float",
-			"price": true,
-			"cssClass": "red",
-			"enable": true,
-			"label": "AmountHT",
-			"mode": "absolute",
-			"render": {
-				"type": "price"
-			}
-		},
-		"total_tva": {
-			"schema": "Number",
-			"type": "text",
-			"settype": "float",
-			"price": true,
-			"enable": true,
-			"label": "AmountVAT",
-			"mode": "absolute"
-		},
-		"total_ttc": {
-			"schema": "Number",
-			"type": "text",
-			"settype": "float",
-			"price": true,
-			"enable": true,
-			"label": "AmountTTC",
-			"mode": "absolute"
-		},
-		"shipping": {
-			"schema": "Number",
-			"type": "text",
-			"icon": "icon-plane",
-			"settype": "float",
-			"price": true,
-			"enable": true,
-			"label": "ShippingHT",
-			"mode": "absolute"
-		},
-		"author": {
-			"schema": {
-				"id": "String",
-				"name": "String"
-			}
-		},
-		"entity": {
-			"schema": "String"
-		},
-		"modelpdf": {
-			"schema": "String"
-		},
-		"linked_objects": {
-			"schema": [{"id": "ObjectId", "name": "String"}]
-		},
-		"groups": {
-			"schema": ["Mixed"]
-		},
-		"lines": {
-			"schema": [
-				{
-					"pu": "Number",
-					"qty": "Number",
-					"tva_tx": "Number",
-					"price_base_type": "String",
-					"group": "String",
-					"title": "String",
-					"pu_ht": "Number",
-					"description": "String",
-					"product_type": "String",
-					"product": {
-						"id": {"type": "ObjectId", "ref": "Product"},
-						"name": "String"
-					},
-					"total_tva": "Number",
-					"total_ttc": "Number",
-					"total_ht_without_discount": "Number",
-					"total_ttc_without_discount": "Number",
-					"total_vat_without_discount": "Number",
-					"total_ht": "Number",
-					"pu_ttc": "Number",
-					"pu_tva": "Number"
-				}
-			]
-		},
-		"history": {
-			"schema": [
-				{
-					"date": "Date",
-					"author": {
-						"id": "String",
-						"name": "String"
-					},
-					"Status": "Mixed"
-				}
-			]
-		},
-		"subprice": {
-			"enable": true
-		}
-	},
-	"tms": "2013-04-09T18:51:31+02:00",
-	"entity": "clermont"
+    "_id" : "extrafields:Commande",
+    "ico" : "icon-object-order",
+    "langs" : [ 
+        "orders"
+    ],
+    "schemaMongoose" : {
+        "enabled" : true,
+        "name" : "commande",
+        "collection" : "Commande",
+        "plugins" : [ 
+            "mongoose-timestamp"
+        ]
+    },
+    "history" : true,
+    "models" : [ 
+        "einstein"
+    ],
+    "pluginsList" : [ 
+        "RowAction", 
+        "TrashNotification", 
+        "FieldEditable", 
+        "ColFilter"
+    ],
+    "createList" : [ 
+        "client", 
+        "date_livraison", 
+        "ref_client", 
+        "Status"
+    ],
+    "createLine" : [ 
+        "product", 
+        "product_type", 
+        "description", 
+        "pu_ht", 
+        "qty", 
+        "tva_tx", 
+        "remise"
+    ],
+    "longList" : [ 
+        "_id", 
+        "ref", 
+        "client", 
+        "ref_client", 
+        "contact", 
+        "date_livraison", 
+        "total_ht", 
+        "Status", 
+        "Action"
+    ],
+    "amountsBox" : [ 
+        "shipping", 
+        "total_ht", 
+        "total_tva", 
+        "total_ttc"
+    ],
+    "fields" : {
+        "_id" : {
+            "schema" : "ObjectId",
+            "type" : "text",
+            "enable" : true,
+            "list" : {
+                "visible" : false,
+                "static" : true
+            }
+        },
+        "type" : {
+            "type" : "select",
+            "enable" : true,
+            "default" : "ORDER_STANDARD",
+            "status" : true,
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "ORDER_STANDARD" : {
+                    "enable" : true,
+                    "label" : "OrderStandard",
+                    "cssClass" : "grey-gradient"
+                },
+                "ORDER_AUTO" : {
+                    "enable" : false,
+                    "label" : "OrderAuto",
+                    "cssClass" : "grey-gradient"
+                }
+            }
+        },
+        "ref" : {
+            "schema" : "String",
+            "type" : "text",
+            "enable" : true,
+            "label" : "Ref",
+            "list" : {
+                "static" : true
+            },
+            "render" : {
+                "type" : "url",
+                "ico" : "icon-object-order"
+            }
+        },
+        "Status" : {
+            "schema" : {
+                "type" : "Mixed",
+                "default" : "DRAFT"
+            },
+            "type" : "select",
+            "enable" : true,
+            "default" : "DRAFT",
+            "label" : "Status",
+            "status" : true,
+            "list" : {
+                "cssclass" : "center",
+                "editable" : true
+            },
+            "render" : {
+                "type" : "status"
+            },
+            "dict" : "dict:fk_order_status"
+        },
+        "StatusSupplier" : {
+            "type" : "select",
+            "enable" : true,
+            "default" : "NEW",
+            "status" : true,
+            "label" : "Etat",
+            "dict" : "dict:fk_order_status_supplier"
+        },
+        "cond_reglement_code" : {
+            "schema" : {
+                "type" : "String",
+                "default" : "RECEP"
+            },
+            "type" : "select",
+            "enable" : true,
+            "default" : "RECEP",
+            "aoColumns" : {
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "dict" : "dict:fk_payment_term",
+            "values" : {
+                "RECEP" : {
+                    "enable" : true,
+                    "label" : "A réception",
+                    "label_pdf" : "Réception de facture"
+                },
+                "30D" : {
+                    "enable" : true,
+                    "label" : "30 jours",
+                    "label_pdf" : "Réglement à 30 jours",
+                    "nbjour" : 30
+                },
+                "30DENDMONTH" : {
+                    "enable" : true,
+                    "label" : "30 jours fin de mois",
+                    "label_pdf" : "Réglement à 30 jours fin de mois",
+                    "fdm" : true,
+                    "nbjour" : 30
+                },
+                "60D" : {
+                    "enable" : true,
+                    "label" : "60 jours",
+                    "label_pdf" : "Réglement à 60 jours",
+                    "nbjour" : 60
+                },
+                "60DENDMONTH" : {
+                    "enable" : true,
+                    "label" : "60 jours fin de mois",
+                    "label_pdf" : "Réglement à 60 jours fin de mois",
+                    "fdm" : true,
+                    "nbjour" : 60
+                }
+            }
+        },
+        "mode_reglement_code" : {
+            "schema" : {
+                "type" : "String",
+                "default" : "TIP"
+            },
+            "type" : "select",
+            "enable" : true,
+            "default" : "TIP",
+            "aoColumns" : {
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "dict" : "dict:fk_paiement",
+            "values" : {
+                "NONE" : {
+                    "enable" : true,
+                    "label" : "-"
+                },
+                "CB" : {
+                    "enable" : true,
+                    "label" : "Carte Bancaire"
+                },
+                "CHQ" : {
+                    "enable" : true,
+                    "label" : "Chèque"
+                },
+                "FAC" : {
+                    "label" : "Factor"
+                },
+                "LCR" : {
+                    "label" : "LCR"
+                },
+                "LIQ" : {
+                    "enable" : true,
+                    "label" : "Espèces"
+                },
+                "PRE" : {
+                    "enable" : true,
+                    "label" : "Prélèvement"
+                },
+                "PRO" : {
+                    "label" : "Proforma"
+                },
+                "TIP" : {
+                    "enable" : true,
+                    "label" : "TIP"
+                },
+                "TRA" : {
+                    "label" : "Traite"
+                },
+                "VAD" : {
+                    "label" : "Paiement en ligne"
+                },
+                "VIR" : {
+                    "enable" : true,
+                    "label" : "Virement"
+                }
+            }
+        },
+        "availability_code" : {
+            "schema" : {
+                "type" : "String",
+                "default" : "AV_NOW"
+            },
+            "type" : "select",
+            "enable" : true,
+            "default" : "AV_NOW",
+            "aoColumns" : {
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "dict" : "dict:fk_availability",
+            "values" : {
+                "AV_NOW" : {
+                    "enable" : true,
+                    "label" : "Immediate"
+                },
+                "AV_1W" : {
+                    "enable" : true,
+                    "label" : "1 week"
+                },
+                "AV_2W" : {
+                    "enable" : true,
+                    "label" : "2 weeks"
+                },
+                "AV_3W" : {
+                    "enable" : true,
+                    "label" : "3 weeks"
+                }
+            }
+        },
+        "demand_reason_code" : {
+            "schema" : {
+                "type" : "String",
+                "default" : "SRC_CAMP_EMAIL"
+            },
+            "type" : "select",
+            "enable" : true,
+            "default" : "SRC_CAMP_EMAIL",
+            "aoColumns" : {
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "dict" : "dict:fk_input_reason",
+            "values" : {
+                "SRC_CAMP_EMAIL" : {
+                    "enable" : true,
+                    "label" : "EMailing campaign"
+                },
+                "SRC_CAMP_FAX" : {
+                    "enable" : true,
+                    "label" : "Fax campaign"
+                },
+                "SRC_CAMP_PHO" : {
+                    "enable" : true,
+                    "label" : "Phone campaign"
+                },
+                "SRC_COMM" : {
+                    "enable" : true,
+                    "label" : "Commercial contact"
+                },
+                "SRC_INTE" : {
+                    "enable" : true,
+                    "label" : "Internet"
+                },
+                "SRC_SHOP" : {
+                    "enable" : true,
+                    "label" : "Shop contact"
+                }
+            }
+        },
+        "client" : {
+            "schema" : {
+                "id" : {
+                    "type" : "ObjectId",
+                    "ref" : "Societe"
+                },
+                "name" : "String"
+            },
+            "type" : "select",
+            "enable" : true,
+            "class" : "Societe",
+            "view" : "list",
+            "label" : "Company",
+            "list" : {
+                "editable" : true
+            },
+            "render" : {
+                "type" : "url",
+                "ico" : "icon-object-company"
+            }
+        },
+        "contact" : {
+            "schema" : {
+                "id" : {
+                    "type" : "ObjectId",
+                    "ref" : "Contact"
+                },
+                "name" : "String"
+            },
+            "type" : "select",
+            "enable" : true,
+            "class" : "Contact",
+            "view" : "list",
+            "label" : "Contact",
+            "list" : {
+                "editable" : true
+            },
+            "render" : {
+                "type" : "url",
+                "ico" : "icon-object-user"
+            }
+        },
+        "ref_client" : {
+            "schema" : {
+                "type" : "String"
+            },
+            "type" : "text",
+            "enable" : true,
+            "label" : "RefCustomer"
+        },
+        "datec" : {
+            "schema" : {
+                "type" : "Date"
+            },
+            "type" : "date",
+            "enable" : false,
+            "label" : "Date",
+            "list" : {
+                "editable" : true
+            },
+            "render" : {
+                "type" : "date"
+            }
+        },
+        "date_livraison" : {
+            "schema" : "Date",
+            "type" : "date",
+            "enable" : true,
+            "label" : "DateEnd",
+            "list" : {
+                "editable" : true
+            },
+            "render" : {
+                "type" : "date"
+            }
+        },
+        "notes" : {
+            "schema" : [ 
+                {
+                    "title" : "String",
+                    "note" : "String",
+                    "public" : {
+                        "type" : "Boolean",
+                        "default" : false
+                    },
+                    "edit" : {
+                        "type" : "Boolean",
+                        "default" : false
+                    }
+                }
+            ],
+            "enable" : true
+        },
+        "description" : {
+            "type" : "text",
+            "enable" : true,
+            "label" : "Description"
+        },
+        "Action" : {
+            "type" : "action",
+            "label" : "Action",
+            "enable" : true,
+            "list" : {
+                "width" : 45,
+                "cssclass" : "center",
+                "sortable" : false,
+                "searchable" : false,
+                "static" : true
+            },
+            "action" : {
+                "edit" : {
+                    "label" : "Edit",
+                    "cssclass" : "icon-action-edit action-edit"
+                },
+                "trash" : {
+                    "label" : "Delete",
+                    "cssclass" : "icon-action-trash action-trash"
+                }
+            }
+        },
+        "Checkbox" : {
+            "type" : "checkbox",
+            "label" : false,
+            "enable" : true,
+            "list" : {
+                "width" : 8,
+                "sortable" : false,
+                "searchable" : false,
+                "static" : true
+            },
+            "render" : {}
+        },
+        "pu_ht" : {
+            "type" : "text",
+            "enable" : true,
+            "label" : "PriceUHT"
+        },
+        "qty" : {
+            "type" : "text",
+            "enable" : true,
+            "label" : "Qty"
+        },
+        "tva_tx" : {
+            "type" : "text",
+            "enable" : true,
+            "label" : "VAT"
+        },
+        "remise" : {
+            "type" : "text",
+            "enable" : true,
+            "label" : "ReductionShort"
+        },
+        "product" : {
+            "type" : "select",
+            "enable" : true,
+            "class" : "Product",
+            "view" : "list",
+            "label" : "Product"
+        },
+        "product_type" : {
+            "type" : "select",
+            "enable" : true,
+            "default" : "PRODUCT",
+            "status" : true,
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "PRODUCT" : {
+                    "enable" : true,
+                    "label" : "Product",
+                    "cssClass" : "blue-gradient"
+                },
+                "SERVICE" : {
+                    "label" : "Service",
+                    "enable" : true,
+                    "cssClass" : "green-gradient"
+                }
+            }
+        },
+        "total_ht" : {
+            "schema" : "Number",
+            "type" : "text",
+            "settype" : "float",
+            "price" : true,
+            "cssClass" : "red",
+            "enable" : true,
+            "label" : "AmountHT",
+            "mode" : "absolute",
+            "render" : {
+                "type" : "price"
+            }
+        },
+        "total_tva" : {
+            "schema" : "Number",
+            "type" : "text",
+            "settype" : "float",
+            "price" : true,
+            "enable" : true,
+            "label" : "AmountVAT",
+            "mode" : "absolute"
+        },
+        "total_ttc" : {
+            "schema" : "Number",
+            "type" : "text",
+            "settype" : "float",
+            "price" : true,
+            "enable" : true,
+            "label" : "AmountTTC",
+            "mode" : "absolute"
+        },
+        "shipping" : {
+            "schema" : "Number",
+            "type" : "text",
+            "icon" : "icon-plane",
+            "settype" : "float",
+            "price" : true,
+            "enable" : true,
+            "label" : "ShippingHT",
+            "mode" : "absolute"
+        },
+        "author" : {
+            "schema" : {
+                "id" : "String",
+                "name" : "String"
+            },
+            "enable" : false
+        },
+        "entity" : {
+            "schema" : "String",
+            "enable" : false
+        },
+        "modelpdf" : {
+            "schema" : "String",
+            "enable" : false
+        },
+        "linked_objects" : {
+            "schema" : [ 
+                {
+                    "id" : "ObjectId",
+                    "name" : "String"
+                }
+            ],
+            "enable" : false
+        },
+        "groups" : {
+            "schema" : [ 
+                "Mixed"
+            ],
+            "enable" : false
+        },
+        "lines" : {
+            "schema" : [ 
+                {
+                    "pu" : "Number",
+                    "qty" : "Number",
+                    "tva_tx" : "Number",
+                    "price_base_type" : "String",
+                    "group" : "String",
+                    "title" : "String",
+                    "pu_ht" : "Number",
+                    "description" : "String",
+                    "product_type" : "String",
+                    "product" : {
+                        "id" : {
+                            "type" : "ObjectId",
+                            "ref" : "Product"
+                        },
+                        "name" : "String"
+                    },
+                    "total_tva" : "Number",
+                    "total_ttc" : "Number",
+                    "total_ht_without_discount" : "Number",
+                    "total_ttc_without_discount" : "Number",
+                    "total_vat_without_discount" : "Number",
+                    "total_ht" : "Number",
+                    "pu_ttc" : "Number",
+                    "pu_tva" : "Number"
+                }
+            ],
+            "enable" : false
+        },
+        "history" : {
+            "schema" : [ 
+                {
+                    "date" : "Date",
+                    "author" : {
+                        "id" : "String",
+                        "name" : "String"
+                    },
+                    "Status" : "Mixed"
+                }
+            ],
+            "enable" : false
+        },
+        "subprice" : {
+            "enable" : true
+        },
+        "facility" : {
+            "enable" : false
+        },
+        "date_commande" : {
+            "enable" : true
+        },
+        "date" : {
+            "enable" : true
+        }
+    },
+    "tms" : "2013-04-09T18:51:31+02:00",
+    "entity" : "clermont"
 }

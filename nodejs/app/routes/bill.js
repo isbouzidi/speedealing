@@ -157,7 +157,7 @@ Object.prototype = {
 	},
 	create: function(req, res) {
 		var bill = {};
-		if(req.query.clone) {
+		if (req.query.clone) {
 			bill = req.bill.toObject();
 			delete bill._id;
 			delete bill.__v;
@@ -168,11 +168,11 @@ Object.prototype = {
 			bill.notes = [];
 			bill.latex = {};
 			bill.datec = new Date();
-			
+
 			bill = new BillModel(bill);
 		} else
 			bill = new BillModel(req.body);
-		
+
 		bill.author = {};
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;
@@ -417,30 +417,33 @@ Object.prototype = {
 			async.each(results.caFamily, function(product, callback) {
 				//console.log(product);
 				ProductModel.findOne({ref: product._id}, function(err, doc) {
-					if(!doc)
-						console.log(product);
-					
-					product.caFamily = doc.caFamily;
+					if (err)
+						console.log(err);
 
-					if (typeof ca[doc.caFamily] === "undefined")
-						ca[doc.caFamily] = 0;
+					if (doc)
+						product.caFamily = doc.caFamily;
+					else
+						product.caFamily = "OTHER";
 
-					ca[doc.caFamily] += product.total_ht;
+					if (typeof ca[product.caFamily] === "undefined")
+						ca[product.caFamily] = 0;
+
+					ca[product.caFamily] += product.total_ht;
 					//console.log(ca);
 
 					callback();
 				});
 
 			}, function(err) {
-				
+
 				var result = [];
 				for (var i in ca) {
 					result.push({
-						family:i,
-						total_ht:ca[i]
+						family: i,
+						total_ht: ca[i]
 					});
 				}
-				
+
 				//console.log(results);
 
 				res.json(200, result);
