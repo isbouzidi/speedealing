@@ -1,0 +1,46 @@
+{
+    "_id" : "extrafields:Lead",
+    "ico" : "icon-object-lead",
+    "schemaMongoose" : {
+        "enabled" : false,
+        "name" : "lead",
+        "collection" : "Lead",
+        "plugins" : [ 
+            "mongoose-timestamp"
+        ]
+    },
+    "fields" : {
+        "Status" : {
+            "schema" : "Mixed",
+            "type" : "radio",
+            "enable" : true,
+            "aoColumns" : {
+                "sClass" : "center",
+                "bSearchable" : true,
+                "bVisible" : true
+            },
+            "values" : {
+                "REF" : {
+                    "enable" : true,
+                    "label" : "Refusé",
+                    "cssClass" : "red-gradient"
+                },
+                "NEG" : {
+                    "enable" : true,
+                    "label" : "En cours de négociation",
+                    "cssClass" : "orange-gradient"
+                },
+                "ACT" : {
+                    "enable" : true,
+                    "label" : "En activité",
+                    "cssClass" : "blue-gradient"
+                },
+                "COMP" : {
+                    "enable" : true,
+                    "label" : "Terminé",
+                    "cssClass" : "green-gradient"
+                }
+            }
+        }
+    }
+}
