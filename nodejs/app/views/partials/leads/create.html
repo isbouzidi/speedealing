@@ -1,7 +1,7 @@
 <form data-ng-init='init()' data-ng-submit='createLead()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <!-- Block style is optional, you can use any layout -->
-    <h3 class="block-title">{{t 'reports:New Lead'}}</h3>
+    <h3 class="block-title">{{t 'leads:New Lead'}}</h3>
 
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
@@ -25,7 +25,7 @@
 		<div class="field-block button-height">
 			<label for="potential"><b>{{t "leads:Potential"}}</b></label>
 			<span ng-repeat="p in potential" style="margin-left" >
-				<input type="radio" name="selectedProspectLevel" ng-model="prospectLevel.selectedOption" value="\{{p.id}}">\{{p.label|| 'Aucun'}}
+				<input type="radio" name="selectedProspectLevel" ng-model="lead.potential" value="\{{p.id}}">\{{p.label|| 'Aucun'}}
 			</span>
 
 		</div>

@@ -19,6 +19,15 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http
 
 				$scope.status = data;
 			});
+			
+			$http({method: 'GET', url: '/api/report/dict_fk/select', params: {
+                field: "prospectlevel"
+            }
+            }).success(function(data) {
+
+                $scope.potential = data;
+
+            });
 
 		};
 
