@@ -676,7 +676,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 //                                            </div>\n\
 //                                            <a class="with-tooltip" ng-href="#!/contacts/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'>\n\
 //                                            <span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div></div>'},               
-				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/contacts/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findContact(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'poste', displayName: 'Fonction'},
 				{field: 'phone_mobile', displayName: 'Téléphone'},
 				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
@@ -780,6 +780,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		};
 
 		$scope.addNewContact = function() {
+                    
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/contacts/create.html',
 				controller: "ContactCreateController",
@@ -830,6 +831,27 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				windowClass: "steps"
 			});
 		};
+                
+                $scope.findContact = function(id) {
+                    
+                    var modalInstance = $modal.open({
+                        templateUrl: '/partials/contacts/fiche.html',
+                        controller: "ContactsController",
+                        windowClass: "steps",
+                        resolve: {
+                            object: function() {
+                                return {
+                                    contact: id
+                                };
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function(contacts) {
+                            $scope.contacts.push(contacts);
+                            $scope.countContact++;
+                    }, function() {
+                    });
+                };
 	}]);
 
 angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Societes', function($scope, $http, $modalInstance, $upload, $route, Global, Societes) {
