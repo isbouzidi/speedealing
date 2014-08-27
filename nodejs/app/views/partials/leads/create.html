@@ -5,12 +5,12 @@
 
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
-            <label for="name"><b>{{t "reports:Name"}}</b></label>
+            <label for="name"><b>{{t "Name"}}</b></label>
             <input type="text" ng-model="lead.name" id="name" class="input" autocomplete="off">
         </div>
-        
+
         <div class="field-block button-height">
-            <label for="dueDate"><b>{{t "reports:Due Date"}}</b></label>
+            <label for="dueDate"><b>{{t "DateDue"}}</b></label>
             <span class="k-widget k-datepicker k-header input">
                 <span class="k-picker-wrap k-state-default">
                     <input 
@@ -22,6 +22,13 @@
                 </span>
             </span>
         </div>
+		<div class="field-block button-height">
+			<label for="potential"><b>{{t "leads:Potential"}}</b></label>
+			<span ng-repeat="p in potential" style="margin-left" >
+				<input type="radio" name="selectedProspectLevel" ng-model="prospectLevel.selectedOption" value="\{{p.id}}">\{{p.label|| 'Aucun'}}
+			</span>
+
+		</div>
         <div class="field-block button-height wizard-controls clearfix">
             <button type="submit" class="button glossy mid-margin-right float-right">
                 <span class="button-icon"><span class="icon-tick"></span></span>
