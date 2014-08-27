@@ -283,7 +283,7 @@ module.exports = function(app, passport, auth) {
             if (req.body.val === null)
                 return res.send(200, {});
             
-            var val = req.body.val;
+            var val = "^" + req.body.val;
             
             var query = { "$or": [
                             {code: new RegExp(val, "i")},
