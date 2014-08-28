@@ -21,6 +21,8 @@ exports.read = function(req, res) {
 	if (req.query.qty) {
 		query.qtyMin = {'$lte': parseFloat(req.query.qty)};
 	}
+	
+	console.log(query);
 
 	PriceLevelModel.find(query, "-history", {sort: {qtyMin: -1}})
 			.populate("product.id", "label pu_ht")
