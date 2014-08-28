@@ -762,7 +762,7 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 			if (!$scope.course.poids || !$scope.course.to.zip)
 				return;
 
-			$http({method: 'GET', url: 'api/product', params: {
+			$http({method: 'GET', url: 'api/product/price_level', params: {
 					price_level: $scope.course.client.price_level.toUpperCase(),
 					ref: "MESS" + $scope.course.to.zip.substr(0, 2),
 					qty: $scope.course.poids
