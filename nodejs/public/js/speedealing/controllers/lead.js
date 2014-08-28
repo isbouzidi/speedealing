@@ -19,7 +19,7 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http
 
 				$scope.status = data;
 			});
-			
+
 			$http({method: 'GET', url: '/api/report/dict_fk/select', params: {
                 field: "prospectlevel"
             }
@@ -28,7 +28,6 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http
                 $scope.potential = data;
 
             });
-
 		};
 
 		$scope.createLead = function() {
@@ -42,4 +41,15 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http
 
 		};
 
+}]);
+angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$routeParams', '$modal', '$filter', 'dialogs', 'pageTitle', 'Global', 'object', 'Lead', function($scope, $http, $routeParams, $modal, $filter, $dialogs, pageTitle, Global, object, Lead) {
+        
+    $scope.findOne = function(){
+            
+            Lead.get({
+                Id: object.lead
+            }, function(lead) {
+                $scope.lead = lead;
+            });
+        };
 	}]);

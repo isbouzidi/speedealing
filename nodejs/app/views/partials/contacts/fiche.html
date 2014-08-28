@@ -1,217 +1,186 @@
-<section data-ng-controller="ContactsController">
-    <div data-ng-init="findOne()">
-    <hgroup id="main-title" class="thin">
-        <h1>Fiche contact : \{{contact.name}}</h1>
-    </hgroup>
-        <div class="with-padding" data-ng-init="init()">
-            <div class="columns">
-                <div style="margin-bottom: 10px; float: right;">
-                    <a ng-href="#" class="button" ng-click="retour()" title="Retour à la liste">
-                        Liste Contacts
-                        <span class="button-icon right-side"><span class="icon-list"></span></span>
-                    </a>
-                    <!--<a ng-href="#" class="button disabled" confirmed-click="deleteContact()" ng-confirm-click="Supprimer le contact ?" title="Supprimer le contact">
-                        Supprimer
-                        <span class="button-icon right-side"><span class="icon-trash"></span></span>
-                    </a>-->
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">Fiche contact : \{{contact.name}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active" data-ng-init="init()">
+        
+        <div class="field-block">
+            <label><b>{{t 'companies:Lastname'}}</b></label>
+
+            <a href="#" 
+               editable-text="contact.lastname" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="lastname">
+                \{{contact.lastname|| "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="lastname.$show()" ng-hide="lastname.$visible"></span>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:Firstname'}}</b></label>
+
+            <a href="#" 
+               editable-text="contact.firstname" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="firstname">
+                \{{contact.firstname|| "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="firstname.$show()" ng-hide="firstname.$visible"></span>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:PostOrFunction'}}</b></label>
+
+            <a href="#" 
+               editable-text="contact.poste" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="poste">
+                \{{contact.poste|| "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="poste.$show()" ng-hide="poste.$visible"></span>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:ContactStatut'}}</b></label>
+
+            <span class="tag small glossy" 
+                  data-ng-class="contact.status.css" 
+                  editable-select="contact.Status" 
+                  buttons="no"
+                  onaftersave="update()"
+                  blur="submit"
+                  e-ng-options="s.id as s.label for s in Status.values">
+                \{{contact.status.name|| "Non défini"}}</span>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:email'}}</b></label> 
+            <a 
+                data-ng-href="mailto:\{{contact.email}}" 
+                target="_blank" 
+                editable-email="contact.email" 
+                buttons="no" 
+                e-form="eMailBtnForm" 
+                onaftersave="update()"
+                blur="submit">\{{contact.email|| "Non défini"}}</a>
+            <span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:Tel-Mobile'}}</b></label>
+            
+                <a href="#"
+                   editable-tel="contact.phone_mobile" 
+                   e-pattern="\d{11}" 
+                   e-title="11(x)" 
+                   blur="submit" 
+                   buttons="no"
+                   e-form="telMobFrm"
+                   onaftersave="update()">
+                    \{{ contact.phone_mobile || 'Non défini' }}
+                </a>
+                <span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:Tel-Fixe'}}</b></label>
+
+            <a href="#" 
+               editable-tel="contact.phone_perso" 
+               e-pattern="\d{11}" 
+               blur="submit" 
+               buttons="no"
+               onaftersave="update()" 
+               e-title="Telephone Fixe"
+               e-placeholder="{{t 'companies:Tel-Fixe'}}"
+               e-form="TelFixFrm">
+                \{{ contact.phone_perso || 'Non défini' }}
+            </a>
+            <span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:birthday'}}</b></label>
+
+            <a href="#"
+               editable-date="contact.birthday"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+
+                \{{ (contact.birthday | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'companies:Address'}}</b></label>
+
+            <form editable-form name="editableFormAddress" onaftersave="update()">
+
+                <span 
+                    editable-textarea="contact.address" e-name="address" e-rows="4" e-cols="20" e-required>
+                    <pre class="no-padding">
+                        \{{ contact.address || 'Non défini' }}
+                    </pre>
+                </span>
+                <br>
+                <span 
+                    editable-text="contact.zip" 
+                    e-name="zip" 
+                    e-placeholder="{{t 'companies:zip'}}" 
+                    e-title="{{t 'companies:zip'}}">
+                    \{{contact.zip}}
+
+                </span>
+
+                <span 
+                    editable-text="contact.town" 
+                    e-name="town" 
+                    e-placeholder="{{t 'companies:town'}}" 
+                    e-title="{{t 'companies:town'}}">
+                    \{{contact.town}}
+
+                </span>
+                <span 
+                    type="button" 
+                    class="icon-pencil grey" 
+                    ng-click="editableFormAddress.$show()" 
+                    ng-show="!editableFormAddress.$visible">
+
+                </span>
+
+
+                <div 
+                    class="small-margin-top button-group" 
+                    ng-show="editableFormAddress.$visible">
+                    <button 
+                        type="submit" 
+                        class="button icon-tick blue-gradient" 
+                        title="{{t 'Save'}}" 
+                        ng-disabled="editableFormAddress.$waiting">
+
+                    </button>
+
+                    <button 
+                        type="button" 
+                        class="button icon-cross-round white-gradient" 
+                        ng-disabled="editableFormAddress.$waiting" 
+                        title="{{t
+                            'Cancel'}}" 
+                        ng-click="editableFormAddress.$cancel()">
+
+                    </button>
                 </div>
-            </div>
-                    
-            <div class="boxed relative">
-                    <div class="columns">
-                            <div class="twelve-columns">
-                                    <table class="simple-table">
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:Lastname'}}</th>
-                                                    <td>
-                                                        <a href="#" 
-                                                           editable-text="contact.lastname" 
-                                                           buttons="no"
-                                                           onaftersave="update()"
-                                                           blur="submit"
-                                                           e-form="lastname">
-                                                                    \{{contact.lastname || "Non défini"}}
-                                                        </a>
-                                                        <span class="icon-pencil grey" ng-click="lastname.$show()" ng-hide="lastname.$visible"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:Firstname'}}</th>
-                                                    <td>
-                                                        <a href="#" 
-                                                           editable-text="contact.firstname" 
-                                                           buttons="no"
-                                                           onaftersave="update()"
-                                                           blur="submit"
-                                                           e-form="firstname">
-                                                                    \{{contact.firstname || "Non défini"}}
-                                                        </a>
-                                                        <span class="icon-pencil grey" ng-click="firstname.$show()" ng-hide="firstname.$visible"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:PostOrFunction'}}</th>
-                                                    <td>
-                                                        <a href="#" 
-                                                           editable-text="contact.poste" 
-                                                           buttons="no"
-                                                           onaftersave="update()"
-                                                           blur="submit"
-                                                           e-form="poste">
-                                                                    \{{contact.poste || "Non défini"}}
-                                                        </a>
-                                                        <span class="icon-pencil grey" ng-click="poste.$show()" ng-hide="poste.$visible"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:ContactStatut'}}</th>
-                                                    <td>
-                                                        <span class="tag small glossy" 
-                                                              data-ng-class="contact.status.css" 
-                                                              editable-select="contact.Status" 
-                                                              buttons="no"
-                                                              onaftersave="update()"
-                                                              blur="submit"
-                                                              e-ng-options="s.id as s.label for s in Status.values">
-                                                              \{{contact.status.name || "Non défini"}}</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                        <th scope="row">{{t 'companies:email'}}</th> 
-                                                        <td><a 
-                                                                data-ng-href="mailto:\{{contact.email}}" 
-                                                                target="_blank" 
-                                                                editable-email="contact.email" 
-                                                                buttons="no" 
-                                                                e-form="eMailBtnForm" 
-                                                                onaftersave="update()"
-                                                                blur="submit">\{{contact.email || "Non défini"}}</a>
-                                                                <span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span>
-                                                        </td>
-                                                </tr>
-                                                <tr>
-                                                        <th scope="row">{{t 'companies:Tel-Mobile'}}</th>
-                                                        <td >
-                                                            <a href="#"
-                                                               editable-tel="contact.phone_mobile" 
-                                                               e-pattern="\d{11}" 
-                                                               e-title="11(x)" 
-                                                               blur="submit" 
-                                                               buttons="no"
-                                                               e-form="telMobFrm"
-                                                               onaftersave="update()">
-                                                                \{{ contact.phone_mobile || 'Non défini' }}
-                                                             </a>
-                                                             <span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
-                                                        </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:Tel-Fixe'}}</th>
-                                                    <td>
-                                                        <a href="#" 
-                                                           editable-tel="contact.phone_perso" 
-                                                           e-pattern="\d{11}" 
-                                                           blur="submit" 
-                                                           buttons="no"
-                                                           onaftersave="update()" 
-                                                           e-title="Telephone Fixe"
-                                                           e-placeholder="{{t 'companies:Tel-Fixe'}}"
-                                                           e-form="TelFixFrm">
-                                                            \{{ contact.phone_perso || 'Non défini' }}
-                                                        </a>
-                                                        <span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:birthday'}}</th>
-                                                    <td>
-                                                        <a href="#"
-                                                           editable-date="contact.birthday"
-                                                           buttons="no"
-                                                           onaftersave="update()"
-                                                           blur="submit">
 
-                                                            \{{ (contact.birthday | date:"dd/MM/yyyy") || 'Non défini' }}</a>
+            </form>
 
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">{{t 'companies:Address'}}</th>
-                                                    <td>
-                                                            <form editable-form name="editableFormAddress" onaftersave="update()">
-
-                                                                    <span 
-                                                                        editable-textarea="contact.address" e-name="address" e-rows="4" e-cols="20" e-required>
-                                                                        <pre class="no-padding">
-                                                                            \{{ contact.address || 'Non défini' }}
-                                                                        </pre>
-                                                                    </span>
-
-                                                                    <span 
-                                                                        editable-text="contact.zip" 
-                                                                        e-name="zip" 
-                                                                        e-placeholder="{{t 'companies:zip'}}" 
-                                                                        e-title="{{t 'companies:zip'}}">
-                                                                        \{{contact.zip}}
-                                                                        
-                                                                    </span>
-
-                                                                    <span 
-                                                                        editable-text="contact.town" 
-                                                                        e-name="town" 
-                                                                        e-placeholder="{{t 'companies:town'}}" 
-                                                                        e-title="{{t 'companies:town'}}">
-                                                                        \{{contact.town}}
-                                                                        
-                                                                    </span>
-                                                                    <span 
-                                                                        type="button" 
-                                                                        class="icon-pencil grey" 
-                                                                        ng-click="editableFormAddress.$show()" 
-                                                                        ng-show="!editableFormAddress.$visible">
-
-                                                                    </span>
-
-
-                                                                    <div 
-                                                                        class="small-margin-top button-group" 
-                                                                        ng-show="editableFormAddress.$visible">
-                                                                            <button 
-                                                                                type="submit" 
-                                                                                class="button icon-tick blue-gradient" 
-                                                                                title="{{t 'Save'}}" 
-                                                                                ng-disabled="editableFormAddress.$waiting">
-
-                                                                            </button>
-
-                                                                            <button 
-                                                                                type="button" 
-                                                                                class="button icon-cross-round white-gradient" 
-                                                                                ng-disabled="editableFormAddress.$waiting" 
-                                                                                title="{{t 'Cancel'}}" 
-                                                                                ng-click="editableFormAddress.$cancel()">
-
-                                                                            </button>
-                                                                    </div>
-
-                                                            </form>
-                                                    </td>
-                                            </tr>
-                                            </tbody>
-                                    </table>
-                            </div>
-                    </div>
-            </div>
-             
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                </div>  
-            </div>
-</section>
+        </div>
+    </fieldset>
+</div>

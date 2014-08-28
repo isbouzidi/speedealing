@@ -52,7 +52,7 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 
 	}]);
 
-angular.module('mean.contacts').controller('ContactsController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Contacts', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Contacts) {
+angular.module('mean.contacts').controller('ContactsController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'object', 'Global', 'Contacts', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, object, Global, Contacts) {
 
 		$scope.retour = function() {
 			$location.path('/contacts');
@@ -112,13 +112,11 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$lo
 		};
 
 		$scope.findOne = function() {
-
+                    
 			Contacts.get({
-				Id: $routeParams.id
+				Id: object.contact
 			}, function(doc) {
 				$scope.contact = doc;
-
-				pageTitle.setTitle('Fiche ' + $scope.contact.lastname + ' ' + $scope.contact.firstname);
 
 			});
 

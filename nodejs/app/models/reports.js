@@ -55,10 +55,15 @@ ReportSchema.plugin(timestamps);
 ReportSchema.virtual('RealisedStatus').get(function() {
 
 	var realisedStat = {};
-	if (this.realised)
-		realisedStat = {id: 'Réalisé', css: 'green-gradient'};
-	else
-		realisedStat = {id: 'Non Réalisé', css: 'red-gradient'};
+        
+        if(this.actions.length > 0){
+            if (this.realised)
+                    realisedStat = {id: 'Réalisé', css: 'green-gradient'};
+            else
+                    realisedStat = {id: 'Non Réalisé', css: 'red-gradient'};
+        }else {
+            realisedStat = {id: 'Aucun', css: 'grey-gradient'};
+        }
 
 	return realisedStat;
 });

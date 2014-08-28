@@ -81,6 +81,9 @@ module.exports = function(app, passport, auth) {
     //get report details
     app.get('/api/reports/:reportId', auth.requiresLogin, object.show);
     
+    //update report
+    app.put('/api/reports/:reportId', auth.requiresLogin, object.update);
+    
     app.param('reportId', object.report);
 };
 
@@ -226,6 +229,20 @@ Object.prototype = {
                 
                 res.send(200);
 
+        });
+    },
+    update: function(req, res) {
+
+        var report = req.report;
+        report = _.extend(report, req.body);
+
+        report.save(function(err, doc) {
+
+            if (err) {
+                return console.log(err);
+            }
+
+            res.json(200, doc);
         });
     }
 };
