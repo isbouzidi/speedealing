@@ -21,7 +21,7 @@ exports.read = function(req, res) {
 	if (req.query.qty) {
 		query.qtyMin = {'$lte': parseFloat(req.query.qty)};
 	}
-	
+
 	console.log(query);
 
 	PriceLevelModel.find(query, "-history", {sort: {qtyMin: -1}})
@@ -172,7 +172,7 @@ exports.upgrade = function(req, res) {
 						//console.log(price);
 					});
 				else
-					PriceLevelModel.update({"product.id": product._id, price_level: product.price[i].price_level},
+					PriceLevelModel.update({"product.id": product._id, price_level: product.price[i].price_level, qtyMin: product.price[i].qtyMin},
 					{
 						product: {
 							id: product._id,
