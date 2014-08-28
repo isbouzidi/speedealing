@@ -79,7 +79,6 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
             });
             
             var fields = [
-                /*"potentialAttract", */
                 "model", 
                 "typeAction", 
                 "methodAction", 

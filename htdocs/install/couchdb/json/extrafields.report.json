@@ -37,37 +37,6 @@
                 }
             }
         },
-        "potentialAttract" : {
-            "schema" : "Mixed",
-            "type" : "radio",
-            "enable" : true,
-            "values" : {
-                "0" : {
-                    "enable" : true,
-                    "label" : "0"
-                },
-                "-50" : {
-                    "enable" : true,
-                    "label" : "1 à 50 K€"
-                },
-                "-100" : {
-                    "enable" : true,
-                    "label" : "51 à 100 K€"
-                },
-                "-200" : {
-                    "enable" : true,
-                    "label" : "101 à 200 K€"
-                },
-                "-400" : {
-                    "enable" : true,
-                    "label" : "201 à 400 K€"
-                },
-                "+400" : {
-                    "enable" : true,
-                    "label" : "+ 400 K€"
-                }
-            }
-        },
         "typeAction" : {
             "schema" : "String",
             "type" : "select",
@@ -155,7 +124,7 @@
             "values" : {
                 "negotiation" : {
                     "enable" : true,
-                    "label" : "Négotiation"
+                    "label" : "Négociation"
                 },
                 "signature" : {
                     "enable" : true,
