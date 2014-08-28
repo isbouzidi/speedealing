@@ -1,39 +1,46 @@
 angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http', '$modalInstance', 'Global', 'Lead','object', function($scope, $http, $modalInstance, Global, Lead, object) {
 
-        $scope.global = Global;
+		$scope.global = Global;
 
-        $scope.lead = {
-                entity : Global.user.entity,
-                societe: {
-                        name: object.societe.name,
-                        id: object.societe.id
-                }
-        };
+		$scope.lead = {
+			entity : Global.user.entity,
+			societe: {
+				name: object.societe.name,
+				id: object.societe.id
+			}
+		};
 
-        $scope.init = function() {
+		$scope.init = function() {
 
-                $http({method: 'GET', url: '/api/report/fk_extrafields/lead', params: {
-                                field: "Status"
-                        }
-                }).success(function(data) {
+			$http({method: 'GET', url: '/api/report/fk_extrafields/lead', params: {
+					field: "Status"
+				}
+			}).success(function(data) {
 
-                        $scope.status = data;
-                });
+				$scope.status = data;
+			});
 
-        };
+			$http({method: 'GET', url: '/api/report/dict_fk/select', params: {
+                field: "prospectlevel"
+            }
+            }).success(function(data) {
 
-        $scope.createLead = function() {
+                $scope.potential = data;
 
-                var lead = new Lead(this.lead);
+            });
+		};
 
-                lead.$save(function(response) {
-                        $modalInstance.close(response);
+		$scope.createLead = function() {
 
-                });
+			var lead = new Lead(this.lead);
 
-        };
-        
-        
+			lead.$save(function(response) {
+				$modalInstance.close(response);
+
+			});
+
+		};
+
 }]);
 angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$routeParams', '$modal', '$filter', 'dialogs', 'pageTitle', 'Global', 'object', 'Lead', function($scope, $http, $routeParams, $modal, $filter, $dialogs, pageTitle, Global, object, Lead) {
         
@@ -45,4 +52,4 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
                 $scope.lead = lead;
             });
         };
-}]);
+	}]);

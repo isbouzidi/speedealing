@@ -7,7 +7,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     timestamps = require('mongoose-timestamp');
 
+<<<<<<< HEAD
 var ExtrafieldModel = mongoose.model('extrafields');
+=======
+var DictModel = mongoose.model('dict');
+>>>>>>> ffe1c22ba0636c3139d3920aee5a0dab1e05beba
 
 /**
  * Lead Schema
@@ -29,6 +33,7 @@ var leadSchema = new Schema({
 
 leadSchema.plugin(timestamps);
 
+<<<<<<< HEAD
 var leadStatusList = {};
 
 ExtrafieldModel.findById('extrafields:Lead', function(err, doc) {
@@ -57,5 +62,33 @@ leadSchema.virtual('Status')
             return res_status;
 
         });
+=======
+var prospectLevelList = {};
+DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
+	prospectLevelList = docs;
+});
+
+leadSchema.virtual('potentialLevel')
+		.get(function() {
+			var prospectLevel = {};
+
+			var level = this.potential;
+
+			if (level && prospectLevelList.values[level] && prospectLevelList.values[level].cssClass) {
+				prospectLevel.id = level;
+				prospectLevel.name = i18n.t("companies:" + level);
+				if (prospectLevelList.values[level].label)
+					prospectLevel.name = prospectLevelList.values[level].label;
+				prospectLevel.css = prospectLevelList.values[level].cssClass;
+			} else { // By default
+				prospectLevel.id = level;
+				prospectLevel.name = level;
+				prospectLevel.css = "";
+			}
+
+			return prospectLevel;
+		});
+
+>>>>>>> ffe1c22ba0636c3139d3920aee5a0dab1e05beba
 mongoose.model('lead', leadSchema, 'Lead');
 

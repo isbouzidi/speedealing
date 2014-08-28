@@ -86,14 +86,13 @@ ReportSchema.post('save', function(doc) {
 			stat = 'NEG';
 
 	}
-	;
 
-	if (doc.lead.id)
-		LeadModel.update({_id: doc.lead.id}, {$set: {status: stat}}, {multi: false}, function(err) {
-
-			console.log('lead updated ');
-		});
-
+	/*if (doc.lead.id)
+	 LeadModel.update({_id: doc.lead.id}, {$set: {status: stat}}, {multi: false}, function(err) {
+	 
+	 console.log('lead updated ');
+	 });
+	 */
 
 });
 

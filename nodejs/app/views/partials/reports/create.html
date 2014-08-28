@@ -5,7 +5,7 @@
 
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
-            <label for="model"><b>{{t "reports:Model"}}</b></label>
+            <label for="model"><b>{{t "Model"}}</b></label>
             <select class="form-control" 
                     id="model" 
                     ng-model="report.modelTemp" 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="field-block button-height">
-            <label for="dateReport"><b>{{t "reports:Date Report"}}</b></label>
+            <label for="dateReport"><b>{{t "Date"}}</b></label>
 
             <span class="k-widget k-datepicker k-header input">
                 <span class="k-picker-wrap k-state-default">
@@ -29,22 +29,9 @@
             </span>
 
         </div>
+        
         <div class="field-block button-height">
-            <label for="dueDate"><b>{{t "reports:Due Date"}}</b></label>
-
-            <span class="k-widget k-datepicker k-header input">
-                <span class="k-picker-wrap k-state-default">
-                    <input 
-                        kendo-date-picker required 
-                        id="dueDate" 
-                        k-on-change="report.dueDate = kendoEvent.sender._value;" 
-                        class="input"/>
-                </span>
-            </span>
-
-        </div>
-        <div class="field-block button-height">
-            <label for="reports:duration"><b>{{t "reports:Duration"}}</b></label>
+            <label for="reports:duration"><b>{{t "reports:DurationPrepare"}}</b></label>
             <!--<input required type="text" data-ng-model="report.duration" id="duration" class="input" autocomplete="off">-->
 
             <p class="button-height">
@@ -76,9 +63,9 @@
                 </span> Heure(s)
             </p>
         </div>
-        
+
         <div class="field-block button-height">
-            <label for="Contact"><b>{{t "reports:Contacts"}}</b></label>
+            <label for="Contact"><b>{{t "Contacts"}}</b></label>
 
             <select class="form-control margin-right margin-bottom" style="float :left" 
                     id="contacts" 
@@ -112,9 +99,9 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div class="field-block button-height">
-            <label for="lead"><b>{{t "reports:Leads"}}</b></label>
+            <label for="lead"><b>{{t "leads:Leads"}}</b></label>
 
             <select class="form-control margin-right margin-bottom" style="float :left" 
                     id="lead" 
@@ -126,7 +113,7 @@
                 <span class="button-icon"><span class="icon-plus"></span></span>
                 {{t "Create"}}
             </a>
-            
+
             <table class="table table-condensed" >
                 <thead>
                     <tr>
@@ -137,7 +124,7 @@
                 </thead>
                 <tbody>
                     <tr class="active" ng-if="report.lead.name">
-                        
+
                         <td>\{{report.lead.name}}</td>
                         <td>\{{report.lead.dueDate |date:'dd/MM/yyyy'}}</td>
                         <td>
@@ -148,9 +135,33 @@
                     </tr>
                 </tbody>
             </table>
-            
+
         </div>
-        <div data-ng-include="template" class="field-block-include"></div>        
+        <div data-ng-include="template" class="field-block-include"></div>
+		
+		<div ng-if="report.actions.length" class="field-block button-height">
+            <label for="dueDate"><b>{{t "DateDue"}}</b></label>
+
+            <span class="k-widget k-datepicker k-header input">
+                <span class="k-picker-wrap k-state-default">
+                    <input 
+                        kendo-date-picker required 
+                        id="dueDate" 
+                        k-on-change="report.dueDate = kendoEvent.sender._value;" 
+                        class="input"/>
+                </span>
+            </span>
+
+        </div>
+
+		<div class="field-block">
+			<h4>{{t "Comments"}}</h4>
+		</div>
+		<div class="field-block button-height">
+			<label for="comment"><b>{{t "Comments"}}</b></label>
+			<textarea class="input" rows="3" cols="60" data-ng-model="report.comment"></textarea>
+		</div>
+
         <div class="field-block button-height wizard-controls clearfix">
             <button type="submit" class="button glossy mid-margin-right float-right">
                 <span class="button-icon"><span class="icon-tick"></span></span>
