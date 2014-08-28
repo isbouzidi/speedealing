@@ -1,11 +1,11 @@
 "use strict";
 
 var mongoose = require('mongoose'),
-        fs = require('fs'),
-        csv = require('csv'),
-        _ = require('underscore'),
-        gridfs = require('../controllers/gridfs'),
-        config = require('../../config/config');
+		fs = require('fs'),
+		csv = require('csv'),
+		_ = require('underscore'),
+		gridfs = require('../controllers/gridfs'),
+		config = require('../../config/config');
 
 var ReportModel = mongoose.model('report');
 var ContactModel = mongoose.model('contact');
@@ -16,233 +16,231 @@ var SocieteModel = mongoose.model('societe');
 
 module.exports = function(app, passport, auth) {
 
-    var object = new Object();
+	var object = new Object();
 
 
-    app.get('/api/report/contacts', auth.requiresLogin, function(req, res) {
-        
-        if (req.query.societe === null)
-            return res.send(200, {});
-        
-        console.log("contacts : " + req.query.contacts);
-        var societe = req.query.societe;
+	app.get('/api/report/contacts', auth.requiresLogin, function(req, res) {
 
-        ContactModel.find({'societe.id': societe}, function(err, doc) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            ;
-            return res.send(200, doc);
+		if (req.query.societe === null)
+			return res.send(200, {});
 
-        });
+		console.log("contacts : " + req.query.contacts);
+		var societe = req.query.societe;
 
-    });
-    
-    // add or update potential attract
-    app.put('/api/report/addProspectLevel', auth.requiresLogin, function(req, res) {
-            
-        var prospectLevel = req.query.prospectLevel;
-        var societe = req.query.societe;
-        
+		ContactModel.find({'societe.id': societe}, function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			;
+			return res.send(200, doc);
+
+		});
+
+	});
+
+	// add or update potential attract
+	app.put('/api/report/addProspectLevel', auth.requiresLogin, function(req, res) {
+
+		var prospectLevel = req.query.prospectLevel;
+		var societe = req.query.societe;
+
 		SocieteModel.update({_id: societe}, {$set: {prospectlevel: prospectLevel}}, function(err, doc) {
-        
-            if (err) {
-                return console.log('Erreur : ' + err);
-            } else {
-                
-                res.json(200, doc);
-            }
-        });
-        
-        
-    });
-    
-    app.get('/api/report/fk_extrafields/select', auth.requiresLogin, object.select);
 
-    //add new report
-    app.post('/api/reports', auth.requiresLogin, object.create);
-    
-    //get all report of a company
-    app.get('/api/report', auth.requiresLogin, object.read);
-    
-    //get reports of other users
-    app.get('/api/reports/listReports', auth.requiresLogin, object.listReports);
-    
-    //get all the task not realised of a user
-    app.get('/api/reports/listTasks', auth.requiresLogin, object.listTasks);
-    
-    //mark a task as realised
-    app.put('/api/reports/taskRealised', auth.requiresLogin, object.taskRealised);
-    
-    //cancel task as realised
-    app.put('/api/reports/cancelTaskRealised', auth.requiresLogin, object.cancelTaskRealised);
-    
-    //get report details
-    app.get('/api/reports/:reportId', auth.requiresLogin, object.show);
-    
-    //update report
-    app.put('/api/reports/:reportId', auth.requiresLogin, object.update);
-    
-    app.param('reportId', object.report);
+			if (err) {
+				return console.log('Erreur : ' + err);
+			} else {
+
+				res.json(200, doc);
+			}
+		});
+
+
+	});
+
+	app.get('/api/report/fk_extrafields/select', auth.requiresLogin, object.select);
+
+	//add new report
+	app.post('/api/reports', auth.requiresLogin, object.create);
+
+	//get all report of a company
+	app.get('/api/report', auth.requiresLogin, object.read);
+
+	//get reports of other users
+	app.get('/api/reports/listReports', auth.requiresLogin, object.listReports);
+
+	//get all the task not realised of a user
+	app.get('/api/reports/listTasks', auth.requiresLogin, object.listTasks);
+
+	//mark a task as realised
+	app.put('/api/reports/taskRealised', auth.requiresLogin, object.taskRealised);
+
+	//cancel task as realised
+	app.put('/api/reports/cancelTaskRealised', auth.requiresLogin, object.cancelTaskRealised);
+
+	//get report details
+	app.get('/api/reports/:reportId', auth.requiresLogin, object.show);
+
+	//update report
+	app.put('/api/reports/:reportId', auth.requiresLogin, object.update);
+
+	app.param('reportId', object.report);
 };
 
 function Object() {
 }
 
 Object.prototype = {
-     report: function(req, res, next, id) {
-        ReportModel.findOne({_id: id}, function(err, doc) {
-            if (err)
-                return next(err);
-            if (!doc)
-                return next(new Error('Failed to load report ' + id));
+	report: function(req, res, next, id) {
+		ReportModel.findOne({_id: id}, function(err, doc) {
+			if (err)
+				return next(err);
+			if (!doc)
+				return next(new Error('Failed to load report ' + id));
 
-            req.report = doc;
-            next();
-        });
-    },
-    select: function(req, res) {
+			req.report = doc;
+			next();
+		});
+	},
+	select: function(req, res) {
 
-        ExtrafieldModel.findById('extrafields:Report', function(err, doc) {
-            if (err) {
-                console.log(err);
-                return;
-            }
+		ExtrafieldModel.findById('extrafields:Report', function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
 
-            var result = [];
-            if (doc.fields[req.query.field])
-                for (var i in doc.fields[req.query.field].values) {
-                    if (doc.fields[req.query.field].values[i].enable) {
-                        var val = {};
-                        val.id = i;
-                        val.label = doc.fields[req.query.field].values[i].label;
-                        result.push(val);
-                    }
-                }
+			var result = [];
+			if (doc.fields[req.query.field])
+				for (var i in doc.fields[req.query.field].values) {
+					if (doc.fields[req.query.field].values[i].enable) {
+						var val = {};
+						val.id = i;
+						val.label = doc.fields[req.query.field].values[i].label;
+						result.push(val);
+					}
+				}
 
-            res.json(result);
-        });
-    },
-    create: function(req, res) {
+			res.json(result);
+		});
+	},
+	create: function(req, res) {
 
-        var reportModel = new ReportModel(req.body);
-        console.log("log " + req.body.report);
+		var reportModel = new ReportModel(req.body);
+		console.log("log " + req.body.report);
 
-        reportModel.save(function(err, doc) {
-            if (err) {
-                //return res.json(500, err);
-                return console.log(err);
-            }
+		reportModel.save(function(err, doc) {
+			if (err) {
+				//return res.json(500, err);
+				return console.log(err);
+			}
 
-            res.json(200, doc);
-        });
-    },
-    read: function(req, res) {
+			res.json(200, doc);
+		});
+	},
+	read: function(req, res) {
+		var query = {};
+		var fields = {};
 
-        
-            var query = {};
-            var fields = {};
-            
-            query = JSON.parse(req.query.find);
-            
-            if (req.query.fields) {
-                fields = req.query.fields;
-            }
+		query = JSON.parse(req.query.find);
 
-            ReportModel.find(query, fields, function(err, doc) {
-                if (err) {
-                    console.log(err);
-                    res.send(500, doc);
-                    return;
-                }
+		if (req.query.fields) {
+			fields = req.query.fields;
+		}
 
-                res.send(200, doc);
-            });
-    },
-    show: function(req, res) {
-        console.log("show : " + req.report);
-        res.json(req.report);
-    },
-    listReports: function(req, res){
-        
-        var user = req.query.user;
-        
-        var query = {
-            "author.id": {
-                "$nin": [user]
+		ReportModel.find(query, fields, function(err, doc) {
+			if (err) {
+				console.log(err);
+				res.send(500, doc);
+				return;
+			}
+
+			res.send(200, doc);
+		});
+	},
+	show: function(req, res) {
+		//console.log("show : " + req.report);
+		res.json(req.report);
+	},
+	listReports: function(req, res) {
+
+		var user = req.query.user;
+
+		var query = {
+			"author.id": {
+				"$nin": [user]
 			},
 			entity: req.query.entity
 		};
-        ReportModel.find(query, {}, {limit: req.query.limit}, function(err, doc) {
-            if (err) {
-                console.log(err);
-                res.send(500, doc);
-                return;
-            }
-            
-            res.send(200, doc);
-        });
-    },
+		ReportModel.find(query, {}, {limit: req.query.limit}, function(err, doc) {
+			if (err) {
+				console.log(err);
+				res.send(500, doc);
+				return;
+			}
+
+			res.send(200, doc);
+		});
+	},
 	listTasks: function(req, res) {
-        
-        var user = req.query.user;
-        
-        var query = {
-            "author.id": {"$in": [user]},
-            "realised": false
-        };
-        ReportModel.find(query, "_id societe actions", function(err, doc) {
-            if (err) {
-                console.log(err);
-                res.send(500, doc);
-                return;
-            }
-            
-            res.send(200, doc);
-        });
-    },
+
+		var user = req.query.user;
+
+		var query = {
+			"author.id": {"$in": [user]},
+			"realised": false
+		};
+		ReportModel.find(query, "_id societe actions", function(err, doc) {
+			if (err) {
+				console.log(err);
+				res.send(500, doc);
+				return;
+			}
+
+			res.send(200, doc);
+		});
+	},
 	taskRealised: function(req, res) {
-        
-        var id = req.query.id;
-        
+
+		var id = req.query.id;
+
 		if (id)
 			ReportModel.update({"_id": id}, {$set: {"realised": true, dueDate: new Date()}}, function(err, doc) {
 
 				if (err)
-                    return console.log(err);
-                
-                res.send(200);
+					return console.log(err);
 
-        });
-    }
-    ,
+				res.send(200);
+
+			});
+	}
+	,
 	cancelTaskRealised: function(req, res) {
-        
-        var id = req.query.id;
-        
+
+		var id = req.query.id;
+
 		if (id)
 			ReportModel.update({"_id": id}, {$set: {"realised": false, dueDate: null}}, function(err, doc) {
 
 				if (err)
-                    return console.log(err);
-                
-                res.send(200);
+					return console.log(err);
 
-        });
-    },
-    update: function(req, res) {
+				res.send(200);
 
-        var report = req.report;
-        report = _.extend(report, req.body);
+			});
+	},
+	update: function(req, res) {
 
-        report.save(function(err, doc) {
+		var report = req.report;
+		report = _.extend(report, req.body);
 
-            if (err) {
-                return console.log(err);
-            }
+		report.save(function(err, doc) {
 
-            res.json(200, doc);
-        });
-    }
+			if (err) {
+				return console.log(err);
+			}
+
+			res.json(200, doc);
+		});
+	}
 };

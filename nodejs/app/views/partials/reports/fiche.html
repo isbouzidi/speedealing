@@ -4,27 +4,27 @@
     <h3 class="block-title">{{t 'reports:Details Report'}}</h3>
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block">
-            <label><b>{{t 'reports:Model'}}</b></label>
+            <label><b>{{t 'Model'}}</b></label>
             \{{report.model}}  <small class="tag \{{report.RealisedStatus.css}}">\{{report.RealisedStatus.id}}</small>
         </div>
         <div class="field-block">
-            <label><b>{{t 'reports:Author'}}</b></label>
+            <label><b>{{t 'Author'}}</b></label>
             \{{report.author.name}}
         </div>
         <div class="field-block">
-            <label><b>{{t 'reports:Company'}}</b></label>
+            <label><b>{{t 'CompanyFoundation'}}</b></label>
             \{{report.societe.name}}
         </div>
         <div class="field-block">
-            <label><b>{{t 'reports:Date Created'}}</b></label>
+            <label><b>{{t 'DateCreation'}}</b></label>
             \{{report.createdAt |date:'dd/MM/yyyy HH:mm'}}
         </div>
         <div class="field-block">
-            <label><b>{{t 'reports:Due Date'}}</b></label>
+            <label><b>{{t 'DateDue'}}</b></label>
             \{{report.dueDate |date:'dd/MM/yyyy'}}
         </div>
         <div class="field-block">
-            <label><b>{{t 'reports:Duration'}}</b></label>
+            <label><b>{{t 'Duration'}}</b></label>
             \{{report.duration || 'indéfini'}} Heure
         </div>
         <div class="field-block">
@@ -32,11 +32,11 @@
             \{{report.durationAppointment || 'indéfini'}} Heure
         </div>
         <div class="field-block">
-            <label><b>{{t 'reports:Lead'}}</b></label>
+            <label><b>{{t 'leads:Lead'}}</b></label>
             \{{report.lead.name || 'indéfinie'}}
         </div>
         <div class="field-block">
-            <label><b>{{t 'reports:Contacts'}}</b></label>
+            <label><b>{{t 'Contacts'}}</b></label>
             <table class="table table-condensed">
                 <thead>
                     <tr>
