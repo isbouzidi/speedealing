@@ -134,7 +134,7 @@
 			// 		  "status": "needsAction",
 			// 		  "due": "2014-12-01T10:00:00Z"
 			// 	},
-			// 	function (err, task) {
+			// 	function (err, task_id) {
 			//  		if (err)
 			//  			res.send(500, "ERR: " + err);
 			//  		else
@@ -142,13 +142,15 @@
 			//  	}
 			// );
 		
-			googleCalendar.insertCalendar(req.user, "CRM",
-				function (err) {
+			googleCalendar.insertQuickAddEvent(req.user, 
+				"RDV ici le 4 juillet 2016 à 16h",
+				function (err, event_id) {
 					if (err)
 						res.send(500, "ERR: " + err);
 					else
 						res.send(200, "ok");
-				});
+				}
+			);
 		}
 	};
 

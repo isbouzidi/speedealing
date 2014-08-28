@@ -25,16 +25,18 @@ exports.insertCalendar = insertCalendar;
 
 exports.insertEvent = insertEvent;
 
+exports.insertQuickAddEvent = insertQuickAddEvent;
+
 
 
 /* Methods definitions */
 
-	function _makeCalendarParams(user) {
- 		if (!user.google)
-			user.google = {};
-		if (!user.google.calendar)
-			user.google.calendar = {};
- 	}
+function _makeCalendarParams(user) {
+	if (!user.google)
+		user.google = {};
+	if (!user.google.calendar)
+		user.google.calendar = {};
+}
 
 function _setCalendarId(user, calendar_id, callback) {
 	_makeCalendarParams(user);
@@ -81,6 +83,10 @@ function hasRemoteCalendar(user) {
 		user.google.calendar.calendar_id;
 }
 
+/*
+	event = https://developers.google.com/google-apps/calendar/v3/reference/events#resource
+	callback = function(err, event_id)
+*/
 function insertEvent(user, event, callback) {
 	if (! gcommon.isGoogleUserAndHasGrantedAccess(user))
 		return callback("Not a Google User or not access.", null);
@@ -95,9 +101,37 @@ function insertEvent(user, event, callback) {
 				function (cb) {
 					var t = new GoogleCalendar(gcommon.getDefaultGoogleContactsParams(user));
 					t.insertEvent(event, 
-						{'email':user.email, 
-						'calendar_id': user.google.calendar.calendar_id}, 
-					callback);
+						{'calendar_id': user.google.calendar.calendar_id}, 
+						callback);
+				}], 
+				cb_google);
+		},
+		callback
+	);
+}
+
+/*
+	eventString : a text string which describe an event
+		with start date and end date.
+		e.g. "Rendez vous quelque part le 3 juin  à 10h jusqu'à 10h25"
+	callback = function(err, event_id)
+*/
+function insertQuickAddEvent(user, eventString, callback) {
+	if (! gcommon.isGoogleUserAndHasGrantedAccess(user))
+		return callback("Not a Google User or not access.", null);
+	gcommon.googleAction(user,
+		function (cb_google) {
+			async.series([
+				function (cb) {
+					if (hasRemoteCalendar(user))
+						return cb();
+					insertCalendar(user, "CRM", cb);
+				},
+				function (cb) {
+					var t = new GoogleCalendar(gcommon.getDefaultGoogleContactsParams(user));
+					t.insertQuickAddEvent(eventString, 
+						{'calendar_id': user.google.calendar.calendar_id}, 
+						callback);
 				}], 
 				cb_google);
 		},
@@ -233,7 +267,15 @@ exports.GoogleCalendar = GoogleCalendar;
 
 GoogleCalendar.prototype = {};
 
+/*
+	path = path on the server web (after the host name)
+	method = http method
+	header = hash headers to add to request. Optional
+*/
 GoogleCalendar.prototype._createHttpsReqOptions = function(path, method, headers) {
+
+	if (!headers)
+		headers = {}
 
 	headers['Authorization'] = 'OAuth ' + this.token;
 	//headers['GData-Version'] = '3.0';
@@ -258,6 +300,8 @@ GoogleCalendar.prototype._buildPath = function (params) {
 	//params.tasklist_id
 	params.alt = params.alt || 'json';
 	params.email = params.email || 'me';
+	params.calendar_id = params.calendar_id || '0';
+	params.query = params.query || '';
 
 	var path = '/calendar/v3';
 
@@ -265,17 +309,25 @@ GoogleCalendar.prototype._buildPath = function (params) {
 		path += '/calendars';	
 	} else if (params.type == 'calendar_list') {
 		path += '/users/' + params.email + '/calendarList';
+	} else if (params.type == 'event') {
+		path += '/calendars/' + params.calendar_id + '/events';
+	} else if (params.type == 'quick_add_event') {
+		path += '/calendars/' + params.calendar_id + '/events/quickAdd/';
+		path += '?' + qs.stringify(params.query);
 	}
-
-	//path += '?' + qs.stringify(query);
 
 	return path;
 };
 
 
-
+/*
+	opts = {host, port, path, method, headers}
+	body [string] 
+	callback = function(err, data)
+*/
 GoogleCalendar.prototype._sendHttpsRequest = function(opts, body, callback) {
 	console.log("HTTPS opts = ", opts, "\n");
+	body = body || '';
 	var req = https.request(opts, function (res) {
 		var data = '';
 		res.setEncoding('utf8');
@@ -372,6 +424,78 @@ function (calendar, params, callback) {
 		function (err, data) {
 			console.log("My data =", data);
 			callback(err);
+		}
+	);
+};
+
+
+
+/*
+	event = https://developers.google.com/google-apps/calendar/v3/reference/events#resource
+	params = {calendar_id}
+	callback = function(err, event_id)
+*/
+GoogleCalendar.prototype.insertEvent = 
+function (event, params, callback) {
+		
+	var body = JSON.stringify(event);
+
+	params['type'] = 'event';
+
+	var opts = this._createHttpsReqOptions(
+		this._buildPath(params),
+		'POST', 
+		{
+			'Content-Type': 'application/json',
+			'Content-Length': body.length
+		}
+	);
+
+	this._sendHttpsRequest(opts, body, 
+		function (err, data) {
+			console.log("My data =", data);
+			if (err)
+				return callback(err);
+
+			try {
+				data = JSON.parse(data);
+				callback(null, data.id);
+			} catch (err) {
+				callback(err);
+			}
+		}
+	);
+};
+
+
+/*
+	event = https://developers.google.com/google-apps/calendar/v3/reference/events#resource
+	params = {calendar_id}
+	callback = function(err, event_id)
+*/
+GoogleCalendar.prototype.insertQuickAddEvent = 
+function (eventString, params, callback) {
+	
+	params['type'] = 'quick_add_event';
+	params['query'] = { 'text': eventString };
+
+	var opts = this._createHttpsReqOptions(
+		this._buildPath(params),
+		'POST'
+	);
+
+	this._sendHttpsRequest(opts, null, 
+		function (err, data) {
+			console.log("My data =", data);
+			if (err)
+				return callback(err);
+
+			try {
+				data = JSON.parse(data);
+				callback(null, data.id);
+			} catch (err) {
+				callback(err);
+			}
 		}
 	);
 };
