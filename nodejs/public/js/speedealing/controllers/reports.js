@@ -2,13 +2,23 @@ angular.module('mean.reports').controller('ReportController', ['$scope', '$rootS
 
         $scope.global = Global;
         
-        $scope.initFicheReport = function(){
+        $scope.findOne = function(){
             
             Reports.get({
                 Id: $rootScope.idReport
             }, function(report) {
                 console.log(report);
                 $scope.report = report;
+            });
+        };
+        $scope.update = function(){
+        
+            var report = $scope.report;
+
+            report.$update(function() {
+                
+            }, function(errorResponse){
+                
             });
         };
         

@@ -1,4 +1,4 @@
-<div data-ng-init='initFicheReport()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <!-- Block style is optional, you can use any layout -->
     <h3 class="block-title">{{t 'reports:Details Report'}}</h3>
@@ -120,7 +120,16 @@
         
         <div class="field-block">
             <label><b>{{t 'reports:Comment'}}</b></label>
-            <p class="padding">\{{report.comment || 'indéfini'}}</p>
+            
+            <a href="#" editable-textarea="report.comment" 
+               e-rows="4" e-cols="40" 
+               onaftersave="update()"
+               buttons="no"
+               blur="submit"
+               e-form="CommentFrm">
+                \{{report.comment || 'indéfini'}}
+            </a>
+            <span class="icon-pencil grey" ng-click="CommentFrm.$show()" ng-hide="CommentFrm.$visible"></span>
         </div>
     </fieldset>
 </div>

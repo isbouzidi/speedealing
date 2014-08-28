@@ -151,13 +151,24 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				$http({method: 'GET', url: 'api/report', params:
 							{
 								find: {"societe.id": societe._id},
-								fields: "dateReport model author.name comment realised lead"
+								fields: "dateReport model author.name comment realised lead actions"
 							}
 				}).success(function(data, status) {
 
 					$scope.reports = data;
 
 					$scope.countReports = $scope.reports.length;
+				});
+                                
+                                $http({method: 'GET', url: 'api/lead', params:
+							{
+								"societe.id": societe._id
+							}
+				}).success(function(data, status) {
+
+					$scope.leads = data;
+
+					$scope.countLeads = $scope.leads.length;
 				});
 
 				$http({method: 'GET', url: 'api/europexpress/buy', params:
@@ -715,12 +726,28 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			enableRowSelection: false,
 			i18n: 'fr',
 			enableColumnResize: true,
+                        sortInfo: { fields: ['dateReport'], directions: ['desc']},
 			columnDefs: [
 				{field: 'model', displayName: 'Model', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'lead.name\')">(Affaire : {{row.getProperty(\'lead.name\')}})</small></a>'},
 				{field: 'dateReport', displayName: 'Date', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'author.name', displayName: 'Auteur'},
 				{field: 'RealisedStatus.id', displayName: 'Etat des actions', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'RealisedStatus.css\')}} glossy">{{row.getProperty(\'RealisedStatus.id\')}}</small></div>'},
 				{field: 'comment', displayName: 'Commentaires'}
+			]
+		};
+                
+                $scope.gridOptionsLeads = {
+			data: 'leads',
+			enableRowSelection: false,
+			i18n: 'fr',
+			enableColumnResize: true,
+                        sortInfo: { fields: ['createdAt'], directions: ['desc']},
+			columnDefs: [
+                                {field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a ng-click="findLead(row.getProperty(\'_id\'))" title=\'{{row.getProperty(col.field)}}\'><span class="icon-briefcase"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"},
+                                {field: 'dueDate', displayName: 'Date échéance', cellFilter: "date:'dd/MM/yyyy'"},
+				{field: 'status', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'Status.css\')}} glossy">{{row.getProperty(\'Status.name\')}}</small></div>'}
+				
 			]
 		};
 
@@ -832,6 +859,22 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			});
 		};
                 
+                $scope.findLead = function(id) {
+
+			var modalInstance = $modal.open({
+                            templateUrl: '/partials/leads/fiche.html',
+                            controller: "LeadController",
+                            windowClass: "steps",
+                            resolve: {
+                                object: function() {
+                                    return {
+                                        lead: id
+                                    };
+                                }
+                            }
+                        });
+		};
+                
                 $scope.findContact = function(id) {
                     
                     var modalInstance = $modal.open({
@@ -851,6 +894,20 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
                             $scope.countContact++;
                     }, function() {
                     });
+                };
+                
+                $scope.refreshReport = function(){
+                  
+                    $http({method: 'GET', url: 'api/report', params:
+                          {
+                              find: {"societe.id": $scope.societe._id},
+                              fields: "dateReport model author.name comment realised lead actions"
+                          }
+                      }).success(function(data, status) {
+
+                              $scope.reports = data;
+                              $scope.countReports = $scope.reports.length;
+                      });  
                 };
 	}]);
 

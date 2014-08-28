@@ -6,7 +6,7 @@
 		"port": 3000,
 		"secret": "1234qwerty"
 	},
-	"root": "/var/www/speedealing/nodejs",
+	"root": "/home/issam/www/speedealing/nodejs",
 	"facebook": {
 		"clientID": "APP_ID",
 		"clientSecret": "APP_SECRET",
@@ -56,6 +56,6 @@
 		],
 		"log": "trace"
 	},
-	"externalIPAllowed": ["127.0.0.1"],
+	"externalIPAllowed": [],
 	"sessionTimeout" : 3600000
 }
