@@ -18,9 +18,9 @@ exports.read = function(req, res) {
 		query.product.name = req.query.ref;
 	}
 
-	if (req.query.qty) {
-		query.qtyMin = {'$lte': parseFloat(req.query.qty)};
-	}
+	//if (req.query.qty) {
+	//	query.qtyMin = {'$lte': parseFloat(req.query.qty)};
+	//}
 
 	console.log(query);
 
