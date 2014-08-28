@@ -13,13 +13,22 @@ exports.read = function(req, res) {
 	if (req.query.price_level)
 		query.price_level = req.query.price_level;
 
-	PriceLevelModel.find(query, "-history")
+	if (req.query.ref) {
+		query.product = {};
+		query.product.name = req.query.ref;
+	}
+
+	if (req.query.qty) {
+		query.qtyMin = {'$lte': parseFloat(req.query.qty)};
+	}
+
+	PriceLevelModel.find(query, "-history", {sort: {qtyMin: -1}})
 			.populate("product.id", "label pu_ht")
 			.exec(function(err, prices) {
 				if (err)
 					console.log(err);
 
-				//console.log(prices);
+				console.log(prices);
 				if (prices == null)
 					prices = [];
 
