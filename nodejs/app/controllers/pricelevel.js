@@ -14,8 +14,7 @@ exports.read = function(req, res) {
 		query.price_level = req.query.price_level;
 
 	if (req.query.ref) {
-		query.product = {};
-		query.product.name = req.query.ref;
+		query.'product.name' = req.query.ref;
 	}
 
 	//if (req.query.qty) {
