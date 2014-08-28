@@ -38,22 +38,6 @@ module.exports = function(app, passport, auth) {
         });
 
     });
-
-    app.get('/api/report/caFamily/select', auth.requiresLogin, function(req, res) {
-
-
-        ProductModel.distinct(req.query.field, function(err, data) {
-
-            if (err) {
-                console.log('Erreur : ' + err);
-            } else {
-
-                res.send(200, data);
-            }
-        });
-
-        return;
-    });
     
     // add or update potential attract
     app.put('/api/report/addProspectLevel', auth.requiresLogin, function(req, res) {

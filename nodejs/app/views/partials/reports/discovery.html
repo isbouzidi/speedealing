@@ -1,9 +1,9 @@
 <div class="field-block button-height">
     <label for="potential"><b>{{t "reports:Potential"}}</b></label>
     <span ng-repeat="p in potential" style="margin-left" >
-    <input type="radio" name="selectedProspectLevel" ng-model="prospectLevel.selectedOption" value="\{{p.id}}">\{{p.label || 'Aucun'}}
+		<input type="radio" name="selectedProspectLevel" ng-model="prospectLevel.selectedOption" value="\{{p.id}}">\{{p.label|| 'Aucun'}}
     </span>
-    
+
 </div>
 
 <div class="field-block">
@@ -11,20 +11,17 @@
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>{{t "reports:Products"}}</b></label>
-    <span ng-repeat="p in products"  class="checkbox-inline">
-        
-        <input type="checkbox"
-               value="\{{p}}"  
-               ng-click="productSelection(p)">
-                \{{p}}
+    <span ng-repeat="p in products">
+        <input type="checkbox" value="\{{p}}"  
+               ng-click="productSelection(p)"/> \{{p}} <br/>
     </span>
-    
+
 </div>
 <div class="field-block">
     <h4>Actions à faire</h4>
 </div>
 <div class="field-block button-height">
-    
+
     <label for="senBooklet"><b>{{t "reports:Send Booklet"}}</b></label>
     <input type="checkbox" ng-model="plaquette" ng-click="actionSelection('plaquette')" value="plaquette">
     <span ng-show="plaquette">
@@ -33,7 +30,7 @@
         <input type="radio" ng-model="actionMethod['plaquette']" ng-change="addActionMethod('plaquette')" value="Déplacement" class=""> Par téléphone
         <input type="radio" ng-model="actionMethod['plaquette']" ng-change="addActionMethod('plaquette')" value="Téléphone" class=""> Déplacement
     </span>
-    
+
 </div>
 <div class="field-block button-height">
     <label for="sendOffer"><b>{{t "reports:Send Offer"}}</b></label>
@@ -58,7 +55,7 @@
 <div class="field-block button-height">
     <label for="dayVisitWorkshop"><b>{{t "reports:Visit Workshop"}}</b></label>
     <input type="checkbox" ng-model="visitAtelier" ng-click="actionSelection('visite atelier')">
-    
+
 </div>
 <div class="field-block button-height">
     <label for="nextAppointment"><b>{{t "reports:Next Appointment"}}</b></label>

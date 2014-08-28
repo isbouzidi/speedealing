@@ -8,12 +8,12 @@
         <input type="checkbox"
                value="\{{d.label}}" 
                ng-checked="report.optional.subject.deployment.indexOf(d.label) > -1" 
-               ng-click="deploymentSelection(d.label)"> \{{d.label}}
+               ng-click="deploymentSelection(d.label)"/> \{{d.label}}<br/>
     </span>
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>{{t "reports:Satisfaction Survey"}}</b></label>
-    <input type="checkbox" ng-model="report.optional.subject.satisfactionSurvey" ng-true-value=true ng-false-value=false>
+    <input type="checkbox" ng-model="report.optional.subject.satisfactionSurvey" ng-true-value=true ng-false-value=false />
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>{{t "reports:Progress Points"}}</b></label>
@@ -21,7 +21,7 @@
         <input type="checkbox"
                value="\{{p.label}}" 
                ng-checked="report.optional.subject.progressPoints.indexOf(p.label) > -1" 
-               ng-click="progressPointsSelection(p.label)"> \{{p.label}}
+               ng-click="progressPointsSelection(p.label)"/> \{{p.label}}<br/>
     </span>
 </div>
 <div class="field-block">
@@ -41,6 +41,6 @@
         <input type="checkbox"
                value="\{{r.label}}" 
                ng-checked="report.optional.reports.indexOf(p.label) > -1" 
-               ng-click="reportSelection(r.label)"> \{{r.label}}
+               ng-click="reportSelection(r.label)"/> \{{r.label}} <br/>
     </span>
 </div>

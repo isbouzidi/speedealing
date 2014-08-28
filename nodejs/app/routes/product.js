@@ -324,6 +324,21 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
+	app.get('/api/product/family', auth.requiresLogin, function(req, res) {
+
+
+		ProductModel.distinct(req.query.field, {caFamily: {$nin: [null, "OTHERS", ""]}}, function(err, data) {
+
+			if (err) {
+				console.log('Erreur : ' + err);
+			} else {
+				res.send(200, data);
+			}
+		});
+
+		return;
+	});
+
 	// list for autocomplete
 	app.post('/api/product/ref/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
