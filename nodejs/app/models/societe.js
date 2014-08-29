@@ -216,7 +216,7 @@ societeSchema.virtual('status')
 			var res_status = {};
 
 			var status = this.Status;
-                        
+
 			if (status && statusList.values[status].label) {
 				//console.log(this);
 				res_status.id = status;
@@ -261,7 +261,7 @@ mongoose.model('societe', societeSchema, 'Societe');
 var contactSchema = new Schema({
 	ref: String,
 	firstname: String,
-	lastname: String,
+	lastname: {type: String, uppercase: true},
 	poste: String,
 	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
 	Status: {type: String, default: "ST_ENABLE"},
@@ -277,8 +277,8 @@ var contactSchema = new Schema({
 	fax: String, // pro
 	email: String,
 	emails: [{
-		type: {type: String, default:"pro"},
-		address:String
+			type: {type: String, default: "pro"},
+			address: String
 		}],
 	civilite: String, // DICT
 	Tag: [String], // Used by DSF
@@ -352,9 +352,9 @@ contactSchema.virtual('attractivity')
 		});
 
 contactSchema.virtual('fullAddress').get(function() {
-   
-    return this.address + ', ' + this.zip + ', ' + this.town; 
-    
+
+	return this.address + ', ' + this.zip + ', ' + this.town;
+
 });
 
 mongoose.model('contact', contactSchema, 'Contact');
