@@ -290,11 +290,7 @@ var contactSchema = new Schema({
 	birthday: Date,
 	datec: {type: Date},
 	user_creat: String,
-	user_modif: String,
-	organization: {
-		name: String, // nom de la société
-		title: String // nom de la fonction occupée
-	}
+	user_modif: String
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
