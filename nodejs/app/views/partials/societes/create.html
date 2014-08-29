@@ -22,14 +22,15 @@
 			<label for="name"><b>{{t 'companies:Company'}}</b></label>
 			<input required type="text" data-ng-model="societe.name" id="name" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="code"><b>{{t 'SIRET'}}</b></label>
 			<input required ng-disabled="noSiret" type="text" data-ng-model="societe.idprof2" data-ng-change="isValidSiret()" id="code" class="input" autocomplete="off"><br/>
 			Organisme public <input type="checkbox" ng-model="noSiret" ng-change="societe.idprof2 = ''" /> 
-			<small ng-show="societe.idprof2==null && !noSiret" class="icon-warning blue input-info"> Ce numéro permet de vérifier que le compte n'existe pas dans la base. (sans espace)</small>
+			<small ng-show="societe.idprof2 == null && !noSiret" class="icon-warning blue input-info"> Ce numéro permet de vérifier que le compte n'existe pas dans la base. (sans espace)</small>
 			<small ng-show="societe.idprof2 && !validSiret" class="icon-warning orange input-info"> Code incorrect.</small>
-			<small ng-show="validSiret && siretFound" class="icon-warning red input-info"> Ce code existe déjà dans la base : \{{siretFound.name}} ({{t 'Entity'}} : \{{siretFound.entity}}).</small>
+			<small ng-show="validSiret && siretFound" class="icon-warning red input-info"> Ce code existe déjà dans la base : \{{siretFound.name}} ({{t
+				'Entity'}} : \{{siretFound.entity}}).</small>
 			<small ng-show="validSiret && !siretFound" class="icon-tick green input-info"> Code correct.</small>
 		</div>
 
@@ -37,7 +38,7 @@
 			<label for="status"><b>Status commercial</b></label>
 			<select class="form-control" id="status" data-ng-model="societe.Status" data-ng-options="c.id as c.label for c in status.values"></select>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="statusF"><b>Status fournisseur</b></label>
 			<select class="form-control" id="statusF" data-ng-model="societe.fournisseur" data-ng-options="f.id as f.label for f in fournisseur.values"></select>
@@ -45,7 +46,9 @@
 
 		<div class="field-block button-height wizard-controls clearfix">
 			<!--<button type="button" data-ng-disabled="!(societe.name && validSiret && !siretFound)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
-			<button type="button" data-ng-disabled="!(societe.name && (validSiret || noSiret) && !siretFound )" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button" data-ng-disabled="!(societe.name && (validSiret || noSiret) && !siretFound)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">
+				{{t 'Next'}}
+				<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
 	</fieldset>
@@ -59,136 +62,136 @@
 
 		<div class="field-block button-height">
 			<label><b>{{t 'companies:Address'}}</b></label>
-			<div class='columns'>
-				<div class='seven-columns'>
-					\{{societe.name}}<br />
-					<textarea class='input' rows='3' data-ng-model="societe.address" placeholder="{{t 'companies:Address'}}"></textarea><br/>
-					<input type="text" class="input" data-ng-model="societe.zip" size="8" placeholder="{{t 'companies:Zip'}}"/>
-					<input type="text" class="input" data-ng-model="societe.town" placeholder="{{t 'companies:Town'}}"/>
-				</div>
-				<div class="five-columns">
-				</div>
-			</div>
+			\{{societe.name}}<br />
+			<div ng-address model="societe"></div>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="phone"><b>{{t 'companies:Phone'}}</b></label>
 			<input type="text" data-ng-model="societe.phone" id="phone" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="fax"><b>{{t 'companies:Fax'}}</b></label>
 			<input type="text" data-ng-model="societe.fax" id="fax" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
-			<label for="email"><b>{{t 'Email'}}</b></label>
+			<label for="email"><b>{{t
+				'Email'}}</b></label>
 			<input type="email" data-ng-model="societe.email" id="email" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="url"><b>{{t 'companies:Web'}}</b></label>
 			<input type="url" data-ng-model="societe.url" id="url" placeholder="http://" class="input" autocomplete="off">
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
-			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t
+				'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
+				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
 	</fieldset>
-	
+
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
 
 		<div class="field-block">
 			<h4>Données commerciales</h4>
 			<p></p>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="idprof1"><b>{{t 'companies:ProfId1FR'}} / {{t 'companies:ProfId2FR'}}</b></label>
 			<span>\{{societe.idprof1}}&nbsp;/&nbsp;\{{societe.idprof2}}</span>
 		</div>
-			
+
 		<div class="field-block button-height">
 			<label for="idprof3"><b>{{t 'companies:ProfId3FR'}}</b></label>
 			<input type="text" data-ng-model="societe.idprof3" id="idprof3" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="idprof5"><b>{{t 'companies:ProfId5FR'}}</b></label>
 			<input type="text" data-ng-model="societe.idprof5" id="idprof5" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="ProspectLevel"><b>{{t 'companies:ProspectLevelShort'}}</b></label>
 			<select class="form-control" id="ProspectLevel" data-ng-model="societe.prospectlevel" data-ng-options="c.id as c.label for c in potential.values"></select>
 		</div>
-		
+
 		<div class="field-block button-height">
-			<label for="Tag"><b>{{t 'Categories'}}</b></label>
+			<label for="Tag"><b>{{t
+				'Categories'}}</b></label>
 			<input type="text" data-ng-model="societe.Tag" id="Tag" class="input" autocomplete="on">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="typent_id"><b>{{t 'companies:ThirdPartyType'}}</b></label>
 			<select class="form-control" id="typent_id" data-ng-model="societe.typent_id" data-ng-options="c.id as c.label for c in typent.values"></select>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="effectif_id"><b>{{t 'companies:Staff'}}</b></label>
 			<select class="form-control" id="effectif_id" data-ng-model="societe.effectif_id" data-ng-options="c.id as c.label for c in effectif.values"></select>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="commercial_id"><b>{{t 'companies:AllocateCommercial'}}</b></label>
 			<input type="text" id="commercial_id" data-ng-model="societe.commercial_id" typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="input" autocomplete="off">
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>
-			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t
+				'Previous'}}</button>
+			<button type="button"  data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
+				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
 	</fieldset>
-	
+
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
 
 		<div class="field-block">
 			<h4>Données de facturation</h4>
 			<p>Permet l'édition des factures</p>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="price_level"><b>{{t 'companies:PriceLevel'}}</b></label>
 			<input type="text" id="price_level" data-ng-model="societe.price_level" typeahead="price.name as price.name for price in priceLevelAutoComplete($viewValue) | filter:{name:$viewValue}" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="capital"><b>{{t 'companies:Capital'}}</b></label>
 			<input type="number" min='0' data-ng-model="societe.capital" id="capital" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="forme_juridique_code"><b>{{t 'companies:JuridicalStatus'}}</b></label>
 			<select class="form-control" id="forme_juridique_code" data-ng-model="societe.forme_juridique_code" data-ng-options="c.id as c.label for c in forme_juridique.values"></select>
 		</div>
-		
+
 		<div class="field-block button-height wizard-controls align-right">
 
 			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left">
 				<span class="button-icon anthracite-gradient">
 					<span class="icon-backward"></span>
-				</span>{{t 'Previous'}}</button>
+				</span>{{t
+					'Previous'}}</button>
 
 			<button type="submit" class="button glossy mid-margin-right">
 				<span class="button-icon"><span class="icon-tick"></span></span>
-				{{t 'Create'}}
+				{{t
+					'Create'}}
 			</button>
 
 		</div>
 
-		
+
 	</fieldset>
 
 </form>

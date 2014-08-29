@@ -30,25 +30,25 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 			});
 		};
 
-		$scope.contactAutoComplete = function(val) {
+//		$scope.contactAutoComplete = function(val) {
+//
+//			return $http.post('api/zipcode/autocomplete', {
+//				val: val
+//			}).then(function(res) {
+//				$scope.listCode = res.data;
+//
+//				return res.data;
+//			});
+//
+//		};
 
-			return $http.post('api/zipcode/autocomplete', {
-				val: val
-			}).then(function(res) {
-				$scope.listCode = res.data;
-
-				return res.data;
-			});
-
-		};
-
-		$scope.generateZip = function(val) {
-
-			if (val) {
-				$scope.contact.town = val.city;
-				$scope.contact.zip = val.code;
-			}
-		};
+//		$scope.generateZip = function(val) {
+//
+//			if (val) {
+//				$scope.contact.town = val.city;
+//				$scope.contact.zip = val.code;
+//			}
+//		};
 
 	}]);
 

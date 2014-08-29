@@ -107,15 +107,41 @@ angular.module('mean.system').directive('ngConfirmClick', ['dialogs', function(d
 		};
 	}]);
 
-angular.module('mean.system').directive('myFocus', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attr) {
-            scope.$watch(attr.myFocus, function (n, o) {
-                if (n != 0 && n) {
-                    element[0].focus();
-                }
-            });
-        }
-    };
+angular.module('mean.system').directive('myFocus', function() {
+	return {
+		restrict: 'A',
+		link: function(scope, element, attr) {
+			scope.$watch(attr.myFocus, function(n, o) {
+				if (n != 0 && n) {
+					element[0].focus();
+				}
+			});
+		}
+	};
+});
+angular.module('mean.system').directive('ngAddress', function($http) {
+	return {
+		restrict: 'A',
+		scope: {
+			adressModel: '=model'
+		},
+		templateUrl: '/partials/address.html',
+		link: function(scope, el, attr) {
+
+			scope.getLocation = function(val) {
+				return $http.post('api/zipcode/autocomplete', {
+					val: val
+				}).then(function(res) {
+					return res.data;
+				});
+			};
+
+			scope.generateZip = function(item) {
+				if (item) {
+					scope.adressModel.zip = item.code;
+					scope.adressModel.town = item.city;
+				}
+			};
+		}
+	};
 });

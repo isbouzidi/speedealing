@@ -955,7 +955,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			}).success(function(data, status) {
 				$scope.status = data;
 				//console.log(data);
-				$scope.societe.Status = data.default;
+				$scope.societe.Status = "ST_CINF3";
 			});
 
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {

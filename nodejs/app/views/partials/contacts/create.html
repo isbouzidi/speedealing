@@ -1,9 +1,11 @@
 <form data-ng-init='init()' data-ng-submit='createContact()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+    <!--
     <script type="text/ng-template" id="searchZipCode.html">
         <a>
             <span bind-html-unsafe="match.model.code | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.city"></span>
         </a>
     </script>
+    -->
 	<!-- Block style is optional, you can use any layout -->
 	<h3 class="block-title">{{t 'companies:NewContact'}}</h3>
 
@@ -34,6 +36,8 @@
                     <div class='columns'>
                         <div class='twelve-columns'>
 
+                            <div ng-address model="contact"></div>
+                            <!--
                             <textarea class="input" rows="3" cols="30" data-ng-model="contact.address" placeholder="{{t 'users:Address'}}"></textarea><br/>
                             
                             <input type="text" 
@@ -43,7 +47,7 @@
                                    typeahead-on-select ="generateZip($item)"
                                    typeahead-template-url="searchZipCode.html"
                                    class="input"
-                                   autocomplete="off">
+                                   autocomplete="on">
                             <input type="text" 
                                    data-ng-model="contact.town"
                                    placeholder="Ville" 
@@ -51,14 +55,14 @@
                                    typeahead-on-select ="generateZip($item)"
                                    typeahead-template-url="searchZipCode.html"
                                    class="input"
-                                   autocomplete="off">
+                                   autocomplete="on">
+                            -->
                         </div>
                     </div>			
 		</div>
 		<div class="field-block button-height">
 			<label for="phoneMob"><b>{{t 'companies:Tel-Mobile'}}</b></label>
 			<input type="text" data-ng-model="contact.phone_mobile" id="phoneMob" class="input" autocomplete="off">
-			<small ng-show="!(contact.phone_mobile || contact.phone || contact.email)" class="icon-warning orange input-info"> Au moins un mail ou un numéro de téléphone est obligatoire pour enregistrer un contact.</small>
 		</div>
 		<div class="field-block button-height">
 			<label for="phoneFix"><b>{{t 'companies:Tel-Fixe'}}</b></label>
