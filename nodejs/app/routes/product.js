@@ -273,33 +273,8 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/product/price_level', auth.requiresLogin, pricelevel.add);
 	app.del('/api/product/price_level', auth.requiresLogin, pricelevel.remove);
 	app.get('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
+	app.post('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
 	app.get('/api/product/price_level/upgrade', auth.requiresLogin, pricelevel.upgrade);
-
-	// list for autocomplete
-	app.post('/api/product/price_level/autocomplete', auth.requiresLogin, function(req, res) {
-		//console.dir(req.body);
-
-		PriceLevelModel.aggregate([{'$group': {_id: '$price_level'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
-			if (err) {
-				console.log("err : /api/product/price_level/autocomplete");
-				console.log(err);
-				return;
-			}
-
-			var result = [];
-
-			if (docs !== null)
-				for (var i in docs) {
-					//console.log(docs[i]);
-					result[i] = {};
-					result[i].name = docs[i]._id;
-					//result[i].id = docs[i]._id;
-				}
-
-			return res.send(200, result);
-		});
-	});
-
 	app.post('/api/product/family/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body);
 

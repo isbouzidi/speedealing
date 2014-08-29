@@ -38,7 +38,19 @@ exports.read = function(req, res) {
 };
 
 exports.list = function(req, res) {
-	PriceLevelModel.aggregate([{'$group': {_id: '$price_level'}}, {'$sort': {_id: 1}}], function(err, docs) {
+	var query = [];
+	
+	if (req.body.filter)
+		query.push({'$match': {price_level: new RegExp(req.body.filter.filters[0].value, "i")}});
+
+	query.push({'$group': {_id: '$price_level'}});
+	
+	if(req.body.take)
+		query.push({'$limit': parseInt(req.body.take)});
+
+	query.push({'$sort': {_id: 1}});
+
+	PriceLevelModel.aggregate(query, function(err, docs) {
 		if (err) {
 			console.log("err : /api/product/price_level/select");
 			console.log(err);
@@ -149,7 +161,6 @@ exports.autocomplete = function(body, callback) {
 				console.log(prices);
 				callback(prices);
 			});
-
 };
 
 exports.upgrade = function(req, res) {

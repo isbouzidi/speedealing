@@ -291,7 +291,7 @@ Object.prototype = {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref);
-				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.client.name + "} \\\\" + doc.address + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}");
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.client.name + "} \\\\" + doc.address.replace(/\n/g, "\\\\") + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}");
 				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
 				tex = tex.replace(/--TITLE--/g, doc.title);
 				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
@@ -332,7 +332,6 @@ Object.prototype = {
 				var tab_latex = "";
 				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
 				for (var i = 0; i < doc.total_tva.length; i++) {
-					console.log(doc.total_tva[i].total);
 					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
 				}
 				tab_latex += "\\vhline\n";

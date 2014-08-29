@@ -781,7 +781,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		};
 
 		$scope.priceLevelAutoComplete = function(val, field) {
-			return $http.post('api/product/price_level/autocomplete', {
+			return $http.post('api/product/price_level/select', {
 				take: '5',
 				skip: '0',
 				page: '1',
@@ -1031,7 +1031,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		};
 
 		$scope.priceLevelAutoComplete = function(val) {
-			return $http.post('api/product/price_level/autocomplete', {
+			return $http.post('api/product/price_level/select', {
 				take: '5',
 				skip: '0',
 				page: '1',
