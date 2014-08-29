@@ -38,7 +38,7 @@ module.exports = function(app, passport, auth) {
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body.filter);
-                
+
 		if (req.body.filter == null)
 			return res.send(200, {});
 
@@ -830,7 +830,7 @@ module.exports = function(app, passport, auth) {
 
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
 		req.connection.setTimeout(300000);
-		
+
 		var conv_id = {
 			effectif_id: {
 				"0": "EF0",
@@ -1069,7 +1069,7 @@ module.exports = function(app, passport, auth) {
 
 	app.post('/api/contact/import', /*ensureAuthenticated,*/ function(req, res) {
 		req.connection.setTimeout(300000);
-		
+
 		var conv_id = {
 			civilite: {
 				"": "NO",
@@ -1325,7 +1325,7 @@ module.exports = function(app, passport, auth) {
 				switch (tab[i]) {
 					case "notes":
 						if (row[i]) {
-							
+
 							societe[tab[i]] = {
 								author: {
 									name: "Inconnu"
@@ -1365,8 +1365,8 @@ module.exports = function(app, passport, auth) {
 							//return;
 
 							convertRow(tab, row, index, function(data) {
-								
-								if(!data.notes.note) {
+
+								if (!data.notes.note) {
 									return callback();
 								}
 
@@ -1382,7 +1382,7 @@ module.exports = function(app, passport, auth) {
 									}
 
 									societe.notes.push(data.notes);
-									
+
 									//console.log(societe);
 
 									societe.save(function(err, doc) {
@@ -1587,9 +1587,9 @@ Object.prototype = {
 
 		if (req.query.fields)
 			fields = req.query.fields;
-		
+
 		if (req.query.filter)
-			query.name = new RegExp(req.query.filter, "i");
+			query.name = new RegExp("\\b" + req.query.filter, "i");
 
 		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
 			if (err) {
@@ -1677,7 +1677,7 @@ Object.prototype = {
 
 	},
 	update: function(req, res) {
-                
+
 		var societe = req.societe;
 		societe = _.extend(societe, req.body);
 
@@ -1942,7 +1942,7 @@ function Contact() {
 
 Contact.prototype = {
 	read: function(req, res) {
-            
+
 		ContactModel.find(JSON.parse(req.query.find), function(err, doc) {
 			if (err) {
 				console.log(err);
