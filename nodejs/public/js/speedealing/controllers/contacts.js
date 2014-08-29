@@ -3,6 +3,7 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 		$scope.global = Global;
 		$scope.listCode = {};
 		$scope.active = 1;
+		$scope.jobs = [];
 
 		$scope.init = function() {
 			$scope.contact = {
@@ -11,6 +12,13 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 					name: object.societe.name
 				}
 			};
+
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_job"
+				}
+			}).success(function(data, status) {
+				$scope.jobs = data;
+			});
 		};
 
 		$scope.isActive = function(idx) {
@@ -109,10 +117,16 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$lo
 				$scope.Status = data;
 			});
 
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_job"
+				}
+			}).success(function(data, status) {
+				$scope.jobs = data;
+			});
 		};
 
 		$scope.findOne = function() {
-                    
+
 			Contacts.get({
 				Id: object.contact
 			}, function(doc) {

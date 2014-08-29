@@ -37,13 +37,15 @@
             <label><b>{{t 'companies:PostOrFunction'}}</b></label>
 
             <a href="#" 
-               editable-text="contact.poste" 
+               editable-select="contact.poste" 
                buttons="no"
                onaftersave="update()"
                blur="submit"
-               e-form="poste">
+               e-form="poste"
+			   e-ng-options="s.id as s.label for s in jobs.values">
                 \{{contact.poste|| "Non défini"}}
             </a>
+			
             <span class="icon-pencil grey" ng-click="poste.$show()" ng-hide="poste.$visible"></span>
 
         </div>
@@ -93,7 +95,7 @@
             <label><b>{{t 'companies:Tel-Fixe'}}</b></label>
 
             <a href="#" 
-               editable-tel="contact.phone_perso" 
+               editable-tel="contact.phone" 
                e-pattern="\d{11}" 
                blur="submit" 
                buttons="no"
