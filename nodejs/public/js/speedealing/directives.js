@@ -119,3 +119,31 @@ angular.module('mean.system').directive('myFocus', function () {
         }
     };
 });
+angular.module('mean.system').directive('ngAddress', function($http) {
+      return {
+        restrict: 'A',
+        scope: {
+          adressModel: '=model'
+        },
+        templateUrl: '/partials/address.html',
+        
+        link: function(scope, el, attr) {
+          
+          scope.getLocation = function(val) {
+            return $http.post('api/zipcode/autocomplete', {
+                        val: val
+                }).then(function(res) {
+                        
+                        return res.data;
+                });
+          };
+          
+          scope.generateZip = function(item){
+            if(item){
+                scope.adressModel.zip = item.code;
+                scope.adressModel.town = item.city;
+            }
+          };
+        }
+      };
+    });

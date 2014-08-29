@@ -1,0 +1,9 @@
+<script type="text/ng-template" id="customTemplate.html">
+  <a>
+      <span bind-html-unsafe="match.model.code | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.city"></span>
+  </a>
+</script>
+<textarea class="input" rows="3" cols="30" ng-model = "adressModel.address" placeholder="Adresse"></textarea><br/>
+<input type="text" ng-model="adressModel.zip" typeahead="adress.code for address in getLocation($viewValue)" typeahead-template-url="customTemplate.html" class="input margin-right"  typeahead-on-select ="generateZip($item)" placeholder="Code Postal">
+<input type="text" ng-model="adressModel.town" typeahead="adress.city for address in getLocation($viewValue)" typeahead-template-url="customTemplate.html" class="input"  typeahead-on-select ="generateZip($item)" placeholder="Ville">
+
