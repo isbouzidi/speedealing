@@ -3,5 +3,6 @@
     "Leads": "Affaire détectée",
     "Lead": "Affaire",
     "New Lead": "Nouvelle affaire",
-    "Potential": "Potentiel de l'affaire"
+    "Potential": "Potentiel de l'affaire",
+	 "Business Type": "Type affaire"
 }
