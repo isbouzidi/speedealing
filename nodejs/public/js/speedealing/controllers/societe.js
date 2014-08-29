@@ -90,7 +90,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				fields: "_id commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client",
 				query: this.type.id,
 				entity: Global.user.entity,
-				//filter: $scope.filterOptionsSociete.filterText,
+				filter: $scope.filterOptionsSociete.filterText,
 				skip: $scope.pagingOptionsSociete.currentPage - 1,
 				limit: $scope.pagingOptionsSociete.pageSize,
 				sort: sb
@@ -212,7 +212,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.filterOptionsSociete = {
 			filterText: "",
-			useExternalFilter: false
+			useExternalFilter: true
 		};
 
 		// paging
@@ -226,6 +226,12 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.$watch('pagingOptionsSociete', function(newVal, oldVal) {
 			if (newVal.currentPage !== oldVal.currentPage) {
+				$scope.find();
+			}
+		}, true);
+
+		$scope.$watch('filterOptionsSociete', function(newVal, oldVal) {
+			if (newVal.filterText !== oldVal.filterText) {
 				$scope.find();
 			}
 		}, true);
@@ -748,7 +754,6 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				{field: 'dueDate', displayName: 'Date échéance', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'status', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'Status.css\')}} glossy">{{row.getProperty(\'Status.name\')}}</small></div>'},
 				{field: 'potential', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'potentialLevel.css\')}} glossy">{{row.getProperty(\'potentialLevel.name\')}}</small></div>'},
-
 			]
 		};
 

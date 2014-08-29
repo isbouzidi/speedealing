@@ -1587,6 +1587,9 @@ Object.prototype = {
 
 		if (req.query.fields)
 			fields = req.query.fields;
+		
+		if (req.query.filter)
+			query.name = new RegExp(req.query.filter, "i");
 
 		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
 			if (err) {
