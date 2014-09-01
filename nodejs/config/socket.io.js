@@ -13,7 +13,7 @@ module.exports = exports = function(server, db, socketsUser) {
 	//console.log(db.connection.db);
 	var sockets = require('socket.io').listen(server, {log: false});
 
-	setTimeout(function() {
+	/*setTimeout(function() {
 		sockets.set('authorization', passportSocketIo.authorize({
 			cookieParser: express.cookieParser,
 			key: 'SpeedSession', // the name of the cookie where express/connect stores its session_id
@@ -44,7 +44,7 @@ module.exports = exports = function(server, db, socketsUser) {
 				accept(null, false);
 			}
 		}))
-	}, 300);
+	}, 300);*/
 
 
 	sockets.on('connection', function(socket) { // New client
