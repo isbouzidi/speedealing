@@ -102,7 +102,7 @@
                 <div class="eight-columns small-margin-bottom">
 
                     <div class="float-right button-height">					
-                        <button ng-show="editable" class="button" data-ng-click="changeStatus('NOT_PAID')">
+                        <button ng-show="editable" class="button" data-ng-click="changeStatus('SEND')">
                             <span class="button-icon green-gradient"><span class="icon-like"></span></span>
                             {{t 'Validate'}}
                         </button>
@@ -313,7 +313,7 @@
                 </div>
                 <div class="twelve-columns">
                     <h5 class="green underline">{{t 'deliveries:Details'}}</h5>
-                    <form editable-form name="tableform" onaftersave="saveTable()" oncancel="cancel()">
+                    <form editable-form name="tableform" onaftersave="update()" oncancel="cancel()">
 						<!-- table -->
 						<table class="table table-bordered table-hover table-condensed">
 							<tr style="font-weight: bold">
@@ -358,17 +358,17 @@
 									</span>
 								</td>
 								<td class="align-right">
-									<span editable-number="line.qty" e-ng-change="calculMontantHT($data, line.pu_ht, line.idLine)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
+									<span editable-number="line.qty" e-ng-change="calculMontantHT(line, $data, 'qty')" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
 										\{{ line.qty || 0 }}
 									</span>
 								</td>
 								<td class="align-right">
-									<span editable-number="line.pu_ht" e-ng-change="calculMontantHT(line.qty, $data, line.idLine)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
-										\{{ line.pu_ht || 0 }}
+									<span editable-number="line.pu_ht" e-ng-change="calculMontantHT(line, $data, 'pu_ht')" e-min="0" e-step="0.001" e-style="width: 80px" e-form="tableform">
+										\{{ line.pu_ht || 0 | number:3}}
 									</span>
 								</td>
 								<td class="align-right">
-									<span editable-number="line.discount" e-ng-change="calculMontantHT(line.qty, $data, line.idLine)" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
+									<span editable-number="line.discount" e-ng-change="calculMontantHT(line, $data, 'discount')" e-min="0" e-step="0.01" e-style="width: 80px" e-form="tableform">
 										\{{ line.discount || 0 |percent}}
 									</span>
 								</td>
@@ -379,7 +379,7 @@
 								</td>
 								<td style="vertical-align: middle;" class="align-right">
 									<span ng-model="montantHT[$index]" form="tableform" style="width: 60px"">
-										\{{ line.total_ht | number:2 }}
+										\{{ line.total_ht | number:3 }}
 									</span>
 								</td>
 								<td><button type="button"  e-style="width: 100px" ng-show="tableform.$visible" ng-click="deleteLine(line.idLine)" class="button red-gradient icon-trash" title="Supprimer"></button></td>

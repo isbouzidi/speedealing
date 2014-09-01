@@ -112,7 +112,7 @@
 			"perms": "$user->rights->commande->lire || $user->rights->intervention->lire",
 			"enabled": "$conf->delivery->enabled",
 			"usertype": 2,
-			"title": "deliveries:DeliveryNote",
+			"title": "deliveries:Deliveries",
 			"submenus": {
 				"menu:orderslist": {
 					"position": 1,

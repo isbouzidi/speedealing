@@ -83,29 +83,25 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 							name: data.product.id.ref,
 							label: data.product.id.label
 						},
-						description : data.product.id.description,
+						description: data.product.id.description,
 						isNew: true,
-						qty : $scope.delivery.lines[i].qty,
-						no_package : $scope.delivery.lines[i].no_package, // nombre de pieces
+						qty: $scope.delivery.lines[i].qty,
+						no_package: $scope.delivery.lines[i].no_package, // nombre de pieces
 						idLine: index
 					};
-					
-					$scope.calculMontantHT($scope.delivery.lines[i].qty, data.pu_ht, index);
+
+					$scope.calculMontantHT($scope.delivery.lines[i]);
 				}
 			}
 		};
 
 
-		$scope.calculMontantHT = function(qty, pu, idLine) {
+		$scope.calculMontantHT = function(line, data, varname) {
+			if (varname)
+				line[varname] = data;
 
-			for (var i in $scope.delivery.lines) {
-				var line = $scope.delivery.lines[i];
-				if (line.idLine === idLine) {
-					line.pu_ht = pu;
-					line.qty = qty;
-					line.total_ht = qty * pu;
-				}
-			}
+			line.total_ht = line.qty * (line.pu_ht * (1 - (line.discount / 100)));
+			line.total_tva = line.total_ht * line.tva_tx / 100;
 		};
 		// filter lines to show
 		$scope.filterLine = function(line) {
@@ -143,38 +139,8 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 					$scope.delivery.lines.splice(i, 1);
 				}
 			}
-			;
 
 			$scope.findOne();
-		};
-
-		// save edits
-		$scope.saveTable = function() {
-
-
-			for (var i = $scope.delivery.lines.length; i--; ) {
-				var line = $scope.delivery.lines[i];
-				// actually delete line
-				if (line.isDeleted) {
-					$scope.delivery.lines.splice(i, 1);
-				}
-				// mark as not new 
-				if (line.isNew) {
-					line.isNew = false;
-				}
-
-				line.total_ht = line.pu_ht * line.qty;
-				line.total_tva = line.total_ht * line.tva_tx / 100;
-				line.total_ttc = line.total_ht + line.total_tva;
-
-				$scope.delivery.total_ht = $scope.delivery.total_ht + line.total_ht;
-				$scope.delivery.total_ttc = $scope.delivery.total_ttc + line.total_ttc;
-
-			}
-
-			//send to server to update
-			$scope.update();
-
 		};
 
 		$scope.listDelivries = function() {
@@ -191,7 +157,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
 		$scope.remove = function(delivery) {
 			delivery.$remove();
-
 		};
 
 		$scope.update = function() {
@@ -238,7 +203,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				for (var i in $scope.delivery.lines) {
 					$scope.delivery.lines[i].idLine = i;
 				}
-				;
 
 				if (delivery.Status === "DRAFT")
 					$scope.editable = true;

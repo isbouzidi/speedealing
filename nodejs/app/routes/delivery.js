@@ -287,6 +287,8 @@ Object.prototype = {
 				res.type('html');
 				return res.send(500, "Impossible de générer le PDF, le bon livraison n'est pas validé");
 			}
+			
+			var tex = "";
 
 			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
 
