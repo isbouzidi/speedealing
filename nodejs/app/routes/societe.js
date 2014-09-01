@@ -44,7 +44,7 @@ module.exports = function(app, passport, auth) {
 
 		var query = {
 			"$or": [
-				{name: new RegExp(req.body.filter.filters[0].value, "i")},
+				{name: new RegExp("\\b" + req.body.filter.filters[0].value, "i")},
 				{ref: new RegExp(req.body.filter.filters[0].value, "i")},
 				{code_client: new RegExp(req.body.filter.filters[0].value, "i")}
 			]

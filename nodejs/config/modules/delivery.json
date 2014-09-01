@@ -1,5 +1,5 @@
 {
-	"_id": "module:Bon Livraison",
+	"_id": "module:Delivery",
 	"enabled": true,
 	"boxes": [
 		{
@@ -84,7 +84,7 @@
 	"module_parts": [],
 	"numero": 25,
 	"family": "crm",
-	"name": "Bon Livraison",
+	"name": "Delivery",
 	"description": "Gestion des commandes clients",
 	"version": "speedealing",
 	"const_name": "MAIN_MODULE_BonLivraison",
@@ -107,18 +107,18 @@
 		"deliveries"
 	],
 	"menus": {
-		"menu:bonLivraison": {
+		"menu:delivery": {
 			"position": 41,
 			"perms": "$user->rights->commande->lire || $user->rights->intervention->lire",
-			"enabled": "$conf->bonLivraison->enabled",
+			"enabled": "$conf->delivery->enabled",
 			"usertype": 2,
 			"title": "deliveries:DeliveryNote",
 			"submenus": {
 				"menu:orderslist": {
 					"position": 1,
 					"url": "#!/delivery",
-					"perms": "$user->rights->bonLivraison->lire",
-					"enabled": "$conf->bonLivraison->enabled",
+					"perms": "$user->rights->delivery->lire",
+					"enabled": "$conf->delivery->enabled",
 					"usertype": 2,
 					"title": "deliveries:List"
 				}
