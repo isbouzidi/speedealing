@@ -112,15 +112,17 @@ Object.prototype = {
 
 		//console.log(query);
 
-		BillModel.findOne(query, "-latex", function(err, doc) {
-			if (err)
-				return next(err);
+		BillModel.findOne(query, "-latex")
+				//.populate("orders")
+				.exec(function(err, doc) {
+					if (err)
+						return next(err);
 
-			req.bill = doc;
+					req.bill = doc;
 
-			//console.log(doc);
-			next();
-		});
+					//console.log(doc);
+					next();
+				});
 	},
 	read: function(req, res) {
 		var query = {};

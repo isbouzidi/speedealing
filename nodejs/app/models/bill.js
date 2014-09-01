@@ -61,7 +61,7 @@ var billSchema = new Schema({
 	commercial_id: {id: {type: String}, name: String},
 	entity: {type: String},
 	modelpdf: String,
-	orders: [Schema.Types.ObjectId],
+	orders: [{type: Schema.Types.ObjectId, ref:'commande'}],
 	groups: [Schema.Types.Mixed],
 	lines: [{
 			//pu: Number,

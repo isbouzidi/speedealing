@@ -65,7 +65,7 @@ var deliverySchema = new Schema({
 	commercial_id: {id: {type: String}, name: String},
 	entity: {type: String},
 	modelpdf: String,
-	orders: [Schema.Types.ObjectId],
+	orders: [{type: Schema.Types.ObjectId, ref: 'commande'}],
 	//groups: [Schema.Types.Mixed],
 	lines: [{
 			group: {type: String, default: "1. DEFAULT"},
@@ -82,7 +82,7 @@ var deliverySchema = new Schema({
 			tva_tx: Number,
 			total_tva: Number,
 			total_ht: Number,
-			discount: {type: Number, default : 0},
+			discount: {type: Number, default: 0},
 			no_package: Number // Colis Number
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],

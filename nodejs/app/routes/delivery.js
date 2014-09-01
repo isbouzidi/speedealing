@@ -112,18 +112,20 @@ Object.prototype = {
 
 		//console.log(query);
 
-		DeliveryModel.findOne(query, "-latex", function(err, doc) {
-			if (err)
-				return next(err);
+		DeliveryModel.findOne(query, "-latex")
+				//.populate("orders", "ref")
+				.exec(function(err, doc) {
+					if (err)
+						return next(err);
 
-			req.delivery = doc;
+					req.delivery = doc;
 
-			//console.log(doc);
-			next();
-		});
+					//console.log(doc);
+					next();
+				});
 	},
 	read: function(req, res) {
-            
+
 		var query = {};
 
 		if (req.query) {
@@ -158,7 +160,7 @@ Object.prototype = {
 	},
 	create: function(req, res) {
 		var delivery = {};
-		if(req.query.clone) {
+		if (req.query.clone) {
 			delivery = req.delivery.toObject();
 			delete delivery._id;
 			delete delivery.__v;
@@ -169,11 +171,11 @@ Object.prototype = {
 			delivery.notes = [];
 			delivery.latex = {};
 			delivery.datec = new Date();
-			
+
 			delivery = new DeliveryModel(delivery);
 		} else
 			delivery = new DeliveryModel(req.body);
-		
+
 		delivery.author = {};
 		delivery.author.id = req.user._id;
 		delivery.author.name = req.user.name;
@@ -287,7 +289,7 @@ Object.prototype = {
 				res.type('html');
 				return res.send(500, "Impossible de générer le PDF, le bon livraison n'est pas validé");
 			}
-			
+
 			var tex = "";
 
 			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
@@ -420,9 +422,9 @@ Object.prototype = {
 			async.each(results.caFamily, function(product, callback) {
 				//console.log(product);
 				ProductModel.findOne({ref: product._id}, function(err, doc) {
-					if(!doc)
+					if (!doc)
 						console.log(product);
-					
+
 					product.caFamily = doc.caFamily;
 
 					if (typeof ca[doc.caFamily] === "undefined")
@@ -435,15 +437,15 @@ Object.prototype = {
 				});
 
 			}, function(err) {
-				
+
 				var result = [];
 				for (var i in ca) {
 					result.push({
-						family:i,
-						total_ht:ca[i]
+						family: i,
+						total_ht: ca[i]
 					});
 				}
-				
+
 				//console.log(results);
 
 				res.json(200, result);
