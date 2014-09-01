@@ -127,29 +127,18 @@
 			// 	}
 			// );
 
-			// googleTasks.insertTask(req.user,
-			// 	{
-			// 		  "title": "matache!!!!",
-			// 		  "notes": "- \n -",
-			// 		  "status": "needsAction",
-			// 		  "due": "2014-12-01T10:00:00Z"
-			// 	},
-			// 	function (err, task_id) {
-			//  		if (err)
-			//  			res.send(500, "ERR: " + err);
-			//  		else
-			//  			res.send(200, "ok");
-			//  	}
-			// );
-		
-			googleCalendar.insertQuickAddEvent(req.user, 
-				"RDV ici le 4 juillet 2016 à 16h",
-				function (err, event_id) {
-					if (err)
-						res.send(500, "ERR: " + err);
-					else
-						res.send(200, "ok");
-				}
+			googleTasks.listTasks(req.user,
+				function (err, tasks) {
+					if (tasks) {
+						console.log("Result:", tasks);
+						console.log("Nb:", tasks.length);
+					}
+
+			 		if (err)
+			 			res.send(500, "ERR: " + err);
+			 		else
+			 			res.send(200, "ok");
+			 	}
 			);
 		}
 	};
