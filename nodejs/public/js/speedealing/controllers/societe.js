@@ -43,6 +43,20 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				return res.data;
 			});
 		};
+		
+		$scope.productFamilyAutoComplete = function(val) {
+			return $http.post('api/product/family/autocomplete', {
+				take: 5,
+				skip: 0,
+				page: 1,
+				pageSize: 5,
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				//console.log(res.data);
+				return res.data;
+			});
+		};
 
 		$scope.showStatus = function(idx) {
 			if (!($scope[idx] && $scope.societe[idx]))

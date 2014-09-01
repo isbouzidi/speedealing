@@ -292,6 +292,7 @@ module.exports = function(app, passport, auth) {
 					//console.log(docs[i]);
 					result[i] = {};
 					result[i].name = docs[i]._id;
+					result[i].text = docs[i]._id;//For Product Family
 					//result[i].id = docs[i]._id;
 				}
 

@@ -146,24 +146,6 @@
 					"title": "companies:ListOfThirdParties",
 					"fk_menu": "menu:companies"
 				},
-				"menu:contactsenable": {
-					"position": 11,
-					"url": "#!/contacts",
-					"perms": "$user->rights->societe->lire",
-					"enabled": "$conf->societe->enabled",
-					"usertype": 2,
-					"title": "companies:ListOfContactsEnable",
-					"fk_menu": "menu:companies"
-				},
-				"menu:contactsdisable": {
-					"position": 12,
-					"url": "/contact/list.php?disable=true",
-					"perms": "user.rights.societe.read",
-					"enabled": "conf.societe.enabled",
-					"usertype": 2,
-					"title": "companies:ListOfContactsDisable",
-					"fk_menu": "menu:companies"
-				},
 				"menu:companysegmentation": {
 					"position": 22,
 					"url": "#!/societes/segmentation.html",

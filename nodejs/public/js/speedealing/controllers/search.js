@@ -28,7 +28,10 @@ angular.module('mean.system').controller('SearchController', ['$rootScope', '$sc
         
         if (item) {               
             $http({method: 'GET', url: '/api/contact/searchEngine',
-                params: {item: item}
+                params: {
+					item: item,
+					limit: 500
+				},
 
             }).success(function(data) {
                 $scope.results = data;

@@ -179,6 +179,7 @@ Contact.prototype = {
 	showList: function(req, res) {
 
 		//var query = {name: new RegExp(req.query.item, "i")};
+		var sort = {};
 
 		var query = {
 			"$or": [
@@ -189,7 +190,10 @@ Contact.prototype = {
 			]
 		};
 
-		ContactModel.find(query, {}, function(err, doc) {
+		if (req.query.limit)
+			sort.limit = parseInt(req.query.limit);
+
+		ContactModel.find(query, {}, sort, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
