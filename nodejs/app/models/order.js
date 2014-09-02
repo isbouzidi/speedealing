@@ -190,7 +190,7 @@ orderSchema.virtual('status')
 
 	var status = this.Status;
 
-	if (statusList.values[status].label) {
+	if (status && statusList.values[status].label) {
 		res_status.id = status;
 		res_status.name = i18n.t("orders:" + statusList.values[status].label);
 		//this.status.name = statusList.values[status].label;

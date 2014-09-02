@@ -113,7 +113,7 @@ Object.prototype = {
 		//console.log(query);
 
 		BillModel.findOne(query, "-latex")
-				//.populate("orders")
+				.populate("orders","ref ref_client total_ht")
 				.exec(function(err, doc) {
 					if (err)
 						return next(err);
