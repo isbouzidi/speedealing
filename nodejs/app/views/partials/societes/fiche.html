@@ -28,7 +28,9 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Entity'}}</th>
-									<td><small class="tag anthracite-gradient glossy">\{{societe.entity}}</small></td>
+									<td><span class="tag anthracite-gradient glossy" editable-select="societe.entity" buttons="no" e-form="EntityBtnForm" onaftersave="update()" e-ng-options="e.id as e.name for e in entities">
+											  \{{societe.entity}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>
+									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:ProspectCustomer'}}</th>

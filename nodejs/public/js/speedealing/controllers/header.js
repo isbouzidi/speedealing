@@ -1,36 +1,35 @@
 angular.module('mean.system').controller('HeaderController', ['$scope', '$http', '$route', 'Global', 'pageTitle', function($scope, $http, $route, Global, pageTitle) {
-        $scope.global = Global;
-        //console.log(Global);
+		$scope.global = Global;
+		//console.log(Global);
 
-        $scope.title = pageTitle.getTitle();
+		$scope.title = pageTitle.getTitle();
 
-        $scope.withMenu = function() {
-            //console.log(Global);
-            if (Global && Global.user.right_menu)
-                return "with-menu";
-        };
+		$scope.withMenu = function() {
+			//console.log(Global);
+			if (Global && Global.user.right_menu)
+				return "with-menu";
+		};
 
-        $scope.getEntities = function() {
-            $http({method: 'GET', url: 'api/entity/select'
-            }).
-                    success(function(data, status) {
-                        $scope.entities = data;
-                    });
-        };
+		$scope.getEntities = function() {
+			$http({method: 'GET', url: 'api/entity/select'
+			}).success(function(data, status) {
+				$scope.entities = data;
+			});
+		};
 
-        $scope.entity = {id: Global.user.entity, name: Global.user.entity};
+		$scope.entity = {id: Global.user.entity, name: Global.user.entity};
 
-        $scope.changeEntity = function() {
-            $scope.title = pageTitle.getTitle();
-            //Global.user.entity = $scope.entity.id;
-            $route.reload();
-        };
+		$scope.changeEntity = function() {
+			$scope.title = pageTitle.getTitle();
+			//Global.user.entity = $scope.entity.id;
+			$route.reload();
+		};
 
-        $scope.filteredResults = [];
-        $scope.currentPage = 1;
-        $scope.numPerPage = 3;
-        $scope.maxSize = 5;
-        
+		$scope.filteredResults = [];
+		$scope.currentPage = 1;
+		$scope.numPerPage = 3;
+		$scope.maxSize = 5;
+
 //        $scope.$watch('searchItem', function(item) {
 //            $scope.currentPage = 1;
 //            $scope.showPagination = false;
@@ -62,4 +61,4 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$http',
 //            }
 //        });
 
-    }]);
+	}]);

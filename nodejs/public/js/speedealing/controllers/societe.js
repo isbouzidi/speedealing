@@ -4,6 +4,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.societe = {};
 		$scope.societes = [];
+		$scope.entities = [];
 		$scope.segementations = [];
 		$scope.gridOptionsSociete = {};
 		$scope.gridOptionsSegementation = {};
@@ -28,6 +29,15 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					//console.log(data);
 				});
 			});
+
+			$http({method: 'GET', url: 'api/entity/select'})
+					.success(function(data, status) {
+						$scope.entities = data;
+						$scope.entities.push({
+							id: "ALL",
+							name: "ALL"
+						});
+					});
 		};
 
 		$scope.segmentationAutoComplete = function(val) {
@@ -43,7 +53,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				return res.data;
 			});
 		};
-		
+
 		$scope.productFamilyAutoComplete = function(val) {
 			return $http.post('api/product/family/autocomplete', {
 				take: 5,
@@ -281,7 +291,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					//cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'prospectLevel.css\')" editable-select="row.getProperty(\'prospectlevel\')" buttons="no" e-form="ProspectLevelBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'prospectlevel\', row, $data)" e-ng-options="s.id as s.label for s in prospectlevel.values">{{row.getProperty(\'prospectLevel.name\')}}</small> <span class="icon-pencil grey" ng-click="ProspectLevelBtnForm.$show()" ng-hide="ProspectLevelBtnForm.$visible"></span>'
 				},
-				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width: '100px'},
+				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width: '100px',
+					cellTemplate: '<div class="ngCellText align-center"><span editable-select="row.getProperty(col.field)" buttons="no" e-form="EntityBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'entity\', row, $data)" e-ng-options="e.id as e.name for e in entities" ><span class="icon-home" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>'
+				},
 				{field: 'attractivity', width: "50px", displayName: 'Attractivité', cellClass: "align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
