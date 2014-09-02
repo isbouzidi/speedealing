@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('SearchController', ['$rootScope', '$scope', '$location', '$routeParams', 'Global', 'socket', '$http', function($rootScope, $scope, $location, $routeParams, Global, socket, $http) {
+angular.module('mean.system').controller('SearchController', ['$rootScope', '$scope', '$location', '$routeParams', '$modal', 'Global', 'socket', '$http', function($rootScope, $scope, $location, $routeParams, $modal, Global, socket, $http) {
     $scope.global = Global;
     
     $scope.init = function(){
@@ -45,5 +45,20 @@ angular.module('mean.system').controller('SearchController', ['$rootScope', '$sc
         $rootScope.showSearchInput = true;
         
     });
+    
+    $scope.showContact = function(id){
+        var modalInstance = $modal.open({
+            templateUrl: '/partials/contacts/fiche.html',
+            controller: "ContactsController",
+            windowClass: "steps",
+            resolve: {
+                object: function() {
+                    return {
+                        contact: id
+                    };
+                }
+            }
+        });
+    }
     
 }]);
