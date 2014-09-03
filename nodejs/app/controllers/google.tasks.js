@@ -23,6 +23,8 @@ exports.insertTasklist = insertTasklist;
 
 exports.insertTask = insertTask;
 
+exports.updateTask = updateTask;
+
 exports.insertTaskFromReport =
 		insertTaskFromReport;
 
@@ -84,8 +86,7 @@ function insertTask(user, task, callback) {
 				function (cb) {
 					var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
 					t.insertTask(task, 
-						{'email':user.email, 
-						'tasklist_id': user.google.tasks.tasklist_id}, 
+						{'tasklist_id': user.google.tasks.tasklist_id}, 
 					callback);
 				}], 
 				cb_google);
@@ -161,6 +162,32 @@ function insertTaskFromReport(report, user, callback) {
 
 
 
+/* Update a task (who belongs to the speedealing tasklist)
+*/
+function updateTask(user, task_id, task, callback) {
+	if (! gcommon.isGoogleUserAndHasGrantedAccess(user))
+		return callback("Not a Google User or not access.", null);
+	gcommon.googleAction(user,
+		function (cb_google) {
+			async.series([
+				function (cb) {
+					if (hasRemoteTasklist(user))
+						return cb();
+					cb(new Error("No speedealing tasklist saved."));
+				},
+				function (cb) {
+					task.id = task_id;
+					var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
+					t.updateTask(task, 
+						{'task_id': task_id,
+						 'tasklist_id': user.google.tasks.tasklist_id}, 
+					callback);
+				}], 
+				cb_google);
+		},
+		callback
+	);
+}
 
 
 
@@ -328,7 +355,11 @@ GoogleTasks.prototype._buildPath = function (params) {
 			path += '/' + params.tasklist_id;
 	} else if (params.type == 'task') {
 		path += '/lists/' + params.tasklist_id + '/tasks';
-	}
+	}  else if (params.type == 'task') {
+		path += '/lists/' + params.tasklist_id + '/tasks';
+	} else if (params.type == 'task_update') {
+		path += '/lists/' + params.tasklist_id + '/tasks/' + params.task_id;
+	}	
 
 	if (params.query)
 		path += '?' + qs.stringify(params.query);
@@ -533,6 +564,62 @@ GoogleTasks.prototype.insertTask = function (task, params, callback) {
 	var opts = this._createHttpsReqOptions(
 		this._buildPath(params),
 		'POST', 
+		{
+			'Content-Type': 'application/json',
+			'Content-Length': body.length
+		}
+	);
+
+	this._sendHttpsRequest(opts, body, 
+		function (err, data) {
+			console.log("My data =", data);
+			if (err) {
+				console.log(err);
+				return callback(err);
+			}
+
+			try {
+				data = JSON.parse(data);
+				callback(null, data.id);
+			} catch (err) {
+				console.log(err);
+				callback(err);
+			}
+		}
+	);
+};
+
+
+
+
+
+
+
+/*
+https://developers.google.com/google-apps/tasks/v1/reference/tasks?hl=fr#resource
+* task = {}
+{
+  "title": string,
+  "updated": datetime, (e.g. 2014-12-01T00:00:00.000Z)
+  "position": string,
+  "notes": string,
+  "status": string,
+  "due": datetime,
+  "completed": datetime
+}
+* params = {task_id, tasklist_id}
+*/
+GoogleTasks.prototype.updateTask = function (task, params, callback) {
+	
+	task['kind'] = "tasks#task";
+	var body = JSON.stringify(task);
+	params['type'] = 'task_update';
+	params['task_id'] = params.task_id;
+	params['tasklist_id'] = params.tasklist_id;
+	
+	var opts = this._createHttpsReqOptions(
+		this._buildPath(params),
+		'PUT', 
 		{
 			'Content-Type': 'application/json',
 			'Content-Length': body.length

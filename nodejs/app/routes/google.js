@@ -56,6 +56,9 @@
 		// Delete and insert contacts.
 		app.post('/api/google/export', auth.requiresLogin, googleRoutes.export);
 
+		// List all google tasks of the speedealing tasklist of the current user.
+		app.get('/api/google/tasks/list', auth.requiresLogin, googleRoutes.listTasks);
+
 		app.get('/api/google/test', auth.requiresLogin, googleRoutes.test);
 	};
 
@@ -117,6 +120,22 @@
 			);
 		},
 
+		listTasks: function(req, res) {
+			googleTasks.listTasks(req.user,
+				function (err, tasks) {
+					if (tasks) {
+						console.log("Result:", tasks);
+						console.log("Nb:", tasks.length);
+					}
+
+			 		if (err)
+			 			res.send(500, {'error': err});
+			 		else
+			 			res.send(200, tasks);
+			 	}
+			);
+		},
+
 		test: function(req, res) {
 			// googleTasks.insertTasklist(req.user, "CRM",
 			// 	function (err) {
@@ -127,13 +146,24 @@
 			// 	}
 			// );
 
-			googleTasks.listTasks(req.user,
-				function (err, tasks) {
-					if (tasks) {
-						console.log("Result:", tasks);
-						console.log("Nb:", tasks.length);
-					}
+			// googleTasks.listTasks(req.user,
+			// 	function (err, tasks) {
+			// 		if (tasks) {
+			// 			console.log("Result:", tasks);
+			// 			console.log("Nb:", tasks.length);
+			// 		}
 
+			//  		if (err)
+			//  			res.send(500, "ERR: " + err);
+			//  		else
+			//  			res.send(200, "ok");
+			//  	}
+			// );
+
+			googleTasks.updateTask(req.user,
+				'MDI5OTY5NDIxMTk3MTA3NTcxODY6MDoxNzgwODIzOTg3',
+				{'status': 'completed'},
+				function (err) {
 			 		if (err)
 			 			res.send(500, "ERR: " + err);
 			 		else
