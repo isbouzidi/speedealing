@@ -38,7 +38,9 @@ var productSchema = new Schema({
 			qtyMin: {type: Number, default: 0},
 			ref_customer_code: String,
 			user_mod: Schema.Types.Mixed,
-			tva_tx: Number
+			tva_tx: Number,
+			dsf_coef: Number,
+			dsf_time: Number
 		}],
 	pu_ht: Number, // For base price
 	user_mod: {id: String, name: String},
