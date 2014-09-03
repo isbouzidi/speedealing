@@ -74,7 +74,6 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			Bills.get({
 				Id: $routeParams.id
 			}, function(bill) {
-				//console.log(bill);
 				$scope.bill = bill;
 
 				if (bill.Status == "DRAFT")
@@ -95,6 +94,13 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				});
 
 				pageTitle.setTitle('Facture ' + $scope.bill.ref);
+				
+				$scope.totalOrders = 0;
+
+				angular.forEach(bill.orders, function(order) {
+					$scope.totalOrders += order.total_ht;
+				});
+				
 			}, function(err) {
 				if (err.status == 401)
 					$location.path("401.html");

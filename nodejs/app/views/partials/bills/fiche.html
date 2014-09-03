@@ -413,10 +413,11 @@
 								<ul class="list spaced">
 									<li ng-repeat="order in bill.orders">
 										<a ng-href="commande/fiche.php?id=\{{order._id}}" class="list-link icon-bag" title="Click to show">
-											<strong>\{{order.ref}}</strong> <small>(\{{order.ref_client}})</small>
+											<strong>\{{order.ref}} (\{{order.client.name}})</strong> <small> - \{{order.ref_client}}</small>
 										</a> Total HT : \{{order.total_ht|currency}}
 									</li>
 								</ul>
+								<span class="blue h5">Total HT : \{{totalOrders | currency}}</span>
 							</div>
 
 						</tab>
