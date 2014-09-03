@@ -850,7 +850,7 @@ module.exports = function(app, passport, auth) {
 				"Publique / Administration": "TE_PUBLIC"
 			},
 			Status: {
-				"": "ST_NEVER",
+				"": "ST_CFID",
 				"Moins de 3 mois": "ST_CINF3",
 				"OK Sensibilisation": "ST_NEW",
 				"Bonne relation": "ST_NEW",
