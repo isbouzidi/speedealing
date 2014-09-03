@@ -4,17 +4,17 @@
 * Module dependencies.
 */
 var mongoose = require('mongoose'),
-	fs = require('fs'),
-	csv = require('csv'),
-	_ = require('underscore'),
-	gridfs = require('../controllers/gridfs'),
-	config = require('../../config/config'),
-	timestamps = require('mongoose-timestamp'),
-	xml2js = require('xml2js'),
-	array = require("array-extended"),
-	dateFormat = require("dateformat"),
-	googleapis = require('googleapis'),
-	async = require("async");
+fs = require('fs'),
+csv = require('csv'),
+_ = require('underscore'),
+gridfs = require('../controllers/gridfs'),
+config = require('../../config/config'),
+timestamps = require('mongoose-timestamp'),
+xml2js = require('xml2js'),
+array = require("array-extended"),
+dateFormat = require("dateformat"),
+googleapis = require('googleapis'),
+async = require("async");
 
 var gcommon = require('./google.common');
 
@@ -26,48 +26,50 @@ exports.insertTask = insertTask;
 exports.updateTask = updateTask;
 
 exports.insertTaskFromReport =
-		insertTaskFromReport;
+insertTaskFromReport;
 
 exports.listTasks = listTasks;
 
 
 /* Methods definitions */
 
-	function _makeTasksParams(user) {
- 		if (!user.google)
-			user.google = {};
-		if (!user.google.tasks)
-			user.google.tasks = {};
- 	}
+function _makeTasksParams(user) {
+	if (!user.google)
+		user.google = {};
+	if (!user.google.tasks)
+		user.google.tasks = {};
+}
 
- 	function _setTasklistId(user, tasklist_id) {
- 		_makeTasksParams(user);
- 		user.google.tasks.tasklist_id = tasklist_id;
- 		user.save(function(err, doc) { callback(err); });
- 	}
+function _setTasklistId(user, tasklist_id) {
+	_makeTasksParams(user);
+	user.google.tasks.tasklist_id = tasklist_id;
+	user.save(function(err, doc) { callback(err); });
+}
 
- 	function hasRemoteTasklist(user) {
-		return user && user.google &&
-			user.google.tasks &&
-			user.google.tasks.tasklist_id;
-	}
+function hasRemoteTasklist(user) {
+	return user && user.google &&
+	user.google.tasks &&
+	user.google.tasks.tasklist_id;
+}
 
 /*
-not working
-*/
-function insertTasklist(user, title, callback) {
-	if (! gcommon.isGoogleUserAndHasGrantedAccess(user))
-		return callback("Not a Google User or not access.", null);
-	gcommon.googleAction(user,
-		function (cb_google) {
-			var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
-			t.insertTasklist({'title': title},
-				{'user_id':user.google.user_id},
-			 	cb_google);
-		},
-		callback
-	);
-}
+	* not working * 
+	Refine the code to create a tasklist
+	for the given user.
+		*/
+	function insertTasklist(user, title, callback) {
+		if (! gcommon.isGoogleUserAndHasGrantedAccess(user))
+			return callback("Not a Google User or not access.", null);
+		gcommon.googleAction(user,
+			function (cb_google) {
+				var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
+				t.insertTasklist({'title': title},
+					{'user_id':user.google.user_id},
+					cb_google);
+			},
+			callback
+			);
+	}
 
 
 /* Insert a task into the speedealing tasklist
@@ -87,75 +89,75 @@ function insertTask(user, task, callback) {
 					var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
 					t.insertTask(task, 
 						{'tasklist_id': user.google.tasks.tasklist_id}, 
-					callback);
+						callback);
 				}], 
 				cb_google);
 		},
 		callback
-	);
+		);
 }
 
 
 /* Get all tasks from the speedealing tasklist
 	callback = function(err, results) with
 		results an array of task.
-*/
-function listTasks(user, callback) {
-	if (! gcommon.isGoogleUserAndHasGrantedAccess(user))
-		return callback("Not a Google User or not access.");
-	var my_result = [];
-	gcommon.googleAction(user,
-		function (cb_google) {
-			async.series([
-				function (cb) {
-					if (hasRemoteTasklist(user))
-						return cb();
-					cb(new Error("No speedealing tasklist"));
+		*/
+		function listTasks(user, callback) {
+			if (! gcommon.isGoogleUserAndHasGrantedAccess(user))
+				return callback("Not a Google User or not access.");
+			var my_result = [];
+			gcommon.googleAction(user,
+				function (cb_google) {
+					async.series([
+						function (cb) {
+							if (hasRemoteTasklist(user))
+								return cb();
+							cb(new Error("No speedealing tasklist"));
+						},
+						function (cb) {
+							var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
+							t.listTasks({'tasklist_id':user.google.tasks.tasklist_id},
+								function (err, result) {
+									if (err)
+										return cb(err);
+									my_result = result;
+									cb();
+								});
+						}], 
+						cb_google);
 				},
-				function (cb) {
-					var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
-					t.listTasks({'tasklist_id':user.google.tasks.tasklist_id},
-						function (err, result) {
-							if (err)
-								return cb(err);
-							my_result = result;
-							cb();
-						});
-				}], 
-				cb_google);
-		},
-		function (err) {
-			if (err)
-				return callback(err);
-			callback(null, my_result);
+				function (err) {
+					if (err)
+						return callback(err);
+					callback(null, my_result);
+				}
+
+				);
 		}
-		
-	);
-}
 
 
 
 /*
 	Convert a report into task. To refine.
-*/
-function insertTaskFromReport(report, user, callback) {
-	var notes = "";
+	*/
+	function insertTaskFromReport(report, user, callback) {
+		var notes = "";
 
-	report.actions.forEach(
-		function (action) {
-			notes += "- [" + action.method +"] " + action.type + "\n" ;
-		}
-	);
+		report.actions.forEach(
+			function (action) {
+				notes += "- [" + action.method +"] " + action.type + "\n" ;
+			}
+			);
 
-	var task = {
-		'notes': notes,
-		'realised': report.realised,
-		'due': report.dueDate,
-		'title': report.model
-	};
+		var task = {
+			'notes': notes,
+			'realised': report.realised,
+			'due': report.dueDate,
+			'title': report.model
+		};
 
-	insertTask(user, task, callback);
-}
+		insertTask(user, task, callback);
+	}
 
 
 
@@ -180,13 +182,13 @@ function updateTask(user, task_id, task, callback) {
 					var t = new GoogleTasks(gcommon.getDefaultGoogleContactsParams(user));
 					t.updateTask(task, 
 						{'task_id': task_id,
-						 'tasklist_id': user.google.tasks.tasklist_id}, 
-					callback);
+						'tasklist_id': user.google.tasks.tasklist_id}, 
+						callback);
 				}], 
 				cb_google);
 		},
 		callback
-	);
+		);
 }
 
 
@@ -314,13 +316,13 @@ GoogleTasks.prototype = {};
 	path = path on the server web (after the host name)
 	method = http method
 	header = hash headers to add to request. Optional
-*/
-GoogleTasks.prototype._createHttpsReqOptions = function(path, method, headers) {
+	*/
+	GoogleTasks.prototype._createHttpsReqOptions = function(path, method, headers) {
 
-	if (!headers)
-		headers = {}
+		if (!headers)
+			headers = {}
 
-	headers['Authorization'] = 'OAuth ' + this.token;
+		headers['Authorization'] = 'OAuth ' + this.token;
 	//headers['GData-Version'] = '3.0';
 
 	return {
@@ -371,35 +373,35 @@ GoogleTasks.prototype._buildPath = function (params) {
 	opts = {host, port, path, method, headers}
 	body [string]. Can be null
 	callback = function(err, data)
-*/
-GoogleTasks.prototype._sendHttpsRequest = function(opts, body, callback) {
-	console.log("HTTPS opts = ", opts, "\n");
-	body = body || '';
-	var req = https.request(opts, function (res) {
-		var data = '';
-		res.setEncoding('utf8');
+	*/
+	GoogleTasks.prototype._sendHttpsRequest = function(opts, body, callback) {
+		console.log("HTTPS opts = ", opts, "\n");
+		body = body || '';
+		var req = https.request(opts, function (res) {
+			var data = '';
+			res.setEncoding('utf8');
 
-		res.on('data', function (chunk) {
-			data += chunk;
-		});
+			res.on('data', function (chunk) {
+				data += chunk;
+			});
 
-		res.on('end', function () {
-			if (res.statusCode < 200 || res.statusCode >= 300) {
-				console.log("Response = ", data);
-				var error = new Error('Bad client request status: ' + res.statusCode);
-				return callback(error, data);
-			} else {
-				callback(null, data);
-			}
+			res.on('end', function () {
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					console.log("Response = ", data);
+					var error = new Error('Bad client request status: ' + res.statusCode);
+					return callback(error, data);
+				} else {
+					callback(null, data);
+				}
+			});
+		}).on('error', function (err) {
+			callback(err);
 		});
-	}).on('error', function (err) {
-		callback(err);
-	});
-	if (body)
-		req.write(body);
-	req.end();
-	return req;
-}
+		if (body)
+			req.write(body);
+		req.end();
+		return req;
+	}
 
 // *****************
 
@@ -411,7 +413,7 @@ GoogleTasks.prototype._getTasks = function (params, callback) {
 	var opts = this._createHttpsReqOptions(
 		this._buildPath(params),
 		'GET'
-	);
+		);
 
 	this._sendHttpsRequest(opts, null, 
 		function (err, data) {
@@ -429,7 +431,7 @@ GoogleTasks.prototype._getTasks = function (params, callback) {
 				callback(err);
 			}
 		}
-	);
+		);
 };
 
 
@@ -452,7 +454,7 @@ GoogleTasks.prototype._treatTasks = function (data, params, callback) {
 			}
 		}],
 		callback
-	);
+		);
 }
 
 /* Get google contacts
@@ -472,7 +474,7 @@ GoogleTasks.prototype._listTasks = function (params, callback) {
 			
 			that._treatTasks(data, params, callback);
 		}
-	);
+		);
 };
 
 /* Get google contacts
@@ -490,7 +492,7 @@ GoogleTasks.prototype.listTasks = function (params, callback) {
 		function (err) {
 			callback(err, that.tasks);
 		}
-	);
+		);
 }
 
 // ********************************************************************
@@ -518,7 +520,7 @@ GoogleTasks.prototype.insertTasklist = function (tasklist, params, callback) {
 			'Content-Type': 'application/json',
 			'Content-Length': body.length
 		}
-	);
+		);
 
 	this._sendHttpsRequest(opts, body, 
 		function (err, data) {
@@ -536,7 +538,7 @@ GoogleTasks.prototype.insertTasklist = function (tasklist, params, callback) {
 				callback(err);
 			}
 		}
-	);
+		);
 };
 
 
@@ -568,7 +570,7 @@ GoogleTasks.prototype.insertTask = function (task, params, callback) {
 			'Content-Type': 'application/json',
 			'Content-Length': body.length
 		}
-	);
+		);
 
 	this._sendHttpsRequest(opts, body, 
 		function (err, data) {
@@ -586,7 +588,7 @@ GoogleTasks.prototype.insertTask = function (task, params, callback) {
 				callback(err);
 			}
 		}
-	);
+		);
 };
 
 
@@ -624,7 +626,7 @@ GoogleTasks.prototype.updateTask = function (task, params, callback) {
 			'Content-Type': 'application/json',
 			'Content-Length': body.length
 		}
-	);
+		);
 
 	this._sendHttpsRequest(opts, body, 
 		function (err, data) {
@@ -642,7 +644,7 @@ GoogleTasks.prototype.updateTask = function (task, params, callback) {
 				callback(err);
 			}
 		}
-	);
+		);
 };
 
 
