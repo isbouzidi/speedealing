@@ -113,7 +113,7 @@ Object.prototype = {
 		//console.log(query);
 
 		DeliveryModel.findOne(query, "-latex")
-				.populate("orders","ref ref_client total_ht")
+				.populate("orders", "ref ref_client total_ht")
 				.exec(function(err, doc) {
 					if (err)
 						return next(err);
@@ -281,7 +281,7 @@ Object.prototype = {
 			mode_reglement_code = docs;
 		});
 
-		latex.loadModel("livraison.tex", function(err, tex) {
+		latex.loadModel("delivery.tex", function(err, tex) {
 
 			var doc = req.delivery;
 
@@ -289,8 +289,6 @@ Object.prototype = {
 				res.type('html');
 				return res.send(500, "Impossible de générer le PDF, le bon livraison n'est pas validé");
 			}
-
-			var tex = "";
 
 			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
 
@@ -326,7 +324,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
-					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].tva_tx + "\\% &" + latex.price(doc.lines[i].pu_ht) + "&" + doc.lines[i].qty + "&" + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
+					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].no_package + "&" + latex.number(doc.lines[i].qty,3) + (doc.lines[i].unit ? " " + doc.lines[i].unit : " kg") + "\\tabularnewline\n";
 				}
 				//console.log(products)
 				//console.log(tab_latex);

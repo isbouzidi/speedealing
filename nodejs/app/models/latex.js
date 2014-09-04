@@ -168,3 +168,7 @@ exports.headfoot = function(entity, tex, callback) {
 exports.price = function(price) {
 	return accounting.formatMoney(price, {symbol: "€", format: "%v %s", decimal: ",", thousand: " ", precision: 2});
 };
+
+exports.number = function(number, precision) {
+	return accounting.formatNumber(number, {decimal: ",", thousand: " ", precision: precision || 2});
+};
