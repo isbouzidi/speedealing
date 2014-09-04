@@ -4,9 +4,11 @@
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		Schema = mongoose.Schema,
+		i18n = require("i18next"),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
+var ExtrafieldModel = mongoose.model('extrafields');
 /**
  * Product Schema
  */
@@ -18,15 +20,15 @@ var productSchema = new Schema({
 	description: {type: String, default: ""},
 	barCode: String,
 	type: Schema.Types.Mixed,
-	Status: Schema.Types.Mixed,
+	Status: String,
 	country_id: String,
 	tva_tx: {type: Number, default: 20},
-	units: String,
+	units: {type: String, default: "unit"},
 	minPrice: {type: Number, default: 0},
 	finished: String,
 	price_base_type: String,
-	tms: Date,
-	datec: Date,
+	tms: Date, // Not used ??
+	datec: {type: Date, default: Date.now},
 	billingMode: {type: String, uppercase: true, default: "QTY"}, //MONTH, QTY, ...
 	Tag: [String],
 	entity: String,
@@ -42,17 +44,19 @@ var productSchema = new Schema({
 			dsf_coef: Number,
 			dsf_time: Number
 		}],
-	pu_ht: Number, // For base price
+	pu_ht: {type: Number, default: 0}, // For base price
 	user_mod: {id: String, name: String},
 	history: [{
 			tms: Date,
 			user_mod: Schema.Types.Mixed,
 			pu_ht: Number,
-			ref_customer_code: String,
-			price_level: String
+			ref_customer_code: String
 		}],
 	template: {type: String, default: "/partials/lines/classic.html"},
 	caFamily: {type: String, uppercase: true, default: "OTHER"}
+}, {
+	toObject: {virtuals: true},
+	toJSON: {virtuals: true}
 });
 
 productSchema.plugin(timestamps);
@@ -67,6 +71,37 @@ productSchema.pre('save', function(next) {
 	} else
 		next();
 });
+
+var statusList = {};
+ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
+	if (err) {
+		console.log(err);
+		return;
+	}
+	statusList = doc.fields.Status;
+});
+
+productSchema.virtual('status')
+		.get(function() {
+			var res_status = {};
+
+			var status = this.Status;
+
+			if (status && statusList.values[status].label) {
+				//console.log(this);
+				res_status.id = status;
+				res_status.name = i18n.t("products:" + statusList.values[status].label);
+				//res_status.name = statusList.values[status].label;
+				res_status.css = statusList.values[status].cssClass;
+			} else { // By default
+				res_status.id = status;
+				res_status.name = status;
+				res_status.css = "";
+			}
+			return res_status;
+
+		});
+
 
 mongoose.model('product', productSchema, 'Product');
 

@@ -1,0 +1,27 @@
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <h3 class="block-title">{{t 'lead:Details Lead'}} : \{{lead.name}}</h3>
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <label><b>{{t 'Name'}}</b></label>
+            \{{lead.name}}
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'Status'}}</b></label>
+            <small class="tag \{{lead.Status.css}}">\{{lead.Status.name}}</small>
+        </div>
+		<div class="field-block">
+            <label><b>{{t 'Potential'}}</b></label>
+            <small class="tag \{{lead.potentialLevel.css}}">\{{lead.potentialLevel.name}}</small>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'DateCreation'}}</b></label>
+            \{{lead.createdAt}}
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'DateDue'}}</b></label>
+            \{{lead.dueDate}}
+        </div>
+        
+    </fieldset>
+</div>

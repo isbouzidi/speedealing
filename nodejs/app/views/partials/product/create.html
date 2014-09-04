@@ -1,0 +1,63 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'products:NewProduct'}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block button-height">
+            <label for="ref"><b>{{t "products:ProductRef"}}</b></label>
+            <input type="text" ng-model="product.ref" data-ng-change="isValidRef()" id="ref" class="input" autocomplete="off">
+			<small ng-show="product.ref && !validRef" class="icon-warning orange input-info"> Code incorrect : il ne doit pas y avoir d'espace.</small>
+			<small ng-show="validRef && refFound" class="icon-warning red input-info"> Cette référence existe déjà dans la base.</small>
+        </div>
+
+		<div class="field-block button-height">
+            <label for="label"><b>{{t "products:ProductLabel"}}</b></label>
+			<input type="text" ng-model="product.label" id="label" class="input full-width" autocomplete="on">
+		</div>
+
+		<div class="field-block button-height">
+			<label for="description"><b>{{t
+				'Description'}}</b></label>
+			<textarea id="description" cols="30" rows="5" data-ng-model="product.description" class="input full-width"></textarea>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="pu_ht"><b>{{t 'products:SellingPriceHT'}}</b></label>
+			<input required type="number" step="0.001" data-ng-model="product.pu_ht" id="pu_ht" class="input" autocomplete="off">
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="minPrice"><b>{{t 'products:MinPrice'}}</b></label>
+			<input required type="number" step="0.001" data-ng-model="product.minPrice" id="minPrice" class="input" autocomplete="off">
+			<small ng-show="product.pu_ht < product.minPrice" class="icon-warning red input-info"> {{t 'products:CantBeLessThanMinPrice'}}</small>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="tva_tx"><b>{{t 'VAT'}} %</b></label>
+			<select class="form-control" id="tva_tx" required data-ng-model="product.tva_tx" data-ng-options="c.value as c.value for c in tva_tx.values"></select>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="status"><b>{{t 'Status'}}</b></label>
+			<select class="form-control" id="status" required data-ng-model="product.Status" data-ng-options="c.id as c.label for c in Status.values"></select>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="units"><b>{{t 'products:Units'}}</b></label>
+			<select class="form-control" id="units" data-ng-model="product.units" data-ng-options="c.id as c.label for c in units.values"></select>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="billingMode"><b>Mode de facturation</b></label>
+			<select class="form-control" id="billingMode" data-ng-model="product.billingMode" data-ng-options="c.id as c.label for c in billingModes"></select>
+		</div>
+        
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" ng-disabled='refFound || !validRef' class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t 'Create'}}
+            </button>
+        </div>
+    </fieldset>
+</form>

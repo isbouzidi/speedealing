@@ -15,6 +15,7 @@ window.app = angular.module('mean', [
 	"ui.bootstrap.datetimepicker",
 	'mean.system',
 	'mean.societes',
+	'mean.products',
 	'mean.orders',
 	'mean.ordersSupplier',
 	'mean.bills',
@@ -26,8 +27,8 @@ window.app = angular.module('mean', [
 	'mean.rh',
 	'mean.userGroup',
 	'mean.contacts',
-        'mean.reports',
-        'mean.delivery',
+	'mean.reports',
+	'mean.delivery',
 	'mean.lead',
 	'timer',
 	'pascalprecht.translate',
@@ -39,6 +40,7 @@ window.app = angular.module('mean', [
 angular.module('mean.system', []);
 angular.module('mean.societes', []);
 angular.module('mean.orders', []);
+angular.module('mean.products', []);
 angular.module('mean.ordersSupplier', []);
 angular.module('mean.users', []);
 angular.module('mean.bills', []);

@@ -1,17 +1,39 @@
-<section data-ng-controller="ProductController" class="scroll" style="height:500px" ng-style="style(0)" resize>
+<section data-ng-controller="ProductController" data-ng-init="init()">
 	<hgroup id="main-title" class="thin">
 		<h1>Liste des produits et services</h1>
 	</hgroup>
 
-	<div class="with-padding">
-		<!--<div class="margin-bottom">
-			<!--<p class="button-height block-label">
-				<label class="label" for="ref">{{t 'Search'}} : </label>
-				<input class="input" type="text" id="ref" />
-			</p>-->
-		<!--</div>-->
+	<div class="with-padding" data-ng-init="find()">
 
-		<div kendo-grid k-data-source="dataSource" k-columns='[
+		<div class="table-header silver-gradient glossy button-height">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="button-group">
+						<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
+						<button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
+					</div>
+
+				</div>
+				<div class="col-sm-4">
+					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
+				</div>
+				<div class="col-sm-4">
+					<div class="float-right">
+						{{t 'Search'}} <input type="text" data-ng-model="filterOptionsProduct.filterText" class="input small mid-margin-left">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gridStyle"  data-ng-grid="gridOptionsProduct" ng-style="style(170)" resize></div>
+		<div class="table-footer silver-gradient button-height">
+			<div class="float-right">
+				 <pagination total-items="totalCountProduct" ng-model="pagingOptionsProduct.currentPage" max-size="10" items-per-page="pagingOptionsProduct.pageSize" class="pagination-sm no-margin-top" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+			</div>
+			\{{countProducts}}/\{{totalCountProduct}} ligne(s)
+		</div>
+
+
+		<!--<div kendo-grid k-data-source="dataSource" k-columns='[
 			 {"field": "ref", "filterable": true, "title": "reference", "editor": refDropDownEditor},
 			 {"field": "label", "filterable": false, "title": "Designation", "editor": textareaEditor},
 			 {"field": "type", "filterable": false, "title": "Type", "editor": typeDropDownEditor, "template": "<small class=\"tag #=type.css# glossy \">#=type.name#</small>"},
@@ -43,6 +65,6 @@
 			 }]'
 			 k-editable='{
 			 "mode": "incell"
-			 }'></div>
+			 }'></div>-->
 	</div>
 </section>

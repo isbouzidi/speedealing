@@ -1,284 +1,256 @@
-angular.module('mean.system').controller('ProductController', ['$scope', '$routeParams', '$location', '$route', 'Global', function($scope, $routeParams, $location, $route, Global) {
+angular.module('mean.products').controller('ProductController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'pageTitle', 'Products', function($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, pageTitle, Product) {
 		$scope.global = Global;
+		pageTitle.setTitle('Liste des sociétés');
 
-		var crudServiceBaseUrl = "api/product";
+		$scope.product = {};
+		$scope.products = [];
+		$scope.caFamilies = [];
 
-		$scope.dataSource = new kendo.data.DataSource({
-			transport: {
-				read: {
-					url: crudServiceBaseUrl,
-					type: "GET",
-					dataType: "json"
-				},
-				update: {
-					url: crudServiceBaseUrl,
-					type: "PUT",
-					dataType: "json"
-				},
-				destroy: {
-					url: crudServiceBaseUrl,
-					type: "DELETE",
-					dataType: "json"
-				},
-				create: {
-					url: crudServiceBaseUrl,
-					type: "POST",
-					dataType: "json"
-				},
-				parameterMap: function(options, operation) {
-					if (operation !== "read" && options.models) {
-						return {models: kendo.stringify(options.models)};
-					}
-				}
-			},
-			batch: true,
-			autoSync: true,
-			pageSize: 50,
-			schema: {
-				model: {
-					id: "_id",
-					fields: {
-						_id: {editable: false, nullable: true},
-						ref: {editable: true, validation: {required: true}},
-						qtyMin: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-						pu_ht: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-						tms: {type: "date", editable: false, defaultValue: Date().now},
-						entity: {type: "string", defaultValue: ""},
-						label: {type: "string", defaultValue: ""},
-						//Status_ID: {from: "Status.id", defaultValue: "SELL"},
-						price_level: {type: "string", defaultValue: "BASE"},
-						ref_customer_code: {type: "string"},
-						caFamily: {type: "string"},
-						barCode: {type: "string"},
-						billingMode: {type: "string", defaultvalue: "QTY"},
-						compta_buy: {type: "string", defaultValue: ""},
-						compta_sell: {type: "string", defaultValue: ""},
-						author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
-						Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
-						tva_tx: {type: "string", defaultValue: 20},
-						type: {defaultValue: {id: "PRODUCT", name: "Produit", css: "blue-gradient"}}
-					}
-				}
-			},
-			error: function(e) {
-				// log error
-				if (e.xhr.status === 500)
-					alert(e.xhr.responseText);
-			},
-			/*group: [{
-			 field: "ref",
-			 dir: "asc"
-			 }, {
-			 field: "price_level",
-			 dir: "asc"
-			 }]*/
-			sort: {field: "tms", dir: "desc"}
-		});
+		$scope.types = [{name: "A la vente", id: "SELL"},
+			{name: "A l'achat", id: "BUY"},
+			{name: "Tous", id: "ALL"}];
 
-		$scope.statusDropDownEditor = function(container, options) {
-			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoDropDownList({
-						autoBind: false,
-						dataSource: {
-							transport: {
-								read: {
-									url: "api/product/status/select",
-									type: "GET",
-									dataType: "json"
-								}
-							}
-						}
-					});
+		$scope.type = {name: "A la vente", id: "SELL"};
+
+		$scope.init = function() {
+			/*var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement"];
+			 
+			 angular.forEach(fields, function(field) {
+			 $http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+			 field: field
+			 }
+			 }).success(function(data, status) {
+			 $scope[field] = data;
+			 //console.log(data);
+			 });
+			 });*/
+
+			/*$http({method: 'GET', url: 'api/product/family', params: {
+			 field: "caFamily"
+			 }
+			 })
+			 .success(function(data, status) {
+			 $scope.caFamilies = data;
+			 //console.log(data);
+			 });*/
 		};
 
-		$scope.typeDropDownEditor = function(container, options) {
-			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoDropDownList({
-						autoBind: false,
-						dataSource: {
-							data: [{id: "PRODUCT", name: "Produit", css: "blue-gradient"},
-								{id: "SERVICE", name: "Service", css: "green-gradient"}]
-						}
-					});
-		};
+		$scope.update = function() {
+			var product = $scope.product;
 
-		$scope.entityDropDownEditor = function(container, options) {
-			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoDropDownList({
-						autoBind: false,
-						dataSource: {
-							transport: {
-								read: {
-									url: "api/user/entity/select",
-									type: "GET",
-									dataType: "json"
-								}
-							}
-						}
-					});
-		};
-
-		$scope.priceLevelDropDownEditor = function(container, options) {
-			$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoAutoComplete({
-						minLength: 1,
-						dataTextfield: "name",
-						filter: "contains",
-						autoBind: false,
-						suggest: true,
-						dataSource: {
-							serverFiltering: true,
-							serverPaging: true,
-							pageSize: 5,
-							transport: {
-								read: {
-									url: "api/product/price_level/autocomplete",
-									type: "POST",
-									dataType: "json"
-								}
-							}
-						}
-					});
-		};
-
-		$scope.familyDropDownEditor = function(container, options) {
-			$('<input data-text-field="name" data-value-field="name" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoAutoComplete({
-						minLength: 1,
-						dataTextfield: "name",
-						filter: "contains",
-						autoBind: false,
-						suggest: true,
-						dataSource: {
-							serverFiltering: true,
-							serverPaging: true,
-							pageSize: 5,
-							transport: {
-								read: {
-									url: "api/product/family/autocomplete",
-									type: "POST",
-									dataType: "json"
-								}
-							}
-						}
-					});
-		};
-
-		$scope.refDropDownEditor = function(container, options) {
-			$('<input data-text-field="name" required data-value-field="name" data-bind="value:' + options.field + '"/>')
-					.appendTo(container)
-					.kendoAutoComplete({
-						minLength: 1,
-						dataTextfield: "name",
-						filter: "contains",
-						autoBind: false,
-						suggest: true,
-						dataSource: {
-							serverFiltering: true,
-							serverPaging: true,
-							pageSize: 5,
-							transport: {
-								read: {
-									url: "api/product/ref/autocomplete",
-									type: "POST",
-									dataType: "json"
-								}
-							}
-						}
-					});
-		};
-
-		$scope.textareaEditor = function(container, options) {
-			$('<textarea rows="3" cols="25" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
-		};
-
-		$scope.statusFilter = function(element) {
-			element.kendoDropDownList({
-				dataTextField: "name",
-				dataValueField: "id",
-				dataSource: {
-					transport: {
-						read: {
-							url: "api/product/status/select",
-							type: "GET",
-							dataType: "json"
-						}
-					}
-				},
-				optionLabel: "--Status--"
+			product.$update(function(response) {
+				pageTitle.setTitle('Fiche produit ' + product.ref);
 			});
 		};
 
-		/*		$scope.clientDropDownEditor = function(container, options) {
-		 $('<input id="id"/>')
-		 .attr("name", options.field)
-		 .appendTo(container)
-		 .kendoAutoComplete({
-		 minLength: 1,
-		 dataTextField: "name",
-		 filter: "contains",
-		 dataSource: {
-		 serverFiltering: true,
-		 serverPaging: true,
-		 pageSize: 5,
-		 transport: {
-		 read: {
-		 url: "api/societe/autocomplete",
-		 type: "POST",
-		 dataType: "json"
-		 }
-		 }
-		 }
-		 });
-		 }
+		$scope.find = function() {
+			var sb = {};
+			for (var i = 0; i < $scope.sortOptionsProduct.fields.length; i++) {
+				sb[$scope.sortOptionsProduct.fields[i]] = $scope.sortOptionsProduct.directions[i] === "desc" ? -1 : 1;
+			}
+
+			var p = {
+				fields: "_id Status label ref pu_ht Status updatedAt caFamily",
+				query: this.type.id,
+				filter: $scope.filterOptionsProduct.filterText,
+				skip: $scope.pagingOptionsProduct.currentPage - 1,
+				limit: $scope.pagingOptionsProduct.pageSize,
+				sort: sb
+			};
+
+			Product.query(p, function(products) {
+				$scope.products = products;
+				$scope.countProducts = products.length;
+			});
+
+			$http({method: 'GET', url: '/api/product/count', params: p
+			}).success(function(data, status) {
+				$scope.totalCountProduct = data.count;
+				$scope.maxPageProduct = Math.ceil(data.count / 1000);
+			});
+		};
+
+		$scope.findOne = function() {
+			Product.get({
+				Id: $routeParams.id
+			}, function(product) {
+				$scope.product = product;
+
+				pageTitle.setTitle('Fiche produit' + $scope.product.ref);
+
+			}, function(err) {
+				if (err.status == 401)
+					$location.path("401.html");
+			});
+
+		};
+
+		$scope.productFamilyAutoComplete = function(val) {
+			return $http.post('api/product/family', {
+				take: 5,
+				skip: 0,
+				page: 1,
+				pageSize: 5,
+				field: "caFamily",
+				filter: val
+			}).then(function(res) {
+				//console.log(res.data);
+				return res.data;
+			});
+		};
+
+		/*
+		 * NG-GRID for product list
+		 */
+
+		$scope.filterOptionsProduct = {
+			filterText: "",
+			useExternalFilter: true
+		};
+
+		// paging
+		$scope.totalCountProduct = 0;
+
+		$scope.pagingOptionsProduct = {
+			pageSizes: [500, 1000, 2500, 5000],
+			pageSize: 1000,
+			currentPage: 1
+		};
+
+		$scope.$watch('pagingOptionsProduct', function(newVal, oldVal) {
+			if (newVal.currentPage !== oldVal.currentPage) {
+				$scope.find();
+			}
+		}, true);
+
+		$scope.$watch('filterOptionsProduct', function(newVal, oldVal) {
+			if (newVal.filterText !== oldVal.filterText) {
+				$scope.find();
+			}
+		}, true);
+
+		// sorting
+		$scope.sortOptionsProduct = {fields: ["ref"], directions: ["asc"]};
+
+		$scope.gridOptionsProduct = {
+			data: 'products',
+			enableRowSelection: false,
+			filterOptions: $scope.filterOptionsProduct,
+			pagingOptions: $scope.pagingOptionsProduct,
+			sortInfo: $scope.sortOptionsProduct,
+			useExternalSorting: true,
+			enablePaging: true,
+			//showFilter:true,
+			enableColumnResize: true,
+			i18n: 'fr',
+			columnDefs: [
+				{field: 'code_client', displayName: 'Code Client', visible: false, width: '110px'},
+				{field: 'ref', displayName: 'Produit', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'code_client\')">({{row.getProperty(\'code_client\')}})</small></a>'},
+				{field: 'label', displayName: 'Nom'},
+				{field: 'pu_ht', displayName: 'Tarif HT', width: '100px', cellClass: "align-right", cellFilter: "number:3"},
+				{field: 'status.name', width: '100px', displayName: 'Etat',
+					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small></span>'
+				},
+				{field: 'caFamily', displayName: 'Famille', cellClass: "align-center", width: '150px',
+					cellTemplate: '<div class="ngCellText align-center"><span editable-text="row.getProperty(col.field)" buttons="no" e-form="caFamilyBtnForm" e-typeahead="family as family for family in productFamilyAutoComplete($viewValue) | filter:{name:$viewValue}" e-typeahead-on-select="updateInPlace(\'/api/product\',col.field, row, $item); caFamilyBtnForm.$cancel();" ><span ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>'
+				},
+				{field: 'updatedAt', displayName: 'Dernière MAJ', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"}
+			]
+		};
+
+		$scope.$watch('filterOptionsProduct', function(newVal, oldVal) {
+			if (newVal.filterText !== oldVal.filterText) {
+				$scope.find();
+			}
+		}, true);
+
+		$scope.$watch('sortOptionsProduct', function(newVal, oldVal) {
+			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
+				$scope.find();
+			}
+		}, true);
+
+		$scope.updateInPlace = function(api, field, row, newdata) {
+			if (!$scope.save) {
+				$scope.save = {promise: null, pending: false, row: null};
+			}
+			$scope.save.row = row.rowIndex;
+
+			if (!$scope.save.pending) {
+				$scope.save.pending = true;
+				$scope.save.promise = $timeout(function() {
+					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
+						data: {
+							oldvalue: row.entity[field],
+							value: newdata
+						}
+					})
+							.success(function(data, status) {
+								if (status == 200) {
+									if (data) {
+										row.entity = data;
+									}
+								}
+							});
+
+					$scope.save.pending = false;
+				}, 200);
+			}
+
+			return false;
+		};
+
+		$scope.addNew = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/product/create.html',
+				controller: "ProductCreateController",
+				windowClass: "steps"
+			});
+
+			modalInstance.result.then(function(product) {
+				//console.log(product);
+				$scope.products.push(product);
+				$scope.countProducts++;
+			}, function() {
+			});
+		};
+
+
+		/*var crudServiceBaseUrl = "api/product";
 		 
-		 $scope.modeDropDownEditor = function(container, options) {
-		 $('<input data-ng-model="name" data-bind="value:' + options.field + '"/>')
-		 .appendTo(container)
-		 .kendoDropDownList({
-		 autoBind: true,
-		 dataTextField: "name",
-		 dataValueField: "id",
-		 dataSource: [
-		 {id: "NONE", name: ""},
-		 {id: "AM", name: "AM"},
-		 {id: "PM", name: "PM"},
-		 {id: "DAY", name: "En journée"}
-		 ]
-		 });
-		 }
 		 
-		 $scope.panierMultiSelect = function(container, options) {
-		 $('<input data-bind="value:' + options.field + ', source: ' + options.field + '" />')
-		 .appendTo(container)
-		 .kendoMultiSelect({
-		 minLength: 1,
-		 placeholder: "Sélectionner les paniers...",
-		 autoBind: true,
-		 //dataTextField: "name",
-		 //dataValueField: "id",
-		 dataSource: {
-		 serverFiltering: true,
-		 serverPaging: true,
-		 pageSize: 5,
-		 transport: {
-		 read: {
-		 url: "api/europexpress/tournee/select/panier",
-		 type: "POST",
-		 dataType: "json"
+		 schema: {
+		 model: {
+		 id: "_id",
+		 fields: {
+		 _id: {editable: false, nullable: true},
+		 ref: {editable: true, validation: {required: true}},
+		 qtyMin: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
+		 pu_ht: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
+		 tms: {type: "date", editable: false, defaultValue: Date().now},
+		 entity: {type: "string", defaultValue: ""},
+		 label: {type: "string", defaultValue: ""},
+		 //Status_ID: {from: "Status.id", defaultValue: "SELL"},
+		 price_level: {type: "string", defaultValue: "BASE"},
+		 ref_customer_code: {type: "string"},
+		 caFamily: {type: "string"},
+		 barCode: {type: "string"},
+		 billingMode: {type: "string", defaultvalue: "QTY"},
+		 compta_buy: {type: "string", defaultValue: ""},
+		 compta_sell: {type: "string", defaultValue: ""},
+		 author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
+		 Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
+		 tva_tx: {type: "string", defaultValue: 20},
+		 type: {defaultValue: {id: "PRODUCT", name: "Produit", css: "blue-gradient"}}
 		 }
 		 }
-		 }
-		 });
-		 }*/
+		 },
+		 */
+
+
 	}]);
 
-angular.module('mean.system').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function($scope, $routeParams, Global, $http) {
+angular.module('mean.products').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function($scope, $routeParams, Global, $http) {
 		$scope.global = Global;
 
 		$scope.isChecked = {};
@@ -383,7 +355,7 @@ angular.module('mean.system').controller('ProductBarCodeController', ['$scope', 
 
 	}]);
 
-angular.module('mean.system').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object', 'options', function($scope, $http, $modalInstance, Global, object, options) {
+angular.module('mean.products').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object', 'options', function($scope, $http, $modalInstance, Global, object, options) {
 		$scope.global = Global;
 
 		$scope.line = object;
@@ -453,7 +425,70 @@ angular.module('mean.system').controller('LineController', ['$scope', '$http', '
 
 	}]);
 
-angular.module('mean.system').controller('ProductPriceLevelController', ['$scope', '$location', '$route', '$http', '$timeout', '$modal', 'Global', function($scope, $location, $route, $http, $timeout, $modal, Global) {
+angular.module('mean.products').controller('ProductCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Products', function($scope, $http, $modalInstance, $upload, $route, Global, Product) {
+		$scope.global = Global;
+		
+		$scope.product = {
+			minPrice: 0,
+			billingMode : "QTY",
+			Status: "SELL",
+			tva_tx: 20,
+			units: "unit"
+		};
+		$scope.refFound = false;
+		$scope.validRef = true;
+		
+		$scope.billingModes = [
+			{id:"QTY",label : "Quantité"},
+			{id:"MONTH",label : "Abonnement mensuel"}
+		];
+
+		$scope.init = function() {
+			var fields = ["tva_tx","Status","units"];
+
+			angular.forEach(fields, function(field) {
+				$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
+						field: field
+					}
+				}).success(function(data, status) {
+					$scope[field] = data;
+					//console.log(data);
+				});
+			});
+		};
+
+		$scope.create = function() {
+			var product = new Product(this.product);
+			product.$save(function(response) {
+				//console.log(response);
+				$modalInstance.close(response);
+				//$location.path("societe/" + response._id);
+			});
+		};
+		
+		$scope.isValidRef = function() {
+			var ref = $scope.product.ref.trim().toUpperCase();
+			$scope.refFound = false;
+			
+			var isValide=true;
+			if(!ref || ref.indexOf(" ") > -1)
+				isValide=false;
+			
+			if (isValide)
+				$http({method: 'GET', url: '/api/product/'+ref
+				}).success(function(data, status) {
+					//console.log(data);
+					if(data && data._id) // REF found
+						$scope.refFound = true;
+				});
+			
+			$scope.validRef = isValide;
+		};
+		
+	}]);
+
+
+angular.module('mean.products').controller('ProductPriceLevelController', ['$scope', '$location', '$route', '$http', '$timeout', '$modal', 'Global', function($scope, $location, $route, $http, $timeout, $modal, Global) {
 
 		$scope.priceLevel = [];
 		$scope.price_level = null;

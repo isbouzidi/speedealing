@@ -128,7 +128,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			$http({method: 'GET', url: '/api/societe/count', params: p
 			}).success(function(data, status) {
 				$scope.totalCountSociete = data.count;
-				$scope.maxPageSociete = Math.ceil(data.count / 500);
+				$scope.maxPageSociete = Math.ceil(data.count / 1000);
 			});
 		};
 
@@ -1121,6 +1121,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				$scope.validSiret = isValide;
 		};
 	}]);
+
 angular.module('mean.societes').controller('SocieteSegmentationRenameController', function($scope, $modalInstance, data) {
 	$scope.data = {id: data._id};
 
