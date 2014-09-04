@@ -427,24 +427,24 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 
 angular.module('mean.products').controller('ProductCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Products', function($scope, $http, $modalInstance, $upload, $route, Global, Product) {
 		$scope.global = Global;
-		
+
 		$scope.product = {
 			minPrice: 0,
-			billingMode : "QTY",
+			billingMode: "QTY",
 			Status: "SELL",
 			tva_tx: 20,
 			units: "unit"
 		};
 		$scope.refFound = false;
 		$scope.validRef = true;
-		
+
 		$scope.billingModes = [
-			{id:"QTY",label : "Quantité"},
-			{id:"MONTH",label : "Abonnement mensuel"}
+			{id: "QTY", label: "Quantité"},
+			{id: "MONTH", label: "Abonnement mensuel"}
 		];
 
 		$scope.init = function() {
-			var fields = ["tva_tx","Status","units"];
+			var fields = ["tva_tx", "Status", "units"];
 
 			angular.forEach(fields, function(field) {
 				$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
@@ -465,26 +465,26 @@ angular.module('mean.products').controller('ProductCreateController', ['$scope',
 				//$location.path("societe/" + response._id);
 			});
 		};
-		
+
 		$scope.isValidRef = function() {
 			var ref = $scope.product.ref.trim().toUpperCase();
 			$scope.refFound = false;
-			
-			var isValide=true;
-			if(!ref || ref.indexOf(" ") > -1)
-				isValide=false;
-			
+
+			var isValide = true;
+			if (!ref || ref.indexOf(" ") > -1)
+				isValide = false;
+
 			if (isValide)
-				$http({method: 'GET', url: '/api/product/'+ref
+				$http({method: 'GET', url: '/api/product/' + ref
 				}).success(function(data, status) {
 					//console.log(data);
-					if(data && data._id) // REF found
+					if (data && data._id) // REF found
 						$scope.refFound = true;
 				});
-			
+
 			$scope.validRef = isValide;
 		};
-		
+
 	}]);
 
 
@@ -510,6 +510,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 					price_level: $scope.price_level
 				}
 			}).success(function(data, status) {
+				//console.log(data);
 				$scope.priceLevel = data;
 			});
 		};
@@ -539,7 +540,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 				{field: 'price_level', displayName: 'Liste de prix', width: "80px", enableCellEdit: false},
 				{field: 'qtyMin', displayName: 'Minimum de commande', cellClass: "align-right", width: "150px", enableCellEdit: false},
 				{field: 'pu_ht', displayName: 'Tarif HT', width: "80px", cellClass: "blue align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>'},
-				{field: 'product.id.pu_ht', displayName: 'Base HT', width: "80px", cellClass: "grey align-right", enableCellEdit: false},
+				{field: 'product.id.pu_ht', displayName: 'Base HT', width: "80px", cellClass: "align-right", enableCellEdit: false},
 				{field: 'discount', displayName: 'Remise', width: "80px", cellClass: "blue align-right", cellFilter: "percent", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="update(row)"/>'},
 				{field: 'tms', displayName: 'Date MAJ', width: "100px", cellFilter: "date:'dd/MM/yyyy'", enableCellEdit: false},
 				{displayName: "Actions", enableCellEdit: false, width: "60px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer le tarif du produit ?" confirmed-click="remove(row)"></button></div></div>'}
@@ -610,7 +611,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 
 			$scope.price = {
 				product: {
-					ref: ""
+					name: ""
 				},
 				pu_ht: 0,
 				discount: 0,
@@ -628,12 +629,17 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 					filter: {logic: 'and', filters: [{value: val}]
 					}
 				}).then(function(res) {
+					for(var i in res.data) {
+						res.data[i] = res.data[i].product.id;
+						res.data[i].name = res.data[i].ref;
+						//console.log(res.data[i]);
+					}
 					return res.data;
 				});
 			};
 
 			$scope.priceLevelAutoComplete = function(val) {
-				return $http.post('api/product/price_level/autocomplete', {
+				return $http.post('api/product/price_level/select', {
 					take: 5,
 					skip: 0,
 					page: 1,

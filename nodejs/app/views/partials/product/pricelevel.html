@@ -13,10 +13,10 @@
 			
             <p class="button-height inline-medium-label">
 				<label for="product">Ref. produit / service</label>
-				<input id="product" data-ng-model="price.product" typeahead="product as product.ref for product in productAutoComplete($viewValue) | filter:{ref:$viewValue}" class="input">
+				<input id="product" data-ng-model="price.product" typeahead="product as product.name for product in productAutoComplete($viewValue) | filter:{name:$viewValue}" class="input">
 			</p>
 			<p class="button-height inline-medium-label">
-				<label for="vehicule">Description</label>
+				<label>Libellé</label>
 				\{{price.product.label}}
 			</p>
 			<p class="button-height inline-medium-label">
