@@ -35,28 +35,7 @@
                     <label for="adress"><b>{{t 'companies:Address'}}</b></label>
                     <div class='columns'>
                         <div class='twelve-columns'>
-                            <div ng-address model="contact"></div>
-                            <!--
-                            <textarea class="input" rows="3" cols="30" data-ng-model="contact.address" placeholder="{{t 'users:Address'}}"></textarea><br/>
-                            
-                            <input type="text" 
-                                   data-ng-model="contact.zip"
-                                   placeholder="Code postal" 
-                                   typeahead="contact.code for contact in contactAutoComplete($viewValue)" 
-                                   typeahead-on-select ="generateZip($item)"
-                                   typeahead-template-url="searchZipCode.html"
-                                   class="input"
-                                   autocomplete="on">
-                            <input type="text" 
-                                   data-ng-model="contact.town"
-                                   placeholder="Ville" 
-                                   typeahead="contact.city for contact in contactAutoComplete($viewValue)"
-                                   typeahead-on-select ="generateZip($item)"
-                                   typeahead-template-url="searchZipCode.html"
-                                   class="input"
-                                   autocomplete="on">
-                            -->
-                            
+                            <div ng-address model="contact" opp="create"></div>                                                     
                         </div>
                     </div>			
 		</div>

@@ -120,15 +120,49 @@ angular.module('mean.system').directive('myFocus', function () {
     };
 });
 angular.module('mean.system').directive('ngAddress', function($http) {
-      return {
+
+    return {
         restrict: 'A',
         scope: {
-          adressModel: '=model'
+          addressModel: '=model',
+          opp: '='          
         },
-        templateUrl: '/partials/address.html',
-        
-        link: function(scope, el, attr) {
+        templateUrl: function (el, attr) {
+          if (attr.opp) {
+              if (attr.opp === 'create') {
+                  return '/partials/address.html';
+              }
+              if (attr.opp === 'update') {
+                  return '/partials/updateAddress.html';
+              }
+          }
+        },
+        link: function(scope) {
+           
+          scope.updateAddressDir = true;
           
+          scope.deletedAddress = {
+              address: null,
+              zip: null,
+              town: null
+          };
+          
+          scope.enableUpdateAddress = function(){
+            scope.deletedAddress = {
+                address: scope.addressModel.address,
+                zip: scope.addressModel.zip,
+                town: scope.addressModel.town
+            };
+            
+            scope.updateAddressDir = !scope.updateAddressDir;
+          };
+          
+          scope.cancelUpdateAddress = function (){
+            scope.addressModel.address = scope.deletedAddress.address;
+            scope.addressModel.zip = scope.deletedAddress.zip;
+            scope.addressModel.town = scope.deletedAddress.town;
+            scope.updateAddressDir = !scope.updateAddressDir;
+          };
           scope.getLocation = function(val) {
             return $http.post('api/zipcode/autocomplete', {
                         val: val
@@ -139,11 +173,10 @@ angular.module('mean.system').directive('ngAddress', function($http) {
           };
           
           scope.generateZip = function(item){
-            if(item){
-                scope.adressModel.zip = item.code;
-                scope.adressModel.town = item.city;
-            }
-          };
+            
+                scope.addressModel.zip = item.code;
+                scope.addressModel.town = item.city;
+          }; 
         }
       };
     });

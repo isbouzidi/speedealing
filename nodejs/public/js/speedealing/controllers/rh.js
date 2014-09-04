@@ -4,6 +4,11 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
 
         pageTitle.setTitle('Gestion des collaborateurs');
         
+        $scope.userEdit1 = {
+            address: "60 rue cesar",
+            zip: 34343,
+            town: "lyon"
+        };
         $scope.retour = function(){
             $location.path('/rh');
         };

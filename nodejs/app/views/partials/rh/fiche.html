@@ -137,66 +137,14 @@
                                                                             <span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
                                                                         </td>
 								</tr>
-								<tr>
+								
+                                                                <tr>
 									<th scope="row">{{t 'users:Address'}}</th>
 									<td>
-										<form editable-form name="editableFormAddress" onaftersave="update()">
-                                                                                    
-											<span 
-                                                                                            editable-textarea="userEdit.address" e-name="address" e-rows="4" e-cols="20" e-required>
-                                                                                            <pre class="no-padding">
-                                                                                                \{{ userEdit.address || 'Non défini' }}
-                                                                                            </pre>
-                                                                                        </span>
-
-											<span 
-                                                                                            editable-text="userEdit.zip" 
-                                                                                            e-name="zip" 
-                                                                                            e-placeholder="{{t 'users:Zip'}}" 
-                                                                                            e-title="{{t 'users:Zip'}}">
-                                                                                            \{{userEdit.zip}}
-                                                                                        </span>
-                                                                                    
-                                                                                        <span 
-                                                                                            editable-text="userEdit.town" 
-                                                                                            e-name="town" 
-                                                                                            e-placeholder="{{t 'users:Town'}}" 
-                                                                                            e-title="{{t 'users:Town'}}">
-                                                                                            \{{userEdit.town}}
-                                                                                        </span>
-											\{{userEdit.country}}
-											<!-- button to show form -->
-											<span 
-                                                                                            type="button" 
-                                                                                            class="icon-pencil grey" 
-                                                                                            ng-click="editableFormAddress.$show()" 
-                                                                                            ng-show="!editableFormAddress.$visible">
-                                                                                                
-                                                                                        </span>
-
-
-											<div 
-                                                                                            class="small-margin-top button-group" 
-                                                                                            ng-show="editableFormAddress.$visible">
-												<button 
-                                                                                                    type="submit" 
-                                                                                                    class="button icon-tick blue-gradient" 
-                                                                                                    title="{{t 'Save'}}" 
-                                                                                                    ng-disabled="editableFormAddress.$waiting">
-                                                                                                        
-                                                                                                </button>
-
-												<button 
-                                                                                                    type="button" 
-                                                                                                    class="button icon-cross-round white-gradient" 
-                                                                                                    ng-disabled="editableFormAddress.$waiting" 
-                                                                                                    title="{{t 'Cancel'}}" 
-                                                                                                    ng-click="editableFormAddress.$cancel()">
-                                                                                                        
-                                                                                                </button>
-											</div>
-
-										</form>
+                                                                            <form editable-form onaftersave="update()">
+                                                                                <div ng-address model="userEdit" opp="update"></div>
+                                                                            </form>
+                                                                                 
 									</td>
 								</tr>
 								<tr>
@@ -217,6 +165,7 @@
 							<div class="boxed relative large-box-shadow">
 								<div class="columns">
 									<div class="twelve-columns">
+                                                                            
 										<table class="simple-table">
 											<tbody>
 												<tr>
