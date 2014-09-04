@@ -152,7 +152,7 @@
 					"perms": "user.rights.societe.read",
 					"enabled": "conf.societe.enabled",
 					"usertype": 2,
-					"title": "companies:Segmentation",
+					"title": "companies:CustomerSegmentation",
 					"fk_menu": "menu:companies"
 				}
 			}
