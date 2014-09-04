@@ -7,11 +7,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     timestamps = require('mongoose-timestamp');
 
-<<<<<<< HEAD
+
 var ExtrafieldModel = mongoose.model('extrafields');
-=======
+
 var DictModel = mongoose.model('dict');
->>>>>>> ffe1c22ba0636c3139d3920aee5a0dab1e05beba
+
 
 /**
  * Lead Schema
@@ -33,7 +33,7 @@ var leadSchema = new Schema({
 
 leadSchema.plugin(timestamps);
 
-<<<<<<< HEAD
+
 var leadStatusList = {};
 
 ExtrafieldModel.findById('extrafields:Lead', function(err, doc) {
@@ -62,7 +62,7 @@ leadSchema.virtual('Status')
             return res_status;
 
         });
-=======
+
 var prospectLevelList = {};
 DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
 	prospectLevelList = docs;
@@ -89,6 +89,6 @@ leadSchema.virtual('potentialLevel')
 			return prospectLevel;
 		});
 
->>>>>>> ffe1c22ba0636c3139d3920aee5a0dab1e05beba
+
 mongoose.model('lead', leadSchema, 'Lead');
 
