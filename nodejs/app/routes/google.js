@@ -31,6 +31,9 @@
 
 	var googleCommon =   require('../controllers/google.common');
 	var googleContacts = require('../controllers/google.contacts');
+	var googleTasks = require('../controllers/google.tasks');
+	var googleCalendar = require('../controllers/google.calendar');
+
 
 	module.exports = function(app, passport, auth) {
 
@@ -70,7 +73,7 @@
 
 		authorize : function(req, res) {
 
-			var url = googleCommon.generateAuthUrl(['contacts', 'tasks']);
+			var url = googleCommon.generateAuthUrl(['contacts', 'tasks', 'calendar']);
 
 			res.send("<a href='" + url + "'>Hello " + req.user.name + ", give access to google account !</a>");
 		},
@@ -115,24 +118,7 @@
 		},
 
 		test: function(req, res) {
-
-			// ContactModel.findOne({'_id':"52721d60a4e3eb2c268b4567"},
-			// 	function (err, contact) {
-
-			// 		googleContacts.contactChanged(
-			// 			contact,
-			// 			"5220c606269148e7260002b5",
-			// 			"525efd0b2690f6b640000007",
-			// 			function (err) {res.send (err)}
-			// 		);
-									
-			// 		//googleContacts.societeChanged(contact);
-					
-			// 	}
-			// );
-
-
-			// googleContacts.createRemoteContactGroup(req.user,
+			// googleTasks.insertTasklist(req.user, "CRM",
 			// 	function (err) {
 			// 		if (err)
 			// 			res.send(500, "ERR: " + err);
@@ -141,7 +127,30 @@
 			// 	}
 			// );
 
-			
+			// googleTasks.insertTask(req.user,
+			// 	{
+			// 		  "title": "matache!!!!",
+			// 		  "notes": "- \n -",
+			// 		  "status": "needsAction",
+			// 		  "due": "2014-12-01T10:00:00Z"
+			// 	},
+			// 	function (err, task_id) {
+			//  		if (err)
+			//  			res.send(500, "ERR: " + err);
+			//  		else
+			//  			res.send(200, "ok");
+			//  	}
+			// );
+		
+			googleCalendar.insertQuickAddEvent(req.user, 
+				"RDV ici le 4 juillet 2016 à 16h",
+				function (err, event_id) {
+					if (err)
+						res.send(500, "ERR: " + err);
+					else
+						res.send(200, "ok");
+				}
+			);
 		}
 	};
 

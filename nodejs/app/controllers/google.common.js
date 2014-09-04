@@ -45,6 +45,9 @@ exports.setAccessCode = setAccessCode;
 
 exports.googleAction = googleAction;
 
+exports.getDefaultGoogleContactsParams =
+		getDefaultGoogleContactsParams;
+
 exports.forEachGoogleUser = forEachGoogleUser;
 
 
@@ -66,13 +69,18 @@ function generateAuthUrl(submodules) {
 	];
 
 	if (_arr_contains(submodules,'contacts'))
-		scopes.append('https://www.googleapis.com/auth/contacts');
+		scopes.push('https://www.googleapis.com/auth/contacts');
+	
 	if (_arr_contains(submodules, 'tasks')) {
-		scopes.append('https://www.googleapis.com/auth/tasks');
-		scopes.append('https://www.googleapis.com/auth/tasks.readonly');
+		scopes.push('https://www.googleapis.com/auth/tasks');
+		scopes.push('https://www.googleapis.com/auth/tasks.readonly');
 	}
-
-
+	
+	if (_arr_contains(submodules, 'calendar')) {
+		scopes.push('https://www.googleapis.com/auth/calendar');
+		scopes.push('https://www.googleapis.com/auth/calendar.readonly');
+	}
+		
 	// generate consent page url
     var url = oauth2Client.generateAuthUrl({
         access_type: 'offline', // will return a refresh token
@@ -167,6 +175,19 @@ function googleAction (user, strategy, callback) {
 	);
 }
 
+
+
+
+function getDefaultGoogleContactsParams (user) {
+	return {
+		consumerKey: GOOGLE_CLIENT_ID,
+		consumerSecret: GOOGLE_CLIENT_SECRET,
+		token: user.google.tokens.access_token,
+		refreshToken: user.google.tokens.refresh_token,
+	};
+}
+
+
 function refreshGoogleTokens (user, callback) {
 	oauth2Client.setCredentials(user.google.tokens);
 
@@ -178,6 +199,7 @@ function refreshGoogleTokens (user, callback) {
 			var new_access_token = oauth2Client.credentials.access_token;
 			if (new_access_token != user.google.tokens.access_token) {
 				// update user's access token in database
+
 				user.google = _.extend(user.google,
 				{
 					"tokens": {

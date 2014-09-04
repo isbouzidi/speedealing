@@ -38,6 +38,12 @@ var UserSchema = new Schema({
 		contacts: {
 			latestImport: String, // date format YYYY-MM-DD
 			group_href: String 		// group which contains exported contacts
+		},
+		tasks: {
+			tasklist_id: String // tasklist which contains our tasks
+		},
+		calendar: {
+			calendar_id: String // calendar which contains our events
 		}
 	},
 	roles: [String],

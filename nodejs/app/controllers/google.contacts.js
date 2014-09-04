@@ -32,7 +32,7 @@ var mongoose = require('mongoose'),
 	var oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET,
 		GOOGLE_REDIRECT_URL);
-	
+
 
 	var gcommon = require('./google.common');
 
@@ -84,6 +84,24 @@ function importAddressBooksOfAllUsers (callback) {
 /*
  * ****************** IMPORT *************************************
  */
+ 	function _makeContactsParams(user) {
+ 		if (!user.google)
+			user.google = {};
+		if (!user.google.contacts)
+			user.google.contacts = {};
+ 	}
+
+	function _setLatestImport(user, latestImport, callback) {
+		_makeContactsParams(user);
+		user.google.contacts.latestImport = latestImport;
+		user.save(function(err, doc) { callback(err); });
+	}
+
+	function _setGroupHref(user, group_href, callback) {
+		_makeContactsParams(user);
+		user.google.contacts.group_href = group_href;
+		user.save(function(err, doc) { callback(err); });
+	}
 
 	/* 
 	*/
@@ -207,7 +225,9 @@ function importAddressBooksOfAllUsers (callback) {
 	*  merged : boolean, true if merge succeed
 	*/
 	function imp_mergeByMail(gcontact, callback) {
-		var addresses = array.pluck(gcontact.emails, 'address').value();
+		var addresses = array.pluck(gcontact.emails, 'address');
+		if (typeof addresses.value === 'function')
+			addresses = addresses.value();
 		//console.log("addresses = ", addresses);
 		ContactModel.find({ 'emails.address': { $in : addresses }},
 			function (err, contacts) {
@@ -262,17 +282,12 @@ function importAddressBooksOfAllUsers (callback) {
 			function (err) {
 				if (err)
 					return callback(err);
-
-				// update the date of the latest import
-				user.google.contacts = _.extend(user.google.contacts,
-					{
-						latestImport: dateFormat(new Date(), "yyyy-mm-dd")
-					});
-
-				user.save(function(err, doc) { callback(err); });
+				_setLatestImport(user, dateFormat(new Date(), "yyyy-mm-dd"), callback);
 			}
 		);
 	}
+
+
 
 	/* Main function to treat a google user in order to import contacts
 	*/
@@ -353,27 +368,15 @@ function insertContactsForOneUser(contacts, user, callback) {
 }
 
 
-function getDefaultGoogleContactsParams (user) {
-	return {
-		consumerKey: GOOGLE_CLIENT_ID,
-		consumerSecret: GOOGLE_CLIENT_SECRET,
-		token: user.google.tokens.access_token,
-		refreshToken: user.google.tokens.refresh_token,
-	};
-}
 
 function createRemoteContactGroup(user, callback) {
-	var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+	var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
 	c.createGroup({'title': 'CRM'},
 		{'email':user.email},
 		function (err, group_href) {
 			if (err)
 				return callback(err);
-
-			user.google.contacts = _.extend(user.google.contacts,
-					{ 'group_href': group_href });
-			
-			user.save(callback);
+			_setGroupHref(user, group_href, callback);
 		} 
 	);
 }
@@ -396,7 +399,7 @@ function insertOneContactForOneUser (contact, user, callback) {
 				},
 				function (cb_sub) {
 					console.log("\n\n*** INSERTING CONTACT ***\n\n");
-					var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+					var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
 					c.insertContact(contact, 
 						{'email':user.email, 
 						'group_href':user.google.contacts.group_href}, 
@@ -420,7 +423,7 @@ function belongsToSociete(contact) {
 
 function up_deleteGoogleContact(user, gcontact, callback) {
 	console.log("\n\n*** DELETING CONTACT ***\n\n");
-	var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+	var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
 	c.deleteContact(gcontact.id, {'email':user.email}, callback);
 }
 
@@ -523,7 +526,7 @@ function updateGoogleUserAdressBook (user, callback) {
 			async.series([
 
 				function (cb) {
-					var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
+					var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
 					c.getContacts({
 						email: user.email,
 						storeContactId: true
@@ -597,7 +600,9 @@ function findNearestContactsByPhone(gcontact, callback) {
 */
 function findNearestContactsByMail(gcontact, callback) {
 	if (gcontact.emails && gcontact.emails.length > 0) {
-		var addresses = array(gcontact.emails).pluck('address').value();
+		var addresses = array(gcontact.emails).pluck('address');
+		if (typeof addresses.value === 'function')
+			addresses = addresses.value();
 		ContactModel.find({ 'emails.address': { $in : addresses }}, callback);
 	} else {
 		callback(null, []);
@@ -886,9 +891,9 @@ GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
           try { new_contact.firstname   = entry['gd$name']['gd$givenName']['$t']; } catch(e){}
           
           if (entry['gd$organization']) {
-            new_contact.organization = {};
-            try { new_contact.organization.name   = entry['gd$organization'][0]['gd$orgName']['$t']; } catch(e){}
-            try { new_contact.organization.title  = entry['gd$organization'][0]['gd$orgTitle']['$t']; } catch(e){}
+            new_contact.societe = {};
+            try { new_contact.societe.name   = entry['gd$organization'][0]['gd$orgName']['$t']; } catch(e){}
+            try { new_contact.poste = entry['gd$organization'][0]['gd$orgTitle']['$t']; } catch(e){}
           }
           
           /* - Emails - */
@@ -1157,7 +1162,7 @@ GoogleContacts.prototype._buildPathInsert = function (params) {
 };
 
 GoogleContacts.prototype._contactToXML = function (contact) {
-  x = new XMLWriter;
+  var x = new XMLWriter;
   
   x.startElement('atom:entry')
     .writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom')
