@@ -105,7 +105,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 		};
 		// filter lines to show
 		$scope.filterLine = function(line) {
-
 			return line.isDeleted !== true;
 		};
 
@@ -161,6 +160,13 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
 		$scope.update = function() {
 			var delivery = $scope.delivery;
+
+			for (var i = delivery.lines.length; i--; ) {
+				// actually delete lines
+				if (delivery.lines[i].isDeleted) {
+					delivery.lines.splice(i, 1);
+				}
+			}
 
 			delivery.$update(function(response) {
 				pageTitle.setTitle('Bon Livraison ' + delivery.ref);
