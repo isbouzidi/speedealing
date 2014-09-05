@@ -1,6 +1,6 @@
 angular.module('mean.products').controller('ProductController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'pageTitle', 'Products', function($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, pageTitle, Product) {
 		$scope.global = Global;
-		pageTitle.setTitle('Liste des sociétés');
+		pageTitle.setTitle('Liste des produits');
 
 		$scope.product = {};
 		$scope.products = [];
@@ -99,6 +99,99 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			});
 		};
 
+		$scope.showProduct = function(id) {
+
+			var scope = $scope;
+
+			var ModalInstanceCtrl = function($scope, $modalInstance, object) {
+				$scope.product = {
+				};
+
+				$scope.findOne = function() {
+					Product.get({
+						Id: object.product
+					}, function(product) {
+						$scope.product = product;
+
+					}, function(err) {
+						if (err.status == 401)
+							$location.path("401.html");
+					});
+
+				};
+
+				/*$scope.price = {
+				 product: {
+				 name: ""
+				 },
+				 pu_ht: 0,
+				 discount: 0,
+				 qtyMin: 0,
+				 price_level: object.price_level,
+				 tms: new Date
+				 };
+				 
+				 $scope.productAutoComplete = function(val) {
+				 return $http.post('api/product/autocomplete', {
+				 take: 5,
+				 skip: 0,
+				 page: 1,
+				 pageSize: 5,
+				 filter: {logic: 'and', filters: [{value: val}]
+				 }
+				 }).then(function(res) {
+				 for (var i in res.data) {
+				 res.data[i] = res.data[i].product.id;
+				 res.data[i].name = res.data[i].ref;
+				 //console.log(res.data[i]);
+				 }
+				 return res.data;
+				 });
+				 };
+				 
+				 $scope.priceLevelAutoComplete = function(val) {
+				 return $http.post('api/product/price_level/select', {
+				 take: 5,
+				 skip: 0,
+				 page: 1,
+				 pageSize: 5,
+				 filter: {logic: 'and', filters: [{value: val}]
+				 }
+				 }).then(function(res) {
+				 return res.data;
+				 });
+				 };
+				 
+				 $scope.ok = function() {
+				 $modalInstance.close($scope.price);
+				 };
+				 
+				 $scope.cancel = function() {
+				 $modalInstance.dismiss('cancel');
+				 };*/
+			};
+
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/product/view.html',
+				controller: ModalInstanceCtrl,
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							product: id
+						};
+					}
+				}
+			});
+			modalInstance.result.then(function(product) {
+				//$scope.contacts.push(contacts);
+				//$scope.countContact++;
+			}, function() {
+			});
+		};
+
+
+
 		/*
 		 * NG-GRID for product list
 		 */
@@ -145,14 +238,14 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			i18n: 'fr',
 			columnDefs: [
 				{field: 'code_client', displayName: 'Code Client', visible: false, width: '110px'},
-				{field: 'ref', displayName: 'Produit', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'code_client\')">({{row.getProperty(\'code_client\')}})</small></a>'},
+				{field: 'ref', displayName: 'Produit', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="showProduct(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'code_client\')">({{row.getProperty(\'code_client\')}})</small></a>'},
 				{field: 'label', displayName: 'Nom'},
 				{field: 'pu_ht', displayName: 'Tarif HT', width: '100px', cellClass: "align-right", cellFilter: "number:3"},
 				{field: 'status.name', width: '100px', displayName: 'Etat',
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small></span>'
 				},
 				{field: 'caFamily', displayName: 'Famille', cellClass: "align-center", width: '150px',
-					cellTemplate: '<div class="ngCellText align-center"><span editable-text="row.getProperty(col.field)" buttons="no" e-form="caFamilyBtnForm" e-typeahead="family as family for family in productFamilyAutoComplete($viewValue) | filter:{name:$viewValue}" e-typeahead-on-select="updateInPlace(\'/api/product\',col.field, row, $item); caFamilyBtnForm.$cancel();" ><span ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>'
+					cellTemplate: '<div class="ngCellText align-center"><span editable-text="row.getProperty(col.field)" buttons="no" e-form="caFamilyBtnForm" e-typeahead="family as family for family in productFamilyAutoComplete($viewValue)" e-typeahead-on-select="updateInPlace(\'/api/product\',col.field, row, $item); caFamilyBtnForm.$cancel();" ><span ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>'
 				},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"}
 			]
@@ -629,7 +722,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 					filter: {logic: 'and', filters: [{value: val}]
 					}
 				}).then(function(res) {
-					for(var i in res.data) {
+					for (var i in res.data) {
 						res.data[i] = res.data[i].product.id;
 						res.data[i].name = res.data[i].ref;
 						//console.log(res.data[i]);

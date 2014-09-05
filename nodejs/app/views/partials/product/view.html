@@ -1,27 +1,37 @@
 <div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
-    <h3 class="block-title">{{t 'lead:Details Lead'}} : \{{lead.name}}</h3>
+    <h3 class="block-title">{{t 'products:CardProductPRODUCT'}} : \{{product.ref}}</h3>
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block">
-            <label><b>{{t 'Name'}}</b></label>
-            \{{lead.name}}
-        </div>
-        <div class="field-block">
-            <label><b>{{t 'Status'}}</b></label>
-            <small class="tag \{{lead.Status.css}}">\{{lead.Status.name}}</small>
+            <label><b>{{t 'products:ProductRef'}}</b></label>
+            \{{product.ref}}
         </div>
 		<div class="field-block">
-            <label><b>{{t 'Potential'}}</b></label>
-            <small class="tag \{{lead.potentialLevel.css}}">\{{lead.potentialLevel.name}}</small>
+            <label><b>{{t 'products:ProductLabel'}}</b></label>
+            \{{product.label}}
+        </div>
+		<div class="field-block">
+            <label><b>{{t
+				'Status'}}</b></label>
+            <span class="tag small glossy" data-ng-class="product.status.css" editable-select="product.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in Status.values">
+				\{{product.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>
+        </div>
+		<div class="field-block">
+            <label><b>{{t 'Description'}}</b></label>
+            <span editable-textarea="product.description" e-rows="4" e-cols="70" buttons="no" e-form="DescriptionBtnForm" onaftersave="update()" >
+				\{{product.description || 'empty'}}</span> <span class="icon-pencil grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible"></span>
+        </div>
+
+        <div class="field-block">
+            <label><b>{{t
+				'DateCreation'}}</b></label>
+            \{{product.createdAt|date:'dd/MM/yyyy'}}
         </div>
         <div class="field-block">
-            <label><b>{{t 'DateCreation'}}</b></label>
-            \{{lead.createdAt}}
+            <label><b>{{t
+				'DateLastModification'}}</b></label>
+            \{{product.updatedAt|date:'dd/MM/yyyy HH:mm'}}
         </div>
-        <div class="field-block">
-            <label><b>{{t 'DateDue'}}</b></label>
-            \{{lead.dueDate}}
-        </div>
-        
+
     </fieldset>
 </div>

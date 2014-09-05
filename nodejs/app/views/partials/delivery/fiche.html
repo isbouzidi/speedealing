@@ -348,8 +348,8 @@
 								</td>
 								<td>
 									<!-- editable username (text with validation) -->
-									<span editable-text="line.description" e-style="width: 180px" e-form="tableform">
-										\{{ line.description || 'empty' }}
+									<span editable-textarea="line.description" e-rows="4" e-cols="50" e-style="width: 180px" e-form="tableform">
+										<pre class="no-padding small">\{{ line.description || 'empty' }}</pre>
 									</span>
 								</td>
 								<td class="align-right">
