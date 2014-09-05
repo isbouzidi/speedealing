@@ -15,7 +15,7 @@
 
 		<div class="field-block button-height">
 			<label for="productId"><b>{{t 'products:ProductCode'}}</b></label>
-			<input required type="text" data-ng-model="line.product" typeahead-on-select="updateLine($item)" typeahead="product as product.name for product in productAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" typeahead-template-url="searchproduct.html" id="productId" class="input full-width" autocomplete="off">
+			<input name="productId" required type="text" data-ng-model="line.product" typeahead-on-select="updateLine($item)" typeahead="product as product.name for product in productAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" typeahead-template-url="searchproduct.html" id="productId" class="input full-width" autocomplete="off">
 			<span class='intro'>\{{line.product.label}}</span>
 		</div>
 

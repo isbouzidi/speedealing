@@ -2,31 +2,31 @@
 
 <div class="field-block button-height">
 	<label for="description"><b>{{t 'Description'}}</b></label>
-	<textarea id="description" cols="30" rows="5" data-ng-model="line.description" class="input full-width"></textarea>
+	<textarea name="description" id="description" cols="30" rows="5" data-ng-model="line.description" class="input full-width"></textarea>
 </div>
 
 
 <div class="field-block button-height">
 	<label for="qty"><b>{{t 'Qty'}}</b></label>
-	<input required type="number" step="0.001" data-ng-model="line.qty" id="qty" class="input" autocomplete="off">
+	<input name="qty" required type="number" step="0.001" data-ng-model="line.qty" id="qty" class="input" autocomplete="off">
 </div>
 
 <div class="field-block button-height">
 	<label for="pu_ht"><b>{{t 'products:SellingPriceHT'}}</b></label>
-	<input required type="number" step="0.001" data-ng-model="line.pu_ht" id="pu_ht" class="input" autocomplete="off">
+	<input name="pu_ht" required type="number" step="0.001" data-ng-model="line.pu_ht" id="pu_ht" class="input" autocomplete="off">
 	<small ng-show="line.pu_ht < line.minPrice" class="icon-warning red input-info"> {{t 'products:CantBeLessThanMinPrice'}} ({{t 'products:MinPrice'}} : \{{line.minPrice | currency}})</small>
 </div>
 
 <div class="field-block button-height">
 	<label for="tva_tx"><b>{{t 'VAT'}} %</b></label>
-	<select class="form-control" id="tva_tx" data-ng-model="line.tva_tx" data-ng-options="c.value as c.value for c in tva_tx.values"></select>
+	<select name="tva_tx" class="form-control" id="tva_tx" data-ng-model="line.tva_tx" data-ng-options="c.value as c.value for c in tva_tx.values"></select>
 </div>
 
 <div class="field-block button-height">
 	<label for="total_ht"><b>{{t 'AmountHT'}}</b></label>
 	\{{line.pu_ht * line.qty || 0 | currency}}
 </div>
-<div ng-show = "deliveryModule" class="field-block button-height">
+<div ng-show="deliveryModule" class="field-block button-height">
 	<label for="no_package"><b>{{t 'deliveries:NoPackage'}}</b></label>
-	<input required type="text" data-ng-model="line.no_package" id="no_package" class="input" autocomplete="off">
+	<input name="no_package" type="text" data-ng-model="line.no_package" id="no_package" class="input" autocomplete="off">
 </div>
