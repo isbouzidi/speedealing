@@ -824,6 +824,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			});
 
 		};
+		
+		$scope.societeAutoComplete = function(val, field) {
+			return $http.post('api/societe/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				return res.data;
+			});
+		};
 
 		$scope.userAutoComplete = function(val) {
 			return $http.post('api/user/name/autocomplete', {

@@ -89,7 +89,7 @@ var societeSchema = new Schema({
 	iban: {
 		bank: String,
 		id: String, //FR76........
-		swift: String
+		swift: String, //BIC / SWIFT
 	},
 	checklist: mongoose.Schema.Types.Mixed,
 	annualCA: [{

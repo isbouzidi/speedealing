@@ -29,7 +29,7 @@
 								<tr>
 									<th scope="row">{{t 'Entity'}}</th>
 									<td><span class="tag anthracite-gradient glossy" editable-select="societe.entity" buttons="no" e-form="EntityBtnForm" onaftersave="update()" e-ng-options="e.id as e.name for e in entities">
-											  \{{societe.entity}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>
+											\{{societe.entity}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>
 									</td>
 								</tr>
 								<tr>
@@ -310,11 +310,15 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:VATIsUsed'}}</th>
-													<td >\{{societe.tva_assuj}}</td>
+													<td ><input type="checkbox" data-ng-model="societe.VATIsUsed" data-ng-checked="societe.VATIsUsed" data-ng-change="update()" />
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:VATIntra'}}</th>
-													<td>\{{societe.tva_intra}}</td>
+													<td><a href="#" editable-text="societe.idprof6" buttons="no" onaftersave="update()">
+															\{{societe.idprof6|| "Non défini"}}
+														</a>
+													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
@@ -345,12 +349,18 @@
 													<td>\{{societe.remise_client}}</td>
 												</tr>
 												<tr>
-													<th scope="row">{{t 'banks:RIB'}}</th>
-													<td>\{{societe.iban}}</td>
+													<th scope="row">{{t 'banks:IBAN'}}</th>
+													<td>\{{societe.iban.id}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'banks:BIC'}}</th>
+													<td>\{{societe.iban.swift}}</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyBilling'}}</th>
-													<td>\{{societe.cptBilling}}</td>
+													<td><a href="#" editable-text="societe.cptBilling" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+															\{{societe.cptBilling.name|| "Aucun"}}
+														</a></td>
 												</tr>
 											</tbody>
 										</table>
