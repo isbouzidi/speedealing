@@ -253,17 +253,18 @@ module.exports = function(app, passport, auth) {
 		//console.log(req.body);
 
 		var query = {
-			"$and": [{caFamily: {$nin: [null, "OTHERS", ""]}}]
+			"$and": [{caFamily: {$nin: [null, "OTHER", ""]}}]
 		};
 		if (req.body.filter)
 			query.$and.push({caFamily: new RegExp(req.body.filter, "i")});
+		
 		ProductModel.distinct(req.body.field, query, function(err, data) {
 
 			if (err) {
 				console.log('Erreur : ' + err);
 			} else {
 				res.json(data);
-				//console.log(data);
+				console.log(data);
 			}
 		});
 		return;

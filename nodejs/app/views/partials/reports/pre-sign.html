@@ -1,10 +1,7 @@
-<div class="field-block">
-    <h4>Affaire</h4>
-</div>
 <div class="field-block button-height">
     <label for="fonction"><b>{{t "reports:Products"}}</b></label>
     <span ng-repeat="p in products">
-        
+
         <input type="checkbox" 
                name="selectedProducts[]" 
                value="\{{p}}" 
@@ -13,30 +10,26 @@
     </span>
 </div>
 <div class="field-block button-height">
-    <label for="fonction"><b>{{t "leads:Business Type"}}</b></label>
-    <span ng-repeat="tb in typeBusiness">
-        <input type="radio" ng-model="report.optional.business.type" value="\{{tb.label}}" class=""> \{{tb.label}}
-    </span>
-</div>
-<div class="field-block button-height">
     <label for="offre"><b>{{t "reports:Business Offer"}}</b></label>
-    <input type="text" ng-model="report.optional.business.offer" id="offre" class="input" autocomplete="off">
+    <input type="number" ng-model="report.proposal_ht" id="offre" class="input" autocomplete="off">
 </div>
-<div class="field-block button-height">
-    <label for="fonction"><b>{{t "reports:Business Step"}}</b></label>
-    <span ng-repeat="sb in stepBusiness">
-        <input type="radio" ng-model="report.optional.business.step" ng-change="showReason()" value="\{{sb.label}}" class=""> \{{sb.label}}
+<div class="field-block button-height" ng-show="report.lead.id">
+    <label for="fonction"><b>{{t "leads:Step"}}</b></label>
+    <span ng-repeat="sb in leadStatus">
+        <input type="radio" ng-model="report.leadStatus" ng-change="showReason()" value="\{{sb.id}}" class=""/> \{{sb.label}}
+		<br/>
     </span>
-    <br/>
+
     <span ng-show="showReasonValue">
+		<br/>
         <span ng-repeat="rb in reasonBusiness">
-        <input type="checkbox" 
-               name="selectedReason[]" 
-               value="\{{rb.label}}" 
-               ng-checked="report.optional.business.reason.indexOf(rb.label) > -1" 
-               ng-click="reasonSelection(rb.label)"> \{{rb.label}}
-        
+			<input type="checkbox" 
+				   name="selectedReason[]" 
+				   value="\{{rb.label}}" 
+				   ng-checked="report.optional.business.reason.indexOf(rb.label) > -1" 
+				   ng-click="reasonSelection(rb.label)"/> \{{rb.label}}
+			<br/>
         </span>
     </span>
-    
+
 </div>

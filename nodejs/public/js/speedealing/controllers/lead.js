@@ -11,16 +11,24 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http
 		};
 
 		$scope.init = function() {
+			var fields = [
+                "Status", 
+                "type"
+            ];
+            
+            angular.forEach(fields, function(field) {
+                $http({method: 'GET', url: 'api/lead/fk_extrafields/select', params: {
+                        field: field
+                    }
+                }).success(function(data) {
+                    
+                    $scope[field] = data;
+                });
+            });
 
-			$http({method: 'GET', url: '/api/report/fk_extrafields/lead', params: {
-					field: "Status"
-				}
-			}).success(function(data) {
+			
 
-				$scope.status = data;
-			});
-
-			$http({method: 'GET', url: '/api/report/dict_fk/select', params: {
+			$http({method: 'GET', url: '/api/lead/dict/select', params: {
                 field: "prospectlevel"
             }
             }).success(function(data) {

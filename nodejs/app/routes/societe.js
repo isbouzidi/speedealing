@@ -95,6 +95,45 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
+	app.post('/api/societe/autocomplete/:field', auth.requiresLogin, function(req, res) {
+		//console.dir(req.body);
+
+		if (req.body.filter == null)
+			return res.send(200, {});
+
+		var query = {};
+
+		query[req.params.field] = new RegExp(req.body.filter.filters[0].value, "i");
+
+		if (typeof SocieteModel.schema.paths[req.params.field].options.type == "object")
+			//console.log(query);
+			SocieteModel.aggregate([
+				{$project: {_id: 0, Tag: 1}},
+				{$unwind: "$" + req.params.field},
+				{$match: query},
+				{$group: {_id: "$" + req.params.field}},
+				{$limit: req.body.take}
+			], function(err, docs) {
+				if (err) {
+					console.log("err : /api/societe/autocomplete/" + req.params.field);
+					console.log(err);
+					return;
+				}
+				//console.log(docs);
+				var result = [];
+
+				if (docs !== null)
+					for (var i in docs) {
+						//result.push({text: docs[i]._id});
+						result.push(docs[i]._id);
+					}
+
+				return res.send(200, result);
+			});
+
+		//TODO write code for distinct attribute
+	});
+
 	app.post('/api/societe/segmentation/autocomplete', auth.requiresLogin, function(req, res) {
 		//console.dir(req.body);
 
@@ -1552,6 +1591,7 @@ Object.prototype = {
 				return next(err);
 
 			req.societe = doc;
+			console.log(doc);
 			next();
 		});
 	},
@@ -1677,9 +1717,9 @@ Object.prototype = {
 
 	},
 	update: function(req, res) {
-
 		var societe = req.societe;
 		societe = _.extend(societe, req.body);
+		//console.log(societe);
 
 		societe.save(function(err, doc) {
 			res.json(doc);

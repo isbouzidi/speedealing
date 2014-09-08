@@ -40,23 +40,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					});
 		};
 
-		$scope.segmentationAutoComplete = function(val) {
+		$scope.segmentationSelect = function(val, max) {
 			return $http.post('api/societe/segmentation/autocomplete', {
-				take: 5,
-				skip: 0,
-				page: 1,
-				pageSize: 5,
-				filter: {logic: 'and', filters: [{value: val}]
-				}
-			}).then(function(res) {
-				//console.log(res.data);
-				return res.data;
-			});
-		};
-
-		$scope.productFamilyAutoComplete = function(val) {
-			return $http.post('api/product/family/autocomplete', {
-				take: 5,
+				take: max,
 				skip: 0,
 				page: 1,
 				pageSize: 5,
@@ -719,7 +705,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 //                                            </div>\n\
 //                                            <a class="with-tooltip" ng-href="#!/contacts/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'>\n\
 //                                            <span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div></div>'},               
-				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findContact(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findContact(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div>'},
 				{field: 'poste', displayName: 'Fonction'},
 				{field: 'phone_mobile', displayName: 'Téléphone'},
 				{field: 'email', displayName: 'Mail', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="mailto:{{row.getProperty(col.field)}}" target="_blank">{{row.getProperty(col.field)}}</a></div>'},
@@ -824,7 +810,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			});
 
 		};
-		
+
 		$scope.societeAutoComplete = function(val, field) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
@@ -894,6 +880,33 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			});
 		};
 
+		$scope.addNewLead = function() {
+
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/leads/create.html',
+				controller: "LeadCreateController",
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							societe: $scope.societe
+						};
+					}
+				}
+			});
+
+			modalInstance.result.then(function(leads) {
+				$scope.leads.push({
+					id: leads._id,
+					name: leads.name,
+					dueDate: leads.dueDate
+				});
+
+			}, function() {
+
+			});
+		};
+
 		$scope.findReport = function(id) {
 
 			$rootScope.idReport = id;
@@ -907,7 +920,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.findLead = function(id) {
 
 			var modalInstance = $modal.open({
-				templateUrl: '/partials/leads/fiche.html',
+				templateUrl: '/partials/leads/view.html',
 				controller: "LeadController",
 				windowClass: "steps",
 				resolve: {

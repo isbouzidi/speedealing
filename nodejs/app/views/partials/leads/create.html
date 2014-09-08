@@ -10,7 +10,8 @@
         </div>
 
         <div class="field-block button-height">
-            <label for="dueDate"><b>{{t "DateDue"}}</b></label>
+            <label for="dueDate"><b>{{t
+				"DateDue"}}</b></label>
             <span class="k-widget k-datepicker k-header input">
                 <span class="k-picker-wrap k-state-default">
                     <input 
@@ -25,9 +26,17 @@
 		<div class="field-block button-height">
 			<label for="potential"><b>{{t "leads:Potential"}}</b></label>
 			<span ng-repeat="p in potential" style="margin-left" >
-				<input type="radio" name="selectedProspectLevel" ng-model="lead.potential" value="\{{p.id}}">\{{p.label|| 'Aucun'}}
+				<input type="radio" name="selectedProspectLevel" ng-model="lead.potential" value="\{{p.id}}"/>\{{p.label|| 'Aucun'}}
+				<br/>
 			</span>
 
+		</div>
+		<div class="field-block button-height">
+			<label for="type"><b>{{t "leads:Type"}}</b></label>
+			<span ng-repeat="tb in type">
+				<input type="radio" ng-model="lead.type" id="type" value="\{{tb.label}}"/> \{{tb.label}}
+				<br/>
+			</span>
 		</div>
         <div class="field-block button-height wizard-controls clearfix">
             <button type="submit" class="button glossy mid-margin-right float-right">

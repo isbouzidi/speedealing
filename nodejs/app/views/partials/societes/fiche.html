@@ -95,7 +95,7 @@
 					<h5 class="green underline">Les dernieres notes</h5>
 
 					<div class="scroll" style="height:120px">
-						<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
+						<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
 							<div class="with-small-padding silver-gradient no-margin-top">
 								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -268,14 +268,21 @@
 												<tr>
 													<th scope="row" colspan="2">{{t 'companies:CustomerSegmentation'}}<br/>
 											<tags-input data-ng-model="societe.segmentation" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-												<auto-complete source="segmentationAutoComplete($query)" min-length="1" max-results-to-show="5"></auto-complete>
+												<auto-complete source="segmentationAutoComplete($query, 10)" min-length="1" max-results-to-show="10"></auto-complete>
 											</tags-input>
 											</th>
 											</tr>
 											<tr>
 												<th scope="row" colspan="2">{{t 'companies:ProductSegmentation'}}<br/>
 											<tags-input ng-model="societe.familyProduct" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-												<auto-complete source="productFamilyAutoComplete($query)" min-length="1" max-results-to-show="5"></auto-complete>
+												<auto-complete source="AutoComplete($query,'api/product/family/autocomplete',10)" min-length="1" max-results-to-show="10"></auto-complete>
+											</tags-input>
+											</th>
+											</tr>
+											<tr>
+												<th scope="row" colspan="2">{{t 'Keywords'}}<br/>
+											<tags-input data-ng-model="societe.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+												<auto-complete source="AutoComplete($query,'api/societe/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
 											</tags-input>
 											</th>
 											</tr>
@@ -513,7 +520,7 @@
 
 									<div class="six-columns">
 										<div class="scroll" style="height:360px">
-											<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+											<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
 													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -534,18 +541,20 @@
                     <h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
 
                     <div class="table-header silver-gradient glossy button-height">
-                        <div class="col-sm-6">
-                            <div class="button-group">
-                                <button class="button icon-plus blue-gradient" data-ng-click="addNewContact()">{{t 'Add'}}</button>
-                                <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
-                            </div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="button-group">
+									<button class="button icon-plus blue-gradient" data-ng-click="addNewContact()">{{t 'Add'}}</button>
+									<button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+								</div>
 
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="float-right">
-                                {{t 'Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
-                            </div>
-                        </div>
+							</div>
+							<div class="col-sm-6">
+								<div class="float-right">
+									{{t 'Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
+								</div>
+							</div>
+						</div>
                     </div>
                     <div class="gridStyle"  data-ng-grid="gridOptionsContact"></div>
                     <div class="table-footer silver-gradient">
@@ -556,9 +565,15 @@
                     <h5 class="green underline">Affaires</h5>
 
                     <div class="table-header silver-gradient glossy button-height">
-                        <div class="col-sm-6">
+                        <div class="row">
+							<div class="col-sm-6">
+								<div class="button-group">
+									<button class="button icon-plus blue-gradient" data-ng-click="addNewLead()">{{t 'Add'}}</button>
+									<button title="{{t 'Refresh'}}" class="button" data-ng-click="refreshLead()"><span class="icon-redo"></span></button>
+								</div>
 
-                        </div>
+							</div>
+						</div>
                     </div>
                     <div class="gridStyle"  data-ng-grid="gridOptionsLeads"></div>
                     <div class="table-footer silver-gradient">
@@ -569,13 +584,15 @@
                     <h5 class="green underline">Comptes Rendus</h5>
 
                     <div class="table-header silver-gradient glossy button-height">
-                        <div class="col-sm-6">
-                            <div class="button-group">
-                                <button class="button icon-plus blue-gradient" data-ng-click="addNewReport()">{{t 'Add'}}</button>
-								<button title="{{t 'Refresh'}}" class="button" data-ng-click="refreshReport()"><span class="icon-redo"></span></button>
-                            </div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="button-group">
+									<button class="button icon-plus blue-gradient" data-ng-click="addNewReport()">{{t 'Add'}}</button>
+									<button title="{{t 'Refresh'}}" class="button" data-ng-click="refreshReport()"><span class="icon-redo"></span></button>
+								</div>
 
-                        </div>
+							</div>
+						</div>
                     </div>
                     <div class="gridStyle"  data-ng-grid="gridOptionsReports"></div>
                     <div class="table-footer silver-gradient">

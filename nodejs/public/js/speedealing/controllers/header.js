@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('HeaderController', ['$scope', '$http', '$route', 'Global', 'pageTitle', function($scope, $http, $route, Global, pageTitle) {
+angular.module('mean.system').controller('HeaderController', ['$scope', '$rootScope', '$http', '$route', 'Global', 'pageTitle', function($scope, $rootScope, $http, $route, Global, pageTitle) {
 		$scope.global = Global;
 		//console.log(Global);
 
@@ -29,6 +29,20 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$http',
 		$scope.currentPage = 1;
 		$scope.numPerPage = 3;
 		$scope.maxSize = 5;
+		
+		$rootScope.AutoComplete = function(val, url, max) {
+			return $http.post(url, {
+				take: max,
+				skip: 0,
+				page: 1,
+				pageSize: 5,
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function(res) {
+				//console.log(res.data);
+				return res.data;
+			});
+		};
 
 //        $scope.$watch('searchItem', function(item) {
 //            $scope.currentPage = 1;

@@ -3,25 +3,34 @@
     <h3 class="block-title">{{t 'lead:Details Lead'}} : \{{lead.name}}</h3>
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block">
-            <label><b>{{t 'Name'}}</b></label>
+            <label><b>{{t
+				'Name'}}</b></label>
             \{{lead.name}}
         </div>
+		<div class="field-block">
+            <label><b>{{t 'leads:Type'}}</b></label>
+            \{{lead.Type.name}}
+        </div>
         <div class="field-block">
-            <label><b>{{t 'Status'}}</b></label>
+            <label><b>{{t
+				'Status'}}</b></label>
             <small class="tag \{{lead.Status.css}}">\{{lead.Status.name}}</small>
         </div>
 		<div class="field-block">
-            <label><b>{{t 'Potential'}}</b></label>
+            <label><b>{{t
+				'Potential'}}</b></label>
             <small class="tag \{{lead.potentialLevel.css}}">\{{lead.potentialLevel.name}}</small>
         </div>
         <div class="field-block">
-            <label><b>{{t 'DateCreation'}}</b></label>
-            \{{lead.createdAt}}
+            <label><b>{{t
+				'DateCreation'}}</b></label>
+            \{{lead.createdAt|date:'dd/MM/yyyy'}}
         </div>
         <div class="field-block">
-            <label><b>{{t 'DateDue'}}</b></label>
-            \{{lead.dueDate}}
+            <label><b>{{t
+				'DateDue'}}</b></label>
+            \{{lead.dueDate|date:'dd/MM/yyyy'}}
         </div>
-        
+
     </fieldset>
 </div>

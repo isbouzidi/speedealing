@@ -22,8 +22,9 @@ var leadSchema = new Schema({
 		id: {type: Schema.Types.ObjectId, ref: 'societe'},
 		name: String
 	},
-	status: {type: String, default: 'NEG'},
-	entity: String
+	status: {type: String, default: 'NEW'},
+	entity: String,
+	type: {type: String, default: 'SINGLE'}
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
@@ -32,6 +33,7 @@ var leadSchema = new Schema({
 leadSchema.plugin(timestamps);
 
 var leadStatusList = {};
+var leadTypeList = {};
 
 ExtrafieldModel.findById('extrafields:Lead', function(err, doc) {
 	if (err) {
@@ -39,6 +41,7 @@ ExtrafieldModel.findById('extrafields:Lead', function(err, doc) {
 		return;
 	}
 	leadStatusList = doc.fields.Status;
+	leadTypeList = doc.fields.type;
 });
 
 leadSchema.virtual('Status')
@@ -84,6 +87,23 @@ leadSchema.virtual('potentialLevel')
 			}
 
 			return prospectLevel;
+		});
+		
+leadSchema.virtual('Type')
+		.get(function() {
+			var res = {};
+
+			var type = this.type;
+
+			if (type && leadTypeList.values[type] && leadTypeList.values[type].label) {
+				res.id = type;
+				res.name = leadTypeList.values[type].label;
+			} else { // By default
+				res.id = type;
+				res.name = type;
+			}
+			return res;
+
 		});
 
 mongoose.model('lead', leadSchema, 'Lead');

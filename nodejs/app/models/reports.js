@@ -37,6 +37,8 @@ var ReportSchema = new Schema({
 		}],
 	optional: Schema.Types.Mixed,
 	comment: String,
+	proposal_ht: Number,
+	leadStatus: String,
 	author: {
 		id: String,
 		name: String
@@ -55,44 +57,26 @@ ReportSchema.plugin(timestamps);
 ReportSchema.virtual('RealisedStatus').get(function() {
 
 	var realisedStat = {};
-        
-        if(this.actions.length > 0){
-            if (this.realised)
-                    realisedStat = {id: 'Réalisé', css: 'green-gradient'};
-            else
-                    realisedStat = {id: 'Non Réalisé', css: 'red-gradient'};
-        }else {
-            realisedStat = {id: 'Aucun', css: 'grey-gradient'};
-        }
+
+	if (this.actions.length > 0) {
+		if (this.realised)
+			realisedStat = {id: 'Réalisé', css: 'green-gradient'};
+		else
+			realisedStat = {id: 'Non Réalisé', css: 'red-gradient'};
+	} else {
+		realisedStat = {id: 'Aucun', css: 'grey-gradient'};
+	}
 
 	return realisedStat;
 });
 
 ReportSchema.post('save', function(doc) {
 
-	var stat;
+	if (doc.lead.id && doc.leadStatus)
+		LeadModel.update({_id: doc.lead.id}, {$set: {status: doc.leadStatus}}, {multi: false}, function(err) {
 
-	switch (doc.model) {
-		case 'Découverte':
-			stat = 'NEG';
-			break;
-		case 'Suivi/Contrat signé':
-			stat = 'ACT';
-			break;
-		case 'Pré Signature':
-			stat = 'REF';
-			break;
-		default:
-			stat = 'NEG';
-
-	}
-
-	/*if (doc.lead.id)
-	 LeadModel.update({_id: doc.lead.id}, {$set: {status: stat}}, {multi: false}, function(err) {
-	 
-	 console.log('lead updated ');
-	 });
-	 */
+			console.log('lead updated ');
+		});
 
 });
 

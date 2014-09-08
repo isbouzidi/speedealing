@@ -17,7 +17,7 @@ module.exports = function(app, passport, auth) {
 
 	var lead = new Lead();
 
-	app.get('/api/report/dict_fk/select', auth.requiresLogin, function(req, res) {
+	app.get('/api/lead/dict/select', auth.requiresLogin, function(req, res) {
 
 		DictModel.findById('dict:fk_prospectlevel', function(err, doc) {
 			if (err) {
@@ -43,43 +43,43 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
-	app.get('/api/report/fk_extrafields/lead', auth.requiresLogin, lead.select);
-        
-        
-        app.get('/api/lead/:leadId', auth.requiresLogin, lead.show);
+	app.get('/api/lead/fk_extrafields/select', auth.requiresLogin, lead.select);
+
+
+	app.get('/api/lead/:leadId', auth.requiresLogin, lead.show);
 	app.post('/api/lead', auth.requiresLogin, lead.create);
 	app.get('/api/lead', auth.requiresLogin, lead.read);
-        
-        app.param('leadId', lead.lead);
+
+	app.param('leadId', lead.lead);
 };
 
 function Lead() {
 }
 
 Lead.prototype = {
-        lead: function(req, res, next, id) {
-            LeadModel.findOne({_id: id}, function(err, doc) {
-                if (err)
-                    return next(err);
-                if (!doc)
-                    return next(new Error('Failed to load lead ' + id));
+	lead: function(req, res, next, id) {
+		LeadModel.findOne({_id: id}, function(err, doc) {
+			if (err)
+				return next(err);
+			if (!doc)
+				return next(new Error('Failed to load lead ' + id));
 
-                req.lead = doc;
-                next();
-            });
-        },
+			req.lead = doc;
+			next();
+		});
+	},
 	read: function(req, res) {
-		
-            var query = req.query;
-	    
-            LeadModel.find(query, function(err, doc) {
-                    if (err) {
-                            console.log(err);
-                            return;
-                    }
-                    
-                    return res.json(200, doc);
-            });
+
+		var query = req.query;
+
+		LeadModel.find(query, function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			return res.json(200, doc);
+		});
 
 	},
 	select: function(req, res) {
@@ -116,8 +116,8 @@ Lead.prototype = {
 			res.json(200, doc);
 		});
 	},
-        show: function(req, res) {
-      
-            res.json(req.lead);
-        }
+	show: function(req, res) {
+
+		res.json(req.lead);
+	}
 };

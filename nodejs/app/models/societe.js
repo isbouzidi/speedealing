@@ -15,6 +15,21 @@ var DictModel = mongoose.model('dict');
 var ExtrafieldModel = mongoose.model('extrafields');
 var EntityModel = mongoose.model('entity');
 
+//  Getters and Setters
+/*var getTags = function(tags) {
+	console.log("joiiiiin");
+	return tags.join(',');
+};*/
+
+var setTags = function(tags) {
+	var result = [];
+	for (var i = 0; i < tags.length; i++)
+		result.push(tags[i].text);
+	console.log(result);
+	//return tags.split(',');
+	return result;
+};
+
 /**
  * Article Schema
  */
@@ -53,7 +68,7 @@ var societeSchema = new Schema({
 	groupOrder: Boolean, // 1 bill for many order
 	groupDelivery: Boolean, // 1 bill for many delivery
 	zonegeo: String,
-	Tag: [String],
+	Tag: {type: [], set: setTags},
 	segmentation: [{
 			text: String
 		}],

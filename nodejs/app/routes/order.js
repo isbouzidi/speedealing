@@ -355,7 +355,8 @@ Object.prototype = {
 					doc.save(function(err) {
 						if (err) {
 							console.log("Error while trying to save this document");
-							res.send(403, "Error while trying to save this document");
+							console.log(err);
+							return res.send(403, "Error while trying to save this document");
 						}
 
 						latex.compileDoc(doc._id, doc.latex, function(result) {
