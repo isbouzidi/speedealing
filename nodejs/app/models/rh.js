@@ -4,17 +4,18 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-                config = require('../../config/config'),
-		gridfs = require('../controllers/gridfs'),
-		Schema = mongoose.Schema,
-		i18n = require("i18next"),
-		timestamps = require('mongoose-timestamp'),
-		crypto = require('crypto'),
-		authTypes = ['github', 'twitter', 'facebook', 'google'];
+    config = require('../../config/config'),
+    gridfs = require('../controllers/gridfs'),
+    Schema = mongoose.Schema,
+    i18n = require("i18next"),
+    timestamps = require('mongoose-timestamp'),
+    crypto = require('crypto'),
+    authTypes = ['github', 'twitter', 'facebook', 'google'];
 
+var UserGroupModel = mongoose.model('userGroup');
 var DictModel = mongoose.model('dict');
 var ExtrafieldModel = mongoose.model('extrafields');
-var UserGroupModel = mongoose.model('userGroup');
+
 
 /**
  * User Schema
@@ -67,7 +68,7 @@ var RhSchema = new Schema({
         dateDepart:  Date,
         poste: String,
         descriptionPoste: String,
-        groupe: [String],
+        groupe: String,
         contrat: String,
         periodeEssai: String,
         salaire: Number,
@@ -136,20 +137,17 @@ UserGroupModel.find(function(err, docs) {
 RhSchema.virtual('userGroup')
 		.get(function() {
                     
-	var userGroup = [];
-        var group = [];
-	group = this.groupe;
-        //console.log("this.groupe : " + group[0]);
+	var group;
+        
         if(this.groupe){
-            for (var k = 0; k < group.length; k++){
-                for(var j in userGroupList){
-                    if(userGroupList[j]._id.indexOf(group[k]) > -1)
-                        userGroup.push(userGroupList[j].name);
-                }
+            for(var j in userGroupList){
+                if(userGroupList[j]._id === this.groupe)
+                    group = userGroupList[j].name;
             }
+            
         }
 	
-        return userGroup;
+        return group;
 });
 
 RhSchema.virtual('fullname').get(function() {
