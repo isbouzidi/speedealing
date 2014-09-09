@@ -151,15 +151,9 @@ function setAccessCode(code, user, callback) {
 	        					callback(err);
 	        				});
 	        			}
-	        			);
-	        	}
-	        	); 
-	    }
-	    );
+	        		);}); 
+	    });
 }
-
-
-
 
 
 function googleAction (user, strategy, callback) {

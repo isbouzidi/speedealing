@@ -315,24 +315,6 @@
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Insert contacts in users' google address book.
  * @param contacts Array of contact to insert.
  * @param users Users whose address book will be updated.
@@ -560,16 +542,7 @@ function updateGoogleUserAdressBook (user, callback) {
 		);
 }
 
-
-
-
-
-
-
 /* Protected methods */
-
-
-
 
 /* callback format : fct(err, contacts)
 */
@@ -736,33 +709,9 @@ function contactChanged (contact, old_societe_id, new_societe_id, callback) {
 		);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ****************************************** */
 
-/* ****************************************** */
-
-/* ****************************************** */
-
-
-
-/* Personal module */
+/* Module */
 
 var _ = require('underscore'),
 qs = require('querystring'),

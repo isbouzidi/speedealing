@@ -193,98 +193,11 @@ function updateTask(user, task_id, task, callback) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* *************************************************** */
-
-/* *************************************************** */
-
-/* *************************************************** */
-
 
 
 
 /* Module */
-
-
-
-
 var _ = require('underscore'),
 qs = require('querystring'),
 util = require('util'),
@@ -590,11 +503,6 @@ GoogleTasks.prototype.insertTask = function (task, params, callback) {
 		}
 		);
 };
-
-
-
-
-
 
 
 /*
