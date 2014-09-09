@@ -2,6 +2,7 @@ var async = require('async'),
 		ip = require('ip'),
 		fs = require('fs'),
 		modules = require('../app/controllers/modules'),
+		rights = require('../app/controllers/rights'),
 		config = require(__dirname + '/config'),
 		mongoose = require('mongoose');
 
@@ -312,4 +313,7 @@ module.exports = function(app, passport, auth) {
 
 	// Master angular Page
 	app.get('/', auth.requiresLogin, index.render);
+
+	//import rights from config/modules/..
+	app.get('/rights', auth.requiresLogin, rights.rights);
 };

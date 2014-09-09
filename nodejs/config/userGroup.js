@@ -4,8 +4,11 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-		Schema = mongoose.Schema,
-		timestamps = require('mongoose-timestamp');
+    //config = require('../../config/config'),
+    //gridfs = require('../controllers/gridfs'),
+    Schema = mongoose.Schema,
+    i18n = require("i18next"),
+    timestamps = require('mongoose-timestamp');
 
 
 /**
@@ -20,7 +23,10 @@ var userGroupSchema = new Schema({
 	entity : String,
 	_createdAt: {type: Date},
 	updatedAt : Date,
-        notes: String
+        notes: String,
+        rights:{
+            type: Schema.Types.Mixed
+        }
 });
 
 userGroupSchema.plugin(timestamps);

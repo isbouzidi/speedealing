@@ -16,7 +16,8 @@
                     </a>
                 </div>
             </div>
-            <div class="boxed relative" style="margin:20px 0">
+            
+            <div class="boxed relative large-box-shadow">
                 <div class="columns">
                     <div class="twelve-columns">
                         <table class="simple-table">
@@ -68,7 +69,7 @@
                                             </select>
                                         </div>
                                         <div style="float: left">
-                                            <a ng-href="#" class="button" ng-click="addNewUser()" title="Retour à la liste">
+                                            <a ng-href="#" class="button" ng-click="addNewUser()" title="">
                                                 Ajouter
                                                 <span class="button-icon right-side"><span class="icon-download"></span></span>
                                             </a>
@@ -81,7 +82,8 @@
                     </div>
                 </div>
             </div>
-                                    
+            
+            <div class="margin-top margin-bottom">
             <div class="table-header silver-gradient glossy button-height">
                     <div class="row">
                         <div class="col-sm-6">
@@ -94,9 +96,36 @@
                             </div>
                         </div>
                     </div>
+               
             </div>
-            <div class="gridStyle"  data-ng-grid="gridListUserOptions" ng-style="style(170)"></div>
             
+            <div class="gridStyle"  data-ng-grid="gridListUserOptions" ng-style="style(170)"></div>
+            </div>
+                    
+            <table ng-repeat-start="module in modules" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="2">
+                            \{{module.desc}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="(k, right) in module.rights">
+                <tr class="success">
+                    <td colspan="2">
+                        <strong>\{{k}}</strong>
+                    </td>
+                </tr>
+                <tr ng-repeat="r in right">
+                    <td width="80%">\{{r.desc}}</td>
+                    <td ng-repeat="(key, value) in r.perm">
+                        <input type="checkbox" ng-model="userGroup.rights[k][key]" ng-change="update()" />
+                    </td>
+                </tr>
+                </tbody>
+            <table ng-repeat-end>
+        
+        
         </div>
     </div>
 </section>
