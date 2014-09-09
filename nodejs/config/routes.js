@@ -158,9 +158,16 @@ module.exports = function(app, passport, auth) {
 	//Setting the google oauth routes
 	app.get('/auth/google', passport.authenticate('google', {
 		failureRedirect: '/signin',
+		accessType: 'offline', // will return a refresh token
+		approvalPrompt: 'force',
 		scope: [
 			'https://www.googleapis.com/auth/userinfo.profile',
-			'https://www.googleapis.com/auth/userinfo.email'
+			'https://www.googleapis.com/auth/userinfo.email',
+			'https://www.googleapis.com/auth/contacts',
+			'https://www.googleapis.com/auth/tasks',
+			'https://www.googleapis.com/auth/tasks.readonly',
+			'https://www.googleapis.com/auth/calendar',
+			'https://www.googleapis.com/auth/calendar.readonly'
 		]
 	}), users.signin);
 

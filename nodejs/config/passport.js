@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'),
+		_ = require('underscore'),
 		LocalStrategy = require('passport-local').Strategy,
 		TwitterStrategy = require('passport-twitter').Strategy,
 		FacebookStrategy = require('passport-facebook').Strategy,
@@ -153,12 +154,13 @@ module.exports = function(passport) {
 		callbackURL: config.google.callbackURL
 	},
 	function(accessToken, refreshToken, profile, done) {
+		//console.log(refreshToken);
 		console.log(profile);
 		User.findOne({
 			//'google.id': profile.id
-			email:profile._json.email
+			email: profile._json.email
 		}, function(err, user) {
-			
+
 			if (!user) {
 				user = new User({
 					name: profile.displayName,
@@ -175,11 +177,23 @@ module.exports = function(passport) {
 			} else {
 				user.LastConnection = user.NewConnection;
 				user.NewConnection = new Date();
-				
-				user.save(function(err){
-					if(err)
+
+				if (accessToken && refreshToken)
+					user.google = _.extend(user.google,
+							{
+								"user_id": profile.id,
+								"tokens": {
+									access_token: accessToken,
+									refresh_token: refreshToken
+								}
+							});
+
+				//console.log(user);
+
+				user.save(function(err) {
+					if (err)
 						console.log(err);
-					
+
 					return done(err, user);
 				});
 			}

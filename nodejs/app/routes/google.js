@@ -41,7 +41,7 @@
 
 		// Launch the process of importation : get all google contacts of
 		// all users.
-		app.post('/api/google/import', auth.requiresLogin, googleRoutes.import);
+		app.get('/api/google/import', auth.requiresLogin, googleRoutes.import);
 
 		// Launch the process to grant access to the application : generate
 		// a link to make the current connected user accept our application
@@ -50,7 +50,7 @@
 
 		// Used in the importation process : get back the google access code
 		// associeted to the current connected user.
-		app.get( '/api/google/oauth2callback', auth.requiresLogin, googleRoutes.oauth2callback)
+		app.get( '/api/google/callback', auth.requiresLogin, googleRoutes.oauth2callback)
 
 		// Launch the process of exportation : update address book of all users.
 		// Delete and insert contacts.
