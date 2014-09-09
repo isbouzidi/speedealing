@@ -3,26 +3,26 @@
 	"enabled": true,
 	"boxes": [
 		{
-			"1": "box_commandes.php"
+			"1": "box_bonLivraisons.php"
 		}
 	],
 	"const": [
 		[
-			"COMMANDE_ADDON_PDF",
+			"BONLIVRAISON_ADDON_PDF",
 			"chaine",
 			"einstein",
-			"Nom du gestionnaire de generation des commandes en PDF",
+			"Nom du gestionnaire de generation des bons de livraisons en PDF",
 			0
 		],
 		[
-			"COMMANDE_ADDON",
+			"BONLIVRAISON_ADDON",
 			"chaine",
-			"mod_commande_marbre",
-			"Nom du gestionnaire de numerotation des commandes",
+			"mod_bonlivraison_marbre",
+			"Nom du gestionnaire de numerotation des bons de livraisons",
 			0
 		],
 		[
-			"COMMANDE_ADDON_PDF_ODT_PATH",
+			"BONLIVRAISON_ADDON_PDF_ODT_PATH",
 			"chaine",
 			"DOL_DATA_ROOT/doctemplates/orders",
 			"",
@@ -85,12 +85,12 @@
 	"numero": 25,
 	"family": "crm",
 	"name": "Bon Livraison",
-	"description": "Gestion des commandes clients",
+	"description": "Gestion des bons de livraisons",
 	"version": "speedealing",
 	"const_name": "MAIN_MODULE_BonLivraison",
 	"picto": "order",
 	"config_page_url": [
-		"commande.php@commande"
+		"delivery.php@delivery"
 	],
 	"depends": [
 		"modSociete"
@@ -109,7 +109,7 @@
 	"menus": {
 		"menu:bonLivraison": {
 			"position": 41,
-			"perms": "$user->rights->commande->lire || $user->rights->intervention->lire",
+			"perms": "$user->rights->bonLivraison->lire || $user->rights->intervention->lire",
 			"enabled": "$conf->bonLivraison->enabled",
 			"usertype": 2,
 			"title": "deliveries:DeliveryNote",
