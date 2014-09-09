@@ -77,6 +77,17 @@
 			<label for="poste"><b>{{t 'companies:PostOrFunction'}}</b></label>
 			<select class="form-control" required data-ng-model="contact.poste" id="poste" data-ng-options="c.id as c.label for c in jobs.values"></select>
 		</div>
+
+		<div class="field-block button-height">
+			<label for="tag"><b>{{t 'Keywords'}}</b></label>
+			<span class="editable-input">
+				<label ng-repeat="Tag in Tags">
+					<input type="checkbox" checklist-model="contact.Tag" id="tag" checklist-value="Tag"> \{{Tag}}
+				</label>
+			</span>
+		</div>
+
+
 		<div class="field-block button-height wizard-controls clearfix">
 			<button type="submit" ng-disabled="!(contact.phone_mobile || contact.phone || contact.email)" class="button glossy mid-margin-right float-right">
 				<span class="button-icon"><span class="icon-tick"></span></span>

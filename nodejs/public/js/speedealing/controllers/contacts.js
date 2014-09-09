@@ -5,6 +5,10 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 		$scope.active = 1;
 		$scope.jobs = [];
 
+		$scope.Tags = [
+			"Sécurité", "Sympathique", 'Nouveauté', 'Argent', 'Confort', 'Orgueil'
+		];
+
 		$scope.init = function() {
 			$scope.contact = {
 				societe: {
@@ -72,6 +76,15 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$lo
 			{id: "ST_DISABLE", name: "Inactif"},
 			{id: "ST_NO", name: "Ne pas contacter"},
 			{id: "ALL", name: "Tous"}
+		];
+
+		$scope.Tags = [
+			{value: "Sécurité", text: 'Sécurité'},
+			{value: "Sympathique", text: 'Sympathique'},
+			{value: 'Nouveauté', text: 'Nouveauté'},
+			{value: 'Argent', text: 'Argent'},
+			{value: 'Confort', text: 'Confort'},
+			{value: 'Orgueil', text: 'Orgueil'},
 		];
 
 		$scope.etat = {id: "ST_ENABLE", name: "Actif"};

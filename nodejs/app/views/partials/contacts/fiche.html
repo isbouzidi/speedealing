@@ -4,7 +4,7 @@
     <h3 class="block-title">Fiche contact : \{{contact.name}}</h3>
 
     <fieldset class="wizard-fieldset fields-list active" data-ng-init="init()">
-        
+
         <div class="field-block">
             <label><b>{{t 'companies:Lastname'}}</b></label>
 
@@ -45,7 +45,7 @@
 			   e-ng-options="s.id as s.label for s in jobs.values">
                 \{{contact.poste|| "Non défini"}}
             </a>
-			
+
             <span class="icon-pencil grey" ng-click="poste.$show()" ng-hide="poste.$visible"></span>
 
         </div>
@@ -77,18 +77,18 @@
         </div>
         <div class="field-block">
             <label><b>{{t 'companies:Tel-Mobile'}}</b></label>
-            
-                <a href="#"
-                   editable-tel="contact.phone_mobile" 
-                   e-pattern="\d{11}" 
-                   e-title="11(x)" 
-                   blur="submit" 
-                   buttons="no"
-                   e-form="telMobFrm"
-                   onaftersave="update()">
-                    \{{ contact.phone_mobile || 'Non défini' }}
-                </a>
-                <span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
+
+			<a href="#"
+			   editable-tel="contact.phone_mobile" 
+			   e-pattern="\d{11}" 
+			   e-title="11(x)" 
+			   blur="submit" 
+			   buttons="no"
+			   e-form="telMobFrm"
+			   onaftersave="update()">
+				\{{ contact.phone_mobile || 'Non défini' }}
+			</a>
+			<span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
 
         </div>
         <div class="field-block">
@@ -121,6 +121,16 @@
 
 
         </div>
+
+		<div class="field-block">
+            <label><b>{{t 'Keywords'}}</b></label>
+
+			<a href="#" editable-checklist="contact.Tag" e-class="xeditable" e-ng-options="s.value as s.text for s in Tags" onaftersave="update()">
+				\{{ contact.Tag || 'Non défini'}}
+			</a>
+
+        </div>
+
         <div class="field-block">
             <label><b>{{t 'companies:Address'}}</b></label>
 

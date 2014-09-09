@@ -296,7 +296,7 @@ var contactSchema = new Schema({
 			address: String
 		}],
 	civilite: String, // DICT
-	Tag: [String], // Used by DSF
+	Tag: [String],
 	tag: [{
 			text: String
 		}],
