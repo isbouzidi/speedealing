@@ -94,6 +94,7 @@ function generateAuthUrl(submodules) {
 
 function isGoogleUser(user) {
 	return (user.google.user_id 
+			&& user.google.sync
 			&& user.google.tokens.access_token
 			&& user.google.tokens.refresh_token);
 }

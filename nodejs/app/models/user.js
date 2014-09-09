@@ -31,6 +31,7 @@ var UserSchema = new Schema({
 	github: {},
 	google: {
 		user_id: String,
+		sync: {type: Boolean, default: true}, // authorisation to sync with google
 		tokens: {
 			access_token: String,
 			refresh_token: String
@@ -206,24 +207,24 @@ var statusAbsenceList = {
 
 UserAbsenceSchema.virtual('status')
 		.get(function() {
-	var res_status = {};
+			var res_status = {};
 
-	var status = this.Status;
+			var status = this.Status;
 
-	if (statusAbsenceList.values[status].label) {
-		//console.log(this);
-		res_status.id = status;
-		//this.status.name = i18n.t("intervention." + statusList.values[status].label);
-		res_status.name = statusAbsenceList.values[status].label;
-		res_status.css = statusAbsenceList.values[status].cssClass;
-	} else { // By default
-		res_status.id = status;
-		res_status.name = status;
-		res_status.css = "";
-	}
-	return res_status;
+			if (statusAbsenceList.values[status].label) {
+				//console.log(this);
+				res_status.id = status;
+				//this.status.name = i18n.t("intervention." + statusList.values[status].label);
+				res_status.name = statusAbsenceList.values[status].label;
+				res_status.css = statusAbsenceList.values[status].cssClass;
+			} else { // By default
+				res_status.id = status;
+				res_status.name = status;
+				res_status.css = "";
+			}
+			return res_status;
 
-});
+		});
 
 
 mongoose.model('userAbsence', UserAbsenceSchema, 'Absence');
