@@ -257,7 +257,7 @@ module.exports = function(app, passport, auth) {
 		};
 		if (req.body.filter)
 			query.$and.push({caFamily: new RegExp(req.body.filter, "i")});
-		
+
 		ProductModel.distinct(req.body.field, query, function(err, data) {
 
 			if (err) {
@@ -329,20 +329,20 @@ Object.prototype = {
 	},
 	create: function(req, res) {
 		var product = new ProductModel(req.body);
-		
+
 		product.author = {};
 		product.author.id = req.user._id;
 		product.author.name = req.user.name;
-		
+
 		var history = {};
 		history.Status = product.Status;
 		history.author = req.user.name;
 		history.tms = new Date().toISOString();
 		history.pu_ht = product.pu_ht;
 		product.history.push(history);
-		
+
 		console.log(product);
-		
+
 		product.save(function(err, doc) {
 			if (err) {
 				return console.log(err);
@@ -353,6 +353,9 @@ Object.prototype = {
 	},
 	read: function(req, res) {
 		var query = {};
+		var fields = "-history -files";
+		var sort = {};
+
 		if (req.query.query) {
 			switch (req.query.query) {
 				case "SELL" :
@@ -368,16 +371,21 @@ Object.prototype = {
 
 		if (req.query.barCode)
 			query.barCode = {$nin: [null, ""]};
-		var fields = "-history -files";
+
 		if (req.query.fields)
 			fields = req.query.fields;
+
 		if (req.query.filter)
 			query.$or = [
 				{ref: new RegExp(req.query.filter, "i")},
 				{label: new RegExp("\\b" + req.query.filter, "i")},
 				{description: new RegExp("\\b" + req.query.filter, "i")}
 			];
-		ProductModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, docs) {
+
+		if (req.query.sort)
+			sort = JSON.parse(req.query.sort);
+
+		ProductModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: sort}, function(err, docs) {
 			if (err)
 				console.log(err);
 			//console.log(docs);
