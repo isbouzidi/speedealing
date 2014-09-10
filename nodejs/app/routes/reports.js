@@ -114,9 +114,9 @@ Object.prototype = {
 			if (doc.fields[req.query.field])
 				for (var i in doc.fields[req.query.field].values) {
 					if (doc.fields[req.query.field].values[i].enable) {
-						var val = {};
+						var val = doc.fields[req.query.field].values[i];
 						val.id = i;
-						val.label = doc.fields[req.query.field].values[i].label;
+						//val.label = doc.fields[req.query.field].values[i].label;
 						result.push(val);
 					}
 				}

@@ -511,7 +511,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.chartFunnelOptions = {
 			// The "seriesDefaults" option is an options object that will
 			// be applied to all series in the chart.
-			title: 'Situation de mon porte-feuille',
+			title: 'Statistique du porte-feuille ' + $scope.global.user.firstname + " " + $scope.global.user.lastname[0] + ".",
 			seriesDefaults: {
 				renderer: jQuery.jqplot.FunnelRenderer,
 				rendererOptions: {
@@ -746,7 +746,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			enableColumnResize: true,
 			sortInfo: {fields: ['dateReport'], directions: ['desc']},
 			columnDefs: [
-				{field: 'model', displayName: 'Model', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'lead.name\')">(Affaire : {{row.getProperty(\'lead.name\')}})</small></a>'},
+				{field: 'model', displayName: 'Modèle', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(\'_model.name\')}} <small ng-show="row.getProperty(\'lead.name\')">(Affaire : {{row.getProperty(\'lead.name\')}})</small></a>'},
 				{field: 'dateReport', displayName: 'Date', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'author.name', displayName: 'Auteur'},
 				{field: 'RealisedStatus.id', displayName: 'Etat des actions', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'RealisedStatus.css\')}} glossy">{{row.getProperty(\'RealisedStatus.id\')}}</small></div>'},

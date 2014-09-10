@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 		i18n = require("i18next"),
 		timestamps = require('mongoose-timestamp');
 
+var ExtrafieldModel = mongoose.model('extrafields');
 var LeadModel = mongoose.model('lead');
 /**
  * Report Schema
@@ -69,6 +70,37 @@ ReportSchema.virtual('RealisedStatus').get(function() {
 
 	return realisedStat;
 });
+
+var extrafields = {};
+ExtrafieldModel.findById('extrafields:Report', function(err, doc) {
+	if (err) {
+		console.log(err);
+		return;
+	}
+	extrafields = doc.fields;
+});
+
+ReportSchema.virtual('_model')
+		.get(function() {
+			var res = {};
+
+			var model = this.model;
+
+			if (model && extrafields.model.values[model] && extrafields.model.values[model].label) {
+				//console.log(this);
+				res.id = model;
+				//this.status.name = i18n.t("intervention." + statusList.values[status].label);
+				res.name = extrafields.model.values[model].label;
+				res.css = extrafields.model.values[model].cssClass;
+			} else { // By default
+				res.id = model;
+				res.name = model;
+				res.css = "";
+			}
+			return res;
+
+		});
+
 
 ReportSchema.post('save', function(doc) {
 

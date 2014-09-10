@@ -241,7 +241,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 				name: $scope.global.user.firstname + ' ' + $scope.global.user.lastname
 			};
 
-			$scope.report.model = $scope.report.modelTemp.label;
+			$scope.report.model = $scope.report.modelTemp.id;
 
 			var report = new Reports(this.report);
 
@@ -314,32 +314,11 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 			});
 		};
 
-		$scope.updateReportTemplate = function() {
-
-			var model = $scope.report.modelTemp.id;
-
-			switch (model) {
-				case 'DISCOVERY' :
-					$scope.template = "/partials/reports/discovery.html";
-					break;
-				case 'PRE-SIGN':
-					$scope.template = "/partials/reports/pre-sign.html";
-					break;
-				case 'CONTRACT':
-					$scope.template = "/partials/reports/contract.html";
-					break;
-				default :
-					$scope.template = "";
-			}
-
-		};
-
 		$scope.contactAutoComplete = function(val) {
 
 			return $http.post('api/report/autocomplete', {
 				val: val
 			}).then(function(res) {
-
 				return res.data;
 			});
 

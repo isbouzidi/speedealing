@@ -9,13 +9,12 @@
             <select class="form-control" 
                     id="model" 
                     ng-model="report.modelTemp" 
-                    ng-options="m as m.label for m in model" 
-                    ng-change="updateReportTemplate()">                                    
+                    ng-options="m as m.label for m in model">
             </select>
         </div>
 
         <div class="field-block button-height">
-            <label for="dateReport"><b>{{t "reports:DateAppointment"}}</b></label>
+            <label for="dateReport"><b ng-hide="report.modelTemp.id == 'PHONING'">{{t "reports:DateAppointment"}}</b><b ng-show="report.modelTemp.id == 'PHONING'">{{t "reports:DateCall"}}</b></label>
 
             <span class="k-widget k-datepicker k-header input">
                 <span class="k-picker-wrap k-state-default">
@@ -29,8 +28,8 @@
             </span>
 
         </div>
-        
-        <div class="field-block button-height">
+
+        <div class="field-block button-height" ng-hide="report.modelTemp.id == 'PHONING'">
             <label for="reports:duration"><b>{{t "reports:DurationPrepare"}}</b></label>
             <!--<input required type="text" data-ng-model="report.duration" id="duration" class="input" autocomplete="off">-->
 
@@ -47,7 +46,7 @@
                 </span> Heure(s)
             </p>
         </div>
-        <div class="field-block button-height">
+        <div class="field-block button-height" ng-hide="report.modelTemp.id == 'PHONING'">
             <label for="reports:durationAppointment"><b>{{t "reports:Duration Appointment"}}</b></label>
 
             <p class="button-height">
@@ -65,7 +64,8 @@
         </div>
 
         <div class="field-block button-height">
-            <label for="Contact"><b>{{t "Contacts"}}</b></label>
+            <label for="Contact"><b>{{t
+				"Contacts"}}</b></label>
 
             <select class="form-control margin-right margin-bottom" style="float :left" 
                     id="contacts" 
@@ -75,7 +75,8 @@
             </select>
             <a href="" class="button" style="float: left" ng-click="addNewContact()">
                 <span class="button-icon"><span class="icon-plus"></span></span>
-                {{t "Create"}}
+                {{t
+					"Create"}}
             </a>
 
             <table class="table table-condensed">
@@ -111,7 +112,8 @@
             </select>
             <a href="" class="button" style="float: left" ng-click="addNewLead()">
                 <span class="button-icon"><span class="icon-plus"></span></span>
-                {{t "Create"}}
+                {{t
+					"Create"}}
             </a>
 
             <table class="table table-condensed" >
@@ -126,7 +128,7 @@
                     <tr class="active" ng-if="report.lead.name">
 
                         <td>\{{report.lead.name}}</td>
-                        <td>\{{report.lead.dueDate |date:'dd/MM/yyyy'}}</td>
+                        <td>\{{report.lead.dueDate|date:'dd/MM/yyyy'}}</td>
                         <td>
                             <a href="" ng-click="deleteLead()">
                                 supprimer
@@ -137,8 +139,8 @@
             </table>
 
         </div>
-        <div data-ng-include="template" class="field-block-include"></div>
-		
+        <div data-ng-include="report.modelTemp.template" class="field-block-include"></div>
+
 		<div ng-if="report.actions.length" class="field-block button-height">
             <label for="dueDate"><b>{{t "DateDue"}}</b></label>
 
