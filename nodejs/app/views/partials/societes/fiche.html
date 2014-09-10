@@ -268,7 +268,7 @@
 												<tr>
 													<th scope="row" colspan="2">{{t 'companies:CustomerSegmentation'}}<br/>
 											<tags-input data-ng-model="societe.segmentation" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-												<auto-complete source="segmentationAutoComplete($query, 10)" min-length="1" max-results-to-show="10"></auto-complete>
+												<auto-complete source="segmentationSelect($query, 10)" min-length="1" max-results-to-show="10"></auto-complete>
 											</tags-input>
 											</th>
 											</tr>
