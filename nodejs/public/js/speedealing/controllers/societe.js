@@ -9,13 +9,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.gridOptionsSociete = {};
 		$scope.gridOptionsSegementation = {};
 
-		$scope.types = [{name: "Client/Prospect", id: "CUSTOMER"},
+		$scope.types = [
+			{name: "Mes comptes", id: "MYACCOUNT"},
+			{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
 			{name: "Sous-traitants", id: "SUBCONTRACTOR"},
 			{name: "Non determine", id: "SUSPECT"},
 			{name: "Tous", id: "ALL"}];
 
-		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
+		if (Global.user.rights.societe.seeAll)
+			$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
+		else
+			$scope.type = {name: "Mes comptes", id: "MYACCOUNT"};
 
 		$scope.init = function() {
 			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement"];
@@ -279,7 +284,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				},
 				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width: '100px',
 					cellTemplate: '<div class="ngCellText align-center"><span editable-select="row.getProperty(col.field)" buttons="no" e-form="EntityBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'entity\', row, $data)" e-ng-options="e.id as e.name for e in entities" ><span class="icon-home" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>',
-					visible : $scope.global.user.multiEntities || false
+					visible: $scope.global.user.multiEntities || false
 				},
 				{field: 'datec', displayName: 'Création fiche', width: "90px", cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'attractivity', width: "50px", displayName: 'Attractivité', cellClass: "align-right"}

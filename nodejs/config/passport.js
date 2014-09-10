@@ -19,14 +19,17 @@ module.exports = function(passport) {
 	passport.deserializeUser(function(id, done) {
 		//TODO faire en automatique
 		var rights = {
-			societe:{}
+			societe:{
+				default:false // Needed
+			}
 		};
 		
 		User.findOne({
 			_id: id
 		}, "-password -google", function(err, user) {
-			user.rights = rights;
+			user.rights = _.extend(user.rights, rights);
 			
+			//console.log(user.rights);
 			if (user.groupe)
 				UserGroup.findOne({_id:user.groupe},"rights", function(err, group){		
 					user.rights = _.extend(user.rights,group.rights);

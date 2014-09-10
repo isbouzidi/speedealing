@@ -1603,9 +1603,9 @@ Object.prototype = {
 					entity: req.query.entity
 				}]
 		};
-		
-		if(!req.user.rights.societe.seeAll && !req.user.admin)
-			query["commercial_id.id"]=req.user._id;
+
+		if (!req.user.rights.societe.seeAll && !req.user.admin)
+			query["commercial_id.id"] = req.user._id;
 
 		if (req.query.query) {
 			switch (req.query.query) {
@@ -1622,6 +1622,7 @@ Object.prototype = {
 					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
 					break;
 				default :
+					query["commercial_id.id"] = req.user._id;
 					break;
 			}
 		}
@@ -1658,6 +1659,9 @@ Object.prototype = {
 				}]
 		};
 
+		if (!req.user.rights.societe.seeAll && !req.user.admin)
+			query["commercial_id.id"] = req.user._id;
+
 		if (req.query.query) {
 			switch (req.query.query) {
 				case "CUSTOMER" :
@@ -1672,7 +1676,8 @@ Object.prototype = {
 				case "SUSPECT" :
 					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
 					break;
-				default :
+				default : // MYACCOUNT
+					query["commercial_id.id"] = req.user._id;
 					break;
 			}
 		}
@@ -1902,12 +1907,12 @@ Object.prototype = {
 			},
 			commercial: function(cb) {
 				var query = {};
-				
-				if(req.user.rights.societe.seeAll || req.user.admin)
+
+				if (req.user.rights.societe.seeAll || req.user.admin)
 					query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}};
 				else
 					query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.id": req.user._id};
-				
+
 				SocieteModel.aggregate([
 					{$match: query},
 					{$project: {_id: 0, "commercial_id.name": 1}},

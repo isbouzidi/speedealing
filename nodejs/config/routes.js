@@ -103,14 +103,14 @@ module.exports = function(app, passport, auth) {
 			 LastConnection: req.user.LastConnection
 			 };*/
 
-			//console.log(req.user.photo);
+			//console.log(req.user);
 
 			if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 				req.session.nb++;
 				user.message = req.session.flash.error[nb];
 			}
 
-			return res.send(200, req.user);
+			return res.json(req.user);
 		} else if (req.session.flash && req.session.flash.error && req.session.flash.error[nb]) {
 			//console.log(req.session);
 			req.session.nb++;
