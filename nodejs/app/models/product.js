@@ -137,7 +137,7 @@ mongoose.model('storehouse', storehouseSchema, 'Storehouse');
  * Product PriceLevel Schema
  */
 var priceLevelSchema = new Schema({
-	price_level: {type: String, require: true},
+	price_level: {type: String, uppercase: true, require: true},
 	product: {
 		id: {type: Schema.Types.ObjectId, ref: 'product'},
 		name: String
