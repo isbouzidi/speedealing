@@ -48,6 +48,8 @@ var UserSchema = new Schema({
 		}
 	},
 	roles: [String],
+	groupe: String,
+	rights: Schema.Types.Mixed,
 	_createdAt: {type: Date},
 	LastConnection: Date,
 	NewConnection: Date,

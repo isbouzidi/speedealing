@@ -1,13 +1,10 @@
 angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', '$filter', '$upload', 'pageTitle', 'Global', 'UserGroup', function($scope, $routeParams, $location, $route, $modal, $timeout, $http, $filter, $upload, pageTitle, Global, UserGroup) {
-		
-        //$scope.global = Global;
-
+        $scope.global = Global;
+        
         pageTitle.setTitle('Gestion des Groupes d\'utilisateurs');
         
-       
-        
         $scope.retour = function(){
-            $location.path('/userGroup');
+           $location.path('/userGroup');
         };            
         
         $scope.find = function() {
@@ -56,26 +53,15 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
                 });
         };
                
-        $scope.update = function() {
-            
-            var userEdit = $scope.userEdit;
-
-            userEdit.$update(function() {
-                
-            }, function(errorResponse){
-                
-            });
-        };
-        
         $scope.addNewUser = function(){
             
             $http({method: 'PUT', url: '/api/userGroup/addUserToGroup', params: {
-                user: $scope.userGroup.newUser._id, groupe: $scope.userGroup._id
+                user: $scope.userGroup.newUser._id, 
+                groupe: $scope.userGroup._id
             }
             }).success(function(status) {
                 
                 $scope.findOne();
-                
             });
             
         };
@@ -105,6 +91,11 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
                             
                             $scope.listNoUsers = data;
                     });
+                    
+                    $http({method: 'GET', url: '/rights'}).success(function(data, status) {
+                        $scope.modules = data;
+                                               
+                    });
                                         
             });
                                  
@@ -126,8 +117,8 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
             $http({method: 'PUT', url: '/api/userGroup/removeUserFromGroup', params: {
                 user: user, group: $scope.userGroup._id
             }
-            }).success(function(status) {
-                $scope.listUsers = {};
+            }).success(function(data, status) {
+                $scope.listUsers;
                 $scope.findOne();
                 
             });
@@ -162,16 +153,14 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
         };
         
         $scope.update = function(){
-          
+            
             var userGroup = $scope.userGroup;
-
+                        
             userGroup.$update(function() {
-                
-            }, function(errorResponse){
                 
             });
         };
-        
+             
 }]);
 
 angular.module('mean.userGroup').controller('UserGroupCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'UserGroup', function($scope, $http, $modalInstance, $upload, $route, Global, UserGroup) {

@@ -1603,6 +1603,9 @@ Object.prototype = {
 					entity: req.query.entity
 				}]
 		};
+		
+		if(!req.user.rights.societe.seeAll && !req.user.admin)
+			query["commercial_id.id"]=req.user._id;
 
 		if (req.query.query) {
 			switch (req.query.query) {
@@ -1898,8 +1901,15 @@ Object.prototype = {
 				});
 			},
 			commercial: function(cb) {
+				var query = {};
+				
+				if(req.user.rights.societe.seeAll || req.user.admin)
+					query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}};
+				else
+					query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.id": req.user._id};
+				
 				SocieteModel.aggregate([
-					{$match: {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}}},
+					{$match: query},
 					{$project: {_id: 0, "commercial_id.name": 1}},
 					{$group: {_id: "$commercial_id.name", count: {$sum: 1}}},
 					{$sort: {"_id.commercial": 1}}

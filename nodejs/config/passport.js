@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 		GitHubStrategy = require('passport-github').Strategy,
 		GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
 		User = mongoose.model('user'),
+		UserGroup = mongoose.model('userGroup'),
 		config = require('./config');
 
 
@@ -16,10 +17,24 @@ module.exports = function(passport) {
 	});
 
 	passport.deserializeUser(function(id, done) {
+		//TODO faire en automatique
+		var rights = {
+			societe:{}
+		};
+		
 		User.findOne({
 			_id: id
-		}, "-password", function(err, user) {
-			done(err, user);
+		}, "-password -google", function(err, user) {
+			user.rights = rights;
+			
+			if (user.groupe)
+				UserGroup.findOne({_id:user.groupe},"rights", function(err, group){		
+					user.rights = _.extend(user.rights,group.rights);
+					console.log(user.rights);
+					done(err, user);
+				});
+			else
+				done(err, user);
 		});
 	});
 
@@ -155,7 +170,7 @@ module.exports = function(passport) {
 	},
 	function(accessToken, refreshToken, profile, done) {
 		//console.log(refreshToken);
-		console.log(profile);
+		//console.log(profile);
 		User.findOne({
 			//'google.id': profile.id
 			email: profile._json.email

@@ -1,0 +1,33 @@
+<script type="text/ng-template" id="customTemplate.html">
+    <a>
+    <span bind-html-unsafe="match.model.code | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.city"></span>
+    </a>
+</script>
+
+<div ng-show="updateAddressDir" >
+    <span><pre class="no-padding">\{{addressModel.address}}</pre></span>
+    <span>\{{addressModel.zip}}</span>
+    <span>\{{addressModel.town}}</span>
+    <span type="button" class="icon-pencil grey" ng-click="enableUpdateAddress()"></span>
+</div>
+
+<div ng-show="!updateAddressDir">
+    <textarea class="input" rows="3" cols="18" ng-model = "addressModel.address" placeholder="Adresse"></textarea><br/>
+    <input type="text" ng-model="addressModel.zip" typeahead="address.code for address in getLocation($viewValue)" typeahead-template-url="customTemplate.html" class="input margin-right"  typeahead-on-select ="generateZip($item)" placeholder="Code Postal"><br>
+    <input type="text" ng-model="addressModel.town" typeahead="address.city for address in getLocation($viewValue)" typeahead-template-url="customTemplate.html" class="input"  typeahead-on-select ="generateZip($item)" placeholder="Ville">
+    <div class="margin-top">
+    <button 
+        type="submit" 
+        class="button icon-tick blue-gradient" 
+        title="{{t 'Save'}}"
+        ng-click="updateAddressDir = !updateAddressDir">
+    </button>
+
+    <button 
+        type="button" 
+        class="button icon-cross-round white-gradient"
+        title="{{t 'Cancel'}}"
+        ng-click="cancelUpdateAddress()">
+    </button>
+    </div>
+</div>

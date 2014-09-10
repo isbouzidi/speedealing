@@ -76,6 +76,12 @@
 				}
 			},
 			{
+				"desc": "Affecter des commerciaux",
+				"perm": {
+					"commercial": false
+				}
+			},
+			{
 				"desc": "Consulter tous les tiers par utilisateurs internes (sinon uniquement si contact commercial). Non effectif pour utilisateurs externes (tjs limités à eux-meme).",
 				"perm": {
 					"seeAll": false

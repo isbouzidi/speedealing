@@ -4,24 +4,25 @@
  * Module leads.
  */
 var mongoose = require('mongoose'),
-		Schema = mongoose.Schema,
+    Schema = mongoose.Schema,
 		i18n = require("i18next"),
-		timestamps = require('mongoose-timestamp');
+    timestamps = require('mongoose-timestamp');
 
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
+
 
 /**
  * Lead Schema
  */
 var leadSchema = new Schema({
-	name: String,
-	potential: String,
-	dueDate: Date,
-	societe: {
-		id: {type: Schema.Types.ObjectId, ref: 'societe'},
-		name: String
-	},
+    name: String,
+    potential: String,
+    dueDate: Date,
+    societe :{
+        id: {type: Schema.Types.ObjectId, ref: 'societe'}, 
+        name: String
+    },
 	status: {type: String, default: 'NEW'},
 	entity: String,
 	type: {type: String, default: 'SINGLE'}
@@ -45,23 +46,23 @@ ExtrafieldModel.findById('extrafields:Lead', function(err, doc) {
 });
 
 leadSchema.virtual('Status')
-		.get(function() {
-			var res_status = {};
+        .get(function() {
+            var res_status = {};
 
-			var status = this.status;
+            var status = this.status;
 
-			if (status && leadStatusList.values[status] && leadStatusList.values[status].label) {
-				res_status.id = status;
-				res_status.name = leadStatusList.values[status].label;
-				res_status.css = leadStatusList.values[status].cssClass;
-			} else { // By default
-				res_status.id = status;
-				res_status.name = status;
-				res_status.css = "";
-			}
-			return res_status;
+            if (status && leadStatusList.values[status] && leadStatusList.values[status].label) {
+                res_status.id = status;
+                res_status.name = leadStatusList.values[status].label;
+                res_status.css = leadStatusList.values[status].cssClass;
+            } else { // By default
+                res_status.id = status;
+                res_status.name = status;
+                res_status.css = "";
+            }
+            return res_status;
 
-		});
+        });
 
 var prospectLevelList = {};
 DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
@@ -88,7 +89,7 @@ leadSchema.virtual('potentialLevel')
 
 			return prospectLevel;
 		});
-		
+
 leadSchema.virtual('Type')
 		.get(function() {
 			var res = {};
@@ -105,6 +106,5 @@ leadSchema.virtual('Type')
 			return res;
 
 		});
-
 mongoose.model('lead', leadSchema, 'Lead');
 

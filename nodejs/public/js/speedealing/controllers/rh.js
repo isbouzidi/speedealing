@@ -129,7 +129,7 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
             columnDefs: [
                     {field: 'fullname', displayName: 'Employé', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/rh/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div>'},
                     {field: 'poste', displayName: 'Poste'},
-                    {field: 'userGroup', displayName: 'Groupe', cellFilter: 'userGroupArrayFilter'},
+                    {field: 'userGroup', displayName: 'Groupe'},
                     {field: 'entity', displayName: 'Site'},
                     {field: 'contrat', displayName: 'Contrat'},
                     {field: 'status.name', displayName: 'Statut', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'}

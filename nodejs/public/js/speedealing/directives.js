@@ -107,41 +107,74 @@ angular.module('mean.system').directive('ngConfirmClick', ['dialogs', function(d
 		};
 	}]);
 
-angular.module('mean.system').directive('myFocus', function() {
-	return {
-		restrict: 'A',
-		link: function(scope, element, attr) {
-			scope.$watch(attr.myFocus, function(n, o) {
-				if (n != 0 && n) {
-					element[0].focus();
-				}
-			});
-		}
-	};
+angular.module('mean.system').directive('myFocus', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            scope.$watch(attr.myFocus, function (n, o) {
+                if (n != 0 && n) {
+                    element[0].focus();
+                }
+            });
+        }
+    };
 });
 angular.module('mean.system').directive('ngAddress', function($http) {
-	return {
-		restrict: 'A',
-		scope: {
-			adressModel: '=model'
-		},
-		templateUrl: '/partials/address.html',
-		link: function(scope, el, attr) {
-
-			scope.getLocation = function(val) {
-				return $http.post('api/zipcode/autocomplete', {
-					val: val
-				}).then(function(res) {
-					return res.data;
-				});
-			};
-
-			scope.generateZip = function(item) {
-				if (item) {
-					scope.adressModel.zip = item.code;
-					scope.adressModel.town = item.city;
-				}
-			};
-		}
-	};
-});
+      return {
+        restrict: 'A',
+        scope: {
+          addressModel: '=model',
+          opp: '='          
+        },
+        templateUrl: function (el, attr) {
+          if (attr.opp) {
+              if (attr.opp === 'create') {
+                  return '/partials/address.html';
+              }
+              if (attr.opp === 'update') {
+                  return '/partials/updateAddress.html';
+              }
+          }
+        },
+        link: function(scope) {
+        
+          scope.updateAddressDir = true;
+          
+          scope.deletedAddress = {
+              address: null,
+              zip: null,
+              town: null
+          };
+          
+          scope.enableUpdateAddress = function(){
+            scope.deletedAddress = {
+                address: scope.addressModel.address,
+                zip: scope.addressModel.zip,
+                town: scope.addressModel.town
+            };
+            
+            scope.updateAddressDir = !scope.updateAddressDir;
+          };
+          
+          scope.cancelUpdateAddress = function (){
+            scope.addressModel.address = scope.deletedAddress.address;
+            scope.addressModel.zip = scope.deletedAddress.zip;
+            scope.addressModel.town = scope.deletedAddress.town;
+            scope.updateAddressDir = !scope.updateAddressDir;
+          };
+          scope.getLocation = function(val) {
+            return $http.post('api/zipcode/autocomplete', {
+                        val: val
+                }).then(function(res) {
+                        
+                        return res.data;
+                });
+          };
+          
+          scope.generateZip = function(item){
+                scope.addressModel.zip = item.code;
+                scope.addressModel.town = item.city;
+          };
+        }
+      };
+    });

@@ -20,9 +20,9 @@
 
                     <li>
                         <ul class="message-menu">
-                            <li ng-repeat="result in results">
+                            <li ng-repeat="result in results" style="cursor: pointer">
 
-                                <a ng-href="#!/contacts/\{{result._id}}" title="\{{result.name}}">
+                                <a ng-href="" title="\{{result.name}}" ng-click="showContact(result._id)">
                                     <strong class="blue">\{{result.name}}</strong>
                                     <span class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</span>
                                     <address style="font-style: normal; line-height: 1.5; font-size: 14px">

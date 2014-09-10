@@ -1,15 +1,18 @@
 "use strict";
 
 var mongoose = require('mongoose'),
-		fs = require('fs'),
-		csv = require('csv'),
-		_ = require('underscore'),
-		gridfs = require('../controllers/gridfs'),
-		config = require('../../config/config');
-
-var ExtrafieldModel = mongoose.model('extrafields');
-var UserGroupModel = mongoose.model('userGroup');
+    async = require('async'),
+    fs = require('fs'),
+    csv = require('csv'),
+    _ = require('underscore'),
+    gridfs = require('../controllers/gridfs'),
+    i18n = require("i18next"),
+    config = require('../../config/config');
+                
 var UserModel = mongoose.model('rh');
+var UserGroupModel = mongoose.model('userGroup');
+var ExtrafieldModel = mongoose.model('extrafields');
+
 
 module.exports = function(app, passport, auth) {
 
@@ -47,7 +50,7 @@ module.exports = function(app, passport, auth) {
         
         //modifier un groupe de collaborateur
         app.put('/api/userGroup/:userGroupId', auth.requiresLogin, object.update);
-        
+            
         app.param('userGroupId', object.userGroupId);
 };
 
@@ -85,11 +88,9 @@ Object.prototype = {
                 for(i in group) {
                     counter = 0;
                     for(j in user) {
-                        if(user[j].groupe.indexOf(group[i]._id) > -1)
+                        if(user[j].groupe === group[i]._id)
                             counter = counter + 1;
-                        
-
-                    }
+                        }
                     
                     userGroup.push({_id: group[i]._id, name: group[i].name, count: counter});
                 }
@@ -157,7 +158,7 @@ Object.prototype = {
         var user = req.query.user;
         var groupe = req.query.groupe;
         
-        UserModel.update({_id:user}, {$addToSet: {groupe : groupe}}, function(err, doc){
+        UserModel.update({_id:user}, {$set: {groupe : groupe}}, function(err, doc){
            if(err)
                return res.send(500, err);
            
@@ -204,7 +205,7 @@ Object.prototype = {
         var user = req.query.user;
         var group = req.query.group;
         
-        UserModel.update({_id: user}, {$pull: { groupe: group }}, function(err){
+        UserModel.update({_id: user}, {groupe: null }, function(err){
            if(err)
                return res.send(500, err);
            
@@ -236,5 +237,4 @@ Object.prototype = {
             res.json(200, doc);
         });
     }
-    
 };

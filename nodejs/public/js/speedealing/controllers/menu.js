@@ -41,9 +41,10 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 		$scope.init = function() {
 			$http({method: 'GET', url: '/menus'}).success(function(data, status) {
 				$scope.menus = data;
+                                
 			});
 		};
-
+                
 		/*socket.on('news', function(data) {
 		 notify('<span class="icon-info-round"> </span><i>Philippe</i> : Appeler DHL', data.hello, {
 		 autoClose: true,
