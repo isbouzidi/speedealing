@@ -97,7 +97,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			}
 
 			var p = {
-				fields: "_id createdAt commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client",
+				fields: "_id datec commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client",
 				query: this.type.id,
 				entity: Global.user.entity,
 				filter: $scope.filterOptionsSociete.filterText,
@@ -281,7 +281,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					cellTemplate: '<div class="ngCellText align-center"><span editable-select="row.getProperty(col.field)" buttons="no" e-form="EntityBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'entity\', row, $data)" e-ng-options="e.id as e.name for e in entities" ><span class="icon-home" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>',
 					visible : $scope.global.user.multiEntities || false
 				},
-				{field: 'createdAt', displayName: 'Création fiche', width: "90px", cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'datec', displayName: 'Création fiche', width: "90px", cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'attractivity', width: "50px", displayName: 'Attractivité', cellClass: "align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
