@@ -86,6 +86,12 @@
 				"perm": {
 					"seeAll": false
 				}
+			},
+			{
+				"desc": "Modifier et gerer la segmentation",
+				"perm": {
+					"segmentation": false
+				}
 			}
 		],
 		"contact": [
@@ -155,7 +161,7 @@
 				"menu:companysegmentation": {
 					"position": 22,
 					"url": "#!/societes/segmentation.html",
-					"perms": "user.rights.societe.read",
+					"perms": "user.rights.societe.segmentation",
 					"enabled": "conf.societe.enabled",
 					"usertype": 2,
 					"title": "companies:CustomerSegmentation",

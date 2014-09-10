@@ -350,7 +350,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				{field: '_id', displayName: 'Segmentation', enableCellEdit: false},
 				{field: 'count', displayName: 'Nombre', cellClass: "align-right", enableCellEdit: false},
 				{field: 'attractivity', displayName: 'Attractivité', cellClass: "align-right", editableCellTemplate: '<input type="number" step="1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="updateSegmentation(row)"/>'},
-				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Renommer" ng-click="renameSegmentation(row)"></button></button><button class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer la segmentation ?" confirmed-click="removeSegmentation(row)"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button ng-disabled="!global.user.societe.segmentation" class="button icon-pencil" title="Renommer" ng-click="renameSegmentation(row)"></button></button><button ng-disabled="!global.user.societe.segmentation" class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer la segmentation ?" confirmed-click="removeSegmentation(row)"></button></div></div>'}
 			]
 		};
 

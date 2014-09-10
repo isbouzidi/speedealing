@@ -30,7 +30,7 @@ module.exports = function(passport) {
 			if (user.groupe)
 				UserGroup.findOne({_id:user.groupe},"rights", function(err, group){		
 					user.rights = _.extend(user.rights,group.rights);
-					console.log(user.rights);
+					//console.log(user.rights);
 					done(err, user);
 				});
 			else
