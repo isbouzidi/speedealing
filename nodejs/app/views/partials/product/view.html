@@ -18,10 +18,16 @@
         </div>
 		<div class="field-block">
             <label><b>{{t 'Description'}}</b></label>
-            <span editable-textarea="product.description" e-rows="4" e-cols="70" buttons="no" e-form="DescriptionBtnForm" onaftersave="update()" >
+            <span editable-textarea="product.description" e-rows="4" e-cols="70" e-form="DescriptionBtnForm" onaftersave="update()" >
 				\{{product.description || 'empty'}}</span> <span class="icon-pencil grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible"></span>
         </div>
+		
+		<div class="field-block">
+            <label><b>{{t 'Family'}}</b></label>
+		<span editable-text="product.caFamily" buttons="no" e-form="caFamilyBtnForm" e-typeahead="family as family for family in productFamilyAutoComplete($viewValue)" onaftersave="update()">
+			\{{product.caFamily || 'empty'}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>
 
+		</div>
         <div class="field-block">
             <label><b>{{t
 				'DateCreation'}}</b></label>

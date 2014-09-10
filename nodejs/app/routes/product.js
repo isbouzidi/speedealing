@@ -90,7 +90,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/product', auth.requiresLogin, function(req, res) {
 		object.create(req, res);
 	});
-	app.put('/api/product', auth.requiresLogin, function(req, res) {
+	app.put('/api/product/:productId', auth.requiresLogin, function(req, res) {
 		object.update(req, res);
 	});
 	app.del('/api/product', auth.requiresLogin, function(req, res) {
@@ -511,61 +511,22 @@ Object.prototype = {
 		});
 	},
 	update: function(req, res) {
-		//console.log(req.body);
-		var obj = JSON.parse(req.body.models);
-		obj = obj[0];
-		obj.pu_ht = parseFloat(obj.pu_ht);
-		obj.tva_tx = parseFloat(obj.tva_tx);
-		obj.qtyMin = parseFloat(obj.qtyMin);
-		obj.ref = obj.ref.toUpperCase();
-		if (obj._id == null) {
-			delete obj._id; // new price
 
-			ProductModel.findOne({ref: obj.ref}, function(err, doc) {
-				if (err)
-					console.log(err);
-				//console.log(doc);
+		var product = req.product;
+		product = _.extend(product, req.body);
+		//console.log(societe);
 
-				if (doc == null) {
-					doc = new ProductModel(obj);
-					doc.Status = doc.Status.id;
-					doc.type = doc.type.id;
-				}
+		product.save(function(err, doc) {
+			res.json(doc);
+		});
 
-				obj.label = doc.label;
-				obj.barCode = doc.barCode;
-				obj.billingMode = doc.billingMode;
-				obj.caFamily = doc.caFamily;
-				var price = _.extend({_id: new mongoose.Types.ObjectId()}, obj);
-				doc.price.push(price);
-				doc.history.push(price);
-				obj._id = price._id;
-				res.send(200, obj);
-				//console.log(doc);
-				doc.save(function(err, doc) {
-					if (err)
-						console.log(err);
-					//console.log(doc);
-				});
-			});
-			return;
-		}
-
-		obj.tms = new Date();
-		//console.log(obj);
-		//obj.Status.id = obj['Status.id'];
-
-		obj.Status.css = this.fk_extrafields.fields.Status.values[obj.Status.id].cssClass;
-		obj.Status.name = req.i18n.t("products:Status." + this.fk_extrafields.fields.Status.values[obj.Status.id].label);
-		res.send(200, obj);
-		//console.log(obj);
-
-		if (obj._id)
-			ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode, caFamily: obj.caFamily}, $push: {history: obj}}, function(err) {
-				if (err)
-					console.log(err);
-				//console.log(obj);
-			});
+		/*
+		 if (obj._id)
+		 ProductModel.update({"price._id": obj._id}, {$set: {"price.$": obj, ref: obj.ref, label: obj.label, Status: obj.Status.id, type: obj.type.id, compta_buy: obj.compta_buy, compta_sell: obj.compta_sell, barCode: obj.barCode, billingMode: obj.billingMode, caFamily: obj.caFamily}, $push: {history: obj}}, function(err) {
+		 if (err)
+		 console.log(err);
+		 //console.log(obj);
+		 });*/
 	},
 	updateField: function(req, res) {
 		if (req.body.value) {
