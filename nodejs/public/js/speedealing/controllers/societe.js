@@ -971,7 +971,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		};
 	}]);
 
-angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Societes', function($scope, $http, $modalInstance, $upload, $route, Global, Societes) {
+angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$route', 'Global', 'Societes', function($scope, $http, $modalInstance, $route, Global, Societes) {
 		$scope.global = Global;
 
 		$scope.active = 1;

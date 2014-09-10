@@ -202,12 +202,12 @@
 															\{{societe.commercial_id.name}}
 														</span> <span class="icon-pencil grey" ng-click="CommercialIdBtnForm.$show()" ng-hide="CommercialIdBtnForm.$visible || !(global.user.rights.societe.commercial || global.user.admin)"></span></td>
 												</tr>
-												<tr>
+												<!--<tr>
 													<th scope="row">{{t 'zonegeo'}}</th>
 													<td><a href="#" editable-text="societe.zonegeo" buttons="no" onaftersave="update()">
 															\{{societe.zonegeo|| "Non défini"}}
 														</a></td>
-												</tr>
+												</tr>-->
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyType'}}</th>
 													<td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in typent_id.values" onaftersave="update()">
