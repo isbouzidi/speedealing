@@ -139,106 +139,9 @@ function insertQuickAddEvent(user, eventString, callback) {
 	);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* *************************************************** */
-
-/* *************************************************** */
-
-/* *************************************************** */
-
-
-
 
 /* Module */
-
-
-
 
 var _ = require('underscore'),
 qs = require('querystring'),
@@ -288,8 +191,6 @@ GoogleCalendar.prototype._createHttpsReqOptions = function(path, method, headers
 		'headers': headers
 	};
 }
-
-
 
 
 GoogleCalendar.prototype._buildPath = function (params) {
