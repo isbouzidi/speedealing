@@ -139,106 +139,9 @@ function insertQuickAddEvent(user, eventString, callback) {
 	);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* *************************************************** */
-
-/* *************************************************** */
-
-/* *************************************************** */
-
-
-
 
 /* Module */
-
-
-
 
 var _ = require('underscore'),
 qs = require('querystring'),
@@ -290,8 +193,6 @@ GoogleCalendar.prototype._createHttpsReqOptions = function(path, method, headers
 }
 
 
-
-
 GoogleCalendar.prototype._buildPath = function (params) {
 	if (params.path) return params.path;
 
@@ -313,8 +214,10 @@ GoogleCalendar.prototype._buildPath = function (params) {
 		path += '/calendars/' + params.calendar_id + '/events';
 	} else if (params.type == 'quick_add_event') {
 		path += '/calendars/' + params.calendar_id + '/events/quickAdd/';
-		path += '?' + qs.stringify(params.query);
 	}
+
+	if (params.query)
+		path += '?' + qs.stringify(params.query);
 
 	return path;
 };
@@ -322,7 +225,7 @@ GoogleCalendar.prototype._buildPath = function (params) {
 
 /*
 	opts = {host, port, path, method, headers}
-	body [string] 
+	body [string]. Can be null
 	callback = function(err, data)
 */
 GoogleCalendar.prototype._sendHttpsRequest = function(opts, body, callback) {
