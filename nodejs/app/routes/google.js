@@ -56,6 +56,9 @@
 		// Delete and insert contacts.
 		app.post('/api/google/export', auth.requiresLogin, googleRoutes.export);
 
+		// List all google tasks of the speedealing tasklist of the current user.
+		app.get('/api/google/tasks/list', auth.requiresLogin, googleRoutes.listTasks);
+
 		app.get('/api/google/test', auth.requiresLogin, googleRoutes.test);
 	};
 
@@ -117,6 +120,22 @@
 			);
 		},
 
+		listTasks: function(req, res) {
+			googleTasks.listTasks(req.user,
+				function (err, tasks) {
+					if (tasks) {
+						console.log("Result:", tasks);
+						console.log("Nb:", tasks.length);
+					}
+
+			 		if (err)
+			 			res.send(500, {'error': err});
+			 		else
+			 			res.send(200, tasks);
+			 	}
+			);
+		},
+
 		test: function(req, res) {
 			// googleTasks.insertTasklist(req.user, "CRM",
 			// 	function (err) {
@@ -127,131 +146,30 @@
 			// 	}
 			// );
 
-			// googleTasks.insertTask(req.user,
-			// 	{
-			// 		  "title": "matache!!!!",
-			// 		  "notes": "- \n -",
-			// 		  "status": "needsAction",
-			// 		  "due": "2014-12-01T10:00:00Z"
-			// 	},
-			// 	function (err, task_id) {
+			// googleTasks.listTasks(req.user,
+			// 	function (err, tasks) {
+			// 		if (tasks) {
+			// 			console.log("Result:", tasks);
+			// 			console.log("Nb:", tasks.length);
+			// 		}
+
 			//  		if (err)
 			//  			res.send(500, "ERR: " + err);
 			//  		else
 			//  			res.send(200, "ok");
 			//  	}
 			// );
-		
-			googleCalendar.insertQuickAddEvent(req.user, 
-				"RDV ici le 4 juillet 2016 à 16h",
-				function (err, event_id) {
-					if (err)
-						res.send(500, "ERR: " + err);
-					else
-						res.send(200, "ok");
-				}
+
+			googleTasks.updateTask(req.user,
+				'MDI5OTY5NDIxMTk3MTA3NTcxODY6MDoxNzgwODIzOTg3',
+				{'status': 'completed'},
+				function (err) {
+			 		if (err)
+			 			res.send(500, "ERR: " + err);
+			 		else
+			 			res.send(200, "ok");
+			 	}
 			);
 		}
 	};
 
-
-
-/*
- * ****************** EXPORT *********************************************
- */
-
-	
-
-	function _getSocietyCommercialIdByContact(contact, callback) {
-		if (!_belongsToSociete(contact)) {
-			callback(null);
-		} else {
-			SocieteModel.findOne({_id: contact.societe.id},
-				function (err, doc) {
-					if (err) {
-						console.log("Google export - societe err - ", err);
-						callback(null);
-					} else if (doc) {
-						if (doc.commercial_id && doc.commercial_id.id)
-							callback(doc.commercial_id.id);
-						else
-							callback(null);
-					}
-				});
-		}
-	}
-
-
-	function _exp_insertGoogleContact(params, contact) {
-		console.log("\n\n*** INSERTING CONTACT ***\n\n");
-
-		var c = new GoogleContacts({
-			consumerKey: GOOGLE_CLIENT_ID,
-			consumerSecret: GOOGLE_CLIENT_SECRET,
-			token: params.user.google.tokens.access_token,
-			refreshToken: params.user.google.tokens.refresh_token,
-		});
-
-		c.insertContact(contact,
-			{ email: params.user.email }, 
-
-			function (err) {
-				if (err) {
-					console.log("Google - insert contact " + 
-						contact.name + "(" + contact.id + ") - ", err);
-				} else {
-					console.log("Google - insert contact " + 
-						contact.name + "(" + contact.id + ") - OK");
-				}
-			});
-	}
-
-	function _exp_listContactsBySociete(params, societe) {
-		var stream = ContactModel.find({ "societe.id": societe.id }).stream();
-		stream.on('data', function (contact) {
-			console.log(">> contact : " + contact.name);
-			
-			_exp_insertGoogleContact(params, contact);
-
-			console.log("");
-		}).on('error', function (err) {
-		  console.log("Stream Contact - err", err);
-		}).on('close', function () {
-		});
-	}
-
-	function _exp_listSocieteObjs(params) {
-		var stream = SocieteModel.find({ "commercial_id.id": params.user.id }).stream();
-		stream.on('data', function (societe) {
-			console.log(">> Scan societe : " + societe._id);
-			console.log("        name : " + societe.name);
-			console.log("        commercial id: " + societe.commercial_id.id);
-
-			_exp_listContactsBySociete(params, societe);
-
-			console.log("");
-		}).on('error', function (err) {
-		  console.log("Stream Societe - err", err);
-		}).on('close', function () {
-		});
-	}
-
-	/* Main function to treat a google user in order to export contacts
-	*/
-	function _exp_treatGoogleUser(params) {
-		_refreshGoogleTokens(params.user, 
-			function (err) {
-				if (err)
-					console.log("Google export error - ", err);
-				else {
-					_exp_getGoogleContacts(
-						params, 
-						_exp_checkGoogleContacts,
-						_exp_listSocieteObjs
-					);	
-					
-					
-				}
-			}
-		);
-	}
