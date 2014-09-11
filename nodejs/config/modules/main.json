@@ -89,6 +89,26 @@
 					"delete": false
 				}
 			}
+		],
+		"box": [
+			{
+				"desc": "Connexion des utilisateurs",
+				"perm": {
+					"infologin": false
+				}
+			},
+			{
+				"desc": "Liste de absences",
+				"perm": {
+					"absence": false
+				}
+			},
+			{
+				"desc": "indicateur du mois",
+				"perm": {
+					"indicateur": false
+				}
+			}
 		]
 	},
 	"module_parts": [],

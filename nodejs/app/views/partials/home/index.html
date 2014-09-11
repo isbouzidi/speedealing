@@ -1,11 +1,10 @@
 <section data-ng-controller="IndexHomeController">
 	<hgroup class="thin" id="main-title">
 		<h1>{{t 'Dashboard'}}</h1>
-		<h2>\{{dateNow | date:'MMM'}} <strong>\{{dateNow | date:'dd'}}</strong></h2>
+		<h2>\{{dateNow| date:'MMM'}} <strong>\{{dateNow| date:'dd'}}</strong></h2>
 	</hgroup>
 
-	{{#if stats}}
-	<div class="dashboard">
+	<div ng-if="global.user.rights.box.dashboardGraph" class="dashboard">
 		<div class="columns">
 			<div class="nine-columns twelve-columns-mobile chart" data-ng-init="initCharts()">
 				<highchart id="caChart" config="caChartConfig" style="min-width: 100px; height: 270px; margin: 0 auto;"></highchart>
@@ -23,9 +22,10 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<div class="with-padding">
 		<div class='columns'>
+			
 			{{> 'box/absence'}}
 			{{> 'box/result'}}
 			{{> 'box/cost'}}
@@ -33,8 +33,7 @@
 			{{> 'box/ca'}}
 			{{> 'box/infologin'}}
 			{{> 'box/report'}}
-                        {{> 'box/tasks'}}
+			{{> 'box/tasks'}}
 		</div>
 	</div>
-	{{/if}}
 </section>

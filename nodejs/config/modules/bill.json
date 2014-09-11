@@ -78,6 +78,26 @@
 					"export": false
 				}
 			}
+		],
+		"box": [
+			{
+				"desc": "Affichage du chiffre d'affaire",
+				"perm": {
+					"ca": false
+				}
+			},
+			{
+				"desc": "Graphe du chiffre d'affaire",
+				"perm": {
+					"dashboardGraph": false
+				}
+			},
+			{
+				"desc": "Resultat de la societe",
+				"perm": {
+					"result": false
+				}
+			}
 		]
 	},
 	"module_parts": [],

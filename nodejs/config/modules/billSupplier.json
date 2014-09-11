@@ -69,6 +69,14 @@
 					"deleteBill": false
 				}
 			}
+		],
+		"box": [
+			{
+				"desc": "Affichage des statistiques des principales charges",
+				"perm": {
+					"cost": false
+				}
+			}
 		]
 	},
 	"module_parts": [],

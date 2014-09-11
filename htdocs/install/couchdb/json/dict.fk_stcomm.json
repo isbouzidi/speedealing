@@ -1,97 +1,104 @@
 {
-	"_id": "dict:fk_stcomm",
-	"class": "Dict",
-	"values": {
-		"ST_NO": {
-			"enable": true,
-			"label": "Ne pas contacter",
-			"type": "closed",
-			"cssClass": "red-gradient",
-			"order": 0
-		},
-		"ST_NEVER": {
-			"enable": true,
-			"label": "Non déterminé",
-			"type": "suspect",
-			"cssClass": "grey-gradient",
-			"order": 1
-		},
-		"ST_TODO": {
-			"enable": false,
-			"label": "A contacter",
-			"type": "suspect",
-			"cssClass": "blue-gradient",
-			"order": 2
-		},
-		"ST_PEND": {
-			"enable": false,
-			"label": "Contact en cours",
-			"type": "suspect",
-			"cssClass": "grey-gradient",
-			"order": 3
-		},
-		"ST_DONE": {
-			"enable": false,
-			"label": "Contactée",
-			"type": "suspect",
-			"cssClass": "green-gradient",
-			"order": 4
-		},
-		"ST_PFROI": {
-			"enable": true,
-			"label": "Prospect froid",
-			"type": "prospect",
-			"cssClass": "blue-gradient",
-			"order": 5
-		},
-		"ST_PTIED": {
-			"enable": true,
-			"label": "Prospect tiède",
-			"type": "prospect",
-			"cssClass": "orange-gradient",
-			"order": 6
-		},
-		"ST_PCHAU": {
-			"enable": true,
-			"label": "Prospect chaud",
-			"type": "prospect",
-			"cssClass": "red-gradient",
-			"order": 7
-		},
-		"ST_CINF3": {
-			"enable": true,
-			"label": "Client -3 mois",
-			"type": "customer",
-			"cssClass": "orange-gradient",
-			"order": 8
-		},
-		"ST_CREC": {
-			"enable": true,
-			"label": "Client -6 mois",
-			"type": "customer",
-			"cssClass": "green-gradient",
-			"order": 9
-		},
-		"ST_CPAR": {
-			"enable": true,
-			"label": "Client -18 mois",
-			"type": "customer",
-			"cssClass": "green-gradient",
-			"order": 10
-		},
-		"ST_CFID": {
-			"enable": true,
-			"label": "Client fidèle",
-			"type": "customer",
-			"cssClass": "green-gradient",
-			"order": 11
-		},
-		"ST_CVIP": {
-			"enable": true,
-			"label": "Client VIP",
-			"type": "customer",
-			"cssClass": "orange-gradient",
-			"order": 12
-		}
-	}
+    "_id" : "dict:fk_stcomm",
+    "values" : {
+        "ST_NO" : {
+            "enable" : true,
+            "label" : "Ne pas contacter",
+            "type" : "closed",
+            "cssClass" : "red-gradient"
+        },
+        "ST_NEVER" : {
+            "enable" : true,
+            "label" : "Non déterminé",
+            "type" : "suspect",
+            "cssClass" : "grey-gradient",
+            "order" : 1
+        },
+        "ST_TODO" : {
+            "label" : "A contacter",
+            "type" : "suspect",
+            "cssClass" : "blue-gradient",
+            "order" : 2
+        },
+        "ST_PEND" : {
+            "label" : "Contact en cours",
+            "type" : "suspect",
+            "cssClass" : "grey-gradient",
+            "order" : 3
+        },
+        "ST_DONE" : {
+            "label" : "Contactée",
+            "type" : "suspect",
+            "cssClass" : "green-gradient",
+            "order" : 4
+        },
+        "ST_PFROI" : {
+            "enable" : true,
+            "label" : "Prospect froid",
+            "type" : "prospect",
+            "cssClass" : "blue-gradient",
+            "order" : 5
+        },
+        "ST_PTIED" : {
+            "label" : "Prospect tiède",
+            "type" : "prospect",
+            "cssClass" : "orange-gradient",
+            "order" : 6
+        },
+        "ST_PCHAU" : {
+            "enable" : true,
+            "label" : "Prospect chaud",
+            "type" : "prospect",
+            "cssClass" : "red-gradient",
+            "order" : 7
+        },
+        "ST_CINF3" : {
+            "enable" : true,
+            "label" : "Client -3 mois",
+            "type" : "customer",
+            "cssClass" : "orange-gradient",
+            "order" : 8
+        },
+        "ST_CREC" : {
+            "enable" : true,
+            "label" : "Client -6 mois",
+            "type" : "customer",
+            "cssClass" : "green-gradient",
+            "order" : 9
+        },
+        "ST_CFID" : {
+            "enable" : true,
+            "label" : "Client fidèle",
+            "type" : "customer",
+            "cssClass" : "green-gradient",
+            "order" : 11
+        },
+        "ST_CPAR" : {
+            "label" : "Client -18 mois",
+            "type" : "customer",
+            "cssClass" : "green-gradient",
+            "order" : 10
+        },
+        "ST_NEW" : {
+            "label" : "Nouveau client",
+            "type" : "customer",
+            "cssClass" : "orange-gradient"
+        },
+        "ST_CVIP" : {
+            "enable" : true,
+            "label" : "Client VIP",
+            "type" : "customer",
+            "cssClass" : "orange-gradient",
+            "order" : 12
+        },
+        "ST_LOOSE" : {
+            "enable" : true,
+            "label" : "Client Perdu",
+            "type" : "customer",
+            "cssClass" : "red-gradient",
+            "order" : 14
+        }
+    },
+    "updatedAt" : "2014-08-21T09:59:49.000Z",
+    "createdAt" : "2014-08-21T09:59:49.000Z"
 }
