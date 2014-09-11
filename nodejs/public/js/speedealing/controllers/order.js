@@ -75,7 +75,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref', width: "140px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', displayName: 'Ref', width: "140px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a></div>'},
 				{field: 'client.name', displayName: 'Société'},
 				{field: 'ref_client', displayName: 'Ref. client'},
 				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
