@@ -72,18 +72,21 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			//showFilter:true,
 			enableCellSelection: false,
 			enableRowSelection: false,
-			enableCellEditOnFocus: true,
+			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'ref', enableCellEdit: false, displayName: 'Ref', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'client.name', enableCellEdit: false, displayName: 'Société'},
-				{field: 'ref_client', enableCellEdit: false, displayName: 'Ref. client'},
-				{field: 'contact.name', enableCellEdit: false, displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
-				{field: 'date_livraison', enableCellEdit: false, displayName: 'Date livraison', width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
-				{field: 'total_ht', enableCellEdit: false, displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
-				{field: 'status.name', enableCellEdit: true, displayName: 'Etat', headerClass: "blue", cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.label for c in status.values"></select>'},
-				{field: 'entity', enableCellEdit: false, displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
-				{displayName: "Actions", enableCellEdit: false, width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a ng-href="/api/commande/pdf/{{row.getProperty(\'_id\')}}" class="button icon-download" title="Bon de commande PDF"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
+				{field: 'ref', displayName: 'Ref', width: "140px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'client.name', displayName: 'Société'},
+				{field: 'ref_client', displayName: 'Ref. client'},
+				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
+				{field: 'date_livraison', displayName: 'Date livraison', width: "100px", cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'total_ht', displayName: 'Montant HT', cellFilter: "currency", cellClass: "align-right"},
+				{field: 'status.name', displayName: 'Etat', headerClass: "blue", width: "180px",
+					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')" editable-select="row.getProperty(\'Status\')" buttons="no" e-form="StatusBtnForm" onbeforesave="updateInPlace(\'/api/commande\',\'Status\', row, $data)" e-ng-options="c.id as c.label for c in status.values">{{row.getProperty(\'status.name\')}}</small> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span></div>'
+				},
+				//cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.label for c in status.values"></select>'},
+				{field: 'entity', displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
+				{displayName: "Actions", width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a ng-href="/api/commande/pdf/{{row.getProperty(\'_id\')}}" class="button icon-download" title="Bon de commande PDF"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
 		};
 
@@ -103,7 +106,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			});
 		};
 
-		$scope.updateInPlace = function(column, row) {
+		$scope.updateInPlace = function(api, field, row, newdata) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -112,10 +115,25 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
 				$scope.save.promise = $timeout(function() {
-					row.entity.$update();
+					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
+						data: {
+							oldvalue: row.entity[field],
+							value: newdata
+						}
+					}).
+							success(function(data, status) {
+								if (status == 200) {
+									if (data) {
+										row.entity = data;
+									}
+								}
+							});
+
 					$scope.save.pending = false;
-				}, 500);
+				}, 200);
 			}
+
+			return false;
 		};
 
 	}]);
@@ -208,8 +226,8 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-                            
-                            return res.data;
+
+				return res.data;
 			});
 		};
 

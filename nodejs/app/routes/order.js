@@ -35,11 +35,12 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/commande/:orderId', auth.requiresLogin, object.show);
 	app.put('/api/commande/:orderId', auth.requiresLogin, object.update);
 	app.del('/api/commande/:orderId', auth.requiresLogin, object.destroy);
+	app.put('/api/commande/:orderId/:field', auth.requiresLogin, object.updateField);
 	app.post('/api/commande/file/:Id', auth.requiresLogin, object.createFile);
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
-	
+
 	app.get('/api/order/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	//Finish with setting up the orderId param
@@ -130,7 +131,7 @@ Object.prototype = {
 				});
 			});
 		}
-		
+
 		console.log(order);
 
 		order.save(function(err, doc) {
@@ -181,6 +182,18 @@ Object.prototype = {
 		order.save(function(err, doc) {
 			res.json(doc);
 		});
+	},
+	updateField: function(req, res) {
+		if (req.body.value) {
+			var order = req.order;
+
+			order[req.params.field] = req.body.value;
+
+			order.save(function(err, doc) {
+				res.json(doc);
+			});
+		} else
+			res.send(500);
 	},
 	/**
 	 * Delete an order
@@ -337,7 +350,7 @@ Object.prototype = {
 
 				for (var i = 0; i < products.length; i++) {
 					//tab_latex += products[i].title.replace(/_/g, "\\_") + "&" + products[i].note.replace(/<br\/>/g,"\\\\") + "& & \\tabularnewline\n";
-					tab_latex += products[i].title.replace(/_/g, "\\_") + "&\\specialcell[t]{" + products[i].note.replace(/<br\/>/g, "\\\\").replace(/<br \/>/g, "\\\\").replace(/<p>/g, "").replace(/<\/p>/g, "\\\\").replace(/<a.*>/g, "\\\\").replace(/&/g,"\\&") + "}& & \\tabularnewline\n";
+					tab_latex += products[i].title.replace(/_/g, "\\_") + "&\\specialcell[t]{" + products[i].note.replace(/<br\/>/g, "\\\\").replace(/<br \/>/g, "\\\\").replace(/<p>/g, "").replace(/<\/p>/g, "\\\\").replace(/<a.*>/g, "\\\\").replace(/&/g, "\\&") + "}& & \\tabularnewline\n";
 				}
 
 				//tab_latex += "&\\specialcell[t]{" + doc.desc.replace(/\n/g, "\\\\") + "}& & \\tabularnewline\n";
@@ -395,10 +408,10 @@ Object.prototype = {
 									val.label = req.i18n.t("orders:" + docs.values[i].label);
 								else
 									val.label = req.i18n.t("orders:" + i);
-								
+
 								if (docs.values[i].cssClass)
 									val.css = docs.values[i].cssClass;
-								
+
 								result.push(val);
 							}
 						}
