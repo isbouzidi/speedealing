@@ -4,11 +4,49 @@
 var mongoose = require('mongoose'),
 		User = mongoose.model('user');
 
+var googleCommon = require('./google.common');
+
 /**
  * Auth callback
  */
-exports.authCallback = function(req, res, next) {
-	res.redirect('/');
+exports.authCallback = authCallback;
+
+function authCallback(req, res, next) {
+	if (req.user.google && req.user.google.user_id) {
+		User.findOne({_id: req.user._id}, function(err, user) {
+			if (user.google.tokens.refresh_token)
+				return res.redirect('/');
+
+			var url = googleCommon.generateAuthUrl(['contacts', 'tasks', 'calendar']);
+
+			res.redirect(url);
+		});
+	} else
+		res.redirect('/');
+};
+
+/**
+ * Set tokens google in user database for offline tokens
+ */
+
+exports.setAccessCodeGoogle = function(req, res, next) {
+	if (req.user) {
+		//console.log(req.query);
+		var code = req.query.code;
+		var user = req.user;
+
+		//console.log("oauth2callback: user = " + user.id + " ; code = " + code);
+
+		googleCommon.setAccessCode(code, user,
+				function(err) {
+					if (err)
+						res.send(500, "ERR: " + err);
+					else
+						res.redirect('/');
+				}
+		);
+	} else
+		next();
 };
 
 /**

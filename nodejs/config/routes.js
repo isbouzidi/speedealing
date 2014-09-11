@@ -159,20 +159,20 @@ module.exports = function(app, passport, auth) {
 	//Setting the google oauth routes
 	app.get('/auth/google', passport.authenticate('google', {
 		failureRedirect: '/signin',
-		accessType: 'offline', // will return a refresh token
-		approvalPrompt: 'force',
+		//accessType: 'offline', // will return a refresh token
+		//approvalPrompt: 'force',
 		scope: [
 			'https://www.googleapis.com/auth/userinfo.profile',
 			'https://www.googleapis.com/auth/userinfo.email',
-			'https://www.googleapis.com/auth/contacts',
-			'https://www.googleapis.com/auth/tasks',
-			'https://www.googleapis.com/auth/tasks.readonly',
-			'https://www.googleapis.com/auth/calendar',
-			'https://www.googleapis.com/auth/calendar.readonly'
+					//	'https://www.googleapis.com/auth/contacts',
+					//	'https://www.googleapis.com/auth/tasks',
+					//	'https://www.googleapis.com/auth/tasks.readonly',
+					//	'https://www.googleapis.com/auth/calendar',
+					//	'https://www.googleapis.com/auth/calendar.readonly'
 		]
 	}), users.signin);
 
-	app.get('/auth/google/callback', passport.authenticate('google', {
+	app.get('/auth/google/callback', users.setAccessCodeGoogle, passport.authenticate('google', {
 		failureRedirect: '/signin'
 	}), users.authCallback);
 
@@ -284,33 +284,33 @@ module.exports = function(app, passport, auth) {
 		else
 			res.render('partials/' + view + "/fiche.html", {user: req.user}); // Mode fiche view 
 	});
-	
-	app.post('/api/zipcode/autocomplete', auth.requiresLogin, function(req, res){
-	    
-            
-            if (req.body.val === null)
-                return res.send(200, {});
-            
-            var val = "^" + req.body.val;
-            
-            var query = { "$or": [
-                            {code: new RegExp(val, "i")},
-                            {city: new RegExp(val, "i")}
-                        ]
-            };
-            
-            //var query = {$or: [{"code" : {$regex: /val.*/ }}, {"city" : { $regex: val, $options: 'i'}}]};
-            
-            ZipCodeModel.find(query, {}, {limit: 5}, function(err, doc){
-                if(err){
-                    console.log(err);
-                    return;
-                }
-                
-                return res.send(200, doc);
-                
-            });
-            
+
+	app.post('/api/zipcode/autocomplete', auth.requiresLogin, function(req, res) {
+
+
+		if (req.body.val === null)
+			return res.send(200, {});
+
+		var val = "^" + req.body.val;
+
+		var query = {"$or": [
+				{code: new RegExp(val, "i")},
+				{city: new RegExp(val, "i")}
+			]
+		};
+
+		//var query = {$or: [{"code" : {$regex: /val.*/ }}, {"city" : { $regex: val, $options: 'i'}}]};
+
+		ZipCodeModel.find(query, {}, {limit: 5}, function(err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			return res.send(200, doc);
+
+		});
+
 	});
 	/*app.get('/partials/module/:module/:view', auth.requiresLogin, function(req, res) {
 	 var module = req.params.module;

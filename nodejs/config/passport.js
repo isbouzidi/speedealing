@@ -19,20 +19,20 @@ module.exports = function(passport) {
 	passport.deserializeUser(function(id, done) {
 		//TODO faire en automatique
 		var rights = {
-			societe:{
-				default:false // Needed
+			societe: {
+				default: false // Needed
 			}
 		};
-		
+
 		User.findOne({
 			_id: id
-		}, "-password -google", function(err, user) {
+		}, "-password -google.tokens", function(err, user) {
 			user.rights = _.extend(user.rights, rights);
-			
+
 			//console.log(user.rights);
 			if (user.groupe)
-				UserGroup.findOne({_id:user.groupe},"rights", function(err, group){		
-					user.rights = _.extend(user.rights,group.rights);
+				UserGroup.findOne({_id: user.groupe}, "rights", function(err, group) {
+					user.rights = _.extend(user.rights, group.rights);
 					//console.log(user.rights);
 					done(err, user);
 				});
@@ -196,10 +196,15 @@ module.exports = function(passport) {
 				user.LastConnection = user.NewConnection;
 				user.NewConnection = new Date();
 
+				if (user.google && user.google.user_id)
+					user.google = _.extend(user.google,
+							{
+								"user_id": profile.id
+							});
+
 				if (accessToken && refreshToken)
 					user.google = _.extend(user.google,
 							{
-								"user_id": profile.id,
 								"tokens": {
 									access_token: accessToken,
 									refresh_token: refreshToken
