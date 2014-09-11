@@ -8,19 +8,17 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.segementations = [];
 		$scope.gridOptionsSociete = {};
 		$scope.gridOptionsSegementation = {};
+		$scope.commercialList = [];
 
 		$scope.types = [
-			{name: "Mes comptes", id: "MYACCOUNT"},
 			{name: "Client/Prospect", id: "CUSTOMER"},
 			{name: "Fournisseur", id: "SUPPLIER"},
 			{name: "Sous-traitants", id: "SUBCONTRACTOR"},
 			{name: "Non determine", id: "SUSPECT"},
 			{name: "Tous", id: "ALL"}];
 
-		if (Global.user.rights.societe.seeAll)
-			$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
-		else
-			$scope.type = {name: "Mes comptes", id: "MYACCOUNT"};
+
+		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
 
 		$scope.init = function() {
 			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement"];
@@ -105,6 +103,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				fields: "_id datec commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client",
 				query: this.type.id,
 				entity: Global.user.entity,
+				commercial_id: this.commercial_id,
 				filter: $scope.filterOptionsSociete.filterText,
 				skip: $scope.pagingOptionsSociete.currentPage - 1,
 				limit: $scope.pagingOptionsSociete.pageSize,
@@ -121,6 +120,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				$scope.totalCountSociete = data.count;
 				$scope.maxPageSociete = Math.ceil(data.count / 1000);
 			});
+
+			$scope.initCharts();
 		};
 
 		$scope.findSegmentation = function() {
@@ -421,7 +422,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.initCharts = function() {
 			$http({method: 'GET', url: '/api/societe/statistic', params: {
 					entity: Global.user.entity,
-					name: Global.user.name
+					name: Global.user.name,
+					commercial_id: $scope.commercial_id
 				}
 			}).success(function(data, status) {
 				//console.log(data);
@@ -429,8 +431,11 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 				var series = [];
 				for (var i = 0; i < data.commercial.length; i++) {
-					series.push({label: data.commercial[i]._id});
+					series.push({label: data.commercial[i]._id.name});
 				}
+
+				if ($scope.commercialList.length == 0)
+					$scope.commercialList = data.commercial;
 
 				$scope.chartOptions.series = series;
 				//-- Other available options

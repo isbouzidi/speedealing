@@ -3,7 +3,7 @@
 		<h1>Liste des sociétés / institutions</h1>
 	</hgroup>
 
-	<div class="dashboard" data-ng-init="initCharts()">
+	<div class="dashboard">
 		<div class="columns">
 			<div class="four-columns twelve-columns-mobile graph">
 				<!--<highchart id="pieChart" config="pieChartConfig" style="min-width: 100px; height: 240px; margin: 0 auto;"></highchart>-->
@@ -21,17 +21,24 @@
 
 		<div class="table-header silver-gradient glossy button-height">
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					<div class="button-group">
 						<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
-						<button title="{{t 'Refresh'}}" class="button" data-ng-click="find(); initCharts();"><span class="icon-redo"></span></button>
+						<button title="{{t 'Refresh'}}" class="button" data-ng-click="commercialList = [];
+								commercial_id = '';
+								filterOptionsSociete.filterText = '';
+								find();"><span class="icon-redo"></span></button>
 					</div>
 
 				</div>
-				<div class="col-sm-4">
-					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
+				<div class="col-sm-6">
+					{{t
+							'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class="margin-right"></select>
+					<select ng-show="global.user.rights.societe.seeAll" ng-model="commercial_id" ng-options="c._id.id as c._id.name +' (' + c.count + ')' for c in commercialList" data-ng-change="find()" class="">
+						<option value="">-- {{t 'Select'}} {{t 'companies:Deal'}} --</option>
+					</select>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-3">	
 					<div class="float-right">
 						{{t 'Search'}} <input type="text" data-ng-model="filterOptionsSociete.filterText" class="input small mid-margin-left">
 					</div>
@@ -41,7 +48,7 @@
 		<div class="gridStyle"  data-ng-grid="gridOptionsSociete" ng-style="style(100)" resize></div>
 		<div class="table-footer silver-gradient button-height">
 			<div class="float-right">
-				 <pagination total-items="totalCountSociete" ng-model="pagingOptionsSociete.currentPage" max-size="10" items-per-page="pagingOptionsSociete.pageSize" class="pagination-sm no-margin-top" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+				<pagination total-items="totalCountSociete" ng-model="pagingOptionsSociete.currentPage" max-size="10" items-per-page="pagingOptionsSociete.pageSize" class="pagination-sm no-margin-top" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
 			</div>
 			\{{countSocietes}}/\{{totalCountSociete}} ligne(s)
 		</div>

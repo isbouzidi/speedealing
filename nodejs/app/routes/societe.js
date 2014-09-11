@@ -1604,8 +1604,6 @@ Object.prototype = {
 				}]
 		};
 
-		if (!req.user.rights.societe.seeAll && !req.user.admin)
-			query["commercial_id.id"] = req.user._id;
 
 		if (req.query.query) {
 			switch (req.query.query) {
@@ -1621,11 +1619,13 @@ Object.prototype = {
 				case "SUSPECT" :
 					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
 					break;
-				default :
-					query["commercial_id.id"] = req.user._id;
+				default : //ALL
 					break;
 			}
 		}
+
+		if (req.query.commercial_id)
+			query["commercial_id.id"] = req.query.commercial_id;
 
 		var fields = "-history -files";
 
@@ -1634,6 +1634,9 @@ Object.prototype = {
 
 		if (req.query.filter)
 			query.name = new RegExp("\\b" + req.query.filter, "i");
+
+		if (!req.user.rights.societe.seeAll && !req.user.admin)
+			query["commercial_id.id"] = req.user._id;
 
 		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
 			if (err) {
@@ -1659,9 +1662,6 @@ Object.prototype = {
 				}]
 		};
 
-		if (!req.user.rights.societe.seeAll && !req.user.admin)
-			query["commercial_id.id"] = req.user._id;
-
 		if (req.query.query) {
 			switch (req.query.query) {
 				case "CUSTOMER" :
@@ -1676,11 +1676,16 @@ Object.prototype = {
 				case "SUSPECT" :
 					query.Status = {"$in": ["ST_NO", "ST_NEVER"]};
 					break;
-				default : // MYACCOUNT
-					query["commercial_id.id"] = req.user._id;
+				default : // ALL
 					break;
 			}
 		}
+
+		if (req.query.commercial_id)
+			query["commercial_id.id"] = req.query.commercial_id;
+
+		if (!req.user.rights.societe.seeAll && !req.user.admin)
+			query["commercial_id.id"] = req.user._id;
 
 		SocieteModel.count(query, function(err, doc) {
 			if (err) {
@@ -1908,16 +1913,18 @@ Object.prototype = {
 			commercial: function(cb) {
 				var query = {};
 
-				if (req.user.rights.societe.seeAll || req.user.admin)
+				if (req.user.rights.societe.seeAll || req.user.admin) {
 					query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}};
-				else
+					if (req.query.commercial_id)
+						query["commercial_id.id"] = req.query.commercial_id;
+				} else
 					query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.id": req.user._id};
 
 				SocieteModel.aggregate([
 					{$match: query},
-					{$project: {_id: 0, "commercial_id.name": 1}},
-					{$group: {_id: "$commercial_id.name", count: {$sum: 1}}},
-					{$sort: {"_id.commercial": 1}}
+					{$project: {_id: 0, "commercial_id.id": 1, "commercial_id.name": 1}},
+					{$group: {_id: {id: "$commercial_id.id", name: "$commercial_id.name"}, count: {$sum: 1}}},
+					{$sort: {"_id.name": 1}}
 				], function(err, docs) {
 					cb(err, docs || []);
 				});
@@ -1925,8 +1932,8 @@ Object.prototype = {
 			status: function(cb) {
 				SocieteModel.aggregate([
 					{$match: {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}}},
-					{$project: {_id: 0, "commercial_id.name": 1, "Status": 1}},
-					{$group: {_id: {commercial: "$commercial_id.name", Status: "$Status"}, count: {$sum: 1}}}
+					{$project: {_id: 0, "commercial_id.id": 1, "Status": 1}},
+					{$group: {_id: {commercial: "$commercial_id.id", Status: "$Status"}, count: {$sum: 1}}}
 				], function(err, docs) {
 					cb(err, docs || []);
 				});
@@ -1976,7 +1983,7 @@ Object.prototype = {
 						//console.log(results.status[k]);
 						//console.log("----------------------------");
 
-						if (results.commercial[i]._id === results.status[k]._id.commercial &&
+						if (results.commercial[i]._id.id === results.status[k]._id.commercial &&
 								results.fk_status[j].id === results.status[k]._id.Status) {
 							output.data[i][j] = results.status[k].count;
 							break;
