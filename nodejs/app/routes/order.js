@@ -311,7 +311,7 @@ Object.prototype = {
 			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
 
 				// replacement des variables
-				tex = tex.replace(/--NUM--/g, doc.ref.replace(/_/g, "\\_"));
+				tex = tex.replace(/--NUM--/g, doc.ref.trim().replace(/_/g, "\\_"));
 				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
 				tex = tex.replace(/--CODECLIENT--/g, societe.code_client.replace(/_/g, "\\_"));
 				tex = tex.replace(/--TITLE--/g, doc.ref_client);
