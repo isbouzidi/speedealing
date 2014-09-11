@@ -311,7 +311,7 @@ Object.prototype = {
 			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
 
 				// replacement des variables
-				tex = tex.replace(/--NUM--/g, doc.ref.trim().replace(/_/g, "\\_"));
+				tex = tex.replace(/--NUM--/g, doc.ref.replace(/_/g, "\\_"));
 				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
 				tex = tex.replace(/--CODECLIENT--/g, societe.code_client.replace(/_/g, "\\_"));
 				tex = tex.replace(/--TITLE--/g, doc.ref_client);
@@ -337,7 +337,7 @@ Object.prototype = {
 
 				for (var i = 0; i < products.length; i++) {
 					//tab_latex += products[i].title.replace(/_/g, "\\_") + "&" + products[i].note.replace(/<br\/>/g,"\\\\") + "& & \\tabularnewline\n";
-					tab_latex += products[i].title.replace(/_/g, "\\_") + "&\\specialcell[t]{" + products[i].note.replace(/<br\/>/g, "\\\\").replace(/<br \/>/g, "\\\\").replace(/<p>/g, "").replace(/<\/p>/g, "\\\\").replace(/<a.*>/g, "\\\\") + "}& & \\tabularnewline\n";
+					tab_latex += products[i].title.replace(/_/g, "\\_") + "&\\specialcell[t]{" + products[i].note.replace(/<br\/>/g, "\\\\").replace(/<br \/>/g, "\\\\").replace(/<p>/g, "").replace(/<\/p>/g, "\\\\").replace(/<a.*>/g, "\\\\").replace(/&/g,"\\&") + "}& & \\tabularnewline\n";
 				}
 
 				//tab_latex += "&\\specialcell[t]{" + doc.desc.replace(/\n/g, "\\\\") + "}& & \\tabularnewline\n";
