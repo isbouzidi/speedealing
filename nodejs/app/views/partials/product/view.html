@@ -1,14 +1,19 @@
-<div data-ng-init='init();findOne();' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+<div data-ng-init='init();
+		findOne();' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <h3 class="block-title">{{t 'products:CardProductPRODUCT'}} : \{{product.ref}}</h3>
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block">
             <label><b>{{t 'products:ProductRef'}}</b></label>
-            \{{product.ref}}
+			<a href="#" class="blue h5" editable-text="product.ref" buttons="no" onaftersave="update()">
+				\{{product.ref|| "Non defini"}}
+			</a>
         </div>
 		<div class="field-block">
             <label><b>{{t 'products:ProductLabel'}}</b></label>
-            \{{product.label}}
+			<a href="#" class="blue h5" editable-text="product.label" buttons="no" onaftersave="update()">
+				\{{product.label|| "Non defini"}}
+			</a>
         </div>
 		<div class="field-block">
             <label><b>{{t
@@ -28,19 +33,19 @@
 				\{{product.caFamily || 'empty'}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>
 
 		</div>
-		
+
 		<div class="field-block">
             <label><b>{{t 'VAT'}}</b></label>
 			<span editable-select="product.tva_tx" buttons="no" e-form="vatBtnForm" onaftersave="update()" e-ng-options="c.value as c.value for c in tva_tx.values">
 				\{{product.tva_tx | percent}}</span> <span class="icon-pencil grey" ng-click="vatBtnForm.$show()" ng-hide="vatBtnForm.$visible"></span>
 		</div>
-		
+
 		<div class="field-block">
             <label><b>{{t 'products:Units'}}</b></label>
 			<span editable-select="product.units" buttons="no" e-form="unitsBtnForm" onaftersave="update()" e-ng-options="c.id as c.label for c in units.values">
 				\{{product._units.name}}</span> <span class="icon-pencil grey" ng-click="unitsBtnForm.$show()" ng-hide="unitsBtnForm.$visible"></span>
 		</div>
-		
+
         <div class="field-block">
             <label><b>{{t
 				'DateCreation'}}</b></label>
