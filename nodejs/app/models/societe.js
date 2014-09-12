@@ -133,11 +133,12 @@ societeSchema.pre('save', function(next) {
 	var self = this;
 
 	if (this.code_client === null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
-
+		console.log("Save societe");
+		
 		SeqModel.incNumber("C", 6, function(seq) {
 			self.barCode = "C" + seq;
 
-			console.log(seq);
+			//console.log(seq);
 			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
 				if (err)
 					console.log(err);
