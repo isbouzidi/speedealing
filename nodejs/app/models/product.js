@@ -72,13 +72,13 @@ productSchema.pre('save', function(next) {
 		next();
 });
 
-var statusList = {};
+var extrafield = {};
 ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
 	if (err) {
 		console.log(err);
 		return;
 	}
-	statusList = doc.fields.Status;
+	extrafield = doc.fields;
 });
 
 productSchema.virtual('status')
@@ -87,18 +87,36 @@ productSchema.virtual('status')
 
 			var status = this.Status;
 
-			if (status && statusList.values[status].label) {
+			if (status && extrafield.Status.values[status].label) {
 				//console.log(this);
 				res_status.id = status;
-				res_status.name = i18n.t("products:" + statusList.values[status].label);
+				res_status.name = i18n.t("products:" + extrafield.Status.values[status].label);
 				//res_status.name = statusList.values[status].label;
-				res_status.css = statusList.values[status].cssClass;
+				res_status.css = extrafield.Status.values[status].cssClass;
 			} else { // By default
 				res_status.id = status;
 				res_status.name = status;
 				res_status.css = "";
 			}
 			return res_status;
+
+		});
+
+productSchema.virtual('_units')
+		.get(function() {
+			var res = {};
+
+			var units = this.units;
+
+			if (units && extrafield.units.values[units].label) {
+				//console.log(this);
+				res.id = units;
+				res.name = i18n.t("products:" + extrafield.units.values[units].label);
+			} else { // By default
+				res.id = units;
+				res.name = units;
+			}
+			return res;
 
 		});
 

@@ -13,25 +13,16 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 		$scope.type = {name: "A la vente", id: "SELL"};
 
 		$scope.init = function() {
-			/*var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement"];
+			/*var fields = ["tva_tx", "Status", "units"];
 			 
 			 angular.forEach(fields, function(field) {
-			 $http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+			 $http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
 			 field: field
 			 }
 			 }).success(function(data, status) {
 			 $scope[field] = data;
 			 //console.log(data);
 			 });
-			 });*/
-
-			/*$http({method: 'GET', url: 'api/product/family', params: {
-			 field: "caFamily"
-			 }
-			 })
-			 .success(function(data, status) {
-			 $scope.caFamilies = data;
-			 //console.log(data);
 			 });*/
 		};
 
@@ -119,6 +110,18 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 					});
 
 				};
+
+				var fields = ["tva_tx", "Status", "units"];
+
+				angular.forEach(fields, function(field) {
+					$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
+							field: field
+						}
+					}).success(function(data, status) {
+						$scope[field] = data;
+						//console.log(data);
+					});
+				});
 
 				$scope.productFamilyAutoComplete = function(val) {
 					return $http.post('api/product/family', {
