@@ -137,7 +137,7 @@ societeSchema.pre('save', function(next) {
 		SeqModel.incNumber("C", 6, function(seq) {
 			self.barCode = "C" + seq;
 
-			//console.log(seq);
+			console.log(seq);
 			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
 				if (err)
 					console.log(err);
