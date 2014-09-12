@@ -26,7 +26,7 @@
 		<div class="field-block button-height">
 			<label for="code"><b>{{t 'SIRET'}}</b></label>
 			<input required ng-disabled="noSiret" type="text" data-ng-model="societe.idprof2" data-ng-change="isValidSiret()" id="code" class="input" autocomplete="off"><br/>
-			Organisme public <input type="checkbox" ng-model="noSiret" ng-change="societe.idprof2 = ''" /> 
+			Organisme public/Association <input type="checkbox" ng-model="noSiret" ng-change="societe.idprof2 = ''" /> 
 			<small ng-show="societe.idprof2 == null && !noSiret" class="icon-warning blue input-info"> Ce numéro permet de vérifier que le compte n'existe pas dans la base. (sans espace)</small>
 			<small ng-show="societe.idprof2 && !validSiret" class="icon-warning orange input-info"> Code incorrect.</small>
 			<small ng-show="validSiret && siretFound" class="icon-warning red input-info"> Ce code existe déjà dans la base : \{{siretFound.name}} ({{t

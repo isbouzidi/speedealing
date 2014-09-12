@@ -42,7 +42,7 @@
 	"ThirdPartySuppliers": "Fournisseurs",
 	"ThirdPartyType": "Type du compte",
 	"ThirdPartyBilling": "Compte de facturation",
-	"ThirdPartyCode" : "Numéro du compte",
+	"ThirdPartyCode" : "Code client/fournisseur",
 	"Company/Fundation": "Société/Association",
 	"Individual": "Individu privé",
 	"ToCreateContactWithSameName": "Créera automatiquement un contact physique avec infos identiques",

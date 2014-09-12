@@ -227,7 +227,7 @@ exports.upgrade = function(req, res) {
 
 exports.toUppercase = function(req, res) {
 
-	PriceLevelModel.find({price_level: "function toUpperCase() { [native code] }"}, function(err, prices) {
+	PriceLevelModel.find({price_level: "Caves du château"}, function(err, prices) {
 		if (err) {
 			console.log("err : /api/product/price_level/toUppercase");
 			console.log(err);
@@ -235,13 +235,17 @@ exports.toUppercase = function(req, res) {
 		}
 		console.log(prices);
 
+
 		prices.forEach(function(price) {
-			PriceLevelModel.update({_id: price._id},
-			{$set: {price_level: /*price.price_level.toUpperCase*/ "CAVE AUX FROMAGES"}},
-			{multi: true}, function(err, docs) {
-				console.log(docs);
-			});
+			/*	PriceLevelModel.update({_id: price._id},
+			 {$set: {price_level: price.price_level.toUpperCase}},
+			 {multi: true}, function(err, docs) {
+			 console.log(docs);
+			 });*/
+			console.log(price.price_level.toUpperCase());
 		});
+
+		res.send(200);
 
 	});
 };
