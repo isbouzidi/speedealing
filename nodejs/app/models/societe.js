@@ -36,7 +36,7 @@ var setTags = function(tags) {
 var societeSchema = new Schema({
 	ref: String,
 	name: {type: String, require: true},
-	code_client: {type: String, unique: true},
+	code_client: {type: String},
 	code_fournisseur: String,
 	barCode: String,
 	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
