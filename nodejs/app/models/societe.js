@@ -136,7 +136,7 @@ societeSchema.pre('save', function(next) {
 	console.log(this.entity);
 	console.log(this.Status);
 
-	if (this.code_client === null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
+	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
 		console.log("Save societe");
 		
 		SeqModel.incNumber("C", 6, function(seq) {
