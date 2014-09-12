@@ -160,7 +160,7 @@ exports.checkIP = function(req, res, user, callback) {
 	/* CheckExternalIP */
 	if (config.externalIPAllowed.length) { /* Verify list allowed IP */
 		console.log(req.headers['x-real-ip']);
-		if (!(ip.isPrivate(req.headers['x-re)al-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
+		if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
 			res.json({success: false, errors: "Internet access denied"}, 500);
 			return signout;
 		}
