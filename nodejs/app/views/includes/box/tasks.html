@@ -7,7 +7,7 @@
 			<span ng-show="listTasks.length" class="ribbon"><span class="ribbon-inner orange-bg">\{{listTasks.length}} actions</span></span>
 				
         </div>
-        <p class="message orange-gradient" ng-show="isTaskRealised" style="font-weight: bold" >
+        <p class="message orange-gradient" ng-show="isTaskRealised" style="font-weight: bold; position: relative; z-index: 999;" >
             Actions réalisées avec succès.
             <a href="" ng-click="cancelTaskReealised()" style=" float: right; color: white; text-decoration: underline">Annuler</a>
         </p>
@@ -21,7 +21,7 @@
                             <li ng-repeat="task in listTasks">
                                 <span class="message-info show-on-parent-hover">
 
-                                        <a href="javascript:void(0)" class="button icon-like green-gradient compact" ng-click="taskRealised(task._id)"></a>
+                                    <a href="javascript:void(0)" class="button icon-like green-gradient compact" style="position: relative; z-index: 999" ng-click="taskRealised(task._id)"></a>
 
                                 </span>
 
