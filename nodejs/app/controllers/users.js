@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose'),
 		User = mongoose.model('user'),
+		ip = require('ip'),
 		config = require(__dirname + '/../../config/config');
 
 var googleCommon = require('./google.common');

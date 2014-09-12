@@ -1,5 +1,4 @@
 var async = require('async'),
-		ip = require('ip'),
 		fs = require('fs'),
 		modules = require('../app/controllers/modules'),
 		rights = require('../app/controllers/rights'),
