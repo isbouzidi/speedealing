@@ -27,7 +27,7 @@ module.exports = function(passport) {
 		User.findOne({
 			_id: id
 		}, "-password -google.tokens", function(err, user) {
-			user.rights = _.extend(user.rights, rights);
+			user.rights = rights;
 
 			//console.log(user.rights);
 			if (user.groupe)
