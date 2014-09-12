@@ -92,6 +92,12 @@
 				"perm": {
 					"segmentation": false
 				}
+			},
+			{
+				"desc": "Modifier l'entité auquel est attaché le compte",
+				"perm": {
+					"entity": false
+				}
 			}
 		],
 		"contact": [
