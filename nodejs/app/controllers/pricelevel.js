@@ -227,7 +227,7 @@ exports.upgrade = function(req, res) {
 
 exports.toUppercase = function(req, res) {
 
-	PriceLevelModel.find({price_level: "Caves du château"}, function(err, prices) {
+	PriceLevelModel.find({price_level: {$ne: null}}, function(err, prices) {
 		if (err) {
 			console.log("err : /api/product/price_level/toUppercase");
 			console.log(err);
