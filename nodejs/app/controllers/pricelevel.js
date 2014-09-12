@@ -39,13 +39,13 @@ exports.read = function(req, res) {
 
 exports.list = function(req, res) {
 	var query = [];
-	
+
 	if (req.body.filter)
 		query.push({'$match': {price_level: new RegExp(req.body.filter.filters[0].value, "i")}});
 
 	query.push({'$group': {_id: '$price_level'}});
-	
-	if(req.body.take)
+
+	if (req.body.take)
 		query.push({'$limit': parseInt(req.body.take)});
 
 	query.push({'$sort': {_id: 1}});
@@ -222,5 +222,26 @@ exports.upgrade = function(req, res) {
 				return res.json(err);
 			res.send(200);
 		});
+	});
+};
+
+exports.toUppercase = function(req, res) {
+
+	PriceLevelModel.find({price_level: "Cave aux fromages"}, function(err, prices) {
+		if (err) {
+			console.log("err : /api/product/price_level/toUppercase");
+			console.log(err);
+			return;
+		}
+		console.log(prices);
+
+		prices.forEach(function(price) {
+			PriceLevelModel.update({_id: price._id},
+			{$set: {price_level: price.price_level.toUpperCase}},
+			{multi: true}, function(err, docs) {
+				console.log(docs);
+			});
+		});
+
 	});
 };

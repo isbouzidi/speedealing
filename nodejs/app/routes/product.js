@@ -221,6 +221,7 @@ module.exports = function(app, passport, auth) {
 	});
 	app.get('/api/product/status/select', auth.requiresLogin, object.StatusSelect);
 	app.get('/api/product/price_level', auth.requiresLogin, pricelevel.read);
+	app.get('/api/product/price_level/toUppercase', auth.requiresLogin, pricelevel.toUppercase);
 	app.put('/api/product/price_level', auth.requiresLogin, pricelevel.update);
 	app.post('/api/product/price_level', auth.requiresLogin, pricelevel.add);
 	app.del('/api/product/price_level', auth.requiresLogin, pricelevel.remove);
