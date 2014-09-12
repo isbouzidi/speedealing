@@ -132,6 +132,10 @@ societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 societeSchema.pre('save', function(next) {
 	var self = this;
 
+	console.log(this.code_client);
+	console.log(this.entity);
+	console.log(this.Status);
+
 	if (this.code_client === null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
 		console.log("Save societe");
 		
