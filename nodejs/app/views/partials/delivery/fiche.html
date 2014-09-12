@@ -2,7 +2,7 @@
     <div data-ng-init="findOne()">
         <script type="text/ng-template" id="searchproduct.html">
             <a>
-                <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.label"></span> (\{{match.model.price.price_level}} : \{{match.model.price.pu_ht|currency}})
+                <span bind-html-unsafe="match.model.product.name | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.product.id.label"></span> (\{{match.model.price_level}} : \{{match.model.id.pu_ht|currency}})
             </a>
 	</script>
         <hgroup id="main-title" class="thin">
@@ -37,7 +37,7 @@
                                     <td class="blue">\{{delivery.dater|date:'dd/MM/yyyy'}}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">{{t 'deliveries:DeliveryTo'}}</th>
+                                    <th scope="row">{{t 'deliveries:DeliveredTo'}}</th>
                                     <td><a href="#" ng-show="editable" editable-text="delivery.client" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no"  onbeforesave="updateAddress($data)" onaftersave="update()">
                                             \{{delivery.client.name|| "Non defini"}}
                                         </a>
@@ -45,18 +45,25 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">{{t 'Entity'}}</th>
-                                    <td><small class="tag anthracite-gradient glossy">\{{delivery.entity}}</small></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{t 'companies:Address'}}</th>
+                                    <th scope="row">{{t 'deliveries:BilledTo'}}</th>
                                     <td>
+                                        <a href="#" 
+                                           ng-show="editable"
+                                           editable-text="delivery.billedTo.client" 
+                                           e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
+                                           buttons="no"  
+                                           onbeforesave="updateBilledAddress($data)" 
+                                           onaftersave="update()"
+                                           blur="submit">
+                                            \{{delivery.billedTo.client.name || "Non defini"}}
+                                        </a>
+                                        
+                                        <!--
                                         <form editable-form name="editableFormAddress" onaftersave="update()">
                                             <span editable-textarea="delivery.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ delivery.address ||  "Non defini" }}</pre></span>
 
                                             <span editable-text="delivery.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{delivery.zip}}</span> <span editable-text="delivery.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{delivery.town}}</span>
                                             \{{delivery.country}}
-                                            <!-- button to show form -->
                                             <span type="button" class="icon-pencil grey" ng-click="editableFormAddress.$show()" ng-show="!editableFormAddress.$visible && editable"></span>
 
                                             <div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
@@ -66,7 +73,12 @@
                                             </div>
 
                                         </form>
+                                        -->
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">{{t 'Entity'}}</th>
+                                    <td><small class="tag anthracite-gradient glossy">\{{delivery.entity}}</small></td>
                                 </tr>
                                 <!--<tr>
                                         <th scope="row">{{t 'companies:Phone'}}</th>
@@ -330,7 +342,7 @@
       <tr ng-repeat="line in delivery.lines | filter:filterLine">
         <td>
           <span editable-text="line.product.name" 
-                e-typeahead="product as product.name for product in productAutoComplete($viewValue, 'name')"
+                e-typeahead="product as product.product.name for product in productAutoComplete($viewValue, 'name')"
                 e-typeahead-template-url="searchproduct.html"
                 e-typeahead-on-select ="addProduct($item, line.idLine)"
                 e-form="tableform"
@@ -377,23 +389,23 @@
             \{{ line.total_ht | number:2 }}
           </span>
         </td>
-        <td><button type="button"  e-style="width: 100px" ng-show="tableform.$visible" ng-click="deleteLine(line.idLine)" class="btn btn-danger pull-right">Del</button></td>
+        <td><button type="button"  e-style="width: 100px" ng-show="tableform.$visible" ng-click="deleteLine(line.idLine)" class="btn btn-danger pull-right">Supprimer</button></td>
       </tr>
     </table>
-
     <!-- buttons -->
     <div class="btn-edit">
       <button type="button" class="btn btn-default" ng-show="!tableform.$visible" ng-click="tableform.$show()">
-        edit
+        Modifier
       </button>
     </div>
     <div class="btn-form" ng-show="tableform.$visible">
-      <button type="button" ng-disabled="tableform.$waiting" ng-click="addLine()" class="btn btn-default pull-right">add row</button>
-      <button type="submit" ng-disabled="tableform.$waiting" class="btn btn-primary">save</button>
-      <button type="button" ng-disabled="tableform.$waiting" ng-click="tableform.$cancel()" class="btn btn-default">cancel</button>
+      <button type="button" ng-disabled="tableform.$waiting" ng-click="addLine()" class="btn btn-default pull-right">Ajouter produit</button>
+      <button type="submit" ng-disabled="tableform.$waiting" class="btn btn-primary">Enregistrer</button>
+      <button type="button" ng-disabled="tableform.$waiting" ng-click="tableform.$cancel()" class="btn btn-default">Annuler</button>
     </div> 
     
   </form>
+    
 </div>
                 
                 <!--

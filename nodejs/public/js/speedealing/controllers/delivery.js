@@ -46,8 +46,8 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
             });
 
         };
-        $scope.productAutoComplete = function(val) {
-
+        $scope.productAutoComplete = function(val, field) {
+            
             return $http.post('api/product/autocomplete', {
                 take: 5,
                 skip: 0,
@@ -58,6 +58,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
                 filter: {logic: 'and', filters: [{value: val}]
                 }
             }).then(function(res) {
+                $scope.p = res.data;
                 return res.data;
             });
         };
@@ -69,7 +70,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
         };
         
         $scope.addProduct = function(data, index) {
-            
+            $scope.p = data;
             //angular.copy($scope.delivery.lines[index], data);
             //$scope.delivery.lines[index] = data;
             //$scope.delivery.lines[index].pu_ht = data.price.pu_ht;
@@ -78,11 +79,12 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
             for(var i in $scope.delivery.lines){
                 if($scope.delivery.lines[i].idLine === index){
                     $scope.delivery.lines[i] = { 
-                    pu_ht: data.price.pu_ht,
+                    pu_ht: data.pu_ht,
                     product: {
-                        id: data.id,
-                        name: data.name,
-                        label: data.label
+                        id: data.product.id._id,
+                        name: data.product.name,
+                        label: data.product.id.label,
+                        description: data.product.id.description
                     },
                     isNew: true,
                     idLine: index
@@ -289,11 +291,16 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
             });
         };
 
-        $scope.updateAddress = function(data) {
-            $scope.delivery.address = data.address.address;
-            $scope.delivery.zip = data.address.zip;
-            $scope.delivery.town = data.address.town;
-
+        $scope.updateBilledAddress = function(data) {
+            console.log(data);
+            $scope.delivery.billedTo.client = {
+                id: data.id,
+                name: data.name
+            };
+            $scope.delivery.billedTo.address = data.address.address;
+            $scope.delivery.billedTo.zip = data.address.zip;
+            $scope.delivery.billedTo.town = data.address.town;
+            
             $scope.delivery.price_level = data.price_level;
 
             return true;
@@ -600,18 +607,30 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
             $modalInstance.close(this.delivery);
         };
 
-        $scope.updateCoord = function(item, model, label) {
-            //console.log(item);
-
+        $scope.updateCoord = function(item, model, label, data) {
+            console.log(item);
+            
             if ($scope.delivery.client.name === "Accueil")
                 $scope.delivery.client.isNameModified = true;
 
             $scope.delivery.price_level = item.price_level;
-            $scope.delivery.address = item.address.address;
-            $scope.delivery.zip = item.address.zip;
-            $scope.delivery.town = item.address.town;
             $scope.delivery.mode_reglement_code = item.mode_reglement_code;
             $scope.delivery.cond_reglement_code = item.cond_reglement_code;
+            $scope.delivery.deliveredTo = {
+               address: item.address.address,
+               zip: item.address.zip,
+               town: item.address.town
+            };
+            
+            $scope.delivery.billedTo = {
+                client : {
+                    id: item.id,
+                    name: item.name
+                },
+                address: item.address.address,
+                zip: item.address.zip,
+                town: item.address.town
+            };
         };
 
         $scope.userAutoComplete = function(val) {

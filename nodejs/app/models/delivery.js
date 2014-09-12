@@ -33,11 +33,29 @@ var deliverySchema = new Schema({
     contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
     ref_client: {type: String},
     price_level: {type: String, default: "BASE", uppercase: true, trim: true},
-    address: String,
-    zip: String,
-    town: String,
-    country_id: {type: String, default: 'FR'},
-    state_id: Number,
+//    address: String,
+//    zip: String,
+//    town: String,
+//    country_id: {type: String, default: 'FR'},
+//    state_id: Number,
+    billedTo: {
+        client: {
+            id: {type: Schema.Types.ObjectId, ref: 'Societe'},
+            name: String
+        },
+        address: String,
+        zip: String,
+        town: String,
+        country_id: {type: String, default: 'FR'},
+        state_id: Number
+    },
+    deliveredTo: {
+        address: String,
+        zip: String,
+        town: String,
+        country_id: {type: String, default: 'FR'},
+        state_id: Number
+    },
     datec: {type: Date},
     dater: {type: Date},
     notes: [{

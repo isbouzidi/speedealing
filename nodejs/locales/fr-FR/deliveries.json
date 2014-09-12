@@ -59,5 +59,9 @@
 	"DeliveryStatusClosedUnpaid": "Fermée (impayée)",
 	"DeliveryStatusClosedPaidPartially": "Payée (partiellement)",
     "DeliveryNotes": "Bons Livraisons",
-    "DeliveryNote": "Bon Livraison"
+    "DeliveryNote": "Bon Livraison",
+    "BillAddress": "Adresse de facturation",
+    "DeliveryAddress": "Adresse de livraison",
+    "BilledTo": "Facturé à",
+    "DeliveredTo": "Livré à"
 }
