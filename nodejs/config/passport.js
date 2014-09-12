@@ -196,7 +196,7 @@ module.exports = function(passport) {
 				user.LastConnection = user.NewConnection;
 				user.NewConnection = new Date();
 
-				if (user.google && user.google.user_id)
+				if (!user.google || !user.google.user_id)
 					user.google = _.extend(user.google,
 							{
 								"user_id": profile.id
