@@ -233,16 +233,15 @@ exports.toUppercase = function(req, res) {
 			console.log(err);
 			return;
 		}
-		console.log(prices);
+		//console.log(prices);
 
 
 		prices.forEach(function(price) {
-			/*	PriceLevelModel.update({_id: price._id},
-			 {$set: {price_level: price.price_level.toUpperCase}},
-			 {multi: true}, function(err, docs) {
-			 console.log(docs);
-			 });*/
-			console.log(price.price_level.toUpperCase());
+			PriceLevelModel.update({_id: price._id},
+			{$set: {price_level: price.price_level.toUpperCase()}},
+			{multi: true}, function(err, docs) {
+				//console.log(docs);
+			});
 		});
 
 		res.send(200);
