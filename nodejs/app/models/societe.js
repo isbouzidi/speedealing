@@ -17,9 +17,9 @@ var EntityModel = mongoose.model('entity');
 
 //  Getters and Setters
 /*var getTags = function(tags) {
-	console.log("joiiiiin");
-	return tags.join(',');
-};*/
+ console.log("joiiiiin");
+ return tags.join(',');
+ };*/
 
 var setTags = function(tags) {
 	var result = [];
@@ -36,7 +36,7 @@ var setTags = function(tags) {
 var societeSchema = new Schema({
 	ref: String,
 	name: {type: String, require: true},
-	code_client: {type: String},
+	code_client: {type: String, unique: true},
 	code_fournisseur: String,
 	barCode: String,
 	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
@@ -132,13 +132,9 @@ societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 societeSchema.pre('save', function(next) {
 	var self = this;
 
-	console.log(this.code_client);
-	console.log(this.entity);
-	console.log(this.Status);
-
 	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
-		console.log("Save societe");
-		
+		//console.log("Save societe");
+
 		SeqModel.incNumber("C", 6, function(seq) {
 			self.barCode = "C" + seq;
 
