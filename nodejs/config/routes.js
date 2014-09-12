@@ -34,44 +34,28 @@ module.exports = function(app, passport, auth) {
 				return next(err)
 			}
 
-			var navigator = require('ua-parser').parse(req.headers['user-agent']);
-			console.log(req.headers['user-agent']);
-			console.log(navigator.ua.family);
-			console.log(navigator.ua.major);
-
-			if (navigator.ua.family == "Other" && parseFloat((req.headers['user-agent'].match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) < 10) {
-				res.json({success: false, errors: "Votre version Internet Explorer est trop ancienne. Utilisez Chrome ou Firefox."}, 500);
-				return users.signout;
-			}
-
 			if (!user) {
 				req.session.messages = [info.message];
 				return res.json({success: false, errors: req.i18n.t('errors:ErrorBadLoginPassword')}, 401);
 			}
 
-			/* CheckExternalIP */
-			if (config.externalIPAllowed.length) { /* Verify list allowed IP */
-				console.log(req.headers['x-real-ip']);
-				if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
-					res.json({success: false, errors: "Internet access denied"}, 500);
-					return users.signout;
-				}
-			}
+			users.checkIP(req, res, user, function() {
 
-			req.logIn(user, function(err) {
-				if (err) {
-					return next(err);
-				}
+				req.logIn(user, function(err) {
+					if (err) {
+						return next(err);
+					}
 
-				user.LastConnection = user.NewConnection;
-				user.NewConnection = new Date();
+					user.LastConnection = user.NewConnection;
+					user.NewConnection = new Date();
 
-				user.save(function(err) {
-					if (err)
-						console.log(err);
+					user.save(function(err) {
+						if (err)
+							console.log(err);
+					});
+
+					return res.json({success: true, url: user.url}, 200);
 				});
-
-				return res.json({success: true, url: user.url}, 200);
 			});
 		})(req, res, next);
 	});
@@ -174,7 +158,9 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/auth/google/callback', users.setAccessCodeGoogle, passport.authenticate('google', {
 		failureRedirect: '/signin'
-	}), users.authCallback);
+	}), function(req, res) {
+		users.checkIP(req, res, req.user, users.authCallback);
+	});
 
 	//Finish with setting up the userId param
 	app.param('userId', users.user);

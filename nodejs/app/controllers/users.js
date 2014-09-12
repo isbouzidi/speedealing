@@ -2,7 +2,8 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-		User = mongoose.model('user');
+		User = mongoose.model('user'),
+		config = require(__dirname + '/../../config/config');
 
 var googleCommon = require('./google.common');
 
@@ -23,7 +24,7 @@ function authCallback(req, res, next) {
 		});
 	} else
 		res.redirect('/');
-};
+}
 
 /**
  * Set tokens google in user database for offline tokens
@@ -72,10 +73,12 @@ exports.signup = function(req, res) {
 /**
  * Logout
  */
-exports.signout = function(req, res) {
+exports.signout = signout;
+
+function signout(req, res) {
 	req.logout();
 	res.redirect('/');
-};
+}
 
 /**
  * Session
@@ -140,4 +143,27 @@ exports.user = function(req, res, next, id) {
 				req.profile = user;
 				next();
 			});
+};
+
+exports.checkIP = function(req, res, user, callback) {
+	var navigator = require('ua-parser').parse(req.headers['user-agent']);
+	console.log(req.headers['user-agent']);
+	console.log(navigator.ua.family);
+	console.log(navigator.ua.major);
+
+	if (navigator.ua.family == "Other" && parseFloat((req.headers['user-agent'].match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) < 10) {
+		res.json({success: false, errors: "Votre version Internet Explorer est trop ancienne. Utilisez Chrome ou Firefox."}, 500);
+		return;
+	}
+
+	/* CheckExternalIP */
+	if (config.externalIPAllowed.length) { /* Verify list allowed IP */
+		console.log(req.headers['x-real-ip']);
+		if (!(ip.isPrivate(req.headers['x-re)al-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
+			res.json({success: false, errors: "Internet access denied"}, 500);
+			return signout;
+		}
+	}
+
+	callback(req, res);
 };
