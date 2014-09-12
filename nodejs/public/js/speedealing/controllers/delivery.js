@@ -291,15 +291,15 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
             });
         };
 
-        $scope.updateBilledAddress = function(data) {
-            console.log(data);
-            $scope.delivery.billedTo.client = {
+        $scope.updateBillingAddress = function(data) {
+            
+            $scope.delivery.billingClient = {
                 id: data.id,
                 name: data.name
             };
-            $scope.delivery.billedTo.address = data.address.address;
-            $scope.delivery.billedTo.zip = data.address.zip;
-            $scope.delivery.billedTo.town = data.address.town;
+            $scope.delivery.billingTo.address = data.address.address;
+            $scope.delivery.billingTo.zip = data.address.zip;
+            $scope.delivery.billingTo.town = data.address.town;
             
             $scope.delivery.price_level = data.price_level;
 
@@ -559,8 +559,19 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 
         $scope.active = 1;
         $scope.delivery = {
-            Status: "DRAFT"
+            Status: "DRAFT",
+            billingClient: {
+                id: null,
+                name: null
+            },
+            billingTo:{
+                address: null,
+                zip: null,
+                town: null
+            }
         };
+        
+        $scope.delivery.billingClient
 
         $scope.isActive = function(idx) {
             if (idx == $scope.active)
@@ -600,37 +611,32 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
             $scope.delivery.commercial_id = {
                 id: Global.user._id,
                 name: Global.user.firstname + " " + Global.user.lastname
-            }
+            };
         };
 
         $scope.create = function() {
             $modalInstance.close(this.delivery);
         };
 
-        $scope.updateCoord = function(item, model, label, data) {
-            console.log(item);
+        $scope.updateCoord = function(item, model, label) {
             
             if ($scope.delivery.client.name === "Accueil")
                 $scope.delivery.client.isNameModified = true;
 
             $scope.delivery.price_level = item.price_level;
+            $scope.delivery.address = item.address.address;
+            $scope.delivery.zip = item.address.zip;
+            $scope.delivery.town = item.address.town;
             $scope.delivery.mode_reglement_code = item.mode_reglement_code;
             $scope.delivery.cond_reglement_code = item.cond_reglement_code;
-            $scope.delivery.deliveredTo = {
-               address: item.address.address,
-               zip: item.address.zip,
-               town: item.address.town
-            };
             
-            $scope.delivery.billedTo = {
-                client : {
-                    id: item.id,
-                    name: item.name
-                },
-                address: item.address.address,
-                zip: item.address.zip,
-                town: item.address.town
-            };
+            $scope.delivery.billingClient.id = item.id;
+            $scope.delivery.billingClient.name = item.name;
+            
+            $scope.delivery.billingTo.address = item.address.address; 
+            $scope.delivery.billingTo.zip = item.address.zip; 
+            $scope.delivery.billingTo.town = item.address.town;
+            
         };
 
         $scope.userAutoComplete = function(val) {

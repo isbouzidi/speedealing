@@ -22,7 +22,7 @@
 			<label for="client"><b>{{t 'companies:Company'}}</b></label>
 			<input required type="text" 
                                data-ng-model="delivery.client" 
-                               typeahead-on-select="updateCoord($item, $model, $label, $data)" 
+                               typeahead-on-select="updateCoord($item, $model, $label)" 
                                typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
                                id="client" class="input" autocomplete="off">
 		</div>
@@ -95,7 +95,7 @@
 				<div class='twelve-columns'>
 					<input type="text" data-ng-model="delivery.client.name" class="input" placeholder="Nom"/><br/>
 					<input type="text" data-ng-model="delivery.contact.name" class="input" placeholder="Nom du contact"/><br/>
-					<div ng-address model="delivery.deliveredTo" opp="create"></div>
+					<div ng-address model="delivery" opp="create"></div>
                                         
                                         <!--
                                         <textarea class='input' rows='3' data-ng-model="delivery.address" placeholder="Adresse"></textarea><br/>

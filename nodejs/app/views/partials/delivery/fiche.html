@@ -45,17 +45,25 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th width="40%" scope="row">{{t 'Contact'}}</th>
+                                    <td>
+                                        <a href="#" editable-text="delivery.contact.name" buttons="no" blur="submit" onaftersave="update()">
+                                            \{{delivery.contact.name || "Non défini"}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th scope="row">{{t 'deliveries:BilledTo'}}</th>
                                     <td>
                                         <a href="#" 
                                            ng-show="editable"
-                                           editable-text="delivery.billedTo.client" 
+                                           editable-text="delivery.billingClient" 
                                            e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
                                            buttons="no"  
-                                           onbeforesave="updateBilledAddress($data)" 
+                                           onbeforesave="updateBillingAddress($data)" 
                                            onaftersave="update()"
                                            blur="submit">
-                                            \{{delivery.billedTo.client.name || "Non defini"}}
+                                            \{{delivery.billingClient.name || "Non defini"}}
                                         </a>
                                         
                                         <!--
@@ -328,7 +336,7 @@
                     <form editable-form name="tableform" onaftersave="saveTable()" oncancel="cancel()">
     <!-- table -->
     <table class="table table-bordered table-hover table-condensed">
-      <tr style="font-weight: bold">
+      <tr style="font-weight: bold" class="success">
         <td >Code produit</td>
         <td>Label</td>
         <td>Déscription</td>
