@@ -288,7 +288,10 @@ module.exports = function (app, passport, auth) {
 						if (row[i])
 							contact[tab[i]] = row[i].replace(/ /g, "");
 						break;
-
+					case "entity":
+						if (row[i])
+							contact[tab[i]] = row[i].toLowerCase();
+						break;
 					case "notes":
 						if (row[i]) {
 							if (typeof contact.notes != "array")
