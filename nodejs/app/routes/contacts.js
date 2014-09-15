@@ -123,8 +123,10 @@ Contact.prototype = {
 		//console.log(query);
 
 		ContactModel.findOne(query, function(err, doc) {
-			if (err)
+			if (err){
+				console.log(err);
 				return next(err);
+			}
 
 			req.contact = doc;
 			next();
@@ -204,7 +206,7 @@ Contact.prototype = {
 		});
 	},
 	findOne: function(req, res) {
-
+		console.log(req.contact);
 		res.json(req.contact);
 	},
 	update: function(req, res) {

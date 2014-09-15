@@ -9,13 +9,13 @@
 	<!-- Block style is optional, you can use any layout -->
 	<h3 class="block-title">{{t 'companies:NewContact'}}</h3>
 
-        <!-- Each form step should be wrapped in a fieldset -->
+	<!-- Each form step should be wrapped in a fieldset -->
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
-                <div class="field-block button-height">
+		<div class="field-block button-height">
 			<label for="lastname"><b>{{t 'companies:Lastname'}}</b></label>
 			<input required type="text" id="nom" data-ng-model="contact.lastname" class="input" autocomplete="off">		
 		</div>
-                <div class="field-block button-height">
+		<div class="field-block button-height">
 			<label for="firstName"><b>{{t 'companies:Firstname'}}</b></label>
 			<input required type="text" data-ng-model="contact.firstname" id="firstName" class="input" autocomplete="off">
 		</div>
@@ -23,26 +23,27 @@
 			<label for="birthday"><b>{{t 'companies:birthday'}}</b></label>
 			<span class="k-widget k-datepicker k-header input">
 				<span class="k-picker-wrap k-state-default">
-                                        <input 
-                                            kendo-date-picker 
-                                            id="birthday" 
-                                            k-on-change="contact.birthday = kendoEvent.sender._value;" 
-                                            class="input"/>
+					<input 
+						kendo-date-picker 
+						id="birthday" 
+						k-on-change="contact.birthday = kendoEvent.sender._value;" 
+						class="input"/>
 				</span>
 			</span>			
 		</div>
-                <div class="field-block button-height">
-                    <label for="adress"><b>{{t 'companies:Address'}}</b></label>
-                    <div class='columns'>
-                        <div class='twelve-columns'>
-                            <div ng-address model="contact" opp="create"></div>                                                     
-                            
-                        </div>
-                    </div>			
+		<div class="field-block button-height">
+			<label for="adress"><b>{{t 'companies:Address'}}</b></label>
+			<div class='columns'>
+				<div class='twelve-columns'>
+					<div ng-address model="contact" opp="create"></div>                                                     
+
+				</div>
+			</div>			
 		</div>
 		<div class="field-block button-height">
 			<label for="phoneMob"><b>{{t 'companies:Tel-Mobile'}}</b></label>
 			<input type="text" data-ng-model="contact.phone_mobile" id="phoneMob" class="input" autocomplete="off">
+			<small ng-show="!(contact.phone_mobile || contact.phone || contact.email)" class="icon-warning orange input-info"> Au moins l'email ou un numéro de téléphone est obligatoire pour la création d'un contact.</small>
 		</div>
 		<div class="field-block button-height">
 			<label for="phoneFix"><b>{{t 'companies:Tel-Fixe'}}</b></label>
@@ -51,26 +52,26 @@
 		<div class="field-block button-height">
 			<label for="email"><b>{{t 'companies:email'}}</b></label>
 			<input type="email" data-ng-model="contact.email" id="email" class="input" autocomplete="off">
-                        
+
 		</div>
-                <div class="field-block button-height">
+		<div class="field-block button-height">
 			<label for="poste"><b>{{t 'companies:PostOrFunction'}}</b></label>
 			<select class="form-control" required data-ng-model="contact.poste" id="poste" data-ng-options="c.id as c.label for c in jobs.values"></select>
 		</div>
 
 		<div class="field-block button-height">
-			<label for="tag"><b>{{t 'Keywords'}}</b></label>
+			<label for="soncas"><b>{{t 'companies:Soncas'}}</b></label>
 			<span class="editable-input">
-				<label ng-repeat="Tag in Tags">
-					<input type="checkbox" checklist-model="contact.Tag" id="tag" checklist-value="Tag"> \{{Tag}}
+				<label ng-repeat="Soncas in soncas">
+					<input type="checkbox" checklist-model="contact.soncas" id="soncas" checklist-value="Soncas"> \{{Soncas}}
 				</label>
 			</span>
 		</div>
-                <div class="field-block button-height wizard-controls clearfix">
+		<div class="field-block button-height wizard-controls clearfix">
 			<button type="submit" ng-disabled="!(contact.phone_mobile || contact.phone || contact.email)" class="button glossy mid-margin-right float-right">
-                        <span class="button-icon"><span class="icon-tick"></span></span>
-                        Créer
-                    </button>
-                </div>
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				Créer
+			</button>
+		</div>
 	</fieldset>		
 </form>

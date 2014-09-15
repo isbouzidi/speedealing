@@ -123,12 +123,21 @@
         </div>
 
 		<div class="field-block">
-            <label><b>{{t 'Keywords'}}</b></label>
+            <label><b>{{t 'companies:Soncas'}}</b></label>
 
-			<a href="#" editable-checklist="contact.Tag" e-class="xeditable" e-ng-options="s.value as s.text for s in Tags" onaftersave="update()">
-				\{{ contact.Tag || 'Non défini'}}
+			<a href="#" editable-checklist="contact.soncas" e-class="xeditable" e-ng-options="s.value as s.text for s in soncas" onaftersave="update()">
+				\{{ contact.soncas || 'Non défini'}}
 			</a>
 
+        </div>
+
+		<div class="field-block">
+            <label><b>{{t
+				'Keywords'}}</b></label>
+			\{{contact.Tag}}
+			<!--	<tags-input ng-model="contact.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+			<!--<auto-complete source="AutoComplete($query,'api/societe/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>-->
+			<!--</tags-input>-->
         </div>
 
         <div class="field-block">
@@ -185,7 +194,7 @@
                         class="button icon-cross-round white-gradient" 
                         ng-disabled="editableFormAddress.$waiting" 
                         title="{{t
-                            'Cancel'}}" 
+							'Cancel'}}" 
                         ng-click="editableFormAddress.$cancel()">
 
                     </button>
