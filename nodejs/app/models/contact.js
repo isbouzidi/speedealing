@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		Schema = mongoose.Schema,
 		i18n = require("i18next"),
+		array= require("array-extended"),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
@@ -25,9 +26,11 @@ var setTags = function (tags) {
 	var result = [];
 	for (var i = 0; i < tags.length; i++)
 		if (tags[i].text)
-			result.push(tags[i].text);
+			result.push(tags[i].text.trim());
 		else
-			result.push(tags[i]);
+			result.push(tags[i].trim());
+
+	result = array.unique(result);
 
 	//console.log(result);
 	return result;
