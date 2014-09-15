@@ -268,7 +268,9 @@ module.exports = function (app, passport, auth) {
 					case "Tag" :
 						if (row[i]) {
 							var seg = row[i].split(',');
-							contact[tab[i]] = [];
+							if(typeof contact[tab[i]] != "array")
+								contact[tab[i]] = [];
+							
 							for (var j = 0; j < seg.length; j++) {
 								seg[j] = seg[j].replace(/\./g, "");
 								seg[j] = seg[j].trim();
