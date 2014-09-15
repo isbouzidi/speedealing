@@ -361,6 +361,8 @@ module.exports = function (app, passport, auth) {
 
 											if (contact == null) {
 												contact = new ContactModel(data);
+											} else {
+												contact = _.extend(contact, data);
 											}
 
 											//console.log(data);
@@ -408,6 +410,11 @@ module.exports = function (app, passport, auth) {
 											} else {
 												console.log("Found / update");
 												//console.log("old : " + contact);
+												if(contact.zip)
+													delete data.zip;
+												if(contact.town)
+													delete data.town;
+												
 												contact = _.extend(contact, data);
 											}
 
