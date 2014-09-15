@@ -409,8 +409,8 @@ module.exports = function (app, passport, auth) {
 
 									if (data.email != null)
 										query.$or.push({email: data.email});
-									if (data.phone != null)
-										query.$or.push({phone: data.phone});
+									//if (data.phone != null)
+									//	query.$or.push({phone: data.phone});
 									if (data.phone_mobile != null)
 										query.$or.push({phone_mobile: data.phone_mobile});
 
