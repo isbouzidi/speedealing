@@ -124,7 +124,7 @@ function imp_getGoogleContacts(user, callback) {
 	c.getContacts(
 			{
 				'email': user.email,
-				//'updatedMin': user.google.contacts.latestImport
+				'updatedMin': user.google.contacts.latestImport
 			},
 			callback);
 }
