@@ -21,12 +21,15 @@ var EntityModel = mongoose.model('entity');
  return tags.join(',');
  };*/
 
-var setTags = function(tags) {
+var setTags = function (tags) {
 	var result = [];
 	for (var i = 0; i < tags.length; i++)
-		result.push(tags[i].text);
-	console.log(result);
-	//return tags.split(',');
+		if (tags[i].text)
+			result.push(tags[i].text);
+		else
+			result.push(tags[i]);
+
+	//console.log(result);
 	return result;
 };
 
@@ -77,7 +80,7 @@ var contactSchema = new Schema({
 contactSchema.plugin(timestamps);
 
 var segmentationList = {};
-DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, docs) {
+DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, docs) {
 	if (docs) {
 		segmentationList = docs.values;
 	}
@@ -123,12 +126,12 @@ var tab_attractivity = {
 };
 
 contactSchema.virtual('name')
-		.get(function() {
+		.get(function () {
 			return this.firstname + " " + this.lastname;
 		});
 
 var contactStatusList = {};
-ExtrafieldModel.findById('extrafields:Contact', function(err, doc) {
+ExtrafieldModel.findById('extrafields:Contact', function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
@@ -137,7 +140,7 @@ ExtrafieldModel.findById('extrafields:Contact', function(err, doc) {
 });
 
 contactSchema.virtual('status')
-		.get(function() {
+		.get(function () {
 			var res_status = {};
 
 			var status = this.Status;
@@ -158,7 +161,7 @@ contactSchema.virtual('status')
 		});
 
 contactSchema.virtual('attractivity')
-		.get(function() {
+		.get(function () {
 			var attractivity = 0;
 
 			for (var i in tab_attractivity) {
@@ -174,7 +177,7 @@ contactSchema.virtual('attractivity')
 			return attractivity;
 		});
 
-contactSchema.virtual('fullAddress').get(function() {
+contactSchema.virtual('fullAddress').get(function () {
 
 	return this.address + ', ' + this.zip + ', ' + this.town;
 
