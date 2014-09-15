@@ -103,6 +103,45 @@ module.exports = function(app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
+	
+	app.post('/api/contact/autocomplete/:field', auth.requiresLogin, function(req, res) {
+		//console.dir(req.body);
+
+		if (req.body.filter == null)
+			return res.send(200, {});
+
+		var query = {};
+
+		query[req.params.field] = new RegExp(req.body.filter.filters[0].value, "i");
+
+		if (typeof ContactModel.schema.paths[req.params.field].options.type == "object")
+			//console.log(query);
+			ContactModel.aggregate([
+				{$project: {_id: 0, Tag: 1}},
+				{$unwind: "$" + req.params.field},
+				{$match: query},
+				{$group: {_id: "$" + req.params.field}},
+				{$limit: req.body.take}
+			], function(err, docs) {
+				if (err) {
+					console.log("err : /api/contact/autocomplete/" + req.params.field);
+					console.log(err);
+					return;
+				}
+				//console.log(docs);
+				var result = [];
+
+				if (docs !== null)
+					for (var i in docs) {
+						//result.push({text: docs[i]._id});
+						result.push(docs[i]._id);
+					}
+
+				return res.send(200, result);
+			});
+
+		//TODO write code for distinct attribute
+	});
 };
 
 
@@ -206,7 +245,7 @@ Contact.prototype = {
 		});
 	},
 	findOne: function(req, res) {
-		console.log(req.contact);
+		//console.log(req.contact);
 		res.json(req.contact);
 	},
 	update: function(req, res) {

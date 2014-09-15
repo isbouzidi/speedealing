@@ -134,10 +134,9 @@
 		<div class="field-block">
             <label><b>{{t
 				'Keywords'}}</b></label>
-			\{{contact.Tag}}
-			<!--	<tags-input ng-model="contact.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-			<!--<auto-complete source="AutoComplete($query,'api/societe/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>-->
-			<!--</tags-input>-->
+			<tags-input ng-model="contact.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+				<auto-complete source="AutoComplete($query,'api/contact/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
+			</tags-input>
         </div>
 
         <div class="field-block">

@@ -69,6 +69,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 		$scope.retour = function () {
 			$location.path('/contacts');
 		};
+		$scope.contact = {};
 
 		$scope.etats = [
 			{id: "ST_NEVER", name: "Non déterminé"},
