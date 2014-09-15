@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('underscore'),
+		array = require('array-extended'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -365,6 +366,9 @@ module.exports = function (app, passport, auth) {
 											if (contact == null) {
 												contact = new ContactModel(data);
 											} else {
+												if (data.Tag)
+													data.Tag = array.union(contact.Tag, data.Tag); // Fusion Tag
+
 												contact = _.extend(contact, data);
 											}
 
@@ -419,6 +423,9 @@ module.exports = function (app, passport, auth) {
 													delete data.town;
 												if (contact.societe && (contact.societe.name || contact.societe.id))
 													delete data.societe;
+
+												if (data.Tag)
+													data.Tag = array.union(contact.Tag, data.Tag); // Fusion Tag
 
 												contact = _.extend(contact, data);
 											}
