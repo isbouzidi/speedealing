@@ -410,11 +410,13 @@ module.exports = function (app, passport, auth) {
 											} else {
 												console.log("Found / update");
 												//console.log("old : " + contact);
-												if(contact.zip)
+												if (contact.zip)
 													delete data.zip;
-												if(contact.town)
+												if (contact.town)
 													delete data.town;
-												
+												if (contact.societe && (contact.societe.name || contact.societe.id))
+													delete data.societe;
+
 												contact = _.extend(contact, data);
 											}
 
