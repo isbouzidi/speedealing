@@ -260,6 +260,10 @@ module.exports = function (app, passport, auth) {
 						if (row[i])
 							contact.address += "\n" + row[i];
 						break;
+					case "address4":
+						if (row[i])
+							contact.address += "\n" + row[i];
+						break;
 					case "BP":
 						if (row[i]) {
 							contact.address += "\n" + row[i].substr(0, row[i].indexOf(','));
@@ -268,9 +272,9 @@ module.exports = function (app, passport, auth) {
 					case "Tag" :
 						if (row[i]) {
 							var seg = row[i].split(',');
-							if(typeof contact[tab[i]] != "array")
+							if (typeof contact[tab[i]] != "array")
 								contact[tab[i]] = [];
-							
+
 							for (var j = 0; j < seg.length; j++) {
 								seg[j] = seg[j].replace(/\./g, "");
 								seg[j] = seg[j].trim();
@@ -286,6 +290,10 @@ module.exports = function (app, passport, auth) {
 					case "phone":
 						if (row[i])
 							contact[tab[i]] = row[i].replace(/ /g, "");
+						break;
+					case "phone1":
+						if (row[i])
+							contact["phone"] = row[i].replace(/ /g, "");
 						break;
 					case "fax":
 						if (row[i])
