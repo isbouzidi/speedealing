@@ -49,16 +49,16 @@
 		
 		<div class="table-header silver-gradient glossy button-height">
 			<div class="row">
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					<div class="button-group">
 						<button class="button icon-plus blue-gradient" data-ng-click="addNewPrice()">{{t 'Add'}}</button>
 						<button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
 					</div>
 				</div>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 					\{{'companies:PriceLevel' | i18next}} <select ng-model="price_level" ng-options="c.name as c.name for c in prices_level" data-ng-change="find()" class=""></select>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					<div class="float-right">
 						{{t 'Search'}} <input type="text" data-ng-model="filterOptions.filterText" class="input small mid-margin-left">
 					</div>
