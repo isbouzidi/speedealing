@@ -36,12 +36,17 @@
 
 		<div class="field-block button-height">
 			<label for="status"><b>Status commercial</b></label>
-			<select class="form-control" id="status" data-ng-model="societe.Status" data-ng-options="c.id as c.label for c in status.values"></select>
+			<select class="form-control" id="status" data-ng-model="societe.Status" data-ng-options="c.id as c.label for c in Status.values"></select>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="statusF"><b>Status fournisseur</b></label>
 			<select class="form-control" id="statusF" data-ng-model="societe.fournisseur" data-ng-options="f.id as f.label for f in fournisseur.values"></select>
+		</div>
+		
+		<div class="field-block button-height">
+			<label for="segmentation"><b>{{t 'companies:CustomerSegmentation'}}</b></label>
+			<select class="form-control" id="segmentation" data-ng-model="societe.segmentation" data-ng-options="c as c.label group by c.group for c in segmentation.values"></select>
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">

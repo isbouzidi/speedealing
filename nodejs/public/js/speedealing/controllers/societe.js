@@ -44,18 +44,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		};
 
 		/*$scope.segmentationSelect = function (val, max) {
-			return $http.post('api/societe/segmentation/autocomplete', {
-				take: max,
-				skip: 0,
-				page: 1,
-				pageSize: 5,
-				filter: {logic: 'and', filters: [{value: val}]
-				}
-			}).then(function (res) {
-				//console.log(res.data);
-				return res.data;
-			});
-		};*/
+		 return $http.post('api/societe/segmentation/autocomplete', {
+		 take: max,
+		 skip: 0,
+		 page: 1,
+		 pageSize: 5,
+		 filter: {logic: 'and', filters: [{value: val}]
+		 }
+		 }).then(function (res) {
+		 //console.log(res.data);
+		 return res.data;
+		 });
+		 };*/
 
 		$scope.showStatus = function (idx) {
 			if (!($scope[idx] && $scope.societe[idx]))
@@ -1014,49 +1014,16 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		};
 
 		$scope.init = function () {
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "Status"
-				}
-			}).success(function (data, status) {
-				$scope.status = data;
-				//console.log(data);
-				$scope.societe.Status = "ST_CINF3";
-			});
+			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement", "segmentation"];
 
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "fournisseur"
-				}
-			}).success(function (data, status) {
-				$scope.fournisseur = data;
-				//console.log(data);
-				$scope.societe.fournisseur = "NO";
-			});
-
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "prospectlevel"
-				}
-			}).success(function (data, status) {
-				$scope.potential = data;
-				//console.log(data);
-				$scope.societe.prospectlevel = data.default;
-			});
-
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "typent_id"
-				}
-			}).success(function (data, status) {
-				$scope.typent = data;
-				//console.log(data);
-				$scope.societe.typent_id = data.default;
-			});
-
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "effectif_id"
-				}
-			}).success(function (data, status) {
-				$scope.effectif = data;
-				//console.log(data);
-				$scope.societe.effectif_id = data.default;
+			angular.forEach(fields, function (field) {
+				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
+						field: field
+					}
+				}).success(function (data, status) {
+					$scope[field] = data;
+					//console.log(data);
+				});
 			});
 
 			$scope.societe.commercial_id = {
@@ -1064,14 +1031,6 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				name: Global.user.firstname + " " + Global.user.lastname
 			};
 
-			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-					field: "forme_juridique_code"
-				}
-			}).success(function (data, status) {
-				$scope.forme_juridique = data;
-				//console.log(data);
-				$scope.societe.forme_juridique_code = data.default;
-			});
 
 			$scope.societe.price_level = "BASE";
 			$scope.societe.capital = 0;
