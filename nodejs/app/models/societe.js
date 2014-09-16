@@ -21,11 +21,11 @@ var EntityModel = mongoose.model('entity');
  return tags.join(',');
  };*/
 
-var setTags = function(tags) {
+var setTags = function (tags) {
 	var result = [];
 	for (var i = 0; i < tags.length; i++)
 		result.push(tags[i].text);
-	console.log(result);
+	//console.log(result);
 	//return tags.split(',');
 	return result;
 };
@@ -68,15 +68,15 @@ var societeSchema = new Schema({
 	groupOrder: Boolean, // 1 bill for many order
 	groupDelivery: Boolean, // 1 bill for many delivery
 	zonegeo: String,
+	rival: String, //concurrent
 	Tag: {type: [], set: setTags},
 	segmentation: {
-			id: String,
-			label: String,
-			group: String
-		},
-	familyProduct: [{
-			text: String
-		}],
+		id: String,
+		label: String,
+		group: String
+	},
+	caFamily: {type: String, default: "OTHER", uppercase: true},
+	familyProduct: {type: [], set: setTags},
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},
@@ -106,7 +106,7 @@ var societeSchema = new Schema({
 	iban: {
 		bank: String,
 		id: String, //FR76........
-		swift: String, //BIC / SWIFT
+		swift: String //BIC / SWIFT
 	},
 	checklist: mongoose.Schema.Types.Mixed,
 	annualCA: [{
@@ -131,17 +131,17 @@ societeSchema.plugin(timestamps);
 
 societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 
-societeSchema.pre('save', function(next) {
+societeSchema.pre('save', function (next) {
 	var self = this;
 
 	if (this.code_client == null && this.entity !== "ALL" && this.Status !== 'ST_NEVER') {
 		//console.log("Save societe");
 
-		SeqModel.incNumber("C", 6, function(seq) {
+		SeqModel.incNumber("C", 6, function (seq) {
 			self.barCode = "C" + seq;
 
 			//console.log(seq);
-			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+			EntityModel.findOne({_id: self.entity}, "cptRef", function (err, entity) {
 				if (err)
 					console.log(err);
 
@@ -157,17 +157,17 @@ societeSchema.pre('save', function(next) {
 });
 
 var statusList = {};
-DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, docs) {
+DictModel.findOne({_id: "dict:fk_stcomm"}, function (err, docs) {
 	statusList = docs;
 });
 
 var prospectLevelList = {};
-DictModel.findOne({_id: "dict:fk_prospectlevel"}, function(err, docs) {
+DictModel.findOne({_id: "dict:fk_prospectlevel"}, function (err, docs) {
 	prospectLevelList = docs;
 });
 
 var segmentationList = {};
-DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, docs) {
+DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, docs) {
 	if (docs) {
 		segmentationList = docs.values;
 	}
@@ -213,7 +213,7 @@ var tab_attractivity = {
 };
 
 societeSchema.virtual('attractivity')
-		.get(function() {
+		.get(function () {
 			var attractivity = 0;
 
 			for (var i in tab_attractivity) {
@@ -230,7 +230,7 @@ societeSchema.virtual('attractivity')
 		});
 
 societeSchema.virtual('status')
-		.get(function() {
+		.get(function () {
 			var res_status = {};
 
 			var status = this.Status;
@@ -251,7 +251,7 @@ societeSchema.virtual('status')
 		});
 
 societeSchema.virtual('prospectLevel')
-		.get(function() {
+		.get(function () {
 			var prospectLevel = {};
 
 			var level = this.prospectlevel;

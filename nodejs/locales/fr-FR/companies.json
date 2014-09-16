@@ -20,7 +20,7 @@
 	"NewSocGroup": "Nouveau groupement de sociétés",
 	"NewPrivateIndividual": "Nouveau particulier (prospect, client, fournisseur)",
 	"ProspectionArea": "Espace prospection",
-	"SocGroup": "Groupement de sociétés",
+	"SocGroup": "Groupe de sociétés",
 	"IdThirdParty": "Id compte",
 	"IdCompany": "Id société",
 	"IdContact": "Id contact",
@@ -429,5 +429,7 @@
 	"Tel-Fixe": "Téléphone Fixe",
 	"email": "Email",
 	"ContactStatut": "Status",
-	"Soncas":"Soncas"
+	"Soncas": "Soncas",
+	"Rival": "Concurrent présent chez le client",
+	"Hobbies": "Hobbies/loisirs"
 }

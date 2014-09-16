@@ -65,6 +65,7 @@ var contactSchema = new Schema({
 	civilite: String, // DICT
 	Tag: {type: [], set: setTags},
 	soncas: [String],
+	hobbies: [String],
 	tag: [{
 			text: String
 		}],

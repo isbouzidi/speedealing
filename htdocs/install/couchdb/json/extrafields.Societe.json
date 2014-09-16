@@ -482,6 +482,13 @@
 			"dict": "dict:fk_segmentation",
 			"enable": true
 		},
+		"rival": {
+			"schema": "String",
+			"type": "select",
+			"label": "Concurrent",
+			"dict": "dict:fk_rival",
+			"enable": true
+		},
 		"currency": {
 			"type": "select",
 			"label": "CompanyCurrency",

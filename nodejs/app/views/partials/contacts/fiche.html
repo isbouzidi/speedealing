@@ -127,6 +127,15 @@
 			</a>
 
         </div>
+		
+		<div class="field-block">
+            <label><b>{{t 'companies:Hobbies'}}</b></label>
+
+			<a href="#" editable-checklist="contact.hobbies" e-class="xeditable" e-ng-options="s.label as s.label for s in hobbies.values" onaftersave="update()">
+				\{{ contact.hobbies || 'Non défini'}}
+			</a>
+
+        </div>
 
 		<div class="field-block">
             <label><b>{{t

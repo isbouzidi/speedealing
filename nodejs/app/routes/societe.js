@@ -14,7 +14,7 @@ var ContactModel = mongoose.model('contact');
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 	var contact = new Contact();
@@ -36,7 +36,7 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/societe/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
-	app.post('/api/societe/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/societe/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
 
 		if (req.body.filter == null)
@@ -55,7 +55,7 @@ module.exports = function(app, passport, auth) {
 		} else // customer Only
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
-		SocieteModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		SocieteModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/societe/autocomplete");
 				console.log(err);
@@ -95,7 +95,7 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
-	app.post('/api/societe/autocomplete/:field', auth.requiresLogin, function(req, res) {
+	app.post('/api/societe/autocomplete/:field', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
 		if (req.body.filter == null)
@@ -113,7 +113,7 @@ module.exports = function(app, passport, auth) {
 				{$match: query},
 				{$group: {_id: "$" + req.params.field}},
 				{$limit: req.body.take}
-			], function(err, docs) {
+			], function (err, docs) {
 				if (err) {
 					console.log("err : /api/societe/autocomplete/" + req.params.field);
 					console.log(err);
@@ -130,11 +130,18 @@ module.exports = function(app, passport, auth) {
 
 				return res.send(200, result);
 			});
-
-		//TODO write code for distinct attribute
+		else
+			SocieteModel.distinct(req.params.field, query, function (err, docs) {
+				if (err) {
+					console.log("err : /api/societe/autocomplete/" + req.params.field);
+					console.log(err);
+					return;
+				}
+				return res.send(200, docs);
+			});
 	});
 
-	app.post('/api/societe/segmentation/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/societe/segmentation/autocomplete', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
 		if (req.body.filter == null)
@@ -151,7 +158,7 @@ module.exports = function(app, passport, auth) {
 			{$match: query},
 			{$group: {_id: "$segmentation.text"}},
 			{$limit: req.body.take}
-		], function(err, docs) {
+		], function (err, docs) {
 			if (err) {
 				console.log("err : /api/societe/segmentation/autocomplete");
 				console.log(err);
@@ -169,7 +176,7 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
-	app.post('/api/societe/import/kompass', /*ensureAuthenticated,*/ function(req, res) {
+	app.post('/api/societe/import/kompass', /*ensureAuthenticated,*/ function (req, res) {
 
 		var conv = [
 			"kompass_id",
@@ -321,7 +328,7 @@ module.exports = function(app, passport, auth) {
 			"annualEBE"
 		];
 
-		var convertRow = function(row, index, cb) {
+		var convertRow = function (row, index, cb) {
 			var societe = {};
 
 			for (var i = 0; i < row.length; i++) {
@@ -438,7 +445,7 @@ module.exports = function(app, passport, auth) {
 
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
-						.transform(function(row, index, callback) {
+						.transform(function (row, index, callback) {
 							if (index === 0) {
 								tab = row; // Save header line
 
@@ -459,13 +466,13 @@ module.exports = function(app, passport, auth) {
 
 							//console.log(row[0]);
 
-							convertRow(row, index, function(data) {
+							convertRow(row, index, function (data) {
 
 								//callback();
 
 								//return;
 
-								SocieteModel.findOne({$or: [{kompass_id: data.kompass_id}, {idprof2: data.idprof2}]}, function(err, societe) {
+								SocieteModel.findOne({$or: [{kompass_id: data.kompass_id}, {idprof2: data.idprof2}]}, function (err, societe) {
 									if (err) {
 										console.log(err);
 										return callback();
@@ -487,7 +494,7 @@ module.exports = function(app, passport, auth) {
 									//return;
 
 									if (!alreadyImport)
-										societe.save(function(err, doc) {
+										societe.save(function (err, doc) {
 											if (err)
 												console.log(err);
 											/*if (doc == null)
@@ -499,7 +506,7 @@ module.exports = function(app, passport, auth) {
 										});
 
 									if (!isNew) {
-										ContactModel.findOne({'societe.id': societe._id, firstname: data.firstname, lastname: data.lastname}, function(err, contact) {
+										ContactModel.findOne({'societe.id': societe._id, firstname: data.firstname, lastname: data.lastname}, function (err, contact) {
 											if (err) {
 												console.log(err);
 												return callback();
@@ -520,7 +527,7 @@ module.exports = function(app, passport, auth) {
 											if (!contact.firstname && !contact.lastname)
 												return callback();
 
-											contact.save(function(err, doc) {
+											contact.save(function (err, doc) {
 												callback();
 											});
 										});
@@ -532,22 +539,22 @@ module.exports = function(app, passport, auth) {
 								//return row;
 							});
 						}/*, {parallel: 1}*/)
-						.on("end", function(count) {
+						.on("end", function (count) {
 							console.log('Number of lines: ' + count);
-							fs.unlink(filename, function(err) {
+							fs.unlink(filename, function (err) {
 								if (err)
 									console.log(err);
 							});
 							return res.send(200, {count: count});
 						})
-						.on('error', function(error) {
+						.on('error', function (error) {
 							console.log(error.message);
 						});
 			}
 		}
 	});
 
-	app.post('/api/societe/import/horsAntenne', /*ensureAuthenticated,*/ function(req, res) {
+	app.post('/api/societe/import/horsAntenne', /*ensureAuthenticated,*/ function (req, res) {
 
 		var conv = [
 			false,
@@ -626,7 +633,7 @@ module.exports = function(app, passport, auth) {
 			"segmentation"
 		];
 
-		var convertRow = function(row, index, cb) {
+		var convertRow = function (row, index, cb) {
 			var societe = {};
 			societe.typent_id = "TE_PUBLIC";
 			societe.country_id = "FR";
@@ -736,7 +743,7 @@ module.exports = function(app, passport, auth) {
 
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
-						.transform(function(row, index, callback) {
+						.transform(function (row, index, callback) {
 							if (index === 0) {
 								tab = row; // Save header line
 
@@ -757,7 +764,7 @@ module.exports = function(app, passport, auth) {
 
 							//console.log(row[0]);
 
-							convertRow(row, index, function(data) {
+							convertRow(row, index, function (data) {
 
 								//callback();
 
@@ -773,7 +780,7 @@ module.exports = function(app, passport, auth) {
 								else
 									query = {ha_id: data.ha_id};
 
-								SocieteModel.findOne(query, function(err, societe) {
+								SocieteModel.findOne(query, function (err, societe) {
 									if (err) {
 										console.log(err);
 										return callback();
@@ -795,7 +802,7 @@ module.exports = function(app, passport, auth) {
 									//return;
 
 									if (!alreadyImport)
-										societe.save(function(err, doc) {
+										societe.save(function (err, doc) {
 											if (err)
 												console.log("societe : " + JSON.stringify(err));
 
@@ -808,7 +815,7 @@ module.exports = function(app, passport, auth) {
 										});
 
 									if (!isNew) {
-										ContactModel.findOne({'societe.id': societe._id, firstname: data.firstname, lastname: data.lastname}, function(err, contact) {
+										ContactModel.findOne({'societe.id': societe._id, firstname: data.firstname, lastname: data.lastname}, function (err, contact) {
 											if (err) {
 												console.log(err);
 												return callback();
@@ -837,7 +844,7 @@ module.exports = function(app, passport, auth) {
 											if (!contact.firstname || !contact.lastname)
 												return callback();
 
-											contact.save(function(err, doc) {
+											contact.save(function (err, doc) {
 												if (err)
 													console.log("contact : " + err);
 
@@ -852,22 +859,22 @@ module.exports = function(app, passport, auth) {
 								//return row;
 							});
 						}/*, {parallel: 1}*/)
-						.on("end", function(count) {
+						.on("end", function (count) {
 							console.log('Number of lines: ' + count);
-							fs.unlink(filename, function(err) {
+							fs.unlink(filename, function (err) {
 								if (err)
 									console.log(err);
 							});
 							return res.send(200, {count: count});
 						})
-						.on('error', function(error) {
+						.on('error', function (error) {
 							console.log(error.message);
 						});
 			}
 		}
 	});
 
-	app.post('/api/societe/import', /*ensureAuthenticated,*/ function(req, res) {
+	app.post('/api/societe/import', /*ensureAuthenticated,*/ function (req, res) {
 		req.connection.setTimeout(300000);
 
 		var conv_id = {
@@ -914,7 +921,7 @@ module.exports = function(app, passport, auth) {
 			"segmentation"
 		];
 
-		var convertRow = function(tab, row, index, cb) {
+		var convertRow = function (tab, row, index, cb) {
 			var societe = {};
 			societe.country_id = "FR";
 			societe.segmentation = [];
@@ -1048,7 +1055,7 @@ module.exports = function(app, passport, auth) {
 
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
-						.transform(function(row, index, callback) {
+						.transform(function (row, index, callback) {
 							if (index === 0) {
 								tab = row; // Save header line
 								return callback();
@@ -1060,9 +1067,9 @@ module.exports = function(app, passport, auth) {
 
 							//return;
 
-							convertRow(tab, row, index, function(data) {
+							convertRow(tab, row, index, function (data) {
 
-								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+								SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
 									if (err) {
 										console.log(err);
 										return callback();
@@ -1075,7 +1082,7 @@ module.exports = function(app, passport, auth) {
 									//console.log(societe)
 									//console.log(societe.datec);
 
-									societe.save(function(err, doc) {
+									societe.save(function (err, doc) {
 										if (err)
 											console.log(err);
 										/*if (doc == null)
@@ -1091,24 +1098,24 @@ module.exports = function(app, passport, auth) {
 
 							//return row;
 						}/*, {parallel: 1}*/)
-						.on("end", function(count) {
+						.on("end", function (count) {
 							console.log('Number of lines: ' + count);
-							fs.unlink(filename, function(err) {
+							fs.unlink(filename, function (err) {
 								if (err)
 									console.log(err);
 							});
 							return res.send(200, {count: count});
 						})
-						.on('error', function(error) {
+						.on('error', function (error) {
 							console.log(error.message);
 						});
 			}
 		}
 	});
 
-	app.post('/api/societe/notes/import', /*ensureAuthenticated,*/ function(req, res) {
+	app.post('/api/societe/notes/import', /*ensureAuthenticated,*/ function (req, res) {
 
-		var convertRow = function(tab, row, index, cb) {
+		var convertRow = function (tab, row, index, cb) {
 			var societe = {};
 
 			for (var i = 0; i < row.length; i++) {
@@ -1145,7 +1152,7 @@ module.exports = function(app, passport, auth) {
 
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
-						.transform(function(row, index, callback) {
+						.transform(function (row, index, callback) {
 							if (index === 0) {
 								tab = row; // Save header line
 								return callback();
@@ -1157,13 +1164,13 @@ module.exports = function(app, passport, auth) {
 
 							//return;
 
-							convertRow(tab, row, index, function(data) {
+							convertRow(tab, row, index, function (data) {
 
 								if (!data.notes.note) {
 									return callback();
 								}
 
-								SocieteModel.findOne({code_client: data.code_client}, function(err, societe) {
+								SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
 									if (err) {
 										console.log(err);
 										return callback();
@@ -1178,7 +1185,7 @@ module.exports = function(app, passport, auth) {
 
 									//console.log(societe);
 
-									societe.save(function(err, doc) {
+									societe.save(function (err, doc) {
 										if (err)
 											console.log(err);
 										/*if (doc == null)
@@ -1194,29 +1201,29 @@ module.exports = function(app, passport, auth) {
 
 							//return row;
 						}/*, {parallel: 1}*/)
-						.on("end", function(count) {
+						.on("end", function (count) {
 							console.log('Number of lines: ' + count);
-							fs.unlink(filename, function(err) {
+							fs.unlink(filename, function (err) {
 								if (err)
 									console.log(err);
 							});
 							return res.send(200, {count: count});
 						})
-						.on('error', function(error) {
+						.on('error', function (error) {
 							console.log(error.message);
 						});
 			}
 		}
 	});
 
-	app.post('/api/societe/file/:Id', auth.requiresLogin, function(req, res) {
+	app.post('/api/societe/file/:Id', auth.requiresLogin, function (req, res) {
 		var id = req.params.Id;
 		//console.log(id);
 
 		if (req.files && id) {
 			//console.log(req.files);
 
-			gridfs.addFile(SocieteModel, id, req.files.file, function(err, result, file, update) {
+			gridfs.addFile(SocieteModel, id, req.files.file, function (err, result, file, update) {
 				if (err)
 					return res.send(500, err);
 
@@ -1226,12 +1233,12 @@ module.exports = function(app, passport, auth) {
 			res.send(500, "Error in request file");
 	});
 
-	app.get('/api/societe/file/:Id/:fileName', auth.requiresLogin, function(req, res) {
+	app.get('/api/societe/file/:Id/:fileName', auth.requiresLogin, function (req, res) {
 		var id = req.params.Id;
 
 		if (id && req.params.fileName) {
 
-			gridfs.getFile(SocieteModel, id, req.params.fileName, function(err, store) {
+			gridfs.getFile(SocieteModel, id, req.params.fileName, function (err, store) {
 				if (err)
 					return res.send(500, err);
 
@@ -1248,13 +1255,13 @@ module.exports = function(app, passport, auth) {
 
 	});
 
-	app.del('/api/societe/file/:Id/:fileNames', auth.requiresLogin, function(req, res) {
+	app.del('/api/societe/file/:Id/:fileNames', auth.requiresLogin, function (req, res) {
 		console.log(req.body);
 		var id = req.params.Id;
 		//console.log(id);
 
 		if (req.params.fileNames && id) {
-			gridfs.delFile(SocieteModel, id, req.params.fileNames, function(err) {
+			gridfs.delFile(SocieteModel, id, req.params.fileNames, function (err) {
 				if (err)
 					res.send(500, err);
 				else
@@ -1264,11 +1271,11 @@ module.exports = function(app, passport, auth) {
 			res.send(500, "File not found");
 	});
 
-	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function(req, res) {
+	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function (req, res) {
 		var id = req.params.Id;
 
 		if (req.params.fileName && id) {
-			gridfs.delFile(SocieteModel, id, req.params.fileName, function(err) {
+			gridfs.delFile(SocieteModel, id, req.params.fileName, function (err) {
 				if (err)
 					res.send(500, err);
 				else
@@ -1278,12 +1285,12 @@ module.exports = function(app, passport, auth) {
 			res.send(500, "File not found");
 	});
 
-	app.get('/api/societe/contact/select', auth.requiresLogin, function(req, res) {
+	app.get('/api/societe/contact/select', auth.requiresLogin, function (req, res) {
 		//console.log(req.query);
 		var result = [];
 
 		if (req.query.societe)
-			ContactModel.find({"societe.id": req.query.societe}, "_id name", function(err, docs) {
+			ContactModel.find({"societe.id": req.query.societe}, "_id name", function (err, docs) {
 				if (err)
 					console.log(err);
 
@@ -1300,7 +1307,7 @@ module.exports = function(app, passport, auth) {
 				res.send(200, result);
 			});
 		else
-			ContactModel.find({}, "_id name", function(err, docs) {
+			ContactModel.find({}, "_id name", function (err, docs) {
 				if (err)
 					console.log(err);
 
@@ -1328,7 +1335,7 @@ function Object() {
 }
 
 Object.prototype = {
-	societe: function(req, res, next, id) {
+	societe: function (req, res, next, id) {
 		//TODO Check ACL here
 		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 		var query = {};
@@ -1340,7 +1347,7 @@ Object.prototype = {
 
 		//console.log(query);
 
-		SocieteModel.findOne(query, function(err, doc) {
+		SocieteModel.findOne(query, function (err, doc) {
 			if (err)
 				return next(err);
 
@@ -1349,7 +1356,7 @@ Object.prototype = {
 			next();
 		});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 		var query = {
 			$or: [{
 					entity: "ALL"
@@ -1376,8 +1383,8 @@ Object.prototype = {
 					break;
 			}
 		}
-		
-		if(req.query.Status)
+
+		if (req.query.Status)
 			query.Status = req.query.Status;
 
 		if (req.query.commercial_id)
@@ -1394,7 +1401,7 @@ Object.prototype = {
 		if (!req.user.rights.societe.seeAll && !req.user.admin)
 			query["commercial_id.id"] = req.user._id;
 
-		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function(err, doc) {
+		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -1406,10 +1413,10 @@ Object.prototype = {
 			res.json(200, doc);
 		});
 	},
-	show: function(req, res) {
+	show: function (req, res) {
 		res.json(req.societe);
 	},
-	count: function(req, res) {
+	count: function (req, res) {
 		var query = {
 			$or: [{
 					entity: "ALL"
@@ -1436,8 +1443,8 @@ Object.prototype = {
 					break;
 			}
 		}
-		
-		if(req.query.Status)
+
+		if (req.query.Status)
 			query.Status = req.query.Status;
 
 		if (req.query.commercial_id)
@@ -1446,7 +1453,7 @@ Object.prototype = {
 		if (!req.user.rights.societe.seeAll && !req.user.admin)
 			query["commercial_id.id"] = req.user._id;
 
-		SocieteModel.count(query, function(err, doc) {
+		SocieteModel.count(query, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -1456,7 +1463,7 @@ Object.prototype = {
 			res.json(200, {count: doc});
 		});
 	},
-	create: function(req, res) {
+	create: function (req, res) {
 		var societe = new SocieteModel(req.body);
 		societe.author = {};
 		societe.author.id = req.user._id;
@@ -1466,7 +1473,7 @@ Object.prototype = {
 			societe.entity = req.user.entity;
 
 		console.log(societe);
-		societe.save(function(err, doc) {
+		societe.save(function (err, doc) {
 			if (err) {
 				return console.log(err);
 			}
@@ -1474,11 +1481,11 @@ Object.prototype = {
 			res.json(societe);
 		});
 	},
-	uniqId: function(req, res) {
+	uniqId: function (req, res) {
 		if (!req.query.idprof2)
 			return res.send(404);
 
-		SocieteModel.findOne({idprof2: req.query.idprof2}, "name entity", function(err, doc) {
+		SocieteModel.findOne({idprof2: req.query.idprof2}, "name entity", function (err, doc) {
 			if (err)
 				return next(err);
 			if (!doc)
@@ -1488,30 +1495,30 @@ Object.prototype = {
 		});
 
 	},
-	update: function(req, res) {
+	update: function (req, res) {
 		var societe = req.societe;
 		societe = _.extend(societe, req.body);
 		//console.log(req.body);
 
-		societe.save(function(err, doc) {
+		societe.save(function (err, doc) {
 			res.json(doc);
 		});
 	},
-	updateField: function(req, res) {
+	updateField: function (req, res) {
 		if (req.body.value) {
 			var societe = req.societe;
 
 			societe[req.params.field] = req.body.value;
 
-			societe.save(function(err, doc) {
+			societe.save(function (err, doc) {
 				res.json(doc);
 			});
 		} else
 			res.send(500);
 	},
-	destroy: function(req, res) {
+	destroy: function (req, res) {
 		var societe = req.societe;
-		societe.remove(function(err) {
+		societe.remove(function (err) {
 			if (err) {
 				res.render('error', {
 					status: 500
@@ -1521,15 +1528,15 @@ Object.prototype = {
 			}
 		});
 	},
-	select: function(req, res) {
-		ExtrafieldModel.findById('extrafields:Societe', function(err, doc) {
+	select: function (req, res) {
+		ExtrafieldModel.findById('extrafields:Societe', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
 			}
 			var result = [];
 			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
 
 					if (docs) {
 						for (var i in docs.values) {
@@ -1540,10 +1547,10 @@ Object.prototype = {
 									val.label = docs.values[i].label;
 								else
 									val.label = req.i18n.t("companies:" + i);
-								
-								if(docs.values[i].group)
+
+								if (docs.values[i].group)
 									val.group = docs.values[i].group;
-								
+
 								result.push(val);
 							}
 						}
@@ -1566,9 +1573,9 @@ Object.prototype = {
 			res.json(doc.fields[req.query.field]);
 		});
 	},
-	segmentation: function(req, res) {
+	segmentation: function (req, res) {
 		var segmentationList = {};
-		DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, docs) {
+		DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, docs) {
 			if (docs) {
 				segmentationList = docs.values;
 			}
@@ -1577,7 +1584,7 @@ Object.prototype = {
 				{$project: {_id: 0, segmentation: 1}},
 				{$unwind: "$segmentation"},
 				{$group: {_id: "$segmentation.text", count: {$sum: 1}}}
-			], function(err, docs) {
+			], function (err, docs) {
 				if (err) {
 					console.log("err : /api/societe/segmentation/autocomplete");
 					console.log(err);
@@ -1601,8 +1608,8 @@ Object.prototype = {
 			});
 		});
 	},
-	segmentationUpdate: function(req, res) {
-		DictModel.findOne({_id: "dict:fk_segmentation"}, function(err, doc) {
+	segmentationUpdate: function (req, res) {
+		DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, doc) {
 			if (doc == null)
 				return console.log("dict:fk_segmentation doesn't exist !");
 
@@ -1616,7 +1623,7 @@ Object.prototype = {
 
 			doc.markModified('values');
 
-			doc.save(function(err, doc) {
+			doc.save(function (err, doc) {
 				if (err)
 					console.log(err);
 			});
@@ -1625,45 +1632,45 @@ Object.prototype = {
 
 		});
 	},
-	segmentationDelete: function(req, res) {
+	segmentationDelete: function (req, res) {
 		//console.log(req.body);
 		SocieteModel.update({'segmentation.text': req.body._id},
 		{$pull: {segmentation: {text: req.body._id}}},
 		{multi: true},
-		function(err) {
+		function (err) {
 			res.send(200);
 		});
 	},
-	segmentationRename: function(req, res) {
+	segmentationRename: function (req, res) {
 		console.log(req.body);
 		SocieteModel.update({'segmentation.text': req.body.old},
 		{$push: {segmentation: {text: req.body.new}}},
 		{multi: true},
-		function(err) {
+		function (err) {
 			if (err)
 				return console.log(err);
 
 			SocieteModel.update({'segmentation.text': req.body.old},
 			{$pull: {segmentation: {text: req.body.old}}},
 			{multi: true},
-			function(err) {
+			function (err) {
 				if (err)
 					console.log(err);
 				res.send(200);
 			});
 		});
 	},
-	statistic: function(req, res) {
+	statistic: function (req, res) {
 		//console.log(req.query);
 
 		async.parallel({
-			own: function(cb) {
-				DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, dict) {
+			own: function (cb) {
+				DictModel.findOne({_id: "dict:fk_stcomm"}, function (err, dict) {
 					SocieteModel.aggregate([
 						{$match: {entity: {$in: ["ALL", req.query.entity]}, Status: {$nin: ["ST_NO"]}, "commercial_id.id": "user:" + req.query.name}},
 						{$project: {_id: 0, "Status": 1}},
 						{$group: {_id: "$Status", count: {$sum: 1}}}
-					], function(err, docs) {
+					], function (err, docs) {
 
 						for (var i = 0; i < docs.length; i++) {
 							docs[i]._id = dict.values[docs[i]._id];
@@ -1673,7 +1680,7 @@ Object.prototype = {
 					});
 				});
 			},
-			commercial: function(cb) {
+			commercial: function (cb) {
 				var query = {};
 
 				if (req.user.rights.societe.seeAll || req.user.admin) {
@@ -1688,21 +1695,21 @@ Object.prototype = {
 					{$project: {_id: 0, "commercial_id.id": 1, "commercial_id.name": 1}},
 					{$group: {_id: {id: "$commercial_id.id", name: "$commercial_id.name"}, count: {$sum: 1}}},
 					{$sort: {"_id.name": 1}}
-				], function(err, docs) {
+				], function (err, docs) {
 					cb(err, docs || []);
 				});
 			},
-			status: function(cb) {
+			status: function (cb) {
 				SocieteModel.aggregate([
 					{$match: {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}}},
 					{$project: {_id: 0, "commercial_id.id": 1, "Status": 1}},
 					{$group: {_id: {commercial: "$commercial_id.id", Status: "$Status"}, count: {$sum: 1}}}
-				], function(err, docs) {
+				], function (err, docs) {
 					cb(err, docs || []);
 				});
 			},
-			fk_status: function(cb) {
-				DictModel.findOne({_id: "dict:fk_stcomm"}, function(err, doc) {
+			fk_status: function (cb) {
+				DictModel.findOne({_id: "dict:fk_stcomm"}, function (err, doc) {
 					var result = [];
 
 					for (var i in doc.values) {
@@ -1713,7 +1720,7 @@ Object.prototype = {
 						}
 					}
 
-					result.sort(function(a, b) {
+					result.sort(function (a, b) {
 						return a.order > b.order;
 					});
 
@@ -1721,7 +1728,7 @@ Object.prototype = {
 				});
 			}
 		},
-		function(err, results) {
+		function (err, results) {
 			if (err)
 				return console.log(err);
 
@@ -1766,9 +1773,9 @@ function Contact() {
 }
 
 Contact.prototype = {
-	read: function(req, res) {
+	read: function (req, res) {
 
-		ContactModel.find(JSON.parse(req.query.find), function(err, doc) {
+		ContactModel.find(JSON.parse(req.query.find), function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);

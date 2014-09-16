@@ -137,6 +137,13 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			}).success(function (data, status) {
 				$scope.jobs = data;
 			});
+			
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_hobbies"
+				}
+			}).success(function (data, status) {
+				$scope.hobbies = data;
+			});
 		};
 
 		$scope.findOne = function () {

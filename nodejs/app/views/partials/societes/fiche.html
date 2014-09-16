@@ -266,11 +266,17 @@
 														</a></td>
 												</tr>-->
 												<tr>
+													<th scope="row">{{t 'companies:SocGroup'}}</th>
+													<td><a href="#" editable-text="societe.caFamily" e-typeahead="ca as ca for ca in AutoComplete($viewValue,'api/societe/autocomplete/caFamily',10)" buttons="no" onaftersave="update()">
+															\{{societe.caFamily|| "Aucun"}}
+														</a></td>
+												</tr>
+												<tr>
 													<th scope="row">{{t 'companies:CustomerSegmentation'}}</th>
 													<td><a href="#" editable-select="societe.segmentation" buttons="no" e-ng-options="s as s.label group by s.group for s in segmentation.values track by s.id" onaftersave="update()">
 															\{{societe.segmentation.label || 'Non défini'}} <small ng-if="societe.segmentation.group">(\{{societe.segmentation.group}})</small>
 														</a></td>
-											</tr>
+												</tr>
 											<tr>
 												<th scope="row" colspan="2">{{t 'companies:ProductSegmentation'}}<br/>
 											<tags-input ng-model="societe.familyProduct" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
@@ -278,6 +284,12 @@
 											</tags-input>
 											</th>
 											</tr>
+											<tr>
+													<th scope="row">{{t 'companies:Rival'}}</th>
+													<td><a href="#" editable-select="societe.rival" buttons="no" e-ng-options="s.label as s.label for s in rival.values" onaftersave="update()">
+															\{{societe.rival || 'Non défini'}}
+														</a></td>
+												</tr>
 											<tr>
 												<th scope="row" colspan="2">{{t 'Keywords'}}<br/>
 											<tags-input data-ng-model="societe.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
