@@ -14,12 +14,12 @@ var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
 
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 
 
-	app.get('/api/report/contacts', auth.requiresLogin, function(req, res) {
+	app.get('/api/report/contacts', auth.requiresLogin, function (req, res) {
 
 		if (req.query.societe === null)
 			return res.send(200, {});
@@ -27,7 +27,7 @@ module.exports = function(app, passport, auth) {
 		console.log("contacts : " + req.query.contacts);
 		var societe = req.query.societe;
 
-		ContactModel.find({'societe.id': societe}, function(err, doc) {
+		ContactModel.find({'societe.id': societe}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
@@ -40,12 +40,12 @@ module.exports = function(app, passport, auth) {
 	});
 
 	// add or update potential attract
-	app.put('/api/report/addProspectLevel', auth.requiresLogin, function(req, res) {
+	app.put('/api/report/addProspectLevel', auth.requiresLogin, function (req, res) {
 
 		var prospectLevel = req.query.prospectLevel;
 		var societe = req.query.societe;
 
-		SocieteModel.update({_id: societe}, {$set: {prospectlevel: prospectLevel}}, function(err, doc) {
+		SocieteModel.update({_id: societe}, {$set: {prospectlevel: prospectLevel}}, function (err, doc) {
 
 			if (err) {
 				return console.log('Erreur : ' + err);
@@ -91,8 +91,8 @@ function Object() {
 }
 
 Object.prototype = {
-	report: function(req, res, next, id) {
-		ReportModel.findOne({_id: id}, function(err, doc) {
+	report: function (req, res, next, id) {
+		ReportModel.findOne({_id: id}, function (err, doc) {
 			if (err)
 				return next(err);
 			if (!doc)
@@ -102,9 +102,9 @@ Object.prototype = {
 			next();
 		});
 	},
-	select: function(req, res) {
+	select: function (req, res) {
 
-		ExtrafieldModel.findById('extrafields:Report', function(err, doc) {
+		ExtrafieldModel.findById('extrafields:Report', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
@@ -124,12 +124,12 @@ Object.prototype = {
 			res.json(result);
 		});
 	},
-	create: function(req, res) {
+	create: function (req, res) {
 
 		var reportModel = new ReportModel(req.body);
 		console.log("log " + req.body.report);
 
-		reportModel.save(function(err, doc) {
+		reportModel.save(function (err, doc) {
 			if (err) {
 				//return res.json(500, err);
 				return console.log(err);
@@ -138,7 +138,7 @@ Object.prototype = {
 			res.json(200, doc);
 		});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 		var query = {};
 		var fields = {};
 
@@ -148,7 +148,7 @@ Object.prototype = {
 			fields = req.query.fields;
 		}
 
-		ReportModel.find(query, fields, function(err, doc) {
+		ReportModel.find(query, fields, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -158,23 +158,23 @@ Object.prototype = {
 			res.send(200, doc);
 		});
 	},
-	show: function(req, res) {
+	show: function (req, res) {
 		//console.log("show : " + req.report);
 		res.json(req.report);
 	},
-	listReports: function(req, res) {
+	listReports: function (req, res) {
 
 		var user = req.query.user;
 
 		var query = {
-//			"author.id": {
-//				"$nin": [user]
-//			},
+			"author.id": {
+				"$nin": [user]
+			},
 			entity: req.query.entity
 		};
-		ReportModel.find(query, {}, {limit: req.query.limit, sort:{
-        createdAt: -1 //Sort by Date Added DESC
-    }}, function(err, doc) {
+		ReportModel.find(query, {}, {limit: req.query.limit, sort: {
+				createdAt: -1 //Sort by Date created DESC
+			}}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -184,7 +184,7 @@ Object.prototype = {
 			res.send(200, doc);
 		});
 	},
-	listTasks: function(req, res) {
+	listTasks: function (req, res) {
 
 		var user = req.query.user;
 
@@ -192,7 +192,7 @@ Object.prototype = {
 			"author.id": {"$in": [user]},
 			"realised": false
 		};
-		ReportModel.find(query, "_id societe actions", function(err, doc) {
+		ReportModel.find(query, "_id societe actions", function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -202,12 +202,12 @@ Object.prototype = {
 			res.send(200, doc);
 		});
 	},
-	taskRealised: function(req, res) {
+	taskRealised: function (req, res) {
 
 		var id = req.query.id;
 
 		if (id)
-			ReportModel.update({"_id": id}, {$set: {"realised": true, dueDate: new Date()}}, function(err, doc) {
+			ReportModel.update({"_id": id}, {$set: {"realised": true, dueDate: new Date()}}, function (err, doc) {
 
 				if (err)
 					return console.log(err);
@@ -217,12 +217,12 @@ Object.prototype = {
 			});
 	}
 	,
-	cancelTaskRealised: function(req, res) {
+	cancelTaskRealised: function (req, res) {
 
 		var id = req.query.id;
 
 		if (id)
-			ReportModel.update({"_id": id}, {$set: {"realised": false, dueDate: null}}, function(err, doc) {
+			ReportModel.update({"_id": id}, {$set: {"realised": false, dueDate: null}}, function (err, doc) {
 
 				if (err)
 					return console.log(err);
@@ -231,12 +231,12 @@ Object.prototype = {
 
 			});
 	},
-	update: function(req, res) {
+	update: function (req, res) {
 
 		var report = req.report;
 		report = _.extend(report, req.body);
 
-		report.save(function(err, doc) {
+		report.save(function (err, doc) {
 
 			if (err) {
 				return console.log(err);
