@@ -172,7 +172,9 @@ Object.prototype = {
 			},
 			entity: req.query.entity
 		};
-		ReportModel.find(query, {}, {limit: req.query.limit}, function(err, doc) {
+		ReportModel.find(query, {}, {limit: req.query.limit, sort:{
+        createAt: -1 //Sort by Date Added DESC
+    }}, function(err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
