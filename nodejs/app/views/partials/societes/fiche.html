@@ -268,7 +268,7 @@
 												<tr>
 													<th scope="row">{{t 'companies:CustomerSegmentation'}}</th>
 													<td><a href="#" editable-select="societe.segmentation" buttons="no" e-ng-options="s as s.label group by s.group for s in segmentation.values track by s.id" onaftersave="update()">
-															\{{societe.segmentation.label || 'Non défini'}} (\{{societe.segmentation.group}})
+															\{{societe.segmentation.label || 'Non défini'}} <small ng-if="societe.segmentation.group">(\{{societe.segmentation.group}})</small>
 														</a></td>
 											</tr>
 											<tr>
