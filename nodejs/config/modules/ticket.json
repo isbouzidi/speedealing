@@ -1,0 +1,69 @@
+{
+	"_id": "module:Ticket",
+	"enabled": true,
+	"boxes": [
+		{
+			"1": "box_factures_imp.php"
+		},
+		{
+			"1": "box_factures.php"
+		}
+	],
+	"const": [
+		[
+			"FACTURE_ADDON_PDF",
+			"chaine",
+			"crabe"
+		],
+		[
+			"FACTURE_ADDON",
+			"chaine",
+			"terre"
+		],
+		[
+			"FACTURE_ADDON_PDF_ODT_PATH",
+			"chaine",
+			"DOL_DATA_ROOT/doctemplates/invoices",
+			"",
+			0
+		]
+	],
+	"rights": {
+		"ticket": [
+			{
+				"desc": "Lire les tickets",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer/modifier les tickets",
+				"perm": {
+					"create": false
+				}
+			},
+			{
+				"desc": "Supprimer les tickets",
+				"perm": {
+					"delete": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"family": "main",
+	"name": "Ticket",
+	"description": "Gestion des ticket",
+	"version": "speedealing",
+	"picto": "bill",
+	"depends": [
+		"modSociete"
+	],
+	"requiredby": [
+	],
+	"conflictwith": [],
+	"config_page_url": [
+	],
+	"menus": {
+	}
+}

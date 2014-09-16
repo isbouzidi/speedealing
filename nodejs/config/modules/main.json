@@ -127,7 +127,8 @@
 	"menus": {
 		"menu:parameters": {
 			"position": 1000,
-			"url": "/index.php",
+			"url": "",
+			"perms":"admin",
 			"enabled": "$user->admin",
 			"usertype": 2,
 			"title": "Parameters",
@@ -315,7 +316,7 @@
 		},
 		"menu:rh": {
 			"position": 999,
-			"enabled": "$user->rights->user->user->creer || $user->admin",
+			"perms": "user.write",
 			"usertype": 2,
 			"title": "RH",
 			"submenus": {

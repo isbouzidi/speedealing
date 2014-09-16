@@ -103,7 +103,7 @@
 				"menu:billssupplierlist": {
 					"position": 2,
 					"url": "#!/billsSupplier",
-					"perms": "$user->rights->facture->lire",
+					"perms": "bill.read",
 					"enabled": "$conf->facture->enabled",
 					"usertype": 2,
 					"title": "suppliers:SuppliersInvoices"

@@ -7,22 +7,35 @@ var async = require('async'),
 		_ = require('underscore');
 
 var menus = {};
+var rights = [];
 
 console.log("Loading Speedealing modules...");
 
-fs.readdirSync(__dirname + '/../../config/modules').forEach(function(file) {
+fs.readdirSync(__dirname + '/../../config/modules').forEach(function (file) {
 	if (file === "index.js")
 		return;
 	if (file.indexOf('.json') == null) // exclude not json
 		return;
 
-	fs.readFile(__dirname + '/../../config/modules/' + file, 'utf8', function(err, data) {
+	fs.readFile(__dirname + '/../../config/modules/' + file, 'utf8', function (err, data) {
 		if (err) {
 			console.log('Error: ' + err);
 			return;
 		}
 
 		data = JSON.parse(data);
+		
+		/* Load rights */
+		
+		if (data.enabled) {
+
+            rights.push({
+                name: data.name,
+                desc: data.description,
+                rights: data.rights
+            });
+
+        }
 
 		/* Load Menu : 3 levels MAX */
 
@@ -62,6 +75,49 @@ fs.readdirSync(__dirname + '/../../config/modules').forEach(function(file) {
 	});
 });
 
-exports.menus = function(req, res) {
-	res.json(menus);
+exports.menus = function (req, res) {
+	var result = {};
+
+	function checkright(perms) {
+		if (!req.user.admin && typeof perms == "string") {
+			var perm = perms.split(".");
+			console.log(perm);
+
+			if (perm[0] === "admin" && !req.user.admin) // super administrator
+				return false;
+
+			if (perm.length == 2) {
+				if (!req.user.rights[perm[0]] || !req.user.rights[perm[0]][perm[1]])
+					return false;
+			}
+		}
+		return true;
+	}
+
+	for (var i in menus) {
+		// Check right
+		if (!checkright(menus[i].perms))
+			continue;
+
+		result[i] = menus[i];
+
+		for (var j in menus[i].submenus) {
+			if (!checkright(menus[i].submenus[j].perms)){
+				delete result[i].submenus[j];
+				continue;
+			}
+
+			for (var k in menus[i].submenus[j].submenus) {
+				if (!checkright(menus[i].submenus[j].submenus[k].perms)) {
+					delete result[i].submenus[j].submenus[k];
+					continue;
+				}
+			}
+		}
+	}
+	res.json(result);
+};
+
+exports.rights = function(req, res) {
+    res.json(rights);
 };

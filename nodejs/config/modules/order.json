@@ -109,7 +109,7 @@
 	"menus": {
 		"menu:commandes": {
 			"position": 41,
-			"perms": "$user->rights->commande->lire || $user->rights->intervention->lire",
+			"perms": "order.read",
 			"enabled": "$conf->commande->enabled",
 			"usertype": 2,
 			"title": "orders:Orders",
@@ -117,7 +117,7 @@
 				"menu:orderslist": {
 					"position": 1,
 					"url": "#!/orders",
-					"perms": "$user->rights->commande->lire",
+					"perms": "order.read",
 					"enabled": "$conf->commande->enabled",
 					"usertype": 2,
 					"title": "orders:ListOfOrders"
@@ -125,7 +125,7 @@
 				"menu:orderslistsupplier": {
 					"position": 2,
 					"url": "#!/ordersSupplier",
-					"perms": "$user->rights->commande->lire",
+					"perms": "order.read",
 					"enabled": "$conf->commande->enabled",
 					"usertype": 2,
 					"title": "orders:ListOfOrdersSupplier"

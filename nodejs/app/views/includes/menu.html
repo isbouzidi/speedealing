@@ -30,25 +30,28 @@
                 </a>
             </li>
             <li style="width: 20%;" data-ng-init="ticketCounter()">
-                <a href='#!/ticket' title="{{t 'TicketCenter'}}" >
+                <a ng-if="global.user.rights.ticket.read" ng-href='#!/ticket' title="{{t 'TicketCenter'}}" >
                     <span class="icon-inbox"></span>
                     <span data-ng-if="ticketCpt" class="count">\{{ticketCpt}}</span>
                 </a>
+				<span ng-if="!global.user.rights.ticket.read">
+					<span class="icon-inbox"></span>
+				</span>
             </li>
             <li style="width: 20%;">
-                <a href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t
+                <span href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t
                                 'Agenda'}}" target="_self">
                     <span class="icon-calendar"></span>
-                    {{#if agenda.count}}
+                    <!--{{#if agenda.count}}
                     <span class="count">{{agenda.count}}</span>
-                    {{/if}}
-                </a>
+                    {{/if}}-->
+                </span>
             </li>
             <li style="width: 20%;">
-                <a href="user/fiche.php?id={{user.id}}"  title="{{t
+                <span href="user/fiche.php?id={{user.id}}"  title="{{t
                         'Parameters'}}" target="_self">
                     <span class="icon-gear"></span>
-                </a>
+                </span>
             </li>
             <li style="width: 20%;">
                 <a href="logout" title="{{t

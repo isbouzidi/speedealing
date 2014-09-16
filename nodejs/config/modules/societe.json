@@ -164,7 +164,7 @@
 	"menus": {
 		"menu:companies": {
 			"position": 2,
-			"perms": "user.rights.societe.read",
+			"perms": "societe.read",
 			"enabled": "conf.societe.enabled || conf.fournisseur.enabled",
 			"usertype": 2,
 			"title": "companies:ThirdParties",
@@ -172,7 +172,7 @@
 				"menu:thirdpartyenable": {
 					"position": 2,
 					"url": "#!/societes",
-					"perms": "$user->rights->societe->lire",
+					"perms": "societe.read",
 					"enabled": "$conf->societe->enabled",
 					"usertype": 2,
 					"title": "companies:ListOfThirdParties",
@@ -181,7 +181,7 @@
 				"menu:companysegmentation": {
 					"position": 22,
 					"url": "#!/societes/segmentation.html",
-					"perms": "user.rights.societe.segmentation",
+					"perms": "societe.segmentation",
 					"enabled": "conf.societe.enabled",
 					"usertype": 2,
 					"title": "companies:CustomerSegmentation",

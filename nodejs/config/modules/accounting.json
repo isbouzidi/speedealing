@@ -42,7 +42,7 @@
 			"submenus": {
 				"menu:accounting": {
 					"position": 10,
-					"perms": "$user->rights->accounting->read",
+					"perms": "accounting.read",
 					"enabled": "$conf->accounting->enabled",
 					"usertype": 2,
 					"title": "compta:Journaux",
@@ -50,7 +50,7 @@
 						"menu:accountinglist": {
 							"position": 10,
 							"url": "#!/accounting",
-							"perms": "$user->rights->accounting->read",
+							"perms": "accounting.read",
 							"enabled": "$conf->accounting->enabled",
 							"usertype": 2,
 							"title": "compta:SellsJournal"

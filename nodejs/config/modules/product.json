@@ -83,7 +83,7 @@
 	"menus": {
 		"menu:products": {
 			"position": 3,
-			"perms": "$user->rights->produit->lire || $user->rights->service->lire",
+			"perms": "product.read",
 			"enabled": "$conf->product->enabled || $conf->service->enabled",
 			"usertype": 2,
 			"title": "products:Products/Services",
@@ -92,7 +92,7 @@
 					"url": "#!/product",
 					"position": 1,
 					"usertype": 2,
-					"perms": "$user->rights->produit->lire",
+					"perms": "product.read",
 					"enabled": "$conf->product->enabled",
 					"title": "products:ListProducts"
 				},
@@ -100,7 +100,7 @@
 					"url": "#!/product/pricelevel.html",
 					"position": 10,
 					"usertype": 2,
-					"perms": "$user->rights->produit->lire",
+					"perms": "product.read",
 					"enabled": "$conf->product->enabled",
 					"title": "products:PriceLevel"
 				}

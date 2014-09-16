@@ -1,7 +1,6 @@
 var async = require('async'),
 		fs = require('fs'),
 		modules = require('../app/controllers/modules'),
-		rights = require('../app/controllers/rights'),
 		config = require(__dirname + '/config'),
 		mongoose = require('mongoose');
 
@@ -110,6 +109,9 @@ module.exports = function(app, passport, auth) {
 	//app.get('/users/:userId', users.show);
 
 	app.get('/menus', auth.requiresLogin, modules.menus);
+	
+	//import rights from config/modules/..
+	app.get('/rights', auth.requiresLogin, modules.rights);
 
 	//Setting the facebook oauth routes
 	app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -305,7 +307,4 @@ module.exports = function(app, passport, auth) {
 
 	// Master angular Page
 	app.get('/', auth.requiresLogin, index.render);
-
-	//import rights from config/modules/..
-	app.get('/rights', auth.requiresLogin, rights.rights);
 };

@@ -30,7 +30,7 @@
 		]
 	],
 	"rights": {
-		"order": [
+		"delivery": [
 			{
 				"desc": "Lire les bons livraisons clients",
 				"perm": {
@@ -109,7 +109,7 @@
 	"menus": {
 		"menu:delivery": {
 			"position": 41,
-			"perms": "$user->rights->commande->lire || $user->rights->intervention->lire",
+			"perms": "delivery.read",
 			"enabled": "$conf->delivery->enabled",
 			"usertype": 2,
 			"title": "deliveries:Deliveries",
@@ -117,7 +117,7 @@
 				"menu:orderslist": {
 					"position": 1,
 					"url": "#!/delivery",
-					"perms": "$user->rights->delivery->lire",
+					"perms": "delivery.read",
 					"enabled": "$conf->delivery->enabled",
 					"usertype": 2,
 					"title": "deliveries:List"
