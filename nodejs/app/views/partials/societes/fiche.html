@@ -259,18 +259,17 @@
 															\{{societe.idprof4 || "Aucun"}}
 														</a></td>
 												</tr>-->
-												<tr>
+												<!--<tr>
 													<th scope="row">{{t 'companies:ProfId5FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof5" buttons="no" onaftersave="update()">
 															\{{societe.idprof5|| "Non défini"}}
 														</a></td>
-												</tr>
+												</tr>-->
 												<tr>
-													<th scope="row" colspan="2">{{t 'companies:CustomerSegmentation'}}<br/>
-											<tags-input data-ng-model="societe.segmentation" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-												<auto-complete source="segmentationSelect($query, 10)" min-length="1" max-results-to-show="10"></auto-complete>
-											</tags-input>
-											</th>
+													<th scope="row">{{t 'companies:CustomerSegmentation'}}</th>
+													<td><a href="#" editable-select="societe.segmentation" buttons="no" e-ng-options="s as s.label group by s.group for s in segmentation.values track by s.id" onaftersave="update()">
+															\{{societe.segmentation.label}} (\{{societe.segmentation.group}})
+														</a></td>
 											</tr>
 											<tr>
 												<th scope="row" colspan="2">{{t 'companies:ProductSegmentation'}}<br/>

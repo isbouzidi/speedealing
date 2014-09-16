@@ -69,9 +69,11 @@ var societeSchema = new Schema({
 	groupDelivery: Boolean, // 1 bill for many delivery
 	zonegeo: String,
 	Tag: {type: [], set: setTags},
-	segmentation: [{
-			text: String
-		}],
+	segmentation: {
+			id: String,
+			label: String,
+			group: String
+		},
 	familyProduct: [{
 			text: String
 		}],

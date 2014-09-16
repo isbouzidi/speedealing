@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'pageTitle', 'Global', 'Societes', function($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'pageTitle', 'Global', 'Societes', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, pageTitle, Global, Societe) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des sociétés');
 
@@ -20,21 +20,21 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
 
-		$scope.init = function() {
-			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement"];
+		$scope.init = function () {
+			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement", "segmentation"];
 
-			angular.forEach(fields, function(field) {
+			angular.forEach(fields, function (field) {
 				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 						field: field
 					}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					$scope[field] = data;
 					//console.log(data);
 				});
 			});
 
 			$http({method: 'GET', url: 'api/entity/select'})
-					.success(function(data, status) {
+					.success(function (data, status) {
 						$scope.entities = data;
 						$scope.entities.push({
 							id: "ALL",
@@ -43,7 +43,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					});
 		};
 
-		$scope.segmentationSelect = function(val, max) {
+		/*$scope.segmentationSelect = function (val, max) {
 			return $http.post('api/societe/segmentation/autocomplete', {
 				take: max,
 				skip: 0,
@@ -51,13 +51,13 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				pageSize: 5,
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				//console.log(res.data);
 				return res.data;
 			});
-		};
+		};*/
 
-		$scope.showStatus = function(idx) {
+		$scope.showStatus = function (idx) {
 			if (!($scope[idx] && $scope.societe[idx]))
 				return 'Non défini';
 			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
@@ -65,13 +65,13 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			return ($scope.societe[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
-		$scope.remove = function(societe) {
+		$scope.remove = function (societe) {
 			societe.$remove();
 
 		};
 
-		$scope.checkCodeClient = function(data) {
-			return $http.get('api/societe/' + data).then(function(societe) {
+		$scope.checkCodeClient = function (data) {
+			return $http.get('api/societe/' + data).then(function (societe) {
 				//console.log(societe.data);
 				if (societe.data._id && $scope.societe._id !== societe.data._id)
 					return "Existe deja !";
@@ -81,10 +81,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var societe = $scope.societe;
 
-			societe.$update(function(response) {
+			societe.$update(function (response) {
 				pageTitle.setTitle('Fiche ' + societe.name);
 				$scope.checklist = 0;
 				for (var i in response.checklist)
@@ -93,7 +93,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			});
 		};
 
-		$scope.find = function() {
+		$scope.find = function () {
 			var sb = {};
 			for (var i = 0; i < $scope.sortOptionsSociete.fields.length; i++) {
 				sb[$scope.sortOptionsSociete.fields[i]] = $scope.sortOptionsSociete.directions[i] === "desc" ? -1 : 1;
@@ -104,19 +104,20 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				query: this.type.id,
 				entity: Global.user.entity,
 				commercial_id: this.commercial_id,
+				Status: this.status_id,
 				filter: $scope.filterOptionsSociete.filterText,
 				skip: $scope.pagingOptionsSociete.currentPage - 1,
 				limit: $scope.pagingOptionsSociete.pageSize,
 				sort: sb
 			};
 
-			Societe.query(p, function(societes) {
+			Societe.query(p, function (societes) {
 				$scope.societes = societes;
 				$scope.countSocietes = societes.length;
 			});
 
 			$http({method: 'GET', url: '/api/societe/count', params: p
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.totalCountSociete = data.count;
 				$scope.maxPageSociete = Math.ceil(data.count / 1000);
 			});
@@ -124,18 +125,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			$scope.initCharts();
 		};
 
-		$scope.findSegmentation = function() {
+		$scope.findSegmentation = function () {
 			$http({method: 'GET', url: '/api/societe/segmentation'
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.segmentations = data;
 				$scope.countSegmentations = data.length;
 			});
 		};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			Societe.get({
 				Id: $routeParams.id
-			}, function(societe) {
+			}, function (societe) {
 				$scope.societe = societe;
 
 				//$scope.findContact();
@@ -144,7 +145,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 								find: {"societe.id": societe._id},
 								fields: "name firstname lastname updatedAt Status phone email poste"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (status == 200)
 						$scope.contacts = data;
 
@@ -157,7 +158,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 								find: {"linked.id": societe._id},
 								fields: "name ref updatedAt percentage Status task"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (status == 200)
 						$scope.tickets = data;
 
@@ -169,7 +170,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 								find: {"societe.id": societe._id},
 								fields: "dateReport model author.name comment realised lead actions"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 
 					$scope.reports = data;
 
@@ -180,7 +181,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 							{
 								"societe.id": societe._id
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 
 					$scope.leads = data;
 
@@ -192,12 +193,12 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 								find: {"fournisseur.id": societe._id},
 								fields: "title ref datec Status total_ht"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (status === 200)
 						$scope.requestBuy = data;
 
 					$scope.TotalBuy = 0;
-					angular.forEach($scope.requestBuy, function(row) {
+					angular.forEach($scope.requestBuy, function (row) {
 						if (row.Status.id === "PAYED")
 							$scope.TotalBuy += row.total_ht;
 					});
@@ -209,7 +210,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				for (var i in societe.checklist)
 					if (societe.checklist[i])
 						$scope.checklist++;
-			}, function(err) {
+			}, function (err) {
 				if (err.status == 401)
 					$location.path("401.html");
 			});
@@ -217,7 +218,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			$http({method: 'GET', url: '/api/europexpress/buy/status/select', params: {
 					field: "Status"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.status = data;
 			});
 		};
@@ -240,13 +241,13 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			currentPage: 1
 		};
 
-		$scope.$watch('pagingOptionsSociete', function(newVal, oldVal) {
+		$scope.$watch('pagingOptionsSociete', function (newVal, oldVal) {
 			if (newVal.currentPage !== oldVal.currentPage) {
 				$scope.find();
 			}
 		}, true);
 
-		$scope.$watch('filterOptionsSociete', function(newVal, oldVal) {
+		$scope.$watch('filterOptionsSociete', function (newVal, oldVal) {
 			if (newVal.filterText !== oldVal.filterText) {
 				$scope.find();
 			}
@@ -293,19 +294,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			]
 		};
 
-		$scope.$watch('filterOptionsSociete', function(newVal, oldVal) {
+		$scope.$watch('filterOptionsSociete', function (newVal, oldVal) {
 			if (newVal.filterText !== oldVal.filterText) {
 				$scope.find();
 			}
 		}, true);
 
-		$scope.$watch('sortOptionsSociete', function(newVal, oldVal) {
+		$scope.$watch('sortOptionsSociete', function (newVal, oldVal) {
 			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
 				$scope.find();
 			}
 		}, true);
 
-		$scope.updateInPlace = function(api, field, row, newdata) {
+		$scope.updateInPlace = function (api, field, row, newdata) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -313,14 +314,14 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
 						data: {
 							oldvalue: row.entity[field],
 							value: newdata
 						}
 					}).
-							success(function(data, status) {
+							success(function (data, status) {
 								if (status == 200) {
 									if (data) {
 										row.entity = data;
@@ -361,7 +362,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			]
 		};
 
-		$scope.updateSegmentation = function(row) {
+		$scope.updateSegmentation = function (row) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -371,20 +372,20 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'PUT', url: 'api/societe/segmentation', data: row.entity
-					}).success(function(data, status) {
+					}).success(function (data, status) {
 						$scope.save.pending = false;
 					});
 				}, 200);
 			}
 		};
 
-		$scope.removeSegmentation = function(row) {
+		$scope.removeSegmentation = function (row) {
 			for (var i = 0; i < $scope.segmentations.length; i++) {
 				if (row.entity._id === $scope.segmentations[i]._id) {
 					$http({method: 'DELETE', url: 'api/societe/segmentation', data: row.entity
-					}).success(function(data, status) {
+					}).success(function (data, status) {
 						$scope.segmentations.splice(i, 1);
 						$scope.countSegmentations--;
 					});
@@ -393,22 +394,22 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			}
 		};
 
-		$scope.renameSegmentation = function(row) {
+		$scope.renameSegmentation = function (row) {
 			var dlg = null;
 			for (var i = 0; i < $scope.segmentations.length; i++) {
 				if (row.entity._id === $scope.segmentations[i]._id) {
 					dlg = $dialogs.create('rename.html', 'SocieteSegmentationRenameController', row.entity, {key: false, back: 'static'});
-					dlg.result.then(function(newval) {
+					dlg.result.then(function (newval) {
 
 						//console.log(newval);
 						$http({method: 'POST', url: 'api/societe/segmentation', data: {
 								old: row.entity._id,
 								new : newval
 							}
-						}).success(function(data, status) {
+						}).success(function (data, status) {
 							$scope.findSegmentation();
 						});
-					}, function() {
+					}, function () {
 					});
 
 					break;
@@ -419,13 +420,13 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		//$scope.chartFunnelData = [[]];
 
-		$scope.initCharts = function() {
+		$scope.initCharts = function () {
 			$http({method: 'GET', url: '/api/societe/statistic', params: {
 					entity: Global.user.entity,
 					name: Global.user.name,
 					commercial_id: $scope.commercial_id
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				//console.log(data);
 				$scope.chartData = data.data;
 
@@ -584,21 +585,21 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			}
 		};
 
-		$scope.addNew = function() {
+		$scope.addNew = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/societes/create.html',
 				controller: "SocieteCreateController",
 				windowClass: "steps"
 			});
 
-			modalInstance.result.then(function(societe) {
+			modalInstance.result.then(function (societe) {
 				$scope.societes.push(societe);
 				$scope.countSocietes++;
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.addNote = function() {
+		$scope.addNote = function () {
 			if (!this.note)
 				return;
 
@@ -622,17 +623,17 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		/**
 		 * Get fileType for icon
 		 */
-		$scope.getFileTypes = function() {
+		$scope.getFileTypes = function () {
 			$http({method: 'GET', url: 'dict/filesIcons'
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						if (status == 200) {
 							iconsFilesList = data;
 						}
 					});
 		};
 
-		$scope.onFileSelect = function($files) {
+		$scope.onFileSelect = function ($files) {
 			//$files: an array of files selected, each file has name, size, and type.
 			for (var i = 0; i < $files.length; i++) {
 				var file = $files[i];
@@ -649,9 +650,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function(evt) {
+					}).progress(function (evt) {
 						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-					}).success(function(data, status, headers, config) {
+					}).success(function (data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
@@ -663,17 +664,17 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			}
 		};
 
-		$scope.suppressFile = function(id, fileName, idx) {
+		$scope.suppressFile = function (id, fileName, idx) {
 			$http({method: 'DELETE', url: 'api/societe/file/' + id + '/' + fileName
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						if (status == 200) {
 							$scope.societe.files.splice(idx, 1);
 						}
 					});
 		};
 
-		$scope.fileType = function(name) {
+		$scope.fileType = function (name) {
 			if (typeof iconsFilesList[name.substr(name.lastIndexOf(".") + 1)] == 'undefined')
 				return iconsFilesList["default"];
 
@@ -809,7 +810,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			]
 		};
 
-		$scope.priceLevelAutoComplete = function(val, field) {
+		$scope.priceLevelAutoComplete = function (val, field) {
 			return $http.post('api/product/price_level/select', {
 				take: '5',
 				skip: '0',
@@ -817,13 +818,13 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 
 		};
 
-		$scope.societeAutoComplete = function(val, field) {
+		$scope.societeAutoComplete = function (val, field) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -831,12 +832,12 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.userAutoComplete = function(val) {
+		$scope.userAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -844,19 +845,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.addNewContact = function() {
+		$scope.addNewContact = function () {
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/contacts/create.html',
 				controller: "ContactCreateController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							societe: $scope.societe
 						};
@@ -864,20 +865,20 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				}
 			});
 
-			modalInstance.result.then(function(contacts) {
+			modalInstance.result.then(function (contacts) {
 				$scope.contacts.push(contacts);
 				$scope.countContact++;
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.addNewReport = function() {
+		$scope.addNewReport = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/reports/create.html',
 				controller: "ReportCreateController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							societe: $scope.societe
 						};
@@ -885,21 +886,21 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				}
 			});
 
-			modalInstance.result.then(function(reports) {
+			modalInstance.result.then(function (reports) {
 				$scope.reports.push(reports);
 				$scope.countReports++;
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.addNewLead = function() {
+		$scope.addNewLead = function () {
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/create.html',
 				controller: "LeadCreateController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							societe: $scope.societe
 						};
@@ -907,19 +908,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				}
 			});
 
-			modalInstance.result.then(function(leads) {
+			modalInstance.result.then(function (leads) {
 				$scope.leads.push({
 					id: leads._id,
 					name: leads.name,
 					dueDate: leads.dueDate
 				});
 
-			}, function() {
+			}, function () {
 
 			});
 		};
 
-		$scope.findReport = function(id) {
+		$scope.findReport = function (id) {
 
 			$rootScope.idReport = id;
 			var modalInstance = $modal.open({
@@ -929,14 +930,14 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			});
 		};
 
-		$scope.findLead = function(id) {
+		$scope.findLead = function (id) {
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/view.html',
 				controller: "LeadController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							lead: id
 						};
@@ -945,35 +946,35 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			});
 		};
 
-		$scope.findContact = function(id) {
+		$scope.findContact = function (id) {
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/contacts/fiche.html',
 				controller: "ContactsController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							contact: id
 						};
 					}
 				}
 			});
-			modalInstance.result.then(function(contacts) {
+			modalInstance.result.then(function (contacts) {
 				$scope.contacts.push(contacts);
 				$scope.countContact++;
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.refreshReport = function() {
+		$scope.refreshReport = function () {
 
 			$http({method: 'GET', url: 'api/report', params:
 						{
 							find: {"societe.id": $scope.societe._id},
 							fields: "dateReport model author.name comment realised lead actions"
 						}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 
 				$scope.reports = data;
 				$scope.countReports = $scope.reports.length;
@@ -981,7 +982,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		};
 	}]);
 
-angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$route', 'Global', 'Societes', function($scope, $http, $modalInstance, $route, Global, Societes) {
+angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$route', 'Global', 'Societes', function ($scope, $http, $modalInstance, $route, Global, Societes) {
 		$scope.global = Global;
 
 		$scope.active = 1;
@@ -991,20 +992,20 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		};
 		$scope.siretFound = "";
 
-		$scope.isActive = function(idx) {
+		$scope.isActive = function (idx) {
 			if (idx === $scope.active)
 				return "active";
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			$scope.active++;
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			$scope.active--;
 		};
 
-		$scope.goto = function(idx) {
+		$scope.goto = function (idx) {
 			if ($scope.active == 5)
 				return;
 
@@ -1012,11 +1013,11 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				$scope.active = idx;
 		};
 
-		$scope.init = function() {
+		$scope.init = function () {
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "Status"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.status = data;
 				//console.log(data);
 				$scope.societe.Status = "ST_CINF3";
@@ -1025,7 +1026,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "fournisseur"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.fournisseur = data;
 				//console.log(data);
 				$scope.societe.fournisseur = "NO";
@@ -1034,7 +1035,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "prospectlevel"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.potential = data;
 				//console.log(data);
 				$scope.societe.prospectlevel = data.default;
@@ -1043,7 +1044,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "typent_id"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.typent = data;
 				//console.log(data);
 				$scope.societe.typent_id = data.default;
@@ -1052,7 +1053,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "effectif_id"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.effectif = data;
 				//console.log(data);
 				$scope.societe.effectif_id = data.default;
@@ -1066,7 +1067,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
 					field: "forme_juridique_code"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.forme_juridique = data;
 				//console.log(data);
 				$scope.societe.forme_juridique_code = data.default;
@@ -1076,9 +1077,9 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 			$scope.societe.capital = 0;
 		};
 
-		$scope.create = function() {
+		$scope.create = function () {
 			var societe = new Societes(this.societe);
-			societe.$save(function(response) {
+			societe.$save(function (response) {
 				//console.log(response);
 				$modalInstance.close(response);
 				//$location.path("societe/" + response._id);
@@ -1086,7 +1087,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		};
 
 
-		$scope.userAutoComplete = function(val) {
+		$scope.userAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -1094,12 +1095,12 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.priceLevelAutoComplete = function(val) {
+		$scope.priceLevelAutoComplete = function (val) {
 			return $http.post('api/product/price_level/select', {
 				take: '5',
 				skip: '0',
@@ -1107,12 +1108,12 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.isValidSiret = function() {
+		$scope.isValidSiret = function () {
 			var siret = $scope.societe.idprof2;
 			$scope.siretFound = "";
 			$scope.societe.idprof1 = "";
@@ -1149,7 +1150,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				$http({method: 'GET', url: '/api/societe/uniqId', params: {
 						idprof2: siret
 					}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					$scope.validSiret = isValide;
 					if (data.name) { // already exist
 						$scope.siretFound = data;
@@ -1160,19 +1161,19 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		};
 	}]);
 
-angular.module('mean.societes').controller('SocieteSegmentationRenameController', function($scope, $modalInstance, data) {
+angular.module('mean.societes').controller('SocieteSegmentationRenameController', function ($scope, $modalInstance, data) {
 	$scope.data = {id: data._id};
 
-	$scope.cancel = function() {
+	$scope.cancel = function () {
 		$modalInstance.dismiss('canceled');
 	}; // end cancel
 
-	$scope.save = function() {
+	$scope.save = function () {
 		//console.log($scope.data.id);
 		$modalInstance.close($scope.data.id);
 	}; // end save
 
-	$scope.hitEnter = function(evt) {
+	$scope.hitEnter = function (evt) {
 		if (angular.equals(evt.keyCode, 13) && !(angular.equals($scope.data.id, null) || angular.equals($scope.data.id, '')))
 			$scope.save();
 	}; // end hitEnter

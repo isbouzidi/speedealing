@@ -1345,7 +1345,7 @@ Object.prototype = {
 				return next(err);
 
 			req.societe = doc;
-			console.log(doc);
+			//console.log(doc);
 			next();
 		});
 	},
@@ -1357,7 +1357,6 @@ Object.prototype = {
 					entity: req.query.entity
 				}]
 		};
-
 
 		if (req.query.query) {
 			switch (req.query.query) {
@@ -1377,6 +1376,9 @@ Object.prototype = {
 					break;
 			}
 		}
+		
+		if(req.query.Status)
+			query.Status = req.query.Status;
 
 		if (req.query.commercial_id)
 			query["commercial_id.id"] = req.query.commercial_id;
@@ -1434,6 +1436,9 @@ Object.prototype = {
 					break;
 			}
 		}
+		
+		if(req.query.Status)
+			query.Status = req.query.Status;
 
 		if (req.query.commercial_id)
 			query["commercial_id.id"] = req.query.commercial_id;
@@ -1486,7 +1491,7 @@ Object.prototype = {
 	update: function(req, res) {
 		var societe = req.societe;
 		societe = _.extend(societe, req.body);
-		//console.log(societe);
+		//console.log(req.body);
 
 		societe.save(function(err, doc) {
 			res.json(doc);
@@ -1535,6 +1540,10 @@ Object.prototype = {
 									val.label = docs.values[i].label;
 								else
 									val.label = req.i18n.t("companies:" + i);
+								
+								if(docs.values[i].group)
+									val.group = docs.values[i].group;
+								
 								result.push(val);
 							}
 						}
