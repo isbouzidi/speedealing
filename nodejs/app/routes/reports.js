@@ -167,13 +167,13 @@ Object.prototype = {
 		var user = req.query.user;
 
 		var query = {
-			"author.id": {
-				"$nin": [user]
-			},
+//			"author.id": {
+//				"$nin": [user]
+//			},
 			entity: req.query.entity
 		};
 		ReportModel.find(query, {}, {limit: req.query.limit, sort:{
-        createAt: -1 //Sort by Date Added DESC
+        createdAt: -1 //Sort by Date Added DESC
     }}, function(err, doc) {
 			if (err) {
 				console.log(err);
