@@ -80,8 +80,6 @@
 
 			<a href="#"
 			   editable-tel="contact.phone_mobile" 
-			   e-pattern="\d{11}" 
-			   e-title="11(x)" 
 			   blur="submit" 
 			   buttons="no"
 			   e-form="telMobFrm"
@@ -96,14 +94,13 @@
 
             <a href="#" 
                editable-tel="contact.phone" 
-               e-pattern="\d{11}" 
                blur="submit" 
                buttons="no"
                onaftersave="update()" 
                e-title="Telephone Fixe"
                e-placeholder="{{t 'companies:Tel-Fixe'}}"
                e-form="TelFixFrm">
-                \{{ contact.phone_perso || 'Non défini' }}
+                \{{ contact.phone || 'Non défini' }}
             </a>
             <span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
 
