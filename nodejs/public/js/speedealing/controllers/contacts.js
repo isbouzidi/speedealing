@@ -6,7 +6,7 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 		$scope.jobs = [];
 
 		$scope.soncas = [
-			"Sécurité", "Sympathique", 'Nouveauté', 'Argent', 'Confort', 'Orgueil'
+			"Sécurité", 'Orgueil', 'Nouveauté', 'Confort', 'Argent', "Sympathique"
 		];
 
 		$scope.init = function () {
@@ -81,11 +81,11 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 
 		$scope.soncas = [
 			{value: "Sécurité", text: 'Sécurité'},
-			{value: "Sympathique", text: 'Sympathique'},
-			{value: 'Nouveauté', text: 'Nouveauté'},
-			{value: 'Argent', text: 'Argent'},
-			{value: 'Confort', text: 'Confort'},
 			{value: 'Orgueil', text: 'Orgueil'},
+			{value: 'Nouveauté', text: 'Nouveauté'},
+			{value: 'Confort', text: 'Confort'},
+			{value: 'Argent', text: 'Argent'},
+			{value: "Sympathique", text: 'Sympathique'}
 		];
 
 		$scope.etat = {id: "ST_ENABLE", name: "Actif"};
@@ -137,7 +137,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			}).success(function (data, status) {
 				$scope.jobs = data;
 			});
-			
+
 			$http({method: 'GET', url: '/api/dict', params: {
 					dictName: "fk_hobbies"
 				}
