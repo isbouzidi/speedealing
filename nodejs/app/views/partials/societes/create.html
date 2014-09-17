@@ -24,7 +24,8 @@
 		</div>
 
 		<div class="field-block button-height">
-			<label for="code"><b>{{t 'SIRET'}}</b></label>
+			<label for="code"><b>{{t
+				'SIRET'}}</b></label>
 			<input required ng-disabled="noSiret" type="text" data-ng-model="societe.idprof2" data-ng-change="isValidSiret()" id="code" class="input" autocomplete="off"><br/>
 			Organisme public/Association <input type="checkbox" ng-model="noSiret" ng-change="societe.idprof2 = ''" /> 
 			<small ng-show="societe.idprof2 == null && !noSiret" class="icon-warning blue input-info"> Ce numéro permet de vérifier que le compte n'existe pas dans la base. (sans espace)</small>
@@ -43,7 +44,7 @@
 			<label for="statusF"><b>Status fournisseur</b></label>
 			<select class="form-control" id="statusF" data-ng-model="societe.fournisseur" data-ng-options="f.id as f.label for f in fournisseur.values"></select>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="segmentation"><b>{{t 'companies:CustomerSegmentation'}}</b></label>
 			<select class="form-control" id="segmentation" data-ng-model="societe.segmentation" data-ng-options="c as c.label group by c.group for c in segmentation.values"></select>
@@ -52,7 +53,8 @@
 		<div class="field-block button-height wizard-controls clearfix">
 			<!--<button type="button" data-ng-disabled="!(societe.name && validSiret && !siretFound)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
 			<button type="button" data-ng-disabled="!(societe.name && (validSiret || noSiret) && !siretFound)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">
-				{{t 'Next'}}
+				{{t
+					'Next'}}
 				<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 		</div>
 
@@ -125,25 +127,32 @@
 
 		<div class="field-block button-height">
 			<label for="ProspectLevel"><b>{{t 'companies:ProspectLevelShort'}}</b></label>
-			<select class="form-control" id="ProspectLevel" data-ng-model="societe.prospectlevel" data-ng-options="c.id as c.label for c in potential.values"></select>
+			<select class="form-control" id="ProspectLevel" data-ng-model="societe.prospectlevel" data-ng-options="c.id as c.label for c in prospectlevel.values"></select>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="Tag"><b>{{t
-				'Categories'}}</b></label>
-			<input type="text" data-ng-model="societe.Tag" id="Tag" class="input" autocomplete="on">
+				'Keywords'}}</b></label>
+			<tags-input data-ng-model="societe.Tag" placeholder="{{t
+				'Add'}}">
+				<auto-complete source="AutoComplete($query,'api/societe/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
+			</tags-input>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="typent_id"><b>{{t 'companies:ThirdPartyType'}}</b></label>
-			<select class="form-control" id="typent_id" data-ng-model="societe.typent_id" data-ng-options="c.id as c.label for c in typent.values"></select>
+			<select class="form-control" id="typent_id" data-ng-model="societe.typent_id" data-ng-options="c.id as c.label for c in typent_id.values"></select>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="effectif_id"><b>{{t 'companies:Staff'}}</b></label>
-			<select class="form-control" id="effectif_id" data-ng-model="societe.effectif_id" data-ng-options="c.id as c.label for c in effectif.values"></select>
+			<select class="form-control" id="effectif_id" data-ng-model="societe.effectif_id" data-ng-options="c.id as c.label for c in effectif_id.values"></select>
 		</div>
 
+		<div class="field-block button-height">
+			<label for="rival"><b>{{t 'companies:Rival'}}</b></label>
+			<select class="form-control" id="rival" data-ng-model="societe.rival" data-ng-options="s.label as s.label for s in rival.values"></select>
+		</div>
 		<div class="field-block button-height">
 			<label for="commercial_id"><b>{{t 'companies:AllocateCommercial'}}</b></label>
 			<input type="text" id="commercial_id" data-ng-model="societe.commercial_id" typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="input" autocomplete="off">
@@ -177,7 +186,7 @@
 
 		<div class="field-block button-height">
 			<label for="forme_juridique_code"><b>{{t 'companies:JuridicalStatus'}}</b></label>
-			<select class="form-control" id="forme_juridique_code" data-ng-model="societe.forme_juridique_code" data-ng-options="c.id as c.label for c in forme_juridique.values"></select>
+			<select class="form-control" id="forme_juridique_code" data-ng-model="societe.forme_juridique_code" data-ng-options="c.id as c.label for c in forme_juridique_code.values"></select>
 		</div>
 
 		<div class="field-block button-height wizard-controls align-right">

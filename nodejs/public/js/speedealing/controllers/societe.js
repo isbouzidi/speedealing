@@ -1014,7 +1014,7 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		};
 
 		$scope.init = function () {
-			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement", "segmentation"];
+			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement", "segmentation", "rival"];
 
 			angular.forEach(fields, function (field) {
 				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {

@@ -33,7 +33,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 		}
 
 		$scope.connection = function () {
-			$http({method: 'GET', url: 'api/user/connection'
+			$http({method: 'GET', url: 'api/user/connection', params: {entity: Global.user.entity}
 			}).success(function (users, status) {
 				$scope.userConnection = users;
 			});

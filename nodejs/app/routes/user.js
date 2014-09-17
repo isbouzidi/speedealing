@@ -201,7 +201,8 @@ Object.prototype = {
 		return req.body.models;
 	},
 	connection: function(req, res) {
-		UserModel.find({NewConnection: {$ne: null}}, "lastname firstname NewConnection", {limit: 10, sort: {
+		//console.log(req.query);
+		UserModel.find({NewConnection: {$ne: null}, entity: req.query.entity}, "lastname firstname NewConnection", {limit: 10, sort: {
 				NewConnection: -1
 			}}, function(err, docs) {
 			res.json(200, docs);
