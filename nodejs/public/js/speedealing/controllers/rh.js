@@ -125,9 +125,9 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
             enableCellSelection: false,
             enableRowSelection: false,
             enableCellEditOnFocus: false,
-            
+            enableColumnResize: true,
             columnDefs: [
-                    {field: 'fullname', displayName: 'Employé', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/rh/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a></div>'},
+                    {field: 'fullname', displayName: 'Employé', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-class="{orange: row.getProperty(\'societe.name\')}" ng-href="#!/rh/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a> <small ng-if="row.getProperty(\'societe.name\')">({{row.getProperty(\'societe.name\')}})</small></div>'},
                     {field: 'poste', displayName: 'Poste'},
                     {field: 'userGroup', displayName: 'Groupe'},
                     {field: 'entity', displayName: 'Site'},
