@@ -573,17 +573,17 @@ Contact.prototype = {
 
 		var query = {
 			"$or": [
-				{"name": new RegExp(req.query.item, "i")},
-				{"lastname": new RegExp(req.query.item, "i")},
-				{"firstname": new RegExp(req.query.item, "i")},
-				{"societe.name": new RegExp(req.query.item, "i")}
+				{"lastname": new RegExp(req.query.item, "gi")},
+				{"firstname": new RegExp(req.query.item, "gi")},
+				{"societe.name": new RegExp(req.query.item, "gi")},
+				{"Tag": new RegExp(req.query.item, "gi")},
 			]
 		};
 
 		if (req.query.limit)
 			sort.limit = parseInt(req.query.limit);
 
-		ContactModel.find(query, {}, sort, function (err, doc) {
+		ContactModel.find(query, "firstname lastname societe.name Tag phone Status email", sort, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);

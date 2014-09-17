@@ -30,7 +30,7 @@ angular.module('mean.system').controller('SearchController', ['$rootScope', '$sc
             $http({method: 'GET', url: '/api/contact/searchEngine',
                 params: {
 					item: item,
-					limit: 500
+					limit: 300
 				},
 
             }).success(function(data) {

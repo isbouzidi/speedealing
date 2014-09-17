@@ -7,7 +7,7 @@
             <div class="row margin-bottom">
 
                 <div class="input-group">
-                    <input type="text" ng-model="searchItem" ng-change="search()" my-focus="true" class="form-control">
+                    <input type="text" ng-model="searchItem" my-focus="true" class="form-control">
                     <span class="input-group-btn">
                         <button class="btn btn-default" ng-click="btnSearch()" type="button">Go!</button>
                     </span>
@@ -26,10 +26,10 @@
                                     <strong class="blue">\{{result.name}}</strong>
                                     <span class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</span>
                                     <address style="font-style: normal; line-height: 1.5; font-size: 14px">
-                                        <abbr title="Email">Email:</abbr> <a href="" class="green"><strong>\{{result.email|| 'indéfini'}}</strong></a>,
-                                        <abbr title="Travail">Travail:</abbr><strong> \{{result.poste|| 'indéfini'}} </strong><abbr title="chez">chez:</abbr> <strong>\{{result.societe.name|| 'indéfini'}}</strong>,
-                                        <abbr title="Phone">N° Tél:</abbr> <strong>\{{result.phone_pro|| 'indéfini'}}</strong>
-
+                                        <abbr title="Email">Email :</abbr> <a href="" class="green"><strong>\{{result.email|| 'indéfini'}}</strong></a>,
+                                        <abbr title="Travail">Fonction :</abbr><strong> \{{result.poste|| 'indéfini'}} </strong><abbr title="chez">chez:</abbr> <strong>\{{result.societe.name|| 'indéfini'}}</strong>,
+                                        <abbr title="Phone">N° Tél :</abbr> <strong>\{{result.phone|| 'indéfini'}}</strong>
+										<abbr title="Tag">{{t 'Keywords'}} : </abbr> <strong>\{{result.Tag|| 'indéfini'}}</strong>
                                     </address>
                                 </a>
                             </li>
