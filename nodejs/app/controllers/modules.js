@@ -79,7 +79,7 @@ exports.menus = function (req, res) {
 	var result = {};
 
 	function checkright(perms) {
-		if (/*!req.user.admin &&*/ typeof perms == "string") {
+		if (!req.user.admin && typeof perms == "string") {
 			var perm = perms.split(".");
 			console.log(perm);
 
