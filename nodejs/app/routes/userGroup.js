@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
     i18n = require("i18next"),
     config = require('../../config/config');
                 
-var UserModel = mongoose.model('rh');
+var UserModel = mongoose.model('user');
 var UserGroupModel = mongoose.model('userGroup');
 var ExtrafieldModel = mongoose.model('extrafields');
 

@@ -301,7 +301,7 @@
 			"submenus": {
 				"menu:team": {
 					"position": 3,
-					"url": "#!/rh",
+					"url": "#!/user",
 					"perms": "$user->rights->user->user->creer || $user->admin",
 					"usertype": 2,
 					"title": "users:Collaborators"

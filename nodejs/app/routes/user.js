@@ -7,6 +7,9 @@ var UserModel = mongoose.model('user');
 var UserAbsenceModel = mongoose.model('userAbsence');
 
 var ExtrafieldModel = mongoose.model('extrafields');
+var DictModel = mongoose.model('dict');
+var EntityModel = mongoose.model('entity');
+var UserGroupModel = mongoose.model('userGroup');
 
 module.exports = function(app, passport, auth) {
 
@@ -26,12 +29,24 @@ module.exports = function(app, passport, auth) {
 		absence.fk_extrafields = doc;
 	});
         
-	app.get('/api/user', auth.requiresLogin, function(req, res) {
-            
-            object.read(req, res);
-		return;
-	});
+        app.get('/api/user/fk_extrafields/select', auth.requiresLogin, function(req, res) {
+            object.select(req, res, 'extrafields:User');
+            return;
+        });
+        
+        app.get('/api/site/fk_extrafields/select', auth.requiresLogin, function(req, res) {
 
+            EntityModel.find(function(err, entity) {
+
+                if (err) {
+                    console.log('Erreur - Get Entity(site) : ' + err);
+                } else {
+                    res.json(entity);
+                }
+            });
+
+            return;
+        });
 	// Specific for select
 	app.get('/api/user/select', auth.requiresLogin, function(req, res) {
 		UserModel.find({Status: "ENABLE"}, function(err, docs) {
@@ -115,17 +130,66 @@ module.exports = function(app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
+        
+        app.get('/api/user/pays/select', auth.requiresLogin, function(req, res) {
 
-	app.post('/api/user', auth.requiresLogin, function(req, res) {
+            DictModel.findById(req.query.field, function(err, docs) {
+
+                if (err) {
+                    console.log('Erreur - Get Entity(site) : ' + err);
+                } else {
+
+                    var pays = [];
+
+                    if (docs) {
+                        for (var i in docs.values) {
+                            if (docs.values[i].enable) {
+
+                                var val = {};
+                                val.id = i;
+
+                                if (docs.values[i].label)
+                                    val.label = docs.values[i].label;
+                                else
+                                    val.label = req.i18n.t("pays : " + i);
+                                pays.push(val);
+                            }
+                        }
+
+                    }
+
+                    res.json(pays);
+                }
+            });
+
+            return;
+        });
+        
+        //liste des collaborateurs
+        app.get('/api/users', auth.requiresLogin, object.read);
+        
+        //ajout d'un nouveau collaborateur
+        app.post('/api/users', auth.requiresLogin, object.create);
+    
+        //afficher la fiche du collaborateur
+        app.get('/api/users/:userId', auth.requiresLogin, object.show);
+        
+        //modifier une ficher de collaborateur
+        app.put('/api/users/:userId', auth.requiresLogin, object.update);
+        
+        //verifie si le nouveau exite ou pas
+        app.get('/api/createUser/uniqLogin', auth.requiresLogin, object.uniqLogin);
+	
+        /*app.post('/api/user', auth.requiresLogin, function(req, res) {
 		//console.log(JSON.stringify(req.body));
 		return res.send(200, object.create(req));
 	});
-
-	app.put('/api/user', auth.requiresLogin, function(req, res) {
+        */
+	/*app.put('/api/user', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
 	});
-
+*/
 	app.del('/api/user', auth.requiresLogin, function(req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
@@ -156,6 +220,7 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/user/absence/count', auth.requiresLogin, absence.count);
 
+        app.param('userId', object.user);
 	//other routes..
 };
 
@@ -163,50 +228,175 @@ function Object() {
 }
 
 Object.prototype = {
-	create: function(req) {
-		return req.body.models;
-	},
-	read: function(req, res) {
-		var status_list = this.fk_extrafields.fields.Status;
+    user: function(req, res, next, id) {
+       
+        UserModel.findOne({_id: id}, function(err, doc) {
+            if (err)
+                return next(err);
+            if (!doc)
+                return next(new Error('Failed to load user ' + id));
 
-		UserModel.find({}, function(err, doc) {
-			if (err) {
-				console.log(err);
-				res.send(500, doc);
-				return;
-			}
-/*
-			for (var i in doc) {
-				var status = {};
+            req.user = doc;
+            next();
+        });
+    },
+    show: function(req, res) {
+        
+        console.log("show : " + req.user);
+        res.json(req.user);
+    },
+    create: function(req, res) {
+        //return req.body.models;
+        var user = new UserModel(req.body);
 
-				status.id = doc[i].Status;
-				if (status_list.values[status.id]) {
-					status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
-					status.css = status_list.values[status.id].cssClass;
-				} else { // Value not present in extrafield
-					status.name = status.id;
-					status.css = "";
-				}
+        user.name = req.body.login.toLowerCase();
+        var login = req.body.login;
+        user._id = 'user:' + login;
 
-				doc[i].Status = status;
-			}
-*/
-			res.send(200, doc);
-		});
-	},
-	update: function(req) {
-		return req.body.models;
-	},
-	del: function(req) {
-		return req.body.models;
-	},
-	connection: function(req, res) {
-		UserModel.find({NewConnection: {$ne: null}}, "lastname firstname NewConnection", {limit: 10, sort: {
-				NewConnection: -1
-			}}, function(err, docs) {
-			res.json(200, docs);
-		});
-	}
+        if (!user.entity)
+            user.entity = req.user.entity;
+
+        user.save(function(err, doc) {
+            if (err) {
+                return res.json(500, err);
+                //return console.log(err);
+
+            }
+
+            res.json(200, user);
+        });
+    },
+    read: function(req, res) {
+        //var status_list = this.fk_extrafields.fields.Status;
+        
+        UserModel.find({}, function(err, doc) {
+            if (err) {
+                console.log(err);
+                res.send(500, doc);
+                return;
+            }
+            /*
+             for (var i in doc) {
+             var status = {};
+             
+             status.id = doc[i].Status;
+             if (status_list.values[status.id]) {
+             status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
+             status.css = status_list.values[status.id].cssClass;
+             } else { // Value not present in extrafield
+             status.name = status.id;
+             status.css = "";
+             }
+             
+             doc[i].Status = status;
+             }
+             */
+            res.send(200, doc);
+        });
+    },
+    update: function(req, res) {
+        //return req.body.models;
+        var user = req.user;
+        user = _.extend(user, req.body);
+
+        user.save(function(err, doc) {
+
+            if (err) {
+                return console.log(err);
+            }
+
+            res.json(200, doc);
+        });
+    },
+    del: function(req) {
+        //return req.body.models;
+        var user = req.user;
+        user.remove(function(err) {
+            if (err) {
+                res.render('error', {
+                    status: 500
+                });
+            } else {
+                res.json(user);
+            }
+        });
+    },
+    connection: function(req, res) {
+        UserModel.find({NewConnection: {$ne: null}}, "lastname firstname NewConnection", {limit: 10, sort: {
+                NewConnection: -1
+            }}, function(err, docs) {
+            res.json(200, docs);
+        });
+    },
+    uniqLogin: function(req, res) {
+
+        if (!req.query.login)
+            return res.send(404);
+
+        var login = "user:" + req.query.login;
+
+
+        UserModel.findOne({_id: login}, "lastname firstname", function(err, doc) {
+            if (err)
+                return next(err);
+            if (!doc)
+                return res.json({});
+
+
+            res.json(doc);
+        });
+
+    },
+    select: function(req, res, extrafields) {
+
+        //ExtrafieldModel.findById('extrafields:User', function(err, doc) {
+        ExtrafieldModel.findById(extrafields, function(err, doc) {
+
+            if (err) {
+                console.log(err);
+                return;
+            }
+
+            var result = [];
+            console.log(req.query.field);
+            if (doc.fields[req.query.field].dict)
+                return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+
+                    if (docs) {
+                        for (var i in docs.values) {
+                            if (docs.values[i].enable) {
+                                var val = {};
+                                val.id = i;
+                                if (docs.values[i].label)
+                                    val.label = docs.values[i].label;
+                                else
+                                    val.label = req.i18n.t("user:" + i);
+                                result.push(val);
+                            }
+                        }
+                        doc.fields[req.query.field].values = result;
+                    }
+
+                    //res.json(doc.fields[req.query.field]);
+                });
+
+            for (var i in doc.fields[req.query.field].values) {
+                if (doc.fields[req.query.field].values[i].enable) {
+                    var val = {};
+                    val.id = i;
+                    val.label = doc.fields[req.query.field].values[i].label;
+                    result.push(val);
+                }
+            }
+
+
+            doc.fields[req.query.field].values = result;
+
+            res.json(doc.fields[req.query.field]);
+
+        });
+
+    }
 };
 
 function Absence() {
@@ -235,7 +425,7 @@ Absence.prototype = {
 	},
 	read: function(req, res) {
 		var query = {};
-                
+                console.log('test absence');
 		console.log(req.query);
 		if (req.query.query) {
 			if (req.query.query == 'NOW')
@@ -284,7 +474,7 @@ Absence.prototype = {
 			{$project: {_id: 0, nbDay: 1}},
 			{$group: {'_id': 0, sum: {"$sum": "$nbDay"}}}
 		], function(err, docs) {
-			if (docs.length == 0)
+			if (docs.length === 0)
 				return res.json(200, {_id: 0, sum: 0});
 
 			res.json(200, docs[0]);

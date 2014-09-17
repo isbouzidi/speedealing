@@ -1,0 +1,66 @@
+<section data-ng-controller="UserRhController">
+	<hgroup id="main-title" class="thin">
+		<h1>Liste des collaborateurs</h1>
+	</hgroup>
+	<script type="text/ng-template" id="myModalContent.html">
+		<div class="modal-header">
+		<h3 class="no-margin-bottom">{{t 'companies:NewThirdParty'}}</h3>
+		</div>
+		<div class="modal-body">
+
+		<p class="button-height inline-medium-label">
+		<label for="card">Numéro carte gazoil</label>
+		<input id="card" data-ng-model="cardSelect" typeahead-on-select="refreshVehicule()" typeahead="card as card.id for card in cardAutoComplete($viewValue) | filter:{id:$viewValue}" class="input">
+		</p>
+		<p class="button-height inline-medium-label">
+		<label for="vehicule">Véhicule</label>
+		\{{paiement.vehicule.name}}
+		</p>
+		<p class="button-height inline-medium-label">
+		<label for="datec">Date</label>
+		<input kendo-date-picker id="datec" data-ng-model="datec" k-on-change="paiement.datec = kendoEvent.sender._value;" class="input">
+		</p>
+		<p class="button-height inline-medium-label">
+		<label for="qty">Volume</label>
+		<input type="number" min="0" step="any" id="qty" data-ng-model="paiement.qty" class="input">
+		</p>
+		<p class="button-height inline-medium-label">
+		<label for="total_ht">Total HT</label>
+		<input type="number" min="0" step="any" id="total_ht" data-ng-model="paiement.total_ht" class="input">
+		</p>
+
+		</div>
+		<div class="modal-footer">
+		<span class="button-group">
+		<button class="button green-gradient icon-tick" ng-click="ok()"> OK</button>
+		<button class="button orange-gradient icon-forbidden" ng-click="cancel()"> Cancel</button>
+		</span>
+		</div>
+	</script>
+
+	<div class="with-padding" data-ng-init="find()">
+
+		<div class="table-header silver-gradient glossy button-height">
+			<div class="row">
+				<div class="col-sm-4">
+					<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
+				</div>
+				<!-- 
+				<div class="col-sm-4">
+					{{t 'Type'}} <select ng-model="type" ng-options="c as c.name for c in types track by c.id" data-ng-change="find()" class=""></select>
+				</div>
+				 -->
+				<div class="col-sm-4">
+					<div class="float-right">
+						{{t 'Search'}} <input type="text" data-ng-model="filterOptionsSociete.filterText" class="input small mid-margin-left">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gridStyle"  data-ng-grid="gridOptions" ng-style="style(100)" resize></div>
+		<div class="table-footer silver-gradient">
+			{{countUsers}} ligne(s)
+		</div>
+
+	</div>
+</section>

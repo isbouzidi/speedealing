@@ -1,19 +1,28 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-		Schema = mongoose.Schema,
-		crypto = require('crypto'),
-		_ = require('underscore'),
-		authTypes = ['github', 'twitter', 'facebook', 'google'],
-		timestamps = require('mongoose-timestamp');
+    config = require('../../config/config'),
+    gridfs = require('../controllers/gridfs'),
+    Schema = mongoose.Schema,
+    i18n = require("i18next"),
+    timestamps = require('mongoose-timestamp'),
+    crypto = require('crypto'),
+    authTypes = ['github', 'twitter', 'facebook', 'google'];
+
+var UserGroupModel = mongoose.model('userGroup');
+var DictModel = mongoose.model('dict');
+var ExtrafieldModel = mongoose.model('extrafields');
+
 
 /**
  * User Schema
  */
 var UserSchema = new Schema({
 	_id: String,
-	Status: mongoose.Schema.Types.Mixed,
+	Status: {type: Schema.Types.Mixed, default: 'DISABLE'},
 	name: {type: String, required: true},
 	email: String,
 	admin: Boolean,
@@ -57,10 +66,109 @@ var UserSchema = new Schema({
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String
 	},
-	multiEntities: {type: Boolean, default: false} // Access to all entities ?
+	multiEntities: {type: Boolean, default: false},// Access to all entities ?
+        telFixe: String,
+        address: String,
+	zip: String,
+	town: String,
+        dateNaissance: Date,
+        villeNaissance: String,
+        paysNaissance: String,
+        nationnalite: String,
+        situationFamiliale: String,
+        nbrEnfants: Number,
+        perCharges: Number,
+        dateArrivee: Date,
+        dateDepart:  Date,
+        poste: String,
+        descriptionPoste: String,
+        groupe: String,
+        contrat: String,
+        periodeEssai: String,
+        salaire: Number,
+        tempsTravail: String,
+        securiteSociale: Number,
+        libelleBank: String,
+        iban: String,
+        niveauEtude: String,
+        anneeDiplome: Number,
+        notes: [{
+                author: {
+                        id: {type: String, ref: 'User'},
+                        name: String
+                },
+                datec: Date,
+                note: String
+        }]
+        
+},
+{
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
 });
 
 UserSchema.plugin(timestamps);
+
+UserSchema.plugin(gridfs.pluginGridFs, {root: "User"});
+
+var statusList = {};
+ExtrafieldModel.findOne({_id: "extrafields:User"}, function(err, docs) {
+    
+	statusList = docs;
+});
+
+UserSchema.virtual('status')
+		.get(function() {
+                    
+	var res_status = {};
+        
+	var status = this.Status;
+
+	if (status && statusList.fields["Status"].values[status].label) {
+		//console.log(this);
+		res_status.id = status;
+		//this.status.name = i18n.t("intervention." + statusList.values[status].label);
+		res_status.name = statusList.fields["Status"].values[status].label;
+		res_status.css = statusList.fields["Status"].values[status].cssClass;
+	} else { // By default
+		res_status.id = status;
+		res_status.name = status;
+		res_status.css = "";
+	}
+	return res_status;
+
+});
+
+var userGroupList = {};
+
+UserGroupModel.find(function(err, docs) {
+    
+    userGroupList = docs;
+    
+});
+
+UserSchema.virtual('userGroup')
+		.get(function() {
+                    
+	var group;
+        
+        if(this.groupe){
+            for(var j in userGroupList){
+                if(userGroupList[j]._id === this.groupe)
+                    group = userGroupList[j].name;
+            }
+            
+        }
+	
+        return group;
+});
+
+UserSchema.virtual('fullname').get(function() {
+   
+    return this.lastname + ' ' + this.firstname; 
+    
+});
+
 
 /**
  * Virtuals
