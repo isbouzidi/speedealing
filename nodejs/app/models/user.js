@@ -17,7 +17,7 @@ var UserSchema = new Schema({
 	name: {type: String, required: true},
 	email: String,
 	admin: Boolean,
-	lastname: String,
+	lastname: {type: String, uppercase: true},
 	firstname: String,
 	provider: String,
 	password: String,
@@ -79,26 +79,26 @@ UserSchema.plugin(timestamps);
 /**
  * Validations
  */
-var validatePresenceOf = function(value) {
+var validatePresenceOf = function (value) {
 	return value && value.length;
 };
 
 // the below 4 validations only apply if you are signing up traditionally
-UserSchema.path('name').validate(function(name) {
+UserSchema.path('name').validate(function (name) {
 	// if you are authenticating by any of the oauth strategies, don't validate
 	if (authTypes.indexOf(this.provider) !== -1)
 		return true;
 	return name.length;
 }, 'Name cannot be blank');
 
-UserSchema.path('email').validate(function(email) {
+UserSchema.path('email').validate(function (email) {
 	// if you are authenticating by any of the oauth strategies, don't validate
 	if (authTypes.indexOf(this.provider) !== -1)
 		return true;
 	return email.length;
 }, 'Email cannot be blank');
 
-UserSchema.path('hashed_password').validate(function(hashed_password) {
+UserSchema.path('hashed_password').validate(function (hashed_password) {
 	// if you are authenticating by any of the oauth strategies, don't validate
 	if (authTypes.indexOf(this.provider) !== -1)
 		return true;
@@ -109,7 +109,7 @@ UserSchema.path('hashed_password').validate(function(hashed_password) {
 /**
  * Pre-save hook
  */
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
 	if (!this.isNew)
 		return next();
 
@@ -130,7 +130,7 @@ UserSchema.methods = {
 	 * @return {Boolean}
 	 * @api public
 	 */
-	authenticate: function(plainText) {
+	authenticate: function (plainText) {
 		return this.password === plainText;
 		return this.encryptPassword(plainText) === this.hashed_password;
 	},
@@ -140,7 +140,7 @@ UserSchema.methods = {
 	 * @return {String}
 	 * @api public
 	 */
-	makeSalt: function() {
+	makeSalt: function () {
 		return Math.round((new Date().valueOf() * Math.random())) + '';
 	},
 	/**
@@ -150,7 +150,7 @@ UserSchema.methods = {
 	 * @return {String}
 	 * @api public
 	 */
-	encryptPassword: function(password) {
+	encryptPassword: function (password) {
 		if (!password)
 			return '';
 		return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
@@ -208,7 +208,7 @@ var statusAbsenceList = {
 };
 
 UserAbsenceSchema.virtual('status')
-		.get(function() {
+		.get(function () {
 			var res_status = {};
 
 			var status = this.Status;
