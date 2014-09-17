@@ -132,6 +132,7 @@ angular.module('mean.rh').controller('RhController', ['$scope', '$routeParams', 
                     {field: 'userGroup', displayName: 'Groupe'},
                     {field: 'entity', displayName: 'Site'},
                     {field: 'contrat', displayName: 'Contrat'},
+					{field: 'NewConnection', displayName: 'Date connexion', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"},
                     {field: 'status.name', displayName: 'Statut', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'}
                   ],
             filterOptions: $scope.filterOptionsUser
