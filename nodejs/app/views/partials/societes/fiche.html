@@ -95,7 +95,7 @@
 					<h5 class="green underline">Les dernieres notes</h5>
 
 					<div class="scroll" style="height:120px">
-						<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
+						<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
 							<div class="with-small-padding silver-gradient no-margin-top">
 								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
@@ -274,11 +274,11 @@
 												<tr>
 													<th scope="row">{{t 'companies:CustomerSegmentation'}}</th>
 													<td><a href="#" editable-select="societe.segmentation" buttons="no" e-ng-options="s as s.label group by s.group for s in segmentation.values track by s.id" onaftersave="update()">
-															\{{societe.segmentation.label || 'Non défini'}} <small ng-if="societe.segmentation.group">(\{{societe.segmentation.group}})</small>
+															\{{societe.segmentation.label|| 'Non défini'}} <small ng-if="societe.segmentation.group">(\{{societe.segmentation.group}})</small>
 														</a></td>
 												</tr>
-											<tr>
-												<th scope="row" colspan="2">{{t 'companies:ProductSegmentation'}}<br/>
+												<tr>
+													<th scope="row" colspan="2">{{t 'companies:ProductSegmentation'}}<br/>
 											<tags-input ng-model="societe.familyProduct" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
 												<auto-complete source="AutoComplete($query,'api/product/family/autocomplete',10)" min-length="1" max-results-to-show="10"></auto-complete>
 											</tags-input>
@@ -287,9 +287,9 @@
 											<tr>
 												<th scope="row">{{t 'companies:Rival'}}</th>
 												<td><a href="#" editable-select="societe.rival" buttons="no" e-ng-options="s.label as s.label for s in rival.values" onaftersave="update()">
-														\{{societe.rival || 'Non défini'}}
+														\{{societe.rival|| 'Non défini'}}
 													</a></td>
-												</tr>
+											</tr>
 											<tr>
 												<th scope="row" colspan="2">{{t 'Keywords'}}<br/>
 											<tags-input data-ng-model="societe.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
@@ -379,6 +379,21 @@
 													<td><a href="#" editable-text="societe.cptBilling" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
 															\{{societe.cptBilling.name|| "Aucun"}}
 														</a></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="six-columns">
+										<table class="info-table">
+											<tbody>
+												<tr>
+													<th scope="row">Relevé de factures</th>
+													<td><ul class="files-icons mini">	
+															<li style="height: inherit"><a data-ng-href="api/bill/releveFacture/pdf/\{{societe._id}}" target="_blank" class="file-link">
+																	<span class="icon file-pdf"></span>
+																	releve_facture_\{{societe.name}}.pdf
+																</a></li>
+														</ul></td>
 												</tr>
 											</tbody>
 										</table>
@@ -531,7 +546,7 @@
 
 									<div class="six-columns">
 										<div class="scroll" style="height:360px">
-											<div data-ng-repeat="vnote in societe.notes | orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+											<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
 													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>

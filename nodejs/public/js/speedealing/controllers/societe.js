@@ -988,7 +988,9 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		$scope.active = 1;
 		$scope.validSiret = false;
 		$scope.societe = {
-			entity: Global.user.entity
+			entity: Global.user.entity,
+			Status: "ST_PFROI",
+			fournisseur: "NO"
 		};
 		$scope.siretFound = "";
 

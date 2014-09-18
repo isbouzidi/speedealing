@@ -1,0 +1,112 @@
+\documentclass[a4paper, oneside, 10pt, french]{article}
+
+\usepackage[a4paper]{geometry}
+\geometry{top=1.5cm, bottom=1cm, left=1.5cm, right=1.5cm,foot=1.5cm,head=2cm,headsep=.5cm,includefoot}
+
+\newcommand{\FOOT}{--FOOT--}
+
+\usepackage{symeos_article}
+
+\definecolor{violet}{rgb}{0.58,0.07,0.47}
+\definecolor{bleu}{rgb}{0.01,0.28,0.58}
+\definecolor{orange}{rgb}{0.01,0.28,0.58}
+\newcommand{\vhline}{\arrayrulecolor{violet}\hline\arrayrulecolor{black}}
+\newcommand{\ghline}{\arrayrulecolor{gray}\hline\arrayrulecolor{black}}
+\newcommand{\bhline}{\arrayrulecolor{bleu}\hline\arrayrulecolor{black}}
+\makeatletter
+\renewcommand{\section}{\@startsection {section}{1}{\z@}%
+             {-0ex \@plus -1ex \@minus -.2ex}%
+             {0.01ex \@plus.1ex}%
+             {\footnotesize\sffamily}}
+\makeatother
+
+%%ligne de tableau avec \\
+\newcommand{\specialcell}[2][c]{
+	\parbox[#1]{3.8cm}{#2}}
+
+
+\begin{document}
+
+\begin{tabular}{p{9cm} p{8cm}}
+    \vspace{0pt} 
+    \includegraphics[width=8cm]{logo.jpg}
+    & 
+    \vspace{0pt}
+   \raggedleft
+	%\begin{flushright}
+	\textcolor{violet}{\textsc{\Large Relev\'e de factures}}\\
+	Date du relev\'e : --DATEC--\\
+\end{tabular}
+
+\vspace{1cm}
+
+\begin{minipage}[t]{0.40\textwidth}
+\raggedright
+{\small Emetteur :}\\
+\begin{fminipage}
+--MYSOC--
+\end{fminipage}
+\end{minipage}
+\hspace{40px}
+\begin{minipage}[t]{0.49\textwidth}
+{\small Destinataire :}
+
+\begin{fminipage}
+--DESTINATAIRE--\\
+\begin{minipage}{\textwidth}
+\flushright
+{\tiny --CODECLIENT--}
+\end{minipage}
+\end{fminipage}
+\end{minipage}
+
+Informations : --NOTE--
+
+\tablefirsthead{%
+\hline
+\multicolumn{1}{|c}{Num facture} &
+\multicolumn{1}{c}{Date de facture} &
+\multicolumn{1}{c}{Réf client} &
+\multicolumn{1}{c}{Date d'échéance} &
+\multicolumn{1}{c}{Montant HT} &
+\multicolumn{1}{c|}{Montant TT} \\
+\hline
+\hline}
+\tablehead{%
+\hline
+\multicolumn{6}{|l|}{\small\sl suite de la page précédente}\\
+\hline
+\multicolumn{1}{|c}{Num facture} &
+\multicolumn{1}{c}{Date de facture} &
+\multicolumn{1}{c}{Réf client} &
+\multicolumn{1}{c}{Date d'échéance} &
+\multicolumn{1}{c}{Montant HT} &
+\multicolumn{1}{c|}{Montant TT} \\
+\hline
+\hline}
+\tabletail{%
+\hline
+\multicolumn{6}{|r|}{\small\sl suite sur la prochaine page}\\
+\hline}
+\tablelasttail{\hline}
+\begin{minipage}{\textwidth}
+\flushright 
+\end{minipage}\\
+\begin{supertabular*}{\textwidth}{|p{2.5cm}|p{2.5cm}|p{4cm}@{\extracolsep{1mm plus 1fil}}|p{2.5cm}|r|r|}
+--TABULAR--
+\end{supertabular*}
+
+\begin{minipage}[t]{0.48\textwidth}
+{\footnotesize \textbf{Conditions de règlement :} --REGLEMENT--}\\
+{\footnotesize Règlement TTC par \textbf{--PAID--} --BK--}\\
+\end{minipage}
+\hspace{2mm}
+\begin{minipage}[t]{0.50\textwidth}
+\begin{flushright}
+\begin{tabular}{p{4.5cm} r}
+\rowcolor{violet}\textcolor{white}{Total à payer} &\textcolor{white}{--APAYER--} \\ 
+\end{tabular} 
+\end{flushright}
+\end{minipage}
+
+\end{document}

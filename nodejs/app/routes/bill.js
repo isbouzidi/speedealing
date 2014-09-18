@@ -18,7 +18,7 @@ var ProductModel = mongoose.model('product');
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 
@@ -30,10 +30,11 @@ module.exports = function(app, passport, auth) {
 	app.put('/api/bill/:billId', auth.requiresLogin, object.update);
 	app.del('/api/bill/:billId', auth.requiresLogin, object.destroy);
 	app.get('/api/bill/pdf/:billId', auth.requiresLogin, object.pdf);
+	app.get('/api/bill/releveFacture/pdf/:societeId', auth.requiresLogin, object.releve_facture);
 	app.get('/api/bill/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
-	app.post('/api/bill/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/bill/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
 
 		if (req.body.filter == null)
@@ -52,7 +53,7 @@ module.exports = function(app, passport, auth) {
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
 		console.log(query);
-		BillModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		BillModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/bill/autocomplete");
 				console.log(err);
@@ -101,7 +102,7 @@ function Object() {
 }
 
 Object.prototype = {
-	bill: function(req, res, next, id) {
+	bill: function (req, res, next, id) {
 		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 		var query = {};
 
@@ -113,8 +114,8 @@ Object.prototype = {
 		//console.log(query);
 
 		BillModel.findOne(query, "-latex")
-				.populate("orders","ref ref_client total_ht client")
-				.exec(function(err, doc) {
+				.populate("orders", "ref ref_client total_ht client")
+				.exec(function (err, doc) {
 					if (err)
 						return next(err);
 
@@ -124,7 +125,7 @@ Object.prototype = {
 					next();
 				});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 		var query = {};
 
 		if (req.query) {
@@ -142,7 +143,7 @@ Object.prototype = {
 			}
 		}
 
-		BillModel.find(query, "-history -files -latex", function(err, doc) {
+		BillModel.find(query, "-history -files -latex", function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -154,10 +155,10 @@ Object.prototype = {
 			res.json(200, doc);
 		});
 	},
-	show: function(req, res) {
+	show: function (req, res) {
 		res.json(req.bill);
 	},
-	create: function(req, res) {
+	create: function (req, res) {
 		var bill = {};
 		if (req.query.clone) {
 			bill = req.bill.toObject();
@@ -183,7 +184,7 @@ Object.prototype = {
 			bill.entity = req.user.entity;
 
 		//console.log(bill);
-		bill.save(function(err, doc) {
+		bill.save(function (err, doc) {
 			if (err) {
 				return console.log(err);
 			}
@@ -191,12 +192,12 @@ Object.prototype = {
 			res.json(bill);
 		});
 	},
-	update: function(req, res) {
+	update: function (req, res) {
 		var bill = req.bill;
 		//console.log(req.body);
 		bill = _.extend(bill, req.body);
 
-		bill.save(function(err, doc) {
+		bill.save(function (err, doc) {
 			if (err)
 				console.log(err);
 
@@ -204,9 +205,9 @@ Object.prototype = {
 			res.json(doc);
 		});
 	},
-	destroy: function(req, res) {
+	destroy: function (req, res) {
 		var bill = req.bill;
-		bill.remove(function(err) {
+		bill.remove(function (err) {
 			if (err) {
 				res.render('error', {
 					status: 500
@@ -216,15 +217,15 @@ Object.prototype = {
 			}
 		});
 	},
-	select: function(req, res) {
-		ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
+	select: function (req, res) {
+		ExtrafieldModel.findById('extrafields:Facture', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
 			}
 			var result = [];
 			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
 
 					if (docs) {
 						for (var i in docs.values) {
@@ -257,11 +258,11 @@ Object.prototype = {
 			res.json(doc.fields[req.query.field]);
 		});
 	},
-	pdf: function(req, res) {
+	pdf: function (req, res) {
 		// Generation de la facture PDF et download
 
 		var fk_facture;
-		ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
+		ExtrafieldModel.findById('extrafields:Facture', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
@@ -271,16 +272,16 @@ Object.prototype = {
 		});
 
 		var cond_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_payment_term"}, function(err, docs) {
+		DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
 			cond_reglement_code = docs;
 		});
 
 		var mode_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_paiement"}, function(err, docs) {
+		DictModel.findOne({_id: "dict:fk_paiement"}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
 
-		latex.loadModel("facture.tex", function(err, tex) {
+		latex.loadModel("facture.tex", function (err, tex) {
 
 			var doc = req.bill;
 
@@ -289,7 +290,7 @@ Object.prototype = {
 				return res.send(500, "Impossible de générer le PDF, la facture n'est pas validée");
 			}
 
-			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
+			SocieteModel.findOne({_id: doc.client.id}, function (err, societe) {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref);
@@ -343,7 +344,7 @@ Object.prototype = {
 
 				tex = tex.replace(/--APAYER--/g, latex.price(doc.total_ttc));
 
-				latex.headfoot(doc.entity, tex, function(tex) {
+				latex.headfoot(doc.entity, tex, function (tex) {
 
 					tex = tex.replace(/undefined/g, "");
 
@@ -351,18 +352,18 @@ Object.prototype = {
 					doc.latex.createdAt = new Date();
 					doc.latex.title = "Facture - " + doc.ref;
 
-					doc.save(function(err) {
+					doc.save(function (err) {
 						if (err) {
 							console.log("Error while trying to save this document");
 							res.send(403, "Error while trying to save this document");
 						}
 
-						latex.compileDoc(doc._id, doc.latex, function(result) {
+						latex.compileDoc(doc._id, doc.latex, function (result) {
 							if (result.errors.length) {
 								//console.log(pdf);
 								return res.send(500, result.errors);
 							}
-							return latex.getPDF(result.compiledDocId, function(err, pdfPath) {
+							return latex.getPDF(result.compiledDocId, function (err, pdfPath) {
 								res.type('application/pdf');
 								//res.attachment(doc.ref + ".pdf"); // for douwnloading
 								res.sendfile(pdfPath);
@@ -373,7 +374,127 @@ Object.prototype = {
 			});
 		});
 	},
-	caFamily: function(req, res) {
+	releve_facture: function (req, res) {
+		// Generation de la facture PDF et download
+
+		var fk_facture;
+		ExtrafieldModel.findById('extrafields:Facture', {}, {sort: {datec: -1}}, function (err, doc) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			fk_facture = doc;
+		});
+
+		var cond_reglement_code = {};
+		DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
+			cond_reglement_code = docs;
+		});
+
+		var mode_reglement_code = {};
+		DictModel.findOne({_id: "dict:fk_paiement"}, function (err, docs) {
+			mode_reglement_code = docs;
+		});
+
+		latex.loadModel("releve_facture.tex", function (err, tex) {
+
+			BillModel.find({"client.id": req.societe._id, Status: {$in: ["NOT_PAID", "STARTED"]}}, function (err, bills) {
+
+				var doc = bills[0];
+
+				//console.log(bills);
+				//return;
+
+				if (bills == null || doc == null) {
+					res.type('html');
+					return res.send(500, "Il n'y aucune facture en attente de règlement");
+				}
+
+				if (doc.Status == "DRAFT") {
+					res.type('html');
+					return res.send(500, "Impossible de générer le PDF, la facture n'est pas validée");
+				}
+
+				var societe = req.societe;
+
+				// replacement des variables
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.client.name + "} \\\\" + doc.address.replace(/\n/g, "\\\\") + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}");
+				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
+				tex = tex.replace(/--TITLE--/g, doc.title);
+				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
+				tex = tex.replace(/--DATEC--/g, dateFormat(new Date(), "dd/mm/yyyy"));
+				tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
+
+				tex = tex.replace(/--REGLEMENT--/g, cond_reglement_code.values[doc.cond_reglement_code].label);
+
+				tex = tex.replace(/--PAID--/g, mode_reglement_code.values[doc.mode_reglement_code].label);
+
+				switch (doc.mode_reglement_code) {
+					case "VIR" :
+						tex = tex.replace(/--BK--/g, "\\\\ --IBAN--");
+						break;
+
+					case "CHQ" :
+						tex = tex.replace(/--BK--/g, "A l'ordre de --ENTITY--");
+						break;
+
+					default :
+						tex = tex.replace(/--BK--/g, "");
+				}
+				//tex = tex.replace(/--NOTE--/g, doc.desc.replace(/\n/g, "\\\\"));
+				tex = tex.replace(/--NOTE--/g, "");
+
+				//console.log(doc);
+
+				var tab_latex = "";
+				//for (var i = 0; i < doc.lines.length; i++) {
+				tab_latex += doc.ref.replace(/_/g, "\\_") + "&" + dateFormat(doc.datec, "dd/mm/yyyy") + "&" + doc.ref_client.replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&" + dateFormat(doc.dater, "dd/mm/yyyy") + "&" + latex.price(doc.total_ht) + "&" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
+				//}
+				//console.log(products)
+				//console.log(tab_latex);
+				//return;
+
+				tex = tex.replace("--TABULAR--", tab_latex);
+
+				var tab_latex = "";
+				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
+				for (var i = 0; i < doc.total_tva.length; i++) {
+					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
+				}
+				tab_latex += "\\vhline\n";
+				tab_latex += "Total TTC &" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
+				//Payé & --PAYE--\\ 
+				tex = tex.replace("--TOTAL--", tab_latex);
+
+				tex = tex.replace(/--APAYER--/g, latex.price(doc.total_ttc));
+
+				latex.headfoot(doc.entity, tex, function (tex) {
+
+					tex = tex.replace(/undefined/g, "");
+
+					var docuLatex = {};
+
+					docuLatex.data = new Buffer(tex);
+					docuLatex.createdAt = new Date();
+					docuLatex.title = "Facture - " + doc.ref;
+
+					latex.compileDoc(doc._id, docuLatex, function (result) {
+						if (result.errors.length) {
+							//console.log(pdf);
+							return res.send(500, result.errors);
+						}
+						return latex.getPDF(result.compiledDocId, function (err, pdfPath) {
+							res.type('application/pdf');
+							//res.attachment(doc.ref + ".pdf"); // for douwnloading
+							res.sendfile(pdfPath);
+						});
+					});
+				});
+			});
+		});
+	},
+	caFamily: function (req, res) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
@@ -383,13 +504,13 @@ Object.prototype = {
 		var ca = {};
 
 		async.parallel({
-			caFamily: function(cb) {
+			caFamily: function (cb) {
 				BillModel.aggregate([
 					{$match: {Status: {'$ne': 'DRAFT'}, entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
 					{$unwind: "$lines"},
 					{$project: {_id: 0, lines: 1}},
 					{$group: {_id: "$lines.product.name", total_ht: {"$sum": "$lines.total_ht"}}}
-				], function(err, doc) {
+				], function (err, doc) {
 					if (err) {
 						return cb(err);
 					}
@@ -411,14 +532,14 @@ Object.prototype = {
 			 cb(null, doc);
 			 });
 			 }*/
-		}, function(err, results) {
+		}, function (err, results) {
 			if (err)
 				return console.log(err);
 
 			//console.log(results);
-			async.each(results.caFamily, function(product, callback) {
+			async.each(results.caFamily, function (product, callback) {
 				//console.log(product);
-				ProductModel.findOne({ref: product._id}, function(err, doc) {
+				ProductModel.findOne({ref: product._id}, function (err, doc) {
 					if (err)
 						console.log(err);
 
@@ -436,7 +557,7 @@ Object.prototype = {
 					callback();
 				});
 
-			}, function(err) {
+			}, function (err) {
 
 				var result = [];
 				for (var i in ca) {
