@@ -1535,6 +1535,11 @@ Object.prototype = {
 				return;
 			}
 			var result = [];
+			if(!doc.fields[req.query.field]) {
+				console.log("Error dict societe : " + req.query.field + " Not found");
+				return res.send(500);
+			}
+			
 			if (doc.fields[req.query.field].dict)
 				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
 
