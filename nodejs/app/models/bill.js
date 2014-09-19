@@ -31,7 +31,7 @@ var billSchema = new Schema({
 		isNameModified: {type: Boolean}
 	},
 	contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
-	ref_client: {type: String},
+	ref_client: {type: String, default: ""},
 	price_level: {type: String, default: "BASE", uppercase: true, trim: true},
 	address: String,
 	zip: String,
