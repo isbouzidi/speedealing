@@ -1536,7 +1536,7 @@ Object.prototype = {
 			}
 			var result = [];
 			if(!doc.fields[req.query.field]) {
-				console.log("Error dict societe : " + req.query.field + " Not found");
+				console.log("Error dict  or extrafield error societe : " + req.query.field + " Not found");
 				return res.send(500);
 			}
 			
