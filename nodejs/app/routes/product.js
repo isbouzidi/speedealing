@@ -8,11 +8,11 @@ var ProductModel = mongoose.model('product');
 var StorehouseModel = mongoose.model('storehouse');
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 	var pricelevel = require('../controllers/pricelevel.js');
-	ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
+	ExtrafieldModel.findById('extrafields:Product', function (err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -23,7 +23,7 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/product', auth.requiresLogin, object.read);
 	app.get('/api/product/count', auth.requiresLogin, object.count);
 	// list for autocomplete
-	app.post('/api/product/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/product/autocomplete', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
 		if (req.body.filter == null)
@@ -35,7 +35,7 @@ module.exports = function(app, passport, auth) {
 			]
 		};
 		if (req.body.price_level && req.body.price_level !== 'BASE')
-			return pricelevel.autocomplete(req.body, function(prices) {
+			return pricelevel.autocomplete(req.body, function (prices) {
 				res.json(200, prices);
 			});
 		if (req.body.supplier)
@@ -44,7 +44,7 @@ module.exports = function(app, passport, auth) {
 			query.Status = {'$in': ["SELL", "SELLBUY"]};
 		//console.log(query);
 		ProductModel.find(query, "ref _id label template pu_ht tva_tx minPrice description caFamily",
-				{limit: req.body.take}, function(err, docs) {
+				{limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/product/autocomplete");
 				console.log(err);
@@ -71,8 +71,8 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 	app.get('/api/product/fk_extrafields/select', auth.requiresLogin, object.select);
-	app.get('/api/product/convert_tva', auth.requiresLogin, function(req, res) {
-		DictModel.findOne({_id: "dict:fk_tva"}, function(err, docs) {
+	app.get('/api/product/convert_tva', auth.requiresLogin, function (req, res) {
+		DictModel.findOne({_id: "dict:fk_tva"}, function (err, docs) {
 			for (var i in docs.values) {
 				if (docs.values[i].label)
 					docs.values[i].value = docs.values[i].label;
@@ -81,36 +81,34 @@ module.exports = function(app, passport, auth) {
 				delete docs.values[i].label;
 				//console.log(docs.values[i]);
 			}
-			docs.save(function(err, doc) {
+			docs.save(function (err, doc) {
 				//console.log(err);
 				res.json(doc);
 			});
 		});
 	});
-	app.post('/api/product', auth.requiresLogin, function(req, res) {
+	app.post('/api/product', auth.requiresLogin, function (req, res) {
 		object.create(req, res);
 	});
-	app.put('/api/product/:productId', auth.requiresLogin, function(req, res) {
-		object.update(req, res);
-	});
-	app.del('/api/product', auth.requiresLogin, function(req, res) {
+
+	app.del('/api/product', auth.requiresLogin, function (req, res) {
 		object.del(req, res);
 	});
-	app.get('/api/product/storehouse', auth.requiresLogin, function(req, res) {
-		StorehouseModel.find({}, function(err, storehouses) {
+	app.get('/api/product/storehouse', auth.requiresLogin, function (req, res) {
+		StorehouseModel.find({}, function (err, storehouses) {
 			if (err)
 				console.log(err);
 			res.send(200, storehouses);
 		});
 	});
-	app.post('/api/product/storehouse', auth.requiresLogin, function(req, res) {
+	app.post('/api/product/storehouse', auth.requiresLogin, function (req, res) {
 		//console.log(req.body);
 
 		req.body.name = req.body.name.toUpperCase();
 		if (!req.body.substock)
 			req.body.substock = "";
 		req.body.substock = req.body.substock.toUpperCase();
-		StorehouseModel.findOne({name: req.body.name}, function(err, storehouse) {
+		StorehouseModel.findOne({name: req.body.name}, function (err, storehouse) {
 			if (err)
 				return console.log(err);
 			if (storehouse == null)
@@ -128,7 +126,7 @@ module.exports = function(app, passport, auth) {
 			subStock.barCode = max + 1;
 			subStock.productId = [];
 			storehouse.subStock.push(subStock);
-			storehouse.save(function(err, doc) {
+			storehouse.save(function (err, doc) {
 				if (err)
 					console.log(err);
 				res.send(200, storehouse);
@@ -136,24 +134,24 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 	// add or remove product to a storehouse for gencode
-	app.put('/api/product/storehouse', auth.requiresLogin, function(req, res) {
+	app.put('/api/product/storehouse', auth.requiresLogin, function (req, res) {
 		console.log(req.body);
 		if (req.body.checked) // add a product
-			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$addToSet: {'subStock.$.productId': req.body.product._id}}, function(err, doc) {
+			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$addToSet: {'subStock.$.productId': req.body.product._id}}, function (err, doc) {
 				if (err)
 					console.log(err);
 				console.log(doc);
 				res.send(200, {});
 			});
 		else
-			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$pull: {'subStock.$.productId': req.body.product._id}}, function(err, doc) {
+			StorehouseModel.update({name: req.body.stock.stock, 'subStock.name': req.body.stock.subStock}, {$pull: {'subStock.$.productId': req.body.product._id}}, function (err, doc) {
 				if (err)
 					console.log(err);
 				console.log(doc);
 				res.send(200, {});
 			});
 	});
-	app.post('/api/product/import', /*ensureAuthenticated,*/ function(req, res) {
+	app.post('/api/product/import', /*ensureAuthenticated,*/ function (req, res) {
 
 		if (req.files) {
 			var filename = req.files.filedata.path;
@@ -162,7 +160,7 @@ module.exports = function(app, passport, auth) {
 				var tab = [];
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
-						.transform(function(row, index, callback) {
+						.transform(function (row, index, callback) {
 							if (index === 0) {
 								tab = row; // Save header line
 								return callback();
@@ -174,7 +172,7 @@ module.exports = function(app, passport, auth) {
 
 							//return;
 
-							SocieteModel.findOne({code_client: row[0]}, function(err, societe) {
+							SocieteModel.findOne({code_client: row[0]}, function (err, societe) {
 								if (err) {
 									console.log(err);
 									return callback();
@@ -192,7 +190,7 @@ module.exports = function(app, passport, auth) {
 								//console.log(societe)
 								//console.log(societe.datec);
 
-								societe.save(function(err, doc) {
+								societe.save(function (err, doc) {
 									if (err)
 										console.log(err);
 									/*if (doc == null)
@@ -205,15 +203,15 @@ module.exports = function(app, passport, auth) {
 							});
 							//return row;
 						}/*, {parallel: 1}*/)
-						.on("end", function(count) {
+						.on("end", function (count) {
 							console.log('Number of lines: ' + count);
-							fs.unlink(filename, function(err) {
+							fs.unlink(filename, function (err) {
 								if (err)
 									console.log(err);
 							});
 							return res.send(200, {count: count});
 						})
-						.on('error', function(error) {
+						.on('error', function (error) {
 							console.log(error.message);
 						});
 			}
@@ -228,9 +226,9 @@ module.exports = function(app, passport, auth) {
 	app.get('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
 	app.post('/api/product/price_level/select', auth.requiresLogin, pricelevel.list);
 	app.get('/api/product/price_level/upgrade', auth.requiresLogin, pricelevel.upgrade);
-	app.post('/api/product/family/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/product/family/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body);
-		ProductModel.aggregate([{'$group': {_id: '$caFamily'}}, {'$project': {price_level: '$caFamily'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function(err, docs) {
+		ProductModel.aggregate([{'$group': {_id: '$caFamily'}}, {'$project': {price_level: '$caFamily'}}, {'$match': {_id: new RegExp(req.body.filter.filters[0].value, "i")}}, {'$limit': parseInt(req.body.take)}], function (err, docs) {
 			if (err) {
 				console.log("err : /api/product/price_level/autocomplete");
 				console.log(err);
@@ -250,7 +248,7 @@ module.exports = function(app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
-	app.post('/api/product/family', auth.requiresLogin, function(req, res) {
+	app.post('/api/product/family', auth.requiresLogin, function (req, res) {
 		//console.log(req.body);
 
 		var query = {
@@ -259,7 +257,7 @@ module.exports = function(app, passport, auth) {
 		if (req.body.filter)
 			query.$and.push({caFamily: new RegExp(req.body.filter, "i")});
 
-		ProductModel.distinct(req.body.field, query, function(err, data) {
+		ProductModel.distinct(req.body.field, query, function (err, data) {
 
 			if (err) {
 				console.log('Erreur : ' + err);
@@ -271,7 +269,7 @@ module.exports = function(app, passport, auth) {
 		return;
 	});
 	// list for autocomplete
-	app.post('/api/product/ref/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/product/ref/autocomplete', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
 		var query;
@@ -283,7 +281,7 @@ module.exports = function(app, passport, auth) {
 			};
 		else
 			query = {ref: new RegExp(req.body.filter.filters[0].value, "i")};
-		ProductModel.find(query, "_id ref", {limit: parseInt(req.body.take)}, function(err, docs) {
+		ProductModel.find(query, "_id ref", {limit: parseInt(req.body.take)}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/product/ref/autocomplete");
 				console.log(err);
@@ -304,6 +302,7 @@ module.exports = function(app, passport, auth) {
 	});
 	app.get('/api/product/:productId', auth.requiresLogin, object.show);
 	app.put('/api/product/:productId/:field', auth.requiresLogin, object.updateField);
+	app.put('/api/product/:productId', auth.requiresLogin, object.update);
 	app.param('productId', object.product);
 	//other routes..
 };
@@ -311,7 +310,7 @@ function Object() {
 }
 
 Object.prototype = {
-	product: function(req, res, next, id) {
+	product: function (req, res, next, id) {
 //TODO Check ACL here
 		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 		var query = {};
@@ -321,14 +320,14 @@ Object.prototype = {
 			query = {ref: id};
 		//console.log(query);
 
-		ProductModel.findOne(query, function(err, doc) {
+		ProductModel.findOne(query, function (err, doc) {
 			if (err)
 				return next(err);
 			req.product = doc;
 			next();
 		});
 	},
-	create: function(req, res) {
+	create: function (req, res) {
 		var product = new ProductModel(req.body);
 
 		product.author = {};
@@ -344,7 +343,7 @@ Object.prototype = {
 
 		console.log(product);
 
-		product.save(function(err, doc) {
+		product.save(function (err, doc) {
 			if (err) {
 				return console.log(err);
 			}
@@ -352,7 +351,7 @@ Object.prototype = {
 			res.json(product);
 		});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 		var query = {};
 		var fields = "-history -files";
 		var sort = {};
@@ -386,7 +385,7 @@ Object.prototype = {
 		if (req.query.sort)
 			sort = JSON.parse(req.query.sort);
 
-		ProductModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: sort}, function(err, docs) {
+		ProductModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: sort}, function (err, docs) {
 			if (err)
 				console.log(err);
 			//console.log(docs);
@@ -394,10 +393,10 @@ Object.prototype = {
 			res.send(200, docs);
 		});
 	},
-	show: function(req, res) {
+	show: function (req, res) {
 		res.json(req.product || {});
 	},
-	count: function(req, res) {
+	count: function (req, res) {
 		var query = {};
 		if (req.query.query) {
 			switch (req.query.query) {
@@ -412,7 +411,7 @@ Object.prototype = {
 			}
 		}
 
-		ProductModel.count(query, function(err, doc) {
+		ProductModel.count(query, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -422,7 +421,7 @@ Object.prototype = {
 			res.json(200, {count: doc});
 		});
 	},
-	readPrice: function(req, res) {
+	readPrice: function (req, res) {
 		var status_list = this.fk_extrafields.fields.Status;
 		var type_list = this.fk_extrafields.fields.type;
 		var result = [];
@@ -443,7 +442,7 @@ Object.prototype = {
 
 		//console.log(req.query);
 
-		ProductModel.aggregate(query, function(err, doc) {
+		ProductModel.aggregate(query, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -511,13 +510,13 @@ Object.prototype = {
 			res.send(200, result);
 		});
 	},
-	update: function(req, res) {
+	update: function (req, res) {
 
 		var product = req.product;
 		product = _.extend(product, req.body);
-		//console.log(societe);
+		//console.log(req.body);
 
-		product.save(function(err, doc) {
+		product.save(function (err, doc) {
 			res.json(doc);
 		});
 
@@ -529,20 +528,20 @@ Object.prototype = {
 		 //console.log(obj);
 		 });*/
 	},
-	updateField: function(req, res) {
+	updateField: function (req, res) {
 		if (req.body.value) {
 			var product = req.product;
 			product[req.params.field] = req.body.value;
-			product.save(function(err, doc) {
+			product.save(function (err, doc) {
 				res.json(doc);
 			});
 		} else
 			res.send(500);
 	},
-	del: function(req) {
+	del: function (req) {
 		return req.body.models;
 	},
-	StatusSelect: function(req, res) {
+	StatusSelect: function (req, res) {
 		var result = [];
 		for (var i in this.fk_extrafields.fields.Status.values) {
 
@@ -556,15 +555,15 @@ Object.prototype = {
 		}
 		res.send(200, result);
 	},
-	select: function(req, res) {
-		ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
+	select: function (req, res) {
+		ExtrafieldModel.findById('extrafields:Product', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
 			}
 			var result = [];
 			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
 
 					if (docs) {
 						for (var i in docs.values) {
