@@ -24,20 +24,33 @@
 		<div class="field-block">
             <label><b>{{t 'Description'}}</b></label>
             <span editable-textarea="product.description" e-rows="4" e-cols="70" e-form="DescriptionBtnForm" onaftersave="update()" >
-				\{{product.description || 'empty'}}</span> <span class="icon-pencil grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible"></span>
+				\{{product.description|| 'empty'}}</span> <span class="icon-pencil grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible"></span>
+        </div>
+		<div ng-if="product.Status == 'SELLBUY' || product.Status == 'BUY'" class="field-block">
+            <label><b>{{t 'products:ProductAccountancyBuyCode'}}</b></label>
+			<a href="#" editable-text="product.compta_buy" buttons="no" onaftersave="update()">
+				\{{product.compta_buy|| "Non defini"}}
+			</a>
+        </div>
+		<div ng-if="product.Status == 'SELLBUY' || product.Status == 'SELL'" class="field-block">
+            <label><b>{{t 'products:ProductAccountancySellCode'}}</b></label>
+			<a href="#" editable-text="product.compta_sell" buttons="no" onaftersave="update()">
+				\{{product.compta_sell|| "Non defini"}}
+			</a>
         </div>
 
 		<div class="field-block">
-            <label><b>{{t 'Family'}}</b></label>
+            <label><b>{{t
+				'Family'}}</b></label>
 			<span editable-text="product.caFamily" buttons="no" e-form="caFamilyBtnForm" e-typeahead="family as family for family in productFamilyAutoComplete($viewValue)" onaftersave="update()">
-				\{{product.caFamily || 'empty'}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>
+				\{{product.caFamily|| 'empty'}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>
 
 		</div>
 
 		<div class="field-block">
             <label><b>{{t 'VAT'}}</b></label>
 			<span editable-select="product.tva_tx" buttons="no" e-form="vatBtnForm" onaftersave="update()" e-ng-options="c.value as c.value for c in tva_tx.values">
-				\{{product.tva_tx | percent}}</span> <span class="icon-pencil grey" ng-click="vatBtnForm.$show()" ng-hide="vatBtnForm.$visible"></span>
+				\{{product.tva_tx| percent}}</span> <span class="icon-pencil grey" ng-click="vatBtnForm.$show()" ng-hide="vatBtnForm.$visible"></span>
 		</div>
 
 		<div class="field-block">
