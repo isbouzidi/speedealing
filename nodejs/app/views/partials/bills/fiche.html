@@ -102,10 +102,15 @@
 							<span class="button-icon green-gradient"><span class="icon-like"></span></span>
 							{{t 'Validate'}}
 						</button>
-						<button ng-hide="editable" class="button" data-ng-click="changeStatus('DRAFT')">
+						<button ng-hide="editable || bill.Status == 'PAID'" class="button" data-ng-click="changeStatus('DRAFT')">
 							<span class="button-icon orange-gradient"><span class="icon-unlike"></span></span>
 							{{t 'DeValidate'}}
-						</button>	
+						</button>
+						
+						<button ng-hide="editable || bill.Status == 'PAID'" class="button" data-ng-click="changeStatus('PAID')">
+							<span class="button-icon green-gradient"><span class="icon-credit-card"></span></span>
+							{{t 'bills:ClassifyPaid'}}
+						</button>
 
 
 						<button class="button" data-ng-click="clone()">
