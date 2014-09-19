@@ -15,7 +15,7 @@ exports.authCallback = authCallback;
 
 function authCallback(req, res, next) {
 	if (req.user.google && req.user.google.user_id) {
-		User.findOne({_id: req.user._id}, function(err, user) {
+		User.findOne({_id: req.user._id}, function (err, user) {
 			if (user.google.tokens.refresh_token)
 				return res.redirect('/');
 
@@ -31,7 +31,7 @@ function authCallback(req, res, next) {
  * Set tokens google in user database for offline tokens
  */
 
-exports.setAccessCodeGoogle = function(req, res, next) {
+exports.setAccessCodeGoogle = function (req, res, next) {
 	if (req.user) {
 		//console.log(req.query);
 		var code = req.query.code;
@@ -40,10 +40,11 @@ exports.setAccessCodeGoogle = function(req, res, next) {
 		//console.log("oauth2callback: user = " + user.id + " ; code = " + code);
 
 		googleCommon.setAccessCode(code, user,
-				function(err) {
-					if (err)
+				function (err) {
+					if (err) {
+						console.log(err);
 						res.send(500, "ERR: " + err);
-					else
+					} else
 						res.redirect('/');
 				}
 		);
@@ -54,7 +55,7 @@ exports.setAccessCodeGoogle = function(req, res, next) {
 /**
  * Show login form
  */
-exports.signin = function(req, res) {
+exports.signin = function (req, res) {
 	res.render('users/signin', {
 		title: 'Signin',
 		message: req.flash('error')
@@ -64,7 +65,7 @@ exports.signin = function(req, res) {
 /**
  * Show sign up form
  */
-exports.signup = function(req, res) {
+exports.signup = function (req, res) {
 	res.render('users/signup', {
 		title: 'Sign up',
 		user: new User()
@@ -84,25 +85,25 @@ function signout(req, res) {
 /**
  * Session
  */
-exports.session = function(req, res) {
+exports.session = function (req, res) {
 	res.redirect('/');
 };
 
 /**
  * Create user
  */
-exports.create = function(req, res) {
+exports.create = function (req, res) {
 	var user = new User(req.body);
 
 	user.provider = 'local';
-	user.save(function(err) {
+	user.save(function (err) {
 		if (err) {
 			return res.render('users/signup', {
 				errors: err.errors,
 				user: user
 			});
 		}
-		req.logIn(user, function(err) {
+		req.logIn(user, function (err) {
 			if (err)
 				return next(err);
 			return res.redirect('/');
@@ -113,7 +114,7 @@ exports.create = function(req, res) {
 /**
  *  Show profile
  */
-exports.show = function(req, res) {
+exports.show = function (req, res) {
 	var user = req.profile;
 
 	res.render('users/show', {
@@ -125,18 +126,18 @@ exports.show = function(req, res) {
 /**
  * Send User
  */
-exports.me = function(req, res) {
+exports.me = function (req, res) {
 	res.jsonp(req.user || null);
 };
 
 /**
  * Find user by id
  */
-exports.user = function(req, res, next, id) {
+exports.user = function (req, res, next, id) {
 	User.findOne({
 		_id: id
 	})
-			.exec(function(err, user) {
+			.exec(function (err, user) {
 				if (err)
 					return next(err);
 				if (!user)
@@ -146,7 +147,7 @@ exports.user = function(req, res, next, id) {
 			});
 };
 
-exports.checkIP = function(req, res, user, callback) {
+exports.checkIP = function (req, res, user, callback) {
 	var navigator = require('ua-parser').parse(req.headers['user-agent']);
 	console.log(req.headers['user-agent']);
 	console.log(navigator.ua.family);
