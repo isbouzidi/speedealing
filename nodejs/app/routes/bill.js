@@ -378,7 +378,7 @@ Object.prototype = {
 		// Generation de la facture PDF et download
 
 		var fk_facture;
-		ExtrafieldModel.findById('extrafields:Facture', {}, {sort: {datec: -1}}, function (err, doc) {
+		ExtrafieldModel.findById('extrafields:Facture', {}, {sort: {dater: 1}}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
@@ -406,31 +406,26 @@ Object.prototype = {
 				//console.log(bills);
 				//return;
 
-				if (bills == null || doc == null) {
+				if (bills == null) {
 					res.type('html');
 					return res.send(500, "Il n'y aucune facture en attente de règlement");
-				}
-
-				if (doc.Status == "DRAFT") {
-					res.type('html');
-					return res.send(500, "Impossible de générer le PDF, la facture n'est pas validée");
 				}
 
 				var societe = req.societe;
 
 				// replacement des variables
-				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.client.name + "} \\\\" + doc.address.replace(/\n/g, "\\\\") + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}");
+				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + societe.name + "} \\\\" + societe.address.replace(/\n/g, "\\\\") + "\\\\ \\textsc{" + societe.zip + " " + societe.town + "}");
 				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
-				tex = tex.replace(/--TITLE--/g, doc.title);
-				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
+				//tex = tex.replace(/--TITLE--/g, doc.title);
+				//tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
 				tex = tex.replace(/--DATEC--/g, dateFormat(new Date(), "dd/mm/yyyy"));
-				tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
+				//tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
 
-				tex = tex.replace(/--REGLEMENT--/g, cond_reglement_code.values[doc.cond_reglement_code].label);
+				tex = tex.replace(/--REGLEMENT--/g, cond_reglement_code.values[societe.cond_reglement].label);
 
-				tex = tex.replace(/--PAID--/g, mode_reglement_code.values[doc.mode_reglement_code].label);
+				tex = tex.replace(/--PAID--/g, mode_reglement_code.values[societe.mode_reglement].label);
 
-				switch (doc.mode_reglement_code) {
+				switch (societe.mode_reglement) {
 					case "VIR" :
 						tex = tex.replace(/--BK--/g, "\\\\ --IBAN--");
 						break;
@@ -448,16 +443,18 @@ Object.prototype = {
 				//console.log(doc);
 
 				var tab_latex = "";
-				//for (var i = 0; i < doc.lines.length; i++) {
-				tab_latex += doc.ref.replace(/_/g, "\\_") + "&" + dateFormat(doc.datec, "dd/mm/yyyy") + "&" + doc.ref_client.replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&" + dateFormat(doc.dater, "dd/mm/yyyy") + "&" + latex.price(doc.total_ht) + "&" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
-				//}
+				var total_toPay = 0;
+				for (var i = 0; i < bills.length; i++) {
+					tab_latex += bills[i].ref.replace(/_/g, "\\_") + "&" + dateFormat(bills[i].datec, "dd/mm/yyyy") + "&" + bills[i].ref_client.replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&" + dateFormat(bills[i].dater, "dd/mm/yyyy") + "&" + latex.price(bills[i].total_ht) + "&" + latex.price(bills[i].total_ttc) + "\\tabularnewline\n";
+					total_toPay += bills[i].total_ttc;
+				}
 				//console.log(products)
 				//console.log(tab_latex);
 				//return;
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 
-				var tab_latex = "";
+				/*var tab_latex = "";
 				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
 				for (var i = 0; i < doc.total_tva.length; i++) {
 					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
@@ -465,9 +462,9 @@ Object.prototype = {
 				tab_latex += "\\vhline\n";
 				tab_latex += "Total TTC &" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
 				//Payé & --PAYE--\\ 
-				tex = tex.replace("--TOTAL--", tab_latex);
+				tex = tex.replace("--TOTAL--", tab_latex);*/
 
-				tex = tex.replace(/--APAYER--/g, latex.price(doc.total_ttc));
+				tex = tex.replace(/--APAYER--/g, latex.price(total_toPay));
 
 				latex.headfoot(doc.entity, tex, function (tex) {
 
