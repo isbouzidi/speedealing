@@ -18,23 +18,18 @@ var ProductModel = mongoose.model('product');
 var ExtrafieldModel = mongoose.model('extrafields');
 var DictModel = mongoose.model('dict');
 
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 	var billing = new Billing();
 
 	app.get('/api/delivery', auth.requiresLogin, object.read);
 	app.get('/api/delivery/caFamily', auth.requiresLogin, object.caFamily);
-	app.get('/api/delivery/:deliveryId', auth.requiresLogin, object.show);
-	app.post('/api/delivery', auth.requiresLogin, object.create);
-	app.post('/api/delivery/:deliveryId', auth.requiresLogin, object.create);
-	app.put('/api/delivery/:deliveryId', auth.requiresLogin, object.update);
-	app.del('/api/delivery/:deliveryId', auth.requiresLogin, object.destroy);
 	app.get('/api/delivery/pdf/:deliveryId', auth.requiresLogin, object.pdf);
 	app.get('/api/delivery/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
-	app.post('/api/delivery/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/delivery/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
 
 		if (req.body.filter == null)
@@ -53,7 +48,7 @@ module.exports = function(app, passport, auth) {
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
 		console.log(query);
-		DeliveryModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		DeliveryModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/delivery/autocomplete");
 				console.log(err);
@@ -92,43 +87,42 @@ module.exports = function(app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
-	
+
 	// recupere la liste des courses pour verification
-	app.get('/api/delivery/billing', auth.requiresLogin, function(req, res) {
+	app.get('/api/delivery/billing', auth.requiresLogin, billing.read/*, function (req, res) {
 		async.parallel({
-			course: function(cb) {
+			course: function (cb) {
 				billing.courses(req, "COURSE", cb);
 			},
-			messagerie: function(cb) {
+			messagerie: function (cb) {
 				billing.courses(req, "MESSAGERIE", cb);
 			},
-			affretement: function(cb) {
+			affretement: function (cb) {
 				billing.courses(req, "AFFRETEMENT", cb);
 			},
-			allST: function(cb) {
+			allST: function (cb) {
 				billing.allST(req, cb);
-			},
-			planning: function(cb) {
-				billing.planning(req, cb);
-			},
-			planningDetails: function(cb) {
-				billing.planningDetails(req, cb);
 			}
 		},
-		function(err, results) {
+		function (err, results) {
 			if (err)
 				return console.log(err);
 
 			res.json(200, results);
 		});
 
-	});
-	
+	}*/);
+
 	// Genere la facturation
 	app.post('/api/delivery/billing', auth.requiresLogin, billing.create);
-	
+
 	app.get('/api/delivery/billing/ca', auth.requiresLogin, billing.familyCA);
 
+	app.post('/api/delivery', auth.requiresLogin, object.create);
+	app.get('/api/delivery/:deliveryId', auth.requiresLogin, object.show);
+	app.post('/api/delivery/:deliveryId', auth.requiresLogin, object.create);
+	app.put('/api/delivery/:deliveryId', auth.requiresLogin, object.update);
+	app.del('/api/delivery/:deliveryId', auth.requiresLogin, object.destroy);
 	app.param('deliveryId', object.delivery);
 
 	//other routes..
@@ -138,7 +132,7 @@ function Object() {
 }
 
 Object.prototype = {
-	delivery: function(req, res, next, id) {
+	delivery: function (req, res, next, id) {
 		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 		var query = {};
 
@@ -151,7 +145,7 @@ Object.prototype = {
 
 		DeliveryModel.findOne(query, "-latex")
 				.populate("orders", "ref ref_client total_ht")
-				.exec(function(err, doc) {
+				.exec(function (err, doc) {
 					if (err)
 						return next(err);
 
@@ -161,7 +155,7 @@ Object.prototype = {
 					next();
 				});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 
 		var query = {};
 
@@ -180,7 +174,7 @@ Object.prototype = {
 			}
 		}
 
-		DeliveryModel.find(query, "-history -files -latex", function(err, doc) {
+		DeliveryModel.find(query, "-history -files -latex", function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -192,10 +186,10 @@ Object.prototype = {
 			res.json(200, doc);
 		});
 	},
-	show: function(req, res) {
+	show: function (req, res) {
 		res.json(req.delivery);
 	},
-	create: function(req, res) {
+	create: function (req, res) {
 		var delivery = {};
 		if (req.query.clone) {
 			delivery = req.delivery.toObject();
@@ -221,7 +215,7 @@ Object.prototype = {
 			delivery.entity = req.user.entity;
 
 		//console.log(delivery);
-		delivery.save(function(err, doc) {
+		delivery.save(function (err, doc) {
 			if (err) {
 				return console.log(err);
 			}
@@ -229,12 +223,12 @@ Object.prototype = {
 			res.json(delivery);
 		});
 	},
-	update: function(req, res) {
+	update: function (req, res) {
 		var delivery = req.delivery;
 		//console.log(req.body);
 		delivery = _.extend(delivery, req.body);
 
-		delivery.save(function(err, doc) {
+		delivery.save(function (err, doc) {
 			if (err)
 				console.log(err);
 
@@ -242,9 +236,9 @@ Object.prototype = {
 			res.json(doc);
 		});
 	},
-	destroy: function(req, res) {
+	destroy: function (req, res) {
 		var delivery = req.delivery;
-		delivery.remove(function(err) {
+		delivery.remove(function (err) {
 			if (err) {
 				res.render('error', {
 					status: 500
@@ -254,15 +248,15 @@ Object.prototype = {
 			}
 		});
 	},
-	select: function(req, res) {
-		ExtrafieldModel.findById('extrafields:BonLivraison', function(err, doc) {
+	select: function (req, res) {
+		ExtrafieldModel.findById('extrafields:BonLivraison', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
 			}
 			var result = [];
 			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
 
 					if (docs) {
 						for (var i in docs.values) {
@@ -295,11 +289,11 @@ Object.prototype = {
 			res.json(doc.fields[req.query.field]);
 		});
 	},
-	pdf: function(req, res) {
+	pdf: function (req, res) {
 		// Generation de la livraison PDF et download
 
 		var fk_livraison;
-		ExtrafieldModel.findById('extrafields:BonLivraison', function(err, doc) {
+		ExtrafieldModel.findById('extrafields:BonLivraison', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
@@ -309,16 +303,16 @@ Object.prototype = {
 		});
 
 		var cond_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_payment_term"}, function(err, docs) {
+		DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
 			cond_reglement_code = docs;
 		});
 
 		var mode_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_paiement"}, function(err, docs) {
+		DictModel.findOne({_id: "dict:fk_paiement"}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
 
-		latex.loadModel("delivery.tex", function(err, tex) {
+		latex.loadModel("delivery.tex", function (err, tex) {
 
 			var doc = req.delivery;
 
@@ -327,7 +321,7 @@ Object.prototype = {
 				return res.send(500, "Impossible de générer le PDF, le bon livraison n'est pas validé");
 			}
 
-			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
+			SocieteModel.findOne({_id: doc.client.id}, function (err, societe) {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref);
@@ -361,7 +355,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
-					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].no_package + "&" + latex.number(doc.lines[i].qty,3) + (doc.lines[i].units ? " " + doc.lines[i].units : " kg") + "\\tabularnewline\n";
+					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].no_package + "&" + latex.number(doc.lines[i].qty, 3) + (doc.lines[i].units ? " " + doc.lines[i].units : " kg") + "\\tabularnewline\n";
 				}
 				//console.log(products)
 				//console.log(tab_latex);
@@ -381,7 +375,7 @@ Object.prototype = {
 
 				tex = tex.replace(/--APAYER--/g, latex.price(doc.total_ttc));
 
-				latex.headfoot(doc.entity, tex, function(tex) {
+				latex.headfoot(doc.entity, tex, function (tex) {
 
 					tex = tex.replace(/undefined/g, "");
 
@@ -389,18 +383,18 @@ Object.prototype = {
 					doc.latex.createdAt = new Date();
 					doc.latex.title = "Livraison - " + doc.ref;
 
-					doc.save(function(err) {
+					doc.save(function (err) {
 						if (err) {
 							console.log("Error while trying to save this document");
 							res.send(403, "Error while trying to save this document");
 						}
 
-						latex.compileDoc(doc._id, doc.latex, function(result) {
+						latex.compileDoc(doc._id, doc.latex, function (result) {
 							if (result.errors.length) {
 								//console.log(pdf);
 								return res.send(500, result.errors);
 							}
-							return latex.getPDF(result.compiledDocId, function(err, pdfPath) {
+							return latex.getPDF(result.compiledDocId, function (err, pdfPath) {
 								res.type('application/pdf');
 								//res.attachment(doc.ref + ".pdf"); // for douwnloading
 								res.sendfile(pdfPath);
@@ -411,7 +405,7 @@ Object.prototype = {
 			});
 		});
 	},
-	caFamily: function(req, res) {
+	caFamily: function (req, res) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
@@ -421,13 +415,13 @@ Object.prototype = {
 		var ca = {};
 
 		async.parallel({
-			caFamily: function(cb) {
+			caFamily: function (cb) {
 				DeliveryModel.aggregate([
 					{$match: {Status: {'$ne': 'DRAFT'}, entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
 					{$unwind: "$lines"},
 					{$project: {_id: 0, lines: 1}},
 					{$group: {_id: "$lines.product.name", total_ht: {"$sum": "$lines.total_ht"}}}
-				], function(err, doc) {
+				], function (err, doc) {
 					if (err) {
 						return cb(err);
 					}
@@ -449,14 +443,14 @@ Object.prototype = {
 			 cb(null, doc);
 			 });
 			 }*/
-		}, function(err, results) {
+		}, function (err, results) {
 			if (err)
 				return console.log(err);
 
 			//console.log(results);
-			async.each(results.caFamily, function(product, callback) {
+			async.each(results.caFamily, function (product, callback) {
 				//console.log(product);
-				ProductModel.findOne({ref: product._id}, function(err, doc) {
+				ProductModel.findOne({ref: product._id}, function (err, doc) {
 					if (!doc)
 						console.log(product);
 
@@ -471,7 +465,7 @@ Object.prototype = {
 					callback();
 				});
 
-			}, function(err) {
+			}, function (err) {
 
 				var result = [];
 				for (var i in ca) {
@@ -497,13 +491,43 @@ function Billing() {
 }
 
 Billing.prototype = {
-	create: function(req, res) {
+	read: function (req, res) {
+		
+		var result = {
+			GroupBL : {},
+			GroupOrder: {}
+		};
+		
+		var project = {};
+		var fields = req.query.fields.split(" ");
+		for (var i in fields) {
+			project[fields[i].trim()] = 1;
+		}
+		console.log(project);
+		
+		DeliveryModel.aggregate([
+			{$match:{Status: "SEND",entity: req.query.entity, datec: {$lte:new Date(req.query.dateEnd)}}},
+			{$project: project}
+		])
+				.unwind('lines')
+				
+				//.populate("orders", "ref ref_client total_ht")
+				.exec(function (err, docs) {
+					if (err)
+						return console.log(err);
+
+					//console.log(docs);
+					result.GroupBL = docs
+					res.json(result);
+				});
+	},
+	create: function (req, res) {
 		var dateStart = new Date(req.query.year, req.query.month, 1);
 		var dateEnd = new Date(req.query.year, parseInt(req.query.month) + 1, 1);
 
 		async.parallel({
-			transports: function(cb) {
-				CoursesModel.find({Status: {$ne: 'REFUSED'}, type: {$ne: 'REGULIER'}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "-latex", {sort: {datec: 1}}, function(err, doc) {
+			transports: function (cb) {
+				CoursesModel.find({Status: {$ne: 'REFUSED'}, type: {$ne: 'REGULIER'}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "-latex", {sort: {datec: 1}}, function (err, doc) {
 					for (var i in doc) {
 						doc[i].client.name = doc[i].client.cptBilling.name;
 						doc[i].client.id = doc[i].client.cptBilling.id;
@@ -514,18 +538,18 @@ Billing.prototype = {
 					cb(err, doc);
 				});
 			},
-			stock: function(cb) {
+			stock: function (cb) {
 				StockModel.aggregate([
 					{'$match': {$or: [{datec: {$lt: dateEnd, $gte: dateStart}}, {"product.billingMode": "MONTH"}]}},
 					{'$project': {product: 1, client: 1, qty: 1}},
 					{'$group': {_id: {product: '$product', client: '$client'}, total: {$sum: '$qty'}}}
-				], function(err, doc) {
+				], function (err, doc) {
 					//console.log(doc);
 
 					cb(err, doc);
 				});
 			},
-			ST: function(cb) {
+			ST: function (cb) {
 				//console.log(dateStart);
 				//console.log(dateEnd);
 				CoursesModel.aggregate([
@@ -544,30 +568,30 @@ Billing.prototype = {
 							chargesExt: {'$sum': "$chargesExt"},
 							total_soustraitant: {'$sum': "$total_soustraitant"}
 						}
-					}], function(err, doc) {
+					}], function (err, doc) {
 
 					//console.log(doc);
 					cb(err, doc);
 				});
 			},
-			COURSE: function(cb) {
-				ProductModel.findOne({ref: "COURSE"}, function(err, product) {
+			COURSE: function (cb) {
+				ProductModel.findOne({ref: "COURSE"}, function (err, product) {
 					if (err)
 						console.log(err);
 
 					cb(err, product);
 				});
 			},
-			AFFRETEMENT: function(cb) {
-				ProductModel.findOne({ref: "AFFRETEMENT"}, function(err, product) {
+			AFFRETEMENT: function (cb) {
+				ProductModel.findOne({ref: "AFFRETEMENT"}, function (err, product) {
 					if (err)
 						console.log(err);
 
 					cb(err, product);
 				});
 			},
-			MESSAGERIE: function(cb) {
-				ProductModel.findOne({ref: "MESSAGERIE"}, function(err, product) {
+			MESSAGERIE: function (cb) {
+				ProductModel.findOne({ref: "MESSAGERIE"}, function (err, product) {
 					if (err)
 						console.log(err);
 
@@ -575,7 +599,7 @@ Billing.prototype = {
 				});
 			}
 		},
-		function(err, results) {
+		function (err, results) {
 			if (err)
 				return console.log(err);
 
@@ -596,10 +620,10 @@ Billing.prototype = {
 
 			var factures = {};
 			// Met a jour la liste des factures
-			async.each(clients, function(clientId, callback) {
-				SocieteModel.findOne({_id: clientId}, function(err, societe) {
+			async.each(clients, function (clientId, callback) {
+				SocieteModel.findOne({_id: clientId}, function (err, societe) {
 
-					FactureModel.findOne({'title.ref': "EE" + req.query.year + (parseInt(req.query.month) + 1), 'client.id': clientId}, function(err, facture) {
+					FactureModel.findOne({'title.ref': "EE" + req.query.year + (parseInt(req.query.month) + 1), 'client.id': clientId}, function (err, facture) {
 						if (err)
 							return callback(err);
 
@@ -640,12 +664,12 @@ Billing.prototype = {
 					});
 				});
 
-			}, function(err) {
+			}, function (err) {
 				if (err)
 					return console.log(err);
 
 				//lignes de factures de transports
-				async.each(results.transports, function(course, callback) {
+				async.each(results.transports, function (course, callback) {
 					//console.log(course);
 
 					var line = {
@@ -682,16 +706,16 @@ Billing.prototype = {
 
 					factures[course.client.id].lines.push(line);
 					callback();
-				}, function(err) {
+				}, function (err) {
 					//lignes de factures de stocks
-					async.each(results.stock, function(mouvStock, callback) {
+					async.each(results.stock, function (mouvStock, callback) {
 						//console.log(mouvStock);
 
-						ProductModel.findOne({_id: mouvStock._id.product.id}, function(err, product) {
+						ProductModel.findOne({_id: mouvStock._id.product.id}, function (err, product) {
 							if (err)
 								console.log(err);
 
-							var priceIdx = product.price.map(function(e) {
+							var priceIdx = product.price.map(function (e) {
 								return e.price_level;
 							}).indexOf(factures[mouvStock._id.client.id].price_level);
 
@@ -722,14 +746,14 @@ Billing.prototype = {
 							factures[mouvStock._id.client.id].lines.push(line);
 							callback();
 						});
-					}, function(err) {
+					}, function (err) {
 						// save factures
-						async.each(clients, function(clientId, callback) {
-							factures[clientId].save(function(err, facture) {
+						async.each(clients, function (clientId, callback) {
+							factures[clientId].save(function (err, facture) {
 								factures[clientId] = facture;
 								callback();
 							});
-						}, function(err) {
+						}, function (err) {
 							res.json(200, {});
 						});
 					});
@@ -738,14 +762,14 @@ Billing.prototype = {
 
 			//console.log(results.ST);
 			var supplierFactures = {};
-			async.eachSeries(results.ST, function(BillSupplier, callback) {
+			async.eachSeries(results.ST, function (BillSupplier, callback) {
 				for (var i in BillSupplier.order_id) {
 					BillSupplier.order_id[i].url = "#!/module/europexpress/transport_edit.html/";
 				}
 
 				var supplierId = BillSupplier._id.fournisseur.id.toString();
 
-				SupplierFactureModel.findOne({'title.ref': "EE" + req.query.year + req.query.month, 'supplier.id': supplierId}, function(err, facture) {
+				SupplierFactureModel.findOne({'title.ref': "EE" + req.query.year + req.query.month, 'supplier.id': supplierId}, function (err, facture) {
 					if (err)
 						return callback(err);
 
@@ -898,7 +922,7 @@ Billing.prototype = {
 
 					//console.log(supplierFactures);
 				});
-			}, function(err) {
+			}, function (err) {
 				var factures = [];
 
 				for (var i in supplierFactures) {
@@ -906,8 +930,8 @@ Billing.prototype = {
 				}
 
 				// save SupplierFactures
-				factures.forEach(function(facture) {
-					facture.save(function(err, doc) {
+				factures.forEach(function (facture) {
+					facture.save(function (err, doc) {
 						console.log(facture);
 					});
 				});
@@ -915,12 +939,12 @@ Billing.prototype = {
 
 		});
 	},
-	courses: function(req, type, cb) {
+	courses: function (req, type, cb) {
 		var dateStart = new Date(req.body.year, req.body.month, 1);
 		var dateEnd = new Date(req.body.year, parseInt(req.body.month) + 1, 1);
 		var fk_status = this.fk_extrafields.fields.statusCourses;
 
-		CoursesModel.find({type: type, Status: {'$ne': 'REFUSED'}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "client fournisseur total_ht total_soustraitant type ref Status date_enlevement", function(err, doc) {
+		CoursesModel.find({type: type, Status: {'$ne': 'REFUSED'}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "client fournisseur total_ht total_soustraitant type ref Status date_enlevement", function (err, doc) {
 			for (var i in doc) {
 				var status = {};
 
@@ -942,12 +966,12 @@ Billing.prototype = {
 			cb(err, doc);
 		});
 	},
-	allST: function(req, cb) {
+	allST: function (req, cb) {
 		var dateStart = new Date(req.body.year, req.body.month, 1);
 		var dateEnd = new Date(req.body.year, parseInt(req.body.month) + 1, 1);
 		var fk_status = this.fk_extrafields.fields.statusCourses;
 
-		CoursesModel.find({Status: {'$ne': 'REFUSED'}, total_soustraitant: {'$gt': 0}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "client fournisseur total_ht total_soustraitant type ref Status date_enlevement chargesExt", function(err, doc) {
+		CoursesModel.find({Status: {'$ne': 'REFUSED'}, total_soustraitant: {'$gt': 0}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "client fournisseur total_ht total_soustraitant type ref Status date_enlevement chargesExt", function (err, doc) {
 			for (var i in doc) {
 				var status = {};
 
@@ -967,7 +991,7 @@ Billing.prototype = {
 			cb(err, doc);
 		});
 	},
-	familyCA: function(req, res) {
+	familyCA: function (req, res) {
 		var result = [];
 		var dateStart = new Date();
 		dateStart.setHours(0, 0, 0, 0);
@@ -976,7 +1000,7 @@ Billing.prototype = {
 
 		var family = ["MESSAGERIE", "AFFRETEMENT", "COURSE", "REGULIER"];
 		async.parallel({
-			cafamily: function(cb) {
+			cafamily: function (cb) {
 				var result = {};
 				//init CA
 
@@ -1021,7 +1045,7 @@ Billing.prototype = {
 				 */
 
 				CoursesModel.find({Status: {'$ne': 'REFUSED'}, date_enlevement: {'$gte': dateStart}},
-				{total_ht: 1, type: 1, date_enlevement: 1}, function(err, docs) {
+				{total_ht: 1, type: 1, date_enlevement: 1}, function (err, docs) {
 					if (err)
 						console.log(err);
 
@@ -1039,7 +1063,7 @@ Billing.prototype = {
 				});
 
 			},
-			caMonth: function(cb) {
+			caMonth: function (cb) {
 				var result = {};
 				result.total = [];
 				result.sum = [];
@@ -1058,7 +1082,7 @@ Billing.prototype = {
 				 ], function(err, docs) {*/
 				CoursesModel.find({Status: {'$ne': 'REFUSED'}, date_enlevement: {'$gte': dateStart}},
 				{total_ht: 1, date_enlevement: 1},
-				function(err, docs) {
+				function (err, docs) {
 					for (var i = 0; i < docs.length; i++) {
 						result.total[docs[i].date_enlevement.getMonth()] += docs[i].total_ht;
 					}
@@ -1073,7 +1097,7 @@ Billing.prototype = {
 					cb(null, result);
 				});
 			},
-			caCumul: function(cb) {
+			caCumul: function (cb) {
 				var result = [];
 				for (var m = 0; m < 12; m++)
 					result.push(0);
@@ -1090,14 +1114,14 @@ Billing.prototype = {
 				 }*/
 				CoursesModel.find({Status: {'$ne': 'REFUSED'}, date_enlevement: {'$gte': dateStart}},
 				{total_ht: 1, date_enlevement: 1},
-				function(err, docs) {
+				function (err, docs) {
 					for (var i = 0; i < docs.length; i++) {
 						result[docs[i].date_enlevement.getMonth()] += docs[i].total_ht;
 					}
 
 					cb(null, result);
 				});
-			}, caTotalfamily: function(cb) {
+			}, caTotalfamily: function (cb) {
 				var result = [];
 
 				CoursesModel.aggregate([
@@ -1106,7 +1130,7 @@ Billing.prototype = {
 							total_ht: {$sum: "$total_ht"}
 						}
 					}
-				], function(err, docs) {
+				], function (err, docs) {
 					for (var i = 0; i < docs.length; i++) {
 						result.push({
 							name: docs[i]._id, y: docs[i].total_ht
@@ -1117,7 +1141,7 @@ Billing.prototype = {
 				});
 			}
 		},
-		function(err, results) {
+		function (err, results) {
 			var result = [];
 			if (err)
 				return console.log(err);

@@ -39,7 +39,6 @@ var deliverySchema = new Schema({
 	country_id: {type: String, default: 'FR'},
 	state_id: Number,
 	datec: {type: Date},
-	dater: {type: Date},
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},

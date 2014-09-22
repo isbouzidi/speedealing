@@ -74,6 +74,18 @@
 				}
 			},
 			{
+				"desc": "Affichager la pre-facturation des bons de livraisons",
+				"perm": {
+					"prefac": false
+				}
+			},
+			{
+				"desc": "Générer la facturation des bons de livraisons",
+				"perm": {
+					"createBills": false
+				}
+			},
+			{
 				"desc": "Exporter les bons livraisons clients et attributs",
 				"perm": {
 					"export": false
@@ -121,6 +133,14 @@
 					"enabled": "$conf->delivery->enabled",
 					"usertype": 2,
 					"title": "deliveries:List"
+				},
+				"menu:billdelivery": {
+					"position": 10,
+					"url": "#!/module/delivery/billing.html",
+					"perms": "delivery.prefac",
+					"enabled": "$conf->facture->enabled",
+					"usertype": 2,
+					"title": "Pré-facturation"
 				}
 			}
 		}

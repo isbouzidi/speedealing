@@ -32,10 +32,10 @@
                                     <td><span class="tag small glossy" data-ng-class="delivery.status.css">\{{delivery.status.name}}</span>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!--<tr>
                                     <th scope="row">{{t 'deliveries:DateMaxPayment'}}</th>
                                     <td class="blue">\{{delivery.dater|date:'dd/MM/yyyy'}}</td>
-                                </tr>
+                                </tr>-->
                                 <tr>
                                     <th scope="row">{{t 'deliveries:DeliveryTo'}}</th>
                                     <td><a href="#" ng-show="editable" editable-text="delivery.client" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no"  onbeforesave="updateAddress($data)" onaftersave="update()">
@@ -141,7 +141,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'deliveries:Date'}}</th>
+                                                    <th scope="row">{{t 'deliveries:DeliveryDate'}}</th>
                                                     <td><a href="#" ng-show="editable" editable-bsdate="delivery.datec" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
                                                             \{{ (delivery.datec | date:"dd/MM/yyyy") || 'empty'}}
                                                         </a>

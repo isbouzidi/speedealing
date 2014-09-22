@@ -1,4 +1,4 @@
-angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q', '$location', '$http', '$routeParams', '$rootScope', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function($scope, $q, $location, $http, $routeParams, $rootScope, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
+angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q', '$location', '$http', '$routeParams', '$rootScope', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function ($scope, $q, $location, $http, $routeParams, $rootScope, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
 
 		pageTitle.setTitle('Liste bons de livraison');
 
@@ -20,15 +20,15 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
 		$scope.type = {name: "Toutes", id: "ALL"};
 
-		$scope.init = function() {
+		$scope.init = function () {
 			$scope.pu = [];
 			var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
 
-			angular.forEach(fields, function(field) {
+			angular.forEach(fields, function (field) {
 				$http({method: 'GET', url: '/api/delivery/fk_extrafields/select', params: {
 						field: field
 					}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					$scope[field] = data;
 					//console.log(data);
 				});
@@ -40,13 +40,13 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
 					field: 'tva_tx'
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.tva_tx = data;
 
 			});
 
 		};
-		$scope.productAutoComplete = function(val) {
+		$scope.productAutoComplete = function (val) {
 
 			return $http.post('api/product/autocomplete', {
 				take: 5,
@@ -57,18 +57,18 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 //                supplier: options.supplier,
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.checkLine = function(data) {
+		$scope.checkLine = function (data) {
 
 			if (!data)
 				return "La ligne produit ne peut pas être vide";
 		};
 
-		$scope.addProduct = function(data, index) {
+		$scope.addProduct = function (data, index) {
 
 			//console.log(data);
 
@@ -96,7 +96,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 		};
 
 
-		$scope.calculMontantHT = function(line, data, varname) {
+		$scope.calculMontantHT = function (line, data, varname) {
 			if (varname)
 				line[varname] = data;
 
@@ -104,12 +104,12 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			line.total_tva = line.total_ht * line.tva_tx / 100;
 		};
 		// filter lines to show
-		$scope.filterLine = function(line) {
+		$scope.filterLine = function (line) {
 			return line.isDeleted !== true;
 		};
 
 		// mark line as deleted
-		$scope.deleteLine = function(id) {
+		$scope.deleteLine = function (id) {
 			var filtered = $filter('filter')($scope.delivery.lines, {idLine: id});
 			if (filtered.length) {
 				filtered[0].isDeleted = true;
@@ -117,7 +117,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 		};
 
 		// add line
-		$scope.addLine = function() {
+		$scope.addLine = function () {
 			$scope.delivery.lines.push({
 				isNew: true,
 				idLine: $scope.delivery.lines.length + 1
@@ -126,7 +126,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 		};
 
 		// cancel all changes
-		$scope.cancel = function() {
+		$scope.cancel = function () {
 			for (var i = $scope.delivery.lines.length; i--; ) {
 				var line = $scope.delivery.lines[i];
 				// undelete
@@ -142,11 +142,11 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			$scope.findOne();
 		};
 
-		$scope.listDelivries = function() {
+		$scope.listDelivries = function () {
 			$location.path('/delivery');
 		};
 
-		$scope.showStatus = function(idx) {
+		$scope.showStatus = function (idx) {
 			if (!($scope[idx] && $scope.delivery[idx]))
 				return;
 			var selected = $filter('filter')($scope[idx].values, {id: $scope.delivery[idx]});
@@ -154,11 +154,11 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			return ($scope.delivery[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
-		$scope.remove = function(delivery) {
+		$scope.remove = function (delivery) {
 			delivery.$remove();
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var delivery = $scope.delivery;
 
 			for (var i = delivery.lines.length; i--; ) {
@@ -168,7 +168,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				}
 			}
 
-			delivery.$update(function(response) {
+			delivery.$update(function (response) {
 				pageTitle.setTitle('Bon Livraison ' + delivery.ref);
 
 				if (response.Status === "DRAFT")
@@ -184,24 +184,24 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			});
 		};
 
-		$scope.find = function() {
-			Deliveries.query({query: this.type.id, entity: Global.user.entity}, function(deliveries) {
+		$scope.find = function () {
+			Deliveries.query({query: this.type.id, entity: Global.user.entity}, function (deliveries) {
 				$scope.deliveries = deliveries;
 				$scope.countDeliveries = deliveries.length;
 
 			});
 		};
 
-		$scope.clone = function() {
-			$scope.delivery.$clone(function(response) {
+		$scope.clone = function () {
+			$scope.delivery.$clone(function (response) {
 				$location.path("deliveries/" + response._id);
 			});
 		};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			Deliveries.get({
 				Id: $routeParams.id
-			}, function(delivery) {
+			}, function (delivery) {
 				//console.log(delivery);
 				$scope.delivery = delivery;
 
@@ -220,7 +220,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 								find: {"linked.id": delivery._id},
 								fields: "name ref updatedAt percentage Status task"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (status === 200)
 						$scope.tickets = data;
 
@@ -228,13 +228,13 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				});
 
 				pageTitle.setTitle('Bon Livraison ' + $scope.delivery.ref);
-			}, function(err) {
+			}, function (err) {
 				if (err.status === 401)
 					$location.path("401.html");
 			});
 		};
 
-		$scope.societeAutoComplete = function(val, field) {
+		$scope.societeAutoComplete = function (val, field) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -242,12 +242,12 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.userAutoComplete = function(val) {
+		$scope.userAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -255,12 +255,12 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.updateAddress = function(data) {
+		$scope.updateAddress = function (data) {
 			$scope.delivery.address = data.address.address;
 			$scope.delivery.zip = data.address.zip;
 			$scope.delivery.town = data.address.town;
@@ -289,7 +289,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref.', width:"150px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/delivery/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
+				{field: 'ref', displayName: 'Ref.', width: "150px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/delivery/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
 				{field: 'title.ref', displayName: 'Titre'},
 				{field: 'datec', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'dater', displayName: 'Date échéance', cellFilter: "date:'dd-MM-yyyy'"},
@@ -301,23 +301,23 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			]
 		};
 
-		$scope.addNewDelivery = function() {
+		$scope.addNewDelivery = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/delivery/create.html',
 				controller: "DeliveryCreateController",
 				windowClass: "steps"
 			});
 
-			modalInstance.result.then(function(delivery) {
+			modalInstance.result.then(function (delivery) {
 				delivery = new Deliveries(delivery);
-				delivery.$save(function(response) {
+				delivery.$save(function (response) {
 					$location.path("delivery/" + response._id);
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.addNewLine = function() {
+		$scope.addNewLine = function () {
 
 			/*
 			 * cette variable "$rootScope.module" est utilisé dans le controller "LineController"
@@ -331,12 +331,12 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				controller: "LineController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							qty: 0
 						};
 					},
-					options: function() {
+					options: function () {
 						return {
 							price_level: $scope.delivery.price_level
 						};
@@ -344,25 +344,25 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				}
 			});
 
-			modalInstance.result.then(function(line) {
+			modalInstance.result.then(function (line) {
 				$scope.delivery.lines.push(line);
-				$scope.delivery.$update(function(response) {
+				$scope.delivery.$update(function (response) {
 					$scope.delivery = response;
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.editLine = function(row) {
+		$scope.editLine = function (row) {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return row.entity;
 					},
-					options: function() {
+					options: function () {
 						return {
 							price_level: $scope.delivery.price_level
 						};
@@ -370,15 +370,15 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				}
 			});
 
-			modalInstance.result.then(function(line) {
-				$scope.delivery.$update(function(response) {
+			modalInstance.result.then(function (line) {
+				$scope.delivery.$update(function (response) {
 					$scope.delivery = response;
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.removeLine = function(row) {
+		$scope.removeLine = function (row) {
 			//console.log(row.entity._id);
 			for (var i = 0; i < $scope.delivery.lines.length; i++) {
 				if (row.entity._id === $scope.delivery.lines[i]._id) {
@@ -389,7 +389,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			}
 		};
 
-		$scope.addNote = function() {
+		$scope.addNote = function () {
 			if (!this.note)
 				return;
 
@@ -445,10 +445,10 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 					""
 		};
 
-		$scope.aggFunc = function(row, idx) {
+		$scope.aggFunc = function (row, idx) {
 			var total = 0;
 			//console.log(row);
-			angular.forEach(row.children, function(cropEntry) {
+			angular.forEach(row.children, function (cropEntry) {
 				if (cropEntry.entity[idx])
 					total += cropEntry.entity[idx];
 			});
@@ -479,7 +479,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			]
 		};
 
-		$scope.updateInPlace = function(api, field, row) {
+		$scope.updateInPlace = function (api, field, row) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -487,13 +487,13 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
 						data: {
 							value: row.entity[field]
 						}
 					}).
-							success(function(data, status) {
+							success(function (data, status) {
 								if (status == 200) {
 									if (data.value) {
 										if (data.field === "Status")
@@ -510,7 +510,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			}
 		};
 
-		$scope.changeStatus = function(Status) {
+		$scope.changeStatus = function (Status) {
 			$scope.delivery.Status = Status;
 			$scope.update();
 		};
@@ -518,7 +518,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
 	}]);
 
-angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function($scope, $http, $modalInstance, $upload, $route, Global) {
+angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function ($scope, $http, $modalInstance, $upload, $route, Global) {
 		$scope.global = Global;
 
 		$scope.active = 1;
@@ -526,20 +526,20 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 			Status: "DRAFT"
 		};
 
-		$scope.isActive = function(idx) {
+		$scope.isActive = function (idx) {
 			if (idx == $scope.active)
 				return "active";
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			$scope.active++;
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			$scope.active--;
 		};
 
-		$scope.goto = function(idx) {
+		$scope.goto = function (idx) {
 			if ($scope.active == 5)
 				return;
 
@@ -547,14 +547,14 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 				$scope.active = idx;
 		};
 
-		$scope.init = function() {
+		$scope.init = function () {
 			var fields = ["Status", "mode_reglement_code", "cond_reglement_code"];
 
-			angular.forEach(fields, function(field) {
+			angular.forEach(fields, function (field) {
 				$http({method: 'GET', url: '/api/delivery/fk_extrafields/select', params: {
 						field: field
 					}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					$scope[field] = data;
 					//console.log(data);
 					$scope.delivery[field] = data.default;
@@ -567,11 +567,11 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 			}
 		};
 
-		$scope.create = function() {
+		$scope.create = function () {
 			$modalInstance.close(this.delivery);
 		};
 
-		$scope.updateCoord = function(item, model, label) {
+		$scope.updateCoord = function (item, model, label) {
 			//console.log(item);
 
 			if ($scope.delivery.client.name === "Accueil")
@@ -585,7 +585,7 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 			$scope.delivery.cond_reglement_code = item.cond_reglement_code;
 		};
 
-		$scope.userAutoComplete = function(val) {
+		$scope.userAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -593,12 +593,12 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.societeAutoComplete = function(val, field) {
+		$scope.societeAutoComplete = function (val, field) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -606,9 +606,126 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
-				return res.data
+			}).then(function (res) {
+				return res.data;
 			});
 		};
 
 	}]);
+
+angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope', '$routeParams', '$http', '$location', 'Global', function ($scope, $routeParams, $http, $location, Global) {
+
+		$scope.open = function ($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			$scope.opened = true;
+		};
+
+		$scope.dateOptions = {
+			formatYear: 'yy',
+			startingDay: 1
+		};
+
+
+		$scope.find = function () {
+			var d = new Date();
+			d.setHours(0, 0, 0);
+			$scope.dateEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+
+			$http({method: 'GET', url: 'api/delivery/billing', params: {
+					fields : "_id ref total_ht Status client datec lines",
+					dateEnd: $scope.dateEnd,
+					entity: $scope.global.user.entity
+				}
+			}).success(function (data, status) {
+				if (status == 200) {
+					$scope.result = data;
+					$scope.countGroupBL = data.GroupBL.length;
+
+					$scope.TotalGroupBL = 0;
+
+					angular.forEach(data.GroupBL, function (row) {
+						$scope.TotalGroupBL += row.lines.total_ht;
+					});
+				}
+			});
+
+		};
+
+		$scope.showCreate = function () {
+			if (!Global.user.rights.delivery.createBills)
+				return false;
+			else
+				return true;
+		};
+
+		$scope.createBills = function () {
+			$http({method: 'POST', url: 'api/delivery/billing', params: {
+					dateEnd: $scope.dateEnd,
+					entity: $scope.global.user.entity
+				}
+			}).success(function (data, status) {
+				if (status == 200) {
+					console.log(data);
+				}
+			});
+		};
+
+		
+
+		$scope.aggFunc = function (row, idx) {
+			var total = 0;
+			//console.log(row);
+			angular.forEach(row.children, function (cropEntry) {
+				if (cropEntry.entity[idx])
+					total += cropEntry.entity[idx];
+			});
+			return total.toString();
+		};
+		$scope.entryMaybePlural = function (row) {
+			if (row.children.length > 1)
+			{
+				return "produits";
+			}
+			else
+				return "produit";
+		};
+
+		/*
+		 * NG-GRID for courses sous-traitant list
+		 */
+
+		$scope.filterOptionsGroupBL = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsGroupBL = {
+			data: 'result.GroupBL',
+			enableRowSelection: false,
+			sortInfo: {fields: ["client.name"], directions: ["asc"]},
+			filterOptions: $scope.filterOptionsGroupBL,
+			showGroupPanel: true,
+			enableColumnResize: true,
+			i18n: 'fr',
+			groups: ['client.name', 'lines.product.name'],
+			groupsCollapsedByDefault: false,
+			columnDefs: [
+				{field: 'client.name', displayName: 'Client', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', width: "15%", displayName: 'Id'},
+				{field: 'lines.product.name', width: "15%", displayName: 'Produit'},
+				//{field: 'status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\"status.name\")}}</small></div>'},
+				{field: 'datec', width: "15%", displayName: 'Date d\'expedition', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
+				{field: 'lines.total_ht', width: "15%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
+			],
+			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
+					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}} : {{row.totalChildren()}} {{entryMaybePlural(row)}}</span> <span class=\"red strong\">Total HT: {{aggFunc(row,'lines.total_ht') | euro}}</span></span>" +
+					"    <div class=\"{{row.aggClass()}}\"></div>" +
+					"</div>" +
+					""
+		};
+
+
+	}]);
+

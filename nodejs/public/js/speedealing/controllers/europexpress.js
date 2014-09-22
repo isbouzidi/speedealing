@@ -1427,6 +1427,9 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 		};
 
 		$scope.showCreate = function() {
+			if(!Global.user.rights.europexpress.createBills)
+				return false;
+			
 			var d = new Date();
 			d.setHours(0, 0, 0);
 

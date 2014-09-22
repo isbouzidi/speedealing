@@ -1,0 +1,51 @@
+<section data-ng-controller="DeliveryBillingController" data-ng-init="find()">
+	<hgroup id="main-title" class="thin">
+		<div class="row">
+			<div class="col-xs-8">
+				<h1>Données de facturation \{{dateEnd | date : "MMM yyyy"}}</h1>
+			</div>
+			<div class="col-xs-4">
+				<span class="black">{{t 'DateEnd'}}</span>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="input-group">
+							<input type="text" class="form-control blue" datepicker-popup="dd/MM/yyyy" placeholder="{{t 'DateEnd'}}" ng-model="dateEnd" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Fermer" />
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="btn-group">
+							<button data-ng-click="createBills()" ng-disabled="!showCreate()" class="btn red-gradient">{{t 'Create'}} {{t 'bills:Bills'}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--<div class="col-xs-2">
+				<div class="btn-group btn-group-sm ">
+					<button data-ng-click="createBills()" ng-disabled="!showCreate()" class="btn red-gradient">{{t 'Create'}} {{t 'bills:Bills'}}</button>
+				</div>
+			</div>-->
+		</div>
+	</hgroup>
+
+	<div class="with-padding">
+		<h4 class="green underline">Liste des bons de livraison groupés par client (hors frais de transport)</h4>
+
+		<div class="table-header silver-gradient glossy button-height">
+			<div class="float-right">
+				{{t 'Search'}} <input type="text" data-ng-model="filterOptionsGroupBL.filterText" class="input small mid-margin-left">
+			</div>
+			\{{searchGroupBL}}
+		</div>
+		<div class="gridStyle"  data-ng-grid="gridOptionsGroupBL" style="height:410px"></div>
+		<div class="table-footer silver-gradient">
+			<div class="float-right strong">
+				Total HT : \{{TotalGroupBL| euro}}
+			</div>
+			\{{countGroupBL}} ligne(s)
+		</div>
+
+	</div>
+</section>
