@@ -9,7 +9,7 @@
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="input-group">
-							<input type="text" class="form-control blue" datepicker-popup="dd/MM/yyyy" placeholder="{{t 'DateEnd'}}" ng-model="dateEnd" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Fermer" />
+							<input type="text" class="form-control blue" datepicker-popup="dd/MM/yyyy" placeholder="{{t 'DateEnd'}}" ng-model="dateEnd" ng-change="find()" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Fermer" />
 							<span class="input-group-btn">
 								<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 							</span>

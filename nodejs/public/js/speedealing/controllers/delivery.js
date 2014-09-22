@@ -627,14 +627,14 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			startingDay: 1
 		};
 
+		var d = new Date();
+		d.setHours(0, 0, 0);
+		$scope.dateEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
 
 		$scope.find = function () {
-			var d = new Date();
-			d.setHours(0, 0, 0);
-			$scope.dateEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
 
 			$http({method: 'GET', url: 'api/delivery/billing', params: {
-					fields : "_id ref total_ht Status client datec lines",
+					fields: "_id ref total_ht Status client datec lines",
 					dateEnd: $scope.dateEnd,
 					entity: $scope.global.user.entity
 				}
@@ -672,7 +672,7 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			});
 		};
 
-		
+
 
 		$scope.aggFunc = function (row, idx) {
 			var total = 0;

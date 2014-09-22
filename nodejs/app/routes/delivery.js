@@ -503,7 +503,6 @@ Billing.prototype = {
 		for (var i in fields) {
 			project[fields[i].trim()] = 1;
 		}
-		console.log(project);
 		
 		DeliveryModel.aggregate([
 			{$match:{Status: "SEND",entity: req.query.entity, datec: {$lte:new Date(req.query.dateEnd)}}},
