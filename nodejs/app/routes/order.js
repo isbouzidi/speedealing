@@ -249,7 +249,7 @@ Object.prototype = {
 				});
 
 				console.log(orders);
-			res.json(orders);
+			res.send(200, orders);
 		});
 	},
 	/**
