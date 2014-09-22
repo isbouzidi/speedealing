@@ -62,6 +62,12 @@
 				"perm": {
 					"export": false
 				}
+			},
+			{
+				"desc": "Voir/modifier les conges/absences des utilisateurs",
+				"perm": {
+					"holidayAll": false
+				}
 			}
 		],
 		"group": [
@@ -137,83 +143,97 @@
 					"url": "/admin/index.php",
 					"usertype": 2,
 					"enabled": "$user->admin",
+					"perms":"admin",
 					"title": "admin:Setup",
 					"submenus": {
 						"menu:menucompanysetup": {
 							"position": 1,
 							"url": "/admin/company.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:MenuCompanySetup"
 						},
 						"menu:modules": {
 							"position": 2,
 							"url": "/admin/modules.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Modules"
 						},
 						"menu:menus": {
 							"position": 3,
 							"url": "/admin/menus.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Menus"
 						},
 						"menu:guisetup": {
 							"position": 4,
 							"url": "/admin/ihm.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:GUISetup"
 						},
 						"menu:boxes": {
 							"position": 5,
 							"url": "/admin/boxes.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Boxes"
 						},
 						"menu:alerts": {
 							"position": 6,
 							"url": "/admin/delais.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Alerts"
 						},
 						"menu:security": {
 							"position": 7,
 							"url": "/admin/proxy.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Security"
 						},
 						"menu:menulimits": {
 							"position": 8,
 							"url": "/admin/limits.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:MenuLimits"
 						},
 						"menu:pdf": {
 							"position": 9,
 							"url": "/admin/pdf.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:PDF"
 						},
 						"menu:emails": {
 							"position": 10,
 							"url": "/admin/mails.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Emails"
 						},
 						"menu:sms": {
 							"position": 11,
 							"url": "/admin/sms.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Sms"
 						},
 						"menu:dictionnarysetup": {
 							"position": 12,
 							"url": "/admin/dict.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:DictionnarySetup"
 						},
 						"menu:othersetup": {
 							"position": 13,
 							"url": "/admin/const.php",
+							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:OtherSetup"
 						}
@@ -224,14 +244,17 @@
 					"usertype": 2,
 					"enabled": "$user->admin",
 					"title": "admin:SystemInfo",
+					"perms":"admin",
 					"submenus": {
 						"menu:params": {
 							"url": "/admin/system/dolibarr.php",
 							"usertype": 2,
-							"title": "admin:Infos"
+							"title": "admin:Infos",
+							"perms":"admin"
 						},
 						"menu:memcached": {
 							"position": 1,
+							"perms":"admin",
 							"url": "/memcached/admin/memcached.php",
 							"usertype": 2,
 							"title": "admin:Memcached",
@@ -239,30 +262,35 @@
 						},
 						"menu:phpinfo": {
 							"position": 3,
+							"perms":"admin",
 							"url": "/admin/system/phpinfo.php",
 							"usertype": 2,
 							"title": "admin:PHPinfo"
 						},
 						"menu:allparameters": {
 							"position": 4,
+							"perms":"admin",
 							"url": "/admin/system/constall.php",
 							"usertype": 2,
 							"title": "admin:AllParameters"
 						},
 						"menu:modules0": {
 							"position": 5,
+							"perms":"admin",
 							"url": "/admin/system/modules.php",
 							"usertype": 2,
 							"title": "admin:Modules"
 						},
 						"menu:triggers": {
 							"position": 6,
+							"perms":"admin",
 							"url": "/admin/triggers.php",
 							"usertype": 2,
 							"title": "admin:Triggers"
 						},
 						"menu:about": {
 							"position": 7,
+							"perms":"admin",
 							"url": "/admin/system/about.php",
 							"usertype": 2,
 							"title": "admin:About"
@@ -274,38 +302,45 @@
 					"usertype": 2,
 					"enabled": "$user->admin",
 					"title": "admin:SystemTools",
+					"perms":"admin",
 					"submenus": {
 						"menu:backup": {
+							"perms":"admin",
 							"url": "/admin/tools/dolibarr_export.php",
 							"usertype": 2,
 							"title": "admin:Backup"
 						},
 						"menu:restore": {
 							"position": 1,
+							"perms":"admin",
 							"url": "/admin/tools/dolibarr_import.php",
 							"usertype": 2,
 							"title": "admin:Restore"
 						},
 						"menu:menuupgrade": {
 							"position": 2,
+							"perms":"admin",
 							"url": "/admin/tools/update.php",
 							"usertype": 2,
 							"title": "admin:MenuUpgrade"
 						},
 						"menu:audit": {
 							"position": 4,
+							"perms":"admin",
 							"url": "/admin/tools/listevents.php",
 							"usertype": 2,
 							"title": "admin:Audit"
 						},
 						"menu:sessions": {
 							"position": 5,
+							"perms":"admin",
 							"url": "/admin/tools/listsessions.php",
 							"usertype": 2,
 							"title": "admin:Sessions"
 						},
 						"menu:purge": {
 							"position": 6,
+							"perms":"admin",
 							"url": "/admin/tools/purge.php",
 							"usertype": 2,
 							"title": "admin:Purge"
@@ -323,21 +358,21 @@
 				"menu:team": {
 					"position": 3,
 					"url": "#!/rh",
-					"perms": "$user->rights->user->user->creer || $user->admin",
+					"perms": "user.read",
 					"usertype": 2,
 					"title": "users:Collaborators"
 				},
 				"menu:groups": {
 					"position": 4,
 					"url": "#!/userGroup",
-					"perms": "$user->rights->user->user->creer || $user->admin",
+					"perms": "group.read",
 					"usertype": 2,
 					"title": "users:Profiles"
 				},
 				"menu:absences": {
 					"position": 5,
 					"url": "#!/module/user/absence.html",
-					"perms": "$user->rights->user->user->creer  || $user->admin",
+					"perms": "user.holidayAll",
 					"usertype": 2,
 					"title": "Gestion des conges / absences"
 				}

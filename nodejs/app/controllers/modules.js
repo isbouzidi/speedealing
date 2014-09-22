@@ -24,18 +24,18 @@ fs.readdirSync(__dirname + '/../../config/modules').forEach(function (file) {
 		}
 
 		data = JSON.parse(data);
-		
+
 		/* Load rights */
-		
+
 		if (data.enabled) {
 
-            rights.push({
-                name: data.name,
-                desc: data.description,
-                rights: data.rights
-            });
+			rights.push({
+				name: data.name,
+				desc: data.description,
+				rights: data.rights
+			});
 
-        }
+		}
 
 		/* Load Menu : 3 levels MAX */
 
@@ -96,28 +96,41 @@ exports.menus = function (req, res) {
 
 	for (var i in menus) {
 		// Check right
-		if (!checkright(menus[i].perms))
-			continue;
+		var found0 = false;
+
+		if (checkright(menus[i].perms))
+			found0 = true;
 
 		result[i] = menus[i];
 
 		for (var j in menus[i].submenus) {
-			if (!checkright(menus[i].submenus[j].perms)){
-				delete result[i].submenus[j];
-				continue;
+			var found1 = false;
+			
+			if (checkright(menus[i].submenus[j].perms)) {
+				found1 = true;
+				found0 = true;
 			}
 
 			for (var k in menus[i].submenus[j].submenus) {
-				if (!checkright(menus[i].submenus[j].submenus[k].perms)) {
-					delete result[i].submenus[j].submenus[k];
-					continue;
+				if (checkright(menus[i].submenus[j].submenus[k].perms)) {
+					found0=true;
+					found1=true;
 				}
+				else
+					delete result[i].submenus[j].submenus[k];
 			}
+			
+			if(!found1)
+				delete result[i].submenus[j];
+			
 		}
+		
+		if(!found0)
+			delete result[i];
 	}
 	res.json(result);
 };
 
-exports.rights = function(req, res) {
-    res.json(rights);
+exports.rights = function (req, res) {
+	res.json(rights);
 };
