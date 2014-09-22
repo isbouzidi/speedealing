@@ -385,15 +385,6 @@
 	"export_label": {
 		"1": "Liste des utilisateurs Dolibarr et attributs"
 	},
-	"export_permission": {
-		"1": [
-			[
-				"user",
-				"user",
-				"export"
-			]
-		]
-	},
 	"_id": "module:User",
 	"enabled": true
 }
