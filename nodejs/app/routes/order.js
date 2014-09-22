@@ -248,6 +248,7 @@ Object.prototype = {
 					status: 500
 				});
 
+				console.log(orders);
 			res.json(orders);
 		});
 	},
