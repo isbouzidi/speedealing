@@ -678,11 +678,19 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			var total = 0;
 			//console.log(row);
 			angular.forEach(row.children, function (cropEntry) {
-				if (cropEntry.entity[idx])
+				if (idx.indexOf(".")) {
+					var idxNew = idx.split(".");
+					//console.log(idxNew);
+					//console.log(cropEntry.entity[idxNew[0]][idxNew[1]]);
+					if (cropEntry.entity[idxNew[0]] && cropEntry.entity[idxNew[0]][idxNew[1]])
+						total += cropEntry.entity[idxNew[0]][idxNew[1]];
+				}
+				else if (cropEntry.entity[idx])
 					total += cropEntry.entity[idx];
 			});
 			return total.toString();
 		};
+		
 		$scope.entryMaybePlural = function (row) {
 			if (row.children.length > 1)
 			{
@@ -709,7 +717,7 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			showGroupPanel: true,
 			enableColumnResize: true,
 			i18n: 'fr',
-			groups: ['client.name', 'lines.product.name'],
+			groups: ['client.name'],
 			groupsCollapsedByDefault: false,
 			columnDefs: [
 				{field: 'client.name', displayName: 'Client', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
