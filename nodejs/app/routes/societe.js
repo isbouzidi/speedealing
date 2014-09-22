@@ -1082,16 +1082,12 @@ module.exports = function (app, passport, auth) {
 									//console.log(societe)
 									//console.log(societe.datec);
 
-									societe.save(function (err, doc) {
+									/*societe.save(function (err, doc) {
 										if (err)
-											console.log(err);
-										/*if (doc == null)
-										 console.log("null");
-										 else
-										 console.log(doc);*/
+											console.log(err);*/
 
 										callback();
-									});
+									//});
 
 								});
 							});

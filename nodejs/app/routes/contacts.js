@@ -577,6 +577,7 @@ Contact.prototype = {
 				{"firstname": new RegExp(req.query.item, "gi")},
 				{"societe.name": new RegExp(req.query.item, "gi")},
 				{"Tag": new RegExp(req.query.item, "gi")},
+				{"email": new RegExp(req.query.item, "gi")}
 			]
 		};
 

@@ -127,6 +127,8 @@ var societeSchema = new Schema({
 	toJSON: {virtuals: true}
 });
 
+societeSchema.index({name: 'text', zip: 'text', town: 'text', Tag: 'text'});
+
 societeSchema.plugin(timestamps);
 
 societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
