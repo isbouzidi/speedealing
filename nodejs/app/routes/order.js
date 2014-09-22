@@ -16,11 +16,11 @@ var SocieteModel = mongoose.model('societe');
 
 var smtpTransporter = nodemailer.createTransport(smtpTransport(config.transport));
 
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 
-	ExtrafieldModel.findById('extrafields:Commande', function(err, doc) {
+	ExtrafieldModel.findById('extrafields:Commande', function (err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -52,8 +52,8 @@ function Object() {
 }
 
 Object.prototype = {
-	listLines: function(req, res) {
-		CommandeModel.findOne({_id: req.query.id}, "lines", function(err, doc) {
+	listLines: function (req, res) {
+		CommandeModel.findOne({_id: req.query.id}, "lines", function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -66,8 +66,8 @@ Object.prototype = {
 	/**
 	 * Find order by id
 	 */
-	order: function(req, res, next, id) {
-		CommandeModel.findOne({_id: id}, function(err, doc) {
+	order: function (req, res, next, id) {
+		CommandeModel.findOne({_id: id}, function (err, doc) {
 			if (err)
 				return next(err);
 			if (!doc)
@@ -79,7 +79,7 @@ Object.prototype = {
 	/**
 	 * Create an order
 	 */
-	create: function(req, res) {
+	create: function (req, res) {
 		var order = new CommandeModel(req.body);
 		order.author = {};
 		order.author.id = req.user._id;
@@ -89,7 +89,7 @@ Object.prototype = {
 			order.entity = req.user.entity;
 
 		if (req.user.societe.id) { // It's an external order
-			return ContactModel.findOne({'societe.id': req.user.societe.id}, function(err, contact) {
+			return ContactModel.findOne({'societe.id': req.user.societe.id}, function (err, contact) {
 				if (err)
 					console.log(err);
 
@@ -109,7 +109,7 @@ Object.prototype = {
 
 
 				//console.log(contact);
-				contact.save(function(err, doc) {
+				contact.save(function (err, doc) {
 					if (err)
 						console.log(err);
 
@@ -121,7 +121,7 @@ Object.prototype = {
 					order.client.id = req.user.societe.id;
 					order.client.name = req.user.societe.name;
 
-					order.save(function(err, doc) {
+					order.save(function (err, doc) {
 						if (err)
 							return console.log(err);
 
@@ -134,7 +134,7 @@ Object.prototype = {
 
 		console.log(order);
 
-		order.save(function(err, doc) {
+		order.save(function (err, doc) {
 			if (err) {
 				return console.log(err);
 			}
@@ -145,7 +145,7 @@ Object.prototype = {
 	/**
 	 * Update an order
 	 */
-	update: function(req, res) {
+	update: function (req, res) {
 		var order = req.order;
 		order = _.extend(order, req.body);
 
@@ -166,7 +166,7 @@ Object.prototype = {
 			mailOptions.text += "\n\n";
 
 			// send mail with defined transport object
-			smtpTransporter.sendMail(mailOptions, function(error, info) {
+			smtpTransporter.sendMail(mailOptions, function (error, info) {
 				if (error) {
 					console.log(error);
 				} else {
@@ -179,17 +179,17 @@ Object.prototype = {
 		}
 
 
-		order.save(function(err, doc) {
+		order.save(function (err, doc) {
 			res.json(doc);
 		});
 	},
-	updateField: function(req, res) {
+	updateField: function (req, res) {
 		if (req.body.value) {
 			var order = req.order;
 
 			order[req.params.field] = req.body.value;
 
-			order.save(function(err, doc) {
+			order.save(function (err, doc) {
 				res.json(doc);
 			});
 		} else
@@ -198,9 +198,9 @@ Object.prototype = {
 	/**
 	 * Delete an order
 	 */
-	destroy: function(req, res) {
+	destroy: function (req, res) {
 		var order = req.order;
-		order.remove(function(err) {
+		order.remove(function (err) {
 			if (err) {
 				res.render('error', {
 					status: 500
@@ -213,13 +213,13 @@ Object.prototype = {
 	/**
 	 * Show an order
 	 */
-	show: function(req, res) {
+	show: function (req, res) {
 		res.json(req.order);
 	},
 	/**
 	 * List of orders
 	 */
-	all: function(req, res) {
+	all: function (req, res) {
 		var query = {};
 
 		if (req.query) {
@@ -242,20 +242,19 @@ Object.prototype = {
 			}
 		}
 
-		CommandeModel.find(query, "-files -latex", function(err, orders) {
+		CommandeModel.find(query, "-files -latex", function (err, orders) {
 			if (err)
 				return res.render('error', {
 					status: 500
 				});
 
-				console.log(orders);
-			res.send(200, orders);
+			res.json(orders);
 		});
 	},
 	/**
 	 * Add a file in an order
 	 */
-	createFile: function(req, res) {
+	createFile: function (req, res) {
 		var id = req.params.Id;
 		//console.log(id);
 		//console.log(req.body);
@@ -267,7 +266,7 @@ Object.prototype = {
 			if (req.body.idx)
 				req.files.file.originalFilename = req.body.idx + "___" + req.files.file.originalFilename;
 
-			gridfs.addFile(CommandeModel, id, req.files.file, function(err, result) {
+			gridfs.addFile(CommandeModel, id, req.files.file, function (err, result) {
 				//console.log(result);
 				if (err)
 					res.send(500, err);
@@ -280,11 +279,11 @@ Object.prototype = {
 	/**
 	 * Get a file form an order
 	 */
-	getFile: function(req, res) {
+	getFile: function (req, res) {
 		var id = req.params.Id;
 		if (id && req.params.fileName) {
 
-			gridfs.getFile(CommandeModel, id, req.params.fileName, function(err, store) {
+			gridfs.getFile(CommandeModel, id, req.params.fileName, function (err, store) {
 				if (err)
 					return res.send(500, err);
 				if (req.query.download)
@@ -301,13 +300,13 @@ Object.prototype = {
 	/**
 	 * Delete a file in an order
 	 */
-	deleteFile: function(req, res) {
+	deleteFile: function (req, res) {
 		//console.log(req.body);
 		var id = req.params.Id;
 		//console.log(id);
 
 		if (req.params.fileName && id) {
-			gridfs.delFile(CommandeModel, id, req.params.fileName, function(err) {
+			gridfs.delFile(CommandeModel, id, req.params.fileName, function (err) {
 				if (err)
 					res.send(500, err);
 				else
@@ -316,13 +315,13 @@ Object.prototype = {
 		} else
 			res.send(500, "File not found");
 	},
-	genPDF: function(req, res) {
+	genPDF: function (req, res) {
 		var latex = require('../models/latex');
 
-		latex.loadModel("order.tex", function(err, tex) {
+		latex.loadModel("order.tex", function (err, tex) {
 			var doc = req.order;
 
-			SocieteModel.findOne({_id: doc.client.id}, function(err, societe) {
+			SocieteModel.findOne({_id: doc.client.id}, function (err, societe) {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref.replace(/_/g, "\\_"));
@@ -358,7 +357,7 @@ Object.prototype = {
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 
-				latex.headfoot(doc.entity, tex, function(tex) {
+				latex.headfoot(doc.entity, tex, function (tex) {
 
 					tex = tex.replace(/undefined/g, "");
 
@@ -366,20 +365,20 @@ Object.prototype = {
 					doc.latex.createdAt = new Date();
 					doc.latex.title = "Order " + doc.ref;
 
-					doc.save(function(err) {
+					doc.save(function (err) {
 						if (err) {
 							console.log("Error while trying to save this document");
 							console.log(err);
 							return res.send(403, "Error while trying to save this document");
 						}
 
-						latex.compileDoc(doc._id, doc.latex, function(result) {
+						latex.compileDoc(doc._id, doc.latex, function (result) {
 							if (result.errors.length) {
 								//console.log(pdf);
 								return res.send(500, result.errors);
 							}
 
-							return latex.getPDF(result.compiledDocId, function(err, pdfPath) {
+							return latex.getPDF(result.compiledDocId, function (err, pdfPath) {
 								res.type('application/pdf');
 								res.attachment(doc.ref + ".pdf"); // for douwnloading
 								res.sendfile(pdfPath);
@@ -390,15 +389,15 @@ Object.prototype = {
 			});
 		});
 	},
-	select: function(req, res) {
-		ExtrafieldModel.findById('extrafields:Commande', function(err, doc) {
+	select: function (req, res) {
+		ExtrafieldModel.findById('extrafields:Commande', function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
 			}
 			var result = [];
 			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
+				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
 
 					if (docs) {
 						for (var i in docs.values) {
