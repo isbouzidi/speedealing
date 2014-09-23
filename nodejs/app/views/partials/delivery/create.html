@@ -20,7 +20,11 @@
 
 		<div class="field-block button-height">
 			<label for="client"><b>{{t 'companies:Company'}}</b></label>
-			<input required type="text" data-ng-model="delivery.client" typeahead-on-select="updateCoord($item, $model, $label)" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
+			<input required type="text" 
+                               data-ng-model="delivery.client" 
+                               typeahead-on-select="updateCoord($item, $model, $label)" 
+                               typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
+                               id="client" class="input" autocomplete="off">
 		</div>
 		
 		<div class="field-block button-height" ng-show="delivery.client.isNameModified">
@@ -81,19 +85,23 @@
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
 
 		<div class="field-block">
-			<h4>Adresse de facturation</h4>
+			<h4>{{t 'deliveries:DeliveryAddress'}}</h4>
 			<p></p>
 		</div>
 
 		<div class="field-block button-height">
-			<label for="address"><b>{{t 'deliveries:BillAddress'}}</b></label>
+			<label for="address"><b>{{t 'deliveries:DeliveryAddress'}}</b></label>
 			<div class='columns'>
-				<div class='seven-columns'>
+				<div class='twelve-columns'>
 					<input type="text" data-ng-model="delivery.client.name" class="input" placeholder="Nom"/><br/>
 					<input type="text" data-ng-model="delivery.contact.name" class="input" placeholder="Nom du contact"/><br/>
-					<textarea class='input' rows='3' data-ng-model="delivery.address" placeholder="Adresse"></textarea><br/>
+					<div ng-address model="delivery" opp="create"></div>
+                                        
+                                        <!--
+                                        <textarea class='input' rows='3' data-ng-model="delivery.address" placeholder="Adresse"></textarea><br/>
 					<input type="text" class="input" placeholder="Code postal" data-ng-model="delivery.zip" size="8"/>
 					<input type="text" class="input" data-ng-model="delivery.town" placeholder="Ville"/>
+                                        -->
 				</div>
 			</div>
 		</div>

@@ -1,15 +1,11 @@
+
 <form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
 	<!-- Block style is optional, you can use any layout -->
 	<h3 class="block-title">{{t 'users:NewUser'}}</h3>
 
 	<ul class="wizard-steps">
-		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span> Profile</li>
-		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Contact</li>
-		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Etat Civil</li>
-		<li data-ng-class="isActive(4)" data-ng-click='goto(4)'><span class="wizard-step">4</span> Poste</li>
-		<li data-ng-class="isActive(5)" data-ng-click='goto(5)'><span class="wizard-step">5</span> Affectation</li>
-		<li data-ng-class="isActive(6)" data-ng-click='goto(6)'><span class="wizard-step">6</span> Administration</li>
+		
 	</ul>
 
 	<!-- Each form step should be wrapped in a fieldset -->
@@ -21,195 +17,40 @@
 			<p>Bienvenue sur l'interface de création des collaborateurs.</p>
 		</div>
 
-		<div class="field-block button-height">
-			<label for="civilite"><b>{{t 'users:Civilite'}}</b></label>
-			<select class="form-control" id="civilite" data-ng-model="user.Civilite" data-ng-options="civilite.name for civilite in Civilites"></select>			
+                <div class="field-block button-height">
+			<label for="login"><b>{{t 'users:Login'}}</b></label>
+			<input required type="text" data-ng-model="user.login" data-ng-change="isValidLogin()" id="login"  class="input" autocomplete="off">
+                        
+                        <small ng-show="user.login==null" class="icon-info blue input-info">L'identifiant qui permet au collaborateur  de se connecter à l'application. (unique et sans espace)</small>
+                        <small ng-show="loginFound" class="icon-warning red input-info">Ce login existe déjà !</small>
+			<small ng-show="user.login!=null && !loginFound && validLogin" class="icon-tick green input-info">Login valide.</small>
+                        <small ng-show="user.login!=null && !loginFound && !validLogin" class="icon-tick red input-info">Login invalide.</small>
+                        
 		</div>
+            
 		<div class="field-block button-height">
 			<label for="nom"><b>{{t 'users:LastName'}}</b></label>
-			<input required type="text" id="nom" data-ng-model="user.Nom" class="input" autocomplete="off">		
+			<input required type="text" id="nom" data-ng-model="user.lastname" class="input" autocomplete="off">		
 		</div>
 		<div class="field-block button-height">
 			<label for="prenom"><b>{{t 'users:FirstName'}}</b></label>
-			<input required type="text" id="prenom" data-ng-model="user.Prenom" class="input" autocomplete="off">			
+			<input required type="text" id="prenom" data-ng-model="user.firstname" class="input" autocomplete="off">			
 		</div>
 		<div class="field-block button-height">
-			<label for="photo"><b>{{t 'users:Photo'}}</b></label>
-			<input required type="text" id="photo" data-ng-model="user.Photo" class="input" autocomplete="off">			
-		</div>
-		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button" data-ng-disabled="!(user.Nom && user.Prenom)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span>
-			</button>
-		</div>
-	</fieldset>
-	<!-- 2. Contact -->
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(2)'>
-		<div class="field-block button-height">
-			<label for="civilite"><b>{{t 'users:Address'}}</b></label>
-			<div class='columns'>
-				<div class='seven-columns'>
-					
-					<textarea class="input" rows="3" data-ng-model="user.address" placeholder="{{t 'users:Address'}}"></textarea><br/>
-					<input type="text" class="input" data-ng-model="user.zip" size="8" placeholder="{{t 'users:Zip'}}"/>
-					<input type="text" class="input" data-ng-model="user.town" placeholder="{{t 'users:Town'}}"/>
-				</div>
-				<div class="five-columns">
-				</div>
-			</div>			
-		</div>
-		<div class="field-block button-height">
-			<label for="civilite"><b>{{t 'users:Tel-Mobile'}}</b></label>
-			<input type="text" data-ng-model="user.phoneMob" id="phoneMob" class="input" autocomplete="off">
-		</div>
-		<div class="field-block button-height">
-			<label for="civilite"><b>{{t 'users:Tel-Fixe'}}</b></label>
-			<input type="text" data-ng-model="user.phoneFix" id="phoneFix" class="input" autocomplete="off">			
-		</div>
-		<div class="field-block button-height">
-			<label for="civilite"><b>{{t 'users:Email'}}</b></label>
+			<label for="email"><b>{{t 'users:Email'}}</b></label>
 			<input type="email" data-ng-model="user.email" id="email" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>			
-			<button type="button" data-ng-disabled="" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span>
-			</button>
 		</div>
+                <div class="field-block button-height">
+			<label for="password"><b>{{t 'users:Password'}}</b></label>
+			<input type="password" data-ng-model="user.password" id="password" class="input" autocomplete="off">
+		</div>
+                <div class="field-block button-height wizard-controls clearfix">
+                        <button type="submit" class="button glossy mid-margin-right float-right" data-ng-disabled="!(user.lastname && user.firstname && user.email && user.password && user.login!=null && !loginFound && validLogin)">
+                                <span class="button-icon"><span class="icon-tick"></span></span>
+                                {{t 'Create'}}
+                        </button>
+                </div>	
 	</fieldset>
-	<!-- 3. Etat Civil -->
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
-		<div class="field-block button-height">
-			<label for="dateNaissance"><b>{{t 'users:Date-Naissance'}}</b></label>
-			<span class="k-widget k-datepicker k-header input">
-				<span class="k-picker-wrap k-state-default">
-					<input kendo-date-picker="" required="" id="dateNaissance" k-on-change="order.datec = kendoEvent.sender._value;" class="input k-input" data-role="datepicker" type="text" role="textbox" aria-haspopup="true" aria-expanded="false" aria-owns="dateNaissance_dateview" aria-disabled="false" aria-readonly="false" aria-label="Current focused date is null">
-					<span unselectable="on" class="k-select" role="button" aria-controls="dateNaissance_dateview">
-						<span unselectable="on" class="k-icon k-i-calendar"></span>
-					</span>
-				</span>
-			</span>
-		</div>
-		<div class="field-block button-height">
-			<label for="villeNaissance"><b>{{t 'users:Ville-Naissance'}}</b></label>
-			<input type="text" data-ng-model="user.villeNaissance" id="villeNaissance" class="input" autocomplete="off">		
-		</div>		
-		<div class="field-block button-height">
-			<label for="paysNaissance"><b>{{t 'users:Pays-Naissance'}}</b></label>
-			<input type="text" data-ng-model="user.paysNaissance" id="paysNaissance" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height">
-			<label for="nationnalite"><b>{{t 'users:Nationnalite'}}</b></label>
-			<input type="text" data-ng-model="user.Nationnalite" id="nationnalite" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height">
-			<label for="situation"><b>{{t 'users:Situation'}}</b></label>
-			<select class="form-control" id="situation" data-ng-model="user.situation" data-ng-options=""></select>			
-		</div>		
-		<div class="field-block button-height">
-			<label for="nbrEnfant"><b>{{t 'users:NbrEnfants'}}</b></label>
-			<input type="text" data-ng-model="user.nbrEnfant" id="nbrEnfant" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height">
-			<label for="perCharges"><b>{{t 'users:PerCharges'}}</b></label>
-			<input type="text" data-ng-model="user.perCharges" id="perCharges" class="input" autocomplete="off">
-		</div>
-		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>			
-			<button type="button" data-ng-disabled="" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span>
-			</button>
-		</div>
-	</fieldset>
-	<!-- 4. Poste -->
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(4)'>
 	
-		<div class="field-block button-height">
-			<label for="dateArrivee"><b>{{t 'users:Date-Arrivee'}}</b></label>
-			<span class="k-widget k-datepicker k-header input">
-				<span class="k-picker-wrap k-state-default">
-					<input kendo-date-picker="" required="" id="dateArrivee" k-on-change="order.datec = kendoEvent.sender._value;" class="input k-input" data-role="datepicker" type="text" role="textbox" aria-haspopup="true" aria-expanded="false" aria-owns="dateArrivee_dateview" aria-disabled="false" aria-readonly="false" aria-label="Current focused date is null">
-					<span unselectable="on" class="k-select" role="button" aria-controls="dateArrivee_dateview">
-						<span unselectable="on" class="k-icon k-i-calendar"></span>
-					</span>
-				</span>
-			</span>
-		</div>		
-		<div class="field-block button-height">
-			<label for="dateDepart"><b>{{t 'users:Date-Depart'}}</b></label>
-			<span class="k-widget k-datepicker k-header input">
-				<span class="k-picker-wrap k-state-default">
-					<input kendo-date-picker="" required="" id="dateDepart" k-on-change="order.datec = kendoEvent.sender._value;" class="input k-input" data-role="datepicker" type="text" role="textbox" aria-haspopup="true" aria-expanded="false" aria-owns="dateDepart_dateview" aria-disabled="false" aria-readonly="false" aria-label="Current focused date is null">
-					<span unselectable="on" class="k-select" role="button" aria-controls="dateDepart_dateview">
-						<span unselectable="on" class="k-icon k-i-calendar"></span>
-					</span>
-				</span>
-			</span>
-
-		</div>		
-		<div class="field-block button-height">
-			<label for="poste"><b>{{t 'users:Poste'}}</b></label>
-			<input type="text" data-ng-model="user.poste" id="poste" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height">
-			<label for="descriptionPoste"><b>{{t 'users:Descrption-Poste'}}</b></label>
-			<textarea class="input" rows="3" data-ng-model="user.descriptionPoste" placeholder="{{t 'users:Descrption-Poste'}}"></textarea>
-		</div>		
-		<div class="field-block button-height">
-			<label for="typeContrat"><b>{{t 'users:Type-Contrat'}}</b></label>
-			<select class="form-control" id="typeContrat" data-ng-model="user.typeContrat" data-ng-options=""></select>			
-		</div>		
-		<div class="field-block button-height">
-			<label for="periodeEssai"><b>{{t 'users:Periode-Essai'}}</b></label>
-			<select class="form-control" id="periodeEssai" data-ng-model="user.periodeEssai" data-ng-options=""></select>			
-		</div>		
-		<div class="field-block button-height">
-			<label for="salaireBrut"><b>{{t 'users:Salaire-Brut'}}</b></label>
-			<input type="text" data-ng-model="user.salaireBrut" id="salaireBrut" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>			
-			<button type="button" data-ng-disabled="" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span>
-			</button>
-		</div>		
-	</fieldset>
-	<!-- 5. Affectation -->
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(5)'>
-		<div class="field-block button-height">
-			<label for="statut"><b>{{t 'users:Statut'}}</b></label>
-			<select class="form-control" id="statut" data-ng-model="user.statut" data-ng-options=""></select>			
-		</div>		
-		<div class="field-block button-height">
-			<label for="site"><b>{{t 'users:Site'}}</b></label>
-			<select class="form-control" id="site" data-ng-model="user.site" data-ng-options=""></select>			
-		</div>		
-		<div class="field-block button-height">
-			<label for="group"><b>{{t 'users:Group'}}</b></label>
-			<select class="form-control" id="group" data-ng-model="user.group" data-ng-options=""></select>			
-		</div>
-		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>			
-			<button type="button" data-ng-disabled="" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span>
-			</button>
-		</div>		
-	</fieldset>
-	<!-- 6. Administration -->
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(6)'>
-		<div class="field-block button-height">
-			<label for="securiteSociale"><b>{{t 'users:Securite-Sociale'}}</b></label>
-			<input type="text" data-ng-model="user.securiteSociale" id="securiteSociale" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height">
-			<label for="libelleBank"><b>{{t 'users:Libelle-Bank'}}</b></label>
-			<input type="text" data-ng-model="user.libelleBank" id="libeleBank" class="input" autocomplete="off">
-		</div>		
-		<div class="field-block button-height">
-			<label for="iban"><b>{{t 'users:IBAN'}}</b></label>
-			<input type="text" data-ng-model="user.iban" id="iban" class="input" autocomplete="off">
-		</div>
-		<div class="field-block button-height wizard-controls clearfix">
-					<button type="button"  data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t 'Previous'}}</button>			
-					<button type="submit" class="button glossy mid-margin-right float-right">
-						<span class="button-icon"><span class="icon-tick"></span></span>
-						Créer
-					</button>
-				</div>		
-	</fieldset>
 </form>
+

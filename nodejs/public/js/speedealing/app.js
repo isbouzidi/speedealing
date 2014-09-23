@@ -24,7 +24,6 @@ window.app = angular.module('mean', [
 	'mean.articles',
 	'mean.europexpress',
 	'timer',
-	'mean.rh',
 	'mean.userGroup',
 	'mean.contacts',
 	'mean.reports',
@@ -47,7 +46,6 @@ angular.module('mean.bills', []);
 angular.module('mean.accounting', []);
 angular.module('mean.articles', []);
 angular.module('mean.europexpress', []);
-angular.module('mean.rh', []);
 angular.module('mean.userGroup', []);
 angular.module('mean.contacts', []);
 angular.module('mean.reports', []);

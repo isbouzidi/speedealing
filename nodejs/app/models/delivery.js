@@ -28,7 +28,8 @@ var deliverySchema = new Schema({
 	client: {
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String,
-		isNameModified: {type: Boolean}
+		isNameModified: {type: Boolean},
+		cptBilling: {id: {type: Schema.Types.ObjectId}, name: String},
 	},
 	contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
 	ref_client: {type: String},
@@ -38,7 +39,9 @@ var deliverySchema = new Schema({
 	town: String,
 	country_id: {type: String, default: 'FR'},
 	state_id: Number,
-	datec: {type: Date},
+	phone: String,
+	email: String,
+	datec: {type: Date, default: Date.now},
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},
@@ -99,14 +102,14 @@ var deliverySchema = new Schema({
 deliverySchema.plugin(timestamps);
 
 var cond_reglement = {};
-DictModel.findOne({_id: "dict:fk_payment_term"}, function(err, docs) {
+DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
 	cond_reglement = docs;
 });
 
 /**
  * Pre-save hook
  */
-deliverySchema.pre('save', function(next) {
+deliverySchema.pre('save', function (next) {
 
 	this.calculate_date_lim_reglement();
 
@@ -170,25 +173,25 @@ deliverySchema.pre('save', function(next) {
 
 	var self = this;
 	if (this.isNew) {
-		SeqModel.inc("BL", function(seq) {
+		SeqModel.inc("BL", function (seq) {
 			//console.log(seq);
 			self.ref = "BL" + seq;
 			next();
 		});
 	} else {
 		if (this.Status !== "DRAFT" && this.total_ht !== 0 && this.ref.substr(0, 4) === "BL") {
-			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+			EntityModel.findOne({_id: self.entity}, "cptRef", function (err, entity) {
 				if (err)
 					console.log(err);
 
 				if (entity && entity.cptRef) {
-					SeqModel.inc("BL" + entity.cptRef, self.datec, function(seq) {
+					SeqModel.inc("BL" + entity.cptRef, self.datec, function (seq) {
 						//console.log(seq);
 						self.ref = "BL" + entity.cptRef + seq;
 						next();
 					});
 				} else {
-					SeqModel.inc("BL", self.datec, function(seq) {
+					SeqModel.inc("BL", self.datec, function (seq) {
 						//console.log(seq);
 						self.ref = "BL" + seq;
 						next();
@@ -232,10 +235,10 @@ deliverySchema.methods = {
 	 * @param {function} callback
 	 * @api public
 	 */
-	setNumber: function() {
+	setNumber: function () {
 		var self = this;
 		if (this.ref.substr(0, 4) === "PROV")
-			SeqModel.inc("FA", function(seq) {
+			SeqModel.inc("FA", function (seq) {
 				//console.log(seq);
 				self.ref = "FA" + seq;
 			});
@@ -247,7 +250,7 @@ deliverySchema.methods = {
 	 * 	@param      string	$cond_reglement   	Condition of payment (code or id) to use. If 0, we use current condition.
 	 * 	@return     date     			       	Date limite de reglement si ok, <0 si ko
 	 */
-	calculate_date_lim_reglement: function() {
+	calculate_date_lim_reglement: function () {
 		var data = cond_reglement.values[this.cond_reglement_code];
 
 		var cdr_nbjour = data.nbjour || 0;
@@ -289,7 +292,7 @@ deliverySchema.methods = {
 };
 
 var statusList = {};
-ExtrafieldModel.findById('extrafields:BonLivraison', function(err, doc) {
+ExtrafieldModel.findById('extrafields:BonLivraison', function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
@@ -298,7 +301,7 @@ ExtrafieldModel.findById('extrafields:BonLivraison', function(err, doc) {
 });
 
 deliverySchema.virtual('status')
-		.get(function() {
+		.get(function () {
 			var res_status = {};
 
 			var status = this.Status;

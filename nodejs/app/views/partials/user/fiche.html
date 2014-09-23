@@ -1,4 +1,4 @@
-<section data-ng-controller="RhController">
+<section data-ng-controller="UserController">
     <div data-ng-init="findOne()">
         <div class="with-padding" data-ng-init="init()">
             <div class="columns">
@@ -205,8 +205,10 @@
                                                        buttons="no" 
                                                        e-ng-options="p.label as p.label for p in pays | orderBy:'label'"
                                                        onaftersave="update()"
-                                                       blur="submit">
+                                                       blur="submit"
+                                                       e-form="paysNaissance">
                                                         \{{userEdit.paysNaissance|| "Non defini"}}
+                                                        <span class="icon-pencil grey" ng-click="paysNaissance.$show()" ng-hide="paysNaissance.$visible"></span>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -216,7 +218,7 @@
                                                     <a href="#" 
                                                        editable-select="userEdit.nationnalite" 
                                                        buttons="no" 
-                                                       e-ng-options="p.label as p.label for p in pays orderBy:'label'" 
+                                                       e-ng-options="p.label as p.label for p in pays | orderBy:'label'" 
                                                        onaftersave="update()"
                                                        blur="submit"
                                                        e-form="nationnalite">
@@ -232,9 +234,11 @@
                                                        editable-select="userEdit.situationFamiliale" 
                                                        buttons="no" 
                                                        e-ng-options="s.label as s.label for s in SituationFamiliale.values" 
-                                                       onaftersave="update()">
+                                                       onaftersave="update()"
+                                                       e-form="situationFamiliale">
                                                         \{{userEdit.situationFamiliale|| "Non defini"}}
                                                     </a>
+                                                    <span class="icon-pencil grey" ng-click="situationFamiliale.$show()" ng-hide="situationFamiliale.$visible"></span>
                                                 </td>
                                             </tr>
                                             <tr>

@@ -349,7 +349,7 @@
 				}
 			}
 		},
-		"menu:rh": {
+		"menu:user": {
 			"position": 999,
 			"perms": "user.write",
 			"usertype": 2,
@@ -357,7 +357,7 @@
 			"submenus": {
 				"menu:team": {
 					"position": 3,
-					"url": "#!/rh",
+					"url": "#!/user",
 					"perms": "user.read",
 					"usertype": 2,
 					"title": "users:Collaborators"

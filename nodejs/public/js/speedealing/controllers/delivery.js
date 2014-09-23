@@ -167,7 +167,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 					delivery.lines.splice(i, 1);
 				}
 			}
-
 			delivery.$update(function (response) {
 				pageTitle.setTitle('Bon Livraison ' + delivery.ref);
 
@@ -261,13 +260,15 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 		};
 
 		$scope.updateAddress = function (data) {
-			$scope.delivery.address = data.address.address;
-			$scope.delivery.zip = data.address.zip;
-			$scope.delivery.town = data.address.town;
+			if (data.address) {
+				$scope.delivery.address = data.address.address;
+				$scope.delivery.zip = data.address.zip;
+				$scope.delivery.town = data.address.town;
 
-			$scope.delivery.price_level = data.price_level;
+				$scope.delivery.price_level = data.price_level;
 
-			return true;
+				return true;
+			}
 		};
 
 
@@ -564,7 +565,7 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 			$scope.delivery.commercial_id = {
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
-			}
+			};
 		};
 
 		$scope.create = function () {
@@ -690,7 +691,7 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			});
 			return total.toString();
 		};
-		
+
 		$scope.entryMaybePlural = function (row) {
 			if (row.children.length > 1)
 			{
@@ -717,11 +718,12 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			showGroupPanel: true,
 			enableColumnResize: true,
 			i18n: 'fr',
-			groups: ['client.name'],
+			groups: ['client.cptBilling.name'],
 			groupsCollapsedByDefault: false,
 			columnDefs: [
-				{field: 'client.name', displayName: 'Client', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'client.cptBilling.name', displayName: 'Facturation', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', width: "15%", displayName: 'Id'},
+				{field: 'client.name', displayName: 'Livraison', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'lines.product.name', width: "15%", displayName: 'Produit'},
 				//{field: 'status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\"status.name\")}}</small></div>'},
 				{field: 'datec', width: "15%", displayName: 'Date d\'expedition', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
