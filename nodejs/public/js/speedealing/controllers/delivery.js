@@ -721,9 +721,9 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			groups: ['client.cptBilling.name'],
 			groupsCollapsedByDefault: false,
 			columnDefs: [
-				{field: 'client.cptBilling.name', displayName: 'Facturation', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/societes/{{row.getProperty(\'_id\')}}"><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'client.cptBilling.name', displayName: 'Facturation', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/societes/{{row.getProperty(\'client.cptBilling.id\')}}"><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'ref', width: "15%", displayName: 'BL', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/delivery/{{row.getProperty(\'_id\')}}"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'client.name', displayName: 'Livraison', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/societes/{{row.getProperty(\'_id\')}}"><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'client.name', displayName: 'Livraison', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/societes/{{row.getProperty(\'client.id\')}}"><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'lines.product.name', width: "15%", displayName: 'Produit'},
 				//{field: 'status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\"status.name\")}}</small></div>'},
 				{field: 'datec', width: "15%", displayName: 'Date d\'expedition', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
