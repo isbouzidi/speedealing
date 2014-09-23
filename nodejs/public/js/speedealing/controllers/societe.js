@@ -65,9 +65,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			return ($scope.societe[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
-		$scope.remove = function (societe) {
-			societe.$remove();
-
+		$scope.remove = function(societe) {
+			societe.$remove(function(){
+				$location.path("/societes");
+			});
 		};
 
 		$scope.checkCodeClient = function (data) {
