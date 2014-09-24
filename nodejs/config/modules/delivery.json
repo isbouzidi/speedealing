@@ -126,7 +126,7 @@
 			"usertype": 2,
 			"title": "deliveries:Deliveries",
 			"submenus": {
-				"menu:orderslist": {
+				"menu:deliverylist": {
 					"position": 1,
 					"url": "#!/delivery",
 					"perms": "delivery.read",

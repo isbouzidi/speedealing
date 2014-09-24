@@ -289,6 +289,10 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			//showFilter:true,
 			enableColumnResize: true,
 			i18n: 'fr',
+			rowTemplate: '<div style="height: 100%" ng-class="{\'orange-bg\': (row.getProperty(\'Status\') == \'DRAFT\')}"><div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
+					'<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"> </div>' +
+					'<div ng-cell></div>' +
+					'</div></div>',
 			columnDefs: [
 				{field: 'ref', displayName: 'Ref.', width: "150px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/delivery/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
 				{field: 'title.ref', displayName: 'Titre'},
