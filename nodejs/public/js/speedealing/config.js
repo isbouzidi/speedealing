@@ -79,5 +79,5 @@ window.app.config(['dialogsProvider','$translateProvider',function(dialogsProvid
 			DIALOGS_NO: "Non"
 		});
 
-		$translateProvider.preferredLanguage('en-US');
+		$translateProvider.preferredLanguage('fr-FR');
 	}]);
