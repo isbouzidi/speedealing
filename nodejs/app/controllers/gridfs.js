@@ -15,7 +15,7 @@ function getGridFile(id, options, fn) {
 			id = new ObjectID(id),
 			store = new GridStore(db, id, "r", options);
 
-	store.open(function(err, store) {
+	store.open(function (err, store) {
 		if (err) {
 			return fn(err);
 		}
@@ -28,14 +28,15 @@ function putGridFile(buf, name, options, fn) {
 			options = parse(options);
 	options.metadata.filename = name;
 
-	new GridStore(db, name, "w", options).open(function(err, file) {
+	new GridStore(db, name, "w", options).open(function (err, file) {
 		if (err)
 			return fn(err);
 		else
 			file.write(buf, true, fn);
 		//TODO: Should we gridStore.close() manully??
 	});
-};
+}
+;
 
 function putGridFileByPath(path, name, original, options, fn) {
 	var db = mongoose.connection.db,
@@ -43,7 +44,7 @@ function putGridFileByPath(path, name, original, options, fn) {
 	options.metadata.filename = name;
 	options.metadata.originalFilename = original;
 
-	new GridStore(db, name, "w", options).open(function(err, file) {
+	new GridStore(db, name, "w", options).open(function (err, file) {
 		if (err)
 			return fn(err);
 		else
@@ -58,7 +59,7 @@ function deleteGridFile(id, options, fn) {
 			id = new mongoose.mongo.BSONPure.ObjectID(id),
 			store = new GridStore(db, id, 'r', options);
 
-	store.unlink(function(err, result) {
+	store.unlink(function (err, result) {
 		if (err)
 			return fn(err);
 
@@ -88,7 +89,7 @@ function parse(options) {
  * @returns {undefined}
  */
 
-exports.pluginGridFs = function(schema, opt) {
+exports.pluginGridFs = function (schema, opt) {
 	schema.add({
 		files: [mongoose.Schema.Types.Mixed]
 	});
@@ -100,12 +101,12 @@ exports.pluginGridFs = function(schema, opt) {
 		 * @return {Boolean}
 		 * @api public
 		 */
-		addFile: function(file, options, fn) {
+		addFile: function (file, options, fn) {
 			var _this = this;
 
 			options.root = opt.root;
 
-			return putGridFileByPath(file.path, (this.ref || this.name) + "_" + file.originalFilename, file.originalFilename, options, function(err, result) {
+			return putGridFileByPath(file.path, (this.ref || this.name) + "_" + file.originalFilename, file.originalFilename, options, function (err, result) {
 				//console.log(result);
 				var files = {};
 				files.name = result.filename;
@@ -125,30 +126,33 @@ exports.pluginGridFs = function(schema, opt) {
 				if (!update)
 					_this.files.push(files);
 
-				return _this.save(function(err, doc) {
+				return _this.save(function (err, doc) {
 					fn(err, doc, files, update);
 				});
 			});
 		},
-		removeFile: function(file, fn) {
+		removeFile: function (file, fn) {
 			var _this = this;
 
 			var options = opt;
 
 			var found = false;
-			for (var i = 0; i < _this.files.length; i++)
+			for (var i = 0; i < _this.files.length; i++) {
 				if (_this.files[i].name == file) {
 					//_this.files[i] = files;
-					deleteGridFile(_this.files[i]._id.toString(), options, function(err, result) {
+					deleteGridFile(_this.files[i]._id.toString(), options, function (err, result) {
 						if (err)
 							console.log(err);
 					});
 					_this.files.splice(i, 1);
 				}
+			}
 
-			return _this.save(fn);
+			return _this.save(function (err, doc) {
+				fn(err, doc);
+			});
 		},
-		getFile: function(file, fn) {
+		getFile: function (file, fn) {
 			var _this = this;
 
 			var options = opt;
@@ -156,7 +160,7 @@ exports.pluginGridFs = function(schema, opt) {
 			var found = false;
 			for (var i = 0; i < _this.files.length; i++)
 				if (_this.files[i].name === file) {
-					return getGridFile(_this.files[i]._id.toString(), options, function(err, store) {
+					return getGridFile(_this.files[i]._id.toString(), options, function (err, store) {
 						if (err) {
 							console.log(err);
 							return fn(err, null);
@@ -170,12 +174,12 @@ exports.pluginGridFs = function(schema, opt) {
 	};
 };
 
-exports.addFile = function(Model, id, file, callback) {
+exports.addFile = function (Model, id, file, callback) {
 	var filename = file.path;
 
 	if (fs.existsSync(filename)) {
 		//console.log(filename);
-		Model.findOne({_id: id}, function(err, doc) {
+		Model.findOne({_id: id}, function (err, doc) {
 			if (err || doc === null) {
 				console.log(err);
 				return callback({status: "Id not found"});
@@ -188,7 +192,7 @@ exports.addFile = function(Model, id, file, callback) {
 					_id: id
 				}
 			};
-	
+
 
 			doc.addFile(file, opts, callback);
 		});
@@ -196,15 +200,15 @@ exports.addFile = function(Model, id, file, callback) {
 		callback({foo: "bar", status: "failed"});
 };
 
-exports.getFile = function(Model, id, fileName, callback) {
-	Model.findOne({_id: id}, function(err, doc) {
+exports.getFile = function (Model, id, fileName, callback) {
+	Model.findOne({_id: id}, function (err, doc) {
 
 		if (err || doc === null) {
 			console.log(err);
 			return callback({status: "Id not found"}, null);
 		}
 
-		doc.getFile(fileName, function(err, store) {
+		doc.getFile(fileName, function (err, store) {
 			if (err)
 				console.log(err);
 
@@ -214,18 +218,18 @@ exports.getFile = function(Model, id, fileName, callback) {
 	});
 };
 
-exports.delFile = function(Model, id, fileNames, callback) {
-	Model.findOne({_id: id}, function(err, doc) {
+exports.delFile = function (Model, id, fileNames, callback) {
+	Model.findOne({_id: id}, function (err, doc) {
 
 		if (err) {
 			console.log(err);
 			return callback({status: "Id not found"});
 		}
-		doc.removeFile(fileNames, function(err, result) {
+		doc.removeFile(fileNames, function (err, result) {
 			if (err)
 				console.log(err);
 
-			callback();
+			callback(err, result);
 		});
 	});
 };

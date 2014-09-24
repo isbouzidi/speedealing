@@ -23,6 +23,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			$scope.order.optional = {};
 			$scope.order.optional.dossiers = [];
 			$scope.order.optional.dossiers[0] = {};
+			
+			$scope.nbUpload = 0;
 		};
 
 		$scope.newOrder = function() {
@@ -168,7 +170,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				var note = "";
 				note += "Numero de DF (Uniquement pour la facturation) : " + this.order.optional.numDF + "<br/><br/>";
 				note += "Adresse de livraison : <br/><p>" + this.order.bl[i].name + "<br/>";
-				note += this.order.bl[i].contact + "<br/>"
+				note += this.order.bl[i].contact + "<br/>";
 				note += this.order.bl[i].address + "<br/>";
 				note += this.order.bl[i].zip + " " + this.order.bl[i].town + "</p>";
 				note += "<p> Nombre d'exemplaires papier : " + this.order.bl[i].products[0].qty + "</p>";
@@ -223,6 +225,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 				//console.log(file);
 				if ($scope.order)
+					$scope.nbUpload++;
 					$scope.upload = $upload.upload({
 						url: 'api/commande/file/' + $scope.order._id,
 						method: 'POST',
@@ -245,6 +248,8 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 						$scope.order.files = data.files;
 						$scope.order.__v = data.__v; // for update
+						
+						$scope.nbUpload--;//end Upload
 
 						//$scope.filePercentage[idx] = 100;
 						$scope.fileName[idx] = file.name;
@@ -276,6 +281,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 			$http({method: 'DELETE', url: 'api/commande/file/' + id + '/' + fileName
 			}).success(function(data, status) {
+				//console.log(data);
 				if (status == 200) {
 					$scope.order.files = data.files;
 					$scope.order.__v = data.__v; // for update

@@ -264,7 +264,7 @@ Object.prototype = {
 
 			/* Add dossier information in filename */
 			if (req.body.idx)
-				req.files.file.originalFilename = req.body.idx + "___" + req.files.file.originalFilename;
+				req.files.file.originalFilename = req.body.idx + "_" + req.files.file.originalFilename;
 
 			gridfs.addFile(CommandeModel, id, req.files.file, function (err, result) {
 				//console.log(result);
@@ -306,11 +306,11 @@ Object.prototype = {
 		//console.log(id);
 
 		if (req.params.fileName && id) {
-			gridfs.delFile(CommandeModel, id, req.params.fileName, function (err) {
+			gridfs.delFile(CommandeModel, id, req.params.fileName, function (err, result) {
 				if (err)
 					res.send(500, err);
 				else
-					res.send(200, {status: "ok"});
+					res.send(200, result);
 			});
 		} else
 			res.send(500, "File not found");
