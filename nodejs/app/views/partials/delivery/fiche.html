@@ -388,7 +388,7 @@
         </td>
 								<td class="align-right">
 									<span editable-number="line.discount" e-ng-change="calculMontantHT(line, $data, 'discount')" e-min="0" e-step="0.001" e-style="width: 80px" e-form="tableform">
-										\{{ line.discount || 0 |percent}}
+										\{{ line.discount || 0 | percent:3}}
 									</span>
 								</td>
 								<td class="align-right">

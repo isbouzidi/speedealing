@@ -389,7 +389,7 @@
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyBilling'}}</th>
 													<td><a href="#" editable-text="societe.cptBilling" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
-															\{{societe.cptBilling.name|| "Aucun"}}
+															\{{societe.cptBilling.name|| "Lui-même"}}
 														</a></td>
 												</tr>
 											</tbody>

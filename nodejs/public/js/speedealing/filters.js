@@ -1,12 +1,12 @@
-angular.module('mean.system').filter('euro', function() {
-	return function(text, size) {
+angular.module('mean.system').filter('euro', function () {
+	return function (text, size) {
 
 		size = size || 2;
 
 		if (isNaN(text))
 			return text;
 
-		text = Math.round(Math.pow(10, 2) * text) / Math.pow(10, 2);
+		text = Math.round(Math.pow(10, size) * text) / Math.pow(10, size);
 
 		text = text.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 ");
 		var t = text + ' €';
@@ -14,15 +14,15 @@ angular.module('mean.system').filter('euro', function() {
 	};
 });
 
-angular.module('mean.system').filter('percent', function() {
-	return function(text, size) {
+angular.module('mean.system').filter('percent', function () {
+	return function (text, size) {
 
 		size = size || 2;
 
 		if (isNaN(text))
 			return text;
 
-		text = Math.round(Math.pow(10, 2) * text) / Math.pow(10, 2);
+		text = Math.round(Math.pow(10, size) * text) / Math.pow(10, size);
 
 		text = text.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 ");
 		var t = text + ' %';
@@ -30,8 +30,8 @@ angular.module('mean.system').filter('percent', function() {
 	};
 });
 
-angular.module('mean.system').filter('object2Array', function() {
-	return function(input) {
+angular.module('mean.system').filter('object2Array', function () {
+	return function (input) {
 		var out = [];
 		for (var i in input) {
 			input[i].id = i;
@@ -41,8 +41,8 @@ angular.module('mean.system').filter('object2Array', function() {
 	};
 });
 
-angular.module('mean.system').filter('capitalize', function() {
-	return function(input, scope) {
+angular.module('mean.system').filter('capitalize', function () {
+	return function (input, scope) {
 		if (input == null)
 			return;
 
@@ -51,8 +51,8 @@ angular.module('mean.system').filter('capitalize', function() {
 	};
 });
 
-angular.module('mean.system').filter('phone', function() {
-	return function(tel) {
+angular.module('mean.system').filter('phone', function () {
+	return function (tel) {
 		if (!tel) {
 			return '';
 		}
@@ -111,8 +111,8 @@ angular.module('mean.system').filter('phone', function() {
 	};
 });
 
-angular.module('mean.system').filter('makeRange', function() {
-	return function(input) {
+angular.module('mean.system').filter('makeRange', function () {
+	return function (input) {
 		var lowBound, highBound;
 		switch (input.length) {
 			case 1:
@@ -133,8 +133,8 @@ angular.module('mean.system').filter('makeRange', function() {
 	};
 });
 
-angular.module('mean.system').filter('userGroupArrayFilter', function() {
-	return function(myArray) {
-    		return myArray.join(', ');
-  };
+angular.module('mean.system').filter('userGroupArrayFilter', function () {
+	return function (myArray) {
+		return myArray.join(', ');
+	};
 });
