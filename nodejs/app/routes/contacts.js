@@ -435,7 +435,7 @@ module.exports = function (app, passport, auth) {
 													delete data.societe;
 
 												if (data.Tag)
-													data.Tag = array.union(contact.Tag, data.Tag); // Fusion Tag
+													data.Tag = _.union(contact.Tag, data.Tag); // Fusion Tag
 
 												contact = _.extend(contact, data);
 											}
