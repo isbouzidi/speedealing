@@ -211,7 +211,7 @@ module.exports = function (app, passport, auth) {
 					continue;
 
 				/* optional */
-				if (tab[i].indexOf(".") >= 0) {
+				if (tab[i] && tab[i].indexOf(".") >= 0) {
 					var split = tab[i].split(".");
 
 					if (row[i]) {
