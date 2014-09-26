@@ -377,7 +377,7 @@ module.exports = function (app, passport, auth) {
 												contact = new ContactModel(data);
 											} else {
 												if (data.Tag)
-													data.Tag = array.union(contact.Tag, data.Tag); // Fusion Tag
+													data.Tag = _.union(contact.Tag, data.Tag); // Fusion Tag
 
 												contact = _.extend(contact, data);
 											}
