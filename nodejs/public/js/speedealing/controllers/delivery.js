@@ -565,11 +565,6 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 					$scope.delivery[field] = data.default;
 				});
 			});
-
-			$scope.delivery.commercial_id = {
-				id: Global.user._id,
-				name: Global.user.firstname + " " + Global.user.lastname
-			};
 		};
 
 		$scope.create = function () {

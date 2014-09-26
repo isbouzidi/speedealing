@@ -1,4 +1,4 @@
-angular.module('mean.products').controller('ProductController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'pageTitle', 'Products', function($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, pageTitle, Product) {
+angular.module('mean.products').controller('ProductController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'pageTitle', 'Products', function ($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, pageTitle, Product) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des produits');
 
@@ -12,7 +12,7 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 
 		$scope.type = {name: "A la vente", id: "SELL"};
 
-		$scope.init = function() {
+		$scope.init = function () {
 			/*var fields = ["tva_tx", "Status", "units"];
 			 
 			 angular.forEach(fields, function(field) {
@@ -26,15 +26,15 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			 });*/
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var product = $scope.product;
 
-			product.$update(function(response) {
+			product.$update(function (response) {
 				pageTitle.setTitle('Fiche produit ' + product.ref);
 			});
 		};
 
-		$scope.find = function() {
+		$scope.find = function () {
 			var sb = {};
 			for (var i = 0; i < $scope.sortOptionsProduct.fields.length; i++) {
 				sb[$scope.sortOptionsProduct.fields[i]] = $scope.sortOptionsProduct.directions[i] === "desc" ? -1 : 1;
@@ -49,34 +49,34 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 				sort: sb
 			};
 
-			Product.query(p, function(products) {
+			Product.query(p, function (products) {
 				$scope.products = products;
 				$scope.countProducts = products.length;
 			});
 
 			$http({method: 'GET', url: '/api/product/count', params: p
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.totalCountProduct = data.count;
 				$scope.maxPageProduct = Math.ceil(data.count / 1000);
 			});
 		};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			Product.get({
 				Id: $routeParams.id
-			}, function(product) {
+			}, function (product) {
 				$scope.product = product;
 
 				pageTitle.setTitle('Fiche produit' + $scope.product.ref);
 
-			}, function(err) {
+			}, function (err) {
 				if (err.status == 401)
 					$location.path("401.html");
 			});
 
 		};
 
-		$scope.productFamilyAutoComplete = function(val) {
+		$scope.productFamilyAutoComplete = function (val) {
 			return $http.post('api/product/family', {
 				take: 5,
 				skip: 0,
@@ -84,27 +84,27 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 				pageSize: 5,
 				field: "caFamily",
 				filter: val
-			}).then(function(res) {
+			}).then(function (res) {
 				//console.log(res.data);
 				return res.data;
 			});
 		};
 
-		$scope.showProduct = function(id) {
+		$scope.showProduct = function (id) {
 
 			var scope = $scope;
 
-			var ModalInstanceCtrl = function($scope, $modalInstance, object) {
+			var ModalInstanceCtrl = function ($scope, $modalInstance, object) {
 				$scope.product = {
 				};
 
-				$scope.findOne = function() {
+				$scope.findOne = function () {
 					Product.get({
 						Id: object.product
-					}, function(product) {
+					}, function (product) {
 						$scope.product = product;
 
-					}, function(err) {
+					}, function (err) {
 						if (err.status == 401)
 							$location.path("401.html");
 					});
@@ -113,17 +113,17 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 
 				var fields = ["tva_tx", "Status", "units"];
 
-				angular.forEach(fields, function(field) {
+				angular.forEach(fields, function (field) {
 					$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
 							field: field
 						}
-					}).success(function(data, status) {
+					}).success(function (data, status) {
 						$scope[field] = data;
 						//console.log(data);
 					});
 				});
 
-				$scope.productFamilyAutoComplete = function(val) {
+				$scope.productFamilyAutoComplete = function (val) {
 					return $http.post('api/product/family', {
 						take: 5,
 						skip: 0,
@@ -131,16 +131,16 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 						pageSize: 5,
 						field: "caFamily",
 						filter: val
-					}).then(function(res) {
+					}).then(function (res) {
 						//console.log(res.data);
 						return res.data;
 					});
 				};
 
-				$scope.update = function() {
+				$scope.update = function () {
 					var product = $scope.product;
 
-					product.$update(function(response) {
+					product.$update(function (response) {
 					});
 				};
 
@@ -200,17 +200,17 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 				controller: ModalInstanceCtrl,
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							product: id
 						};
 					}
 				}
 			});
-			modalInstance.result.then(function(product) {
+			modalInstance.result.then(function (product) {
 				//$scope.contacts.push(contacts);
 				//$scope.countContact++;
-			}, function() {
+			}, function () {
 			});
 		};
 
@@ -234,13 +234,13 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			currentPage: 1
 		};
 
-		$scope.$watch('pagingOptionsProduct', function(newVal, oldVal) {
+		$scope.$watch('pagingOptionsProduct', function (newVal, oldVal) {
 			if (newVal.currentPage !== oldVal.currentPage) {
 				$scope.find();
 			}
 		}, true);
 
-		$scope.$watch('filterOptionsProduct', function(newVal, oldVal) {
+		$scope.$watch('filterOptionsProduct', function (newVal, oldVal) {
 			if (newVal.filterText !== oldVal.filterText) {
 				$scope.find();
 			}
@@ -275,19 +275,19 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			]
 		};
 
-		$scope.$watch('filterOptionsProduct', function(newVal, oldVal) {
+		$scope.$watch('filterOptionsProduct', function (newVal, oldVal) {
 			if (newVal.filterText !== oldVal.filterText) {
 				$scope.find();
 			}
 		}, true);
 
-		$scope.$watch('sortOptionsProduct', function(newVal, oldVal) {
+		$scope.$watch('sortOptionsProduct', function (newVal, oldVal) {
 			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
 				$scope.find();
 			}
 		}, true);
 
-		$scope.updateInPlace = function(api, field, row, newdata) {
+		$scope.updateInPlace = function (api, field, row, newdata) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -295,14 +295,14 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
 						data: {
 							oldvalue: row.entity[field],
 							value: newdata
 						}
 					})
-							.success(function(data, status) {
+							.success(function (data, status) {
 								if (status == 200) {
 									if (data) {
 										row.entity = data;
@@ -317,18 +317,18 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			return false;
 		};
 
-		$scope.addNew = function() {
+		$scope.addNew = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/product/create.html',
 				controller: "ProductCreateController",
 				windowClass: "steps"
 			});
 
-			modalInstance.result.then(function(product) {
+			modalInstance.result.then(function (product) {
 				//console.log(product);
 				$scope.products.push(product);
 				$scope.countProducts++;
-			}, function() {
+			}, function () {
 			});
 		};
 
@@ -367,7 +367,7 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 
 	}]);
 
-angular.module('mean.products').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function($scope, $routeParams, Global, $http) {
+angular.module('mean.products').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function ($scope, $routeParams, Global, $http) {
 		$scope.global = Global;
 
 		$scope.isChecked = {};
@@ -380,7 +380,7 @@ angular.module('mean.products').controller('ProductBarCodeController', ['$scope'
 					barCode: 1
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.products = data;
 						for (var i in data) {
 							$scope.productsBarCode[data[i]._id] = data[i];
@@ -399,7 +399,7 @@ angular.module('mean.products').controller('ProductBarCodeController', ['$scope'
 
 			$http({method: 'GET', url: 'api/product/storehouse'
 			}).
-					success(function(entrepot, status) {
+					success(function (entrepot, status) {
 						//$scope.products = data;
 
 						for (var i = 0; i < entrepot.length; i++) {
@@ -430,24 +430,24 @@ angular.module('mean.products').controller('ProductBarCodeController', ['$scope'
 					});
 		}
 
-		$scope.updateCheck = function(product, stock) {
+		$scope.updateCheck = function (product, stock) {
 			$http({method: 'PUT', url: 'api/product/storehouse', data: {
 					product: product,
 					stock: stock,
 					checked: $scope.isChecked[stock.barCode][product._id]
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						console.log("ok");
 					});
 		};
 
-		$scope.initList = function() {
+		$scope.initList = function () {
 			initProducts();
 			initEntrepot();
 		};
 
-		$scope.societeAutoComplete = function(val) {
+		$scope.societeAutoComplete = function (val) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -455,15 +455,15 @@ angular.module('mean.products').controller('ProductBarCodeController', ['$scope'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
 
-		$scope.insert = function() {
+		$scope.insert = function () {
 			$http({method: 'POST', url: 'api/product/storehouse', data: $scope.storehouse
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						//$scope.products = data;
 						$scope.initList();
 					});
@@ -472,27 +472,27 @@ angular.module('mean.products').controller('ProductBarCodeController', ['$scope'
 
 	}]);
 
-angular.module('mean.products').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object', 'options', function($scope, $http, $modalInstance, Global, object, options) {
+angular.module('mean.products').controller('LineController', ['$scope', '$http', '$modalInstance', 'Global', 'object', 'options', function ($scope, $http, $modalInstance, Global, object, options) {
 		$scope.global = Global;
 
 		$scope.line = object;
 		$scope.supplier = options && options.supplier;
 
-		$scope.init = function() {
+		$scope.init = function () {
 			var fields = ["tva_tx"];
 
-			angular.forEach(fields, function(field) {
+			angular.forEach(fields, function (field) {
 				$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
 						field: field
 					}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					$scope[field] = data;
 					//console.log(data);
 				});
 			});
 		};
 
-		$scope.addOrUpdate = function() {
+		$scope.addOrUpdate = function () {
 			$scope.line.total_ht = $scope.line.pu_ht * $scope.line.qty;
 			$scope.line.total_tva = $scope.line.total_ht * $scope.line.tva_tx / 100;
 			$scope.line.total_ttc = $scope.line.total_ht + $scope.line.total_tva;
@@ -500,7 +500,7 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 			$modalInstance.close($scope.line);
 		};
 
-		$scope.updateLine = function(data) {
+		$scope.updateLine = function (data) {
 
 			if (!$scope.line.description)
 				$scope.line.description = data.description;
@@ -524,7 +524,7 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 			//console.log(data);
 		};
 
-		$scope.productAutoComplete = function(val) {
+		$scope.productAutoComplete = function (val) {
 			return $http.post('api/product/autocomplete', {
 				take: 5,
 				skip: 0,
@@ -534,7 +534,7 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 				supplier: options.supplier,
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				//console.log(res.data);
 				return res.data;
 			});
@@ -542,7 +542,7 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 
 	}]);
 
-angular.module('mean.products').controller('ProductCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Products', function($scope, $http, $modalInstance, $upload, $route, Global, Product) {
+angular.module('mean.products').controller('ProductCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Products', function ($scope, $http, $modalInstance, $upload, $route, Global, Product) {
 		$scope.global = Global;
 
 		$scope.product = {
@@ -560,30 +560,30 @@ angular.module('mean.products').controller('ProductCreateController', ['$scope',
 			{id: "MONTH", label: "Abonnement mensuel"}
 		];
 
-		$scope.init = function() {
+		$scope.init = function () {
 			var fields = ["tva_tx", "Status", "units"];
 
-			angular.forEach(fields, function(field) {
+			angular.forEach(fields, function (field) {
 				$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
 						field: field
 					}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					$scope[field] = data;
 					//console.log(data);
 				});
 			});
 		};
 
-		$scope.create = function() {
+		$scope.create = function () {
 			var product = new Product(this.product);
-			product.$save(function(response) {
+			product.$save(function (response) {
 				//console.log(response);
 				$modalInstance.close(response);
 				//$location.path("societe/" + response._id);
 			});
 		};
 
-		$scope.isValidRef = function() {
+		$scope.isValidRef = function () {
 			var ref = $scope.product.ref.trim().toUpperCase();
 			$scope.refFound = false;
 
@@ -593,7 +593,7 @@ angular.module('mean.products').controller('ProductCreateController', ['$scope',
 
 			if (isValide)
 				$http({method: 'GET', url: '/api/product/' + ref
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					//console.log(data);
 					if (data && data._id) // REF found
 						$scope.refFound = true;
@@ -605,28 +605,28 @@ angular.module('mean.products').controller('ProductCreateController', ['$scope',
 	}]);
 
 
-angular.module('mean.products').controller('ProductPriceLevelController', ['$scope', '$location', '$route', '$http', '$timeout', '$modal', 'Global', function($scope, $location, $route, $http, $timeout, $modal, Global) {
+angular.module('mean.products').controller('ProductPriceLevelController', ['$scope', '$location', '$route', '$http', '$timeout', '$modal', 'Global', function ($scope, $location, $route, $http, $timeout, $modal, Global) {
 
 		$scope.priceLevel = [];
 		$scope.price_level = null;
 		$scope.prices_level = [];
 
-		$scope.init = function() {
+		$scope.init = function () {
 
 			$http({method: 'GET', url: '/api/product/price_level/select'
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.prices_level = data;
 				//console.log(data);
 			});
 		};
 
-		$scope.find = function() {
+		$scope.find = function () {
 			$scope.init();
 
 			$http({method: 'GET', url: '/api/product/price_level', params: {
 					price_level: $scope.price_level
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				//console.log(data);
 				$scope.priceLevel = data;
 			});
@@ -650,6 +650,8 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 			enableColumnResize: true,
 			enableCellSelection: true,
 			enableCellEditOnFocus: true,
+			plugins: [new ngGridCsvExportPlugin({delimiter: ';'})],
+			showFooter: true,
 			i18n: 'fr',
 			columnDefs: [
 				{field: 'product.name', displayName: 'Ref produit', width: "15%", enableCellEdit: false},
@@ -664,7 +666,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 			]
 		};
 
-		$scope.update = function(row) {
+		$scope.update = function (row) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -674,20 +676,20 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'PUT', url: 'api/product/price_level', data: row.entity
-					}).success(function(data, status) {
+					}).success(function (data, status) {
 						$scope.save.pending = false;
 					});
 				}, 200);
 			}
 		};
 
-		$scope.remove = function(row) {
+		$scope.remove = function (row) {
 			for (var i = 0; i < $scope.priceLevel.length; i++) {
 				if (row.entity._id === $scope.priceLevel[i]._id) {
 					$http({method: 'DELETE', url: 'api/product/price_level', data: row.entity
-					}).success(function(data, status) {
+					}).success(function (data, status) {
 						$scope.priceLevel.splice(i, 1);
 					});
 					break;
@@ -695,13 +697,13 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 			}
 		};
 
-		$scope.addNewPrice = function() {
+		$scope.addNewPrice = function () {
 			var modalInstance = $modal.open({
 				templateUrl: 'myModalContent.html',
 				controller: ModalInstanceCtrl,
 				//windowClass: "steps",
 				resolve: {
-					options: function() {
+					options: function () {
 						return {
 							price_level: $scope.price_level
 						};
@@ -709,9 +711,9 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 				}
 			});
 
-			modalInstance.result.then(function(price) {
+			modalInstance.result.then(function (price) {
 				$http({method: 'POST', url: 'api/product/price_level', data: price
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (data.price_level === $scope.price_level)
 						$scope.priceLevel.push(data);
 					else {
@@ -720,11 +722,11 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 					}
 
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		var ModalInstanceCtrl = function($scope, $modalInstance, options) {
+		var ModalInstanceCtrl = function ($scope, $modalInstance, options) {
 
 			$scope.price = {
 				product: {
@@ -737,7 +739,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 				tms: new Date
 			};
 
-			$scope.productAutoComplete = function(val) {
+			$scope.productAutoComplete = function (val) {
 				return $http.post('api/product/autocomplete', {
 					take: 5,
 					skip: 0,
@@ -745,7 +747,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 					pageSize: 5,
 					filter: {logic: 'and', filters: [{value: val}]
 					}
-				}).then(function(res) {
+				}).then(function (res) {
 					for (var i in res.data) {
 						res.data[i] = res.data[i].product.id;
 						res.data[i].name = res.data[i].ref;
@@ -755,7 +757,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 				});
 			};
 
-			$scope.priceLevelAutoComplete = function(val) {
+			$scope.priceLevelAutoComplete = function (val) {
 				return $http.post('api/product/price_level/select', {
 					take: 5,
 					skip: 0,
@@ -763,16 +765,16 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 					pageSize: 5,
 					filter: {logic: 'and', filters: [{value: val}]
 					}
-				}).then(function(res) {
+				}).then(function (res) {
 					return res.data;
 				});
 			};
 
-			$scope.ok = function() {
+			$scope.ok = function () {
 				$modalInstance.close($scope.price);
 			};
 
-			$scope.cancel = function() {
+			$scope.cancel = function () {
 				$modalInstance.dismiss('cancel');
 			};
 		};
