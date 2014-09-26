@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config'),
 		timestamps = require('mongoose-timestamp'),
@@ -775,7 +775,7 @@ function contactChanged(contact, old_societe_id, new_societe_id, callback) {
 /* Personal module */
 
 
-var _ = require('underscore'),
+var _ = require('lodash'),
 		qs = require('querystring'),
 		util = require('util'),
 		url = require('url'),

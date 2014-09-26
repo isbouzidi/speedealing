@@ -1,5 +1,5 @@
 var mongoose = require('mongoose'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		LocalStrategy = require('passport-local').Strategy,
 		TwitterStrategy = require('passport-twitter').Strategy,
 		FacebookStrategy = require('passport-facebook').Strategy,

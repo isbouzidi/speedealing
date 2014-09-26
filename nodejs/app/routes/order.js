@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		nodemailer = require("nodemailer"),
 		smtpTransport = require('nodemailer-smtp-transport'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		dateFormat = require('dateformat'),
 		config = require(__dirname + '/../../config/config');
 

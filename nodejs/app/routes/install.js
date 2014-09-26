@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		dateFormat = require('dateformat'),
 		async = require('async'),
 		config = require('../../config/config');

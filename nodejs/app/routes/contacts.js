@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
-		_ = require('underscore'),
+		_ = require('lodash'),
 		array = require('array-extended'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');

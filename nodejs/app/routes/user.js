@@ -1,7 +1,7 @@
 "use strict";
 
 var mongoose = require('mongoose'),
-		_ = require('underscore');
+		_ = require('lodash');
 
 var UserModel = mongoose.model('user');
 var UserAbsenceModel = mongoose.model('userAbsence');

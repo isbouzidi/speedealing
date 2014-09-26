@@ -4,7 +4,7 @@ var async = require('async'),
 		mongoose = require('mongoose'),
 		fs = require('fs'),
 		i18n = require("i18next"),
-		_ = require('underscore');
+		_ = require('lodash');
 
 var menus = {};
 var rights = [];
@@ -78,7 +78,7 @@ fs.readdirSync(__dirname + '/../../config/modules').forEach(function (file) {
 exports.menus = function (req, res) {
 	var result = {};
 	
-	console.dir(menus);
+	//console.dir(menus);
 
 	function checkright(perms) {
 		if (!req.user.admin && typeof perms == "string") {
@@ -103,7 +103,7 @@ exports.menus = function (req, res) {
 		if (checkright(menus[i].perms))
 			found0 = true;
 
-		result[i] = menus[i];
+		result[i] = _.clone(menus[i], true);
 
 		for (var j in menus[i].submenus) {
 			var found1 = false;
