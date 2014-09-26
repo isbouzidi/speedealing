@@ -77,6 +77,8 @@ fs.readdirSync(__dirname + '/../../config/modules').forEach(function (file) {
 
 exports.menus = function (req, res) {
 	var result = {};
+	
+	console.dir(menus);
 
 	function checkright(perms) {
 		if (!req.user.admin && typeof perms == "string") {
