@@ -281,6 +281,7 @@ module.exports = function (app, passport, auth) {
 
 								contact[tab[i]].push({text: seg[j]});
 							}
+							console.log(typeof contact[tab[i]]);
 						}
 						break;
 					case "phone_mobile":
