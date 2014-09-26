@@ -443,7 +443,7 @@ module.exports = function (app, passport, auth) {
 											//console.log(data);
 
 											//console.log(row[10]);
-											//console.log(contact);
+											console.log(contact);
 											//console.log(societe.datec);
 
 											contact.save(function (err, doc) {
@@ -459,6 +459,7 @@ module.exports = function (app, passport, auth) {
 										});
 									} else {
 										contact = new ContactModel(data);
+										console.log(contact);
 										contact.save(function (err, doc) {
 											if (err)
 												console.log(err);
