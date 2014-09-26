@@ -272,7 +272,7 @@ module.exports = function (app, passport, auth) {
 					case "Tag" :
 						if (row[i]) {
 							var seg = row[i].split(',');
-							if (typeof contact[tab[i]] != "array")
+							if (typeof contact[tab[i]] != "object")
 								contact[tab[i]] = [];
 
 							for (var j = 0; j < seg.length; j++) {
@@ -281,7 +281,7 @@ module.exports = function (app, passport, auth) {
 
 								contact[tab[i]].push({text: seg[j]});
 							}
-							console.log(typeof contact[tab[i]]);
+							//console.log(typeof contact[tab[i]]);
 						}
 						break;
 					case "phone_mobile":
