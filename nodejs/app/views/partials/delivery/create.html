@@ -6,8 +6,8 @@
 	<ul class="wizard-steps">
 		<li data-ng-class="isActive(1)" data-ng-click='goto(1)'><span class="wizard-step">1</span> Références</li>
 		<!--<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Produits/services</li>-->
-		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> Adresse</li>
-		<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Règlement</li>
+		<li data-ng-class="isActive(2)" data-ng-click='goto(2)'><span class="wizard-step">2</span> {{t 'deliveries:DeliveryAddress'}}</li>
+		<!--<li data-ng-class="isActive(3)" data-ng-click='goto(3)'><span class="wizard-step">3</span> Règlement</li>-->
 	</ul>
 
 	<!-- Each form step should be wrapped in a fieldset -->
@@ -109,13 +109,19 @@
 		<div class="field-block button-height wizard-controls clearfix">
 			<button type="button" data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t
 				'Previous'}}</button>
-			<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
-				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			
+			<button type="submit" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				{{t 'deliveries:CreateDelivery'}}
+			</button>
+			
+			<!--<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
+				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
 		</div>
 
 	</fieldset>
 
-	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
+	<!--<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(3)'>
 
 		<div class="field-block">
 			<h4>Paiement</h4>
@@ -148,6 +154,6 @@
 
 		</div>
 
-	</fieldset>
+	</fieldset>-->
 
 </form>

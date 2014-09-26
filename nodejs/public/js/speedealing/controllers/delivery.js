@@ -289,7 +289,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			//showFilter:true,
 			enableColumnResize: true,
 			i18n: 'fr',
-			rowTemplate: '<div style="height: 100%" ng-class="{\'orange-bg\': (row.getProperty(\'Status\') == \'DRAFT\')}"><div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
+			rowTemplate: '<div style="height: 100%" ng-class="{\'green-bg\': (row.getProperty(\'Status\') == \'SEND\')}"><div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
 					'<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"> </div>' +
 					'<div ng-cell></div>' +
 					'</div></div>',
