@@ -41,7 +41,7 @@
 
 		// Launch the process of importation : get all google contacts of
 		// all users.
-		app.get('/api/google/import', auth.requiresLogin, googleRoutes.import);
+		app.get('/api/google/import', googleRoutes.import);
 
 		// Launch the process to grant access to the application : generate
 		// a link to make the current connected user accept our application
