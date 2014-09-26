@@ -260,7 +260,7 @@ Object.prototype = {
 		//console.log(req.body);
 
 		if (req.files && id) {
-			//console.log(req.files);
+			console.log("Add : " + req.files.file.originalFilename);
 
 			/* Add dossier information in filename */
 			if (req.body.idx)
@@ -307,6 +307,7 @@ Object.prototype = {
 
 		if (req.params.fileName && id) {
 			gridfs.delFile(CommandeModel, id, req.params.fileName, function (err, result) {
+				//console.log(result);
 				if (err)
 					res.send(500, err);
 				else

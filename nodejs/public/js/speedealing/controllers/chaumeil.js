@@ -246,8 +246,9 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 						//$scope.myFiles = "";
 						//console.log(data);
 
-						$scope.order.files = data.files;
-						$scope.order.__v = data.__v; // for update
+						//$scope.order.files = data.files;
+						//$scope.order.__v = data.__v; // for update
+						$scope.order = data;
 						
 						$scope.nbUpload--;//end Upload
 
@@ -270,6 +271,10 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				 });*/
 			}
 		};
+		
+		$scope.reInitFiles = function() {
+			$scope.nbUpload = 0;
+		};
 
 		$scope.suppressFile = function(id, fileName, idx) {
 			//console.log(id);
@@ -283,8 +288,9 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			}).success(function(data, status) {
 				//console.log(data);
 				if (status == 200) {
-					$scope.order.files = data.files;
-					$scope.order.__v = data.__v; // for update
+					//$scope.order.files = data.files;
+					//$scope.order.__v = data.__v; // for update
+					$scope.order = data;
 
 					$scope.filePercentage[idx] = 0;
 					$scope.fileName[idx] = "";
