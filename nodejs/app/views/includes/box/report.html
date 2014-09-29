@@ -13,9 +13,10 @@
                     <ul class="message-menu" ng-init="findReports()">
                         <li ng-repeat="report in reports">
                                 <span class="message-info">
-                                        <span class="blue">\{{report.dateReport | date:'MMM dd HH:mm'}}</span>
+                                        <span class="blue">\{{report.createdAt | date:'MMM dd HH:mm'}}</span>
                                 </span>
                                 <a href="" ng-click="showReport(report._id)">
+										<span class="grey">\{{report.dateReport | date:'dd/MM/YYYY'}}</span> - 
                                         <strong class="blue">\{{report.author.name}}</strong><br>
 										<span class="icon green icon-home">\{{report.societe.name}}</span> <small ng-if="report.lead.name">Affaire : \{{report.lead.name}}</small>
                                         <p class="intro">\{{report.comment}}</p>
