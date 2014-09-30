@@ -138,6 +138,10 @@
                             <span class="button-icon"><span class="icon-list"></span></span>
                             {{t 'List'}}
                         </button>
+						<button class="button" ng-disabled="!global.user.rights.delivery.delete" confirmed-click="remove(delivery)" ng-confirm-click="Supprimer le bon de livraison ?" title="Supprimer le bon de livraison">
+							{{t 'Delete'}}
+							<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
+						</button>
 
                     </div>
                 </div>

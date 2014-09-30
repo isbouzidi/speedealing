@@ -155,8 +155,11 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 		};
 
 		$scope.remove = function (delivery) {
-			delivery.$remove();
+			delivery.$remove(function () {
+				$location.path("/delivery");
+			});
 		};
+
 
 		$scope.update = function () {
 			var delivery = $scope.delivery;

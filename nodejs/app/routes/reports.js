@@ -127,7 +127,9 @@ Object.prototype = {
 	create: function (req, res) {
 
 		var reportModel = new ReportModel(req.body);
-		console.log("log " + req.body.report);
+		console.log(req.body);
+		
+		
 
 		reportModel.save(function (err, doc) {
 			if (err) {
