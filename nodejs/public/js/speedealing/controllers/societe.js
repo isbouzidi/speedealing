@@ -1,4 +1,4 @@
-angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'pageTitle', 'Global', 'Societes', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, pageTitle, Global, Societe) {
+angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'superCache', 'pageTitle', 'Global', 'Societes', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, superCache, pageTitle, Global, Societe) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des sociétés');
 
@@ -8,7 +8,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.segementations = [];
 		$scope.gridOptionsSociete = {};
 		$scope.gridOptionsSegementation = {};
-		$scope.commercialList = [];
+		$scope.commercialList = superCache.get('SocieteController.commercialList') || [];
 
 		$scope.types = [
 			{name: "Client/Prospect", id: "CUSTOMER"},
@@ -17,8 +17,20 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			{name: "Non determine", id: "SUSPECT"},
 			{name: "Tous", id: "ALL"}];
 
+		if (typeof superCache.get("SocieteController.type") == "undefined")
+			superCache.put("SocieteController.type", {name: "Client/Prospect", id: "CUSTOMER"});
 
-		$scope.type = {name: "Client/Prospect", id: "CUSTOMER"};
+		$scope.type = superCache.get("SocieteController.type");
+		$scope.commercial_id = superCache.get("SocieteController.commercial_id");
+		$scope.status_id = superCache.get("SocieteController.status_id");
+
+		$scope.setCache = function (idx, value) {
+			superCache.put("SocieteController." + idx, value);
+		};
+		
+		$scope.clearCache = function() {
+			superCache.removeAll();
+		}
 
 		$scope.init = function () {
 			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement", "segmentation", "rival"];
@@ -65,8 +77,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			return ($scope.societe[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
-		$scope.remove = function(societe) {
-			societe.$remove(function(){
+		$scope.remove = function (societe) {
+			societe.$remove(function () {
 				$location.path("/societes");
 			});
 		};
@@ -229,7 +241,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		 */
 
 		$scope.filterOptionsSociete = {
-			filterText: "",
+			filterText: superCache.get("SocieteController.filterText") || "",
 			useExternalFilter: true
 		};
 
@@ -436,9 +448,11 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					series.push({label: data.commercial[i]._id.name});
 				}
 
-				if ($scope.commercialList.length == 0)
+				if ($scope.commercialList.length == 0) {
 					$scope.commercialList = data.commercial;
-
+					$scope.setCache('commercialList', data.commercial);
+				}
+					
 				$scope.chartOptions.series = series;
 				//-- Other available options
 				var xaxis = [];

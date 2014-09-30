@@ -179,3 +179,8 @@ angular.module('mean.system').directive('ngAddress', function($http) {
 		}
 	};
 });
+
+angular.module('mean.system')
+  .factory('superCache', ['$cacheFactory', function($cacheFactory) {
+    return $cacheFactory('super-cache');
+  }]);
