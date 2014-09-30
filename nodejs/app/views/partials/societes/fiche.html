@@ -6,18 +6,6 @@
 		</hgroup>
 		<div class="with-padding" data-ng-init="init()">
 			<div class="columns">
-                <div style="margin-bottom: 10px; float: right;">
-                    <a class="button" ng-href="#!/societes" title="Retour à la liste">
-                        {{t 'List'}}
-                        <span class="button-icon right-side"><span class="icon-list"></span></span>
-                    </a>
-                    <button class="button" ng-disabled="!global.user.rights.societe.delete" confirmed-click="remove(societe)" ng-confirm-click="Supprimer la société ?" title="Supprimer la société">
-                        {{t 'Delete'}}
-                        <span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
-                    </button>
-                </div>
-            </div>
-			<div class="columns">
 				<div class="four-columns twelve-columns-mobile">
 					<div class="boxed">
 						<p class="icon-info green underline">Infos société</p>
@@ -116,6 +104,20 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="eight-columns small-margin-bottom">
+                    <div class="float-right button-height">					
+                        <a class="button" ng-href="#!/societes" title="Retour à la liste">
+							{{t 'List'}}
+							<span class="button-icon right-side"><span class="icon-list"></span></span>
+						</a>
+						<button class="button" ng-disabled="!global.user.rights.societe.delete" confirmed-click="remove(societe)" ng-confirm-click="Supprimer la société ?" title="Supprimer la société">
+							{{t 'Delete'}}
+							<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
+						</button>
+                    </div>
+                </div>
+
 				<div class="eight-columns">
 
 					<tabset>
