@@ -259,9 +259,9 @@ if ($action == 'add' && $user->rights->commande->creer) {
 	 */
 
 	// Sauvegarde le dernier modele choisi pour generer un document
-	if ($_REQUEST['model']) {
-		$object->setDocModel($user, $_REQUEST['model']);
-	}
+	//if ($_REQUEST['model']) {
+	//	$object->setDocModel($user, $_REQUEST['model']);
+	//}
 
 	// Define output language
 	$outputlangs = $langs;
