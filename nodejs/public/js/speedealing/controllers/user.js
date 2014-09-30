@@ -305,13 +305,13 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
         enableCellEditOnFocus: false,
             enableColumnResize: true,
         columnDefs: [
-                    {field: 'fullname', displayName: 'Employé', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-class="{orange: row.getProperty(\'societe.name\')}" ng-href="#!/rh/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a> <small ng-if="row.getProperty(\'societe.name\')">({{row.getProperty(\'societe.name\')}})</small></div>'},
-                {field: 'poste', displayName: 'Poste'},
-                {field: 'userGroup', displayName: 'Groupe'},
-                {field: 'entity', displayName: 'Site'},
-                {field: 'contrat', displayName: 'Contrat'},
+                    {field: 'fullname', displayName: 'Employé', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-class="{orange: row.getProperty(\'societe.name\')}" ng-href="#!/user/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-user"></span> {{row.getProperty(col.field)}}</a> <small ng-if="row.getProperty(\'societe.name\')">({{row.getProperty(\'societe.name\')}})</small></div>'},
+                {field: 'poste', displayName: 'Fonction'},
+                {field: 'userGroup', displayName: 'Rôle'},
+                {field: 'entity', displayName: 'Site', width: "100px"},
+                {field: 'email', displayName: 'Email'},
 					{field: 'NewConnection', displayName: 'Date connexion', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"},
-                {field: 'status.name', displayName: 'Statut', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'}
+                {field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'}
               ],
         filterOptions: $scope.filterOptionsUser
     };

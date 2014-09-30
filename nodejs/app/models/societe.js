@@ -24,9 +24,14 @@ var EntityModel = mongoose.model('entity');
 var setTags = function (tags) {
 	var result = [];
 	for (var i = 0; i < tags.length; i++)
-		result.push(tags[i].text);
+		if (typeof tags[i] == "object" && tags[i].text)
+			result.push(tags[i].text.trim());
+		else
+			result.push(tags[i].trim());
+
+	result = array.unique(result);
+
 	//console.log(result);
-	//return tags.split(',');
 	return result;
 };
 
