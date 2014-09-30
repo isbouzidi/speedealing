@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		Schema = mongoose.Schema,
 		i18n = require("i18next"),
-		array= require("array-extended"),
+		array = require("array-extended"),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
@@ -72,6 +72,9 @@ var contactSchema = new Schema({
 	notes: String,
 	entity: String,
 	sex: {type: String, default: "H"},
+	newsletter: Boolean,
+	sendEmailing: {type: Boolean, default: true},
+	sendSMS: {type: Boolean, default: true},
 	birthday: Date,
 	datec: {type: Date},
 	user_creat: String,

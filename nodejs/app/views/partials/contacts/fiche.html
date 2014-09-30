@@ -33,6 +33,14 @@
             <span class="icon-pencil grey" ng-click="firstname.$show()" ng-hide="firstname.$visible"></span>
 
         </div>
+
+		<div class="field-block">
+            <label><b>{{t 'companies:ThirdPartyName'}}</b></label>
+			<a href="#" ng-class="{red:!contact.societe.id}" editable-text="contact.societe" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+				\{{contact.societe.name|| "Non defini"}}
+			</a>
+		</div>
+		
         <div class="field-block">
             <label><b>{{t 'companies:PostOrFunction'}}</b></label>
 
@@ -63,7 +71,8 @@
 
         </div>
         <div class="field-block">
-            <label><b>{{t 'Email'}}</b></label> 
+            <label><b>{{t
+						'Email'}}</b></label> 
             <a 
                 data-ng-href="mailto:\{{contact.email}}" 
                 target="_blank" 
@@ -105,6 +114,22 @@
             <span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
 
         </div>
+
+		<div class="field-block">
+			<label><b>{{t 'companies:SendEmailing'}}</b></label>
+			<input type="checkbox" data-ng-model="contact.sendEmailing" data-ng-checked="contact.sendEmailing" data-ng-change="update()" />
+		</div>
+
+		<div class="field-block">
+			<label><b>{{t 'companies:SendSMS'}}</b></label>
+			<input type="checkbox" data-ng-model="contact.sendSMS" data-ng-checked="contact.sendSMS" data-ng-change="update()" />
+		</div>
+
+		<div class="field-block">
+			<label><b>{{t 'companies:Newsletter'}}</b></label>
+			<input type="checkbox" data-ng-model="contact.newsletter" data-ng-checked="contact.newsletter" data-ng-change="update()" />
+		</div>
+
         <div class="field-block">
             <label><b>{{t 'companies:birthday'}}</b></label>
 
@@ -127,7 +152,7 @@
 			</a>
 
         </div>
-		
+
 		<div class="field-block">
             <label><b>{{t 'companies:Hobbies'}}</b></label>
 
@@ -140,7 +165,8 @@
 		<div class="field-block">
             <label><b>{{t
 				'Keywords'}}</b></label>
-			<tags-input ng-model="contact.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+			<tags-input ng-model="contact.Tag" placeholder="{{t
+				'Add'}}" on-tag-added='update()' on-tag-removed="update()">
 				<auto-complete source="AutoComplete($query,'api/contact/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
 			</tags-input>
         </div>
@@ -206,7 +232,7 @@
                 </div>
 
             </form>
+		</div>
 
-        </div>
     </fieldset>
 </div>

@@ -172,4 +172,17 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 				$location.path('/contacts');
 			});
 		};
+		
+		$scope.societeAutoComplete = function (val, field) {
+			return $http.post('api/societe/autocomplete', {
+				take: '5',
+				skip: '0',
+				page: '1',
+				pageSize: '5',
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function (res) {
+				return res.data;
+			});
+		};
 	}]);
