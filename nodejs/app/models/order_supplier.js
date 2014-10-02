@@ -9,8 +9,8 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 var EntityModel = mongoose.model('entity');
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
+
+var Dict = require('../controllers/dict');
 
 /**
  * Article Schema
@@ -142,7 +142,7 @@ orderSupplierSchema.pre('save', function(next) {
 });
 
 var statusList = {};
-DictModel.findOne({_id: "dict:fk_order_status_supplier"}, function(err, docs) {
+Dict.dict({dictName: "fk_order_status_supplier", object:true}, function(err, docs) {
 	statusList = docs;
 });
 

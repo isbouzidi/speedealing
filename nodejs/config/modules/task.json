@@ -1,0 +1,52 @@
+{
+	"_id": "module:Task",
+	"enabled": true,
+	"boxes": [
+	],
+	"const": [
+	],
+	"rights": {
+		"task": [
+			{
+				"desc": "Lire les taches",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer/modifier des taches",
+				"perm": {
+					"create": false
+				}
+			},
+			{
+				"desc": "Supprimer des taches",
+				"perm": {
+					"delete": false
+				}
+			},
+			{
+				"desc": "Voir les taches des autres utilisateurs",
+				"perm": {
+					"readAll": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"family": "main",
+	"name": "Taches",
+	"description": "Gestion des taches",
+	"version": "speedealing",
+	"picto": "bill",
+	"depends": [
+		"modSociete"
+	],
+	"requiredby": [
+	],
+	"conflictwith": [],
+	"config_page_url": [
+	],
+	"menus": {
+	}
+}

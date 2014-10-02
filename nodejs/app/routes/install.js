@@ -10,9 +10,6 @@ var mongoose = require('mongoose'),
 
 var ZipCodeModel = mongoose.model('zipCode');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
-
 module.exports = function(app, passport, auth) {
 
 	var object = new Object();

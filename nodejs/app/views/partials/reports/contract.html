@@ -4,7 +4,7 @@
 <div class="field-block button-height">
     <label for="deploiement"><b>{{t "reports:Deployment"}}</b></label>
     
-    <span ng-repeat="d in deployment">
+    <span ng-repeat="d in extrafield.fields.deployment.values">
         <input type="checkbox"
                value="\{{d.label}}" 
                ng-checked="report.optional.subject.deployment.indexOf(d.label) > -1" 
@@ -17,7 +17,7 @@
 </div>
 <div class="field-block button-height">
     <label for="fonction"><b>{{t "reports:Progress Points"}}</b></label>
-    <span ng-repeat="p in progressPoints">
+    <span ng-repeat="p in extrafield.fields.progressPoints.values">
         <input type="checkbox"
                value="\{{p.label}}" 
                ng-checked="report.optional.subject.progressPoints.indexOf(p.label) > -1" 
@@ -37,7 +37,7 @@
 </div>
 <div class="field-block button-height">
     <label for="repport"><b>{{t "reports:Report"}}</b></label>
-    <span ng-repeat="r in reports">
+    <span ng-repeat="r in extrafield.fields.reports.values">
         <input type="checkbox"
                value="\{{r.label}}" 
                ng-checked="report.optional.reports.indexOf(p.label) > -1" 

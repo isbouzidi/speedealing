@@ -3,35 +3,28 @@
 var mongoose = require('mongoose'),
 		config = require('../../config/config');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
+var Dict = require('../controllers/dict')
 
 module.exports = function(app, passport, auth) {
 
 	app.get('/api/dict', auth.requiresLogin, function(req, res) {
-		var result = {
-			values: []
-		};
-
-		DictModel.findOne({_id: "dict:" + req.query.dictName}, function(err, docs) {
-			if (err)
-				return console.log(err);
-
-			if (docs) {
-				for (var i in docs.values) {
-					if (docs.values[i].enable) {
-						var val = {};
-						val.id = i;
-						if (docs.values[i].label)
-							val.label = docs.values[i].label;
-						//else
-						//	val.label = req.i18n.t("companies:" + i);
-						result.values.push(val);
-					}
-				}
+		Dict.dict(req.query, function(err, dict){
+			if(err) {
+				console.log(err);
+				res.send(500);
 			}
-
-			res.json(result);
+			res.json(dict);
+				
+		});
+	});
+	
+	app.get('/api/extrafield', auth.requiresLogin, function(req, res) {
+		Dict.extrafield(req.query, function(err, extrafield){
+			if(err) {
+				console.log(err);
+				res.send(500);
+			}
+			res.json(extrafield);
 		});
 	});
 

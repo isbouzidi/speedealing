@@ -37,17 +37,17 @@
 
 		<div class="field-block button-height">
 			<label for="status"><b>Status commercial</b></label>
-			<select class="form-control" id="status" data-ng-model="societe.Status" data-ng-options="c.id as c.label for c in Status.values"></select>
+			<select class="form-control" id="status" data-ng-model="societe.Status" data-ng-options="c.id as c.label for c in dict.fk_stcomm.values"></select>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="statusF"><b>Status fournisseur</b></label>
-			<select class="form-control" id="statusF" data-ng-model="societe.fournisseur" data-ng-options="f.id as f.label for f in fournisseur.values"></select>
+			<select class="form-control" id="statusF" data-ng-model="societe.fournisseur" data-ng-options="f.id as f.label for f in dict.fk_fournisseur.values"></select>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="segmentation"><b>{{t 'companies:CustomerSegmentation'}}</b></label>
-			<select class="form-control" id="segmentation" data-ng-model="societe.segmentation" data-ng-options="c as c.label group by c.group for c in segmentation.values"></select>
+			<select class="form-control" id="segmentation" data-ng-model="societe.segmentation" data-ng-options="c as c.label group by c.group for c in dict.fk_segmentation.values"></select>
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
@@ -120,14 +120,14 @@
 			<input type="text" data-ng-model="societe.idprof3" id="idprof3" class="input" autocomplete="off">
 		</div>
 
-		<div class="field-block button-height">
+		<!--<div class="field-block button-height">
 			<label for="idprof5"><b>{{t 'companies:ProfId5FR'}}</b></label>
 			<input type="text" data-ng-model="societe.idprof5" id="idprof5" class="input" autocomplete="off">
-		</div>
+		</div>-->
 
 		<div class="field-block button-height">
 			<label for="ProspectLevel"><b>{{t 'companies:ProspectLevelShort'}}</b></label>
-			<select class="form-control" id="ProspectLevel" data-ng-model="societe.prospectlevel" data-ng-options="c.id as c.label for c in prospectlevel.values"></select>
+			<select class="form-control" id="ProspectLevel" data-ng-model="societe.prospectlevel" data-ng-options="c.id as c.label for c in dict.fk_prospectlevel.values"></select>
 		</div>
 
 		<div class="field-block button-height">
@@ -141,17 +141,17 @@
 
 		<div class="field-block button-height">
 			<label for="typent_id"><b>{{t 'companies:ThirdPartyType'}}</b></label>
-			<select class="form-control" id="typent_id" data-ng-model="societe.typent_id" data-ng-options="c.id as c.label for c in typent_id.values"></select>
+			<select class="form-control" id="typent_id" data-ng-model="societe.typent_id" data-ng-options="c.id as c.label for c in dict.fk_typent.values"></select>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="effectif_id"><b>{{t 'companies:Staff'}}</b></label>
-			<select class="form-control" id="effectif_id" data-ng-model="societe.effectif_id" data-ng-options="c.id as c.label for c in effectif_id.values"></select>
+			<select class="form-control" id="effectif_id" data-ng-model="societe.effectif_id" data-ng-options="c.id as c.label for c in dict.fk_effectif.values"></select>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="rival"><b>{{t 'companies:Rival'}}</b></label>
-			<select class="form-control" id="rival" data-ng-model="societe.rival" data-ng-options="s.label as s.label for s in rival.values"></select>
+			<select class="form-control" id="rival" data-ng-model="societe.rival" data-ng-options="s.label as s.label for s in dict.fk_rival.values"></select>
 		</div>
 		<div class="field-block button-height">
 			<label for="commercial_id"><b>{{t 'companies:AllocateCommercial'}}</b></label>
@@ -186,7 +186,7 @@
 
 		<div class="field-block button-height">
 			<label for="forme_juridique_code"><b>{{t 'companies:JuridicalStatus'}}</b></label>
-			<select class="form-control" id="forme_juridique_code" data-ng-model="societe.forme_juridique_code" data-ng-options="c.id as c.label for c in forme_juridique_code.values"></select>
+			<select class="form-control" id="forme_juridique_code" data-ng-model="societe.forme_juridique_code" data-ng-options="c.id as c.label for c in dict.fk_forme_juridique.values"></select>
 		</div>
 
 		<div class="field-block button-height wizard-controls align-right">

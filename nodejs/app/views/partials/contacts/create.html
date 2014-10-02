@@ -21,15 +21,16 @@
 		</div>
 		<div class="field-block button-height">
 			<label for="birthday"><b>{{t 'companies:birthday'}}</b></label>
-			<span class="k-widget k-datepicker k-header input">
-				<span class="k-picker-wrap k-state-default">
-					<input 
-						kendo-date-picker 
-						id="birthday" 
-						k-on-change="contact.birthday = kendoEvent.sender._value;" 
-						class="input"/>
-				</span>
-			</span>			
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="contact.birthday" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Fermer" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>	
 		</div>
 		<div class="field-block button-height">
 			<label for="adress"><b>{{t 'companies:Address'}}</b></label>

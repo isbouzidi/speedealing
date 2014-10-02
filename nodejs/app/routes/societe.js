@@ -11,13 +11,12 @@ var mongoose = require('mongoose'),
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
+var Dict = require('../controllers/dict');
+var DictModel = mongoose.model('dict'); // For update segmentation
 
 module.exports = function (app, passport, auth) {
 
 	var object = new Object();
-	var contact = new Contact();
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
@@ -27,13 +26,11 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/societe/segmentation', auth.requiresLogin, object.segmentationRename);
 	app.put('/api/societe/segmentation', auth.requiresLogin, object.segmentationUpdate);
 	app.del('/api/societe/segmentation', auth.requiresLogin, object.segmentationDelete);
-	app.get('/api/societe/contact', auth.requiresLogin, contact.read);
 	app.get('/api/societe/:societeId', auth.requiresLogin, object.show);
 	app.post('/api/societe', auth.requiresLogin, object.create);
 	app.put('/api/societe/:societeId', auth.requiresLogin, object.update);
 	app.del('/api/societe/:societeId', auth.requiresLogin, object.destroy);
 	app.put('/api/societe/:societeId/:field', auth.requiresLogin, object.updateField);
-	app.get('/api/societe/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function (req, res) {
@@ -1083,10 +1080,10 @@ module.exports = function (app, passport, auth) {
 									//console.log(societe.datec);
 
 									/*societe.save(function (err, doc) {
-										if (err)
-											console.log(err);*/
+									 if (err)
+									 console.log(err);*/
 
-										callback();
+									callback();
 									//});
 
 								});
@@ -1524,59 +1521,9 @@ Object.prototype = {
 			}
 		});
 	},
-	select: function (req, res) {
-		ExtrafieldModel.findById('extrafields:Societe', function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-			var result = [];
-			if(!doc.fields[req.query.field]) {
-				console.log("Error dict  or extrafield error societe : " + req.query.field + " Not found");
-				return res.send(500);
-			}
-			
-			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
-
-					if (docs) {
-						for (var i in docs.values) {
-							if (docs.values[i].enable) {
-								var val = {};
-								val.id = i;
-								if (docs.values[i].label)
-									val.label = docs.values[i].label;
-								else
-									val.label = req.i18n.t("companies:" + i);
-
-								if (docs.values[i].group)
-									val.group = docs.values[i].group;
-
-								result.push(val);
-							}
-						}
-						doc.fields[req.query.field].values = result;
-					}
-
-					res.json(doc.fields[req.query.field]);
-				});
-
-			for (var i in doc.fields[req.query.field].values) {
-				if (doc.fields[req.query.field].values[i].enable) {
-					var val = {};
-					val.id = i;
-					val.label = doc.fields[req.query.field].values[i].label;
-					result.push(val);
-				}
-			}
-			doc.fields[req.query.field].values = result;
-
-			res.json(doc.fields[req.query.field]);
-		});
-	},
 	segmentation: function (req, res) {
 		var segmentationList = {};
-		DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, docs) {
+		DictModel.findOne({_id: "fk_segmentation"}, function (err, docs) {
 			if (docs) {
 				segmentationList = docs.values;
 			}
@@ -1610,9 +1557,9 @@ Object.prototype = {
 		});
 	},
 	segmentationUpdate: function (req, res) {
-		DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, doc) {
+		DictModel.findOne({_id: "fk_segmentation"}, function (err, doc) {
 			if (doc == null)
-				return console.log("dict:fk_segmentation doesn't exist !");
+				return console.log("fk_segmentation doesn't exist !");
 
 			if (req.body.attractivity)
 				doc.values[req.body._id] = {
@@ -1666,7 +1613,7 @@ Object.prototype = {
 
 		async.parallel({
 			own: function (cb) {
-				DictModel.findOne({_id: "dict:fk_stcomm"}, function (err, dict) {
+				Dict.dict({dictName: "fk_stcomm", object:true}, function (err, dict) {
 					SocieteModel.aggregate([
 						{$match: {entity: {$in: ["ALL", req.query.entity]}, Status: {$nin: ["ST_NO"]}, "commercial_id.id": "user:" + req.query.name}},
 						{$project: {_id: 0, "Status": 1}},
@@ -1710,7 +1657,7 @@ Object.prototype = {
 				});
 			},
 			fk_status: function (cb) {
-				DictModel.findOne({_id: "dict:fk_stcomm"}, function (err, doc) {
+				Dict.dict({dictName: "fk_stcomm", object: true}, function (err, doc) {
 					var result = [];
 
 					for (var i in doc.values) {
@@ -1766,24 +1713,6 @@ Object.prototype = {
 
 			//console.log(output);
 			res.json(output);
-		});
-	}
-};
-
-function Contact() {
-}
-
-Contact.prototype = {
-	read: function (req, res) {
-
-		ContactModel.find(JSON.parse(req.query.find), function (err, doc) {
-			if (err) {
-				console.log(err);
-				res.send(500, doc);
-				return;
-			}
-
-			res.json(200, doc);
 		});
 	}
 };

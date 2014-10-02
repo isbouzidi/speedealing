@@ -64,8 +64,6 @@ var logger = new (winston.Logger)({
 });
 
 require('./config/sequence'); // load the sequence ID First
-// Speedealing Schema
-require('./config/extrafields');
 require('./config/userGroup');
 // Multi-entities
 require('./config/entity');

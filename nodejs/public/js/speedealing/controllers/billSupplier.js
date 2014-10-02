@@ -12,29 +12,27 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 		$scope.countTicket = 0;
 		$scope.bills = [];
 		$scope.gridOptionsBills = {};
+		$scope.dict = {};
 
 		$scope.types = [{name: "Toutes", id: "ALL"}];
 
 		$scope.type = {name: "Toutes", id: "ALL"};
 
 		$scope.init = function() {
-			var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
+			var dict = ["fk_bill_status", "fk_paiement", "fk_bill_type", "fk_payment_term"];
 
-			angular.forEach(fields, function(field) {
-				$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function(data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
 		};
 
-		$scope.showStatus = function(idx) {
-			if (!($scope[idx] && $scope.bill[idx]))
+		$scope.showStatus = function(idx, dict) {
+			if (!($scope.dict[dict] && $scope.bill[idx]))
 				return;
-			var selected = $filter('filter')($scope[idx].values, {id: $scope.bill[idx]});
+			var selected = $filter('filter')($scope.dict[dict].values, {id: $scope.bill[idx]});
 
 			return ($scope.bill[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};

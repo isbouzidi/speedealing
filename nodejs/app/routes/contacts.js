@@ -11,8 +11,6 @@ var mongoose = require('mongoose'),
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-
 module.exports = function (app, passport, auth) {
 
 	var contact = new Contact();
@@ -26,6 +24,9 @@ module.exports = function (app, passport, auth) {
 	//get all contacts for search engine
 	app.get('/api/contact/searchEngine', auth.requiresLogin, contact.showList);
 
+	// list all contact for a societe
+	app.get('/api/contact/societe', auth.requiresLogin, contact.societe);
+
 	//get a contact
 	app.get('/api/contact/:contactId', auth.requiresLogin, contact.findOne);
 
@@ -37,11 +38,6 @@ module.exports = function (app, passport, auth) {
 
 	//get all contacts
 	app.get('/api/contacts', auth.requiresLogin, contact.read);
-
-	app.get('/api/contact/fk_extrafields/status', auth.requiresLogin, function (req, res) {
-		contact.select(req, res, 'extrafields:Contact');
-		return;
-	});
 
 	app.post('/api/contact/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
@@ -600,6 +596,17 @@ Contact.prototype = {
 		//console.log(req.contact);
 		res.json(req.contact);
 	},
+	societe: function (req, res) {
+		ContactModel.find({"societe.id": req.query.societe}, function (err, doc) {
+			if (err) {
+				console.log(err);
+				res.send(500, doc);
+				return;
+			}
+
+			res.json(doc);
+		});
+	},
 	update: function (req, res) {
 
 		var contact = req.contact;
@@ -626,33 +633,5 @@ Contact.prototype = {
 				res.json(contact);
 			}
 		});
-	},
-	select: function (req, res, extrafields) {
-
-		ExtrafieldModel.findById(extrafields, function (err, doc) {
-
-			if (err) {
-				console.log(err);
-				return;
-			}
-
-			var result = [];
-
-			for (var i in doc.fields[req.query.field].values) {
-				if (doc.fields[req.query.field].values[i].enable) {
-					var val = {};
-					val.id = i;
-					val.label = doc.fields[req.query.field].values[i].label;
-					result.push(val);
-				}
-			}
-
-
-			doc.fields[req.query.field].values = result;
-
-			res.json(doc.fields[req.query.field]);
-
-		});
-
 	}
 };

@@ -35,17 +35,17 @@
 
 		<div class="field-block button-height">
 			<label for="tva_tx"><b>{{t 'VAT'}} %</b></label>
-			<select class="form-control" id="tva_tx" required data-ng-model="product.tva_tx" data-ng-options="c.value as c.value for c in tva_tx.values"></select>
+			<select class="form-control" id="tva_tx" required data-ng-model="product.tva_tx" data-ng-options="c.value as c.value for c in dict.fk_tva.values"></select>
 		</div>
 		
 		<div class="field-block button-height">
 			<label for="status"><b>{{t 'Status'}}</b></label>
-			<select class="form-control" id="status" required data-ng-model="product.Status" data-ng-options="c.id as c.label for c in Status.values"></select>
+			<select class="form-control" id="status" required data-ng-model="product.Status" data-ng-options="c.id as c.label for c in dict.fk_product_status.values"></select>
 		</div>
 		
 		<div class="field-block button-height">
 			<label for="units"><b>{{t 'products:Units'}}</b></label>
-			<select class="form-control" id="units" data-ng-model="product.units" data-ng-options="c.id as c.label for c in units.values"></select>
+			<select class="form-control" id="units" data-ng-model="product.units" data-ng-options="c.id as c.label for c in dict.fk_units.values"></select>
 		</div>
 		
 		<div class="field-block button-height">

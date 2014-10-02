@@ -9,8 +9,8 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 var EntityModel = mongoose.model('entity');
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
+
+var Dict = require('../controllers/dict');
 
 /**
  * Article Schema
@@ -87,15 +87,15 @@ var billSupplierSchema = new Schema({
 billSupplierSchema.plugin(timestamps);
 
 var cond_reglement = {};
-DictModel.findOne({_id: "dict:fk_payment_term"}, function(err, docs) {
+Dict.dict({dictName: "fk_payment_term"}, function (err, docs) {
 	cond_reglement = docs;
 });
 
 /**
  * Pre-save hook
  */
-billSupplierSchema.pre('save', function(next) {
-	
+billSupplierSchema.pre('save', function (next) {
+
 	this.calculate_date_lim_reglement();
 
 	this.total_ht = 0;
@@ -135,25 +135,25 @@ billSupplierSchema.pre('save', function(next) {
 
 	var self = this;
 	if (this.isNew) {
-		SeqModel.inc("PROV", function(seq) {
+		SeqModel.inc("PROV", function (seq) {
 			//console.log(seq);
 			self.ref = "PROV" + seq;
 			next();
 		});
 	} else {
 		if (this.Status != "DRAFT" && this.total_ht != 0 && this.ref.substr(0, 4) == "PROV") {
-			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+			EntityModel.findOne({_id: self.entity}, "cptRef", function (err, entity) {
 				if (err)
 					console.log(err);
 
 				if (entity && entity.cptRef) {
-					SeqModel.inc("FF" + entity.cptRef, self.datec, function(seq) {
+					SeqModel.inc("FF" + entity.cptRef, self.datec, function (seq) {
 						//console.log(seq);
 						self.ref = "FF" + entity.cptRef + seq;
 						next();
 					});
 				} else {
-					SeqModel.inc("FF", self.datec, function(seq) {
+					SeqModel.inc("FF", self.datec, function (seq) {
 						//console.log(seq);
 						self.ref = "FF" + seq;
 						next();
@@ -177,10 +177,10 @@ billSupplierSchema.methods = {
 	 * @param {function} callback
 	 * @api public
 	 */
-	setNumber: function() {
+	setNumber: function () {
 		var self = this;
 		if (this.ref.substr(0, 4) == "PROV")
-			SeqModel.inc("FF", function(seq) {
+			SeqModel.inc("FF", function (seq) {
 				//console.log(seq);
 				self.ref = "FF" + seq;
 			});
@@ -192,7 +192,7 @@ billSupplierSchema.methods = {
 	 * 	@param      string	$cond_reglement   	Condition of payment (code or id) to use. If 0, we use current condition.
 	 * 	@return     date     			       	Date limite de reglement si ok, <0 si ko
 	 */
-	calculate_date_lim_reglement: function() {
+	calculate_date_lim_reglement: function () {
 		var data = cond_reglement.values[this.cond_reglement_code];
 
 		var cdr_nbjour = data.nbjour || 0;
@@ -234,16 +234,16 @@ billSupplierSchema.methods = {
 };
 
 var statusList = {};
-ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
+Dict.dict({dictName: 'fk_bill_status', object:true}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
 	}
-	statusList = doc.fields.Status;
+	statusList = doc;
 });
 
 billSupplierSchema.virtual('status')
-		.get(function() {
+		.get(function () {
 			var res_status = {};
 
 			var status = this.Status;

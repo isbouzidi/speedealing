@@ -45,12 +45,30 @@
 
 		<div class="field-block button-height">
 			<label for="date_commande"><b>Date de commande</b></label>
-			<input kendo-date-picker required id="date_commande" k-on-change="order.datec = kendoEvent.sender._value;" class="input"/>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="order.datec" is-open="opened[0]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event,0)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="field-block button-height">
 			<label for="date_livraison"><b>Date de livraison</b></label>
-			<input kendo-date-picker required id="date_livraison" k-on-change="order.date_livraison = kendoEvent.sender._value;" class="input"/>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="order.date_livraison" is-open="opened[1]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event,1)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">

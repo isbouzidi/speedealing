@@ -9,8 +9,8 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 var EntityModel = mongoose.model('entity');
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
+
+var Dict = require('../controllers/dict');
 
 /**
  * Article Schema
@@ -102,7 +102,7 @@ var deliverySchema = new Schema({
 deliverySchema.plugin(timestamps);
 
 var cond_reglement = {};
-DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
+Dict.dict({dictName: "fk_payment_term"}, function (err, docs) {
 	cond_reglement = docs;
 });
 
@@ -292,7 +292,7 @@ deliverySchema.methods = {
 };
 
 var statusList = {};
-ExtrafieldModel.findById('extrafields:BonLivraison', function (err, doc) {
+Dict.extrafield({extrafieldName:'BonLivraison'}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;

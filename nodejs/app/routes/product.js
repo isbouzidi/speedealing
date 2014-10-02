@@ -6,13 +6,14 @@ var mongoose = require('mongoose'),
 		_ = require('lodash');
 var ProductModel = mongoose.model('product');
 var StorehouseModel = mongoose.model('storehouse');
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
+
+var Dict = require('../controllers/dict');
+
 module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 	var pricelevel = require('../controllers/pricelevel.js');
-	ExtrafieldModel.findById('extrafields:Product', function (err, doc) {
+	Dict.extrafield({extrafieldName:'Product'}, function (err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -70,7 +71,6 @@ module.exports = function (app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
-	app.get('/api/product/fk_extrafields/select', auth.requiresLogin, object.select);
 	app.get('/api/product/convert_tva', auth.requiresLogin, function (req, res) {
 		DictModel.findOne({_id: "dict:fk_tva"}, function (err, docs) {
 			for (var i in docs.values) {
@@ -554,50 +554,5 @@ Object.prototype = {
 			}
 		}
 		res.send(200, result);
-	},
-	select: function (req, res) {
-		ExtrafieldModel.findById('extrafields:Product', function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-			var result = [];
-			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
-
-					if (docs) {
-						for (var i in docs.values) {
-							if (docs.values[i].enable) {
-								if (docs.values[i].pays_code && docs.values[i].pays_code != 'FR')
-									continue;
-								//console.log(docs.values[i]);
-								var val = {};
-								val.id = i;
-								if (docs.values[i].label)
-									val.label = docs.values[i].label;
-								else
-									val.label = req.i18n.t("products:" + i);
-								if (docs.values[i].value !== null)
-									val.value = docs.values[i].value
-
-								result.push(val);
-							}
-						}
-						doc.fields[req.query.field].values = result;
-					}
-
-					res.json(doc.fields[req.query.field]);
-				});
-			for (var i in doc.fields[req.query.field].values) {
-				if (doc.fields[req.query.field].values[i].enable) {
-					var val = {};
-					val.id = i;
-					val.label = req.i18n.t("products:" + doc.fields[req.query.field].values[i].label);
-					result.push(val);
-				}
-			}
-			doc.fields[req.query.field].values = result;
-			res.json(doc.fields[req.query.field]);
-		});
 	}
 };

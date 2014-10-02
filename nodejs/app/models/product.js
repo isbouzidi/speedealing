@@ -8,7 +8,8 @@ var mongoose = require('mongoose'),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
-var ExtrafieldModel = mongoose.model('extrafields');
+
+var Dict = require('../controllers/dict');
 /**
  * Product Schema
  */
@@ -72,13 +73,13 @@ productSchema.pre('save', function(next) {
 		next();
 });
 
-var extrafield = {};
-ExtrafieldModel.findById('extrafields:Product', function(err, doc) {
+var dict = {};
+Dict.dict({dictName:['fk_product_status','fk_units'],object:true}, function(err, doc) {
 	if (err) {
 		console.log(err);
 		return;
 	}
-	extrafield = doc.fields;
+	dict = doc;
 });
 
 productSchema.virtual('status')
@@ -87,12 +88,12 @@ productSchema.virtual('status')
 
 			var status = this.Status;
 
-			if (status && extrafield.Status.values[status].label) {
+			if (status && dict.fk_product_status.values[status].label) {
 				//console.log(this);
 				res_status.id = status;
-				res_status.name = i18n.t("products:" + extrafield.Status.values[status].label);
+				res_status.name = i18n.t("products:" + dict.fk_product_status.values[status].label);
 				//res_status.name = statusList.values[status].label;
-				res_status.css = extrafield.Status.values[status].cssClass;
+				res_status.css = dict.fk_product_status.values[status].cssClass;
 			} else { // By default
 				res_status.id = status;
 				res_status.name = status;
@@ -108,10 +109,10 @@ productSchema.virtual('_units')
 
 			var units = this.units;
 
-			if (units && extrafield.units.values[units].label) {
+			if (units && dict.fk_units.values[units].label) {
 				//console.log(this);
 				res.id = units;
-				res.name = i18n.t("products:" + extrafield.units.values[units].label);
+				res.name = i18n.t("products:" + dict.fk_units.values[units].label);
 			} else { // By default
 				res.id = units;
 				res.name = units;

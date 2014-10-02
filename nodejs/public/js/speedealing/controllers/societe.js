@@ -8,6 +8,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.segementations = [];
 		$scope.gridOptionsSociete = {};
 		$scope.gridOptionsSegementation = {};
+		$scope.dict = {};
 		$scope.commercialList = superCache.get('SocieteController.commercialList') || [];
 
 		$scope.types = [
@@ -27,22 +28,19 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.setCache = function (idx, value) {
 			superCache.put("SocieteController." + idx, value);
 		};
-		
-		$scope.clearCache = function() {
+
+		$scope.clearCache = function () {
 			superCache.removeAll();
 		}
 
 		$scope.init = function () {
-			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement", "segmentation", "rival"];
+			var dict = ["fk_stcomm", "fk_fournisseur", "fk_prospectlevel", "fk_typent", "fk_effectif", "fk_forme_juridique", "fk_payment_term", "fk_paiement", "fk_segmentation", "fk_rival"];
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
 
 			$http({method: 'GET', url: 'api/entity/select'})
@@ -69,10 +67,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		 });
 		 };*/
 
-		$scope.showStatus = function (idx) {
-			if (!($scope[idx] && $scope.societe[idx]))
+		$scope.showStatus = function (idx, dict) {
+			if (!($scope.dict[dict] && $scope.societe[idx]))
 				return 'Non défini';
-			var selected = $filter('filter')($scope[idx].values, {id: $scope.societe[idx]});
+			var selected = $filter('filter')($scope.dict[dict].values, {id: $scope.societe[idx]});
 
 			return ($scope.societe[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
@@ -452,7 +450,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					$scope.commercialList = data.commercial;
 					$scope.setCache('commercialList', data.commercial);
 				}
-					
+
 				$scope.chartOptions.series = series;
 				//-- Other available options
 				var xaxis = [];
@@ -988,7 +986,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			$http({method: 'GET', url: 'api/report', params:
 						{
 							find: {"societe.id": $scope.societe._id},
-							fields: "dateReport model author.name comment realised lead actions"
+							fields: "dateReport model author.name comment realised lead actions createdAt"
 						}
 			}).success(function (data, status) {
 
@@ -1032,16 +1030,13 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 		};
 
 		$scope.init = function () {
-			var fields = ["Status", "fournisseur", "prospectlevel", "typent_id", "effectif_id", "forme_juridique_code", "cond_reglement", "mode_reglement", "segmentation", "rival"];
+			var dict = ["fk_stcomm", "fk_fournisseur", "fk_prospectlevel", "fk_typent", "fk_effectif", "fk_forme_juridique", "fk_payment_term", "fk_paiement", "fk_segmentation", "fk_rival"];
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/societe/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
 
 			$scope.societe.commercial_id = {

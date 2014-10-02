@@ -1,30 +1,28 @@
-angular.module('mean.reports').controller('ReportController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Reports', function($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Reports) {
+angular.module('mean.reports').controller('ReportController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Reports', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Reports) {
 
 		$scope.global = Global;
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 
 			Reports.get({
 				Id: $rootScope.idReport
-			}, function(report) {
-				console.log(report);
+			}, function (report) {
+				//console.log(report);
 				$scope.report = report;
 			});
 		};
-		$scope.update = function() {
+		$scope.update = function () {
 
 			var report = $scope.report;
 
-			report.$update(function() {
-
-			}, function(errorResponse) {
-
+			report.$update(function () {
+			}, function (errorResponse) {
 			});
 		};
 
 	}]);
 
-angular.module('mean.reports').controller('ReportCreateController', ['$scope', '$http', '$modalInstance', '$modal', '$upload', '$route', 'Global', 'Reports', 'object', function($scope, $http, $modalInstance, $modal, $upload, $route, Global, Reports, object) {
+angular.module('mean.reports').controller('ReportCreateController', ['$scope', '$http', '$modalInstance', '$modal', '$upload', '$route', 'Global', 'Reports', 'object', function ($scope, $http, $modalInstance, $modal, $upload, $route, Global, Reports, object) {
 
 		$scope.global = Global;
 		$scope.report = {
@@ -55,15 +53,17 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 		$scope.lead = {};
 		$scope.leads = [];
 		$scope.report.lead = {};
+		$scope.extrafield = {};
+		$scope.opened = [];
 
 		$scope.prospectLevel = {selectedOption: null};
 
-		$scope.init = function() {
+		$scope.init = function () {
 
 			$http({method: 'POST', url: '/api/product/family', data: {
 					field: "caFamily"
 				}
-			}).success(function(data) {
+			}).success(function (data) {
 				$scope.products = data;
 			});
 
@@ -73,37 +73,22 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 					},
 					field: "_id firstname lastname name poste"
 				}
-			}).success(function(data) {
+			}).success(function (data) {
 
 				$scope.contacts = data;
 			});
 
-			var fields = [
-				"model",
-				"typeAction",
-				"methodAction",
-				"typeReport",
-				"typeBusiness",
-				"reasonBusiness",
-				"deployment",
-				"progressPoints",
-				"reports"
-			];
-
-			angular.forEach(fields, function(field) {
-				$http({method: 'GET', url: '/api/report/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function(data) {
-
-					$scope[field] = data;
-				});
+			$http({method: 'GET', url: '/api/extrafield', params: {
+					extrafieldName: "Report"
+				}
+			}).success(function (data) {
+				$scope.extrafield = data;
 			});
 
-			$http({method: 'GET', url: '/api/lead/fk_extrafields/select', params: {
-					field: "Status"
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_lead_status"
 				}
-			}).success(function(data) {
+			}).success(function (data) {
 
 				$scope.leadStatus = data;
 			});
@@ -111,20 +96,28 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 			$http({method: 'GET', url: 'api/lead', params: {
 					'societe.id': object.societe._id
 				}
-			}).success(function(data) {
+			}).success(function (data) {
 
 				$scope.leads = data;
 			});
 
-			$http({method: 'GET', url: '/api/lead/dict/select', params: {
-					field: "prospectlevel"
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_prospectlevel"
 				}
-			}).success(function(data) {
+			}).success(function (data) {
 
 				$scope.potential = data;
 
 			});
 		};
+
+		$scope.open = function ($event, idx) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			$scope.opened[idx] = true;
+		};
+
 
 		$scope.productSelection = function productSelection(product) {
 			var idx = $scope.report.products.indexOf(product);
@@ -217,7 +210,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
 		};
 
-		$scope.addActionMethod = function(action) {
+		$scope.addActionMethod = function (action) {
 
 			for (var i = 0; i < $scope.report.actions.length; i++)
 				if ($scope.report.actions[i].type === action)
@@ -225,16 +218,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
 		};
 
-		$scope.onDateSelected = function(e, action) {
-			var datePicker = e.sender;
-			$scope.selected = true;
-
-			for (var i = 0; i < $scope.report.actions.length; i++)
-				if ($scope.report.actions[i].type === action)
-					$scope.report.actions[i].date = datePicker.value();
-		};
-
-		$scope.createReport = function() {
+		$scope.createReport = function () {
 
 			$scope.report.author = {
 				id: $scope.global.user._id,
@@ -245,13 +229,13 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
 			var report = new Reports(this.report);
 
-			report.$save(function(response) {
+			report.$save(function (response) {
 				if ($scope.prospectLevel.selectedOption !== null) {
 					$http({method: 'PUT', url: '/api/report/addProspectLevel', params: {
 							prospectLevel: $scope.prospectLevel.selectedOption,
 							societe: object.societe._id
 						}
-					}).success(function(status, response) {
+					}).success(function (status, response) {
 
 					});
 				}
@@ -259,14 +243,14 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 			});
 		};
 
-		$scope.addNewContact = function() {
+		$scope.addNewContact = function () {
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/contacts/create.html',
 				controller: "ContactCreateController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							societe: object.societe
 						};
@@ -274,21 +258,21 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 				}
 			});
 
-			modalInstance.result.then(function(contacts) {
+			modalInstance.result.then(function (contacts) {
 				$scope.report.contacts.push(contacts);
 
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.addNewLead = function() {
+		$scope.addNewLead = function () {
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/create.html',
 				controller: "LeadCreateController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							societe: object.societe
 						};
@@ -296,7 +280,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 				}
 			});
 
-			modalInstance.result.then(function(leads) {
+			modalInstance.result.then(function (leads) {
 				$scope.report.lead = {
 					id: leads._id,
 					name: leads.name,
@@ -309,22 +293,22 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 					dueDate: leads.dueDate
 				});
 
-			}, function() {
+			}, function () {
 
 			});
 		};
 
-		$scope.contactAutoComplete = function(val) {
+		$scope.contactAutoComplete = function (val) {
 
 			return $http.post('api/report/autocomplete', {
 				val: val
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 
 		};
 
-		$scope.addContact = function() {
+		$scope.addContact = function () {
 
 			var add = {
 				id: $scope.report.cont._id,
@@ -336,7 +320,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
 		};
 
-		$scope.addLead = function() {
+		$scope.addLead = function () {
 
 			$scope.report.lead = {
 				id: $scope.report.lead._id,
@@ -346,15 +330,15 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 
 		};
 
-		$scope.delete = function($index) {
+		$scope.delete = function ($index) {
 			$scope.report.contacts.splice($index, 1);
 		};
 
-		$scope.deleteLead = function($index) {
+		$scope.deleteLead = function ($index) {
 			$scope.report.lead = {};
 		};
 
-		$scope.showReason = function() {
+		$scope.showReason = function () {
 
 			if ($scope.report.leadStatus === 'REF') {
 				$scope.showReasonValue = true;

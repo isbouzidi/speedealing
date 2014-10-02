@@ -5,6 +5,7 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 		$scope.product = {};
 		$scope.products = [];
 		$scope.caFamilies = [];
+		$scope.dict = {};
 
 		$scope.types = [{name: "A la vente", id: "SELL"},
 			{name: "A l'achat", id: "BUY"},
@@ -41,7 +42,7 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			}
 
 			var p = {
-				fields: "_id Status label ref pu_ht Status updatedAt caFamily",
+				fields: "_id Status label ref pu_ht updatedAt caFamily",
 				query: this.type.id,
 				filter: $scope.filterOptionsProduct.filterText,
 				skip: $scope.pagingOptionsProduct.currentPage - 1,
@@ -111,16 +112,13 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 
 				};
 
-				var fields = ["tva_tx", "Status", "units"];
+				var dict = ["fk_tva", "fk_product_status", "fk_units"];
 
-				angular.forEach(fields, function (field) {
-					$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
-							field: field
-						}
-					}).success(function (data, status) {
-						$scope[field] = data;
-						//console.log(data);
-					});
+				$http({method: 'GET', url: '/api/dict', params: {
+						dictName: dict,
+					}
+				}).success(function (data, status) {
+					$scope.dict = data;
 				});
 
 				$scope.productFamilyAutoComplete = function (val) {
@@ -246,6 +244,12 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			}
 		}, true);
 
+		$scope.$watch('sortOptionsProduct', function (newVal, oldVal) {
+			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
+				$scope.find();
+			}
+		}, true);
+
 		// sorting
 		$scope.sortOptionsProduct = {fields: ["ref"], directions: ["asc"]};
 
@@ -261,8 +265,7 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'code_client', displayName: 'Code Client', visible: false, width: '110px'},
-				{field: 'ref', displayName: 'Produit', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="showProduct(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}} <small ng-show="row.getProperty(\'code_client\')">({{row.getProperty(\'code_client\')}})</small></a></div>'},
+				{field: 'ref', displayName: 'Produit', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="showProduct(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a></div>'},
 				{field: 'label', displayName: 'Nom'},
 				{field: 'pu_ht', displayName: 'Tarif HT', width: '100px', cellClass: "align-right", cellFilter: "number:3"},
 				{field: 'status.name', width: '100px', displayName: 'Etat',
@@ -274,18 +277,6 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 				{field: 'updatedAt', displayName: 'Dernière MAJ', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"}
 			]
 		};
-
-		$scope.$watch('filterOptionsProduct', function (newVal, oldVal) {
-			if (newVal.filterText !== oldVal.filterText) {
-				$scope.find();
-			}
-		}, true);
-
-		$scope.$watch('sortOptionsProduct', function (newVal, oldVal) {
-			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
-				$scope.find();
-			}
-		}, true);
 
 		$scope.updateInPlace = function (api, field, row, newdata) {
 			if (!$scope.save) {
@@ -478,17 +469,15 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 		$scope.line = object;
 		$scope.supplier = options && options.supplier;
 
-		$scope.init = function () {
-			var fields = ["tva_tx"];
+		$scope.dict = {};
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+		$scope.init = function () {
+
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_tva",
+				}
+			}).success(function (data, status) {
+				$scope.dict.fk_tva = data;
 			});
 		};
 
@@ -552,6 +541,8 @@ angular.module('mean.products').controller('ProductCreateController', ['$scope',
 			tva_tx: 20,
 			units: "unit"
 		};
+
+		$scope.dict = {};
 		$scope.refFound = false;
 		$scope.validRef = true;
 
@@ -561,16 +552,13 @@ angular.module('mean.products').controller('ProductCreateController', ['$scope',
 		];
 
 		$scope.init = function () {
-			var fields = ["tva_tx", "Status", "units"];
+			var dict = ["fk_tva", "fk_product_status", "fk_units"];
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
 		};
 

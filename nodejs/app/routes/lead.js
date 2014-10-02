@@ -8,8 +8,6 @@ var mongoose = require('mongoose'),
 		config = require('../../config/config');
 
 var ReportModel = mongoose.model('report');
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
 var LeadModel = mongoose.model('lead');
 
@@ -42,9 +40,6 @@ module.exports = function(app, passport, auth) {
 			res.json(result);
 		});
 	});
-
-	app.get('/api/lead/fk_extrafields/select', auth.requiresLogin, lead.select);
-
 
 	app.get('/api/lead/:leadId', auth.requiresLogin, lead.show);
 	app.post('/api/lead', auth.requiresLogin, lead.create);
@@ -81,28 +76,6 @@ Lead.prototype = {
 			return res.json(200, doc);
 		});
 
-	},
-	select: function(req, res) {
-
-		ExtrafieldModel.findById('extrafields:Lead', function(err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-
-			var result = [];
-			if (doc.fields[req.query.field])
-				for (var i in doc.fields[req.query.field].values) {
-					if (doc.fields[req.query.field].values[i].enable) {
-						var val = {};
-						val.id = i;
-						val.label = doc.fields[req.query.field].values[i].label;
-						result.push(val);
-					}
-				}
-
-			res.json(result);
-		});
 	},
 	create: function(req, res) {
 

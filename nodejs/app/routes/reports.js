@@ -10,8 +10,6 @@ var mongoose = require('mongoose'),
 var ReportModel = mongoose.model('report');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
 
 module.exports = function (app, passport, auth) {
@@ -58,8 +56,6 @@ module.exports = function (app, passport, auth) {
 
 	});
 
-	app.get('/api/report/fk_extrafields/select', auth.requiresLogin, object.select);
-
 	//add new report
 	app.post('/api/reports', auth.requiresLogin, object.create);
 
@@ -100,28 +96,6 @@ Object.prototype = {
 
 			req.report = doc;
 			next();
-		});
-	},
-	select: function (req, res) {
-
-		ExtrafieldModel.findById('extrafields:Report', function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-
-			var result = [];
-			if (doc.fields[req.query.field])
-				for (var i in doc.fields[req.query.field].values) {
-					if (doc.fields[req.query.field].values[i].enable) {
-						var val = doc.fields[req.query.field].values[i];
-						val.id = i;
-						//val.label = doc.fields[req.query.field].values[i].label;
-						result.push(val);
-					}
-				}
-
-			res.json(result);
 		});
 	},
 	create: function (req, res) {

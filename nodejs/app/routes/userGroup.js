@@ -11,7 +11,6 @@ var mongoose = require('mongoose'),
                 
 var UserModel = mongoose.model('user');
 var UserGroupModel = mongoose.model('userGroup');
-var ExtrafieldModel = mongoose.model('extrafields');
 
 
 module.exports = function(app, passport, auth) {

@@ -5,8 +5,6 @@ var mongoose = require('mongoose'),
 
 var EntityModel = mongoose.model('entity');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-
 module.exports = function(app, passport, auth) {
 
 	var entity = new Entity();

@@ -40,7 +40,7 @@ var ModuleModel = mongoose.model('module', moduleSchema, 'DolibarrModules');
  * GET home page.
  */
 
-var AgendaModel = mongoose.model('agenda');
+var TaskModel = mongoose.model('task');
 
 
 /**
@@ -49,63 +49,63 @@ var AgendaModel = mongoose.model('agenda');
 
 var map_reduce = {};
 /*map_reduce.menuList = {};
-map_reduce.menuList.map = function() {
-	if (this.menus) {
-		this.menus.forEach(function(tag) {
-			if (tag.type) {
-				emit({menu: tag._id, position: tag.position}, tag);
-			}
-		});
-	}
-};
-map_reduce.menuList.map = map_reduce.menuList.map.toString();
-map_reduce.menuList.reduce = function(key, values) {
-	db.result.save(values[0]);
-
-	return null;
-};
-map_reduce.menuList.reduce = map_reduce.menuList.reduce.toString();
-map_reduce.menuList.out = {replace: "view_listMenu"};
-map_reduce.menuList.query = {enabled: true};
-/*ModuleModel.mapReduce(map_reduce.menuList, function(err) {
+ map_reduce.menuList.map = function() {
+ if (this.menus) {
+ this.menus.forEach(function(tag) {
+ if (tag.type) {
+ emit({menu: tag._id, position: tag.position}, tag);
+ }
+ });
+ }
+ };
+ map_reduce.menuList.map = map_reduce.menuList.map.toString();
+ map_reduce.menuList.reduce = function(key, values) {
+ db.result.save(values[0]);
+ 
+ return null;
+ };
+ map_reduce.menuList.reduce = map_reduce.menuList.reduce.toString();
+ map_reduce.menuList.out = {replace: "view_listMenu"};
+ map_reduce.menuList.query = {enabled: true};
+ /*ModuleModel.mapReduce(map_reduce.menuList, function(err) {
  if (err)
  console.log(err);
  });*/
 
 /*map_reduce.submenuList = {};
-map_reduce.submenuList.map = function() {
-	if (this.menus) {
-		this.menus.forEach(function(tag) {
-			if (!tag.type) {
-				emit({menu: tag.fk_menu, position: tag.position}, tag);
-			}
-		});
-	}
-};
-map_reduce.submenuList.map = map_reduce.submenuList.map.toString();
-map_reduce.submenuList.reduce = function(key, values) {
-	db.result.save(values[0]);
-
-	return null;
-};
-map_reduce.submenuList.reduce = map_reduce.submenuList.reduce.toString();
-map_reduce.submenuList.out = {replace: "view_listSubmenu"};
-map_reduce.submenuList.query = {enabled: true};
-/*ModuleModel.mapReduce(map_reduce.submenuList, function(err) {
+ map_reduce.submenuList.map = function() {
+ if (this.menus) {
+ this.menus.forEach(function(tag) {
+ if (!tag.type) {
+ emit({menu: tag.fk_menu, position: tag.position}, tag);
+ }
+ });
+ }
+ };
+ map_reduce.submenuList.map = map_reduce.submenuList.map.toString();
+ map_reduce.submenuList.reduce = function(key, values) {
+ db.result.save(values[0]);
+ 
+ return null;
+ };
+ map_reduce.submenuList.reduce = map_reduce.submenuList.reduce.toString();
+ map_reduce.submenuList.out = {replace: "view_listSubmenu"};
+ map_reduce.submenuList.query = {enabled: true};
+ /*ModuleModel.mapReduce(map_reduce.submenuList, function(err) {
  if (err)
  console.log(err);
  });*/
 
 map_reduce.countTODO = {};
 
-map_reduce.countTODO.map = function() {
+map_reduce.countTODO.map = function () {
 	if (this.Status == "TODO" && this.usertodo.length)
 		for (var i = 0; i < this.usertodo.length; i++)
 			emit(this.usertodo[i].id, 1);
 };
 
 map_reduce.countTODO.map = map_reduce.countTODO.map.toString();
-map_reduce.countTODO.reduce = function(user, cpt) {
+map_reduce.countTODO.reduce = function (user, cpt) {
 	return Array.sum(cpt);
 };
 map_reduce.countTODO.reduce = map_reduce.countTODO.reduce.toString();
@@ -119,15 +119,15 @@ var angular = {};
 angular.services = [];
 angular.controllers = [];
 
-fs.readdirSync(__dirname + '/../../public/js/speedealing/services').forEach(function(file) {
+fs.readdirSync(__dirname + '/../../public/js/speedealing/services').forEach(function (file) {
 	angular.services.push(file);
 });
 
-fs.readdirSync(__dirname + '/../../public/js/speedealing/controllers').forEach(function(file) {
+fs.readdirSync(__dirname + '/../../public/js/speedealing/controllers').forEach(function (file) {
 	angular.controllers.push(file);
 });
 
-exports.render = function(req, res) {
+exports.render = function (req, res) {
 	var url = "/";
 
 	/**
@@ -147,7 +147,7 @@ exports.render = function(req, res) {
 	var menuHTML = "";
 
 	// load conf and const
-	ModuleModel.find({}, "name numero enabled always_enabled family version picto moddir dirs depends requireby need_dolibarr_version const langfiles boxes", function(err, docs) {
+	ModuleModel.find({}, "name numero enabled always_enabled family version picto moddir dirs depends requireby need_dolibarr_version const langfiles boxes", function (err, docs) {
 		if (err) {
 			console.log(err);
 			return;
@@ -166,14 +166,14 @@ exports.render = function(req, res) {
 		async.parallel(
 				[
 					//load top menu
-					function(callback) {
+					function (callback) {
 						ModuleModel.aggregate([
 							{'$match': {enabled: true}},
 							{'$unwind': "$menus"},
 							{'$project': {_id: {menu: '$menus._id', position: '$menus.position'}, value: '$menus'}},
 							{'$match': {"value.type": "top"}},
 							{'$sort': {"value.position": 1}}
-						], function(err, docs) {
+						], function (err, docs) {
 							//console.log(docs);
 							topmenu = docs;
 							callback();
@@ -181,7 +181,7 @@ exports.render = function(req, res) {
 						});
 					},
 					//load submenu
-					function(callback) {
+					function (callback) {
 						ModuleModel.aggregate([
 							{'$match': {enabled: true}},
 							{'$unwind': "$menus"},
@@ -189,11 +189,11 @@ exports.render = function(req, res) {
 							{'$match': {"value.type": {"$ne": "top"}}},
 							{'$sort': {"value.position": 1}}
 						],
-								function(err, docs) {
+								function (err, docs) {
 
 									for (var i in docs) {
 										var menu = docs[i].value;
-										
+
 
 										var newTabMenu = verifyMenu(menu, req);
 										//console.log(newTabMenu);
@@ -211,9 +211,9 @@ exports.render = function(req, res) {
 								});
 					},
 					// Get Count task todo
-					function(callback) {
+					function (callback) {
 						map_reduce.countTODO.query = {"usertodo.id": req.user._id};
-						AgendaModel.mapReduce(map_reduce.countTODO, function(err, doc) {
+						TaskModel.mapReduce(map_reduce.countTODO, function (err, doc) {
 							if (err) {
 								console.log(err);
 								callback();
@@ -231,7 +231,7 @@ exports.render = function(req, res) {
 						});
 					},
 					// Get Count task todo
-					function(callback) {
+					function (callback) {
 						// Get All task list for menu
 						var datep = new Date();
 						datep.setHours(0);
@@ -247,7 +247,7 @@ exports.render = function(req, res) {
 						datef.setMilliseconds(999);
 						//console.log(datef);
 
-						AgendaModel.find({Status: {$ne: "DONE"}, "usertodo.id": req.user._id, datep: {'$gt': datep, '$lte': datef}}, function(err, docs) {
+						TaskModel.find({Status: {$ne: "DONE"}, "usertodo.id": req.user._id, datep: {'$gt': datep, '$lte': datef}}, function (err, docs) {
 							if (err) {
 								console.log(err);
 								callback();
@@ -276,97 +276,97 @@ exports.render = function(req, res) {
 							callback();
 						});
 					}
-				], function() {
+				], function () {
 			//console.log(JSON.stringify(topmenu));
 			//console.log(JSON.stringify(submenu));
-			
-		/*	var menuHTML = "";
-			var idsel;
 
-			var selected;
-
-			for (var i in topmenu) {
-				topmenu[i] = topmenu[i].value;
-				if (topmenu[i].enabled) {
-					idsel = (topmenu[i]._id == null ? 'none' : topmenu[i]._id);
-					//if(topmenu[i].perms)
-
-					selected = genSubmenu(topmenu[i], 1);
-				}
-			}
-
-			function genSubmenu(menuFather, level) { // function recursive
-				var selectnow = false;
-				var result = submenu[menuFather._id];
-
-				var menu = {};
-
-				if (typeof result === 'undefined') { // be a <li> link menu
-
-					menuHTML += '<li>';
-
-					//if (!empty($this->idmenu) && $this->menuSelected($menuFather))
-					//	$classname = "current navigable-current";
-
-					//$url = $this->menuURL($menuFather, $menuFather->_id);
-
-					if (typeof menuFather.position === 'undefined')
-						menuFather.position = 0;
-					
-					//if (!empty($this->idmenu) && $this->menuSelected($menuFather))
-				//$classname = "current collapsible-current";
-
-					menu.classname = "";
-					menu.url = menuFather.url;
-					menu.title = menuFather.title;
-					
-					if (menu.url.match(/\?/) === null)
-						menu.url += '?idmenu=' + menuFather._id;
-					else
-						menu.url += '&idmenu=' + menuFather._id;
-
-					menuHTML += '<a ng-class="selectedMenu(\''+ menuFather._id+'\')" href="' + menu.url + '" target="_self">';
-					menuHTML += menuFather.title;
-					menuHTML += '</a>';
-					menuHTML += '</li>';
-
-					return false;
-				}
-
-				if (typeof menuFather.position === 'undefined')
-					menuFather.position = 0;
-
-				menu.count = result.length;
-				menu.url = "";
-				if (menuFather.type === 'top')
-					menu.title = req.i18n.t((menuFather.langs ? menuFather.langs + ":" : "") + menuFather.title);
-				else
-					menu.title = menuFather.title;
-
-				menuHTML += '<li class="with-right-arrow">';
-				//menuHTML+='<span><span class="list-count">' + result.length + '</span>' + menuFather.title + '</span>';
-				menuHTML += '<span>' + menu.title + '</span>';
-				menuHTML += '<ul class="big-menu ';
-				if (level == 1)
-					menuHTML += 'grey-gradient">';
-				else
-					menuHTML += 'anthracite-gradient">';
-
-				menu.menu = [];
-
-				for (i in result) {
-
-					var selected = genSubmenu(result[i], (level + 1));
-
-					if (selected)
-						selectnow = selected;
-				}
-
-				menuHTML += '</ul>';
-				menuHTML += '</li>';
-
-				return selectnow;
-			}*/
+			/*	var menuHTML = "";
+			 var idsel;
+			 
+			 var selected;
+			 
+			 for (var i in topmenu) {
+			 topmenu[i] = topmenu[i].value;
+			 if (topmenu[i].enabled) {
+			 idsel = (topmenu[i]._id == null ? 'none' : topmenu[i]._id);
+			 //if(topmenu[i].perms)
+			 
+			 selected = genSubmenu(topmenu[i], 1);
+			 }
+			 }
+			 
+			 function genSubmenu(menuFather, level) { // function recursive
+			 var selectnow = false;
+			 var result = submenu[menuFather._id];
+			 
+			 var menu = {};
+			 
+			 if (typeof result === 'undefined') { // be a <li> link menu
+			 
+			 menuHTML += '<li>';
+			 
+			 //if (!empty($this->idmenu) && $this->menuSelected($menuFather))
+			 //	$classname = "current navigable-current";
+			 
+			 //$url = $this->menuURL($menuFather, $menuFather->_id);
+			 
+			 if (typeof menuFather.position === 'undefined')
+			 menuFather.position = 0;
+			 
+			 //if (!empty($this->idmenu) && $this->menuSelected($menuFather))
+			 //$classname = "current collapsible-current";
+			 
+			 menu.classname = "";
+			 menu.url = menuFather.url;
+			 menu.title = menuFather.title;
+			 
+			 if (menu.url.match(/\?/) === null)
+			 menu.url += '?idmenu=' + menuFather._id;
+			 else
+			 menu.url += '&idmenu=' + menuFather._id;
+			 
+			 menuHTML += '<a ng-class="selectedMenu(\''+ menuFather._id+'\')" href="' + menu.url + '" target="_self">';
+			 menuHTML += menuFather.title;
+			 menuHTML += '</a>';
+			 menuHTML += '</li>';
+			 
+			 return false;
+			 }
+			 
+			 if (typeof menuFather.position === 'undefined')
+			 menuFather.position = 0;
+			 
+			 menu.count = result.length;
+			 menu.url = "";
+			 if (menuFather.type === 'top')
+			 menu.title = req.i18n.t((menuFather.langs ? menuFather.langs + ":" : "") + menuFather.title);
+			 else
+			 menu.title = menuFather.title;
+			 
+			 menuHTML += '<li class="with-right-arrow">';
+			 //menuHTML+='<span><span class="list-count">' + result.length + '</span>' + menuFather.title + '</span>';
+			 menuHTML += '<span>' + menu.title + '</span>';
+			 menuHTML += '<ul class="big-menu ';
+			 if (level == 1)
+			 menuHTML += 'grey-gradient">';
+			 else
+			 menuHTML += 'anthracite-gradient">';
+			 
+			 menu.menu = [];
+			 
+			 for (i in result) {
+			 
+			 var selected = genSubmenu(result[i], (level + 1));
+			 
+			 if (selected)
+			 selectnow = selected;
+			 }
+			 
+			 menuHTML += '</ul>';
+			 menuHTML += '</li>';
+			 
+			 return selectnow;
+			 }*/
 
 			// To hide menus
 			var withMenu = "";
@@ -374,10 +374,10 @@ exports.render = function(req, res) {
 				withMenu = 'with-menu';
 
 			var random = Math.random().toString(36).substring(7);
-			
+
 			var ttlSession = new Date(req.session.cookie._expires).getTime();
 			console.log(req.session.cookie._expires);
-			
+
 			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, random: random, ttlSession: ttlSession, version: config.version, angular: angular});
 		});
 	});
@@ -413,7 +413,7 @@ function verifyMenu(newTabMenu, req) {
 	return newTabMenu;
 }
 
-exports.home = function(req, res) {
+exports.home = function (req, res) {
 	var stats = false;
 
 	for (var i in req.user.roles)

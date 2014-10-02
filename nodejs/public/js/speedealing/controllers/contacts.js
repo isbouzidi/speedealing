@@ -42,25 +42,13 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 			});
 		};
 
-//		$scope.contactAutoComplete = function(val) {
-//
-//			return $http.post('api/zipcode/autocomplete', {
-//				val: val
-//			}).then(function(res) {
-//				$scope.listCode = res.data;
-//
-//				return res.data;
-//			});
-//
-//		};
+		$scope.open = function ($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
 
-//		$scope.generateZip = function(val) {
-//
-//			if (val) {
-//				$scope.contact.town = val.city;
-//				$scope.contact.zip = val.code;
-//			}
-//		};
+			$scope.opened = true;
+		};
+
 
 	}]);
 
@@ -123,8 +111,9 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 
 		$scope.init = function () {
 
-			$http({method: 'GET', url: '/api/contact/fk_extrafields/status',
-				params: {field: "Status"}
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_contact_status"
+				}
 
 			}).success(function (data) {
 
@@ -172,7 +161,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 				$location.path('/contacts');
 			});
 		};
-		
+
 		$scope.societeAutoComplete = function (val, field) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',

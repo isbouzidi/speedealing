@@ -6,12 +6,12 @@ var mongoose = require('mongoose'),
 var UserModel = mongoose.model('user');
 var UserAbsenceModel = mongoose.model('userAbsence');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
 var EntityModel = mongoose.model('entity');
 var UserGroupModel = mongoose.model('userGroup');
 
-module.exports = function(app, passport, auth) {
+var Dict = require('../controllers/dict');
+
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 	var absence = new Absence();
@@ -19,7 +19,7 @@ module.exports = function(app, passport, auth) {
 	object.colors = ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
 		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"];
 
-	ExtrafieldModel.findById('extrafields:User', function(err, doc) {
+	Dict.extrafield({extrafieldName: 'User'}, function (err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -28,28 +28,10 @@ module.exports = function(app, passport, auth) {
 		object.fk_extrafields = doc;
 		absence.fk_extrafields = doc;
 	});
-        
-        app.get('/api/user/fk_extrafields/select', auth.requiresLogin, function(req, res) {
-            object.select(req, res, 'extrafields:User');
-            return;
-        });
-            
-        app.get('/api/site/fk_extrafields/select', auth.requiresLogin, function(req, res) {
-
-            EntityModel.find(function(err, entity) {
-
-                if (err) {
-                    console.log('Erreur - Get Entity(site) : ' + err);
-                } else {
-                    res.json(entity);
-                }
-            });
-		return;
-	});
 
 	// Specific for select
-	app.get('/api/user/select', auth.requiresLogin, function(req, res) {
-		UserModel.find({Status: "ENABLE"}, function(err, docs) {
+	app.get('/api/user/select', auth.requiresLogin, function (req, res) {
+		UserModel.find({Status: "ENABLE"}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/user/select");
 				console.log(err);
@@ -85,7 +67,7 @@ module.exports = function(app, passport, auth) {
 	});
 
 	// list for autocomplete
-	app.post('/api/user/name/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/user/name/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body);
 
 		var query = {};
@@ -100,7 +82,7 @@ module.exports = function(app, passport, auth) {
 			query.Status = req.query.status;
 		}
 
-		UserModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		UserModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/user/name/autocomplete");
 				console.log(err);
@@ -131,68 +113,68 @@ module.exports = function(app, passport, auth) {
 		});
 	});
 
-        app.get('/api/user/pays/select', auth.requiresLogin, function(req, res) {
+	app.get('/api/user/pays/select', auth.requiresLogin, function (req, res) {
 
-            DictModel.findById(req.query.field, function(err, docs) {
+		DictModel.findById(req.query.field, function (err, docs) {
 
-                if (err) {
-                    console.log('Erreur - Get Entity(site) : ' + err);
-                } else {
+			if (err) {
+				console.log('Erreur - Get Entity(site) : ' + err);
+			} else {
 
-                    var pays = [];
+				var pays = [];
 
-                    if (docs) {
-                        for (var i in docs.values) {
-                            if (docs.values[i].enable) {
+				if (docs) {
+					for (var i in docs.values) {
+						if (docs.values[i].enable) {
 
-                                var val = {};
-                                val.id = i;
+							var val = {};
+							val.id = i;
 
-                                if (docs.values[i].label)
-                                    val.label = docs.values[i].label;
-                                else
-                                    val.label = req.i18n.t("pays : " + i);
-                                pays.push(val);
-                            }
-                        }
+							if (docs.values[i].label)
+								val.label = docs.values[i].label;
+							else
+								val.label = req.i18n.t("pays : " + i);
+							pays.push(val);
+						}
+					}
 
-                    }
+				}
 
-                    res.json(pays);
-                }
-            });
+				res.json(pays);
+			}
+		});
 
-            return;
-        });
-        
-        //liste des collaborateurs
-        app.get('/api/users', auth.requiresLogin, object.read);
-        
-        //ajout d'un nouveau collaborateur
-        app.post('/api/users', auth.requiresLogin, object.create);
-    
-        //afficher la fiche du collaborateur
-        app.get('/api/users/:userId', auth.requiresLogin, object.show);
-        
-        //modifier une ficher de collaborateur
-        app.put('/api/users/:userId', auth.requiresLogin, object.update);
-        
-        //verifie si le nouveau exite ou pas
-        app.get('/api/createUser/uniqLogin', auth.requiresLogin, object.uniqLogin);
-	
-        /*app.post('/api/user', auth.requiresLogin, function(req, res) {
-		//console.log(JSON.stringify(req.body));
-		return res.send(200, object.create(req));
+		return;
 	});
 
-        */
+	//liste des collaborateurs
+	app.get('/api/users', auth.requiresLogin, object.read);
+
+	//ajout d'un nouveau collaborateur
+	app.post('/api/users', auth.requiresLogin, object.create);
+
+	//afficher la fiche du collaborateur
+	app.get('/api/users/:userId', auth.requiresLogin, object.show);
+
+	//modifier une ficher de collaborateur
+	app.put('/api/users/:userId', auth.requiresLogin, object.update);
+
+	//verifie si le nouveau exite ou pas
+	app.get('/api/createUser/uniqLogin', auth.requiresLogin, object.uniqLogin);
+
+	/*app.post('/api/user', auth.requiresLogin, function(req, res) {
+	 //console.log(JSON.stringify(req.body));
+	 return res.send(200, object.create(req));
+	 });
+	 
+	 */
 	/*app.put('/api/user', auth.requiresLogin, function(req, res) {
-		console.log(JSON.stringify(req.body));
-		return res.send(200, object.update(req));
-	});
-
-*/
-	app.del('/api/user', auth.requiresLogin, function(req, res) {
+	 console.log(JSON.stringify(req.body));
+	 return res.send(200, object.update(req));
+	 });
+	 
+	 */
+	app.del('/api/user', auth.requiresLogin, function (req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
 	});
@@ -203,7 +185,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/user/absence', auth.requiresLogin, absence.create);
 	app.put('/api/user/absence/:id', auth.requiresLogin, absence.update);
 
-	app.get('/api/user/absence/status/select', auth.requiresLogin, function(req, res) {
+	app.get('/api/user/absence/status/select', auth.requiresLogin, function (req, res) {
 		var result = [];
 		for (var i in absence.fk_extrafields.fields.StatusAbsence.values) {
 
@@ -222,7 +204,7 @@ module.exports = function(app, passport, auth) {
 
 	app.get('/api/user/absence/count', auth.requiresLogin, absence.count);
 
-        app.param('userId', object.user);
+	app.param('userId', object.user);
 	//other routes..
 };
 
@@ -230,173 +212,124 @@ function Object() {
 }
 
 Object.prototype = {
-    user: function(req, res, next, id) {
-       
-        UserModel.findOne({_id: id}, function(err, doc) {
-            if (err)
-                return next(err);
-            if (!doc)
-                return next(new Error('Failed to load user ' + id));
+	user: function (req, res, next, id) {
 
-            req.user = doc;
-            next();
-        });
-    },
-    show: function(req, res) {
-        
-        console.log("show : " + req.user);
-        res.json(req.user);
-    },
-    create: function(req, res) {
-        //return req.body.models;
-        var user = new UserModel(req.body);
+		UserModel.findOne({_id: id}, function (err, doc) {
+			if (err)
+				return next(err);
+			if (!doc)
+				return next(new Error('Failed to load user ' + id));
 
-        user.name = req.body.login.toLowerCase();
-        var login = req.body.login;
-        user._id = 'user:' + login;
-
-        if (!user.entity)
-            user.entity = req.user.entity;
-
-        user.save(function(err, doc) {
-            if (err) {
-                return res.json(500, err);
-                //return console.log(err);
-
-            }
-
-            res.json(200, user);
-        });
+			req.user = doc;
+			next();
+		});
 	},
-	read: function(req, res) {
-        //var status_list = this.fk_extrafields.fields.Status;
+	show: function (req, res) {
 
-		UserModel.find({}, function(err, doc) {
+		console.log("show : " + req.user);
+		res.json(req.user);
+	},
+	create: function (req, res) {
+		//return req.body.models;
+		var user = new UserModel(req.body);
+
+		user.name = req.body.login.toLowerCase();
+		var login = req.body.login;
+		user._id = 'user:' + login;
+
+		if (!user.entity)
+			user.entity = req.user.entity;
+
+		user.save(function (err, doc) {
+			if (err) {
+				return res.json(500, err);
+				//return console.log(err);
+
+			}
+
+			res.json(200, user);
+		});
+	},
+	read: function (req, res) {
+		//var status_list = this.fk_extrafields.fields.Status;
+
+		UserModel.find({}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
 				return;
 			}
-/*
-			for (var i in doc) {
-				var status = {};
-
-				status.id = doc[i].Status;
-				if (status_list.values[status.id]) {
-					status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
-					status.css = status_list.values[status.id].cssClass;
-				} else { // Value not present in extrafield
-					status.name = status.id;
-					status.css = "";
-				}
-
-				doc[i].Status = status;
-			}
-*/
+			/*
+			 for (var i in doc) {
+			 var status = {};
+			 
+			 status.id = doc[i].Status;
+			 if (status_list.values[status.id]) {
+			 status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
+			 status.css = status_list.values[status.id].cssClass;
+			 } else { // Value not present in extrafield
+			 status.name = status.id;
+			 status.css = "";
+			 }
+			 
+			 doc[i].Status = status;
+			 }
+			 */
 			res.send(200, doc);
 		});
 	},
-    update: function(req, res) {
-        //return req.body.models;
-        var user = req.user;
-        user = _.extend(user, req.body);
+	update: function (req, res) {
+		//return req.body.models;
+		var user = req.user;
+		user = _.extend(user, req.body);
 
-        user.save(function(err, doc) {
+		user.save(function (err, doc) {
 
-            if (err) {
-                return console.log(err);
-            }
+			if (err) {
+				return console.log(err);
+			}
 
-            res.json(200, doc);
-        });
+			res.json(200, doc);
+		});
 	},
-	del: function(req) {
-        //return req.body.models;
-        var user = req.user;
-        user.remove(function(err) {
-            if (err) {
-                res.render('error', {
-                    status: 500
-                });
-            } else {
-                res.json(user);
-            }
-        });
+	del: function (req) {
+		//return req.body.models;
+		var user = req.user;
+		user.remove(function (err) {
+			if (err) {
+				res.render('error', {
+					status: 500
+				});
+			} else {
+				res.json(user);
+			}
+		});
 	},
-	connection: function(req, res) {
-		UserModel.find({NewConnection: {$ne: null}, entity:req.query.entity}, "lastname firstname NewConnection", {limit: 10, sort: {
+	connection: function (req, res) {
+		UserModel.find({NewConnection: {$ne: null}, entity: req.query.entity}, "lastname firstname NewConnection", {limit: 10, sort: {
 				NewConnection: -1
-			}}, function(err, docs) {
+			}}, function (err, docs) {
 			res.json(200, docs);
 		});
-    },
-    uniqLogin: function(req, res) {
+	},
+	uniqLogin: function (req, res) {
 
-        if (!req.query.login)
-            return res.send(404);
+		if (!req.query.login)
+			return res.send(404);
 
-        var login = "user:" + req.query.login;
-
-
-        UserModel.findOne({_id: login}, "lastname firstname", function(err, doc) {
-            if (err)
-                return next(err);
-            if (!doc)
-                return res.json({});
+		var login = "user:" + req.query.login;
 
 
-            res.json(doc);
-        });
-
-    },
-    select: function(req, res, extrafields) {
-
-        //ExtrafieldModel.findById('extrafields:User', function(err, doc) {
-        ExtrafieldModel.findById(extrafields, function(err, doc) {
-
-            if (err) {
-                console.log(err);
-                return;
-            }
-
-            var result = [];
-            console.log(req.query.field);
-            if (doc.fields[req.query.field].dict)
-                return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
-
-                    if (docs) {
-                        for (var i in docs.values) {
-                            if (docs.values[i].enable) {
-                                var val = {};
-                                val.id = i;
-                                if (docs.values[i].label)
-                                    val.label = docs.values[i].label;
-                                else
-                                    val.label = req.i18n.t("user:" + i);
-                                result.push(val);
-                            }
-                        }
-                        doc.fields[req.query.field].values = result;
-                    }
-
-                    //res.json(doc.fields[req.query.field]);
-                });
-
-            for (var i in doc.fields[req.query.field].values) {
-                if (doc.fields[req.query.field].values[i].enable) {
-                    var val = {};
-                    val.id = i;
-                    val.label = doc.fields[req.query.field].values[i].label;
-                    result.push(val);
-                }
-            }
+		UserModel.findOne({_id: login}, "lastname firstname", function (err, doc) {
+			if (err)
+				return next(err);
+			if (!doc)
+				return res.json({});
 
 
-            doc.fields[req.query.field].values = result;
+			res.json(doc);
+		});
 
-            res.json(doc.fields[req.query.field]);
-
-        });
 	}
 };
 
@@ -404,7 +337,7 @@ function Absence() {
 }
 
 Absence.prototype = {
-	create: function(req, res) {
+	create: function (req, res) {
 		var obj = req.body;
 
 		console.log(obj);
@@ -417,16 +350,16 @@ Absence.prototype = {
 		doc.author.id = req.user._id;
 		doc.author.name = req.user.name;
 
-		doc.save(function(err, doc) {
+		doc.save(function (err, doc) {
 			if (err)
 				console.log(err);
 
 			res.send(200, doc);
 		});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 		var query = {};
-                
+
 		console.log(req.query);
 		if (req.query.query) {
 			if (req.query.query == 'NOW')
@@ -437,7 +370,7 @@ Absence.prototype = {
 
 		query.entity = req.query.entity;
 
-		UserAbsenceModel.find(query, function(err, doc) {
+		UserAbsenceModel.find(query, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -446,25 +379,25 @@ Absence.prototype = {
 			res.send(200, doc);
 		});
 	},
-	update: function(req, res) {
+	update: function (req, res) {
 		var obj = req.body;
 		//console.log(obj);
 
-		UserAbsenceModel.findOne({_id: req.params.id}, function(err, doc) {
+		UserAbsenceModel.findOne({_id: req.params.id}, function (err, doc) {
 			if (err)
 				console.log(err);
 
 			doc = _.extend(doc, obj);
 
-			doc.save(function(err, doc) {
+			doc.save(function (err, doc) {
 				res.send(200, doc);
 			});
 		});
 	},
-	del: function(req) {
+	del: function (req) {
 		return req.body.models;
 	},
-	count: function(req, res) {
+	count: function (req, res) {
 		var d = new Date();
 		d.setHours(0, 0, 0);
 		var dateStart = new Date(d.getFullYear(), 0, 1);
@@ -474,7 +407,7 @@ Absence.prototype = {
 			{$match: {Status: "NOTJUSTIFIED", dateStart: {$gte: dateStart, $lt: dateEnd}}},
 			{$project: {_id: 0, nbDay: 1}},
 			{$group: {'_id': 0, sum: {"$sum": "$nbDay"}}}
-		], function(err, docs) {
+		], function (err, docs) {
 			if (docs.length === 0)
 				return res.json(200, {_id: 0, sum: 0});
 

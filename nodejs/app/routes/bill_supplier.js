@@ -14,10 +14,7 @@ var BillModel = mongoose.model('billSupplier');
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
-
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 
@@ -27,10 +24,9 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/billSupplier', auth.requiresLogin, object.create);
 	app.put('/api/billSupplier/:billSupplierId', auth.requiresLogin, object.update);
 	app.del('/api/billSupplier/:billSupplierId', auth.requiresLogin, object.destroy);
-	app.get('/api/billSupplier/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
-	app.post('/api/billSupplier/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/billSupplier/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
 
 		if (req.body.filter == null)
@@ -49,7 +45,7 @@ module.exports = function(app, passport, auth) {
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
 		console.log(query);
-		BillModel.find(query, {}, {limit: req.body.take}, function(err, docs) {
+		BillModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/bill/autocomplete");
 				console.log(err);
@@ -98,7 +94,7 @@ function Object() {
 }
 
 Object.prototype = {
-	bill: function(req, res, next, id) {
+	bill: function (req, res, next, id) {
 		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 		var query = {};
 
@@ -109,7 +105,7 @@ Object.prototype = {
 
 		//console.log(query);
 
-		BillModel.findOne(query, "-latex", function(err, doc) {
+		BillModel.findOne(query, "-latex", function (err, doc) {
 			if (err)
 				return next(err);
 
@@ -119,7 +115,7 @@ Object.prototype = {
 			next();
 		});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 		var query = {};
 
 		if (req.query) {
@@ -137,7 +133,7 @@ Object.prototype = {
 			}
 		}
 
-		BillModel.find(query, "-history -files -latex", function(err, doc) {
+		BillModel.find(query, "-history -files -latex", function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -149,10 +145,10 @@ Object.prototype = {
 			res.json(200, doc);
 		});
 	},
-	show: function(req, res) {
+	show: function (req, res) {
 		res.json(req.bill);
 	},
-	create: function(req, res) {
+	create: function (req, res) {
 		var bill = new BillModel(req.body);
 		bill.author = {};
 		bill.author.id = req.user._id;
@@ -162,7 +158,7 @@ Object.prototype = {
 			bill.entity = req.user.entity;
 
 		//console.log(bill);
-		bill.save(function(err, doc) {
+		bill.save(function (err, doc) {
 			if (err) {
 				return console.log(err);
 			}
@@ -170,12 +166,12 @@ Object.prototype = {
 			res.json(bill);
 		});
 	},
-	update: function(req, res) {
+	update: function (req, res) {
 		var bill = req.bill;
 		//console.log(req.body);
 		bill = _.extend(bill, req.body);
 
-		bill.save(function(err, doc) {
+		bill.save(function (err, doc) {
 			if (err)
 				console.log(err);
 
@@ -183,9 +179,9 @@ Object.prototype = {
 			res.json(doc);
 		});
 	},
-	destroy: function(req, res) {
+	destroy: function (req, res) {
 		var bill = req.bill;
-		bill.remove(function(err) {
+		bill.remove(function (err) {
 			if (err) {
 				res.render('error', {
 					status: 500
@@ -195,48 +191,7 @@ Object.prototype = {
 			}
 		});
 	},
-	select: function(req, res) {
-		ExtrafieldModel.findById('extrafields:Facture', function(err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-			var result = [];
-			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function(err, docs) {
-
-					if (docs) {
-						for (var i in docs.values) {
-							if (docs.values[i].enable) {
-								var val = {};
-								val.id = i;
-								if (docs.values[i].label)
-									val.label = docs.values[i].label;
-								else
-									val.label = req.i18n.t("bills:" + i);
-								result.push(val);
-							}
-						}
-						doc.fields[req.query.field].values = result;
-					}
-
-					res.json(doc.fields[req.query.field]);
-				});
-
-			for (var i in doc.fields[req.query.field].values) {
-				if (doc.fields[req.query.field].values[i].enable) {
-					var val = {};
-					val.id = i;
-					val.label = req.i18n.t("bills:" + doc.fields[req.query.field].values[i].label);
-					result.push(val);
-				}
-			}
-			doc.fields[req.query.field].values = result;
-
-			res.json(doc.fields[req.query.field]);
-		});
-	},
-	costFamily: function(req, res) {
+	costFamily: function (req, res) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
@@ -244,13 +199,13 @@ Object.prototype = {
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		async.parallel({
-			costFamily: function(cb) {
+			costFamily: function (cb) {
 				BillModel.aggregate([
 					{$match: {entity: req.user.entity, datec: {'$gte': dateStart, '$lt': dateEnd}}},
 					{$unwind: "$lines"},
 					{$project: {_id: 0, lines: 1}},
 					{$group: {_id: "$lines.product.name", total_ht: {"$sum": "$lines.total_ht"}}}
-				], function(err, doc) {
+				], function (err, doc) {
 					if (err) {
 						return cb(err);
 					}
@@ -272,7 +227,7 @@ Object.prototype = {
 			 cb(null, doc);
 			 });
 			 }*/
-		}, function(err, results) {
+		}, function (err, results) {
 			if (err)
 				return console.log(err);
 

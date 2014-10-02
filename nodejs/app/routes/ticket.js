@@ -10,14 +10,14 @@ var mongoose = require('mongoose'),
 
 var TicketModel = mongoose.model('ticket');
 
-var ExtrafieldModel = mongoose.model('extrafields');
+var Dict = require('../controllers/dict');
 
-module.exports = function(app, passport, auth, usersSocket) {
+module.exports = function (app, passport, auth, usersSocket) {
 
 	var object = new Object();
 	object.usersSocket = usersSocket;
 
-	ExtrafieldModel.findById('extrafields:Societe', function(err, doc) {
+	Dict.extrafield({extrafieldName: 'Societe'}, function (err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -28,10 +28,10 @@ module.exports = function(app, passport, auth, usersSocket) {
 
 	app.get('/api/ticket', auth.requiresLogin, object.read);
 	app.get('/api/ticket/:id', auth.requiresLogin, object.findOne);
-	app.post('/api/ticket', auth.requiresLogin, function(req, res) {
+	app.post('/api/ticket', auth.requiresLogin, function (req, res) {
 		object.create(req, res);
 	});
-	app.put('/api/ticket/read', auth.requiresLogin, function(req, res) {
+	app.put('/api/ticket/read', auth.requiresLogin, function (req, res) {
 
 		var addComment = {
 			title: "<strong>" + req.user.firstname + "</strong> a ouvert le ticket",
@@ -52,13 +52,13 @@ module.exports = function(app, passport, auth, usersSocket) {
 				}
 			});
 
-		TicketModel.update({_id: req.body.id}, {'$push': {comments: addComment}, '$addToSet': {read: req.user._id}}, function(err) {
+		TicketModel.update({_id: req.body.id}, {'$push': {comments: addComment}, '$addToSet': {read: req.user._id}}, function (err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			object.refreshTicket(req.user._id, function() {
+			object.refreshTicket(req.user._id, function () {
 				return res.send(200, {});
 			});
 		});
@@ -66,7 +66,7 @@ module.exports = function(app, passport, auth, usersSocket) {
 
 	});
 
-	app.put('/api/ticket/expire', auth.requiresLogin, function(req, res) {
+	app.put('/api/ticket/expire', auth.requiresLogin, function (req, res) {
 
 		var datef = new Date(req.body.datef);
 
@@ -97,19 +97,19 @@ module.exports = function(app, passport, auth, usersSocket) {
 				}
 			});
 
-		TicketModel.update({_id: req.body.id}, update, function(err) {
+		TicketModel.update({_id: req.body.id}, update, function (err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			object.refreshTicket(req.user._id, function() {
+			object.refreshTicket(req.user._id, function () {
 				return res.send(200, {});
 			});
 		});
 	});
 
-	app.post('/api/ticket/comment', auth.requiresLogin, function(req, res) {
+	app.post('/api/ticket/comment', auth.requiresLogin, function (req, res) {
 
 		var addComment = {
 			datec: new Date(),
@@ -164,8 +164,8 @@ module.exports = function(app, passport, auth, usersSocket) {
 				update = {'$push': {comments: addComment}, '$set': {read: [req.user._id]}};
 
 				// notify all members change date
-				TicketModel.findOne({_id: req.body.id}, function(err, ticket) {
-					ticket.affectedTo.forEach(function(user) {
+				TicketModel.findOne({_id: req.body.id}, function (err, ticket) {
+					ticket.affectedTo.forEach(function (user) {
 						if (user.id === req.user._id)
 							return;
 
@@ -189,13 +189,13 @@ module.exports = function(app, passport, auth, usersSocket) {
 
 //console.log(addComment);
 
-		TicketModel.update({_id: req.body.id}, update, function(err) {
+		TicketModel.update({_id: req.body.id}, update, function (err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			object.refreshTicket(req.user._id, function() {
+			object.refreshTicket(req.user._id, function () {
 				return res.send(200, {});
 			});
 		});
@@ -236,7 +236,7 @@ module.exports = function(app, passport, auth, usersSocket) {
 	 });
 	 });*/
 
-	app.put('/api/ticket/status', auth.requiresLogin, function(req, res) {
+	app.put('/api/ticket/status', auth.requiresLogin, function (req, res) {
 
 		var addComment = {
 			datec: new Date(),
@@ -263,19 +263,19 @@ module.exports = function(app, passport, auth, usersSocket) {
 		if (req.user._id != req.body.controller.id)
 			update['$pull'] = {read: req.body.controller.id};
 
-		TicketModel.update({_id: req.body.id}, update, function(err) {
+		TicketModel.update({_id: req.body.id}, update, function (err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			object.refreshTicket(req.user._id, function() {
+			object.refreshTicket(req.user._id, function () {
 				return res.send(200, {});
 			});
 		});
 	});
 
-	app.put('/api/ticket/percentage', auth.requiresLogin, function(req, res) {
+	app.put('/api/ticket/percentage', auth.requiresLogin, function (req, res) {
 
 		var addComment = {
 			datec: new Date(),
@@ -309,27 +309,27 @@ module.exports = function(app, passport, auth, usersSocket) {
 				});
 		}
 
-		TicketModel.update({_id: req.body.id}, {'$set': {percentage: req.body.percentage}, '$push': {comments: addComment}}, function(err) {
+		TicketModel.update({_id: req.body.id}, {'$set': {percentage: req.body.percentage}, '$push': {comments: addComment}}, function (err) {
 			if (err) {
 				console.log(err);
 				return res.send(500, err);
 			}
 
-			object.refreshTicket(req.user._id, function() {
+			object.refreshTicket(req.user._id, function () {
 				return res.send(200, {});
 			});
 		});
 	});
 	app.put('/api/ticket/:id', auth.requiresLogin, object.update);
 	app.del('/api/ticket', auth.requiresLogin, object.del);
-	app.post('/api/ticket/file/:Id', auth.requiresLogin, function(req, res) {
+	app.post('/api/ticket/file/:Id', auth.requiresLogin, function (req, res) {
 		var id = req.params.Id;
 		//console.log(id);
 
 		if (req.files && id) {
 			//console.log(req.files);
 
-			gridfs.addFile(TicketModel, id, req.files.files, function(err) {
+			gridfs.addFile(TicketModel, id, req.files.files, function (err) {
 				if (err)
 					res.send(500, err);
 				else
@@ -339,12 +339,12 @@ module.exports = function(app, passport, auth, usersSocket) {
 			res.send(500, "Error in request file");
 	});
 
-	app.get('/api/ticket/file/:Id/:fileName', auth.requiresLogin, function(req, res) {
+	app.get('/api/ticket/file/:Id/:fileName', auth.requiresLogin, function (req, res) {
 		var id = req.params.Id;
 
 		if (id && req.params.fileName) {
 
-			gridfs.getFile(TicketModel, id, req.params.fileName, function(err, store) {
+			gridfs.getFile(TicketModel, id, req.params.fileName, function (err, store) {
 				if (err)
 					return res.send(500, err);
 
@@ -361,13 +361,13 @@ module.exports = function(app, passport, auth, usersSocket) {
 
 	});
 
-	app.del('/api/ticket/file/:Id', auth.requiresLogin, function(req, res) {
+	app.del('/api/ticket/file/:Id', auth.requiresLogin, function (req, res) {
 //console.log(req.body);
 		var id = req.params.Id;
 		//console.log(id);
 
 		if (req.body.fileNames && id) {
-			gridfs.delFile(TicketModel, id, req.body.fileNames, function(err) {
+			gridfs.delFile(TicketModel, id, req.body.fileNames, function (err) {
 				if (err)
 					res.send(500, err);
 				else
@@ -384,7 +384,7 @@ function Object() {
 }
 
 Object.prototype = {
-	create: function(req, res) {
+	create: function (req, res) {
 		var self = this;
 		var ticket = new TicketModel(req.body);
 
@@ -397,12 +397,12 @@ Object.prototype = {
 
 		ticket.read.push(req.body.controlledBy.id);
 
-		ticket.save(function(err, doc) {
+		ticket.save(function (err, doc) {
 			if (err)
 				console.log(err);
 
 			// notify all members change date
-			doc.affectedTo.forEach(function(user) {
+			doc.affectedTo.forEach(function (user) {
 				if (user.id === req.user._id)
 					return;
 
@@ -420,15 +420,15 @@ Object.prototype = {
 					});
 			});
 
-			self.refreshTicket(req.user._id, function() {
+			self.refreshTicket(req.user._id, function () {
 				return res.send(200, doc);
 			});
 		});
 	},
-	read: function(req, res) {
+	read: function (req, res) {
 
 		if (req.query.count)
-			TicketModel.count({'affectedTo.id': req.user._id, read: {$ne: req.user._id}, Status: {$ne: 'CLOSED'}, $or: [{callback: {$lt: new Date()}}, {callback: null}]}, function(err, doc) {
+			TicketModel.count({'affectedTo.id': req.user._id, read: {$ne: req.user._id}, Status: {$ne: 'CLOSED'}, $or: [{callback: {$lt: new Date()}}, {callback: null}]}, function (err, doc) {
 				if (err) {
 					console.log(err);
 					res.send(500, doc);
@@ -454,7 +454,7 @@ Object.prototype = {
 				fields = req.query.fields;
 			}
 
-			TicketModel.find(query, fields, function(err, doc) {
+			TicketModel.find(query, fields, function (err, doc) {
 				if (err) {
 					console.log(err);
 					res.send(500, doc);
@@ -465,8 +465,8 @@ Object.prototype = {
 			});
 		}
 	},
-	findOne: function(req, res) {
-		TicketModel.findOne({_id: req.params.id}, function(err, ticket) {
+	findOne: function (req, res) {
+		TicketModel.findOne({_id: req.params.id}, function (err, ticket) {
 			if (err)
 				return res.send(500, err);
 			if (!ticket)
@@ -474,8 +474,8 @@ Object.prototype = {
 			res.send(200, ticket);
 		});
 	},
-	update: function(req, res) {
-		TicketModel.findOne({_id: req.params.id}, function(err, ticket) {
+	update: function (req, res) {
+		TicketModel.findOne({_id: req.params.id}, function (err, ticket) {
 			if (err)
 				return res.send(500, err);
 			if (!ticket)
@@ -485,15 +485,15 @@ Object.prototype = {
 
 			ticket = _.extend(ticket, req.body);
 
-			ticket.save(function(err) {
+			ticket.save(function (err) {
 				return res.send(200, {_id: ticket._id});
 			});
 		});
 	},
-	del: function(req) {
+	del: function (req) {
 		return req.body.models;
 	},
-	refreshTicket: function(userId, callback) {
+	refreshTicket: function (userId, callback) {
 		var socket = this.usersSocket[userId];
 		if (socket) {
 			socket.broadcast.emit('refreshTicket', {});

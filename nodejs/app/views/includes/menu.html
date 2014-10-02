@@ -1,6 +1,6 @@
 <div data-ng-controller="MenuController" ng-init="init()">
-    
-        
+
+
     <div id="menu-content">
         <header ng-show="showSearchInput">
             <div id="search_box">
@@ -39,23 +39,24 @@
 				</span>
             </li>
             <li style="width: 20%;">
-                <span href='agenda/list.php?idmenu=menu:myagendaListTODO' title="{{t
-                                'Agenda'}}" target="_self">
-                    <span class="icon-calendar"></span>
+                <a  ng-if="global.user.rights.task.read" ng-href='#!/task' title="{{t 'tasks:Tasks'}}">
+                    <span class="icon-tick"></span>
                     <!--{{#if agenda.count}}
                     <span class="count">{{agenda.count}}</span>
                     {{/if}}-->
-                </span>
+                </a>
+				<span ng-if="!global.user.rights.task.read" title="{{t 'tasks:Tasks'}}">
+					<span class="icon-tick"></span>
+				</span>
             </li>
             <li style="width: 20%;">
-                <span href="user/fiche.php?id={{user.id}}"  title="{{t
-                        'Parameters'}}" target="_self">
+                <span href="user/fiche.php?id={{user.id}}"  title="{{t 'Parameters'}}" target="_self">
                     <span class="icon-gear"></span>
                 </span>
             </li>
             <li style="width: 20%;">
                 <a href="logout" title="{{t
-                        'Logout'}}" target="_self">
+						'Logout'}}" target="_self">
                     <span class="icon-logout"></span>
                 </a>
             </li>
@@ -90,7 +91,7 @@
                 <ul class="calendar-menu">
                     <li>
                         <a href="agenda/fiche.php?id={{this._id}}", title="{{t
-                                'Open'}}">
+								'Open'}}">
                             <time datetime="{{this.event.datetime}}">
                                 <b>{{this.event.day}}</b>
                                 <p>{{this.event.month}}</p>
@@ -107,9 +108,9 @@
             <p>{{t 'agenda:NoMeeting'}}</p>
             {{/each}}
         </ul>
-        
-        
-        
+
+
+
     </div>
 
     <footer id="menu-footer">

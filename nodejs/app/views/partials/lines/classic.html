@@ -23,7 +23,7 @@
 
 <div class="field-block button-height">
 	<label for="tva_tx"><b>{{t 'VAT'}} %</b></label>
-	<select name="tva_tx" class="form-control" id="tva_tx" data-ng-model="line.tva_tx" data-ng-options="c.value as c.value for c in tva_tx.values"></select>
+	<select name="tva_tx" class="form-control" id="tva_tx" data-ng-model="line.tva_tx" data-ng-options="c.value as c.value for c in dict.fk_tva.values"></select>
 </div>
 
 <div class="field-block button-height">

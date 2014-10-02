@@ -47,7 +47,16 @@
 
 		<div class="field-block button-height">
 			<label for="date_commande"><b>Date de facture</b></label>
-			<input kendo-date-picker required id="date_commande" k-on-change="bill.datec = kendoEvent.sender._value;" class="input"/>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" id="date_commande" datepicker-popup="dd/MM/yyyy" ng-model="bill.datec" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Fermer" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
@@ -116,13 +125,13 @@
 
 		<div class="field-block button-height">
 			<label for="paiment"><b>{{t 'bills:PaymentMode'}}</b></label>
-			<select class="form-control margin-bottom" id="paiment" required data-ng-model="bill.mode_reglement_code" data-ng-options="p.id as p.label for p in mode_reglement_code.values"></select>
+			<select class="form-control margin-bottom" id="paiment" required data-ng-model="bill.mode_reglement_code" data-ng-options="p.id as p.label for p in dict.fk_paiement.values"></select>
 
 		</div>
 		
 		<div class="field-block button-height">
 			<label for="rglt"><b>{{t 'bills:PaymentConditions'}}</b></label>
-			<select class="form-control margin-bottom" id="rglt" required data-ng-model="bill.cond_reglement_code" data-ng-options="p.id as p.label for p in cond_reglement_code.values"></select>
+			<select class="form-control margin-bottom" id="rglt" required data-ng-model="bill.cond_reglement_code" data-ng-options="p.id as p.label for p in dict.fk_payment_term.values"></select>
 		</div>
 
 		<div class="field-block button-height wizard-controls align-right">

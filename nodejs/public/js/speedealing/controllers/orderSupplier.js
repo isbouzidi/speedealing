@@ -18,16 +18,13 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 		$scope.type = {name: "Toutes", id: "ALL"};
 
 		$scope.init = function() {
-			var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
+			var dict = ["fk_order_supplier_status", "fk_paiement", "fk_bill_supplier_type", "fk_payment_term"];
 
-			angular.forEach(fields, function(field) {
-				$http({method: 'GET', url: '/api/orderSupplier/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function(data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
 		};
 

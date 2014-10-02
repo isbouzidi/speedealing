@@ -34,14 +34,14 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:ProspectCustomer'}}</th>
-									<td><span class="tag small glossy" data-ng-class="societe.status.css" editable-select="societe.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in Status.values">
+									<td><span class="tag small glossy" data-ng-class="societe.status.css" editable-select="societe.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_stcomm.values">
 											\{{societe.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Supplier'}}</th>
-									<td><a href="#" editable-select="societe.fournisseur" buttons="no" e-ng-options="s.id as s.label for s in fournisseur.values" onaftersave="update()">
-											\{{ showStatus('fournisseur')}}
+									<td><a href="#" editable-select="societe.fournisseur" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_fournisseur.values" onaftersave="update()">
+											\{{ showStatus('fournisseur','fk_fournisseur')}}
 										</a>
 									</td>
 								</tr>
@@ -206,7 +206,7 @@
 											<tbody>
 												<tr>
 													<th scope="row">{{t 'companies:ProspectLevelShort'}}</th>
-													<td><span class="tag small glossy" data-ng-class="societe.prospectLevel.css" editable-select="societe.prospectlevel" buttons="no" e-form="prospectlevelBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in prospectlevel.values">
+													<td><span class="tag small glossy" data-ng-class="societe.prospectLevel.css" editable-select="societe.prospectlevel" buttons="no" e-form="prospectlevelBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_prospectlevel.values">
 															\{{societe.prospectLevel.name}}</span> <span class="icon-pencil grey" ng-click="prospectlevelBtnForm.$show()" ng-hide="prospectlevelBtnForm.$visible"></span>
 													</td>
 												</tr>
@@ -224,23 +224,23 @@
 												</tr>-->
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyType'}}</th>
-													<td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in typent_id.values" onaftersave="update()">
-															\{{ showStatus('typent_id')}}
+													<td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_typent.values" onaftersave="update()">
+															\{{ showStatus('typent_id','fk_typent')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Staff'}}</th>
-													<td><a href="#" editable-select="societe.effectif_id" buttons="no" e-ng-options="s.id as s.label for s in effectif_id.values" onaftersave="update()">
-															\{{ showStatus('effectif_id')}}
+													<td><a href="#" editable-select="societe.effectif_id" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_effectif.values" onaftersave="update()">
+															\{{ showStatus('effectif_id','fk_effectif')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:JuridicalStatus'}}</th>
 													<td>
-														<a href="#" editable-select="societe.forme_juridique_code" buttons="no" e-ng-options="s.id as s.label for s in forme_juridique_code.values" onaftersave="update()">
-															\{{ showStatus('forme_juridique_code') || "-"}}
+														<a href="#" editable-select="societe.forme_juridique_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_forme_juridique.values" onaftersave="update()">
+															\{{ showStatus('forme_juridique_code','fk_forme_juridique') || "-"}}
 														</a></td>
 												</tr>
 												<tr>
@@ -287,7 +287,7 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:CustomerSegmentation'}}</th>
-													<td><a href="#" editable-select="societe.segmentation" buttons="no" e-ng-options="s as s.label group by s.group for s in segmentation.values track by s.id" onaftersave="update()">
+													<td><a href="#" editable-select="societe.segmentation" buttons="no" e-ng-options="s as s.label group by s.group for s in dict.fk_segmentation.values track by s.id" onaftersave="update()">
 															\{{societe.segmentation.label|| 'Non défini'}} <small ng-if="societe.segmentation.group">(\{{societe.segmentation.group}})</small>
 														</a></td>
 												</tr>
@@ -300,7 +300,7 @@
 											</tr>
 											<tr>
 												<th scope="row">{{t 'companies:Rival'}}</th>
-												<td><a href="#" editable-select="societe.rival" buttons="no" e-ng-options="s.label as s.label for s in rival.values" onaftersave="update()">
+												<td><a href="#" editable-select="societe.rival" buttons="no" e-ng-options="s.label as s.label for s in dict.fk_rival.values" onaftersave="update()">
 														\{{societe.rival|| 'Non défini'}}
 													</a></td>
 											</tr>
@@ -355,16 +355,16 @@
 												<tr>
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
 													<td>
-														<a href="#" editable-select="societe.cond_reglement" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement.values" onaftersave="update()">
-															\{{ showStatus('cond_reglement')}}
+														<a href="#" editable-select="societe.cond_reglement" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_payment_term.values" onaftersave="update()">
+															\{{ showStatus('cond_reglement','fk_payment_term')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentMode'}}</th>
 													<td>
-														<a href="#" editable-select="societe.mode_reglement" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement.values" onaftersave="update()">
-															\{{ showStatus('mode_reglement')}}
+														<a href="#" editable-select="societe.mode_reglement" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_paiement.values" onaftersave="update()">
+															\{{ showStatus('mode_reglement', 'fk_paiement')}}
 														</a>
 													</td>
 												</tr>

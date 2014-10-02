@@ -15,9 +15,6 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
-
 module.exports = function (app, passport, auth) {
 
 	var object = new Object();
@@ -31,7 +28,6 @@ module.exports = function (app, passport, auth) {
 	app.del('/api/bill/:billId', auth.requiresLogin, object.destroy);
 	app.get('/api/bill/pdf/:billId', auth.requiresLogin, object.pdf);
 	app.get('/api/bill/releveFacture/pdf/:societeId', auth.requiresLogin, object.releve_facture);
-	app.get('/api/bill/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
 	app.post('/api/bill/autocomplete', auth.requiresLogin, function (req, res) {
@@ -215,47 +211,6 @@ Object.prototype = {
 			} else {
 				res.json(bill);
 			}
-		});
-	},
-	select: function (req, res) {
-		ExtrafieldModel.findById('extrafields:Facture', function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-			var result = [];
-			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
-
-					if (docs) {
-						for (var i in docs.values) {
-							if (docs.values[i].enable) {
-								var val = {};
-								val.id = i;
-								if (docs.values[i].label)
-									val.label = docs.values[i].label;
-								else
-									val.label = req.i18n.t("bills:" + i);
-								result.push(val);
-							}
-						}
-						doc.fields[req.query.field].values = result;
-					}
-
-					res.json(doc.fields[req.query.field]);
-				});
-
-			for (var i in doc.fields[req.query.field].values) {
-				if (doc.fields[req.query.field].values[i].enable) {
-					var val = {};
-					val.id = i;
-					val.label = req.i18n.t("bills:" + doc.fields[req.query.field].values[i].label);
-					result.push(val);
-				}
-			}
-			doc.fields[req.query.field].values = result;
-
-			res.json(doc.fields[req.query.field]);
 		});
 	},
 	pdf: function (req, res) {

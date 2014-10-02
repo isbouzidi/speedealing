@@ -12,9 +12,9 @@ var mongoose = require('mongoose'),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
-var DictModel = mongoose.model('dict');
-var ExtrafieldModel = mongoose.model('extrafields');
 var EntityModel = mongoose.model('entity');
+
+var Dict = require('../controllers/dict');
 
 //  Getters and Setters
 /*var getTags = function(tags) {
@@ -87,7 +87,7 @@ var contactSchema = new Schema({
 contactSchema.plugin(timestamps);
 
 var segmentationList = {};
-DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, docs) {
+Dict.dict({dictName: "fk_segmentation"}, function (err, docs) {
 	if (docs) {
 		segmentationList = docs.values;
 	}
@@ -138,12 +138,12 @@ contactSchema.virtual('name')
 		});
 
 var contactStatusList = {};
-ExtrafieldModel.findById('extrafields:Contact', function (err, doc) {
+Dict.dict({dictName: "fk_contact_status", object: true}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
 	}
-	contactStatusList = doc.fields.Status;
+	contactStatusList = doc;
 });
 
 contactSchema.virtual('status')

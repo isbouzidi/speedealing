@@ -11,8 +11,9 @@ var mongoose = require('mongoose'),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
-var DictModel = mongoose.model('dict');
 var EntityModel = mongoose.model('entity');
+
+var Dict = require('../controllers/dict');
 
 /**
  * Article Schema
@@ -135,7 +136,7 @@ orderSchema.plugin(gridfs.pluginGridFs, {root: 'Commande'});
 /**
  * Pre-save hook
  */
-orderSchema.pre('save', function(next) {
+orderSchema.pre('save', function (next) {
 	this.total_ht = 0;
 	this.total_tva = 0;
 	this.total_ttc = 0;
@@ -156,12 +157,12 @@ orderSchema.pre('save', function(next) {
 	this.total_ht = Math.round(this.total_ht * 100) / 100;
 	this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = Math.round(this.total_ttc * 100) / 100;
-	
+
 	var self = this;
 	if (this.isNew && this.ref == null) {
-		SeqModel.inc("CO", function(seq) {
+		SeqModel.inc("CO", function (seq) {
 			//console.log(seq);
-			EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+			EntityModel.findOne({_id: self.entity}, "cptRef", function (err, entity) {
 				if (err)
 					console.log(err);
 
@@ -177,7 +178,7 @@ orderSchema.pre('save', function(next) {
 });
 
 var statusList = {};
-DictModel.findOne({_id: "dict:fk_order_status"}, function(err, docs) {
+Dict.dict({dictName: "fk_order_status", object: true}, function (err, docs) {
 	statusList = docs;
 });
 
@@ -185,23 +186,23 @@ DictModel.findOne({_id: "dict:fk_order_status"}, function(err, docs) {
  * Methods
  */
 orderSchema.virtual('status')
-		.get(function() {
-	var res_status = {};
+		.get(function () {
+			var res_status = {};
 
-	var status = this.Status;
+			var status = this.Status;
 
-	if (status && statusList.values[status].label) {
-		res_status.id = status;
-		res_status.name = i18n.t("orders:" + statusList.values[status].label);
-		//this.status.name = statusList.values[status].label;
-		res_status.css = statusList.values[status].cssClass;
-	} else { // By default
-		res_status.id = status;
-		res_status.name = status;
-		res_status.css = "";
-	}
+			if (status && statusList.values[status].label) {
+				res_status.id = status;
+				res_status.name = i18n.t("orders:" + statusList.values[status].label);
+				//this.status.name = statusList.values[status].label;
+				res_status.css = statusList.values[status].cssClass;
+			} else { // By default
+				res_status.id = status;
+				res_status.name = status;
+				res_status.css = "";
+			}
 
-	return res_status;
-});
+			return res_status;
+		});
 
 mongoose.model('commande', orderSchema, 'Commande');

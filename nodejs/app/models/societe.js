@@ -11,9 +11,9 @@ var mongoose = require('mongoose'),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
-var DictModel = mongoose.model('dict');
-var ExtrafieldModel = mongoose.model('extrafields');
 var EntityModel = mongoose.model('entity');
+
+var Dict = require('../controllers/dict');
 
 //  Getters and Setters
 /*var getTags = function(tags) {
@@ -164,17 +164,17 @@ societeSchema.pre('save', function (next) {
 });
 
 var statusList = {};
-DictModel.findOne({_id: "dict:fk_stcomm"}, function (err, docs) {
+Dict.dict({dictName: "fk_stcomm", object: true}, function (err, docs) {
 	statusList = docs;
 });
 
 var prospectLevelList = {};
-DictModel.findOne({_id: "dict:fk_prospectlevel"}, function (err, docs) {
+Dict.dict({dictName: "fk_prospectlevel", object: true}, function (err, docs) {
 	prospectLevelList = docs;
 });
 
 var segmentationList = {};
-DictModel.findOne({_id: "dict:fk_segmentation"}, function (err, docs) {
+Dict.dict({dictName: "fk_segmentation", object: true}, function (err, docs) {
 	if (docs) {
 		segmentationList = docs.values;
 	}

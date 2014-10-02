@@ -139,8 +139,8 @@
 											<tbody>
 												<tr>
 													<th scope="row">{{t 'Type'}}</th>
-													<td><span editable-select="bill.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in type.values">
-															\{{showStatus('type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
+													<td><span editable-select="bill.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_bill_type.values">
+															\{{showStatus('type','fk_bill_type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
 													</td>
 												</tr>
 												<tr>
@@ -162,15 +162,15 @@
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
-													<td><a href="#" editable-select="bill.cond_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement_code.values" onaftersave="update()">
-															\{{ showStatus('cond_reglement_code')}}
+													<td><a href="#" editable-select="bill.cond_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_payment_term.values" onaftersave="update()">
+															\{{ showStatus('cond_reglement_code', 'fk_payment_term')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentMode'}}</th>
-													<td><a href="#" editable-select="bill.mode_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement_code.values" onaftersave="update()">
-															\{{ showStatus('mode_reglement_code')}}
+													<td><a href="#" editable-select="bill.mode_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_paiement.values" onaftersave="update()">
+															\{{ showStatus('mode_reglement_code','fk_paiement')}}
 														</a>
 													</td>
 												</tr>

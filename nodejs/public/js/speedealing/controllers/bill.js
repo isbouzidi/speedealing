@@ -1,4 +1,4 @@
-angular.module('mean.bills').controller('BillController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Bills', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
+angular.module('mean.bills').controller('BillController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Bills', function ($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
 
 		pageTitle.setTitle('Liste des factures');
 
@@ -9,6 +9,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			notes: []
 		};
 		$scope.tickets = [];
+		$scope.dict = {};
 		$scope.countTicket = 0;
 		$scope.bills = [];
 		$scope.gridOptionsBills = {};
@@ -17,37 +18,34 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 		$scope.type = {name: "Toutes", id: "ALL"};
 
-		$scope.init = function() {
-			var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
+		$scope.init = function () {
+			var dict = ["fk_bill_status", "fk_payment_term", "fk_bill_type", "fk_paiement"];
 
-			angular.forEach(fields, function(field) {
-				$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function(data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
 		};
 
-		$scope.showStatus = function(idx) {
-			if (!($scope[idx] && $scope.bill[idx]))
+		$scope.showStatus = function (val, dict) {
+			if (!($scope.dict[dict] && $scope.bill[val]))
 				return;
-			var selected = $filter('filter')($scope[idx].values, {id: $scope.bill[idx]});
+			var selected = $filter('filter')($scope.dict[dict].values, {id: $scope.bill[val]});
 
-			return ($scope.bill[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
+			return ($scope.bill[val] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
 
-		$scope.remove = function(bill) {
+		$scope.remove = function (bill) {
 			bill.$remove();
 
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var bill = $scope.bill;
 
-			bill.$update(function(response) {
+			bill.$update(function (response) {
 				pageTitle.setTitle('Facture ' + bill.ref);
 
 				if (response.Status == "DRAFT")
@@ -57,23 +55,23 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			});
 		};
 
-		$scope.find = function() {
-			Bills.query({query: this.type.id, entity: Global.user.entity}, function(bills) {
+		$scope.find = function () {
+			Bills.query({query: this.type.id, entity: Global.user.entity}, function (bills) {
 				$scope.bills = bills;
 				$scope.countBills = bills.length;
 			});
 		};
 
-		$scope.clone = function() {
-			$scope.bill.$clone(function(response) {
+		$scope.clone = function () {
+			$scope.bill.$clone(function (response) {
 				$location.path("bills/" + response._id);
 			});
 		};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			Bills.get({
 				Id: $routeParams.id
-			}, function(bill) {
+			}, function (bill) {
 				$scope.bill = bill;
 
 				if (bill.Status == "DRAFT")
@@ -86,7 +84,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 								find: {"linked.id": bill._id},
 								fields: "name ref updatedAt percentage Status task"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (status == 200)
 						$scope.tickets = data;
 
@@ -94,20 +92,20 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				});
 
 				pageTitle.setTitle('Facture ' + $scope.bill.ref);
-				
+
 				$scope.totalOrders = 0;
 
-				angular.forEach(bill.orders, function(order) {
+				angular.forEach(bill.orders, function (order) {
 					$scope.totalOrders += order.total_ht;
 				});
-				
-			}, function(err) {
+
+			}, function (err) {
 				if (err.status == 401)
 					$location.path("401.html");
 			});
 		};
 
-		$scope.societeAutoComplete = function(val, field) {
+		$scope.societeAutoComplete = function (val, field) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -115,12 +113,12 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
 
-		$scope.userAutoComplete = function(val) {
+		$scope.userAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -128,12 +126,12 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.updateAddress = function(data) {
+		$scope.updateAddress = function (data) {
 			$scope.bill.address = data.address.address;
 			$scope.bill.zip = data.address.zip;
 			$scope.bill.town = data.address.town;
@@ -174,35 +172,35 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			]
 		};
 
-		$scope.addNewBill = function() {
+		$scope.addNewBill = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/bills/create.html',
 				controller: "BillCreateController",
 				windowClass: "steps"
 			});
 
-			modalInstance.result.then(function(bill) {
+			modalInstance.result.then(function (bill) {
 				bill = new Bills(bill);
-				bill.$save(function(response) {
+				bill.$save(function (response) {
 					$location.path("bills/" + response._id);
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.addNewLine = function() {
-                    
+		$scope.addNewLine = function () {
+
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							qty: 0
 						};
 					},
-					options: function() {
+					options: function () {
 						return {
 							price_level: $scope.bill.price_level
 						};
@@ -210,25 +208,25 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				}
 			});
 
-			modalInstance.result.then(function(line) {
+			modalInstance.result.then(function (line) {
 				$scope.bill.lines.push(line);
-				$scope.bill.$update(function(response) {
+				$scope.bill.$update(function (response) {
 					$scope.bill = response;
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.editLine = function(row) {
+		$scope.editLine = function (row) {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return row.entity;
 					},
-					options: function() {
+					options: function () {
 						return {
 							price_level: $scope.bill.price_level
 						};
@@ -236,15 +234,15 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				}
 			});
 
-			modalInstance.result.then(function(line) {
-				$scope.bill.$update(function(response) {
+			modalInstance.result.then(function (line) {
+				$scope.bill.$update(function (response) {
 					$scope.bill = response;
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.removeLine = function(row) {
+		$scope.removeLine = function (row) {
 			//console.log(row.entity._id);
 			for (var i = 0; i < $scope.bill.lines.length; i++) {
 				if (row.entity._id === $scope.bill.lines[i]._id) {
@@ -255,7 +253,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			}
 		};
 
-		$scope.addNote = function() {
+		$scope.addNote = function () {
 			if (!this.note)
 				return;
 
@@ -310,10 +308,10 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					""
 		};
 
-		$scope.aggFunc = function(row, idx) {
+		$scope.aggFunc = function (row, idx) {
 			var total = 0;
 			//console.log(row);
-			angular.forEach(row.children, function(cropEntry) {
+			angular.forEach(row.children, function (cropEntry) {
 				if (cropEntry.entity[idx])
 					total += cropEntry.entity[idx];
 			});
@@ -344,7 +342,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			]
 		};
 
-		$scope.updateInPlace = function(api, field, row) {
+		$scope.updateInPlace = function (api, field, row) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -352,13 +350,13 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
 						data: {
 							value: row.entity[field]
 						}
 					}).
-							success(function(data, status) {
+							success(function (data, status) {
 								if (status == 200) {
 									if (data.value) {
 										if (data.field === "Status")
@@ -375,7 +373,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			}
 		};
 
-		$scope.changeStatus = function(Status) {
+		$scope.changeStatus = function (Status) {
 			$scope.bill.Status = Status;
 			$scope.update();
 		};
@@ -383,28 +381,29 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 	}]);
 
-angular.module('mean.bills').controller('BillCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function($scope, $http, $modalInstance, $upload, $route, Global) {
+angular.module('mean.bills').controller('BillCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function ($scope, $http, $modalInstance, $upload, $route, Global) {
 		$scope.global = Global;
 
 		$scope.active = 1;
 		$scope.bill = {
-			Status: "DRAFT"
+			Status: "DRAFT",
+			datec: new Date()
 		};
 
-		$scope.isActive = function(idx) {
+		$scope.isActive = function (idx) {
 			if (idx == $scope.active)
 				return "active";
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			$scope.active++;
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			$scope.active--;
 		};
 
-		$scope.goto = function(idx) {
+		$scope.goto = function (idx) {
 			if ($scope.active == 5)
 				return;
 
@@ -412,31 +411,30 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				$scope.active = idx;
 		};
 
-		$scope.init = function() {
-			var fields = ["Status", "mode_reglement_code", "cond_reglement_code"];
+		$scope.init = function () {
+			var dict = ["fk_bill_status", "fk_payment_term", "fk_bill_type", "fk_paiement"];
 
-			angular.forEach(fields, function(field) {
-				$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function(data, status) {
-					$scope[field] = data;
-					//console.log(data);
-					$scope.bill[field] = data.default;
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
-
-			$scope.bill.commercial_id = {
-				id: Global.user._id,
-				name: Global.user.firstname + " " + Global.user.lastname
-			}
 		};
 
-		$scope.create = function() {
+		$scope.open = function ($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			$scope.opened = true;
+		};
+
+
+		$scope.create = function () {
 			$modalInstance.close(this.bill);
 		};
 
-		$scope.updateCoord = function(item, model, label) {
+		$scope.updateCoord = function (item, model, label) {
 			//console.log(item);
 
 			if ($scope.bill.client.name === "Accueil")
@@ -450,7 +448,7 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 			$scope.bill.cond_reglement_code = item.cond_reglement_code;
 		};
 
-		$scope.userAutoComplete = function(val) {
+		$scope.userAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -458,12 +456,12 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.societeAutoComplete = function(val, field) {
+		$scope.societeAutoComplete = function (val, field) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -471,7 +469,7 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};

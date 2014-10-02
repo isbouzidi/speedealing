@@ -1,4 +1,4 @@
-angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$timeout', 'pageTitle', 'Global', 'Orders', function($scope, $location, $http, $routeParams, $modal, $timeout, pageTitle, Global, Orders) {
+angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$timeout', 'pageTitle', 'Global', 'Orders', function ($scope, $location, $http, $routeParams, $modal, $timeout, pageTitle, Global, Orders) {
 
 		pageTitle.setTitle('Liste des commandes');
 
@@ -7,12 +7,12 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 
 		$scope.type = {name: "En cours", id: "NOW"};
 
-		$scope.create = function() {
+		$scope.create = function () {
 			var societe = new Societe({
 				title: this.title,
 				content: this.content
 			});
-			societe.$save(function(response) {
+			societe.$save(function (response) {
 				$location.path("societe/" + response._id);
 			});
 
@@ -20,37 +20,37 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			this.content = "";
 		};
 
-		$scope.remove = function(societe) {
+		$scope.remove = function (societe) {
 			societe.$remove();
 
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var societe = $scope.societe;
 
-			societe.$update(function() {
+			societe.$update(function () {
 				//$location.path('societe/' + societe._id);
 			});
 		};
 
-		$scope.find = function() {
-			Orders.query({query: this.type.id, entity: Global.user.entity}, function(orders) {
+		$scope.find = function () {
+			Orders.query({query: this.type.id, entity: Global.user.entity}, function (orders) {
 				$scope.orders = orders;
 				$scope.count = orders.length;
 			});
 
-			$http({method: 'GET', url: '/api/commande/select', params: {
-					field: "Status"
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_order_status"
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.status = data;
 			});
 		};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			Societe.get({
 				Id: $routeParams.id
-			}, function(societe) {
+			}, function (societe) {
 				$scope.societe = societe;
 				pageTitle.setTitle('Fiche ' + $scope.societe.name);
 			});
@@ -92,21 +92,21 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 
 		$scope.order = {};
 
-		$scope.addNew = function() {
+		$scope.addNew = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/orders/create.html',
 				controller: "OrderCreateController",
 				windowClass: "steps"
 			});
 
-			modalInstance.result.then(function(order) {
+			modalInstance.result.then(function (order) {
 				$scope.orders.push(order);
 				$scope.count++;
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.updateInPlace = function(api, field, row, newdata) {
+		$scope.updateInPlace = function (api, field, row, newdata) {
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
 			}
@@ -114,14 +114,14 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
 						data: {
 							oldvalue: row.entity[field],
 							value: newdata
 						}
 					}).
-							success(function(data, status) {
+							success(function (data, status) {
 								if (status == 200) {
 									if (data) {
 										row.entity = data;
@@ -138,12 +138,14 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 
 	}]);
 
-angular.module('mean.system').controller('OrderCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Order', function($scope, $http, $modalInstance, $upload, $route, Global, Order) {
+angular.module('mean.system').controller('OrderCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Order', function ($scope, $http, $modalInstance, $upload, $route, Global, Order) {
 		$scope.global = Global;
 
 		//pageTitle.setTitle('Nouvelle commande');
+		
+		$scope.opened = [];
 
-		$scope.init = function() {
+		$scope.init = function () {
 			$scope.active = 1;
 			$scope.order = {};
 			$scope.order.bl = [];
@@ -175,41 +177,49 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 				{id: "CHQ", label: "Chèque"},
 				{id: "CB", label: "Carte bancaire"},
 			]
-		}
+		};
 
-		$scope.create = function() {
+		$scope.open = function ($event, idx) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			$scope.opened[idx] = true;
+		};
+
+
+		$scope.create = function () {
 			if (this.order._id)
 				return;
 
 			var order = new Order(this.order);
 
-			order.$save(function(response) {
+			order.$save(function (response) {
 				$scope.order = response;
 			});
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var order = $scope.order;
 
-			order.$update(function(response) {
+			order.$update(function (response) {
 				$scope.order = response;
 			});
 		};
 
-		$scope.isActive = function(idx) {
+		$scope.isActive = function (idx) {
 			if (idx == $scope.active)
 				return "active";
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			$scope.active++;
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			$scope.active--;
 		};
 
-		$scope.goto = function(idx) {
+		$scope.goto = function (idx) {
 			if ($scope.active == 5)
 				return;
 
@@ -217,7 +227,7 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 				$scope.active = idx;
 		};
 
-		$scope.societeAutoComplete = function(val) {
+		$scope.societeAutoComplete = function (val) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -225,28 +235,28 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 
 				return res.data;
 			});
 		};
 
-		$scope.initSelectFiles = function() {
+		$scope.initSelectFiles = function () {
 			$http({method: 'GET', url: 'api/chaumeil/otis/selectFiles'
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.selectFiles = data;
 
-				$timeout(function() {
+				$timeout(function () {
 					angular.element('select').change();
 				}, 300);
 			});
 		};
 
-		$scope.addDossier = function() {
+		$scope.addDossier = function () {
 			$scope.order.optional.dossiers.push({});
 		};
 
-		$scope.addDest = function() {
+		$scope.addDest = function () {
 			$scope.order.bl.push({
 				products: [
 					{name: 'paper', qty: 0},
@@ -255,7 +265,7 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 			});
 		};
 
-		$scope.sendOrder = function() {
+		$scope.sendOrder = function () {
 			$scope.order.datec = new Date();
 			$scope.order.date_livraison = new Date();
 			$scope.order.date_livraison.setDate($scope.order.date_livraison.getDate() + 5);
@@ -308,7 +318,7 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 			$modalInstance.close($scope.order);
 		};
 
-		$scope.onFileSelect = function($files, idx) {
+		$scope.onFileSelect = function ($files, idx) {
 			$scope.filePercentage[idx] = 0;
 			//console.log(idx);
 			//$files: an array of files selected, each file has name, size, and type.
@@ -329,9 +339,9 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function(evt) {
+					}).progress(function (evt) {
 						$scope.filePercentage[idx] = parseInt(100.0 * evt.loaded / evt.total);
-					}).success(function(data, status, headers, config) {
+					}).success(function (data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
@@ -347,7 +357,7 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 			}
 		};
 
-		$scope.suppressFile = function(id, fileName, idx) {
+		$scope.suppressFile = function (id, fileName, idx) {
 			//console.log(id);
 			//console.log(fileName);
 			//console.log(idx);
@@ -356,7 +366,7 @@ angular.module('mean.system').controller('OrderCreateController', ['$scope', '$h
 			fileName = $scope.order.ref + "_" + idx + "_" + fileName;
 
 			$http({method: 'DELETE', url: 'api/commande/file/' + id + '/' + fileName
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				if (status == 200) {
 					$scope.order.files = data.files;
 					$scope.order.__v = data.__v; // for update

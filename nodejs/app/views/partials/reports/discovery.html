@@ -1,6 +1,6 @@
 <div class="field-block button-height">
     <label for="potential"><b>{{t "reports:Potential"}}</b></label>
-    <span ng-repeat="p in potential" style="margin-left" >
+    <span ng-repeat="p in potential.values" style="margin-left" >
 		<input required type="radio" name="selectedProspectLevel" ng-model="prospectLevel.selectedOption" value="\{{p.id}}"/> \{{p.label}}
 		<br/>
     </span>

@@ -2,30 +2,30 @@
 
     <!-- Block style is optional, you can use any layout -->
     <h3 class="block-title">{{t 'reports:New Report'}}</h3>
-
+\{{report}}
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
             <label for="model"><b>{{t "Model"}}</b></label>
             <select class="form-control" 
                     id="model" 
                     ng-model="report.modelTemp" 
-                    ng-options="m as m.label for m in model">
+                    ng-options="m as m.label for (id,m) in extrafield.fields.model.values">
             </select>
         </div>
 
         <div class="field-block button-height">
             <label for="dateReport"><b ng-hide="report.modelTemp.id == 'PHONING'">{{t "reports:DateAppointment"}}</b><b ng-show="report.modelTemp.id == 'PHONING'">{{t "reports:DateCall"}}</b></label>
 
-            <span class="k-widget k-datepicker k-header input">
-                <span class="k-picker-wrap k-state-default">
-                    <input 
-                        kendo-date-picker required 
-                        id="dateReport" 
-                        k-on-change="report.dateReport = kendoEvent.sender._value;" 
-                        class="input"/>
-
-                </span>
-            </span>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="report.dateReport" is-open="opened[0]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event,0)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
 
         </div>
 
@@ -144,15 +144,16 @@
 		<div ng-if="report.actions.length" class="field-block button-height">
             <label for="dueDate"><b>{{t "DateDue"}}</b></label>
 
-            <span class="k-widget k-datepicker k-header input">
-                <span class="k-picker-wrap k-state-default">
-                    <input 
-                        kendo-date-picker required 
-                        id="dueDate" 
-                        k-on-change="report.dueDate = kendoEvent.sender._value;" 
-                        class="input"/>
-                </span>
-            </span>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="report.dueDate" is-open="opened[1]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event,1)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
 
         </div>
 

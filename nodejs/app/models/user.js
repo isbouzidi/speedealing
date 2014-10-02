@@ -13,9 +13,8 @@ var mongoose = require('mongoose'),
 		authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 var UserGroupModel = mongoose.model('userGroup');
-var DictModel = mongoose.model('dict');
-var ExtrafieldModel = mongoose.model('extrafields');
 
+var Dict = require('../controllers/dict');
 
 /**
  * User Schema
@@ -114,7 +113,7 @@ UserSchema.plugin(timestamps);
 UserSchema.plugin(gridfs.pluginGridFs, {root: "User"});
 
 var statusList = {};
-ExtrafieldModel.findOne({_id: "extrafields:User"}, function (err, docs) {
+Dict.extrafield({extrafieldName:'User'}, function (err, docs) {
 
 	statusList = docs;
 });

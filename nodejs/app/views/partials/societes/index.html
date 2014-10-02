@@ -39,7 +39,7 @@
 					<select ng-show="global.user.rights.societe.seeAll" ng-model="commercial_id"  ng-change="setCache('commercial_id', commercial_id); find();" ng-options="c._id.id as c._id.name +' (' + c.count + ')' for c in commercialList" class="">
 						<option value="">-- {{t 'Select'}} {{t 'companies:Deal'}} --</option>
 					</select>
-					<select ng-model="status_id" ng-change="setCache('status_id', status_id);find();" ng-options="s.id as s.label for s in Status.values" class="">
+					<select ng-model="status_id" ng-change="setCache('status_id', status_id);find();" ng-options="s.id as s.label for s in dict.fk_stcomm.values" class="">
 						<option value="">-- {{t 'Select'}} {{t 'Status'}} --</option>
 					</select>
 				</div>

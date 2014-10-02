@@ -15,8 +15,7 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
+var Dict = require('../controllers/dict');
 
 module.exports = function (app, passport, auth) {
 
@@ -26,7 +25,6 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/delivery', auth.requiresLogin, object.read);
 	app.get('/api/delivery/caFamily', auth.requiresLogin, object.caFamily);
 	app.get('/api/delivery/pdf/:deliveryId', auth.requiresLogin, object.pdf);
-	app.get('/api/delivery/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	// list for autocomplete
 	app.post('/api/delivery/autocomplete', auth.requiresLogin, function (req, res) {
@@ -90,28 +88,28 @@ module.exports = function (app, passport, auth) {
 
 	// recupere la liste des courses pour verification
 	app.get('/api/delivery/billing', auth.requiresLogin, billing.read/*, function (req, res) {
-		async.parallel({
-			course: function (cb) {
-				billing.courses(req, "COURSE", cb);
-			},
-			messagerie: function (cb) {
-				billing.courses(req, "MESSAGERIE", cb);
-			},
-			affretement: function (cb) {
-				billing.courses(req, "AFFRETEMENT", cb);
-			},
-			allST: function (cb) {
-				billing.allST(req, cb);
-			}
-		},
-		function (err, results) {
-			if (err)
-				return console.log(err);
-
-			res.json(200, results);
-		});
-
-	}*/);
+	 async.parallel({
+	 course: function (cb) {
+	 billing.courses(req, "COURSE", cb);
+	 },
+	 messagerie: function (cb) {
+	 billing.courses(req, "MESSAGERIE", cb);
+	 },
+	 affretement: function (cb) {
+	 billing.courses(req, "AFFRETEMENT", cb);
+	 },
+	 allST: function (cb) {
+	 billing.allST(req, cb);
+	 }
+	 },
+	 function (err, results) {
+	 if (err)
+	 return console.log(err);
+	 
+	 res.json(200, results);
+	 });
+	 
+	 }*/);
 
 	// Genere la facturation
 	app.post('/api/delivery/billing', auth.requiresLogin, billing.create);
@@ -248,52 +246,11 @@ Object.prototype = {
 			}
 		});
 	},
-	select: function (req, res) {
-		ExtrafieldModel.findById('extrafields:BonLivraison', function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-			var result = [];
-			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
-
-					if (docs) {
-						for (var i in docs.values) {
-							if (docs.values[i].enable) {
-								var val = {};
-								val.id = i;
-								if (docs.values[i].label)
-									val.label = docs.values[i].label;
-								else
-									val.label = req.i18n.t("delivery:" + i);
-								result.push(val);
-							}
-						}
-						doc.fields[req.query.field].values = result;
-					}
-
-					res.json(doc.fields[req.query.field]);
-				});
-
-			for (var i in doc.fields[req.query.field].values) {
-				if (doc.fields[req.query.field].values[i].enable) {
-					var val = {};
-					val.id = i;
-					val.label = req.i18n.t("deliveries:" + doc.fields[req.query.field].values[i].label);
-					result.push(val);
-				}
-			}
-			doc.fields[req.query.field].values = result;
-
-			res.json(doc.fields[req.query.field]);
-		});
-	},
 	pdf: function (req, res) {
 		// Generation de la livraison PDF et download
 
 		var fk_livraison;
-		ExtrafieldModel.findById('extrafields:BonLivraison', function (err, doc) {
+		Dict.extrafield({extrafieldName: 'BonLivraison'}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;
@@ -303,12 +260,12 @@ Object.prototype = {
 		});
 
 		var cond_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
+		Dict.dict({dictName: "fk_payment_term"}, function (err, docs) {
 			cond_reglement_code = docs;
 		});
 
 		var mode_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_paiement"}, function (err, docs) {
+		Dict.dict({dictName: "fk_paiement"}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
 
@@ -355,7 +312,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
-					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].no_package + "&" + latex.number(doc.lines[i].qty, 3) + (doc.lines[i].units ? " " + doc.lines[i].units : " kg") + "\\tabularnewline\n";
+					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/%/gi, "\\%") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].no_package + "&" + latex.number(doc.lines[i].qty, 3) + (doc.lines[i].units ? " " + doc.lines[i].units : " kg") + "\\tabularnewline\n";
 				}
 				//console.log(products)
 				//console.log(tab_latex);
@@ -492,24 +449,24 @@ function Billing() {
 
 Billing.prototype = {
 	read: function (req, res) {
-		
+
 		var result = {
-			GroupBL : {},
+			GroupBL: {},
 			GroupOrder: {}
 		};
-		
+
 		var project = {};
 		var fields = req.query.fields.split(" ");
 		for (var i in fields) {
 			project[fields[i].trim()] = 1;
 		}
-		
+
 		DeliveryModel.aggregate([
-			{$match:{Status: "SEND",entity: req.query.entity, datec: {$lte:new Date(req.query.dateEnd)}}},
+			{$match: {Status: "SEND", entity: req.query.entity, datec: {$lte: new Date(req.query.dateEnd)}}},
 			{$project: project}
 		])
 				.unwind('lines')
-				
+
 				//.populate("orders", "ref ref_client total_ht")
 				.exec(function (err, docs) {
 					if (err)

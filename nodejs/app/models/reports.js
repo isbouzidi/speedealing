@@ -9,8 +9,9 @@ var mongoose = require('mongoose'),
 		i18n = require("i18next"),
 		timestamps = require('mongoose-timestamp');
 
-var ExtrafieldModel = mongoose.model('extrafields');
 var LeadModel = mongoose.model('lead');
+var Dict = require('../controllers/dict');
+
 /**
  * Report Schema
  */
@@ -55,7 +56,7 @@ var ReportSchema = new Schema({
 });
 
 ReportSchema.plugin(timestamps);
-ReportSchema.virtual('RealisedStatus').get(function() {
+ReportSchema.virtual('RealisedStatus').get(function () {
 
 	var realisedStat = {};
 
@@ -72,7 +73,7 @@ ReportSchema.virtual('RealisedStatus').get(function() {
 });
 
 var extrafields = {};
-ExtrafieldModel.findById('extrafields:Report', function(err, doc) {
+Dict.extrafield({extrafieldName: 'Report'}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
@@ -81,7 +82,7 @@ ExtrafieldModel.findById('extrafields:Report', function(err, doc) {
 });
 
 ReportSchema.virtual('_model')
-		.get(function() {
+		.get(function () {
 			var res = {};
 
 			var model = this.model;
@@ -102,10 +103,10 @@ ReportSchema.virtual('_model')
 		});
 
 
-ReportSchema.post('save', function(doc) {
+ReportSchema.post('save', function (doc) {
 
 	if (doc.lead.id && doc.leadStatus)
-		LeadModel.update({_id: doc.lead.id}, {$set: {status: doc.leadStatus}}, {multi: false}, function(err) {
+		LeadModel.update({_id: doc.lead.id}, {$set: {status: doc.leadStatus}}, {multi: false}, function (err) {
 
 			console.log('lead updated ');
 		});

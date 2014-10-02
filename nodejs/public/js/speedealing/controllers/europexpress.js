@@ -1,11 +1,11 @@
-angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', '$route', 'Global', '$http', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, $http, Object) {
+angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', '$route', 'Global', '$http', 'EEPlanning', function ($scope, $routeParams, $location, $route, Global, $http, Object) {
 		$scope.global = Global;
 		$scope.showEdit = {};
 
 		$scope.cpt = 0;
 		$scope.hsupp = 0;
 
-		$scope.dateDay = function(day) {
+		$scope.dateDay = function (day) {
 			var year = parseInt($routeParams.id2);
 			var week = parseInt($routeParams.id1);
 
@@ -17,12 +17,12 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 
 		};
 
-		$scope.find = function() {
+		$scope.find = function () {
 			if ($routeParams.id1 == null)
 				return $scope.today();
 
 			//console.log($routeParams);
-			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function(tournees) {
+			Object.query({week: $routeParams.id1, year: $routeParams.id2}, function (tournees) {
 				$scope.tournees = tournees;
 				$scope.cpt = $scope.tournees.length;
 
@@ -32,21 +32,21 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			});
 		};
 
-		$scope.createWeek = function() {
+		$scope.createWeek = function () {
 			$http({method: 'POST', url: 'api/europexpress/planning', data: {
 					year: $routeParams.id2,
 					week: $routeParams.id1}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.find();
 					});
 		};
 
-		$scope.enableEdit = function(id) {
+		$scope.enableEdit = function (id) {
 			$scope.showEdit[id] = true;
 		};
 
-		$scope.today = function() {
+		$scope.today = function () {
 			var d = new Date();
 			d.setHours(0, 0, 0);
 			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
@@ -54,7 +54,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			$location.path('module/europexpress/planning.html/' + week + '/' + d.getFullYear());
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			var year = parseInt($routeParams.id2);
 			var week = parseInt($routeParams.id1);
 
@@ -69,7 +69,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			$location.path('module/europexpress/planning.html/' + week + '/' + year);
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			var year = parseInt($routeParams.id2);
 			var week = parseInt($routeParams.id1);
 
@@ -84,7 +84,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 
 		$scope.week = $routeParams.id1 + '/' + $routeParams.id2;
 
-		$scope.disableEdit = function() {
+		$scope.disableEdit = function () {
 			for (var i in $scope.showEdit)
 				$scope.showEdit[i] = false;
 		};
@@ -93,7 +93,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		 * AutoComplete User Driver
 		 */
 
-		$scope.driverAutoComplete = function(val) {
+		$scope.driverAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete?lastname=1', {
 				take: '5',
 				skip: '0',
@@ -101,7 +101,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
@@ -110,7 +110,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		 * AutoComplete Sous-Traitant
 		 */
 
-		$scope.subcontractorAutoComplete = function(val) {
+		$scope.subcontractorAutoComplete = function (val) {
 			return $http.post('api/societe/autocomplete?fournisseur=SUBCONTRACTOR', {
 				take: '5',
 				skip: '0',
@@ -118,12 +118,12 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
 
-		$scope.update = function(id) {
+		$scope.update = function (id) {
 			//console.log($scope.aday);
 
 			if (!$scope.aday.driver && !$scope.aday.formation) {
@@ -132,7 +132,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 
 			var article = $scope.aday;
 
-			article.$update(function(doc) {
+			article.$update(function (doc) {
 				//$route.reload();
 				//$location.path('articles/' + article._id);
 				$scope.showEdit = {};
@@ -149,15 +149,15 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			});
 		};
 
-		$scope.findOne = function(id) {
+		$scope.findOne = function (id) {
 			Object.get({
 				planningId: id
-			}, function(aday) {
+			}, function (aday) {
 				$scope.aday = aday;
 			});
 		};
 
-		$scope.refresh = function() {
+		$scope.refresh = function () {
 			/*angular.element('#refresh').confirm({
 			 message: 'Are you really really sure?',
 			 onConfirm: function()
@@ -173,16 +173,16 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 					year: $routeParams.id2,
 					week: $routeParams.id1}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$route.reload();
 					}).
-					error(function(data, status) {
+					error(function (data, status) {
 						console.log("Request failed");
 					});
 
 		};
 
-		$scope.disableRefresh = function() {
+		$scope.disableRefresh = function () {
 			var d = new Date();
 			d.setHours(0, 0, 0);
 			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
@@ -232,7 +232,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		 };*/
 	}]);
 
-angular.module('mean.europexpress').controller('EETourneeController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, Object) {
+angular.module('mean.europexpress').controller('EETourneeController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function ($scope, $routeParams, $location, $route, Global, Object) {
 		$scope.global = Global;
 
 		var crudServiceBaseUrl = "api/europexpress/tournee";
@@ -259,13 +259,13 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 					type: "POST",
 					dataType: "json"
 				},
-				parameterMap: function(options, operation) {
+				parameterMap: function (options, operation) {
 					if (operation !== "read" && options.models) {
 						return {models: kendo.stringify(options.models)};
 					}
 				}
 			},
-			error: function(e) {
+			error: function (e) {
 				// log error
 				alert(e.xhr.responseText);
 			},
@@ -305,7 +305,7 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 			sort: {field: "storehouse", dir: "asc"}
 		});
 
-		$scope.clientDropDownEditor = function(container, options) {
+		$scope.clientDropDownEditor = function (container, options) {
 			$('<input id="id"/>')
 					.attr("name", options.field)
 					.appendTo(container)
@@ -328,7 +328,7 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 					});
 		}
 
-		$scope.modeDropDownEditor = function(container, options) {
+		$scope.modeDropDownEditor = function (container, options) {
 			$('<input data-ng-model="name" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
@@ -344,7 +344,7 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 					});
 		}
 
-		$scope.panierMultiSelect = function(container, options) {
+		$scope.panierMultiSelect = function (container, options) {
 			$('<input data-bind="value:' + options.field + ', source: ' + options.field + '" />')
 					.appendTo(container)
 					.kendoMultiSelect({
@@ -369,7 +369,7 @@ angular.module('mean.europexpress').controller('EETourneeController', ['$scope',
 		}
 	}]);
 
-angular.module('mean.europexpress').controller('EETransportController', ['$scope', '$routeParams', '$location', '$route', '$modal', 'Global', 'EETransport', function($scope, $routeParams, $location, $route, $modal, Global, Object) {
+angular.module('mean.europexpress').controller('EETransportController', ['$scope', '$routeParams', '$location', '$route', '$modal', 'Global', 'EETransport', function ($scope, $routeParams, $location, $route, $modal, Global, Object) {
 		$scope.global = Global;
 
 		$scope.gridOptionsTransports = {};
@@ -403,7 +403,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					type: "POST",
 					dataType: "json"
 				},
-				parameterMap: function(options, operation) {
+				parameterMap: function (options, operation) {
 					if (operation !== "read" && options.models) {
 						return {models: kendo.stringify(options.models)};
 					}
@@ -417,7 +417,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					}
 				}
 			},
-			error: function(e) {
+			error: function (e) {
 				// log error
 				alert(e.xhr.responseText);
 			},
@@ -455,7 +455,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 		});
 
 		// cache certain champ dans le popup
-		$scope.kendoEdit = function(e) {
+		$scope.kendoEdit = function (e) {
 			//console.log(e);
 			e.container.find('label[for="from"]').hide();
 			e.container.find('label[for="to"]').hide();
@@ -466,13 +466,13 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 			e.container.find('.button-group').hide();
 		};
 
-		$scope.dateTimeEditor = function(container, options) {
+		$scope.dateTimeEditor = function (container, options) {
 			$('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
 					.appendTo(container)
 					.kendoDateTimePicker({});
 		};
 
-		$scope.clientDropDownEditor = function(container, options) {
+		$scope.clientDropDownEditor = function (container, options) {
 			$('<input required id="id"/>')
 					.attr("name", options.field)
 					.appendTo(container)
@@ -495,7 +495,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					});
 		};
 
-		$scope.fournisseurDropDownEditor = function(container, options) {
+		$scope.fournisseurDropDownEditor = function (container, options) {
 			$('<input id="id"/>')
 					.attr("name", options.field)
 					.appendTo(container)
@@ -518,7 +518,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					});
 		};
 
-		$scope.typeDropDownEditor = function(container, options) {
+		$scope.typeDropDownEditor = function (container, options) {
 			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
@@ -535,7 +535,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					});
 		};
 
-		$scope.societeFilter = function(element) {
+		$scope.societeFilter = function (element) {
 			element.kendoAutoComplete({
 				dataTextField: "name",
 				dataValueField: "name",
@@ -554,8 +554,8 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 			});
 		};
 
-		$scope.find = function() {
-			Object.query({query: this.type.id, entity: Global.user.entity}, function(courses) {
+		$scope.find = function () {
+			Object.query({query: this.type.id, entity: Global.user.entity}, function (courses) {
 				$scope.transports = courses;
 				$scope.countTransports = courses.length;
 			});
@@ -613,13 +613,13 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 		 {template:"<span class=\"button-group\"><a class=\"button icon-pencil\" ng-href=\"\\#!/module/europexpress/transport_edit.html/#=_id#/\"></a><a class=\"button icon-download\" ng-href=\"api/europexpress/courses/pdf/#=_id#\" target=\"_blank\"></a></span>", "width": "80px"}
 		 ]'*/
 
-		$scope.addNewMessagerie = function() {
+		$scope.addNewMessagerie = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/europexpress/create_messagerie.html',
 				controller: "EETransportCreateController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							type: {
 								id: "MESSAGERIE",
@@ -641,23 +641,23 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 				}
 			});
 
-			modalInstance.result.then(function(course) {
+			modalInstance.result.then(function (course) {
 				course = new Object(course);
-				course.$save(function(response) {
+				course.$save(function (response) {
 					$scope.transports.push(response);
 					$scope.countTransports++;
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.addNew = function() {
+		$scope.addNew = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/europexpress/create_transport.html',
 				controller: "EETransportCreateController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							type: {
 								id: "COURSE",
@@ -679,54 +679,54 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 				}
 			});
 
-			modalInstance.result.then(function(course) {
+			modalInstance.result.then(function (course) {
 				course = new Object(course);
-				course.$save(function(response) {
+				course.$save(function (response) {
 					//$scope.transports.push(response);
 					//$scope.countTransports++;
 					$location.path("module/europexpress/transport_edit.html/" + course._id);
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
 	}]);
 
-angular.module('mean.europexpress').controller('EETransportCreateController', ['$scope', '$routeParams', '$location', '$route', '$modalInstance', 'Global', 'EETransport', '$http', '$timeout', 'object', function($scope, $routeParams, $location, $route, $modalInstance, Global, Object, $http, $timeout, object) {
+angular.module('mean.europexpress').controller('EETransportCreateController', ['$scope', '$routeParams', '$location', '$route', '$modalInstance', 'Global', 'EETransport', '$http', '$timeout', 'object', function ($scope, $routeParams, $location, $route, $modalInstance, Global, Object, $http, $timeout, object) {
 		$scope.global = Global;
 
 		$scope.course = object;
 
 		$scope.validBorderau = true;
 
-		$scope.init = function() {
+		$scope.init = function () {
 			$http({method: 'GET', url: 'api/europexpress/courses/type/select'
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.type = data;
 				//console.log(data);
 			});
 		};
 
-		$scope.create = function() {
+		$scope.create = function () {
 			$modalInstance.close($scope.course);
 		};
 
-		$scope.$watch('course.datec', function(date)
+		$scope.$watch('course.datec', function (date)
 		{
 			var time = new Date(date);
 			if (new Date($scope.dateC).getTime() != time.getTime())
 				$scope.dateC = time;
 		});
 
-		$scope.selectStatus = function() {
+		$scope.selectStatus = function () {
 			$http({method: 'GET', url: 'api/europexpress/courses/status/select'
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.status = data;
 					});
 		};
 
-		$scope.clientAutoComplete = function(val) {
+		$scope.clientAutoComplete = function (val) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -734,12 +734,12 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
 
-		$scope.fournisseurAutoComplete = function(val) {
+		$scope.fournisseurAutoComplete = function (val) {
 			return $http.post('api/societe/autocomplete?fournisseur=SUBCONTRACTOR', {
 				take: '5',
 				skip: '0',
@@ -747,12 +747,12 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
 
-		$scope.calculPrice = function() {
+		$scope.calculPrice = function () {
 			if ($scope.course.type.id !== "MESSAGERIE")
 				return;
 
@@ -768,7 +768,7 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 					qty: $scope.course.poids
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						/*
 						 * 2 cas de figures :
 						 *  - si poids inf ou egale a 100 on applique tranche de poids
@@ -795,13 +795,13 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 		};
 
 
-		$scope.checkBordereau = function() {
+		$scope.checkBordereau = function () {
 
 			if ($scope.course.bordereau)
 				$http({method: 'GET', url: '/api/europexpress/courses/uniqId', params: {
 						bordereau: $scope.course.bordereau
 					}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					$scope.validBorderau = true;
 					if (data.bordereau) { // already exist
 						$scope.validBorderau = false;
@@ -813,41 +813,41 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 
 	}]);
 
-angular.module('mean.europexpress').controller('EETransportEditController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EETransport', '$http', '$timeout', function($scope, $routeParams, $location, $route, Global, Object, $http, $timeout) {
+angular.module('mean.europexpress').controller('EETransportEditController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EETransport', '$http', '$timeout', function ($scope, $routeParams, $location, $route, Global, Object, $http, $timeout) {
 		$scope.global = Global;
 
-		$scope.cancel = function() {
+		$scope.cancel = function () {
 			$location.path('module/europexpress/transport.html');
 		};
 
-		$scope.update = function(id) {
+		$scope.update = function (id) {
 			var course = $scope.course;
 
-			course.$update(function() {
+			course.$update(function () {
 				$location.path('module/europexpress/transport.html');
 			});
 		};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			Object.get({
 				id: $routeParams.id
-			}, function(course) {
+			}, function (course) {
 				$scope.course = course;
 				$scope.refreshContact();
-				$timeout(function() {
+				$timeout(function () {
 					angular.element('select').change();
 				}, 300);
 			});
 		};
 
-		$scope.$watch('course.datec', function(date)
+		$scope.$watch('course.datec', function (date)
 		{
 			var time = new Date(date);
 			if (new Date($scope.dateC).getTime() != time.getTime())
 				$scope.dateC = time;
 		});
 
-		$scope.$watch('course.date_enlevement', function(date)
+		$scope.$watch('course.date_enlevement', function (date)
 		{
 			if (date == null)
 				return;
@@ -856,7 +856,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 				$scope.dateEnlevement = time;
 		});
 
-		$scope.$watch('course.date_livraison', function(date)
+		$scope.$watch('course.date_livraison', function (date)
 		{
 			if (date == null)
 				return;
@@ -865,7 +865,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 				$scope.dateLivraison = time;
 		});
 
-		$scope.$watch('course.ETA.date', function(date)
+		$scope.$watch('course.ETA.date', function (date)
 		{
 			if (date == null)
 				return;
@@ -874,31 +874,31 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 				$scope.ETADate = time;
 		});
 
-		$scope.selectType = function() {
+		$scope.selectType = function () {
 			$http({method: 'GET', url: 'api/europexpress/courses/type/select'
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.types = data;
 					});
 		};
 
-		$scope.selectStatus = function() {
+		$scope.selectStatus = function () {
 			$http({method: 'GET', url: 'api/europexpress/courses/status/select'
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.status = data;
 					});
 		};
 
-		$scope.selectTarifs = function() {
+		$scope.selectTarifs = function () {
 			$http({method: 'GET', url: 'api/europexpress/courses/tarif/select'
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.tarifs = data;
 					});
 		};
 
-		$scope.clientAutoComplete = function(val) {
+		$scope.clientAutoComplete = function (val) {
 			return $http.post('api/societe/autocomplete', {
 				take: '5',
 				skip: '0',
@@ -906,12 +906,12 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
 
-		$scope.fournisseurAutoComplete = function(val) {
+		$scope.fournisseurAutoComplete = function (val) {
 			return $http.post('api/societe/autocomplete?fournisseur=SUBCONTRACTOR', {
 				take: '5',
 				skip: '0',
@@ -919,29 +919,26 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data
 			});
 		};
 
-		$scope.refreshContact = function() {
+		$scope.refreshContact = function () {
 			if ($scope.course.client.id == null) {
 				$scope.contacts = [];
 				return;
 			}
 
-			$http({method: 'GET', url: 'api/societe/contact/select', params: {
+			$http({method: 'GET', url: 'api/contact/societe', params: {
 					societe: $scope.course.client.id}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.contacts = data;
-						$timeout(function() {
-							angular.element('select').change();
-						}, 300);
 					});
 		};
 
-		$scope.calculPrice = function() {
+		$scope.calculPrice = function () {
 			if ($scope.course.type.id !== "MESSAGERIE")
 				return;
 
@@ -957,7 +954,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 					qty: $scope.course.poids
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						/*
 						 * 2 cas de figures :
 						 *  - si poids inf ou egale a 100 on applique tranche de poids
@@ -985,7 +982,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEStockController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function($scope, $routeParams, $location, $route, Global, Object) {
+angular.module('mean.europexpress').controller('EEStockController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function ($scope, $routeParams, $location, $route, Global, Object) {
 		$scope.global = Global;
 
 		var crudServiceBaseUrl = "api/europexpress/stock";
@@ -1011,17 +1008,17 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 					url: crudServiceBaseUrl,
 					type: "POST",
 					dataType: "json",
-					complete: function(e) {
+					complete: function (e) {
 						$("#grid").data("kendoGrid").dataSource.read();
 					}
 				},
-				parameterMap: function(options, operation) {
+				parameterMap: function (options, operation) {
 					if (operation !== "read" && options.models) {
 						return {models: kendo.stringify(options.models)};
 					}
 				}
 			},
-			error: function(e) {
+			error: function (e) {
 				// log error
 				alert(e.xhr.responseText);
 			},
@@ -1049,7 +1046,7 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 			sort: {field: "datec", dir: "desc"}
 		});
 
-		$scope.statusDropDownEditor = function(container, options) {
+		$scope.statusDropDownEditor = function (container, options) {
 			$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoDropDownList({
@@ -1067,13 +1064,13 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 		};
 
 
-		$scope.dateTimeEditor = function(container, options) {
+		$scope.dateTimeEditor = function (container, options) {
 			$('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
 					.appendTo(container)
 					.kendoDateTimePicker({});
 		};
 
-		$scope.societeDropDownEditor = function(container, options) {
+		$scope.societeDropDownEditor = function (container, options) {
 			$('<input required data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>')
 					.appendTo(container)
 					.kendoAutoComplete({
@@ -1095,11 +1092,11 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 					});
 		};
 
-		$scope.textareaEditor = function(container, options) {
+		$scope.textareaEditor = function (container, options) {
 			$('<textarea rows="5" cols="30" style="vertical-align:top;" data-bind="value: ' + options.field + '"></textarea>').appendTo(container);
 		};
 
-		$scope.userDropDownEditor = function(container, options) {
+		$scope.userDropDownEditor = function (container, options) {
 			$('<input required id="id"/>')
 					.attr("name", options.field)
 					.appendTo(container)
@@ -1124,15 +1121,15 @@ angular.module('mean.europexpress').controller('EEStockController', ['$scope', '
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope', '$routeParams', '$location', '$route', '$upload', '$http', '$domUtilityService', 'Global', 'EEVehicule', function($scope, $routeParams, $location, $route, $upload, $http, $domUtilityService, Global, Object) {
+angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope', '$routeParams', '$location', '$route', '$upload', '$http', '$domUtilityService', 'Global', 'EEVehicule', function ($scope, $routeParams, $location, $route, $upload, $http, $domUtilityService, Global, Object) {
 		$scope.global = Global;
 
 		$scope.form = {};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			Object.get({
 				id: $routeParams.id
-			}, function(vehicule) {
+			}, function (vehicule) {
 				$scope.vehicule = vehicule;
 
 				$http({method: 'GET', url: 'api/ticket', params:
@@ -1140,7 +1137,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 								find: {"linked.id": vehicule._id},
 								fields: "name ref updatedAt percentage Status task"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (status == 200)
 						$scope.tickets = data;
 
@@ -1152,12 +1149,12 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 								find: {"vehicule.id": vehicule._id},
 								fields: "title ref datec Status total_ht"
 							}
-				}).success(function(data, status) {
+				}).success(function (data, status) {
 					if (status == 200)
 						$scope.requestBuy = data;
 
 					$scope.TotalBuy = 0;
-					angular.forEach($scope.requestBuy, function(row) {
+					angular.forEach($scope.requestBuy, function (row) {
 						if (row.Status.id == "PAYED")
 							$scope.TotalBuy += row.total_ht;
 					});
@@ -1172,10 +1169,10 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			});
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var vehicule = $scope.vehicule;
 
-			vehicule.$update(function(response) {
+			vehicule.$update(function (response) {
 				$scope.checklist = 0;
 				for (var i in response.checklist)
 					if (response.checklist[i])
@@ -1188,10 +1185,10 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 		/**
 		 * Get fileType for icon
 		 */
-		$scope.getFileTypes = function() {
+		$scope.getFileTypes = function () {
 			$http({method: 'GET', url: 'dict/filesIcons'
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						if (status == 200) {
 							iconsFilesList = data;
 						}
@@ -1199,7 +1196,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 		};
 
 
-		$scope.addNote = function() {
+		$scope.addNote = function () {
 			if (!$scope.note)
 				return
 
@@ -1208,7 +1205,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 					note: $scope.note
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						if (status == 200) {
 							$scope.vehicule.notes.push(data);
 							$scope.note = "";
@@ -1216,7 +1213,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 					});
 		};
 
-		$scope.addEntretien = function(id) {
+		$scope.addEntretien = function (id) {
 			$http({method: 'POST', url: 'api/europexpress/vehicules/entretien', data: {
 					id: $scope.vehicule._id,
 					desc: $scope.form.desc,
@@ -1224,7 +1221,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 					km: $scope.form.km
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						if (status == 200) {
 							$scope.vehicule.entretiens.push(data);
 							$scope.vehicule.kms = data.km;
@@ -1233,7 +1230,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 					});
 		};
 
-		$scope.onFileSelect = function($files) {
+		$scope.onFileSelect = function ($files) {
 			//$files: an array of files selected, each file has name, size, and type.
 			for (var i = 0; i < $files.length; i++) {
 				var file = $files[i];
@@ -1250,9 +1247,9 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function(evt) {
+					}).progress(function (evt) {
 						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-					}).success(function(data, status, headers, config) {
+					}).success(function (data, status, headers, config) {
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
@@ -1264,24 +1261,24 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 			}
 		};
 
-		$scope.suppressFile = function(id, fileName, idx) {
+		$scope.suppressFile = function (id, fileName, idx) {
 			$http({method: 'DELETE', url: 'api/europexpress/vehicules/file/' + id + '/' + fileName
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						if (status == 200) {
 							$scope.vehicule.files.splice(idx, 1);
 						}
 					});
 		};
 
-		$scope.fileType = function(name) {
+		$scope.fileType = function (name) {
 			if (typeof iconsFilesList[name.substr(name.lastIndexOf(".") + 1)] == 'undefined')
 				return iconsFilesList["default"];
 
 			return iconsFilesList[name.substr(name.lastIndexOf(".") + 1)];
 		};
 
-		$scope.countDown = function(date, reverse) {
+		$scope.countDown = function (date, reverse) {
 			var today = new Date();
 			var day = new Date(date);
 			//console.log(date);
@@ -1360,9 +1357,9 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEFacturationController', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+angular.module('mean.europexpress').controller('EEFacturationController', ['$scope', '$routeParams', '$http', '$location', 'Global', function ($scope, $routeParams, $http, $location, Global) {
 
-		$scope.find = function() {
+		$scope.find = function () {
 			if ($routeParams.id1 == null)
 				return $scope.today();
 
@@ -1380,7 +1377,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 					month: parseInt($routeParams.id1) - 1,
 					year: parseInt($routeParams.id2)
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				if (status == 200) {
 					$scope.result = data;
 
@@ -1400,23 +1397,23 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 					$scope.TotalCoursesST = 0;
 					$scope.TotalCoursesCE = 0;
 
-					angular.forEach(data.course, function(row) {
+					angular.forEach(data.course, function (row) {
 						$scope.TotalCourses.course += row.total_ht;
 					});
 
-					angular.forEach(data.messagerie, function(row) {
+					angular.forEach(data.messagerie, function (row) {
 						$scope.TotalCourses.messagerie += row.total_ht;
 					});
 
-					angular.forEach(data.affretement, function(row) {
+					angular.forEach(data.affretement, function (row) {
 						$scope.TotalCourses.affretement += row.total_ht;
 					});
 
-					angular.forEach(data.allST, function(row) {
+					angular.forEach(data.allST, function (row) {
 						$scope.TotalCoursesST += row.total_soustraitant;
 					});
 
-					angular.forEach(data.allST, function(row) {
+					angular.forEach(data.allST, function (row) {
 						if (row.chargesExt)
 							$scope.TotalCoursesCE += row.chargesExt;
 					});
@@ -1426,10 +1423,10 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 
 		};
 
-		$scope.showCreate = function() {
-			if(!Global.user.rights.europexpress.createBills)
+		$scope.showCreate = function () {
+			if (!Global.user.rights.europexpress || !Global.user.rights.europexpress.createBills)
 				return false;
-			
+
 			var d = new Date();
 			d.setHours(0, 0, 0);
 
@@ -1437,26 +1434,26 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 				return true;
 		};
 
-		$scope.createBills = function() {
+		$scope.createBills = function () {
 			$http({method: 'GET', url: 'api/europexpress/billing', params: {
 					month: parseInt($routeParams.id1) - 1,
 					year: parseInt($routeParams.id2),
 					entity: $scope.global.user.entity
 				}
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				if (status == 200) {
 					console.log(data);
 				}
 			});
 		};
 
-		$scope.today = function() {
+		$scope.today = function () {
 			var d = new Date();
 			d.setHours(0, 0, 0);
 			$location.path('module/europexpress/facturation.html/' + (d.getMonth()) + '/' + d.getFullYear());
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			var year = parseInt($routeParams.id2);
 			var month = parseInt($routeParams.id1);
 
@@ -1469,7 +1466,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			$location.path('module/europexpress/facturation.html/' + month + '/' + year);
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			var year = parseInt($routeParams.id2);
 			var month = parseInt($routeParams.id1);
 
@@ -1493,7 +1490,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			useExternalFilter: false
 		};
 
-		$scope.gridOptionsCourses = function(type) {
+		$scope.gridOptionsCourses = function (type) {
 			return {
 				data: 'result.' + type,
 				enableRowSelection: false,
@@ -1522,16 +1519,16 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			};
 		};
 
-		$scope.aggFunc = function(row, idx) {
+		$scope.aggFunc = function (row, idx) {
 			var total = 0;
 			//console.log(row);
-			angular.forEach(row.children, function(cropEntry) {
+			angular.forEach(row.children, function (cropEntry) {
 				if (cropEntry.entity[idx])
 					total += cropEntry.entity[idx];
 			});
 			return total.toString();
 		};
-		$scope.entryMaybePlural = function(row) {
+		$scope.entryMaybePlural = function (row) {
 			if (row.children.length > 1)
 			{
 				return "commandes";
@@ -1560,7 +1557,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 			//plugins: [new ngGridFlexibleHeightPlugin()],
 			enableColumnResize: true,
 			i18n: 'fr',
-			groups: ['type','fournisseur.name'],
+			groups: ['type', 'fournisseur.name'],
 			//groupsCollapsedByDefault: false,
 			columnDefs: [
 				{field: 'fournisseur.name', width: "25%", displayName: 'Sous-traitant', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
@@ -1581,7 +1578,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', '$modal', 'EEGazoilCard', function($scope, pageTitle, $routeParams, $http, $location, $modal, Object) {
+angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', '$modal', 'EEGazoilCard', function ($scope, pageTitle, $routeParams, $http, $location, $modal, Object) {
 
 		pageTitle.setTitle('Cartes Gazoil');
 
@@ -1591,15 +1588,15 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 		$scope.count = 0;
 
 
-		$scope.create = function() {
+		$scope.create = function () {
 			var object = new Object(this.paiement);
-			object.$save(function(response) {
+			object.$save(function (response) {
 				$scope.paiements.push(response);
 				total();
 			});
 		};
 
-		var total = function() {
+		var total = function () {
 			$scope.Total = 0;
 			$scope.count = 0;
 
@@ -1609,7 +1606,7 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 			}
 		};
 
-		$scope.remove = function(object) {
+		$scope.remove = function (object) {
 			object.$remove();
 
 			for (var i in $scope.paiements) {
@@ -1619,62 +1616,62 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 			}
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var object = $scope.paiement;
 
-			object.$update(function() {
+			object.$update(function () {
 
 			});
 		};
 
-		$scope.find = function() {
-			Object.query(function(paiements) {
+		$scope.find = function () {
+			Object.query(function (paiements) {
 				$scope.paiements = paiements;
 				total();
 			});
 		};
 
-		$scope.addNew = function() {
+		$scope.addNew = function () {
 
 			var modalInstance = $modal.open({
 				templateUrl: 'myModalContent.html',
 				controller: ModalInstanceCtrl,
 				resolve: {
-					object: function() {
+					object: function () {
 						return $scope.paiement;
 					}
 				}
 			});
 
-			modalInstance.result.then(function(paiement) {
+			modalInstance.result.then(function (paiement) {
 				$scope.paiement = paiement;
 				$scope.create();
 				$scope.paiement = {};
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.edit = function(row) {
+		$scope.edit = function (row) {
 
 			var modalInstance = $modal.open({
 				templateUrl: 'myModalContent.html',
 				controller: ModalInstanceCtrl,
 				resolve: {
-					object: function() {
+					object: function () {
 						return row.entity;
 					}
 				}
 			});
 
-			modalInstance.result.then(function(paiement) {
+			modalInstance.result.then(function (paiement) {
 				$scope.paiement = paiement;
 				$scope.update();
 				$scope.paiement = {};
-			}, function() {
+			}, function () {
 			});
 		};
 
-		var ModalInstanceCtrl = function($scope, $modalInstance, object) {
+		var ModalInstanceCtrl = function ($scope, $modalInstance, object) {
 
 			$scope.paiement = object;
 			if (object.card)
@@ -1686,7 +1683,7 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 			$scope.datec = new Date(object.datec);
 
 
-			$scope.cardAutoComplete = function(val) {
+			$scope.cardAutoComplete = function (val) {
 				return $http.post('api/europexpress/card/autocomplete', {
 					take: '5',
 					skip: '0',
@@ -1694,21 +1691,29 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 					pageSize: '5',
 					filter: {logic: 'and', filters: [{value: val}]
 					}
-				}).then(function(res) {
+				}).then(function (res) {
 					return res.data
 				});
 			};
 
-			$scope.refreshVehicule = function() {
+			$scope.refreshVehicule = function () {
 				$scope.paiement.vehicule = this.cardSelect.vehicule;
 				$scope.paiement.card = this.cardSelect.id;
 			};
 
-			$scope.ok = function() {
+			$scope.open = function ($event) {
+				$event.preventDefault();
+				$event.stopPropagation();
+
+				$scope.opened = true;
+			};
+
+
+			$scope.ok = function () {
 				$modalInstance.close($scope.paiement);
 			};
 
-			$scope.cancel = function() {
+			$scope.cancel = function () {
 				$modalInstance.dismiss('cancel');
 			};
 		};
@@ -1747,7 +1752,7 @@ angular.module('mean.europexpress').controller('EEGazoilCardController', ['$scop
 
 	}]);
 
-angular.module('mean.europexpress').controller('EEMouvementStockController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', '$timeout', function($scope, pageTitle, $routeParams, $http, $location, $timeout) {
+angular.module('mean.europexpress').controller('EEMouvementStockController', ['$scope', 'pageTitle', '$routeParams', '$http', '$location', '$timeout', function ($scope, pageTitle, $routeParams, $http, $location, $timeout) {
 		$scope.radio = {entrepot: undefined};
 
 		var typeMove_list = {
@@ -1907,13 +1912,13 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		$scope.productsBarCode = {};
 		$scope.productsTab = [];
 
-		$scope.today = function() {
+		$scope.today = function () {
 			var d = new Date();
 			d.setHours(0, 0, 0);
 			$location.path('module/europexpress/mouvementstock.html/' + (d.getMonth()) + '/' + d.getFullYear());
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			var year = parseInt($routeParams.id2);
 			var month = parseInt($routeParams.id1);
 
@@ -1926,7 +1931,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 			$location.path('module/europexpress/mouvementstock.html/' + month + '/' + year);
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			var year = parseInt($routeParams.id2);
 			var month = parseInt($routeParams.id1);
 
@@ -1953,7 +1958,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 					barCode: 1
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.products = data;
 						for (var i in data) {
 							$scope.productsBarCode[data[i]._id] = data[i];
@@ -1969,7 +1974,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 
 			$http({method: 'GET', url: 'api/europexpress/stock/total/' + $routeParams.id1 + '/' + $routeParams.id2
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						for (var i in data) {
 							totaux[data[i]._id] = data[i].total;
 						}
@@ -1978,7 +1983,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 					});
 		}
 
-		$scope.entrepotsList = function() {
+		$scope.entrepotsList = function () {
 			if ($routeParams.id1 == null)
 				return $scope.today();
 
@@ -1988,7 +1993,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 			$scope.entrepots = [];
 
 			$http({method: 'GET', url: 'api/product/storehouse'
-			}).success(function(entrepot, status) {
+			}).success(function (entrepot, status) {
 				//$scope.products = data;
 
 				for (var i = 0; i < entrepot.length; i++) {
@@ -2013,10 +2018,10 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 			});
 		};
 
-		$scope.find = function() {
-			getTotaux(function(totaux) {
+		$scope.find = function () {
+			getTotaux(function (totaux) {
 				$scope.productsTab = [];
-				angular.forEach($scope.radio.entrepot.productId, function(code) {
+				angular.forEach($scope.radio.entrepot.productId, function (code) {
 					var product = angular.copy($scope.productsBarCode[code]);
 					product.barCode = $scope.radio.entrepot.barCode + product.barCode;
 					product.qty = totaux[product.barCode];
@@ -2038,7 +2043,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 			});
 		};
 
-		$scope.update = function(row) {
+		$scope.update = function (row) {
 			if (!$scope.productsTab[row.rowIndex].qtyAdd)
 				return;
 
@@ -2056,13 +2061,13 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function() {
+				$scope.save.promise = $timeout(function () {
 					$http({method: 'POST', url: 'api/europexpress/stock', data: {
 							barCode: $scope.productsTab[$scope.save.row].barCode,
 							qty: $scope.productsTab[$scope.save.row].qtyAdd,
 							datec: d
 						}
-					}).success(function(data, status) {
+					}).success(function (data, status) {
 						//console.log(data);
 						if (!$scope.productsTab[$scope.save.row].qty)
 							$scope.productsTab[$scope.save.row].qty = 0;

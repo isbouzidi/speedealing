@@ -10,9 +10,9 @@ var mongoose = require('mongoose'),
 
 var CommandeModel = mongoose.model('commande');
 var ContactModel = mongoose.model('contact');
-var ExtrafieldModel = mongoose.model('extrafields');
-var DictModel = mongoose.model('dict');
 var SocieteModel = mongoose.model('societe');
+
+var Dict = require('../controllers/dict');
 
 var smtpTransporter = nodemailer.createTransport(smtpTransport(config.transport));
 
@@ -20,7 +20,7 @@ module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 
-	ExtrafieldModel.findById('extrafields:Commande', function (err, doc) {
+	Dict.extrafield({extrafieldName: 'Commande'}, function (err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -31,7 +31,6 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/lines/list', auth.requiresLogin, object.listLines);
 	app.get('/api/commande', auth.requiresLogin, object.all);
 	app.post('/api/commande', auth.requiresLogin, object.create);
-	app.get('/api/commande/select', auth.requiresLogin, object.select);
 	app.get('/api/commande/:orderId', auth.requiresLogin, object.show);
 	app.put('/api/commande/:orderId', auth.requiresLogin, object.update);
 	app.del('/api/commande/:orderId', auth.requiresLogin, object.destroy);
@@ -40,8 +39,6 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
-
-	app.get('/api/order/fk_extrafields/select', auth.requiresLogin, object.select);
 
 	//Finish with setting up the orderId param
 	app.param('orderId', object.order);
@@ -388,50 +385,6 @@ Object.prototype = {
 					});
 				});
 			});
-		});
-	},
-	select: function (req, res) {
-		ExtrafieldModel.findById('extrafields:Commande', function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-			var result = [];
-			if (doc.fields[req.query.field].dict)
-				return DictModel.findOne({_id: doc.fields[req.query.field].dict}, function (err, docs) {
-
-					if (docs) {
-						for (var i in docs.values) {
-							if (docs.values[i].enable) {
-								var val = {};
-								val.id = i;
-								if (docs.values[i].label)
-									val.label = req.i18n.t("orders:" + docs.values[i].label);
-								else
-									val.label = req.i18n.t("orders:" + i);
-
-								if (docs.values[i].cssClass)
-									val.css = docs.values[i].cssClass;
-
-								result.push(val);
-							}
-						}
-						doc.fields[req.query.field].values = result;
-					}
-					res.json(doc.fields[req.query.field]);
-				});
-
-			for (var i in doc.fields[req.query.field].values) {
-				if (doc.fields[req.query.field].values[i].enable) {
-					var val = {};
-					val.id = i;
-					val.label = doc.fields[req.query.field].values[i].label;
-					result.push(val);
-				}
-			}
-			doc.fields[req.query.field].values = result;
-
-			res.json(doc.fields[req.query.field]);
 		});
 	}
 };

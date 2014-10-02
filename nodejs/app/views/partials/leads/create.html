@@ -12,20 +12,20 @@
         <div class="field-block button-height">
             <label for="dueDate"><b>{{t
 				"DateDue"}}</b></label>
-            <span class="k-widget k-datepicker k-header input">
-                <span class="k-picker-wrap k-state-default">
-                    <input 
-                        kendo-date-picker required
-                        ng-model ="dueDate"
-                        id="dueDate"
-                        k-on-change="lead.dueDate = kendoEvent.sender._value;" 
-                        class="input"/>
-                </span>
-            </span>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="lead.dueDate" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
         </div>
 		<div class="field-block button-height">
 			<label for="potential"><b>{{t "leads:Potential"}}</b></label>
-			<span ng-repeat="p in potential" style="margin-left" >
+			<span ng-repeat="p in dict.fk_prospectlevel.values" style="margin-left" >
 				<input type="radio" name="selectedProspectLevel" ng-model="lead.potential" value="\{{p.id}}"/>\{{p.label|| 'Aucun'}}
 				<br/>
 			</span>
@@ -33,7 +33,7 @@
 		</div>
 		<div class="field-block button-height">
 			<label for="type"><b>{{t "leads:Type"}}</b></label>
-			<span ng-repeat="tb in type">
+			<span ng-repeat="tb in dict.fk_lead_type.values">
 				<input type="radio" ng-model="lead.type" id="type" value="\{{tb.label}}"/> \{{tb.label}}
 				<br/>
 			</span>

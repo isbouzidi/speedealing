@@ -1,0 +1,117 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'tasks:NewTask'}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block button-height">
+            <label for="ref"><b>{{t "Title"}}</b></label>
+            <input  required type="text" ng-model="task.name" id="label" class="input full-width" autocomplete="on">
+        </div>
+
+		<div class="field-block button-height">
+            <label for="type"><b>{{t
+				"Type"}}</b></label>
+			<select class="form-control" id="type" required data-ng-model="product.tva_tx" data-ng-options="c.value as c.value for c in tva_tx.values"></select>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="datep"><b>{{t 'tasks:DateActionStart'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="datep"><b>{{t 'tasks:DateEchAction'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="dt" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="percentage"><b>{{t
+				'Status'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<span class="input-group-btn btn-group-xs">
+							<button ng-disabled="dynamic == 0" type="button" class="btn btn-default" ng-click="dynamic = (dynamic - 20 < 0 ? 0 : dynamic - 20);"><i class="glyphicon glyphicon-minus"></i></button>
+						</span>
+					<progressbar animate="true" value="dynamic" type="success"><b>\{{dynamic}}%</b></progressbar>
+					<span class="input-group-btn btn-group-xs">
+						<button ng-disabled="dynamic == 100" type="button" class="btn btn-default" ng-click="dynamic = (dynamic + 20 > 100 ? 100 : dynamic + 20);"><i class="glyphicon glyphicon-plus"></i></button>
+					</span>
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="affectedTo"><b>{{t 'tasks:AffectedTo'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon icon icon-user"></span>
+						<input type="text" id="commercial_id" data-ng-model="societe.commercial_id" typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="form-control" autocomplete="off">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="societe"><b>{{t
+				'CompanyFoundation'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon icon icon-home"></span>
+						<input required type="text" 
+							   data-ng-model="task.societe" 
+							   typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
+							   typeahead-on-select="searchContact($item)"
+							   id="societe" class="form-control" autocomplete="off">
+					</div>
+				</div>
+				<div class="col-md-6" ng-if="contacts.length">
+					<div class="input-group" title="Contact">
+						<span class="input-group-addon icon icon-user"></span>
+						<select class="form-control"
+								id="contact" 
+								ng-model="task.contact" 
+								ng-options="contact as contact.name for contact in contacts">                                    
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="notes"><b>{{t
+				'Description'}}</b></label>
+			<textarea id="notes" cols="30" rows="5" data-ng-model="task.notes[0].note" class="input full-width"></textarea>
+		</div>
+
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" ng-disabled='refFound || !validRef' class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t
+					'Add'}}
+            </button>
+        </div>
+    </fieldset>
+</form>
