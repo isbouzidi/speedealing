@@ -14,6 +14,7 @@ var DeliveryModel = mongoose.model('delivery');
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
+var FactureModel = mongoose.model('bill');
 
 var Dict = require('../controllers/dict');
 
@@ -118,7 +119,17 @@ module.exports = function (app, passport, auth) {
 
 	app.post('/api/delivery', auth.requiresLogin, object.create);
 	app.get('/api/delivery/:deliveryId', auth.requiresLogin, object.show);
-	app.post('/api/delivery/:deliveryId', auth.requiresLogin, object.create);
+	app.post('/api/delivery/:deliveryId', auth.requiresLogin, function (req, res) {
+		if (req.query.method)
+			switch (req.query.method) {
+				case "clone" :
+					object.clone(req, res);
+					break;
+				case "bill" :
+					billing.create(req, res);
+					break;
+			}
+	});
 	app.put('/api/delivery/:deliveryId', auth.requiresLogin, object.update);
 	app.del('/api/delivery/:deliveryId', auth.requiresLogin, object.destroy);
 	app.param('deliveryId', object.delivery);
@@ -161,8 +172,8 @@ Object.prototype = {
 			for (var i in req.query) {
 				if (i === "query") {
 					switch (req.query.query) {
-						case "NOTPAID" :
-							query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
+						case "ENCOURS" :
+							query.Status = {"$nin": ["BILLED", "CANCELED"]};
 							break;
 						default :
 							break;
@@ -189,21 +200,39 @@ Object.prototype = {
 	},
 	create: function (req, res) {
 		var delivery = {};
-		if (req.query.clone) {
-			delivery = req.delivery.toObject();
-			delete delivery._id;
-			delete delivery.__v;
-			delete delivery.ref;
-			delete delivery.createdAt;
-			delete delivery.updatedAt;
-			delivery.Status = "DRAFT";
-			delivery.notes = [];
-			delivery.latex = {};
-			delivery.datec = new Date();
+		delivery = new DeliveryModel(req.body);
 
-			delivery = new DeliveryModel(delivery);
-		} else
-			delivery = new DeliveryModel(req.body);
+		delivery.author = {};
+		delivery.author.id = req.user._id;
+		delivery.author.name = req.user.name;
+
+		if (delivery.entity == null)
+			delivery.entity = req.user.entity;
+
+		//console.log(delivery);
+		delivery.save(function (err, doc) {
+			if (err) {
+				return console.log(err);
+			}
+
+			res.json(delivery);
+		});
+	},
+	clone: function (req, res) {
+		var delivery = {};
+
+		delivery = req.delivery.toObject();
+		delete delivery._id;
+		delete delivery.__v;
+		delete delivery.ref;
+		delete delivery.createdAt;
+		delete delivery.updatedAt;
+		delivery.Status = "DRAFT";
+		delivery.notes = [];
+		delivery.latex = {};
+		delivery.datec = new Date();
+
+		delivery = new DeliveryModel(delivery);
 
 		delivery.author = {};
 		delivery.author.id = req.user._id;
@@ -260,12 +289,12 @@ Object.prototype = {
 		});
 
 		var cond_reglement_code = {};
-		Dict.dict({dictName: "fk_payment_term", object:true}, function (err, docs) {
+		Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 			cond_reglement_code = docs;
 		});
 
 		var mode_reglement_code = {};
-		Dict.dict({dictName: "fk_paiement", object:true}, function (err, docs) {
+		Dict.dict({dictName: "fk_paiement", object: true}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
 
@@ -478,6 +507,54 @@ Billing.prototype = {
 				});
 	},
 	create: function (req, res) {
+		
+		var delivery = req.delivery;
+
+		SocieteModel.findOne({_id: req.delivery.client.id}, function (err, societe) {
+			var bill = new FactureModel();
+
+			bill.client = {
+				id: societe._id,
+				name: societe.name
+			};
+
+			if (societe == null)
+				console.log("Error : pas de societe pour le clientId : " + clientId);
+
+			bill.price_level = societe.price_level;
+			bill.mode_reglement_code = societe.mode_reglement;
+			bill.cond_reglement_code = societe.cond_reglement;
+			bill.commercial_id = societe.commercial_id;
+			bill.datec = new Date();
+
+			bill.entity = societe.entity;
+
+			bill.address = societe.address;
+			bill.zip = societe.zip;
+			bill.town = societe.town;
+			
+			bill.shipping = delivery.shipping;
+
+			bill.deliveries.push(delivery._id);
+			if (delivery.order)
+				bill.orders.push(delivery.order);
+
+			bill.lines = delivery.lines;
+			
+			delivery.Status = 'BILLED';
+			delivery.save(function(err, delivery){});
+			
+			bill.save(function(err, bill) {
+				if(err)
+					console.log(err);
+				
+				res.json(bill);
+			});
+		});
+
+		//res.send(200);
+	},
+	createAll: function (req, res) {
 		var dateStart = new Date(req.query.year, req.query.month, 1);
 		var dateEnd = new Date(req.query.year, parseInt(req.query.month) + 1, 1);
 

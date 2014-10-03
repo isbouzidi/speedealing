@@ -56,12 +56,17 @@ var billSchema = new Schema({
 		}
 	],
 	total_ttc: {type: Number, default: 0},
-	shipping: {type: Number, default: 0},
+	shipping: {
+		total_ht: {type: Number, default: 0},
+		tva_tx: {type: Number, default: 20},
+		total_tva: {type: Number, default: 0}
+	},
 	author: {id: String, name: String},
 	commercial_id: {id: {type: String}, name: String},
 	entity: {type: String},
 	modelpdf: String,
 	orders: [{type: Schema.Types.ObjectId, ref: 'commande'}],
+	deliveries: [{type: Schema.Types.ObjectId, ref: 'delivery'}],
 	groups: [Schema.Types.Mixed],
 	lines: [{
 			//pu: Number,
@@ -103,7 +108,7 @@ var billSchema = new Schema({
 billSchema.plugin(timestamps);
 
 var cond_reglement = {};
-Dict.dict({dictName: "fk_payment_term"}, function (err, docs) {
+Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 	cond_reglement = docs;
 });
 
@@ -139,6 +144,30 @@ billSchema.pre('save', function (next) {
 			});
 		}
 	}
+
+	// shipping cost
+	if (this.shipping.total_ht) {
+		this.total_ht += this.shipping.total_ht;
+
+		this.shipping.total_tva = this.shipping.total_ht * this.shipping.tva_tx / 100;
+
+		//Add VAT
+		var found = false;
+		for (var j = 0; j < this.total_tva.length; j++)
+			if (this.total_tva[j].tva_tx === this.shipping.tva_tx) {
+				this.total_tva[j].total += this.shipping.total_tva;
+				found = true;
+				break;
+			}
+
+		if (!found) {
+			this.total_tva.push({
+				tva_tx: this.shipping.tva_tx,
+				total: this.shipping.total_tva
+			});
+		}
+	}
+
 
 	this.total_ht = Math.round(this.total_ht * 100) / 100;
 	//this.total_tva = Math.round(this.total_tva * 100) / 100;

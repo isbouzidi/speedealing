@@ -41,7 +41,8 @@ var deliverySchema = new Schema({
 	state_id: Number,
 	phone: String,
 	email: String,
-	datec: {type: Date, default: Date.now},
+	datec: {type: Date, default: Date.now}, // date de creation
+	datedl: {type: Date, default: Date.now}, // date d'expedition
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},
@@ -101,17 +102,10 @@ var deliverySchema = new Schema({
 
 deliverySchema.plugin(timestamps);
 
-var cond_reglement = {};
-Dict.dict({dictName: "fk_payment_term", object:true}, function (err, docs) {
-	cond_reglement = docs;
-});
-
 /**
  * Pre-save hook
  */
 deliverySchema.pre('save', function (next) {
-
-	this.calculate_date_lim_reglement();
 
 	this.total_ht = 0;
 	this.total_tva = [];
@@ -242,52 +236,6 @@ deliverySchema.methods = {
 				//console.log(seq);
 				self.ref = "FA" + seq;
 			});
-	},
-	/**
-	 * 	Renvoi une date limite de reglement de facture en fonction des
-	 * 	conditions de reglements de la facture et date de facturation
-	 *
-	 * 	@param      string	$cond_reglement   	Condition of payment (code or id) to use. If 0, we use current condition.
-	 * 	@return     date     			       	Date limite de reglement si ok, <0 si ko
-	 */
-	calculate_date_lim_reglement: function () {
-		var data = cond_reglement.values[this.cond_reglement_code];
-
-		var cdr_nbjour = data.nbjour || 0;
-		var cdr_fdm = data.fdm;
-		var cdr_decalage = data.decalage || 0;
-
-		/* Definition de la date limite */
-
-		// 1 : ajout du nombre de jours
-		var datelim = new Date(this.datec);
-		datelim.setDate(datelim.getDate() + cdr_nbjour);
-		//console.log(cdr_nbjour);
-
-		// 2 : application de la regle "fin de mois"
-		if (cdr_fdm) {
-			var mois = datelim.getMonth();
-			var annee = datelim.getFullYear();
-			if (mois === 12) {
-				mois = 1;
-				annee += 1;
-			} else {
-				mois += 1;
-			}
-
-			// On se deplace au debut du mois suivant, et on retire un jour
-			datelim.setHours(0);
-			datelim.setMonth(mois);
-			datelim.setFullYear(annee);
-			datelim.setDate(0);
-			//console.log(datelim);
-		}
-
-		// 3 : application du decalage
-		datelim.setDate(datelim.getDate() + cdr_decalage);
-		//console.log(datelim);
-
-		this.dater = datelim;
 	}
 };
 

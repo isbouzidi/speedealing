@@ -15,6 +15,8 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 
+var Dict = require('../controllers/dict');
+
 module.exports = function (app, passport, auth) {
 
 	var object = new Object();
@@ -111,6 +113,7 @@ Object.prototype = {
 
 		BillModel.findOne(query, "-latex")
 				.populate("orders", "ref ref_client total_ht client")
+				.populate("deliveries", "ref ref_client total_ht client")
 				.exec(function (err, doc) {
 					if (err)
 						return next(err);
@@ -216,23 +219,13 @@ Object.prototype = {
 	pdf: function (req, res) {
 		// Generation de la facture PDF et download
 
-		var fk_facture;
-		ExtrafieldModel.findById('extrafields:Facture', function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-
-			fk_facture = doc;
-		});
-
 		var cond_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
+		Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 			cond_reglement_code = docs;
 		});
 
 		var mode_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_paiement"}, function (err, docs) {
+		Dict.dict({dictName: "fk_paiement", object: true}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
 
@@ -332,23 +325,13 @@ Object.prototype = {
 	releve_facture: function (req, res) {
 		// Generation de la facture PDF et download
 
-		var fk_facture;
-		ExtrafieldModel.findById('extrafields:Facture', {}, {sort: {dater: 1}}, function (err, doc) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-
-			fk_facture = doc;
-		});
-
 		var cond_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_payment_term"}, function (err, docs) {
+		Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 			cond_reglement_code = docs;
 		});
 
 		var mode_reglement_code = {};
-		DictModel.findOne({_id: "dict:fk_paiement"}, function (err, docs) {
+		Dict.dict({dictName: "fk_paiement", object: true}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
 
@@ -410,14 +393,14 @@ Object.prototype = {
 				tex = tex.replace("--TABULAR--", tab_latex);
 
 				/*var tab_latex = "";
-				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
-				for (var i = 0; i < doc.total_tva.length; i++) {
-					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
-				}
-				tab_latex += "\\vhline\n";
-				tab_latex += "Total TTC &" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
-				//Payé & --PAYE--\\ 
-				tex = tex.replace("--TOTAL--", tab_latex);*/
+				 tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
+				 for (var i = 0; i < doc.total_tva.length; i++) {
+				 tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
+				 }
+				 tab_latex += "\\vhline\n";
+				 tab_latex += "Total TTC &" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
+				 //Payé & --PAYE--\\ 
+				 tex = tex.replace("--TOTAL--", tab_latex);*/
 
 				tex = tex.replace(/--APAYER--/g, latex.price(total_toPay));
 

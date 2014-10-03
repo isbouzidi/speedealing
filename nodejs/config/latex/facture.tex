@@ -8,11 +8,11 @@ P\'enlit\'e pour paiement tardif : inter\^et l\'egal x3 et une indemnit\'e forfa
 
 \usepackage{symeos_article}
 
-\definecolor{chaumeil-violet}{rgb}{0.58,0.07,0.47}
-\definecolor{chaumeil-bleu}{rgb}{0.01,0.28,0.58}
-\newcommand{\vhline}{\arrayrulecolor{chaumeil-violet}\hline\arrayrulecolor{black}}
+\definecolor{violet}{rgb}{0.58,0.07,0.47}
+\definecolor{bleu}{rgb}{0.01,0.28,0.58}
+\newcommand{\vhline}{\arrayrulecolor{violet}\hline\arrayrulecolor{black}}
 \newcommand{\ghline}{\arrayrulecolor{gray}\hline\arrayrulecolor{black}}
-\newcommand{\bhline}{\arrayrulecolor{chaumeil-bleu}\hline\arrayrulecolor{black}}
+\newcommand{\bhline}{\arrayrulecolor{bleu}\hline\arrayrulecolor{black}}
 \makeatletter
 \renewcommand{\section}{\@startsection {section}{1}{\z@}%
              {-0ex \@plus -1ex \@minus -.2ex}%
@@ -28,19 +28,18 @@ P\'enlit\'e pour paiement tardif : inter\^et l\'egal x3 et une indemnit\'e forfa
 \begin{document}
 
 
-\begin{minipage}[t]{0.48\textwidth}
-\includegraphics[height=1.50cm]{logo.jpg} 
-\end{minipage}
-\hspace{2mm}
-\begin{minipage}[t]{0.50\textwidth}
-\vspace{-40px}
-\begin{flushright}
-\textcolor{chaumeil-violet}{\textsc{\Large Facture --NUM--}}\\
-Date de facture : --DATEC--\\
-{\small Date d'échéance : \textbf{--DATEECH--}\\
-Ref. commande : --REFCLIENT--\\}~\\
-\end{flushright}
-\end{minipage}
+\begin{tabular}{p{9cm} p{8cm}}
+    \vspace{0pt} 
+    \includegraphics[width=8cm]{logo.jpg}
+    & 
+    \vspace{0pt}
+   \raggedleft
+	%\begin{flushright}
+	\textcolor{violet}{\textsc{\Large Facture --NUM--}}\\
+	Date de facture : --DATEC--\\
+	{\smallDate d'échéance : \textbf{--DATEECH--}\\
+	Ref. commande : --REFCLIENT--\\}~\\
+\end{tabular}
 
 \vspace{1cm}
 
@@ -110,7 +109,7 @@ Qté &
 \begin{flushright}
 \begin{tabular}{p{4.5cm} r}
 --TOTAL--
-\rowcolor{chaumeil-violet}\textcolor{white}{NET à payer} &\textcolor{white}{--APAYER--} \\ 
+\rowcolor{violet}\textcolor{white}{NET à payer} &\textcolor{white}{--APAYER--} \\ 
 \end{tabular} 
 \end{flushright}
 %\begin{flushright}

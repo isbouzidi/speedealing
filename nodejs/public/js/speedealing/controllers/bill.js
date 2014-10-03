@@ -38,8 +38,9 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		};
 
 		$scope.remove = function (bill) {
-			bill.$remove();
-
+			bill.$remove(function () {
+				$location.path("/bills");
+			});
 		};
 
 		$scope.update = function () {
@@ -97,6 +98,12 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 				angular.forEach(bill.orders, function (order) {
 					$scope.totalOrders += order.total_ht;
+				});
+				
+				$scope.totalDeliveries = 0;
+
+				angular.forEach(bill.deliveries, function (delivery) {
+					$scope.totalDeliveries += delivery.total_ht;
 				});
 
 			}, function (err) {

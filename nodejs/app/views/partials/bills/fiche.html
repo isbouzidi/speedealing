@@ -104,7 +104,7 @@
 						</button>
 						<button ng-hide="editable || bill.Status == 'PAID'" class="button" data-ng-click="changeStatus('DRAFT')">
 							<span class="button-icon orange-gradient"><span class="icon-unlike"></span></span>
-							{{t 'DeValidate'}}
+							{{t 'ReOpen'}}
 						</button>
 						
 						<button ng-hide="editable || bill.Status == 'PAID'" class="button" data-ng-click="changeStatus('PAID')">
@@ -115,12 +115,12 @@
 
 						<button class="button" data-ng-click="clone()">
 							<span class="button-icon anthracite-gradient"><span class="icon-pages"></span></span>
-							{{t 'Clone'}}
+							{{t 'ToClone'}}
 						</button>
 
 						<!-- Right side -->
-						<button disabled class="button margin-left">
-							Delete
+						<button class="button margin-left" ng-disabled="!global.user.rights.bill.delete" ng-show="bill.Status == 'DRAFT'" confirmed-click="remove(bill)" ng-confirm-click="Supprimer la facture ?" title="Supprimer la facture">
+							{{t 'Delete'}}
 							<span class="button-icon right-side red-gradient"><span class="icon-trash"></span></span>
 						</button>
 					</div>
@@ -190,11 +190,23 @@
 										<p class="icon-plane green underline no-margin-bottom">Frais de transport</p>
 										<table class="info-table">
 											<tbody>
-												<tr>
-													<th>{{t 'AmountHT'}}</th>
-													<td class="align-right">\{{bill.shipping| currency}}</td>
-												</tr>
-											</tbody>
+                                                <tr>
+                                                    <th>{{t 'AmountHT'}}</th>
+                                                    <td class="align-right">
+                                                        <a href="#" 
+														   editable-text="bill.shipping.total_ht"
+														   e-style="width: 80px"
+														   blur="submit"
+														   buttons="no"
+														   onaftersave="update()"
+														   e-form="shipping">
+															\{{bill.shipping.total_ht| currency}}
+														</a>
+														<span class="icon-pencil grey" ng-click="shipping.$show()" ng-hide="shipping.$visible"></span>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
 										</table>
 
 										<p class="icon-info green underline margin-top no-margin-bottom">{{t 'Totaux'}}</p>
@@ -423,6 +435,23 @@
 									</li>
 								</ul>
 								<span class="blue h5">Total HT : \{{totalOrders | currency}}</span>
+							</div>
+
+						</tab>
+						<tab ng-if="bill.deliveries.length">
+							<tab-heading>
+								<span class="icon-plane">{{t 'deliveries:Deliveries'}}<span class="count green-bg right">\{{bill.deliveries.length}}</span></span>
+							</tab-heading>
+
+							<div class="boxed relative large-box-shadow">
+								<ul class="list spaced">
+									<li ng-repeat="delivery in bill.deliveries">
+										<a ng-href="#!/delivery/\{{delivery._id}}" class="list-link icon-plane" title="Click to show">
+											<strong>\{{delivery.ref}} (\{{delivery.client.name}})</strong> <small> - \{{delivery.ref_client}}</small>
+										</a> Total HT : \{{delivery.total_ht|currency}}
+									</li>
+								</ul>
+								<span class="blue h5">Total HT : \{{totalDeliveries | currency}}</span>
 							</div>
 
 						</tab>
