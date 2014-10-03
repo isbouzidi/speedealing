@@ -292,12 +292,12 @@ deliverySchema.methods = {
 };
 
 var statusList = {};
-Dict.extrafield({extrafieldName:'BonLivraison'}, function (err, doc) {
+Dict.dict({dictName:'fk_delivery_status', object:true}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
 	}
-	statusList = doc.fields.Status;
+	statusList = doc;
 });
 
 deliverySchema.virtual('status')

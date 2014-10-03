@@ -13,6 +13,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 		$scope.tickets = [];
 		$scope.countTicket = 0;
 		$scope.deliveries = [];
+		$scope.dict = {};
 
 		$scope.gridOptionsDeliveries = {};
 
@@ -22,27 +23,14 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 
 		$scope.init = function () {
 			$scope.pu = [];
-			var fields = ["Status", "cond_reglement_code", "type", "mode_reglement_code"];
+			var dict = ["fk_delivery_status", "fk_paiement", "fk_delivery_type", "fk_payment_term", "fk_tva"];
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/delivery/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
-			});
-
-			var fields = ["tva_tx"];
-
-
-			$http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
-					field: 'tva_tx'
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict
 				}
 			}).success(function (data, status) {
-				$scope.tva_tx = data;
-
+				$scope.dict = data;
+				//console.log(data);
 			});
 
 		};
@@ -146,10 +134,10 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			$location.path('/delivery');
 		};
 
-		$scope.showStatus = function (idx) {
-			if (!($scope[idx] && $scope.delivery[idx]))
+		$scope.showStatus = function (idx, dict) {
+			if (!($scope.dict[dict] && $scope.delivery[idx]))
 				return;
-			var selected = $filter('filter')($scope[idx].values, {id: $scope.delivery[idx]});
+			var selected = $filter('filter')($scope.dict[dict].values, {id: $scope.delivery[idx]});
 
 			return ($scope.delivery[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
 		};
@@ -531,8 +519,12 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 
 		$scope.active = 1;
 		$scope.delivery = {
-			Status: "DRAFT"
+			Status: "DRAFT",
+			cond_reglement_code: '30D',
+			mode_reglement_code: 'CHQ',
+			datec : new Date()
 		};
+		$scope.dict = {};
 
 		$scope.isActive = function (idx) {
 			if (idx == $scope.active)
@@ -555,19 +547,11 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 				$scope.active = idx;
 		};
 
-		$scope.init = function () {
-			var fields = ["Status", "mode_reglement_code", "cond_reglement_code"];
+		$scope.open = function ($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/delivery/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-					$scope.delivery[field] = data.default;
-				});
-			});
+			$scope.opened = true;
 		};
 
 		$scope.create = function () {

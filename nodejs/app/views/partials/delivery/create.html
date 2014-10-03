@@ -21,12 +21,12 @@
 		<div class="field-block button-height">
 			<label for="client"><b>{{t 'companies:Company'}}</b></label>
 			<input required type="text" 
-                               data-ng-model="delivery.client" 
-                               typeahead-on-select="updateCoord($item, $model, $label)" 
-                               typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
-                               id="client" class="input" autocomplete="off">
+				   data-ng-model="delivery.client" 
+				   typeahead-on-select="updateCoord($item, $model, $label)" 
+				   typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
+				   id="client" class="input" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height" ng-show="delivery.client.isNameModified">
 			<label for="name"><b>{{t 'Name'}}</b></label>
 			<input type="text" data-ng-model="delivery.client.name" id="namw" class="input" autocomplete="off">
@@ -51,11 +51,21 @@
 
 		<div class="field-block button-height">
 			<label for="date_commande"><b>Date d'expédition</b></label>
-			<input kendo-date-picker required id="date_commande" k-on-change="delivery.datec = kendoEvent.sender._value;" class="input"/>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="delivery.datec" is-open="opened" ng-required="true" close-text="Fermer" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="field-block button-height wizard-controls clearfix">
-			<button type="button" data-ng-disabled="!(delivery.datec && delivery.client.id)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
+			<button type="button" data-ng-disabled="!(delivery.datec && delivery.client.id)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">{{t
+				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>
 			<!--<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
 				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
 		</div>
@@ -96,12 +106,12 @@
 					<input type="text" data-ng-model="delivery.client.name" class="input" placeholder="Nom"/><br/>
 					<input type="text" data-ng-model="delivery.contact.name" class="input" placeholder="Nom du contact"/><br/>
 					<div ng-address model="delivery" opp="create"></div>
-                                        
-                                        <!--
-                                        <textarea class='input' rows='3' data-ng-model="delivery.address" placeholder="Adresse"></textarea><br/>
-					<input type="text" class="input" placeholder="Code postal" data-ng-model="delivery.zip" size="8"/>
-					<input type="text" class="input" data-ng-model="delivery.town" placeholder="Ville"/>
-                                        -->
+
+					<!--
+					<textarea class='input' rows='3' data-ng-model="delivery.address" placeholder="Adresse"></textarea><br/>
+<input type="text" class="input" placeholder="Code postal" data-ng-model="delivery.zip" size="8"/>
+<input type="text" class="input" data-ng-model="delivery.town" placeholder="Ville"/>
+					-->
 				</div>
 			</div>
 		</div>
@@ -109,12 +119,12 @@
 		<div class="field-block button-height wizard-controls clearfix">
 			<button type="button" data-ng-click='previous()' class="button glossy mid-margin-right wizard-prev float-left"><span class="button-icon anthracite-gradient"><span class="icon-backward"></span></span>{{t
 				'Previous'}}</button>
-			
+
 			<button type="submit" class="button glossy mid-margin-right">
 				<span class="button-icon"><span class="icon-tick"></span></span>
 				{{t 'deliveries:CreateDelivery'}}
 			</button>
-			
+
 			<!--<button type="button" data-ng-click='next()' class="button glossy mid-margin-right wizard-next float-right">{{t
 				'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
 		</div>

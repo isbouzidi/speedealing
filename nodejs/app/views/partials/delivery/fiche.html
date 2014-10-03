@@ -138,7 +138,7 @@
                             <span class="button-icon"><span class="icon-list"></span></span>
                             {{t 'List'}}
                         </button>
-						<button class="button" ng-disabled="!global.user.rights.delivery.delete" confirmed-click="remove(delivery)" ng-confirm-click="Supprimer le bon de livraison ?" title="Supprimer le bon de livraison">
+						<button class="button" ng-disabled="!global.user.rights.delivery.delete" ng-hide="delivery.Status == 'BILLED'" confirmed-click="remove(delivery)" ng-confirm-click="Supprimer le bon de livraison ?" title="Supprimer le bon de livraison">
 							{{t 'Delete'}}
 							<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
 						</button>
@@ -159,8 +159,8 @@
                                             <tbody>
                                                 <tr>
                                                     <th scope="row">{{t 'Type'}}</th>
-                                                    <td><span editable-select="delivery.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in type.values">
-                                                            \{{showStatus('type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
+                                                    <td><span editable-select="delivery.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_delivery_type.values">
+                                                            \{{showStatus('type','fk_delivery_type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -182,15 +182,15 @@
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">{{t 'deliveries:PaymentConditions'}}</th>
-                                                    <td><a href="#" editable-select="delivery.cond_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in cond_reglement_code.values" onaftersave="update()">
-                                                            \{{ showStatus('cond_reglement_code')}}
+                                                    <td><a href="#" editable-select="delivery.cond_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_payment_term.values" onaftersave="update()">
+                                                            \{{ showStatus('cond_reglement_code','fk_payment_term')}}
                                                         </a>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">{{t 'deliveries:PaymentMode'}}</th>
-                                                    <td><a href="#" editable-select="delivery.mode_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in mode_reglement_code.values" onaftersave="update()">
-                                                            \{{ showStatus('mode_reglement_code')}}
+                                                    <td><a href="#" editable-select="delivery.mode_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_paiement.values" onaftersave="update()">
+                                                            \{{ showStatus('mode_reglement_code','fk_paiement')}}
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -411,7 +411,7 @@
 
 						<!-- buttons -->
 						<div class="btn-edit">
-							<button type="button" class="btn btn-default" ng-show="!tableform.$visible" ng-click="tableform.$show()">
+							<button type="button" class="btn btn-default" ng-show="!tableform.$visible && editable" ng-click="tableform.$show()">
 								{{t 'Modify'}}
 							</button>
 						</div>
