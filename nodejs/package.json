@@ -56,7 +56,6 @@
 		"ua-parser": ">=0.3.3",
 		"nodemailer":"latest",
 		"nodemailer-smtp-transport": "latest",
-		"array-extended":"latest",
 		"googleapis":"0.8.0"
 	},
 	"devDependencies": {

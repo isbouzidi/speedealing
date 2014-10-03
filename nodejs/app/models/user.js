@@ -85,7 +85,7 @@ var UserSchema = new Schema({
 	poste: String,
 	descriptionPoste: String,
 	contrat: String,
-	periodeEssai: String,
+	periodeEssai: Number,
 	salaire: Number,
 	tempsTravail: String,
 	securiteSociale: Number,
@@ -113,7 +113,7 @@ UserSchema.plugin(timestamps);
 UserSchema.plugin(gridfs.pluginGridFs, {root: "User"});
 
 var statusList = {};
-Dict.extrafield({extrafieldName:'User'}, function (err, docs) {
+Dict.dict({dictName:'fk_user_status', object:true}, function (err, docs) {
 
 	statusList = docs;
 });
@@ -125,12 +125,12 @@ UserSchema.virtual('status')
 
 			var status = this.Status;
 
-			if (status && statusList.fields["Status"].values[status].label) {
+			if (status && statusList.values[status].label) {
 				//console.log(this);
 				res_status.id = status;
 				//this.status.name = i18n.t("intervention." + statusList.values[status].label);
-				res_status.name = statusList.fields["Status"].values[status].label;
-				res_status.css = statusList.fields["Status"].values[status].cssClass;
+				res_status.name = statusList.values[status].label;
+				res_status.css = statusList.values[status].cssClass;
 			} else { // By default
 				res_status.id = status;
 				res_status.name = status;

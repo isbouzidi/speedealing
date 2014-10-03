@@ -87,7 +87,7 @@
                                           buttons="no"
                                           onaftersave="update()"
                                           blur="submit"
-                                          e-ng-options="s.id as s.label for s in Status.values">
+                                          e-ng-options="s.id as s.label for s in dict.fk_user_status.values">
                                         \{{userEdit.status.name}}</span>
                                 </td>
                             </tr>
@@ -203,7 +203,7 @@
                                                     <a href="#" 
                                                        editable-select="userEdit.paysNaissance" 
                                                        buttons="no" 
-                                                       e-ng-options="p.label as p.label for p in pays | orderBy:'label'"
+                                                       e-ng-options="p.label as p.label for p in dict.fk_country.values | orderBy:'label'"
                                                        onaftersave="update()"
                                                        blur="submit"
                                                        e-form="paysNaissance">
@@ -218,7 +218,7 @@
                                                     <a href="#" 
                                                        editable-select="userEdit.nationnalite" 
                                                        buttons="no" 
-                                                       e-ng-options="p.label as p.label for p in pays | orderBy:'label'" 
+                                                       e-ng-options="p.label as p.label for p in dict.fk_country.values | orderBy:'label'" 
                                                        onaftersave="update()"
                                                        blur="submit"
                                                        e-form="nationnalite">
@@ -233,7 +233,7 @@
                                                     <a href="#" 
                                                        editable-select="userEdit.situationFamiliale" 
                                                        buttons="no" 
-                                                       e-ng-options="s.label as s.label for s in SituationFamiliale.values" 
+                                                       e-ng-options="s.label as s.label for s in dict.fk_rh_situationFamiliale.values" 
                                                        onaftersave="update()"
                                                        e-form="situationFamiliale">
                                                         \{{userEdit.situationFamiliale|| "Non defini"}}
@@ -245,7 +245,7 @@
                                                 <th scope="row">{{t 'users:NbrEnfants'}}</th>
                                                 <td>
                                                     <a href="#" 
-                                                       editable-text="userEdit.nbrEnfants" 
+                                                       editable-number="userEdit.nbrEnfants" 
                                                        buttons="no" 
                                                        e-placeholder="{{t 'users:NbrEnfants'}}" 
                                                        onaftersave="update()"
@@ -260,7 +260,7 @@
                                                 <th scope="row">{{t 'users:PerCharges'}}</th>
                                                 <td>
                                                     <a href="#" 
-                                                       editable-text="userEdit.perCharges" 
+                                                       editable-number="userEdit.perCharges" 
                                                        buttons="no" 
                                                        e-placeholder="{{t 'users:PerCharges'}}" 
                                                        onaftersave="update()"
@@ -355,7 +355,7 @@
                                                         href="#" 
                                                         editable-select="userEdit.entity" 
                                                         buttons="no" 
-                                                        e-ng-options="s._id as s._id for s in site" 
+                                                        e-ng-options="s.id as s.name for s in site" 
                                                         onaftersave="update()">
                                                         \{{userEdit.entity|| "Non defini"}}
                                                     </a>
@@ -383,7 +383,7 @@
                                                         href="#" 
                                                         editable-select="userEdit.contrat" 
                                                         buttons="no" 
-                                                        e-ng-options="c.id as c.label for c in Contrat.values" 
+                                                        e-ng-options="c.id as c.label for c in dict.fk_rh_contrat.values" 
                                                         onaftersave="update()"
                                                         blur="submit">
                                                         \{{userEdit.contrat|| "Non defini"}}
@@ -395,9 +395,8 @@
                                                 <td>
                                                     <a 
                                                         href="#" 
-                                                        editable-select="userEdit.periodeEssai" 
+                                                        editable-number="userEdit.periodeEssai" 
                                                         buttons="no" 
-                                                        e-ng-options="p.label as p.label for p in PeriodeEssai.values"
                                                         onaftersave="update()">
                                                         \{{userEdit.periodeEssai|| "Non defini"}}
                                                     </a>
@@ -409,7 +408,7 @@
                                                     <a 
                                                         href="#"
                                                         blur ="submit"
-                                                        editable-text="userEdit.salaire" 
+                                                        editable-number="userEdit.salaire" 
                                                         buttons="no" 
                                                         onaftersave="update()"
                                                         blur="submit"
@@ -427,7 +426,7 @@
                                                         href="#" 
                                                         editable-select="userEdit.tempsTravail" 
                                                         buttons="no" 
-                                                        e-ng-options="t.label as t.label for t in TempsTravail.values" 
+                                                        e-ng-options="t.label as t.label for t in dict.fk_rh_tempsTravail.values" 
                                                         onaftersave="update()">
                                                         \{{userEdit.tempsTravail|| "Non defini"}}
                                                     </a>
@@ -456,7 +455,7 @@
                                                         href="#" 
                                                         editable-select="userEdit.niveauEtude" 
                                                         buttons="no" 
-                                                        e-ng-options="n.label as n.label for n in niveauEtude.values"
+                                                        e-ng-options="n.label as n.label for n in dict.fk_rh_niveauEtude.values"
                                                         onaftersave="update()">
                                                         \{{userEdit.niveauEtude|| "Non defini"}}
                                                     </a>
@@ -466,7 +465,7 @@
                                                 <th scope="row">{{t 'users:Annee-Diplome'}}</th>
                                                 <td>
                                                     <a href="#" 
-                                                       editable-text="userEdit.anneeDiplome" 
+                                                       editable-number="userEdit.anneeDiplome" 
                                                        buttons="no" 
                                                        e-placeholder="{{t 'users:Annee-Diplome'}}" 
                                                        onaftersave="update()"

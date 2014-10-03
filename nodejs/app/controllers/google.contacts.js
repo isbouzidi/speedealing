@@ -11,7 +11,6 @@ var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		timestamps = require('mongoose-timestamp'),
 		xml2js = require('xml2js'),
-		array = require("array-extended"),
 		dateFormat = require("dateformat"),
 		googleapis = require('googleapis'),
 		async = require("async");
@@ -162,7 +161,7 @@ function imp_updateContact(contact, gcontact, callback) {
 
 	if (gcontact.emails) {
 		emails = _array_unique(
-				array(gcontact.emails).union(contact.emails).sort("address").value(),
+				_.union(gcontact.emails, contact.emails).sort("address"),
 				function (a, b) {
 					return a.address == b.address && a.type == b.type;
 				});
@@ -237,7 +236,7 @@ function imp_mergeByPhone(gcontact, callback) {
  *  merged : boolean, true if merge succeed
  */
 function imp_mergeByMail(gcontact, callback) {
-	var addresses = array.pluck(gcontact.emails, 'address');
+	var addresses = _.pluck(gcontact.emails, 'address');
 	if (typeof addresses.value === 'function')
 		addresses = addresses.value();
 	//console.log("addresses = ", addresses);
@@ -610,7 +609,7 @@ function findNearestContactsByPhone(gcontact, callback) {
  */
 function findNearestContactsByMail(gcontact, callback) {
 	if (gcontact.emails && gcontact.emails.length > 0) {
-		var addresses = array(gcontact.emails).pluck('address');
+		var addresses = _.pluck(gcontact.emails,'address');
 		if (typeof addresses.value === 'function')
 			addresses = addresses.value();
 		ContactModel.find({'emails.address': {$in: addresses}}, callback);
@@ -631,8 +630,7 @@ function findNearestContacts(gcontact, callback) {
 		}
 	],
 			function (err, results) {
-				var nearest = array(results[0]).union(results[1]).value();
-				nearest = array.sort(nearest, "_id");
+				var nearest = _.union(results[0],results[1]).sort("_id");
 				nearest = _array_unique(nearest,
 						function (a, b) {
 							return a["_id"] == b["_id"];

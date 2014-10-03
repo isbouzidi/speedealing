@@ -579,10 +579,6 @@ table.info-table {
 
 /* Form bootstrap */
 
-.form-control {
-	width: initial;
-}
-
 /* ng-tags-input */
 tags-input .tags .input {
 	height: 21px;

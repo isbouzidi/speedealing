@@ -9,8 +9,6 @@ var UserAbsenceModel = mongoose.model('userAbsence');
 var EntityModel = mongoose.model('entity');
 var UserGroupModel = mongoose.model('userGroup');
 
-var Dict = require('../controllers/dict');
-
 module.exports = function (app, passport, auth) {
 
 	var object = new Object();
@@ -18,16 +16,6 @@ module.exports = function (app, passport, auth) {
 
 	object.colors = ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
 		"#55BF3B", "#DF5353", "#7798BF", "#aaeeee"];
-
-	Dict.extrafield({extrafieldName: 'User'}, function (err, doc) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-
-		object.fk_extrafields = doc;
-		absence.fk_extrafields = doc;
-	});
 
 	// Specific for select
 	app.get('/api/user/select', auth.requiresLogin, function (req, res) {
@@ -113,40 +101,6 @@ module.exports = function (app, passport, auth) {
 		});
 	});
 
-	app.get('/api/user/pays/select', auth.requiresLogin, function (req, res) {
-
-		DictModel.findById(req.query.field, function (err, docs) {
-
-			if (err) {
-				console.log('Erreur - Get Entity(site) : ' + err);
-			} else {
-
-				var pays = [];
-
-				if (docs) {
-					for (var i in docs.values) {
-						if (docs.values[i].enable) {
-
-							var val = {};
-							val.id = i;
-
-							if (docs.values[i].label)
-								val.label = docs.values[i].label;
-							else
-								val.label = req.i18n.t("pays : " + i);
-							pays.push(val);
-						}
-					}
-
-				}
-
-				res.json(pays);
-			}
-		});
-
-		return;
-	});
-
 	//liste des collaborateurs
 	app.get('/api/users', auth.requiresLogin, object.read);
 
@@ -162,18 +116,6 @@ module.exports = function (app, passport, auth) {
 	//verifie si le nouveau exite ou pas
 	app.get('/api/createUser/uniqLogin', auth.requiresLogin, object.uniqLogin);
 
-	/*app.post('/api/user', auth.requiresLogin, function(req, res) {
-	 //console.log(JSON.stringify(req.body));
-	 return res.send(200, object.create(req));
-	 });
-	 
-	 */
-	/*app.put('/api/user', auth.requiresLogin, function(req, res) {
-	 console.log(JSON.stringify(req.body));
-	 return res.send(200, object.update(req));
-	 });
-	 
-	 */
 	app.del('/api/user', auth.requiresLogin, function (req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
@@ -184,23 +126,6 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/user/absence', auth.requiresLogin, absence.read);
 	app.post('/api/user/absence', auth.requiresLogin, absence.create);
 	app.put('/api/user/absence/:id', auth.requiresLogin, absence.update);
-
-	app.get('/api/user/absence/status/select', auth.requiresLogin, function (req, res) {
-		var result = [];
-		for (var i in absence.fk_extrafields.fields.StatusAbsence.values) {
-
-			if (absence.fk_extrafields.fields.StatusAbsence.values[i].enable) {
-				var status = {};
-
-				status.id = i;
-				status.name = absence.fk_extrafields.fields.StatusAbsence.values[i].label;
-				status.css = absence.fk_extrafields.fields.StatusAbsence.values[i].cssClass;
-
-				result.push(status);
-			}
-		}
-		res.send(200, result);
-	});
 
 	app.get('/api/user/absence/count', auth.requiresLogin, absence.count);
 
@@ -251,7 +176,6 @@ Object.prototype = {
 		});
 	},
 	read: function (req, res) {
-		//var status_list = this.fk_extrafields.fields.Status;
 
 		UserModel.find({}, function (err, doc) {
 			if (err) {
@@ -259,22 +183,7 @@ Object.prototype = {
 				res.send(500, doc);
 				return;
 			}
-			/*
-			 for (var i in doc) {
-			 var status = {};
-			 
-			 status.id = doc[i].Status;
-			 if (status_list.values[status.id]) {
-			 status.name = req.i18n.t("intervention." + status_list.values[status.id].label);
-			 status.css = status_list.values[status.id].cssClass;
-			 } else { // Value not present in extrafield
-			 status.name = status.id;
-			 status.css = "";
-			 }
-			 
-			 doc[i].Status = status;
-			 }
-			 */
+			
 			res.send(200, doc);
 		});
 	},

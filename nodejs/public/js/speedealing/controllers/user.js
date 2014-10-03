@@ -3,7 +3,10 @@ angular.module('mean.users').controller('UserRhAbsenceController', ['$scope', '$
 
 		pageTitle.setTitle('Gestion des absences');
 
-		$scope.absence = {};
+		$scope.absence = {
+			dateStart: new Date().setHours(8,0,0,0),
+			dateEnd: new Date().setHours(18,0,0,0)
+		};
 
 		$scope.types = [{name: "En cours", id: "NOW"},
 			{name: "Clos", id: "CLOSED"}];
@@ -16,8 +19,8 @@ angular.module('mean.users').controller('UserRhAbsenceController', ['$scope', '$
 				$scope.count = absences.length;
 			});
 
-			$http({method: 'GET', url: '/api/user/absence/status/select', params: {
-					field: "Status"
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_absence_status"
 				}
 			}).success(function (data, status) {
 				$scope.status = data;
@@ -48,7 +51,7 @@ angular.module('mean.users').controller('UserRhAbsenceController', ['$scope', '$
 				{field: 'dateStart', enableCellEdit: false, displayName: 'Date début', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(col, row)"/>'},
 				{field: 'dateEnd', enableCellEdit: false, displayName: 'Date fin', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(col, row)"/>'},
 				{field: 'nbDay', enableCellEdit: true, displayName: 'Nombre de jours', width: "130px", cellClass: "align-right", editableCellTemplate: '<input type="number" min="0" step="0.1" ng-class="\'colt\' + col.index" ng-input="COL_FIELD" ng-model="COL_FIELD" ng-blur="updateInPlace(col, row)" class="input"/>'},
-				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.name for c in status"></select>'},
+				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>', editableCellTemplate: '<select ng-cell-input ng-class="\'colt\' + col.index" ng-model="row.entity.Status" ng-blur="updateInPlace(col, row)" ng-input="row.entity.Status" data-ng-options="c.id as c.label for c in status.values"></select>'},
 				{field: 'entity', enableCellEdit: false, displayName: "Entité", cellClass: "align-center", width: 100, visible: Global.user.multiEntities},
 				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-click="edit(row)"></button><button data-ng-click="addTick(row)" ng-disabled="row.getProperty(\'closed\')" class="button icon-tick" title="Le salarié est de retour"></button><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
@@ -130,19 +133,29 @@ angular.module('mean.users').controller('UserRhAbsenceCreateController', ['$scop
 		//$scope.absence = {
 		//	entity: Global.user.entity
 		//};
+		$scope.opened = [];
+		
+		$scope.hstep = 1;
+		$scope.mstep = 15;
 
-		$scope.dateStart = new Date(object.dateStart);
-		$scope.dateEnd = new Date(object.dateEnd);
+		$scope.ismeridian = false;
 
 		$scope.init = function () {
-			$http({method: 'GET', url: '/api/user/absence/status/select', params: {
-					field: "Status"
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_absence_status"
 				}
 			}).success(function (data, status) {
 				$scope.status = data;
 				//console.log(data);
 				//$scope.absence.Status = data.default;
 			});
+		};
+
+		$scope.open = function ($event, idx) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			$scope.opened[idx] = true;
 		};
 
 		$scope.create = function () {
@@ -179,6 +192,8 @@ angular.module('mean.users').controller('UserRhAbsenceCreateController', ['$scop
 angular.module('mean.users').controller('UserController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', '$filter', '$upload', 'pageTitle', 'Global', 'Users', function ($scope, $routeParams, $location, $route, $modal, $timeout, $http, $filter, $upload, pageTitle, Global, Users) {
 
 		$scope.global = Global;
+		$scope.dict = {};
+		$scope.groupe = [];
 
 		pageTitle.setTitle('Gestion des collaborateurs');
 
@@ -212,31 +227,6 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 						$scope.societe.files.push(data.file);
 
 				});
-			}
-		};
-
-		$scope.kendoUpload = {
-			multiple: true,
-			async: {
-				saveUrl: "api/user/file/",
-				removeUrl: "api/user/file/",
-				removeVerb: "DELETE",
-				autoUpload: true
-			},
-			error: function (e) {
-				// log error
-				console.log(e);
-				console.log($scope.userEdit._id);
-			},
-			upload: function (e) {
-				e.sender.options.async.saveUrl = "api/user/file/" + $scope.userEdit._id;
-				e.sender.options.async.removeUrl = "api/user/file/" + $scope.userEdit._id;
-			},
-			complete: function () {
-				$route.reload();
-			},
-			localization: {
-				select: "Ajouter photo"
 			}
 		};
 
@@ -334,46 +324,30 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 		$scope.init = function () {
 
 
-			var fields = ["Contrat", "PeriodeEssai", "TempsTravail", "SituationFamiliale", "Status", "niveauEtude"];
+			var dict = ["fk_country", "fk_rh_contrat", "fk_rh_periodeEssai", "fk_rh_tempsTravail", "fk_rh_situationFamiliale", "fk_user_status", "fk_rh_niveauEtude"];
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/user/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
+				//console.log(data);
 			});
+
 
 			$http({method: 'GET', url: '/api/UserGroup/list',
 				params: {fields: "name"}
-
 			}).success(function (data) {
 
 				$scope.groupe = data;
 			});
 
-
-
-
-			$http({method: 'GET', url: '/api/site/fk_extrafields/select',
-				params: {field: "_id"}
-
+			$http({method: 'GET', url: '/api/entity/select'
 			}).success(function (data) {
 
 				$scope.site = data;
 			});
-
-			$http({method: 'GET', url: '/api/user/pays/select',
-				params: {field: "dict:fk_country"}
-
-			}).success(function (data) {
-
-				$scope.pays = data;
-
-			});
-
 
 		};
 
@@ -445,10 +419,22 @@ angular.module('mean.users').controller('UserCreateController', ['$scope', '$htt
 		$scope.global = Global;
 
 		$scope.validLogin = false;
-		$scope.user = {};
+		$scope.user = {
+			password: generatePassword
+		};
 		$scope.loginFound = "";
 
 		$scope.active = 1;
+
+		function generatePassword() {
+			var length = 10,
+					charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+					retVal = "";
+			for (var i = 0, n = charset.length; i < length; ++i) {
+				retVal += charset.charAt(Math.floor(Math.random() * n));
+			}
+			return retVal;
+		}
 
 		$scope.isActive = function (idx) {
 			if (idx === $scope.active)

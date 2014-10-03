@@ -9,7 +9,6 @@
 		config = require('../../config/config'),
 		timestamps = require('mongoose-timestamp'),
 		xml2js = require('xml2js'),
-		array = require("array-extended"),
 		dateFormat = require("dateformat"),
 		googleapis = require('googleapis'),
 		async = require("async");

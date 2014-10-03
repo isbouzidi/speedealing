@@ -102,7 +102,7 @@ var deliverySchema = new Schema({
 deliverySchema.plugin(timestamps);
 
 var cond_reglement = {};
-Dict.dict({dictName: "fk_payment_term"}, function (err, docs) {
+Dict.dict({dictName: "fk_payment_term", object:true}, function (err, docs) {
 	cond_reglement = docs;
 });
 

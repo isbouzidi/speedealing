@@ -264,6 +264,12 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			}
 		}, true);
 
+		$scope.$watch('sortOptionsSociete', function (newVal, oldVal) {
+			if (newVal.directions[0] !== oldVal.directions[0] || newVal.fields[0] !== oldVal.fields[0]) {
+				$scope.find();
+			}
+		}, true);
+
 		// sorting
 		$scope.sortOptionsSociete = {fields: ["name"], directions: ["asc"]};
 
@@ -304,18 +310,6 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
 		};
-
-		$scope.$watch('filterOptionsSociete', function (newVal, oldVal) {
-			if (newVal.filterText !== oldVal.filterText) {
-				$scope.find();
-			}
-		}, true);
-
-		$scope.$watch('sortOptionsSociete', function (newVal, oldVal) {
-			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
-				$scope.find();
-			}
-		}, true);
 
 		$scope.updateInPlace = function (api, field, row, newdata) {
 			if (!$scope.save) {

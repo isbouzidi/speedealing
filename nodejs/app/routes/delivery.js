@@ -260,12 +260,12 @@ Object.prototype = {
 		});
 
 		var cond_reglement_code = {};
-		Dict.dict({dictName: "fk_payment_term"}, function (err, docs) {
+		Dict.dict({dictName: "fk_payment_term", object:true}, function (err, docs) {
 			cond_reglement_code = docs;
 		});
 
 		var mode_reglement_code = {};
-		Dict.dict({dictName: "fk_paiement"}, function (err, docs) {
+		Dict.dict({dictName: "fk_paiement", object:true}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
 

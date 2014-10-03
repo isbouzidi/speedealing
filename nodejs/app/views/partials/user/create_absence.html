@@ -11,31 +11,63 @@
 
 		<div class="field-block button-height">
 			<label for="name"><b>{{t 'users:Employee'}}</b></label>
-			<input required type="text" data-ng-model="absence.user" typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="name" class="input" autocomplete="off">
+			<input required type="text" data-ng-model="absence.user" typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="name" class="form-control" autocomplete="off">
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="dateStart"><b>Date de début</b></label>
-			<input kendo-date-time-picker data-ng-model="dateStart" k-on-change="absence.dateStart = kendoEvent.sender._value;" id="dateStart" class="input" />		
+			<div class="row">
+				<div class="col-md-6" style="margin-top: 34px;">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="absence.dateStart" is-open="opened[0]" datepicker-options="dateOptions" ng-required="true" close-text="Fermer" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+				<div class="col-md-6">
+					<timepicker ng-model="absence.dateStart" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+				</div>
+			</div>
 			<small class='input-info'>Date du 1er jour du congés. ex 8/03/2014 8h00</small>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="dateEnd"><b>Date de fin</b></label>
-			<input kendo-date-time-picker data-ng-model="dateEnd" k-on-change="absence.dateEnd = kendoEvent.sender._value;" id="dateStart" class="input" />
+			<div class="row">
+				<div class="col-md-6" style="margin-top: 34px;">
+					<p class="input-group">
+						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="absence.dateEnd" is-open="opened[1]" datepicker-options="dateOptions" ng-required="true" close-text="Fermer" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+				<div class="col-md-6">
+					<timepicker ng-model="absence.dateEnd" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+				</div>
+			</div>
 			<small class='input-info'>Date du dernier jour du congés. ex 18/03/2014 18h00</small>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="nbDay"><b>Nombre de jours</b></label>
-			<input type='number' min='0' step='0.1' class="input" id="nbDay" data-ng-model="absence.nbDay" />
+			<div class="row">
+				<div class="col-md-4">
+					<input type='number' min='0' step='0.1' class="form-control" id="nbDay" data-ng-model="absence.nbDay" />
+				</div>
+			</div>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="status"><b>Type</b></label>
-			<select class="form-control" id="status" data-ng-model="absence.Status" data-ng-options="c.id as c.name for c in status"></select>
+			<div class="row">
+				<div class="col-md-6">
+					<select class="form-control" id="status" data-ng-model="absence.Status" data-ng-options="c.id as c.label for c in status.values"></select>
+				</div>
+			</div>
 		</div>
-		
+
 		<div class="field-block button-height">
 			<label for="closed"><b>Clos</b></label>
 			<input type="checkbox" id="closed" data-ng-model="absence.closed" data-ng-checked="absence.closed"/>

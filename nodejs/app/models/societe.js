@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		Schema = mongoose.Schema,
 		i18n = require("i18next"),
+		_ = require('lodash'),
 		timestamps = require('mongoose-timestamp');
 
 var SeqModel = mongoose.model('Sequence');
@@ -29,7 +30,7 @@ var setTags = function (tags) {
 		else
 			result.push(tags[i].trim());
 
-	result = array.unique(result);
+	result = _.uniq(result);
 
 	//console.log(result);
 	return result;
@@ -101,7 +102,7 @@ var societeSchema = new Schema({
 	gps: [Number],
 	contractID: String,
 	UGAP_Ref_Client: String,
-	datec: Date,
+	datec: {type: Date, default: Date.now},
 	idprof1: String, // SIREN
 	idprof2: {type: String}, // SIRET
 	idprof3: String, // NAF
