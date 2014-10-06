@@ -243,7 +243,7 @@ societeSchema.virtual('status')
 
 			var status = this.Status;
 
-			if (status && statusList.values[status].label) {
+			if (status && statusList.values[status] && statusList.values[status].label) {
 				//console.log(this);
 				res_status.id = status;
 				//this.status.name = i18n.t("intervention." + statusList.values[status].label);
