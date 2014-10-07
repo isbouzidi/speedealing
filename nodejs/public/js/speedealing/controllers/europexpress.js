@@ -94,7 +94,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		 */
 
 		$scope.driverAutoComplete = function (val) {
-			return $http.post('api/user/name/autocomplete?lastname=1', {
+			return $http.post('api/user/name/autocomplete?lastname=1&status=ENABLE&status=NOCONNECT', {
 				take: '5',
 				skip: '0',
 				page: '1',
