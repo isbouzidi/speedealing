@@ -1426,7 +1426,7 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 		};
 
 		$scope.showCreate = function () {
-			if (!Global.user.rights.europexpress || !Global.user.rights.europexpress.createBills)
+			if (!Global.user.rights.europexpressCourses || !Global.user.rights.europexpressCourses.createBills)
 				return false;
 
 			var d = new Date();
@@ -1507,8 +1507,9 @@ angular.module('mean.europexpress').controller('EEFacturationController', ['$sco
 				enableColumnResize: true,
 				//plugins: [new ngGridFlexibleHeightPlugin()],
 				columnDefs: [
-					{field: 'client.name', width: "25%", displayName: 'Client', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
-					{field: 'ref', width: "25%", displayName: 'Id'},
+					{field: 'client.name', width: "25%", displayName: 'Client', cellTemplate: '<div class="ngCellText"><a ng-href="#!/module/europexpress/transport_edit.html/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+					{field: 'ref', width: "10%", displayName: 'Id'},
+					{field: 'to.town', width: "15%", displayName: 'Dest.'},
 					{field: 'Status.name', width: "12%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
 					{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm'"},
 					{field: 'total_ht', width: "20%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
