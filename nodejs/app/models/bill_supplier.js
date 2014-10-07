@@ -87,7 +87,7 @@ var billSupplierSchema = new Schema({
 billSupplierSchema.plugin(timestamps);
 
 var cond_reglement = {};
-Dict.dict({dictName: "fk_payment_term"}, function (err, docs) {
+Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 	cond_reglement = docs;
 });
 
@@ -234,7 +234,7 @@ billSupplierSchema.methods = {
 };
 
 var statusList = {};
-Dict.dict({dictName: 'fk_bill_status', object:true}, function (err, doc) {
+Dict.dict({dictName: 'fk_bill_status', object: true}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
