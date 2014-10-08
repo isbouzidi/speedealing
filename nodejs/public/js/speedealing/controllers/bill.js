@@ -99,7 +99,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				angular.forEach(bill.orders, function (order) {
 					$scope.totalOrders += order.total_ht;
 				});
-				
+
 				$scope.totalDeliveries = 0;
 
 				angular.forEach(bill.deliveries, function (delivery) {
@@ -173,7 +173,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				{field: 'dater', displayName: 'Date échéance', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'client.name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'client.id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'commercial_id.name', displayName: 'Commercial', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
-				{field: 'total_ttc', displayName: 'Total TTC'/* cellFilter: "currency"*/},
+				{field: 'total_ttc', displayName: 'Total TTC', cellFilter: "currency"},
 				{field: 'status.name', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(\'status.name\')}}</small></div>'},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
 			]
