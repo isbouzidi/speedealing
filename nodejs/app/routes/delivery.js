@@ -88,32 +88,10 @@ module.exports = function (app, passport, auth) {
 	});
 
 	// recupere la liste des courses pour verification
-	app.get('/api/delivery/billing', auth.requiresLogin, billing.read/*, function (req, res) {
-	 async.parallel({
-	 course: function (cb) {
-	 billing.courses(req, "COURSE", cb);
-	 },
-	 messagerie: function (cb) {
-	 billing.courses(req, "MESSAGERIE", cb);
-	 },
-	 affretement: function (cb) {
-	 billing.courses(req, "AFFRETEMENT", cb);
-	 },
-	 allST: function (cb) {
-	 billing.allST(req, cb);
-	 }
-	 },
-	 function (err, results) {
-	 if (err)
-	 return console.log(err);
-	 
-	 res.json(200, results);
-	 });
-	 
-	 }*/);
+	app.get('/api/delivery/billing', auth.requiresLogin, billing.read);
 
 	// Genere la facturation
-	app.post('/api/delivery/billing', auth.requiresLogin, billing.create);
+	app.post('/api/delivery/billing', auth.requiresLogin, billing.createAll);
 
 	app.get('/api/delivery/billing/ca', auth.requiresLogin, billing.familyCA);
 
@@ -507,7 +485,7 @@ Billing.prototype = {
 				});
 	},
 	create: function (req, res) {
-		
+
 		var delivery = req.delivery;
 
 		SocieteModel.findOne({_id: req.delivery.client.id}, function (err, societe) {
@@ -532,7 +510,7 @@ Billing.prototype = {
 			bill.address = societe.address;
 			bill.zip = societe.zip;
 			bill.town = societe.town;
-			
+
 			bill.shipping = delivery.shipping;
 
 			bill.deliveries.push(delivery._id);
@@ -540,14 +518,15 @@ Billing.prototype = {
 				bill.orders.push(delivery.order);
 
 			bill.lines = delivery.lines;
-			
+
 			delivery.Status = 'BILLED';
-			delivery.save(function(err, delivery){});
-			
-			bill.save(function(err, bill) {
-				if(err)
+			delivery.save(function (err, delivery) {
+			});
+
+			bill.save(function (err, bill) {
+				if (err)
 					console.log(err);
-				
+
 				res.json(bill);
 			});
 		});
@@ -555,473 +534,93 @@ Billing.prototype = {
 		//res.send(200);
 	},
 	createAll: function (req, res) {
-		var dateStart = new Date(req.query.year, req.query.month, 1);
-		var dateEnd = new Date(req.query.year, parseInt(req.query.month) + 1, 1);
-
-		async.parallel({
-			transports: function (cb) {
-				CoursesModel.find({Status: {$ne: 'REFUSED'}, type: {$ne: 'REGULIER'}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "-latex", {sort: {datec: 1}}, function (err, doc) {
-					for (var i in doc) {
-						doc[i].client.name = doc[i].client.cptBilling.name;
-						doc[i].client.id = doc[i].client.cptBilling.id;
-					}
-
-					//console.log(doc);
-
-					cb(err, doc);
-				});
-			},
-			stock: function (cb) {
-				StockModel.aggregate([
-					{'$match': {$or: [{datec: {$lt: dateEnd, $gte: dateStart}}, {"product.billingMode": "MONTH"}]}},
-					{'$project': {product: 1, client: 1, qty: 1}},
-					{'$group': {_id: {product: '$product', client: '$client'}, total: {$sum: '$qty'}}}
-				], function (err, doc) {
-					//console.log(doc);
-
-					cb(err, doc);
-				});
-			},
-			ST: function (cb) {
-				//console.log(dateStart);
-				//console.log(dateEnd);
-				CoursesModel.aggregate([
-					{'$match': {Status: {'$ne': 'REFUSED'}, total_soustraitant: {'$gt': 0}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}},
-					{'$group': {
-							_id: {
-								fournisseur: "$fournisseur",
-								type: "$type",
-								client: "$client"
-							},
-							order_id: {'$addToSet': {
-									id: "$_id",
-									name: "$ref"
-								}
-							},
-							chargesExt: {'$sum': "$chargesExt"},
-							total_soustraitant: {'$sum': "$total_soustraitant"}
-						}
-					}], function (err, doc) {
-
-					//console.log(doc);
-					cb(err, doc);
-				});
-			},
-			COURSE: function (cb) {
-				ProductModel.findOne({ref: "COURSE"}, function (err, product) {
-					if (err)
-						console.log(err);
-
-					cb(err, product);
-				});
-			},
-			AFFRETEMENT: function (cb) {
-				ProductModel.findOne({ref: "AFFRETEMENT"}, function (err, product) {
-					if (err)
-						console.log(err);
-
-					cb(err, product);
-				});
-			},
-			MESSAGERIE: function (cb) {
-				ProductModel.findOne({ref: "MESSAGERIE"}, function (err, product) {
-					if (err)
-						console.log(err);
-
-					cb(err, product);
-				});
-			}
-		},
-		function (err, results) {
+		DeliveryModel.aggregate([
+			{"$match": {Status: "SEND", entity: req.body.entity, datec: {$lte: new Date(req.body.dateEnd)}}},
+			{"$project": {"datec": 1, "shipping": 1, "lines": 1, "ref": 1, "societe": "$client.cptBilling"}},
+			{"$sort": {datec: 1}},
+			{"$unwind": "$lines"},
+			{"$group": {"_id": "$societe.id", "data": {"$push": "$$ROOT"}}}
+		], function (err, docs) {
 			if (err)
 				return console.log(err);
 
-			var clients = [];
+			//console.log(docs)
 
-			for (var i in results.transports) {
-				clients.push(results.transports[i].client.id.toString());
-			}
+			// Creation des factures
+			async.each(docs, function (client, callback) {
 
-			for (var i in results.stock) {
-				clients.push(results.stock[i]._id.client.id.toString());
-			}
+				SocieteModel.findOne({_id: client._id}, function (err, societe) {
 
-			// Recupere la liste des clients
-			clients = array.unique(clients);
+					var datec = new Date(req.body.dateEnd);
 
-			//console.log(clients);
+					var facture = new FactureModel({
+						title: {
+							ref: "BL" + dateFormat(datec, "dd/mm/yyyy"),
+							autoGenerated: true
+						},
+						client: {
+							id: client._id
+						},
+						type: 'INVOICE_AUTO'
+					});
 
-			var factures = {};
-			// Met a jour la liste des factures
-			async.each(clients, function (clientId, callback) {
-				SocieteModel.findOne({_id: clientId}, function (err, societe) {
+					if (societe == null)
+						console.log("Error : pas de societe pour le clientId : " + client._id);
 
-					FactureModel.findOne({'title.ref': "EE" + req.query.year + (parseInt(req.query.month) + 1), 'client.id': clientId}, function (err, facture) {
-						if (err)
-							return callback(err);
+					facture.client.name = societe.name;
+					facture.price_level = societe.price_level;
+					facture.mode_reglement_code = societe.mode_reglement;
+					facture.cond_reglement_code = societe.cond_reglement;
+					facture.commercial_id = societe.commercial_id;
+					facture.datec = datec;
 
-						if (facture == null)
-							facture = new FactureModel({
-								title: {
-									ref: "EE" + req.query.year + (parseInt(req.query.month) + 1),
-									autoGenerated: true
-								},
-								client: {
-									id: clientId
-								},
-								type: 'INVOICE_AUTO'
+					facture.entity = req.body.entity;
+
+					facture.address = societe.address;
+					facture.zip = societe.zip;
+					facture.town = societe.town;
+
+					facture.lines = [];
+
+					var deliveries_id = [];
+
+					for (var i in client.data) {
+						//console.log(client.data[i]);
+
+						var aline = client.data[i].lines;
+
+						aline.description += "\n" + client.data[i].ref + " (" + dateFormat(client.data[i].datec, "dd/mm/yyyy") + ")";
+
+						facture.lines.push(aline);
+
+						facture.shipping.total_ht += client.data[i].shipping.total_ht;
+						facture.shipping.total_tva += client.data[i].shipping.total_tva;
+
+						deliveries_id.push(client.data[i]._id.toString());
+
+					}
+
+					facture.deliveries = _.uniq(deliveries_id, true);
+
+					facture.save(function (err, bill) {
+						for (var i = 0; i < bill.deliveries.length; i++) {
+							DeliveryModel.update({_id: bill.deliveries[i]}, {$set: {Status: "BILLED"}}, function (err) {
+								if (err)
+									console.log(err);
 							});
-
-						if (societe == null)
-							console.log("Error : pas de societe pour le clientId : " + clientId);
-
-						facture.client.name = societe.name;
-						facture.price_level = societe.price_level;
-						facture.mode_reglement_code = societe.mode_reglement;
-						facture.cond_reglement_code = societe.cond_reglement;
-						facture.commercial_id = societe.commercial_id;
-						var date = new Date();
-						facture.datec = new Date(date.getFullYear(), date.getMonth(), 0);
-
-						facture.entity = req.query.entity;
-
-						facture.address = societe.address;
-						facture.zip = societe.zip;
-						facture.town = societe.town;
-
-						facture.lines = [];
-
-						factures[clientId] = facture;
-
+						}
 						callback();
 					});
 				});
 
 			}, function (err) {
 				if (err)
-					return console.log(err);
+					console.log(err);
 
-				//lignes de factures de transports
-				async.each(results.transports, function (course, callback) {
-					//console.log(course);
+				res.send(200);
 
-					var line = {
-						description: (course.from.name || "") + " " + course.from.zip + " " + course.from.town + "\n" + (course.to.name || "") + " " + course.to.zip + " " + course.to.town,
-						pu_ht: course.total_ht,
-						total_ht: course.total_ht,
-						qty: 1,
-						group: course.type
-					};
-
-					if (course.type == "MESSAGERIE") {
-						line.description = course.to.name + " " + course.to.zip + " " + course.to.town + "\n";
-						line.description += "Nombre de colis : " + course.nbPalette + " / Poids : " + course.poids + "kg";
-
-
-						line.tva_tx = 20;
-						line.total_tva = course.total_ht * line.tva_tx / 100;
-						line.product = {};
-						line.product.id = results[course.type]._id;
-						line.product.label = "Messagerie (Bordereau " + course.bordereau + " du " + dateFormat(course.datec, "dd/mm/yyyy") + ")";
-						line.product.name = course.type;
-						line.product.template = "/partials/lines/classic.html";
-					} else {
-						line.tva_tx = results[course.type].tva_tx;
-						line.total_tva = course.total_ht * line.tva_tx / 100;
-						line.product = {};
-						line.product.id = results[course.type]._id;
-						line.product.label = results[course.type].label + " du " + dateFormat(course.date_enlevement, "dd/mm/yyyy") + " au " + dateFormat(course.date_livraison, "dd/mm/yyyy");
-						line.product.name = course.type;
-						line.product.template = "/partials/lines/classic.html";
-						if (course.ref_client)
-							line.description += "\n Ref. client : " + course.ref_client;
-					}
-
-					factures[course.client.id].lines.push(line);
-					callback();
-				}, function (err) {
-					//lignes de factures de stocks
-					async.each(results.stock, function (mouvStock, callback) {
-						//console.log(mouvStock);
-
-						ProductModel.findOne({_id: mouvStock._id.product.id}, function (err, product) {
-							if (err)
-								console.log(err);
-
-							var priceIdx = product.price.map(function (e) {
-								return e.price_level;
-							}).indexOf(factures[mouvStock._id.client.id].price_level);
-
-							if (priceIdx < 0) {
-								console.log("Erreur aucun tarif trouve " + mouvStock._id.product.id + " " + factures[mouvStock._id.client.id].price_level);
-								return callback();
-							}
-
-							var line = {
-								pu_ht: product.price[priceIdx].pu_ht,
-								qty: mouvStock.total,
-								total_ht: product.price[priceIdx].pu_ht * mouvStock.total,
-								group: "STOCK"
-							};
-
-							//line.description = course.to.name + " " + course.to.zip + " " + course.to.town;
-
-							line.tva_tx = 20;
-							line.total_tva = line.total_ht * line.tva_tx / 100;
-							line.product = {};
-							line.product.id = mouvStock._id.product.id;
-							line.product.label = product.label;
-							line.product.name = mouvStock._id.product.name;
-							line.product.template = "/partials/lines/classic.html";
-
-							//console.log(line);
-
-							factures[mouvStock._id.client.id].lines.push(line);
-							callback();
-						});
-					}, function (err) {
-						// save factures
-						async.each(clients, function (clientId, callback) {
-							factures[clientId].save(function (err, facture) {
-								factures[clientId] = facture;
-								callback();
-							});
-						}, function (err) {
-							res.json(200, {});
-						});
-					});
-				});
 			});
 
-			//console.log(results.ST);
-			var supplierFactures = {};
-			async.eachSeries(results.ST, function (BillSupplier, callback) {
-				for (var i in BillSupplier.order_id) {
-					BillSupplier.order_id[i].url = "#!/module/europexpress/transport_edit.html/";
-				}
-
-				var supplierId = BillSupplier._id.fournisseur.id.toString();
-
-				SupplierFactureModel.findOne({'title.ref': "EE" + req.query.year + req.query.month, 'supplier.id': supplierId}, function (err, facture) {
-					if (err)
-						return callback(err);
-
-					if (supplierFactures[supplierId] == null) {
-
-						if (facture == null)
-							facture = new SupplierFactureModel({
-								title: {
-									ref: "EE" + req.query.year + req.query.month,
-									autoGenerated: true
-								},
-								supplier: {
-									id: supplierId
-								},
-								type: 'INVOICE_AUTO'
-							});
-
-						var date = new Date();
-						facture.datec = new Date(date.getFullYear(), date.getMonth(), 0);
-
-						facture.entity = req.query.entity;
-
-						facture.lines = [];
-					} else {
-						facture = supplierFactures[supplierId];
-					}
-
-					facture.supplier.name = BillSupplier._id.fournisseur.name;
-
-
-
-					var product = {};
-					var line = {};
-					switch (BillSupplier._id.type) {
-						case "REGULIER" :
-							switch (BillSupplier._id.client.id.toString()) {
-								case "524b218a2d8a265d6600073a" :
-									//PROXIDIS
-									product = {
-										"id": "53a17f2f5ec617390dbb111c",
-										"label": "Sous-traitance Proxidis",
-										"name": "ST_PROX"
-									};
-
-									break;
-								case "524b218a2d8a265d66000486":
-									//GEFCO
-									product = {
-										"id": "53bbdb3880d64eb74a810db5",
-										"label": "Sous-traitance Gefco",
-										"name": "ST_GEFCO"
-									};
-									break;
-								default:
-									product = {
-										"id": "53bbda3f80d64eb74a810c61",
-										"label": "Sous-traitance regulier",
-										"name": "ST_REGULIER"
-									};
-							}
-
-							line = {
-								qty: 1,
-								tva_tx: 20,
-								pu_ht: BillSupplier.total_soustraitant,
-								product_type: "SERVICE",
-								product: product,
-								description: BillSupplier._id.client.name,
-								total_ht: BillSupplier.total_soustraitant + BillSupplier.chargesExt,
-								total_tva: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 0.20,
-								total_ttc: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 1.20
-							};
-
-							facture.lines.push(line);
-
-							break;
-						case "COURSE" :
-							product = {
-								"id": "53a17e805ec617390dbb1116",
-								"label": "Sous-traitance courses",
-								"name": "ST_COURSE"
-							};
-
-							line = {
-								qty: 1,
-								tva_tx: 20,
-								pu_ht: BillSupplier.total_soustraitant,
-								product_type: "SERVICE",
-								product: product,
-								description: BillSupplier._id.client.name,
-								total_ht: BillSupplier.total_soustraitant + BillSupplier.chargesExt,
-								total_tva: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 0.20,
-								total_ttc: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 1.20
-							};
-
-							facture.lines.push(line);
-
-							break;
-						case "AFFRETEMENT" :
-							product = {
-								"id": "53a17ef15ec617390dbb111a",
-								"label": "Sous-traitance Affretement",
-								"name": "ST_AFFRET"
-							};
-
-							line = {
-								qty: 1,
-								tva_tx: 20,
-								pu_ht: BillSupplier.total_soustraitant,
-								product_type: "SERVICE",
-								product: product,
-								description: BillSupplier._id.client.name,
-								total_ht: BillSupplier.total_soustraitant + BillSupplier.chargesExt,
-								total_tva: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 0.20,
-								total_ttc: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 1.20
-							};
-
-							facture.lines.push(line);
-
-							break;
-						case "MESSAGERIE" :
-							product = {
-								"id": "53a17f515ec617390dbb111e",
-								"label": "Sous-traitance Messagerie",
-								"name": "ST_MESS"
-							};
-
-							line = {
-								qty: 1,
-								tva_tx: 20,
-								pu_ht: BillSupplier.total_soustraitant,
-								product_type: "SERVICE",
-								product: product,
-								description: BillSupplier._id.client.name,
-								total_ht: BillSupplier.total_soustraitant + BillSupplier.chargesExt,
-								total_tva: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 0.20,
-								total_ttc: (BillSupplier.total_soustraitant + BillSupplier.chargesExt) * 1.20
-							};
-
-							facture.lines.push(line);
-
-							break;
-						default :
-
-					}
-
-					supplierFactures[supplierId] = facture;
-
-					callback();
-
-					//console.log(supplierFactures);
-				});
-			}, function (err) {
-				var factures = [];
-
-				for (var i in supplierFactures) {
-					factures.push(supplierFactures[i]);
-				}
-
-				// save SupplierFactures
-				factures.forEach(function (facture) {
-					facture.save(function (err, doc) {
-						console.log(facture);
-					});
-				});
-			});
-
-		});
-	},
-	courses: function (req, type, cb) {
-		var dateStart = new Date(req.body.year, req.body.month, 1);
-		var dateEnd = new Date(req.body.year, parseInt(req.body.month) + 1, 1);
-		var fk_status = this.fk_extrafields.fields.statusCourses;
-
-		CoursesModel.find({type: type, Status: {'$ne': 'REFUSED'}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "client fournisseur total_ht total_soustraitant type ref Status date_enlevement", function (err, doc) {
-			for (var i in doc) {
-				var status = {};
-
-				status.id = doc[i].Status;
-				if (fk_status.values[status.id]) {
-					status.name = fk_status.values[status.id].label;
-					status.css = fk_status.values[status.id].cssClass;
-				} else { // Value not present in extrafield
-					status.name = status.id;
-					status.css = "";
-				}
-				doc[i].client.name = doc[i].client.cptBilling.name;
-				doc[i].client.id = doc[i].client.cptBilling.id;
-
-				doc[i].Status = {};
-				doc[i].Status = status;
-			}
-
-			cb(err, doc);
-		});
-	},
-	allST: function (req, cb) {
-		var dateStart = new Date(req.body.year, req.body.month, 1);
-		var dateEnd = new Date(req.body.year, parseInt(req.body.month) + 1, 1);
-		var fk_status = this.fk_extrafields.fields.statusCourses;
-
-		CoursesModel.find({Status: {'$ne': 'REFUSED'}, total_soustraitant: {'$gt': 0}, date_enlevement: {'$gte': dateStart, '$lt': dateEnd}}, "client fournisseur total_ht total_soustraitant type ref Status date_enlevement chargesExt", function (err, doc) {
-			for (var i in doc) {
-				var status = {};
-
-				status.id = doc[i].Status;
-				if (fk_status.values[status.id]) {
-					status.name = fk_status.values[status.id].label;
-					status.css = fk_status.values[status.id].cssClass;
-				} else { // Value not present in extrafield
-					status.name = status.id;
-					status.css = "";
-				}
-
-				doc[i].Status = {};
-				doc[i].Status = status;
-			}
-
-			cb(err, doc);
 		});
 	},
 	familyCA: function (req, res) {

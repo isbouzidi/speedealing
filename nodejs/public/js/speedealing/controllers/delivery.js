@@ -117,7 +117,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				$scope.delivery.lines[id] = $scope.delivery.lines[id + 1];
 				$scope.delivery.lines[id + 1] = elem;
 			}
-			
+
 			$scope.update();
 		};
 
@@ -673,13 +673,13 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 		};
 
 		$scope.createBills = function () {
-			$http({method: 'POST', url: 'api/delivery/billing', params: {
+			$http({method: 'POST', url: 'api/delivery/billing', data: {
 					dateEnd: $scope.dateEnd,
 					entity: $scope.global.user.entity
 				}
 			}).success(function (data, status) {
 				if (status == 200) {
-					console.log(data);
+					$location.path('/bills');
 				}
 			});
 		};
