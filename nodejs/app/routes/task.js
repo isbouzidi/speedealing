@@ -12,7 +12,7 @@ module.exports = function (app, passport, auth) {
 		Task.read(req.query, function (err, tasks) {
 			if (err) {
 				console.log(err);
-				res.send(500);
+				return res.send(500);
 			}
 
 			res.json(tasks);
@@ -23,7 +23,7 @@ module.exports = function (app, passport, auth) {
 		Task.count(req.query, function (err, count) {
 			if (err) {
 				console.log(err);
-				res.send(500);
+				return res.send(500);
 			}
 
 			res.json({count: count});
@@ -31,7 +31,14 @@ module.exports = function (app, passport, auth) {
 	});
 
 	app.post('/api/task', auth.requiresLogin, function (req, res) {
-		Task.create(req, res);
+		Task.create(req.body, req.user, function (err, task) {
+			if (err) {
+				console.log(err);
+				return res.send(500);
+			}
+
+			res.json(task);
+		});
 	});
 
 	app.put('/api/task', auth.requiresLogin, function (req, res) {

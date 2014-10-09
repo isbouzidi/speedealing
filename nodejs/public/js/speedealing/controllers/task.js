@@ -11,6 +11,11 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.type = {name: "Mes tâches", id: "MYTASK"};
 
+		$scope.user = {
+			id: Global.user.id,
+			name: Global.user.firstname + " " + Global.user.lastname
+		};
+
 		$scope.init = function () {
 			/*var fields = ["tva_tx", "Status", "units"];
 			 
@@ -40,8 +45,10 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			}
 
 			var p = {
-				fields: "_id Status name updatedAt",
+				fields: "_id percentage name datef societe notes updatedAt author usertodo userdone",
 				query: this.type.id,
+				entity: Global.user.entity,
+				user: $scope.user.id,
 				filter: $scope.filterOptions.filterText,
 				skip: $scope.pagingOptions.currentPage - 1,
 				limit: $scope.pagingOptions.pageSize,
@@ -170,7 +177,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		}, true);
 
 		// sorting
-		$scope.sortOptions = {fields: ["ref"], directions: ["asc"]};
+		$scope.sortOptions = {fields: ["datef"], directions: ["asc"]};
 
 		$scope.gridOptions = {
 			data: 'tasks',
@@ -184,10 +191,10 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'name', displayName: 'Titre', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="showProduct(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a></div>'},
+				{field: 'name', displayName: 'Titre', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="showProduct(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-tick"></span> {{row.getProperty(col.field)}}</a></div>'},
 				{field: 'datef', displayName: 'Date d\'échéance', width: "150px", cellFilter: "date:'dd/MM/yyyy HH:mm'"},
 				{field: 'societe.name', displayName: 'Société'},
-				{field: 'contact.name', displayName: 'Contact'},
+			//	{field: 'contact.name', displayName: 'Contact'},
 				{field: 'author.name', displayName: 'Créé par'},
 				{field: 'usertodo.name', displayName: 'Affecté à'},
 				{field: 'userdone.name', displayName: 'Réalisé par'},
@@ -195,7 +202,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small></span></div>'
 				},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"},
-				{displayName: "Actions", enableCellEdit: false, width: "60px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" title="Supprimer" ng-confirm-click="Supprimer le tarif du produit ?" confirmed-click="remove(row)"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button green-gradient icon-like" title="Terminé"></button><button class="button icon-cloud-upload" title="Archiver"></button></div></div>'}
 			]
 		};
 
@@ -247,23 +254,42 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 angular.module('mean.system').controller('TaskCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Task', function ($scope, $http, $modalInstance, $upload, $route, Global, Task) {
 		$scope.global = Global;
+		
+		$scope.hstep = 1;
+		$scope.mstep = 15;
+
+		$scope.ismeridian = false;
 
 		$scope.task = {
+			type: "AC_RDV",
+			usertodo: {
+				id: Global.user._id,
+				name: Global.user.firstname + " " + Global.user.lastname
+			},
+			notes: [
+				{
+					author: {
+						id: Global.user._id,
+						name: Global.user.firstname + " " + Global.user.lastname
+					},
+					datec: new Date(),
+					percentage: 0,
+					note: ""
+				}
+			]
 		};
-		
+
 		$scope.contacts = [];
+		$scope.dict = {};
+		$scope.opened = [];
 
 		$scope.init = function () {
-			var fields = ["Status"];
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/task/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_actioncomm"
+				}
+			}).success(function (data, status) {
+				$scope.dict.fk_actioncomm = data;
 			});
 		};
 
@@ -276,16 +302,16 @@ angular.module('mean.system').controller('TaskCreateController', ['$scope', '$ht
 			});
 		};
 
-		$scope.open = function ($event) {
+		$scope.open = function ($event, idx) {
 			$event.preventDefault();
 			$event.stopPropagation();
 
-			$scope.opened = true;
+			$scope.opened[idx] = true;
 		};
 
 		$scope.searchContact = function (item) {
-			$scope.task.contact={};
-			
+			$scope.task.contact = {};
+
 			$http({method: 'GET', url: 'api/contacts', params: {
 					find: {
 						"societe.id": item.id
