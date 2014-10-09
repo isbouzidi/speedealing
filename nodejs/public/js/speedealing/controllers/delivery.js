@@ -104,6 +104,23 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			}
 		};
 
+		// up or down a line
+		$scope.upDownLine = function (id, mode) {
+			//id = parseInt(id);
+
+			var elem = $scope.delivery.lines[id];
+
+			if (mode == 'UP') {
+				$scope.delivery.lines[id] = $scope.delivery.lines[id - 1];
+				$scope.delivery.lines[id - 1] = elem;
+			} else {
+				$scope.delivery.lines[id] = $scope.delivery.lines[id + 1];
+				$scope.delivery.lines[id + 1] = elem;
+			}
+			
+			$scope.update();
+		};
+
 		// add line
 		$scope.addLine = function () {
 			$scope.delivery.lines.push({
