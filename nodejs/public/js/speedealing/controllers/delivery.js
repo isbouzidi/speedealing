@@ -646,6 +646,7 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 		var d = new Date();
 		d.setHours(0, 0, 0);
 		$scope.dateEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+		$scope.dateEnd.setHours(23,59);
 
 		$scope.find = function () {
 
