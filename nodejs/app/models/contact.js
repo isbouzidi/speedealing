@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		gridfs = require('../controllers/gridfs'),
+		_ = require('lodash'),
 		Schema = mongoose.Schema,
 		i18n = require("i18next"),
 		timestamps = require('mongoose-timestamp');
