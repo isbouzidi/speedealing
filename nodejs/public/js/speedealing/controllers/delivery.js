@@ -733,7 +733,7 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 			groupsCollapsedByDefault: false,
 			columnDefs: [
 				{field: 'client.cptBilling.name', displayName: 'Facturation', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/societes/{{row.getProperty(\'client.cptBilling.id\')}}"><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'ref', width: "10%", displayName: 'BL', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/delivery/{{row.getProperty(\'_id\')}}"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
+				{field: 'ref', width: "12%", displayName: 'BL', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/delivery/{{row.getProperty(\'_id\')}}"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'client.name', displayName: 'Livraison', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/societes/{{row.getProperty(\'client.id\')}}"><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'lines.product.name', width: "15%", displayName: 'Produit'},
 				{field: 'lines.qty', width: "8%", displayName: 'Qté'},
