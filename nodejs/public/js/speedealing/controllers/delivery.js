@@ -736,6 +736,8 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 				{field: 'ref', width: "15%", displayName: 'BL', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/delivery/{{row.getProperty(\'_id\')}}"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'client.name', displayName: 'Livraison', cellTemplate: '<div class="ngCellText"><a ng-href="/#!/societes/{{row.getProperty(\'client.id\')}}"><span class="icon-home"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'lines.product.name', width: "15%", displayName: 'Produit'},
+				{field: 'lines.qty', width: "15%", displayName: 'Qté'},
+				{field: 'lines.pu_ht', width: "15%", displayName: 'PU HT'},
 				//{field: 'status.name', width: "11%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\"status.name\")}}</small></div>'},
 				{field: 'datec', width: "15%", displayName: 'Date d\'expedition', cellFilter: "date:'dd-MM-yyyy HH:mm:ss'"},
 				{field: 'lines.total_ht', width: "15%", displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right"}
