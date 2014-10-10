@@ -62,6 +62,12 @@
 				}
 			},
 			{
+				"desc": "Re-ouvrir un bon de livraison",
+				"perm": {
+					"reopen": false
+				}
+			},
+			{
 				"desc": "Annuler les bons livraisons clients",
 				"perm": {
 					"cancel": false
