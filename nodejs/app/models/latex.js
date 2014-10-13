@@ -172,3 +172,7 @@ exports.price = function(price) {
 exports.number = function(number, precision) {
 	return accounting.formatNumber(number, {decimal: ",", thousand: " ", precision: precision || 2});
 };
+
+exports.percent = function(number, precision) {
+	return accounting.formatNumber(number, {symbol: "%", decimal: ",", thousand: " ", precision: precision || 2});
+};

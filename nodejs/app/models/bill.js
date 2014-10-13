@@ -86,6 +86,7 @@ var billSchema = new Schema({
 			},
 			total_tva: Number,
 			total_ttc: Number,
+			discount: {type: Number, default: 0},
 			total_ht_without_discount: Number,
 			total_ttc_without_discount: Number,
 			total_vat_without_discount: Number,
