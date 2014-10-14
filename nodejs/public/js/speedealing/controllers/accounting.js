@@ -59,7 +59,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 			}
 			month++;
 
-			$location.path('module/accounting/index.html' + month + '/' + year);
+			$location.path('module/accounting/index.html/' + month + '/' + year);
 		};
 
 		$scope.previous = function() {
