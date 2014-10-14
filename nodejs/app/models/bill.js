@@ -87,6 +87,7 @@ var billSchema = new Schema({
 			total_tva: Number,
 			total_ttc: Number,
 			discount: {type: Number, default: 0},
+			no_package: Number, // Colis Number
 			total_ht: Number
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],

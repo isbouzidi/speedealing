@@ -230,8 +230,19 @@ Object.prototype = {
 		Dict.dict({dictName: "fk_paiement", object: true}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
+		
+		var model = "facture.tex";
+		
+		// check if discount
+		for(var i=0; i<req.bill.lines.length; i++) {
+			if(req.bill.lines[i].discount > 0) {
+				model = "facture_discount.tex";
+				discount = true;
+				break;
+			}
+		}
 
-		latex.loadModel("facture.tex", function (err, tex) {
+		latex.loadModel(model, function (err, tex) {
 
 			var doc = req.bill;
 
@@ -275,7 +286,7 @@ Object.prototype = {
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
 					if(discount)
-						tab_latex += doc.lines[i].product.name.substring(0, 12).replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + " & \\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\} & " + doc.lines[i].tva_tx + "\\% & " + latex.price(doc.lines[i].pu_ht) + " & " + (doc.lines[i].discount ? latex.percent(doc.lines[i].discount, 3) : "") + " & " + doc.lines[i].qty + " & " + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
+						tab_latex += doc.lines[i].product.name.substring(0, 12).replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + " & \\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\} & " + doc.lines[i].tva_tx + "\\% & " + latex.price(doc.lines[i].pu_ht) + " & " + (doc.lines[i].discount ? (doc.lines[i].discount + "\\%") : "") + " & " + doc.lines[i].qty + " & " + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
 					else
 						tab_latex += doc.lines[i].product.name.substring(0, 12).replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + " & \\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\} & " + doc.lines[i].tva_tx + "\\% & " + latex.price(doc.lines[i].pu_ht) + " & " + doc.lines[i].qty + " & " + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
 				}

@@ -34,6 +34,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			});
 
 		};
+		
 		$scope.productAutoComplete = function (val) {
 
 			return $http.post('api/product/autocomplete', {

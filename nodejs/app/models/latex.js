@@ -174,5 +174,5 @@ exports.number = function(number, precision) {
 };
 
 exports.percent = function(number, precision) {
-	return accounting.formatNumber(number, {symbol: "%", decimal: ",", thousand: " ", precision: precision || 2});
+	return accounting.formatNumber(number, {symbol: "\\%", format: "%v %s", decimal: ",", thousand: " ", precision: precision || 2});
 };

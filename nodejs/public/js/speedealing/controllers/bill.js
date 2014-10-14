@@ -19,7 +19,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		$scope.type = {name: "Toutes", id: "ALL"};
 
 		$scope.init = function () {
-			var dict = ["fk_bill_status", "fk_payment_term", "fk_bill_type", "fk_paiement"];
+			var dict = ["fk_bill_status", "fk_payment_term", "fk_bill_type", "fk_paiement", "fk_tva"];
 
 			$http({method: 'GET', url: '/api/dict', params: {
 					dictName: dict,
@@ -79,6 +79,11 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					$scope.editable = true;
 				else
 					$scope.editable = false;
+				
+				//on utilise idLine pour deffinier la ligne produit que nous voulons supprimer
+				for (var i in $scope.bill.lines) {
+					$scope.bill.lines[i].idLine = i;
+				}
 
 				$http({method: 'GET', url: 'api/ticket', params:
 							{
@@ -111,6 +116,124 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					$location.path("401.html");
 			});
 		};
+		
+		$scope.productAutoComplete = function (val) {
+
+			return $http.post('api/product/autocomplete', {
+				take: 5,
+				skip: 0,
+				page: 1,
+				pageSize: 5,
+				price_level: $scope.bill.price_level,
+//                supplier: options.supplier,
+				filter: {logic: 'and', filters: [{value: val}]
+				}
+			}).then(function (res) {
+				return res.data;
+			});
+		};
+		
+		$scope.checkLine = function (data) {
+
+			if (!data)
+				return "La ligne produit ne peut pas être vide";
+		};
+
+		$scope.addProduct = function (data, index) {
+
+			//console.log(data);
+
+			for (var i in $scope.bill.lines) {
+				if ($scope.bill.lines[i].idLine === index) {
+					$scope.bill.lines[i] = {
+						pu_ht: data.pu_ht,
+						tva_tx: data.product.id.tva_tx,
+						discount: data.discount,
+						product: {
+							id: data.product.id._id,
+							name: data.product.id.ref,
+							label: data.product.id.label
+						},
+						description: data.product.id.description,
+						isNew: true,
+						qty: $scope.bill.lines[i].qty,
+						no_package: $scope.bill.lines[i].no_package, // nombre de pieces
+						idLine: index
+					};
+
+					$scope.calculMontantHT($scope.bill.lines[i]);
+				}
+			}
+		};
+
+
+		$scope.calculMontantHT = function (line, data, varname) {
+			if (varname)
+				line[varname] = data;
+
+			line.total_ht = line.qty * (line.pu_ht * (1 - (line.discount / 100)));
+			line.total_tva = line.total_ht * line.tva_tx / 100;
+		};
+		// filter lines to show
+		$scope.filterLine = function (line) {
+			return line.isDeleted !== true;
+		};
+
+		// mark line as deleted
+		$scope.deleteLine = function (id) {
+			var filtered = $filter('filter')($scope.bill.lines, {idLine: id});
+			if (filtered.length) {
+				filtered[0].isDeleted = true;
+			}
+		};
+
+		// up or down a line
+		$scope.upDownLine = function (id, mode) {
+			//id = parseInt(id);
+
+			var elem = $scope.bill.lines[id];
+
+			if (mode == 'UP') {
+				$scope.bill.lines[id] = $scope.bill.lines[id - 1];
+				$scope.bill.lines[id - 1] = elem;
+			} else {
+				$scope.bill.lines[id] = $scope.bill.lines[id + 1];
+				$scope.bill.lines[id + 1] = elem;
+			}
+
+			$scope.update();
+		};
+
+		// add line
+		$scope.addLine = function () {
+			$scope.bill.lines.push({
+				isNew: true,
+				idLine: $scope.bill.lines.length + 1
+			});
+
+		};
+
+		// cancel all changes
+		$scope.cancel = function () {
+			for (var i = $scope.bill.lines.length; i--; ) {
+				var line = $scope.bill.lines[i];
+				// undelete
+				if (line.isDeleted) {
+					delete line.isDeleted;
+				}
+				// remove new 
+				if (line.isNew) {
+					$scope.bill.lines.splice(i, 1);
+				}
+			}
+
+			$scope.findOne();
+		};
+
+		$scope.listBills = function () {
+			$location.path('/bill');
+		};
+
 
 		$scope.societeAutoComplete = function (val, field) {
 			return $http.post('api/societe/autocomplete', {
