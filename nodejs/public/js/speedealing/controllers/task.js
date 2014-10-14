@@ -45,7 +45,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			}
 
 			var p = {
-				fields: "_id percentage name datef societe notes updatedAt author usertodo userdone",
+				fields: "_id percentage name datef societe notes updatedAt author usertodo userdone archived",
 				query: this.type.id,
 				entity: Global.user.entity,
 				user: $scope.user.id,
@@ -86,6 +86,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			var scope = $scope;
 
 			var ModalInstanceCtrl = function ($scope, $modalInstance, object) {
+
 				$scope.task = {
 				};
 
@@ -95,6 +96,8 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 					}, function (task) {
 						$scope.task = task;
 
+						$scope.editable = !task.archived;
+
 					}, function (err) {
 						if (err.status == 401)
 							$location.path("401.html");
@@ -102,22 +105,55 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 				};
 
-				var fields = ["Status"];
+				$scope.loadContact = function (item) {
 
-				angular.forEach(fields, function (field) {
-					$http({method: 'GET', url: '/api/task/fk_extrafields/select', params: {
-							field: field
+					$http({method: 'GET', url: 'api/contacts', params: {
+							find: {
+								"societe.id": item.id
+							},
+							field: "_id firstname lastname name poste"
 						}
-					}).success(function (data, status) {
-						$scope[field] = data;
-						//console.log(data);
+					}).success(function (data) {
+						$scope.contacts = data;
 					});
-				});
+				};
+
+				$scope.addNote = function () {
+					$scope.task.notes.push({
+						note: $scope.newNote,
+						percentage: $scope.task.percentage,
+						datec: new Date(),
+						author: {
+							name: Global.user.firstname + " " + Global.user.lastname,
+							id: Global.user.id
+						}
+					});
+
+					$scope.update();
+				};
+
+				$scope.updatePercent = function (percentage) {
+					if ($scope.task.notes[$scope.task.notes.length - 1].author.id == Global.user.id) {
+						$scope.task.notes[$scope.task.notes.length - 1].percentage = percentage;
+						$scope.task.notes[$scope.task.notes.length - 1].datec = new Date();
+					} else
+						$scope.task.notes.push({
+							percentage: percentage,
+							datec: new Date(),
+							author: {
+								name: Global.user.firstname + " " + Global.user.lastname,
+								id: Global.user.id
+							}
+						});
+
+					$scope.update();
+				};
 
 				$scope.update = function () {
 					var task = $scope.task;
 
 					task.$update(function (response) {
+						$scope.task = response;
 					});
 				};
 			};
@@ -191,10 +227,10 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			enableColumnResize: true,
 			i18n: 'fr',
 			columnDefs: [
-				{field: 'name', displayName: 'Titre', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="showProduct(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-tick"></span> {{row.getProperty(col.field)}}</a></div>'},
+				{field: 'name', displayName: 'Titre', width: "200px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="showTask(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-tick"></span> {{row.getProperty(col.field)}}</a></div>'},
 				{field: 'datef', displayName: 'Date d\'échéance', width: "150px", cellFilter: "date:'dd/MM/yyyy HH:mm'"},
 				{field: 'societe.name', displayName: 'Société'},
-			//	{field: 'contact.name', displayName: 'Contact'},
+				//	{field: 'contact.name', displayName: 'Contact'},
 				{field: 'author.name', displayName: 'Créé par'},
 				{field: 'usertodo.name', displayName: 'Affecté à'},
 				{field: 'userdone.name', displayName: 'Réalisé par'},
@@ -202,38 +238,34 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small></span></div>'
 				},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"},
-				{displayName: "Actions", enableCellEdit: false, width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button green-gradient icon-like" title="Terminé"></button><button class="button icon-cloud-upload" title="Archiver"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "90px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button green-gradient icon-like" ng-click="closed(row)" ng-disabled="row.getProperty(\'percentage\')>=100" title="Terminé"></button><button class="button icon-cloud-upload" ng-click="setArchived(row)" ng-disabled="row.getProperty(\'archived\') == true" title="Archiver"></button></div></div>'}
 			]
 		};
 
-		$scope.updateInPlace = function (api, field, row, newdata) {
-			if (!$scope.save) {
-				$scope.save = {promise: null, pending: false, row: null};
-			}
-			$scope.save.row = row.rowIndex;
+		$scope.closed = function (row) {
+			//console.log(row);
+			if (row.entity.notes[row.entity.notes.length - 1].author.id == Global.user.id) {
+				row.entity.notes[row.entity.notes.length - 1].percentage = 100;
+				row.entity.notes[row.entity.notes.length - 1].datec = new Date();
+			} else
+				row.entity.notes.push({
+					percentage: 100,
+					datec: new Date(),
+					author: {
+						name: Global.user.firstname + " " + Global.user.lastname,
+						id: Global.user.id
+					}
+				});
 
-			if (!$scope.save.pending) {
-				$scope.save.pending = true;
-				$scope.save.promise = $timeout(function () {
-					$http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
-						data: {
-							oldvalue: row.entity[field],
-							value: newdata
-						}
-					})
-							.success(function (data, status) {
-								if (status == 200) {
-									if (data) {
-										row.entity = data;
-									}
-								}
-							});
+			row.entity.$update();
+			$scope.find();
+		};
+		
+		$scope.setArchived = function (row) {
+			row.entity.archived = true;
 
-					$scope.save.pending = false;
-				}, 200);
-			}
-
-			return false;
+			row.entity.$update();
+			$scope.find();
 		};
 
 		$scope.addNew = function () {
@@ -254,7 +286,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 angular.module('mean.system').controller('TaskCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Task', function ($scope, $http, $modalInstance, $upload, $route, Global, Task) {
 		$scope.global = Global;
-		
+
 		$scope.hstep = 1;
 		$scope.mstep = 15;
 
@@ -320,32 +352,6 @@ angular.module('mean.system').controller('TaskCreateController', ['$scope', '$ht
 				}
 			}).success(function (data) {
 				$scope.contacts = data;
-			});
-		};
-
-		$scope.societeAutoComplete = function (val, field) {
-			return $http.post('api/societe/autocomplete', {
-				take: '5',
-				skip: '0',
-				page: '1',
-				pageSize: '5',
-				filter: {logic: 'and', filters: [{value: val}]
-				}
-			}).then(function (res) {
-				return res.data;
-			});
-		};
-
-		$scope.userAutoComplete = function (val) {
-			return $http.post('api/user/name/autocomplete', {
-				take: '5',
-				skip: '0',
-				page: '1',
-				pageSize: '5',
-				filter: {logic: 'and', filters: [{value: val}]
-				}
-			}).then(function (res) {
-				return res.data;
 			});
 		};
 

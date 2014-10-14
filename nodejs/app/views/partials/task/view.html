@@ -1,73 +1,119 @@
 <div data-ng-init='init();
 		findOne();' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
-    <h3 class="block-title">{{t 'products:CardProductPRODUCT'}} : \{{product.ref}}</h3>
+    <h3 class="block-title">{{t 'tasks:Task'}} : \{{task.status.name}}</h3>
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block">
-            <label><b>{{t 'products:ProductRef'}}</b></label>
-			<a href="#" class="blue h5" editable-text="product.ref" buttons="no" onaftersave="update()">
-				\{{product.ref|| "Non defini"}}
+            <label><b>{{t
+				'Title'}}</b></label>
+			<a href="#"  ng-show="editable" class="blue h5" editable-text="task.name" buttons="no" onaftersave="update()">
+				\{{task.name|| "Non defini"}}
 			</a>
-        </div>
-		<div class="field-block">
-            <label><b>{{t 'products:ProductLabel'}}</b></label>
-			<a href="#" class="blue h5" editable-text="product.label" buttons="no" onaftersave="update()">
-				\{{product.label|| "Non defini"}}
-			</a>
+			<span class="blue h5" ng-hide="editable">\{{task.name|| "Non defini"}}</span>
         </div>
 		<div class="field-block">
             <label><b>{{t
+				'Type'}}</b></label>
+			\{{task._type.name}}
+        </div>
+		<div class="field-block">
+            <label><b>{{t
+				'CompanyFoundation'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<a href="#" class="icon-home" ng-show="editable" editable-text="task.societe" e-typeahead="societe as societe.name for societe in AutoComplete($viewValue,'api/societe/autocomplete',5) | filter:{name:$viewValue}" buttons="no" onbeforesave="task.contact={};" onaftersave="update()">
+						\{{task.societe.name|| "Non defini"}}
+					</a>
+					<span class="icon-home" ng-hide="editable">\{{task.societe.name|| "Non defini"}}</span>
+				</div>
+				<div class="col-md-6">
+					<a href="#" class="icon-user" ng-show="editable" editable-select="task.contact" onshow="loadContact(task.societe)" e-ng-options="contact as contact.name for contact in contacts" buttons="no" onaftersave="update()">
+						\{{task.contact.name|| "Non defini"}}
+					</a>
+					<span class="icon-user" ng-hide="editable">\{{task.contact.name|| "Non defini"}}</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height" ng-if="task.type == 'AC_RDV'">
+			<label for="datep"><b>{{t 'tasks:DateActionStart'}}</b></label>
+			<a href="#" ng-show="editable" editable-bsdate="task.datep" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+				\{{ (task.datep | date:"dd/MM/yyyy") || 'empty'}}
+			</a>
+			<a ng-show="editable" href="#" editable-bstime="task.datep" e-show-meridian="false" e-minute-step="10" onaftersave="update()">
+				\{{ (task.datep | date:"HH:mm") || 'empty'}}
+			</a>
+			<span ng-hide="editable">\{{ (task.datep | date:"dd/MM/yyyy HH:mm") || 'empty'}}</span></td>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="datep"><b ng-if="task.type == 'AC_RDV'">{{t 'tasks:DateActionEnd'}}</b>
+				<b ng-if="task.type != 'AC_RDV'">{{t 'tasks:DateEchAction'}}</b></label>
+			<a href="#" ng-show="editable" editable-bsdate="task.datef" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+				\{{ (task.datef | date:"dd/MM/yyyy") || 'empty'}}
+			</a>
+			<a ng-show="editable" href="#" editable-bstime="task.datef" e-show-meridian="false" e-minute-step="10" onaftersave="update()">
+				\{{ (task.datef | date:"HH:mm") || 'empty'}}
+			</a>
+			<span ng-hide="editable">\{{ (task.datef | date:"dd/MM/yyyy HH:mm") || 'empty'}}</span></td>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="percentage"><b>{{t
 				'Status'}}</b></label>
-            <span class="tag small glossy" data-ng-class="product.status.css" editable-select="product.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in Status.values">
-				\{{product.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>
-        </div>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="input-group" ng-show="editable">
+						<span class="input-group-btn btn-group-xs">
+							<button ng-disabled="task.percentage == 0" type="button" class="btn btn-default" ng-click="updatePercent(task.percentage - 25 < 0 ? 0 : task.percentage - 25);"><i class="glyphicon glyphicon-minus"></i></button>
+						</span>
+					<progressbar animate="true" value="task.percentage" type="success"><b>\{{task.percentage}}%</b></progressbar>
+					<span class="input-group-btn btn-group-xs">
+						<button ng-disabled="task.percentage == 100" type="button" class="btn btn-default" ng-click="updatePercent(task.percentage + 25 > 100 ? 100 : task.percentage + 25);"><i class="glyphicon glyphicon-plus"></i></button>
+					</span>
+					</p>
+					<progressbar ng-hide="editable" animate="true" value="task.percentage" type="success"><b>\{{task.percentage}}%</b></progressbar>
+				</div>
+			</div>
+		</div>
+
 		<div class="field-block">
-            <label><b>{{t 'Description'}}</b></label>
-            <span editable-textarea="product.description" e-rows="4" e-cols="70" e-form="DescriptionBtnForm" onaftersave="update()" >
-				\{{product.description|| 'empty'}}</span> <span class="icon-pencil grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible"></span>
-        </div>
-		<div ng-if="product.Status == 'SELLBUY' || product.Status == 'BUY'" class="field-block">
-            <label><b>{{t 'products:ProductAccountancyBuyCode'}}</b></label>
-			<a href="#" editable-text="product.compta_buy" buttons="no" onaftersave="update()">
-				\{{product.compta_buy|| "Non defini"}}
+            <label><b>{{t 'tasks:AffectedTo'}}</b></label>
+			<a href="#" ng-show="editable" editable-text="task.usertodo" e-typeahead="user as user.name for user in AutoComplete($viewValue,'api/user/name/autocomplete',5) | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+				\{{task.usertodo.name|| "Non defini"}}
 			</a>
-        </div>
-		<div ng-if="product.Status == 'SELLBUY' || product.Status == 'SELL'" class="field-block">
-            <label><b>{{t 'products:ProductAccountancySellCode'}}</b></label>
-			<a href="#" editable-text="product.compta_sell" buttons="no" onaftersave="update()">
-				\{{product.compta_sell|| "Non defini"}}
-			</a>
-        </div>
+			<span ng-hide="editable">\{{task.usertodo.name|| "Non defini"}}</span>
+		</div>
 
 		<div class="field-block">
             <label><b>{{t
-				'Family'}}</b></label>
-			<span editable-text="product.caFamily" buttons="no" e-form="caFamilyBtnForm" e-typeahead="family as family for family in productFamilyAutoComplete($viewValue)" onaftersave="update()">
-				\{{product.caFamily|| 'empty'}}</span> <span class="icon-pencil grey" ng-click="caFamilyBtnForm.$show()" ng-hide="caFamilyBtnForm.$visible"></span>
+				'Comments'}}</b></label>
 
-		</div>
+			<ul class="message-menu">
+				<li ng-repeat="note in task.notes">
+					<span class="message-info">
+						<span class="blue">\{{note.datec| date:'MMM dd HH:mm'}}</span>
+					</span>
+					<span>
+						<strong class="blue icon-user">\{{note.author.name}}</strong> - <span class="grey">\{{note.percentage | percent:0}}</span><br>
+						<p class="intro">\{{note.note}}</p>
+					</span>
+				</li>
+			</ul>
 
-		<div class="field-block">
-            <label><b>{{t 'VAT'}}</b></label>
-			<span editable-select="product.tva_tx" buttons="no" e-form="vatBtnForm" onaftersave="update()" e-ng-options="c.value as c.value for c in tva_tx.values">
-				\{{product.tva_tx| percent}}</span> <span class="icon-pencil grey" ng-click="vatBtnForm.$show()" ng-hide="vatBtnForm.$visible"></span>
-		</div>
-
-		<div class="field-block">
-            <label><b>{{t 'products:Units'}}</b></label>
-			<span editable-select="product.units" buttons="no" e-form="unitsBtnForm" onaftersave="update()" e-ng-options="c.id as c.label for c in units.values">
-				\{{product._units.name}}</span> <span class="icon-pencil grey" ng-click="unitsBtnForm.$show()" ng-hide="unitsBtnForm.$visible"></span>
-		</div>
+            <span editable-textarea="newNote" e-rows="4" e-cols="70" e-form="DescriptionBtnForm" onaftersave="addNote()" >
+				</span> <a class="icon-plus grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible || !editable">{{t 'Add'}}</a>
+        </div>
 
         <div class="field-block">
             <label><b>{{t
 				'DateCreation'}}</b></label>
-            \{{product.createdAt|date:'dd/MM/yyyy'}}
+            \{{task.createdAt|date:'dd/MM/yyyy HH:mm'}}
         </div>
         <div class="field-block">
             <label><b>{{t
 				'DateLastModification'}}</b></label>
-            \{{product.updatedAt|date:'dd/MM/yyyy HH:mm'}}
+            \{{task.updatedAt|date:'dd/MM/yyyy HH:mm'}}
         </div>
 
     </fieldset>

@@ -41,12 +41,29 @@ module.exports = function (app, passport, auth) {
 		});
 	});
 
-	app.put('/api/task', auth.requiresLogin, function (req, res) {
-		Task.update(req, res);
+	app.put('/api/task/:taskId', auth.requiresLogin, function (req, res) {
+		Task.update(req.task,req.body,req.user, function(err, task){
+			if(err)
+				return res.send(500, err);
+			
+			res.json(task);
+		});
 	});
 
 	app.del('/api/task', auth.requiresLogin, function (req, res) {
 		Task.del(req, res);
+	});
+
+	app.get('/api/task/:taskId', auth.requiresLogin, function (req, res) {
+		res.json(req.task);
+	});
+
+	app.param('taskId', function (req, res, next, id) {
+		Task.get(id, function (err, task) {
+			req.task = task;
+			//console.log(doc);
+			next();
+		});
 	});
 };
 /*

@@ -64,7 +64,7 @@
 		</div>
 
 		<div class="field-block button-height">
-			<label for="datep"><b ng-if="task.type == 'AC_RDV'">{{t 'tasks:DateActionEnd'}}</b>
+			<label for="datef"><b ng-if="task.type == 'AC_RDV'">{{t 'tasks:DateActionEnd'}}</b>
 				<b ng-if="task.type != 'AC_RDV'">{{t 'tasks:DateEchAction'}}</b></label>
 			<div class="row">
 				<div class="col-md-6" style="margin-top: 34px;">
@@ -111,16 +111,11 @@
 			</div>
 		</div>
 
-
-
 		<div class="field-block button-height">
 			<label for="notes"><b>{{t
 				'Description'}}</b></label>
 			<textarea id="notes" cols="30" rows="5" data-ng-model="task.notes[0].note" class="input full-width"></textarea>
 		</div>
-
-
-		\{{task}}
 
         <div class="field-block button-height wizard-controls clearfix">
             <button type="submit" ng-disabled='!task.usertodo.id' class="button glossy mid-margin-right float-right">

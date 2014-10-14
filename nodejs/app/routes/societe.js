@@ -1319,7 +1319,6 @@ module.exports = function (app, passport, auth) {
 	});
 
 	app.param('societeId', object.societe);
-	//app.param('contactId', contact.contact);
 
 	//other routes..
 };

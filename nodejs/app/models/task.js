@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 		Schema = mongoose.Schema,
 		timestamps = require('mongoose-timestamp');
 
+var Dict = require('../controllers/dict');
 
 /**
  * Article Schema
@@ -48,8 +49,8 @@ taskSchema.virtual('percentage')
 			if(this.notes.length == 0)
 				return 0;
 			
-			var last_note = this.notes.pop();
-
+			var last_note = this.notes[this.notes.length - 1];
+			
 			return last_note.percentage || 0;
 		});
 
@@ -107,7 +108,7 @@ taskSchema.virtual('status')
 			if(this.notes.length == 0)
 				return getStatus("NOTAPP");
 
-			var last_note = this.notes.pop();
+			var last_note = this.notes[this.notes.length - 1];
 			var percentage = last_note.percentage || 0;
 			
 			if(percentage >= 100)
@@ -122,4 +123,31 @@ taskSchema.virtual('status')
 			return getStatus("ON");
 			
 		});
+		
+		
+var typeList = {};
+Dict.dict({dictName: "fk_actioncomm", object: true}, function (err, docs) {
+	if (docs) {
+		typeList = docs;
+	}
+});
+
+taskSchema.virtual('_type')
+		.get(function () {
+			var _type = {};
+
+			var type = this.type;
+
+			if (type && typeList.values[type] && typeList.values[type].label) {
+				_type.id = type;
+				_type.name = i18n.t(typeList.lang + ":" + typeList.values[type].label);
+			} else { // By default
+				_type.id = type;
+				_type.name = type;
+			}
+
+			return _type;
+		});
+
+
 mongoose.model('task', taskSchema, 'Task');

@@ -15,7 +15,7 @@ exports.read = readTask;
 exports.create = createTask;
 exports.update = updateTask;
 exports.remove = removeTask;
-exports.show = showTask;
+exports.get = getTask;
 exports.count = countTask;
 
 function readTask(params, callback) {
@@ -40,13 +40,17 @@ function readTask(params, callback) {
 	switch (params.query) {
 		case 'MYTASK':
 			query['usertodo.id'] = params.user;
+			query['archived'] = false;
 			break;
 		case 'ALLTASK':
 			query.entity = params.entity;
+			query['archived'] = false;
 			break;
 		default: //'ARCHIVED':
 			query.archived = true;
 	}
+
+	console.log(query);
 
 	TaskModel.find(query, params.fields, {skip: parseInt(params.skip) * parseInt(params.limit) || 0, limit: params.limit || 100, sort: JSON.parse(params.sort)}, callback);
 }
@@ -71,9 +75,11 @@ function countTask(params, callback) {
 	switch (params.query) {
 		case 'MYTASK':
 			query['usertodo.id'] = params.user;
+			query['archived'] = false;
 			break;
 		case 'ALLTASK':
 			query.entity = params.entity;
+			query['archived'] = false;
 			break;
 		default: //'ARCHIVED':
 			query.archived = true;
@@ -100,23 +106,25 @@ function createTask(task, user, callback) {
 
 	if (new_task.entity == null)
 		new_task.entity = user.entity;
-	
-	if(new_task.type == 'AC_RDV')
+
+	if (new_task.type == 'AC_RDV')
 		new_task.datep = null;
 
 	//console.log(bill);
 	new_task.save(callback);
 }
 
-function updateTask(task, user, callback) {
-
+function updateTask(oldTask, newTask, user, callback) {
+	newTask = _.extend(oldTask, newTask);
+	//console.log(req.body);
+	newTask.save(callback);
 }
 
 function removeTask(id, callback) {
 
 }
 
-function showTask(id, callback) {
-
+function getTask(id, callback) {
+	TaskModel.findOne({_id: id}, callback);
 }
 

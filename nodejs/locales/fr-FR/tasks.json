@@ -1,5 +1,6 @@
 {
     "CHARSET": "UTF-8",
+	"Task": "Tâche",
     "Tasks": "Tâches",
     "Actions": "Activités",
     "TasksList": "Liste des tâches / activités",
@@ -96,5 +97,9 @@
     "Take meeting": "Prendre rendez-vous",
     "Other": "Autre tâche",
     "StatusNotApplicable": "Inconnu",
-	"StatusActionToDo": "A faire"
+	"StatusActionToDo": "A faire",
+	"StatusNotApplicable": "Non applicable",
+    "StatusActionToDo": "À faire",
+    "StatusActionDone": "Réalisé",
+    "StatusActionInProcess": "En cours"
 }
