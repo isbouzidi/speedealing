@@ -87,12 +87,7 @@ var billSchema = new Schema({
 			total_tva: Number,
 			total_ttc: Number,
 			discount: {type: Number, default: 0},
-			//total_ht_without_discount: Number,
-			//total_ttc_without_discount: Number,
-			//total_vat_without_discount: Number,
 			total_ht: Number
-					//pu_ttc: Number,
-					//pu_tva: Number
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {

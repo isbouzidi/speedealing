@@ -538,7 +538,7 @@ Billing.prototype = {
 			{"$match": {Status: "SEND", entity: req.body.entity, datec: {$lte: new Date(req.body.dateEnd)}}},
 			{"$project": {"datec": 1, "shipping": 1, "lines": 1, "ref": 1, "societe": "$client.cptBilling"}},
 			{"$sort": {datec: 1}},
-			{"$unwind": "$lines"},
+			//{"$unwind": "$lines"},
 			{"$group": {"_id": "$societe.id", "data": {"$push": "$$ROOT"}}}
 		], function (err, docs) {
 			if (err)
@@ -587,11 +587,11 @@ Billing.prototype = {
 					for (var i in client.data) {
 						//console.log(client.data[i]);
 
-						var aline = client.data[i].lines;
-
-						aline.description += "\n" + client.data[i].ref + " (" + dateFormat(client.data[i].datec, "dd/mm/yyyy") + ")";
-
-						facture.lines.push(aline);
+						for (var j = 0; j < client.data[i].lines.length; j++) {
+							var aline = client.data[i].lines[j];
+							aline.description += "\n" + client.data[i].ref + " (" + dateFormat(client.data[i].datec, "dd/mm/yyyy") + ")";
+							facture.lines.push(aline);
+						}
 
 						facture.shipping.total_ht += client.data[i].shipping.total_ht;
 						facture.shipping.total_tva += client.data[i].shipping.total_tva;
