@@ -21,7 +21,7 @@ var Dict = require('../controllers/dict');
  */
 var UserSchema = new Schema({
 	_id: String,
-	Status: {type: Schema.Types.Mixed, default: 'DISABLE'},
+	Status: {type: String, default: 'DISABLE'},
 	name: {type: String, required: true},
 	email: String,
 	admin: Boolean,

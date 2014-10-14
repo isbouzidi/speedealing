@@ -6,10 +6,11 @@
 var mongoose = require('mongoose'),
 		config = require('../../config/config'),
 		gridfs = require('../controllers/gridfs'),
-		Schema = mongoose.Schema,
 		i18n = require("i18next"),
 		_ = require('lodash'),
-		timestamps = require('mongoose-timestamp');
+		timestamps = require('mongoose-timestamp'),
+//		mongoosastic = require('mongoosastic'),
+		Schema = mongoose.Schema;
 
 var SeqModel = mongoose.model('Sequence');
 var EntityModel = mongoose.model('entity');
@@ -41,7 +42,7 @@ var setTags = function (tags) {
  */
 var societeSchema = new Schema({
 	ref: String,
-	name: {type: String, require: true},
+	name: {type: String, require: true/*, es_indexed: true*/},
 	code_client: {type: String},
 	code_fournisseur: String,
 	barCode: String,
@@ -133,9 +134,11 @@ var societeSchema = new Schema({
 	toJSON: {virtuals: true}
 });
 
-societeSchema.index({name: 'text', zip: 'text', town: 'text', Tag: 'text'});
+societeSchema.index({name: 'text', zip: 'text', town: 'text', Tag: 'text', rival: 'text', "segmentation.label": 'text'});
 
 societeSchema.plugin(timestamps);
+
+//societeSchema.plugin(mongoosastic, {useRiver: {gridfs: false}, curlDebug: true});
 
 societeSchema.plugin(gridfs.pluginGridFs, {root: "Societe"});
 
@@ -280,3 +283,18 @@ societeSchema.virtual('prospectLevel')
 		});
 
 mongoose.model('societe', societeSchema, 'Societe');
+//var SocieteModel = 
+/*		, stream = Societe.synchronize()
+ , count = 0;
+ 
+ stream.on('data', function (err, doc) {
+ //console.log(doc);
+ count++;
+ });
+ stream.on('close', function () {
+ console.log('Societe indexed ' + count + ' documents!');
+ });
+ stream.on('error', function (err) {
+ console.log("error index stream societe!");
+ console.log(err);
+ });*/

@@ -1388,11 +1388,20 @@ Object.prototype = {
 		if (req.query.fields)
 			fields = req.query.fields;
 
-		if (req.query.filter)
-			query.name = new RegExp("\\b" + req.query.filter, "i");
+		if (req.query.filter) {
+			//query.name = new RegExp("\\b" + req.query.filter, "i");
+			query.$text = {$search: req.query.filter, $language: "fr"};
+		}
 
 		if (!req.user.rights.societe.seeAll && !req.user.admin)
 			query["commercial_id.id"] = req.user._id;
+
+		/*console.log(query);
+
+		if (req.query.filter)
+			SocieteModel.search({query: req.query.filter}, function (err, result) {
+				console.log(err);
+			});*/
 
 		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function (err, doc) {
 			if (err) {
@@ -1613,7 +1622,7 @@ Object.prototype = {
 
 		async.parallel({
 			own: function (cb) {
-				Dict.dict({dictName: "fk_stcomm", object:true}, function (err, dict) {
+				Dict.dict({dictName: "fk_stcomm", object: true}, function (err, dict) {
 					SocieteModel.aggregate([
 						{$match: {entity: {$in: ["ALL", req.query.entity]}, Status: {$nin: ["ST_NO"]}, "commercial_id.id": "user:" + req.query.name}},
 						{$project: {_id: 0, "Status": 1}},
