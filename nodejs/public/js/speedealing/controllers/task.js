@@ -5,9 +5,16 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		$scope.task = {};
 		$scope.tasks = [];
 
-		$scope.types = [{name: "Mes tâches", id: "MYTASK"},
-			{name: "Toutes les tâches", id: "ALLTASK"},
-			{name: "Les tâches archivées", id: "ARCHIVED"}];
+		$scope.types = [];
+
+		if (Global.user.rights.task.readAll)
+			$scope.types = [{name: "Mes tâches", id: "MYTASK"},
+				{name: "Toutes les tâches", id: "ALLTASK"},
+				{name: "Mes tâches archivées", id: "MYARCHIVED"},
+				{name: "Les tâches archivées", id: "ARCHIVED"}];
+		else
+			$scope.types = [{name: "Mes tâches", id: "MYTASK"},
+				{name: "Mes tâches archivées", id: "MYARCHIVED"}];
 
 		$scope.type = {name: "Mes tâches", id: "MYTASK"};
 
@@ -238,7 +245,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small></span></div>'
 				},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"},
-				{displayName: "Actions", enableCellEdit: false, width: "90px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button green-gradient icon-like" ng-click="closed(row)" ng-disabled="row.getProperty(\'percentage\')>=100" title="Terminé"></button><button class="button icon-cloud-upload" ng-click="setArchived(row)" ng-disabled="row.getProperty(\'archived\') == true" title="Archiver"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "90px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button green-gradient icon-like" ng-click="closed(row)" ng-disabled="row.getProperty(\'percentage\')>=100" title="Terminé"></button><button class="button icon-cloud-upload" ng-click="setArchived(row)" ng-disabled="row.getProperty(\'archived\') == true || row.getProperty(\'author.id\') != global.user.id" title="Archiver"></button></div></div>'}
 			]
 		};
 
@@ -260,7 +267,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			row.entity.$update();
 			$scope.find();
 		};
-		
+
 		$scope.setArchived = function (row) {
 			row.entity.archived = true;
 
@@ -298,6 +305,8 @@ angular.module('mean.system').controller('TaskCreateController', ['$scope', '$ht
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
 			},
+			datep : new Date().setHours(new Date().getHours(),0),
+			datef : new Date().setHours(new Date().getHours()+1,0),
 			notes: [
 				{
 					author: {

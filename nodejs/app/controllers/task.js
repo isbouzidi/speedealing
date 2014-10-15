@@ -39,12 +39,24 @@ function readTask(params, callback) {
 
 	switch (params.query) {
 		case 'MYTASK':
-			query['usertodo.id'] = params.user;
+			query.$or = [
+				{'usertodo.id': params.user},
+				{'author.id': params.user}];
 			query['archived'] = false;
 			break;
 		case 'ALLTASK':
 			query.entity = params.entity;
 			query['archived'] = false;
+			break;
+		case 'MYARCHIVED':
+			query.$or = [
+				{'usertodo.id': params.user},
+				{'author.id': params.user}];
+			query['archived'] = true;
+			break;
+		case 'ARCHIVED':
+			query.entity = params.entity;
+			query['archived'] = true;
 			break;
 		default: //'ARCHIVED':
 			query.archived = true;
@@ -74,12 +86,24 @@ function countTask(params, callback) {
 
 	switch (params.query) {
 		case 'MYTASK':
-			query['usertodo.id'] = params.user;
+			query.$or = [
+				{'usertodo.id': params.user},
+				{'author.id': params.user}];
 			query['archived'] = false;
 			break;
 		case 'ALLTASK':
 			query.entity = params.entity;
 			query['archived'] = false;
+			break;
+		case 'MYARCHIVED':
+			query.$or = [
+				{'usertodo.id': params.user},
+				{'author.id': params.user}];
+			query['archived'] = true;
+			break;
+		case 'ARCHIVED':
+			query.entity = params.entity;
+			query['archived'] = true;
 			break;
 		default: //'ARCHIVED':
 			query.archived = true;
@@ -95,13 +119,13 @@ function createTask(task, user, callback) {
 
 	new_task.author = {
 		id: user._id,
-		name: user.name
+		name: user.firstname + " " + user.lastname
 	};
 
 	if (task.usertodo == null)
 		new_task.usertodo = {
 			id: user._id,
-			name: user.name
+			name: user.firstname + " " + user.lastname
 		};
 
 	if (new_task.entity == null)

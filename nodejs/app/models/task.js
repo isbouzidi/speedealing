@@ -36,7 +36,7 @@ var taskSchema = new Schema({
 			note: String
 		}
 	],
-	archived: Boolean
+	archived: {type: Boolean, default: false}
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
@@ -46,11 +46,11 @@ taskSchema.plugin(timestamps);
 
 taskSchema.virtual('percentage')
 		.get(function () {
-			if(this.notes.length == 0)
+			if (this.notes.length == 0)
 				return 0;
-			
+
 			var last_note = this.notes[this.notes.length - 1];
-			
+
 			return last_note.percentage || 0;
 		});
 
@@ -104,27 +104,27 @@ function getStatus(status) {
 
 taskSchema.virtual('status')
 		.get(function () {
-			
-			if(this.notes.length == 0)
+
+			if (this.notes.length == 0)
 				return getStatus("NOTAPP");
 
 			var last_note = this.notes[this.notes.length - 1];
 			var percentage = last_note.percentage || 0;
-			
-			if(percentage >= 100)
+
+			if (percentage >= 100)
 				return getStatus("DONE");
-			
-			if(this.datef < new Date)
+
+			if (this.datef < new Date)
 				return getStatus("expired");
-			
+
 			if (percentage == 0)
 				return getStatus("TODO");
-			
+
 			return getStatus("ON");
-			
+
 		});
-		
-		
+
+
 var typeList = {};
 Dict.dict({dictName: "fk_actioncomm", object: true}, function (err, docs) {
 	if (docs) {

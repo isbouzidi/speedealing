@@ -28,7 +28,7 @@
 						<span class="input-group-addon icon icon-home"></span>
 						<input required type="text" 
 							   data-ng-model="task.societe" 
-							   typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
+							   typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}" 
 							   typeahead-on-select="searchContact($item)"
 							   id="societe" class="form-control" autocomplete="off">
 					</div>
@@ -105,7 +105,7 @@
 				<div class="col-md-6">
 					<div class="input-group">
 						<span class="input-group-addon icon icon-user"></span>
-						<input type="text" id="affectedTo" data-ng-model="task.usertodo" typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="form-control" autocomplete="off">
+						<input type="text" id="affectedTo" data-ng-model="task.usertodo" typeahead="user as user.name for user in AutoComplete($viewValue, '/api/user/name/autocomplete',10) | filter:{name:$viewValue}" class="form-control" autocomplete="off">
 					</div>
 				</div>
 			</div>

@@ -68,6 +68,8 @@ module.exports = function (app, passport, auth) {
 
 		if (req.query.status) {
 			query.Status = {$in : req.query.status};
+		} else {
+			query.Status = {$ne : "DISABLE"};
 		}
 
 		UserModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
