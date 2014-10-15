@@ -13,7 +13,7 @@ module.exports = exports = function(server, db, socketsUser) {
 	//console.log(db.connection.db);
 	var sockets = require('socket.io').listen(server, {log: false});
 
-	/*setTimeout(function() {
+	setTimeout(function() {
 		sockets.set('authorization', passportSocketIo.authorize({
 			cookieParser: express.cookieParser,
 			key: 'SpeedSession', // the name of the cookie where express/connect stores its session_id
@@ -44,7 +44,7 @@ module.exports = exports = function(server, db, socketsUser) {
 				accept(null, false);
 			}
 		}))
-	}, 300);*/
+	}, 300);
 
 
 	sockets.on('connection', function(socket) { // New client
@@ -57,7 +57,7 @@ module.exports = exports = function(server, db, socketsUser) {
 			//console.log(username + " : Connected");
 			//console.log(socket);
 
-			UserModel.findOne({_id: username}, "firstname lastname", function(err, user) {
+			/*UserModel.findOne({_id: username}, "firstname lastname", function(err, user) {
 				socket.broadcast.emit('notify', {
 					title: '<strong>' + user.firstname + " " + user.lastname[0] + '.</strong> vient de se connecter.',
 					message: null,
@@ -67,7 +67,7 @@ module.exports = exports = function(server, db, socketsUser) {
 						closeDelay: 2000
 					}
 				});
-			});
+			});*/
 		});
 		// When user leaves
 		socket.on('disconnect', function() {

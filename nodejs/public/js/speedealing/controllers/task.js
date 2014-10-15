@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('TaskController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'pageTitle', 'Task', function ($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, pageTitle, Task) {
+angular.module('mean.system').controller('TaskController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'socket', 'pageTitle', 'Task', function ($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, socket, pageTitle, Task) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des tâches');
 
@@ -265,14 +265,12 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 				});
 
 			row.entity.$update();
-			$scope.find();
 		};
 
 		$scope.setArchived = function (row) {
 			row.entity.archived = true;
 
 			row.entity.$update();
-			$scope.find();
 		};
 
 		$scope.addNew = function () {
@@ -288,6 +286,10 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			}, function () {
 			});
 		};
+
+		socket.on('refreshTask', function (data) {
+			$scope.find();
+		});
 
 	}]);
 
@@ -305,8 +307,8 @@ angular.module('mean.system').controller('TaskCreateController', ['$scope', '$ht
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
 			},
-			datep : new Date().setHours(new Date().getHours(),0),
-			datef : new Date().setHours(new Date().getHours()+1,0),
+			datep: new Date().setHours(new Date().getHours(), 0),
+			datef: new Date().setHours(new Date().getHours() + 1, 0),
 			notes: [
 				{
 					author: {

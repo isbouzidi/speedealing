@@ -378,7 +378,7 @@ exports.render = function (req, res) {
 			var ttlSession = new Date(req.session.cookie._expires).getTime();
 			console.log(req.session.cookie._expires);
 
-			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, agenda: {count: countTodo, task: eventTodo}, menuHTML: menuHTML, random: random, ttlSession: ttlSession, version: config.version, angular: angular});
+			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, menuHTML: menuHTML, random: random, ttlSession: ttlSession, version: config.version, angular: angular});
 		});
 	});
 };

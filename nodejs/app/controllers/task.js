@@ -5,6 +5,7 @@
  */
 var mongoose = require('mongoose'),
 		_ = require('lodash'),
+		i18n = require("i18next"),
 		async = require("async");
 
 var ExtrafieldModel = mongoose.model('extrafields');
@@ -61,7 +62,7 @@ function readTask(params, callback) {
 		case 'TODAYMYRDV':  // For rdv list in menu
 			query['usertodo.id'] = params.user;
 			query.type = 'AC_RDV';
-			query.datep = {$gte : new Date().setHours(0,0,0), $lte: new Date().setHours(23,59,59)};
+			query.datep = {$gte: new Date().setHours(0, 0, 0), $lte: new Date().setHours(23, 59, 59)};
 			return TaskModel.find(query, params.fields, callback);
 			break;
 		default: //'ARCHIVED':
@@ -117,7 +118,7 @@ function countTask(params, callback) {
 	TaskModel.count(query, callback);
 }
 
-function createTask(task, user, callback) {
+function createTask(task, user, usersSocket, callback) {
 	var new_task = {};
 
 	new_task = new TaskModel(task);
@@ -140,13 +141,77 @@ function createTask(task, user, callback) {
 		new_task.datep = null;
 
 	//console.log(bill);
-	new_task.save(callback);
+	new_task.save(function (err, task) {
+		callback(err, task);
+
+		var socket = usersSocket[task.usertodo.id];
+		//console.log(usersSocket);
+		if (task.usertodo.id != user._id && socket)
+			socket.emit('notify', {
+				title: i18n.t('tasks:Task') + " : " + task.name,
+				message: '<strong>' + user.firstname + " " + user.lastname + '</strong> vous a ajouté une tache.',
+				options: {
+					autoClose: false,
+					//link: "#!/task/" + newTask._id,
+					classes: ["orange-gradient"]
+				}
+			});
+	});
 }
 
-function updateTask(oldTask, newTask, user, callback) {
+function updateTask(oldTask, newTask, user, usersSocket, callback) {
 	newTask = _.extend(oldTask, newTask);
 	//console.log(req.body);
-	newTask.save(callback);
+
+	if (newTask.notes[newTask.notes.length - 1].percentage >= 100 && newTask.userdone.id == null)
+		newTask.userdone = {
+			id: user._id,
+			name: user.firstname + " " + user.lastname
+		};
+
+	newTask.save(function (err, task) {
+		callback(err, task);
+
+		var socket_author = usersSocket[task.author.id];
+		var socket_todo = usersSocket[task.usertodo.id];
+		//console.log(usersSocket);
+		if ((task.author.id != user._id || task.usertodo.id != user._id) && (socket_author || socket_todo)) {
+			if (task.author.id != user._id && socket_author) {
+				if (task.percentage >= 100)
+					socket_author.emit('notify', {
+						title: i18n.t('tasks:Task') + " : " + task.name,
+						message: '<strong>' + user.firstname + " " + user.lastname + '</strong> a terminé la tache.',
+						options: {
+							autoClose: true,
+							//link: "#!/task/" + newTask._id,
+							classes: ["green-gradient"]
+						}
+					});
+				else
+					socket_author.emit('notify', {
+						title: i18n.t('tasks:Task') + " : " + task.name,
+						message: '<strong>' + user.firstname + " " + user.lastname + '</strong> a modifié la tache.',
+						options: {
+							autoClose: true,
+							//link: "#!/task/" + newTask._id,
+							classes: ["blue-gradient"]
+						}
+					});
+			} else if (task.percentage < 100 && task.usertodo.id != user._id && socket_todo)
+				socket_todo.emit('notify', {
+					title: i18n.t('tasks:Task') + " : " + task.name,
+					message: '<strong>' + user.firstname + " " + user.lastname + '</strong> a modifié la tache.',
+					options: {
+						autoClose: true,
+						//link: "#!/task/" + newTask._id,
+						classes: ["blue-gradient"]
+					}
+				});
+		}
+
+		//refresh tasklist and counter on users
+		refreshTask(usersSocket[user._id]);
+	});
 }
 
 function removeTask(id, callback) {
@@ -157,3 +222,9 @@ function getTask(id, callback) {
 	TaskModel.findOne({_id: id}, callback);
 }
 
+function refreshTask(socket) {
+	if (socket) {
+		socket.broadcast.emit('refreshTask', {}); // others
+		socket.emit('refreshTask', {}); //me
+	}
+}

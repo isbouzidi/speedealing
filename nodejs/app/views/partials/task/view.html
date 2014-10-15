@@ -1,7 +1,7 @@
 <div data-ng-init='init();
 		findOne();' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
-    <h3 class="block-title">{{t 'tasks:Task'}} : \{{task.status.name}}</h3>
+    <h3 class="block-title">{{t 'tasks:Task'}} <span class="tag glossy" ng-class="task.status.css">\{{task.status.name}}</span></h3>
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block">
             <label><b>{{t
@@ -75,6 +75,11 @@
 					<progressbar ng-hide="editable" animate="true" value="task.percentage" type="success"><b>\{{task.percentage}}%</b></progressbar>
 				</div>
 			</div>
+		</div>
+		
+		<div class="field-block">
+            <label><b>{{t 'tasks:CreatedBy'}}</b></label>
+			<span>\{{task.author.name|| "Non defini"}}</span>
 		</div>
 
 		<div class="field-block">

@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 var Task = require('../controllers/task')
 
 
-module.exports = function (app, passport, auth) {
+module.exports = function (app, passport, auth, usersSocket) {
 
 	app.get('/api/task', auth.requiresLogin, function (req, res) {
 		Task.read(req.query, function (err, tasks) {
@@ -31,7 +31,7 @@ module.exports = function (app, passport, auth) {
 	});
 
 	app.post('/api/task', auth.requiresLogin, function (req, res) {
-		Task.create(req.body, req.user, function (err, task) {
+		Task.create(req.body, req.user, usersSocket, function (err, task) {
 			if (err) {
 				console.log(err);
 				return res.send(500);
@@ -42,10 +42,10 @@ module.exports = function (app, passport, auth) {
 	});
 
 	app.put('/api/task/:taskId', auth.requiresLogin, function (req, res) {
-		Task.update(req.task,req.body,req.user, function(err, task){
-			if(err)
+		Task.update(req.task, req.body, req.user, usersSocket, function (err, task) {
+			if (err)
 				return res.send(500, err);
-			
+
 			res.json(task);
 		});
 	});

@@ -26,7 +26,6 @@
             <li style="width: 20%;" data-ng-init="taskCounter()">
                 <a href='#!/' title="{{t 'Home'}}" >
                     <span class="icon-home"></span>
-					<span data-ng-if="tasksCpt" class="count orange-bg">\{{tasksCpt}}</span>
                 </a>
             </li>
             <li style="width: 20%;" data-ng-init="ticketCounter()">
@@ -41,16 +40,15 @@
             <li style="width: 20%;">
                 <a  ng-if="global.user.rights.task.read" ng-href='#!/task' title="{{t 'tasks:Tasks'}}">
                     <span class="icon-tick"></span>
-                    <!--{{#if agenda.count}}
-                    <span class="count">{{agenda.count}}</span>
-                    {{/if}}-->
+					<span data-ng-if="tasksCpt" class="count orange-bg">\{{tasksCpt}}</span>
                 </a>
 				<span ng-if="!global.user.rights.task.read" title="{{t 'tasks:Tasks'}}">
 					<span class="icon-tick"></span>
 				</span>
             </li>
             <li style="width: 20%;">
-                <span href="user/fiche.php?id={{user.id}}"  title="{{t 'Parameters'}}" target="_self">
+                <span href="user/fiche.php?id={{user.id}}"  title="{{t
+						'Parameters'}}" target="_self">
                     <span class="icon-gear"></span>
                 </span>
             </li>
@@ -87,15 +85,15 @@
         <ul class="unstyled-list">
             <li class="title-menu">{{t 'tasks:EventOnFullDay'}}</li>
             <li>
-                <ul class="calendar-menu">
+                <ul class="calendar-menu" ng-controller="TaskController" >
                     <li ng-repeat="task in menuTasks">
-                        <a href="#/fiche.php?id=\{{task._id}}", title="{{t
-								'Open'}}">
+                        <a href="#" ng-click="showTask(task._id)" title="{{t
+											'Open'}}">
                             <time datetime="\{{task.datep}}">
-                                <b>\{{task.datep | date:"dd"}}</b>
-                                <p>\{{task.datep | date:"MMM"}}</p>
+                                <b>\{{task.datep| date:"dd"}}</b>
+                                <p>\{{task.datep| date:"MMM"}}</p>
                             </time>
-                            <small class="green">\{{task.datep | date:"HH:mm"}}</small>
+                            <small class="green">\{{task.datep| date:"HH:mm"}}</small>
                             <p>\{{task.name}} 
                                 <i>(\{{task.societe.name}})</i>
                             </p>
