@@ -85,28 +85,25 @@
         </ul>
 
         <ul class="unstyled-list">
-            <li class="title-menu">{{t 'agenda:EventOnFullDay'}}</li>
-            {{#each agenda.task}}
+            <li class="title-menu">{{t 'tasks:EventOnFullDay'}}</li>
             <li>
                 <ul class="calendar-menu">
-                    <li>
-                        <a href="agenda/fiche.php?id={{this._id}}", title="{{t
+                    <li ng-repeat="task in menuTasks">
+                        <a href="#/fiche.php?id=\{{task._id}}", title="{{t
 								'Open'}}">
-                            <time datetime="{{this.event.datetime}}">
-                                <b>{{this.event.day}}</b>
-                                <p>{{this.event.month}}</p>
+                            <time datetime="\{{task.datep}}">
+                                <b>\{{task.datep | date:"dd"}}</b>
+                                <p>\{{task.datep | date:"MMM"}}</p>
                             </time>
-                            <small class="green">{{this.event.hour}}</small>
-                            <p>{{this.label}} 
-                                <i>({{this.societe}})</i>
+                            <small class="green">\{{task.datep | date:"HH:mm"}}</small>
+                            <p>\{{task.name}} 
+                                <i>(\{{task.societe.name}})</i>
                             </p>
                         </a>
                     </li>
                 </ul>
             </li>
-            {{else}}
-            <p>{{t 'agenda:NoMeeting'}}</p>
-            {{/each}}
+            <p ng-if='menuTasks.length == 0'>{{t 'tasks:NoMeeting'}}</p>
         </ul>
 
 

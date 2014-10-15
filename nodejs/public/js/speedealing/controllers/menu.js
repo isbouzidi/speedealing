@@ -3,6 +3,7 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 
 		$scope.ticketCpt = 0;
 		$scope.menus = {};
+		$scope.menuTasks = [];
 		$rootScope.showSearchInput = true;
 
 		$translate.use("fr-FR");
@@ -40,8 +41,18 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 
 		$scope.init = function() {
 			$http({method: 'GET', url: '/menus'}).success(function(data, status) {
-				$scope.menus = data;
-                                
+				$scope.menus = data;                    
+			});
+			
+			$http({method: 'GET', url: '/api/task',
+				params:{
+					fields:"societe datep name",
+					query : 'TODAYMYRDV',
+					user : Global.user.id
+				}
+			}).success(function(data, status) {
+				$scope.menuTasks = data;
+				console.log(data);
 			});
 		};
                 

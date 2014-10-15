@@ -690,3 +690,8 @@ tags-input .tags {
 	border-radius: 0px;
 	height: 22px;
 }
+
+.calendar-menu > li, li.calendar-menu {
+	line-height: 20px;
+	min-height : 50px;
+}

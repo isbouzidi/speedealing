@@ -46,7 +46,7 @@ taskSchema.plugin(timestamps);
 
 taskSchema.virtual('percentage')
 		.get(function () {
-			if (this.notes.length == 0)
+			if (!this.notes || this.notes.length == 0)
 				return 0;
 
 			var last_note = this.notes[this.notes.length - 1];
@@ -105,7 +105,7 @@ function getStatus(status) {
 taskSchema.virtual('status')
 		.get(function () {
 
-			if (this.notes.length == 0)
+			if (!this.notes || this.notes.length == 0)
 				return getStatus("NOTAPP");
 
 			var last_note = this.notes[this.notes.length - 1];

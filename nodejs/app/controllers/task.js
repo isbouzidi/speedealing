@@ -58,12 +58,17 @@ function readTask(params, callback) {
 			query.entity = params.entity;
 			query['archived'] = true;
 			break;
+		case 'TODAYMYRDV':  // For rdv list in menu
+			query['usertodo.id'] = params.user;
+			query.type = 'AC_RDV';
+			query.datep = {$gte : new Date().setHours(0,0,0), $lte: new Date().setHours(23,59,59)};
+			return TaskModel.find(query, params.fields, callback);
+			break;
 		default: //'ARCHIVED':
 			query.archived = true;
 	}
 
-	console.log(query);
-
+	//console.log(query);
 	TaskModel.find(query, params.fields, {skip: parseInt(params.skip) * parseInt(params.limit) || 0, limit: params.limit || 100, sort: JSON.parse(params.sort)}, callback);
 }
 
@@ -131,7 +136,7 @@ function createTask(task, user, callback) {
 	if (new_task.entity == null)
 		new_task.entity = user.entity;
 
-	if (new_task.type == 'AC_RDV')
+	if (new_task.type != 'AC_RDV')
 		new_task.datep = null;
 
 	//console.log(bill);
