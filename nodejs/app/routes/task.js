@@ -14,8 +14,10 @@ module.exports = function (app, passport, auth, usersSocket) {
 				console.log(err);
 				return res.send(500);
 			}
-
-			res.json(tasks);
+			if (tasks)
+				res.json(tasks);
+			else
+				res.json([]);
 		});
 	});
 
