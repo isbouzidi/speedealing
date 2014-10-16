@@ -41,9 +41,9 @@ function readTask(params, callback) {
 	switch (params.query) {
 		case 'MYTASK':
 			query.$or = [
-				{'usertodo.id': params.user},
-				{'author.id': params.user}];
-			query['archived'] = false;
+				{'usertodo.id': params.user, 'userdone.id': null},
+				{'author.id': params.user, archived: false}
+			];
 			break;
 		case 'ALLTASK':
 			query.entity = params.entity;
@@ -52,8 +52,7 @@ function readTask(params, callback) {
 		case 'MYARCHIVED':
 			query.$or = [
 				{'usertodo.id': params.user},
-				{'author.id': params.user}];
-			query['archived'] = true;
+				{'author.id': params.user, archived : true}];
 			break;
 		case 'ARCHIVED':
 			query.entity = params.entity;
@@ -93,9 +92,9 @@ function countTask(params, callback) {
 	switch (params.query) {
 		case 'MYTASK':
 			query.$or = [
-				{'usertodo.id': params.user},
-				{'author.id': params.user}];
-			query['archived'] = false;
+				{'usertodo.id': params.user, 'userdone.id': null},
+				{'author.id': params.user, archived: false}
+			];
 			break;
 		case 'ALLTASK':
 			query.entity = params.entity;
@@ -104,8 +103,7 @@ function countTask(params, callback) {
 		case 'MYARCHIVED':
 			query.$or = [
 				{'usertodo.id': params.user},
-				{'author.id': params.user}];
-			query['archived'] = true;
+				{'author.id': params.user, archived : true}];
 			break;
 		case 'ARCHIVED':
 			query.entity = params.entity;

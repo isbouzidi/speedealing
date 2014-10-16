@@ -581,7 +581,7 @@ Contact.prototype = {
 		if (req.query.limit)
 			sort.limit = parseInt(req.query.limit);
 
-		ContactModel.find(query, "firstname lastname societe.name Tag phone Status email", sort, function (err, doc) {
+		ContactModel.find(query, "firstname lastname societe.name Tag phone Status email phone_mobile newsletter sendEmailing sendSMS", sort, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);

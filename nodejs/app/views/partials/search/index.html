@@ -1,58 +1,100 @@
 <section data-ng-controller="SearchController" ng-init="init()">
-    <div style="padding: 8px 14px 12px">
+    <div class="with-padding">
 
         <h2>Résultats de recherche : <span class="thin">\{{searchItem}}</span></h2>
-        
-        <div class="col-lg-10">
-            <div class="row margin-bottom">
 
-                <div class="input-group">
-                    <input type="text" ng-model="searchItem" my-focus="true" class="form-control">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" ng-click="btnSearch()" type="button">Go!</button>
-                    </span>
-                </div><!-- /input-group -->
-                <h5 class="thin" ng-if="searchItem.length > 0"><strong>\{{resultsCount}}</strong> résultats trouvés</h5>
-            </div><!-- /.row -->
-            <div class="row margin-top">
+		<div class="row margin-bottom">
+			<div class="col-md-10">
+				<div class="input-group">
+					<input type="text" ng-model="searchItem" my-focus="true" ng-enter="btnSearch()" class="form-control">
+					<span class="input-group-btn">
+						<button class="btn btn-default" ng-click="btnSearch()" type="button"><i class="glyphicon glyphicon-search"></i></button>
+					</span>
+				</div><!-- /input-group -->
+			</div>
+			<h5 class="thin" ng-if="searchItem.length > 0"><strong>\{{resultsCount}}</strong> résultats trouvés</h5>
+		</div><!-- /.row -->
+		<div class="row margin-top">
+			<ul class="unstyled-list">
+				<li>
+					<ul class="message-menu">
+						<li ng-repeat="result in results" style="cursor: pointer">
+							<div class="row margin-bottom">
+								<div class="col-md-6">
+									<a ng-href="" title="\{{result.name}}" ng-click="showContact(result._id)">
+										<strong class="blue">\{{result.name}}</strong>
+										<small class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</small>
 
-                <ul class="unstyled-list">
+										<table class="info-table">
+											<tbody>
+												<tr ng-if="result.societe.name">
+													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+													<td class="h5 blue">\{{result.societe.name}}</td>
+												</tr>
+												<tr ng-if="result.email">
+													<th scope="row">{{t 'Email'}}</th>
+													<td>\{{result.email}}</td>
+												</tr>
+												<tr ng-if="result.poste">
+													<th scope="row">{{t 'companies:PostOrFunction'}}</th>
+													<td>\{{result.poste}}</td>
+												</tr>
+												<tr ng-if="result.phone">
+													<th scope="row">{{t 'companies:Tel-Fixe'}}</th>
+													<td>\{{result.phone}}</td>
+												</tr>
+												<tr ng-if="result.phone_mobile">
+													<th scope="row">{{t 'companies:Tel-Mobile'}}</th>
+													<td>\{{result.phone_mobile}}</td>
+												</tr>
+												<tr ng-if="result.Tag">
+													<th scope="row">{{t 'Keywords'}}</th>
+													<td>\{{result.Tag}}</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:Newsletter'}}</th>
+													<td>
+														<input type="checkbox" ng-disabled data-ng-model="result.newsletter" data-ng-checked="result.newsletter"/>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:SendEmailing'}}</th>
+													<td>
+														<input type="checkbox" ng-disabled data-ng-model="result.sendEmailing" data-ng-checked="result.sendEmailing"/>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'companies:SendSMS'}}</th>
+													<td>
+														<input type="checkbox" ng-disabled data-ng-model="result.sendSMS" data-ng-checked="result.sendSMS"/>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 
-                    <li>
-                        <ul class="message-menu">
-                            <li ng-repeat="result in results" style="cursor: pointer">
+									</a>
+								</div>
+							</div>
 
-                                <a ng-href="" title="\{{result.name}}" ng-click="showContact(result._id)">
-                                    <strong class="blue">\{{result.name}}</strong>
-                                    <span class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</span>
-                                    <address style="font-style: normal; line-height: 1.5; font-size: 14px">
-                                        <abbr title="Email">Email :</abbr> <a href="" class="green"><strong>\{{result.email|| 'indéfini'}}</strong></a>,
-                                        <abbr title="Travail">Fonction :</abbr><strong> \{{result.poste|| 'indéfini'}} </strong><abbr title="chez">chez:</abbr> <strong>\{{result.societe.name|| 'indéfini'}}</strong>,
-                                        <abbr title="Phone">N° Tél :</abbr> <strong>\{{result.phone|| 'indéfini'}}</strong>
-										<abbr title="Tag">{{t 'Keywords'}} : </abbr> <strong>\{{result.Tag|| 'indéfini'}}</strong>
-                                    </address>
-                                </a>
-                            </li>
+						</li>
 
-                        </ul>
+					</ul>
+				</li>
 
-                    </li>
+			</ul>
+		</div>
+	</div>
+	<!--
+		<pagination 
+			total-items="resultsCount" 
+			ng-model="currentPage" 
+			max-size="maxSize" 
+			class="pagination-sm" 
+			boundary-links="true" 
+			items-per-page="numPerPage"
+			previous-text ="Précédent" next-text="Suivant"
+			first-text="Premier" last-text="Dernier">
+		</pagination>
+	-->
 
-                </ul>
-            </div>
-        </div>
-        <!--
-            <pagination 
-                total-items="resultsCount" 
-                ng-model="currentPage" 
-                max-size="maxSize" 
-                class="pagination-sm" 
-                boundary-links="true" 
-                items-per-page="numPerPage"
-                previous-text ="Précédent" next-text="Suivant"
-                first-text="Premier" last-text="Dernier">
-            </pagination>
-        -->
-        
-    </div>
 </section>

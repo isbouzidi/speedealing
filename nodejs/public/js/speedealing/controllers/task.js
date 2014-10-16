@@ -251,26 +251,27 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.closed = function (row) {
 			//console.log(row);
-			if (row.entity.notes[row.entity.notes.length - 1].author.id == Global.user.id) {
-				row.entity.notes[row.entity.notes.length - 1].percentage = 100;
-				row.entity.notes[row.entity.notes.length - 1].datec = new Date();
-			} else
-				row.entity.notes.push({
-					percentage: 100,
-					datec: new Date(),
-					author: {
-						name: Global.user.firstname + " " + Global.user.lastname,
-						id: Global.user.id
-					}
-				});
+			if (!row.entity.userdone.id) {
+				if (row.entity.notes[row.entity.notes.length - 1].author.id == Global.user.id) {
+					row.entity.notes[row.entity.notes.length - 1].percentage = 100;
+					row.entity.notes[row.entity.notes.length - 1].datec = new Date();
+				} else
+					row.entity.notes.push({
+						percentage: 100,
+						datec: new Date(),
+						author: {
+							name: Global.user.firstname + " " + Global.user.lastname,
+							id: Global.user.id
+						}
+					});
+			}
 
 			row.entity.$update();
 		};
 
 		$scope.setArchived = function (row) {
 			row.entity.archived = true;
-
-			row.entity.$update();
+			$scope.closed(row);
 		};
 
 		$scope.addNew = function () {

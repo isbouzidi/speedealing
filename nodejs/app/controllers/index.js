@@ -145,7 +145,7 @@ exports.render = function (req, res) {
 	var eventTodo = [];
 
 	var menuHTML = "";
-
+/*
 	// load conf and const
 	ModuleModel.find({}, "name numero enabled always_enabled family version picto moddir dirs depends requireby need_dolibarr_version const langfiles boxes", function (err, docs) {
 		if (err) {
@@ -379,8 +379,8 @@ exports.render = function (req, res) {
 			console.log(req.session.cookie._expires);
 
 			res.render('index', {user: req.user, withMenu: withMenu, title: "Speedealing", href: url, menuHTML: menuHTML, random: random, ttlSession: ttlSession, version: config.version, angular: angular});
-		});
-	});
+//		});
+//	});
 };
 
 function verifyMenu(newTabMenu, req) {
