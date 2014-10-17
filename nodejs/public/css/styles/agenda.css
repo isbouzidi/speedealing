@@ -20,7 +20,7 @@
 .events > li {
 	border-top: 1px solid #e6e6e6;
 	position: relative;
-	padding: 17px 20px 17px 140px;
+	padding: 10px 20px 10px 140px;
 	min-height: 44px;
 }
 .events > li:first-child {
@@ -33,8 +33,8 @@
 	left: 0;
 	bottom: 0;
 	width: 120px;
-	line-height: 80px;
-	font-size: 39px;
+	line-height: 45px;
+	font-size: 30px;
 	font-family: 'Open Sans', sans-serif;
 	color: #999999;
 	text-align: center;
@@ -61,7 +61,7 @@
 	line-height: 12px;
 	padding: 0;
 	vertical-align: top;
-	margin: 14px 3px 0 -10px;
+	margin: 5px 3px 0 -10px;
 	background: none;
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;

@@ -10,7 +10,7 @@
                 </span>
                 {{#if user.multiEntities}}
                 <span class='margin-right'>
-                    <a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" onshow="getEntities()" buttons="no" e-ng-options="i.id as i.name for i in entities">
+                    <a href="#" editable-select="global.user.entity" onaftersave="changeEntity()" buttons="no" e-ng-options="i.id as i.name for i in entities">
                         \{{global.user.entity}}
                     </a>
                     <!--{{t 'Entity'}} <select ng-model="entity" ng-options="i.name for i in entities track by i.id" data-ng-change="changeEntity()"></select>-->

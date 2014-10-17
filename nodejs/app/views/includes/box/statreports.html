@@ -3,47 +3,19 @@
 	<div class="block large-margin-bottom">
 
 		<div class="block-title">
-			<h3>Statistiques des compte-rendus</h3>
-			<!--<span class="ribbon"><span class="ribbon-inner">{{t 'New'}}</span></span>-->
+			<h3>Modifs de comptes</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
 		</div>
 
-		<ul class="events" data-ng-init='indicateur()'>
-
-			<li>
-				<span class="event-date orange">\{{indicateurs.abs}}</span>
-				<span class="event-description">
-					<h4>Nombre de jours d'absences (non justifiées)</h4>
-					<p>Depuis le début de l'année</p>
-				</span>
-			</li>
-
-			<li>
+		<ul class="events">
+			<li ng-repeat="entity in entities">
 				<span class="event-date">
-					\{{familles.sous_traitants/1000 | number:1}} <span class="event-hour">k€</span>
+					\{{statsAllEntities.sumSocietes[$index*2 + 1].count}} <span class="event-hour"></span>
+					<span class="indic-progress green" ng-show="gain(statsAllEntities.sumSocietes,$index*2) > 0">+\{{gain(statsAllEntities.sumSocietes,$index*2) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(statsAllEntities.sumSocietes,$index*2) < 0">\{{gain(statsAllEntities.sumSocietes,$index*2) | number:0}}% ▼</span>
 				</span>
-				<span class="event-description">
-					<h4>Sous-traitance</h4>
-					<p>Objectif mensuel : </p>
-				</span>
-				<span class="ribbon tiny"><span class="ribbon-inner red-gradient">Impor.</span></span>
-			</li>
-
-			<!--<li>
-				<span class="event-date red">
-					0 <span class="event-hour">k€</span>
-				</span>
-				<h4>Interventions non facturées</h4>
-				<p>&nbsp;</p>
-			</li>-->
-			
-			<li>
-				<span class="event-date">
-					\{{indicateurs.hsupp[1]}} <span class="event-hour">H</span>
-					<span class="indic-progress red" ng-show="indicatorHSupp()>0">+\{{indicatorHSupp() | number:0}}% ▲</span>
-					<span class="indic-progress green" ng-show="indicatorHSupp()<0">\{{indicatorHSupp() | number:0}}% ▼</span>
-				</span>
-				<h4>Heures supplémentaires</h4>
-				<p>Depuis le début du mois</p>
+				<h4>\{{entity.id}}</h4>
+				<small>Ce mois-ci</small>
 				
 			</li>
 
@@ -52,52 +24,50 @@
 	</div>
 </div>
 
-<div ng-if="global.user.rights.box.reportStatEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+<div ng-if="global.user.rights.box.reportStatAllEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
 
 	<div class="block large-margin-bottom">
 
 		<div class="block-title">
-			<h3>Indicateurs des entitées</h3>
-			<!--<span class="ribbon"><span class="ribbon-inner">{{t 'New'}}</span></span>-->
+			<h3>Nombre d'affaires</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
 		</div>
 
-		<ul class="events" data-ng-init='indicateur()'>
-
-			<li>
-				<span class="event-date orange">\{{indicateurs.abs}}</span>
-				<span class="event-description">
-					<h4>Nombre de jours d'absences (non justifiées)</h4>
-					<p>Depuis le début de l'année</p>
+		<ul class="events">
+			<li ng-repeat="entity in entities">
+				<span class="event-date">
+					\{{statsAllEntities.sumLeads[$index*2 + 1].count}} <span class="event-hour"></span>
+					<span class="indic-progress green" ng-show="gain(statsAllEntities.sumLeads,$index*2) > 0">+\{{gain(statsAllEntities.sumLeads,$index*2) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(statsAllEntities.sumLeads,$index*2) < 0">\{{gain(statsAllEntities.sumLeads,$index*2) | number:0}}% ▼</span>
 				</span>
+				<h4>\{{entity.id}}</h4>
+				<small>Ce mois-ci</small>
+				
 			</li>
 
-			<li>
-				<span class="event-date">
-					\{{familles.sous_traitants/1000 | number:1}} <span class="event-hour">k€</span>
-				</span>
-				<span class="event-description">
-					<h4>Sous-traitance</h4>
-					<p>Objectif mensuel : </p>
-				</span>
-				<span class="ribbon tiny"><span class="ribbon-inner red-gradient">Impor.</span></span>
-			</li>
+		</ul>
 
-			<!--<li>
-				<span class="event-date red">
-					0 <span class="event-hour">k€</span>
-				</span>
-				<h4>Interventions non facturées</h4>
-				<p>&nbsp;</p>
-			</li>-->
-			
-			<li>
+	</div>
+</div>
+
+<div ng-if="global.user.rights.box.reportStatAllEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>Nombre de compte-rendus</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
+		</div>
+
+		<ul class="events">
+			<li ng-repeat="entity in entities">
 				<span class="event-date">
-					\{{indicateurs.hsupp[1]}} <span class="event-hour">H</span>
-					<span class="indic-progress red" ng-show="indicatorHSupp()>0">+\{{indicatorHSupp() | number:0}}% ▲</span>
-					<span class="indic-progress green" ng-show="indicatorHSupp()<0">\{{indicatorHSupp() | number:0}}% ▼</span>
+					\{{statsAllEntities.sumReports[$index*2 + 1].count}} <span class="event-hour"></span>
+					<span class="indic-progress green" ng-show="gain(statsAllEntities.sumReports,$index*2) > 0">+\{{gain(statsAllEntities.sumReports,$index*2) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(statsAllEntities.sumReports,$index*2) < 0">\{{gain(statsAllEntities.sumReports,$index*2) | number:0}}% ▼</span>
 				</span>
-				<h4>Heures supplémentaires</h4>
-				<p>Depuis le début du mois</p>
+				<h4>\{{entity.id}}</h4>
+				<small>Ce mois-ci</small>
 				
 			</li>
 

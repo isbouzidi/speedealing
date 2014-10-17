@@ -65,20 +65,24 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 				$scope.statsByEntity = data;
 			});
 
-			if (Global.user.multientites)
+			if (Global.user.multiEntities)
 				$http({method: 'GET', url: 'api/statsAllEntities', params: {
 					}
 				}).success(function (data, status) {
+					//console.log(data);
 					$scope.statsAllEntities = data;
 				});
 		};
 
-		$scope.gain = function (tab) {
+		$scope.gain = function (tab, idx) {
 			// idx 1 mois en cous, idx 0 mois precedent
-			if (!tab || tab[0].count == 0)
+			if (idx == null)
+				idx = 0;
+
+			if (!tab || tab[idx].count == 0)
 				return 0;
 
-			return (tab[1].count - tab[0].count) / tab[0].count * 100;
+			return (tab[idx + 1].count - tab[idx].count) / tab[idx].count * 100;
 		};
 
 		$scope.indicatorHSupp = function () {

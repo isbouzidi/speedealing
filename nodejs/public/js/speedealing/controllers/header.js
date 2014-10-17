@@ -1,25 +1,31 @@
-angular.module('mean.system').controller('HeaderController', ['$scope', '$rootScope', '$http', '$route', 'Global', 'pageTitle', function($scope, $rootScope, $http, $route, Global, pageTitle) {
+angular.module('mean.system').controller('HeaderController', ['$scope', '$rootScope', '$http', '$route', 'Global', 'pageTitle', function ($scope, $rootScope, $http, $route, Global, pageTitle) {
 		$scope.global = Global;
 		//console.log(Global);
 
 		$scope.title = pageTitle.getTitle();
 
-		$scope.withMenu = function() {
+		$scope.withMenu = function () {
 			//console.log(Global);
 			if (Global && Global.user.right_menu)
 				return "with-menu";
 		};
 
-		$scope.getEntities = function() {
+		if (Global.user.multiEntities)
 			$http({method: 'GET', url: 'api/entity/select'
-			}).success(function(data, status) {
-				$scope.entities = data;
+			}).success(function (data, status) {
+				$rootScope.entities = data;
 			});
-		};
+
+		/*$scope.getEntities = function() {
+		 $http({method: 'GET', url: 'api/entity/select'
+		 }).success(function(data, status) {
+		 $rootScope.entities = data;
+		 });
+		 };*/
 
 		$scope.entity = {id: Global.user.entity, name: Global.user.entity};
 
-		$scope.changeEntity = function() {
+		$scope.changeEntity = function () {
 			$scope.title = pageTitle.getTitle();
 			//Global.user.entity = $scope.entity.id;
 			$route.reload();
@@ -29,8 +35,8 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
 		$scope.currentPage = 1;
 		$scope.numPerPage = 3;
 		$scope.maxSize = 5;
-		
-		$rootScope.AutoComplete = function(val, url, max) {
+
+		$rootScope.AutoComplete = function (val, url, max) {
 			return $http.post(url, {
 				take: max,
 				skip: 0,
@@ -38,7 +44,7 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
 				pageSize: 5,
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				//console.log(res.data);
 				return res.data;
 			});

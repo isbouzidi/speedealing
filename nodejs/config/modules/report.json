@@ -40,7 +40,7 @@
 				}
 			},
 			{
-				"desc": "Statisque des compte-rendus de toutes les entites",
+				"desc": "Statisque des compte-rendus de toutes les entites (CODIR)",
 				"perm": {
 					"reportStatAllEntity": false
 				}
