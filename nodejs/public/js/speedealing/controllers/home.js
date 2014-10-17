@@ -72,11 +72,11 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 					$scope.statsAllEntities = data;
 				});
 		};
-		
+
 		$scope.gain = function (tab) {
 			// idx 1 mois en cous, idx 0 mois precedent
-			if (!tab[0].count)
-				return 100;
+			if (tab[0].count == 0)
+				return 0;
 
 			return (tab[1].count - tab[0].count) / tab[0].count * 100;
 		};
