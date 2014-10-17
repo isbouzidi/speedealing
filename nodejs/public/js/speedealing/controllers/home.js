@@ -6,6 +6,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 		$scope.dateNow = new Date();
 		$scope.userConnection = [];
 		$scope.indicateurs = {};
+		$scope.stats = {};
 		$scope.limitReport = 0;
 		$scope.isTaskRealised = false;
 
@@ -52,6 +53,15 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 			}).success(function (cpt, status) {
 
 				$scope.indicateurs.hsupp = cpt;
+			});
+		};
+
+		$scope.statsGlobal = function () {
+			$http({method: 'GET', url: 'api/stats', params: {
+					entity: Global.user.entity
+				}
+			}).success(function (data, status) {
+				$scope.stats = data;
 			});
 		};
 

@@ -4,20 +4,22 @@
 		<h2>\{{dateNow| date:'MMM'}} <strong>\{{dateNow| date:'dd'}}</strong></h2>
 	</hgroup>
 
-	<div ng-if="global.user.rights.box.dashboardGraph" class="dashboard">
+	<div class="dashboard">
 		<div class="columns">
-			<div class="nine-columns twelve-columns-mobile chart" data-ng-init="initCharts()">
+			<div ng-if="global.user.rights.box.dashboardGraph" class="nine-columns twelve-columns-mobile chart" data-ng-init="initCharts()">
 				<highchart id="caChart" config="caChartConfig" style="min-width: 100px; height: 270px; margin: 0 auto;"></highchart>
 			</div>
 
-			<div class="three-columns twelve-columns-mobile new-row-mobile">
+			<div class="three-columns twelve-columns-mobile new-row-mobile" data-ng-init="statsGlobal()">
 				<ul class="stats split-on-mobile">
-					<li><a href="#"> <strong>-</strong> new <br>accounts
+					<li><a href="#!/societes"> <strong>-</strong> new <br>accounts
 						</a></li>
-					<li><a href="#"> <strong>-</strong> referred new <br>accounts
+					<li><a href="#!/orders"> <strong>-</strong> referred new <br>accounts
 						</a></li>
-					<li><strong>-</strong> new <br>items</li>
-					<li><strong>-</strong> new <br>comments</li>
+					<li><a href="#!/leads"> <strong>-</strong> referred new <br>affaires
+						</a></li>
+					<li><a href="#!/tickets"> <strong>-</strong> new <br>tickets
+						</a></li>
 				</ul>
 			</div>
 		</div>
@@ -30,6 +32,7 @@
 			{{> 'box/result'}}
 			{{> 'box/cost'}}
 			{{> 'box/indicateur'}}
+			{{> 'box/statreports'}}
 			{{> 'box/ca'}}
 			{{> 'box/infologin'}}
 			{{> 'box/report'}}

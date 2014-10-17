@@ -128,12 +128,6 @@
 		],
 		"box": [
 			{
-				"desc": "Dernier comptes rendus",
-				"perm": {
-					"report": false
-				}
-			},
-			{
 				"desc": "Liste des taches a faire",
 				"perm": {
 					"tasks": false
