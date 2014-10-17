@@ -109,14 +109,14 @@
 			-moz-box-shadow: none;
 			box-shadow: none;
 		}
-		.stats > li > a {
+		.stats > li > div > div > a {
 			display: block;
 			color: inherit;
 			//color:expression(this.parentNode.currentStyle['color']);
 			margin: -19px 0 -20px;
-			padding: 19px 5px 20px 0;
+			padding: 14px 5px 10px 0;
 			}
-			.stats > li > a:hover {
+			.stats > li > div > div > a:hover {
 				padding-right: 0;
 				-webkit-transition: padding-right 100ms;
 				-moz-transition: padding-right 100ms;
@@ -124,8 +124,8 @@
 				-o-transition: padding-right 100ms;
 				transition: padding-right 100ms;
 			}
-		.stats > li > strong,
-		.stats > li > a > strong {
+		.stats > li > div > div > strong,
+		.stats > li > div > div > a > strong {
 			display: block;
 			float: left;
 			font-size: 48px;

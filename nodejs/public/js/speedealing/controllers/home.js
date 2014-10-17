@@ -6,7 +6,8 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 		$scope.dateNow = new Date();
 		$scope.userConnection = [];
 		$scope.indicateurs = {};
-		$scope.stats = {};
+		$scope.statsByEntity = {};
+		$scope.statsAllEntities = {};
 		$scope.limitReport = 0;
 		$scope.isTaskRealised = false;
 
@@ -57,12 +58,27 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 		};
 
 		$scope.statsGlobal = function () {
-			$http({method: 'GET', url: 'api/stats', params: {
+			$http({method: 'GET', url: 'api/statsByEntity', params: {
 					entity: Global.user.entity
 				}
 			}).success(function (data, status) {
-				$scope.stats = data;
+				$scope.statsByEntity = data;
 			});
+
+			if (Global.user.multientites)
+				$http({method: 'GET', url: 'api/statsAllEntities', params: {
+					}
+				}).success(function (data, status) {
+					$scope.statsAllEntities = data;
+				});
+		};
+		
+		$scope.gain = function (tab) {
+			// idx 1 mois en cous, idx 0 mois precedent
+			if (!tab[0].count)
+				return 100;
+
+			return (tab[1].count - tab[0].count) / tab[0].count * 100;
 		};
 
 		$scope.indicatorHSupp = function () {

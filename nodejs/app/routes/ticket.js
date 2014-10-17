@@ -17,15 +17,6 @@ module.exports = function (app, passport, auth, usersSocket) {
 	var object = new Object();
 	object.usersSocket = usersSocket;
 
-	Dict.extrafield({extrafieldName: 'Societe'}, function (err, doc) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-
-		object.fk_extrafields = doc;
-	});
-
 	app.get('/api/ticket', auth.requiresLogin, object.read);
 	app.get('/api/ticket/:id', auth.requiresLogin, object.findOne);
 	app.post('/api/ticket', auth.requiresLogin, function (req, res) {
