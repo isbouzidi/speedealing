@@ -14,12 +14,12 @@
 				<ul class="stats split-on-mobile">
 					<li>
 						<div class="row">
-							<div class="col-md-7">
+							<div class="col-md-9">
 								<a href="#!/societes">
 									<strong>\{{statsByEntity.newAccounts[1].count}}</strong> Nouveaux<br/>comptes<br/><small>ce mois-ci</small>
 								</a>
 							</div>
-							<div  class="col-md-5">
+							<div  class="col-md-3">
 								<span class="indic-progress green" ng-show="gain(statsByEntity.newAccounts) > 0">+\{{gain(statsByEntity.newAccounts) | number:0}}% ▲</span>
 								<span class="indic-progress red" ng-show="gain(statsByEntity.newAccounts) < 0">\{{gain(statsByEntity.newAccounts) | number:0}}% ▼</span>
 							</div>
@@ -27,11 +27,11 @@
 					</li>
 					<li>
 						<div class="row">
-							<div class="col-md-7">
+							<div class="col-md-9">
 								<a href="#!/orders"> <strong>\{{statsByEntity.newOrders[1].count}}</strong> Nouvelles <br>commandes<br/><small>ce mois-ci</small>
 								</a>
 							</div>
-							<div  class="col-md-5">
+							<div  class="col-md-3">
 								<span class="indic-progress green" ng-show="gain(statsByEntity.newOrders) > 0">+\{{gain(statsByEntity.newOrders) | number:0}}% ▲</span>
 								<span class="indic-progress red" ng-show="gain(statsByEntity.newOrders) < 0">\{{gain(statsByEntity.newOrders) | number:0}}% ▼</span>
 							</div>
@@ -39,11 +39,11 @@
 					</li>
 					<li>
 						<div class="row">
-							<div class="col-md-7">
+							<div class="col-md-9">
 								<a href="#!/leads"> <strong>\{{statsByEntity.newLeads[1].count}}</strong> Nouvelles <br>affaires<br/><small>ce mois-ci</small>
 								</a>
 							</div>
-							<div  class="col-md-5">
+							<div  class="col-md-3">
 								<span class="indic-progress green" ng-show="gain(statsByEntity.newLeads) > 0">+\{{gain(statsByEntity.newLeads) | number:0}}% ▲</span>
 								<span class="indic-progress red" ng-show="gain(statsByEntity.newLeads) < 0">\{{gain(statsByEntity.newLeads) | number:0}}% ▼</span>
 							</div>
@@ -51,11 +51,11 @@
 					</li>
 					<li>
 						<div class="row">
-							<div class="col-md-7">
+							<div class="col-md-9">
 								<a href="#!/tickets"> <strong>\{{statsByEntity.newTickets[1].count}}</strong> Nouveaux <br>tickets<br/><small>ce mois-ci</small>
 								</a>
 							</div>
-							<div  class="col-md-5">
+							<div  class="col-md-3">
 								<span class="indic-progress green" ng-show="gain(statsByEntity.newTickets) > 0">+\{{gain(statsByEntity.newTickets) | number:0}}% ▲</span>
 								<span class="indic-progress red" ng-show="gain(statsByEntity.newTickets) < 0">\{{gain(statsByEntity.newTickets) | number:0}}% ▼</span>
 							</div>
