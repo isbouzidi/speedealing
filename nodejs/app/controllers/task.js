@@ -6,10 +6,12 @@
 var mongoose = require('mongoose'),
 		_ = require('lodash'),
 		i18n = require("i18next"),
+		config = require('../../config/config'),
 		async = require("async");
 
-var ExtrafieldModel = mongoose.model('extrafields');
 var TaskModel = mongoose.model('task');
+
+var googleCalendar = require('./google.calendar');
 
 /* Public declaration methods. See definition for documentation. */
 exports.read = readTask;
@@ -138,6 +140,29 @@ function createTask(task, user, usersSocket, callback) {
 	if (new_task.type != 'AC_RDV')
 		new_task.datep = null;
 
+	if (new_task.type == 'AC_RDV')
+		googleCalendar.insertEvent(new_task.usertodo.id, {
+			status: "confirmed",
+			start: {
+				dateTime: new_task.datep
+			},
+			end: {
+				dateTime: new_task.datef
+			},
+			summary: new_task.name + " (" + new_task.societe.name + ")",
+			description: "Tache / evenement avec " + new_task.contact.name,
+			location: new_task.societe.name,
+			source: {
+				title: "ERP CRM Speedealing",
+				url: config.url + "/#!/task/" + new_task._id
+			}
+		}, function (err, event_id) {
+			//if (err)
+			//	console.log(err);
+
+			//console.log(event_id);
+		});
+
 	//console.log(bill);
 	new_task.save(function (err, task) {
 		callback(err, task);
@@ -166,6 +191,29 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 			id: user._id,
 			name: user.firstname + " " + user.lastname
 		};
+
+	if (newTask.type == 'AC_RDV' && oldTask.usertodo.id != newTask.usertodo.id)
+		googleCalendar.insertEvent(newTask.usertodo.id, {
+			status: "confirmed",
+			start: {
+				dateTime: newTask.datep
+			},
+			end: {
+				dateTime: newTask.datef
+			},
+			summary: new_task.name + " (" + newTask.societe.name + ")",
+			description: "Rendez avec " + newTask.contact.name,
+			location: newTask.societe.name,
+			source: {
+				title: "ERP CRM Speedealing",
+				url: config.url + "/#!/task/" + newTask._id
+			}
+		}, function (err, event_id) {
+			//if (err)
+			//	console.log(err);
+
+			//console.log(event_id);
+		});
 
 	newTask.save(function (err, task) {
 		callback(err, task);

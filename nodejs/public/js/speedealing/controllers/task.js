@@ -78,6 +78,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 				Id: $routeParams.id
 			}, function (task) {
 				$scope.task = task;
+				$scope.editable = !task.archived;
 
 				pageTitle.setTitle('Tâche ' + $scope.task.name);
 
