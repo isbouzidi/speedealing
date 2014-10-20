@@ -125,7 +125,7 @@ function imp_getGoogleContacts(user, callback) {
 				'email': user.email,
 				'updatedMin': user.google.contacts.latestImport
 			},
-			callback);
+	callback);
 }
 
 
@@ -240,7 +240,7 @@ function imp_mergeByMail(gcontact, callback) {
 	if (typeof addresses.value === 'function')
 		addresses = addresses.value();
 	//console.log("addresses = ", addresses);
-	ContactModel.find({'emails.address': {$in: addresses}},
+	ContactModel.find({$or: [{'emails.address': {$in: addresses}}, {email: {$in: addresses}}]},
 	function (err, contacts) {
 		if (err)
 			return callback(err);
@@ -609,7 +609,7 @@ function findNearestContactsByPhone(gcontact, callback) {
  */
 function findNearestContactsByMail(gcontact, callback) {
 	if (gcontact.emails && gcontact.emails.length > 0) {
-		var addresses = _.pluck(gcontact.emails,'address');
+		var addresses = _.pluck(gcontact.emails, 'address');
 		if (typeof addresses.value === 'function')
 			addresses = addresses.value();
 		ContactModel.find({'emails.address': {$in: addresses}}, callback);
@@ -630,7 +630,7 @@ function findNearestContacts(gcontact, callback) {
 		}
 	],
 			function (err, results) {
-				var nearest = _.union(results[0],results[1]).sort("_id");
+				var nearest = _.union(results[0], results[1]).sort("_id");
 				nearest = _array_unique(nearest,
 						function (a, b) {
 							return a["_id"] == b["_id"];
