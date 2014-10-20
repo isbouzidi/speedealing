@@ -183,6 +183,8 @@ function createTask(task, user, usersSocket, callback) {
 }
 
 function updateTask(oldTask, newTask, user, usersSocket, callback) {
+	var old_userTodo = oldTask.usertodo.id;
+	
 	newTask = _.extend(oldTask, newTask);
 	//console.log(req.body);
 
@@ -192,7 +194,8 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 			name: user.firstname + " " + user.lastname
 		};
 
-	if (newTask.type == 'AC_RDV' && oldTask.usertodo.id != newTask.usertodo.id)
+		//console.log(oldTask.usertodo.id + " " + newTask.usertodo.id);
+	if (newTask.type == 'AC_RDV' && old_userTodo != newTask.usertodo.id)
 		googleCalendar.insertEvent(newTask.usertodo.id, {
 			status: "confirmed",
 			start: {
@@ -201,7 +204,7 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 			end: {
 				dateTime: newTask.datef
 			},
-			summary: new_task.name + " (" + newTask.societe.name + ")",
+			summary: newTask.name + " (" + newTask.societe.name + ")",
 			description: "Rendez avec " + newTask.contact.name,
 			location: newTask.societe.name,
 			source: {
