@@ -1388,8 +1388,8 @@ Object.prototype = {
 			fields = req.query.fields;
 
 		if (req.query.filter) {
-			query.name = new RegExp("\\b" + req.query.filter, "i");
-			//query.$text = {$search: req.query.filter, $language: "fr"};
+			//query.name = new RegExp("\\b" + req.query.filter, "i");
+			query.$text = {$search: req.query.filter, $language: "fr"};
 		}
 
 		if (!req.user.rights.societe.seeAll && !req.user.admin)
