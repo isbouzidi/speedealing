@@ -141,22 +141,6 @@
         </div>
         <div data-ng-include="report.modelTemp.template" class="field-block-include"></div>
 
-		<div ng-if="report.actions.length" class="field-block button-height">
-            <label for="dueDate"><b>{{t "DateDue"}}</b></label>
-
-			<div class="row">
-				<div class="col-md-6">
-					<p class="input-group">
-						<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="report.dueDate" is-open="opened[1]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="open($event,1)"><i class="glyphicon glyphicon-calendar"></i></button>
-						</span>
-					</p>
-				</div>
-			</div>
-
-        </div>
-
 		<div class="field-block">
 			<h4>{{t "Comments"}}</h4>
 		</div>

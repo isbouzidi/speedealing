@@ -105,7 +105,7 @@ Object.prototype = {
 		var reportModel = new ReportModel(req.body);
 		console.log(req.body);
 
-		
+		return;
 
 		reportModel.save(function (err, doc) {
 			if (err) {
@@ -213,8 +213,6 @@ Object.prototype = {
 
 		var report = req.report;
 		report = _.extend(report, req.body);
-		
-		console.log(report.actions);
 
 		report.save(function (err, doc) {
 

@@ -264,7 +264,6 @@ module.exports = function(app, passport, auth) {
 	});
 
 	app.get('/partials/:view/:id', auth.html.hasAuthorization, function(req, res) {
-		console.log("toto");
 		var view = req.params.view;
 		var pos = req.params.id.search(".html"); // search if id is an html page
 		if (pos > 0) // is a subview in directory

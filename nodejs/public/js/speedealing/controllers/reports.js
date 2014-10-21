@@ -23,15 +23,39 @@ angular.module('mean.reports').controller('ReportController', ['$scope', '$rootS
 	}]);
 
 angular.module('mean.reports').controller('ReportCreateController', ['$scope', '$http', '$modalInstance', '$modal', '$upload', '$route', 'Global', 'Reports', 'object', function ($scope, $http, $modalInstance, $modal, $upload, $route, Global, Reports, object) {
-
 		$scope.global = Global;
+
+		$scope.hstep = 1;
+		$scope.mstep = 15;
+
+		$scope.ismeridian = false;
+
 		$scope.report = {
 			entity: Global.user.entity,
 			duration: 1,
 			durationAppointment: 1,
 			contacts: [],
 			products: [],
-			actions: [],
+			actions: {
+				AC_DOC: {
+					delay: 0.2 //month
+				},
+				AC_PROP: {
+					delay: 0.3
+				},
+				AC_AUDIT: {
+					delay: 0.5
+				},
+				AC_RDV: {
+					delay: 0 //now
+				},
+				AC_REVIVAL: {
+					delay: 1
+				},
+				AC_INTERNAL: {
+					delay: 0
+				}
+			},
 			optional: {
 				reports: [],
 				business: {
@@ -89,8 +113,7 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 					dictName: "fk_lead_status"
 				}
 			}).success(function (data) {
-
-				$scope.leadStatus = data;
+				$scope.leadStatus = data.values;
 			});
 
 			$http({method: 'GET', url: 'api/lead', params: {
@@ -181,41 +204,6 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 			else {
 				$scope.report.optional.reports.push(reason);
 			}
-		};
-
-		$scope.actionSelection = function actionSelection(action) {
-
-			var found = false;
-			var idx;
-			var actionObj = {};
-
-			for (var i = 0; i < $scope.report.actions.length; i++) {
-				if ($scope.report.actions[i].type === action) {
-					found = true;
-					$scope.report.actions.splice(i, 1);
-					$scope.actionMethod[action] = false;
-					$scope.actionDate[action] = null;
-					break;
-				}
-			}
-
-			if (!found) {
-
-				actionObj = {
-					type: action
-				};
-
-				$scope.report.actions.push(actionObj);
-			}
-
-		};
-
-		$scope.addActionMethod = function (action) {
-
-			for (var i = 0; i < $scope.report.actions.length; i++)
-				if ($scope.report.actions[i].type === action)
-					$scope.report.actions[i].method = $scope.actionMethod[action];
-
 		};
 
 		$scope.createReport = function () {

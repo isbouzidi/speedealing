@@ -3,7 +3,7 @@
 </div>
 <div class="field-block button-height">
     <label for="deploiement"><b>{{t "reports:Deployment"}}</b></label>
-    
+
     <span ng-repeat="d in extrafield.fields.deployment.values">
         <input type="checkbox"
                value="\{{d.label}}" 
@@ -28,13 +28,48 @@
     <h4>Actions</h4>
 </div>
 <div class="field-block button-height">
-    <label for="nextAppointment"><b>{{t "reports:Appointment"}}</b></label>
-    <input type="checkbox" ng-model="Appointment" ng-click="actionSelection('Rendez-vous')">
+    <label for="nextAppointment"><b>{{t "reports:Next Appointment"}}</b></label>
+    <span>
+		<input type="radio" name="nextAppointment" required ng-model="report.actions.AC_RDV.type" value="NONE" class=""/> Aucun
+        <input type="radio" name="nextAppointment" required ng-model="report.actions.AC_RDV.type" value="AC_EAT" class=""> Déjeuner
+        <input type="radio" name="nextAppointment" required ng-model="report.actions.AC_RDV.type" value="AC_DEMO" class=""> Démo
+
+		<br/>
+		<div class="row" ng-if="report.actions.AC_RDV.type && report.actions.AC_RDV.type != 'NONE'">
+			<div class="col-md-6" style="margin-top: 9px;">
+				<b>{{t 'tasks:DateMeeting'}}</b>
+				<p class="input-group">
+					<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="report.actions.AC_RDV.datep" is-open="opened[5]" datepicker-options="dateOptions" ng-required="true" close-text="Fermer" />
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" ng-click="open($event, 5)"><i class="glyphicon glyphicon-calendar"></i></button>
+					</span>
+				</p>
+			</div>
+			<div class="col-md-6">
+				<timepicker ng-model="report.actions.AC_RDV.datep" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+			</div>
+		</div>
+	</span>
 </div>
+
+
 <div class="field-block button-height">
     <label for="InternalMeeting"><b>{{t "reports:Internal Meeting"}}</b></label>
-    <input type="checkbox" ng-model="InternalMeeting" ng-click="actionSelection('Réunion interne')">
+    <span>
+		<input type="radio" name="InternalMeeting" required ng-model="report.actions.AC_INTERNAL.type" value="NONE" class=""/> Aucune
+        <input type="radio" name="InternalMeeting" required ng-model="report.actions.AC_INTERNAL.type" value="AC_PRDV" class=""> Fixer rendez-vous <br/>
+
+		<div class="row" ng-if="report.actions.AC_INTERNAL.type && report.actions.AC_INTERNAL.type != 'NONE'">
+			<div class="col-md-6">
+				<b>{{t 'reports:DaleyBeforeRevival'}}</b>
+			</div>
+			<div class="col-md-3">
+				<input type="number" min="0" required ng-model="report.actions.AC_INTERNAL.delay" class="form-control"/>
+			</div>
+		</div>
+	</span>
 </div>
+
 <div class="field-block button-height">
     <label for="repport"><b>{{t "reports:Report"}}</b></label>
     <span ng-repeat="r in extrafield.fields.reports.values">
@@ -43,4 +78,23 @@
                ng-checked="report.optional.reports.indexOf(p.label) > -1" 
                ng-click="reportSelection(r.label)"/> \{{r.label}} <br/>
     </span>
+</div>
+<div class="field-block button-height">
+    <label for="nextAction"><b>{{t "reports:Next Action"}}</b></label>
+
+    <span>
+		<input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="NONE" class=""/> Aucune <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_TEL" class=""> Relance téléphonique <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_PRDV" class=""> Prendre rendez-vous <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_EMAIL" class=""> Relance email<br/>
+    </span>
+
+	<div class="row" ng-if="report.actions.AC_REVIVAL.type && report.actions.AC_REVIVAL.type != 'NONE'">
+		<div class="col-md-6">
+			<b>{{t 'reports:DaleyBeforeRevival'}}</b>
+		</div>
+		<div class="col-md-3">
+			<input type="number" min="0" required ng-model="report.actions.AC_REVIVAL.delay" class="form-control"/>
+		</div>
+	</div>
 </div>

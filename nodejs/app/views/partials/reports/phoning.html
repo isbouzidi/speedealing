@@ -33,3 +33,23 @@
     </span>
 
 </div>
+
+<div class="field-block button-height">
+    <label for="nextAction"><b>{{t "reports:Next Action"}}</b></label>
+
+    <span>
+		<input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="NONE" class=""/> Aucune <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_TEL" class=""> Relance téléphonique <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_PRDV" class=""> Prendre rendez-vous <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_EMAIL" class=""> Relance email<br/>
+    </span>
+
+	<div class="row" ng-if="report.actions.AC_REVIVAL.type && report.actions.AC_REVIVAL.type != 'NONE'">
+		<div class="col-md-6">
+			<b>{{t 'reports:DaleyBeforeRevival'}}</b>
+		</div>
+		<div class="col-md-3">
+			<input type="number" min="0" required ng-model="report.actions.AC_REVIVAL.delay" class="form-control"/>
+		</div>
+	</div>
+</div>
