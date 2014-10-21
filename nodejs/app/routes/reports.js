@@ -4,6 +4,8 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('lodash'),
+		i18n = require("i18next"),
+		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -14,7 +16,7 @@ var SocieteModel = mongoose.model('societe');
 
 var Task = require('../controllers/task');
 
-module.exports = function (app, passport, auth) {
+module.exports = function (app, passport, auth, usersSocket) {
 
 	var object = new Object();
 
@@ -100,12 +102,68 @@ Object.prototype = {
 			next();
 		});
 	},
-	create: function (req, res) {
+	create: function (req, res, usersSocket) {
 
 		var reportModel = new ReportModel(req.body);
 		console.log(req.body);
 
-		return;
+		function object2array(input) {
+			var out = [];
+			for (var i in input) {
+				input[i].id = i;
+				out.push(input[i]);
+			}
+			return out;
+		}
+
+		object2array(req.body.actions).forEach(function (action) {
+			if (!action.type || action.type == "NONE")
+				return;
+
+			//console.log(action);
+			//console.log(actioncomm);
+			
+			var datef = null;
+			
+			if(!action.datep) {
+				var delay = Math.round(30*action.delay);
+				
+				datef = new Date();
+				datef.setDate(datef.getDate()+delay);
+			}
+
+			var task = {
+				name: i18n.t("tasks:" + action.id) + " (" + req.body.societe.name + ")",
+				societe: req.body.societe,
+				contact: req.body.contacts[0] || null,
+				datec: new Date(),
+				datep: action.datep || null, // date de debut
+				datef: datef || null,
+				type: action.type,
+				entity: req.user.entity,
+				notes: [
+					{
+						author: {
+							id: req.user._id,
+							name: req.user.firstname + " " + req.user.lastname
+						},
+						datec: new Date(),
+						percentage: 0,
+						note: i18n.t("tasks:" + action.id) + " " + i18n.t("tasks:" + action.type) + "\nCompte rendu du " + dateFormat(req.body.datec, "dd/mm/yyyy")
+					}
+				],
+				lead: req.body.lead
+			};
+
+			//console.log(task);
+
+			Task.create(task, req.user, usersSocket, function(err, task){
+				if(err)
+					console.log(err);
+			//	console.log(task);
+			});
+
+		});
 
 		reportModel.save(function (err, doc) {
 			if (err) {

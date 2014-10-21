@@ -140,6 +140,13 @@ function createTask(task, user, usersSocket, callback) {
 	if (new_task.type != 'AC_RDV')
 		new_task.datep = null;
 
+	if (new_task.type == 'AC_RDV' && new_task.datep != null) {
+		if (new_task.datef == null || new_task.datef <= new_task.datep) {
+			new_task.datef = new_task.datep;
+			new_task.datef.setHours(new_task.datef.getHours() + 1);
+		}
+	}
+
 	if (new_task.type == 'AC_RDV')
 		googleCalendar.insertEvent(new_task.usertodo.id, {
 			status: "confirmed",
@@ -179,12 +186,15 @@ function createTask(task, user, usersSocket, callback) {
 					classes: ["orange-gradient"]
 				}
 			});
+		
+		//refresh tasklist and counter on users
+		refreshTask(usersSocket[user._id]);
 	});
 }
 
 function updateTask(oldTask, newTask, user, usersSocket, callback) {
 	var old_userTodo = oldTask.usertodo.id;
-	
+
 	newTask = _.extend(oldTask, newTask);
 	//console.log(req.body);
 
@@ -194,7 +204,7 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 			name: user.firstname + " " + user.lastname
 		};
 
-		//console.log(oldTask.usertodo.id + " " + newTask.usertodo.id);
+	//console.log(oldTask.usertodo.id + " " + newTask.usertodo.id);
 	if (newTask.type == 'AC_RDV' && old_userTodo != newTask.usertodo.id)
 		googleCalendar.insertEvent(newTask.usertodo.id, {
 			status: "confirmed",
