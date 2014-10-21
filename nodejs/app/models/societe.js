@@ -134,7 +134,7 @@ var societeSchema = new Schema({
 	toJSON: {virtuals: true}
 });
 
-societeSchema.index({name: 'text', zip: 'text', town: 'text', Tag: 'text', rival: 'text', "segmentation.label": 'text'});
+societeSchema.index({name: 'text', zip: 'text', Tag: 'text', rival: 'text', "segmentation.label": 'text'});
 
 societeSchema.plugin(timestamps);
 

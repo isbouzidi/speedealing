@@ -179,7 +179,7 @@ module.exports = function(app, passport, auth) {
 
 	//latex Routes
 	var latex = require('../app/models/latex');
-	app.get('/servepdf/:pdfId', auth.requiresLogin, latex.servePDF);
+	app.get('/servepdf/:pdfId', auth.requiresAuthenticate, latex.servePDF);
 
 	// File type icons TODO put it in dict
 	app.get('/dict/filesIcons', auth.requiresLogin, function(req, res) {
@@ -247,14 +247,14 @@ module.exports = function(app, passport, auth) {
 	});
 
 	var index = require('../app/controllers/index');
-	app.get('/partials/home', auth.requiresLogin, index.home);
+	app.get('/partials/home', auth.html.hasAuthorization, index.home);
 
-	app.get('/partials/:view', auth.requiresLogin, auth.html.hasAuthorization, function(req, res) {
+	app.get('/partials/:view', auth.html.hasAuthorization, function(req, res) {
 		var view = req.params.view;
 		res.render('partials/' + view, {user: req.user}); // Mode list view
 	});
 
-	app.get('/partials/ticket/:id', auth.requiresLogin, function(req, res) {
+	app.get('/partials/ticket/:id', auth.html.hasAuthorization, function(req, res) {
 		var view = "ticket";
 		var pos = req.params.id.search(".html"); // search if id is an html page
 		if (pos > 0) { // is a subview in directory
@@ -263,7 +263,8 @@ module.exports = function(app, passport, auth) {
 			res.render('partials/' + view, {user: req.user});
 	});
 
-	app.get('/partials/:view/:id', auth.requiresLogin, function(req, res) {
+	app.get('/partials/:view/:id', auth.html.hasAuthorization, function(req, res) {
+		console.log("toto");
 		var view = req.params.view;
 		var pos = req.params.id.search(".html"); // search if id is an html page
 		if (pos > 0) // is a subview in directory
@@ -306,5 +307,5 @@ module.exports = function(app, passport, auth) {
 	 });*/
 
 	// Master angular Page
-	app.get('/', auth.requiresLogin, index.render);
+	app.get('/', auth.requiresAuthenticate, index.render);
 };

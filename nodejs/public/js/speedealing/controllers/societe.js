@@ -130,7 +130,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			$http({method: 'GET', url: '/api/societe/count', params: p
 			}).success(function (data, status) {
 				$scope.totalCountSociete = data.count;
-				$scope.maxPageSociete = Math.ceil(data.count / 1000);
+				$scope.maxPageSociete = Math.ceil(data.count / $scope.pagingOptionsSociete.pageSize);
 			});
 
 			$scope.initCharts();

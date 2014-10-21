@@ -12,6 +12,8 @@ var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 var SocieteModel = mongoose.model('societe');
 
+var Task = require('../controllers/task');
+
 module.exports = function (app, passport, auth) {
 
 	var object = new Object();
@@ -30,7 +32,7 @@ module.exports = function (app, passport, auth) {
 				console.log(err);
 				return;
 			}
-			;
+
 			return res.send(200, doc);
 
 		});
@@ -102,7 +104,7 @@ Object.prototype = {
 
 		var reportModel = new ReportModel(req.body);
 		console.log(req.body);
-		
+
 		
 
 		reportModel.save(function (err, doc) {
@@ -211,6 +213,8 @@ Object.prototype = {
 
 		var report = req.report;
 		report = _.extend(report, req.body);
+		
+		console.log(report.actions);
 
 		report.save(function (err, doc) {
 
