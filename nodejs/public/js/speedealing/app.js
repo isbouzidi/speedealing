@@ -33,7 +33,8 @@ window.app = angular.module('mean', [
 	'pascalprecht.translate',
 	'jm.i18next',
 	'ui.chart',
-	'checklist-model'
+	'checklist-model',
+	'mean.bank'
 ]);
 
 angular.module('mean.system', []);
@@ -51,6 +52,7 @@ angular.module('mean.contacts', []);
 angular.module('mean.reports', []);
 angular.module('mean.delivery', []);
 angular.module('mean.lead', []);
+angular.module('mean.bank', []);
 
 angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
 		$i18nextProvider.options = {

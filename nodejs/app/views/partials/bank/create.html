@@ -1,0 +1,127 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'bank:NewBankAccount'}}</h3>
+
+    <ul class="wizard-steps">
+
+    </ul>
+
+    <!-- Each form step should be wrapped in a fieldset -->
+    <!-- 1. Profile-->
+    <fieldset class="wizard-fieldset fields-list active">
+
+        <div class="field-block">
+                <h4>{{t 'Hello'}}</h4>
+                <p>Bienvenue sur l'interface de création de banque.</p>
+        </div>
+
+        <div class="field-block button-height">
+                <label for="login"><b>{{t 'bank:Ref'}}</b></label>
+                <input required type="text" 
+                       data-ng-model="bank.ref" 
+                       data-ng-change="isValidRef()" 
+                       id="ref"  
+                       class="input" 
+                       autocomplete="off">
+
+                <small ng-show="bank.ref==null" class="icon-info blue input-info">Référence de la banque.</small>
+                <small ng-show="refFound" class="icon-warning red input-info">Cette référence existe déjà !</small>
+                <small ng-show="bank.ref!=null && !refFound && validRef" class="icon-tick green input-info">Référence valide.</small>
+                <small ng-show="bank.ref!=null && !refFound && !validRef" class="icon-tick red input-info">Référence invalide.</small>
+
+        </div>
+
+        <div class="field-block button-height">
+                <label for="nom"><b>{{t 'bank:Libelle'}}</b></label>
+                <input required type="text" 
+                       data-ng-model="bank.libelle" 
+                       data-ng-change="isValidLibelle()" 
+                       id="libelle"  
+                       class="input" 
+                       autocomplete="off">
+
+                <small ng-show="bank.libelle==null" class="icon-info blue input-info">Libelle de la banque.</small>
+                <small ng-show="libelleFound" class="icon-warning red input-info">Cette libelle existe déjà !</small>
+                <small ng-show="bank.libelle!=null && !libelleFound && validLibelle" class="icon-tick green input-info">Libelle valide.</small>
+                <small ng-show="bank.libelle!=null && !libelleFound && !validLibelle" class="icon-tick red input-info">Libelle invalide.</small>
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:Type'}}</b></label>
+            <select class="form-control" 
+                    id="type" 
+                    data-ng-model="bank.type" 
+                    data-ng-options="b.id as b.label for b in dict.fk_account_type.values">                        
+            </select>
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:Currency'}}</b></label>
+            <select class="form-control" 
+                    id="currency" 
+                    data-ng-model="bank.currency" 
+                    data-ng-options="c.id as c.label for c in dict.fk_currencies.values | orderBy:'label'">                        
+            </select>
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:Status'}}</b></label>
+            <select class="form-control" 
+                    id="status" 
+                    data-ng-model="bank.status" 
+                    data-ng-options="b.id as b.label for b in dict.fk_account_status.values">                        
+            </select>
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:Country'}}</b></label>
+            <select
+                class="form-control" 
+                id="country" 
+                data-ng-model="bank.country" 
+                data-ng-options="c.id as c.label for c in dict.fk_country.values | orderBy:'label'">
+            </select>
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:Department'}}</b></label>
+            <div ng-address model="bank" opp="create"></div> 
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:AccountingCode'}}</b></label>
+            <input required type="text" 
+                    data-ng-model="bank.accounting_code"
+                    id="accounting_code"  
+                    class="input" 
+                    autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:InitialBalance'}}</b></label>
+            <input required type="text" 
+                    data-ng-model="bank.initial_balance"
+                    id="initial_balance"  
+                    class="input" 
+                    autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:MinBalanceAllowed'}}</b></label>
+            <input required type="text" 
+                    data-ng-model="bank.min_balance_allowed"
+                    id="min_balance_allowed"  
+                    class="input" 
+                    autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:MinBalanceRequired'}}</b></label>
+            <input required type="text" 
+                    data-ng-model="bank.min_balance_required"
+                    id="min_balance_required"  
+                    class="input" 
+                    autocomplete="off">
+        </div>
+        <div class="field-block button-height wizard-controls clearfix">
+                <button type="submit" class="button glossy mid-margin-right float-right" data-ng-disabled="!(!refFound && validRef && !libelleFound && validLibelle)">
+                        <span class="button-icon"><span class="icon-tick"></span></span>
+                        {{t 'Create'}}
+                </button>
+        </div>	
+    </fieldset>
+	
+</form>
+

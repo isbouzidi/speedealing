@@ -1,0 +1,14 @@
+{
+    "NewBankAccount": "Nouveau compte bancaire",
+    "Ref": "Réf",
+    "Libelle": "Libelle",
+    "Type": "Type",
+    "Currency": "Devise",
+    "Status": "Etat",
+    "Country": "Pays",
+    "Department": "Département",
+    "AccountingCode": "Code compta",
+    "InitialBalance": "Solde initial",
+    "MinBalanceAllowed": "Solde minimum autorisé",
+    "MinBalanceRequired": "Solde minimum désiré"
+}
