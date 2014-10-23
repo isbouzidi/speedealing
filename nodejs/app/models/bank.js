@@ -13,20 +13,16 @@ var Dict = require('../controllers/dict');
 var BankSchema = new Schema({
     ref: String,
     libelle: String,
-    type: String,
-    country: String,
+    account_type: String,
+    country:  String,
     name_bank: String,
+    code_bank: Number,
     number_bank: Number,
     code_counter: String,
     account_number: String,
     iban: String,
     bic: String,
     rib: String,
-    domiciliation: String,
-    department: {
-        zip: String,
-	town: String
-    },
     currency: String,
     status: String,
     accounting_code: String,
@@ -39,11 +35,9 @@ var BankSchema = new Schema({
         id: {type: Schema.Types.ObjectId, ref: 'Societe'},
         name: String
     },
-    address_client: {
-        address: String,
-        zip: String,
-	town: String
-    },
+    address: String,
+    zip: String,
+    town: String,
     comment: String,
     author: {
         id: {type: String, ref: 'User'},
@@ -55,14 +49,9 @@ var BankSchema = new Schema({
 });
 
 var statusList = {};
-var typeList = {};
 
 Dict.dict({dictName: "fk_account_status", object: true}, function (err, docs) {
     statusList = docs;
-});
-
-Dict.dict({dictName: "fk_account_type", object: true}, function (err, docs) {
-    typeList = docs;
 });
 
 BankSchema.virtual('acc_status').get(function () {
@@ -82,14 +71,50 @@ BankSchema.virtual('acc_status').get(function () {
     return acc_status;
 });
 
-BankSchema.virtual('acc_type').get(function () {
+var typeList = {};
 
-    var acc_type = "";
-    var type = this.type;
+Dict.dict({dictName: "fk_account_type", object: true}, function (err, docs) {
     
-    acc_type = typeList.values[type].label;
+    typeList = docs;
+});
+
+BankSchema.virtual('acc_type').get(function () {
     
+    var acc_type = {};
+    var account_type = this.account_type;
+    
+//    if(account_type)
+//       acc_type = typeList.values[account_type].label;
+
+    if (account_type && typeList.values[account_type] && typeList.values[account_type].label) {
+            acc_type.id = account_type;
+            acc_type.name = typeList.values[account_type].label;
+            acc_type.css = typeList.values[account_type].cssClass;
+    } else { // By default
+            acc_type.id = account_type;
+            acc_type.name = account_type;
+            acc_type.css = "";
+    }
+       
     return acc_type;
+});
+
+var countryList = {};
+
+Dict.dict({dictName: "fk_country", object: true}, function (err, docs) {
+    
+    countryList = docs;
+});
+
+BankSchema.virtual('acc_country').get(function () {
+    
+    var acc_country = "";
+    var account_country = this.country;
+    
+    if(account_country)
+       acc_country = countryList.values[account_country].label;  
+       
+    return acc_country;
 });
 
 mongoose.model('bank', BankSchema);
