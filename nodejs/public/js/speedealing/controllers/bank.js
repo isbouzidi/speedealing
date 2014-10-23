@@ -2,8 +2,18 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
 
     $scope.global = Global;
     pageTitle.setTitle('Gestion des banques');
+    $scope.completeInfos = false;
     
     $scope.init = function(){
+        
+        var dict = ["fk_country", "fk_currencies", "fk_account_status", "fk_account_type"];
+
+        $http({method: 'GET', url: '/api/dict', params: {
+                dictName: dict
+            }
+        }).success(function (data, status) {
+            $scope.dict = data;
+        });
         
     };
     
@@ -27,18 +37,63 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
         enableColumnResize: true,
         i18n: 'fr',
         columnDefs: [
-            {field: 'libelle', displayName: 'Compte'},
-            {field: 'acc_type', displayName: 'Type'},    
-            {field: 'name_bank', displayName: 'Banque'},
-            {field: 'account_number', displayName: 'Numero'},
-            {field: 'acc_status.name', width: '80px', displayName: 'Etat',
+            {field: 'libelle', displayName: 'Comptes courants', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/bank/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a></div>'},
+            {field: 'name_bank', displayName: 'Banque', width: '100px'},
+            {field: 'account_number', displayName: 'Numero de compte', width: '140px'},
+            {field: 'acc_type.name', displayName: 'Type', 
+                cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'acc_type.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'},
+            {field: 'acc_status.name', displayName: 'Etat', width: '80px',
                 cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'acc_status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'
             },
-            {field: 'initial_balance', width: '80px', displayName: 'Solde'}
+            {field: 'initial_balance', displayName: 'Solde',  width: '80px'}
         ]
-};
-    $scope.findOne = function(){
+    };
+    
+    $scope.isValidInfo = function(bank){
         
+        if($scope.isValidIban(bank.iban) && typeof bank.country !== "undefined" && typeof bank.account_number !== "undefined")
+            if(bank.country.length !== 0 && bank.account_number.length !== 0)
+                return true;
+ 
+        return false;
+        
+    };
+    
+    $scope.findOne = function(){
+    
+        Bank.get({
+            Id: $routeParams.id
+        }, function (bank) {
+                $scope.bank = bank;
+                pageTitle.setTitle('Fiche ' + $scope.bank.libelle);
+                
+                $scope.completeInfos = $scope.isValidInfo($scope.bank);
+            }
+        );
+        
+    };
+    
+    $scope.update = function () {
+        
+        var bank = $scope.bank;
+
+        bank.$update(function (response) {
+            pageTitle.setTitle('Fiche ' + bank.libelle);
+            $scope.completeInfos = $scope.isValidInfo($scope.bank);
+        });
+    };
+    
+    $scope.clientAutoComplete = function (val, field) {
+        return $http.post('api/societe/autocomplete', {
+            take: '5',
+            skip: '0',
+            page: '1',
+            pageSize: '5',
+            filter: {logic: 'and', filters: [{value: val}]
+            }
+        }).then(function (res) {
+                return res.data;
+        });
     };
     
     $scope.addNew = function(){
@@ -49,10 +104,130 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
         });
 
         modalInstance.result.then(function (bank) {
-            $scope.user.push(bank);
+            $scope.bank.push(bank);
             $scope.count++;
         }, function () {
         });
+    };
+    
+    $scope.isValidIban = function(value){
+        
+        
+	// remove spaces and to upper case
+	var iban = value.replace(/ /g, "").toUpperCase(),
+		ibancheckdigits = "",
+		leadingZeroes = true,
+		cRest = "",
+		cOperator = "",
+		countrycode, ibancheck, charAt, cChar, bbanpattern, bbancountrypatterns, ibanregexp, i, p;
+
+	if (!(/^([a-zA-Z0-9]{4} ){2,8}[a-zA-Z0-9]{1,4}|[a-zA-Z0-9]{12,34}$/.test(iban))) {
+		return false;
+	}
+
+	// check the country code and find the country specific format
+	countrycode = iban.substring(0, 2);
+	bbancountrypatterns = {
+		"AL": "\\d{8}[\\dA-Z]{16}",
+		"AD": "\\d{8}[\\dA-Z]{12}",
+		"AT": "\\d{16}",
+		"AZ": "[\\dA-Z]{4}\\d{20}",
+		"BE": "\\d{12}",
+		"BH": "[A-Z]{4}[\\dA-Z]{14}",
+		"BA": "\\d{16}",
+		"BR": "\\d{23}[A-Z][\\dA-Z]",
+		"BG": "[A-Z]{4}\\d{6}[\\dA-Z]{8}",
+		"CR": "\\d{17}",
+		"HR": "\\d{17}",
+		"CY": "\\d{8}[\\dA-Z]{16}",
+		"CZ": "\\d{20}",
+		"DK": "\\d{14}",
+		"DO": "[A-Z]{4}\\d{20}",
+		"EE": "\\d{16}",
+		"FO": "\\d{14}",
+		"FI": "\\d{14}",
+		"FR": "\\d{10}[\\dA-Z]{11}\\d{2}",
+		"GE": "[\\dA-Z]{2}\\d{16}",
+		"DE": "\\d{18}",
+		"GI": "[A-Z]{4}[\\dA-Z]{15}",
+		"GR": "\\d{7}[\\dA-Z]{16}",
+		"GL": "\\d{14}",
+		"GT": "[\\dA-Z]{4}[\\dA-Z]{20}",
+		"HU": "\\d{24}",
+		"IS": "\\d{22}",
+		"IE": "[\\dA-Z]{4}\\d{14}",
+		"IL": "\\d{19}",
+		"IT": "[A-Z]\\d{10}[\\dA-Z]{12}",
+		"KZ": "\\d{3}[\\dA-Z]{13}",
+		"KW": "[A-Z]{4}[\\dA-Z]{22}",
+		"LV": "[A-Z]{4}[\\dA-Z]{13}",
+		"LB": "\\d{4}[\\dA-Z]{20}",
+		"LI": "\\d{5}[\\dA-Z]{12}",
+		"LT": "\\d{16}",
+		"LU": "\\d{3}[\\dA-Z]{13}",
+		"MK": "\\d{3}[\\dA-Z]{10}\\d{2}",
+		"MT": "[A-Z]{4}\\d{5}[\\dA-Z]{18}",
+		"MR": "\\d{23}",
+		"MU": "[A-Z]{4}\\d{19}[A-Z]{3}",
+		"MC": "\\d{10}[\\dA-Z]{11}\\d{2}",
+		"MD": "[\\dA-Z]{2}\\d{18}",
+		"ME": "\\d{18}",
+		"NL": "[A-Z]{4}\\d{10}",
+		"NO": "\\d{11}",
+		"PK": "[\\dA-Z]{4}\\d{16}",
+		"PS": "[\\dA-Z]{4}\\d{21}",
+		"PL": "\\d{24}",
+		"PT": "\\d{21}",
+		"RO": "[A-Z]{4}[\\dA-Z]{16}",
+		"SM": "[A-Z]\\d{10}[\\dA-Z]{12}",
+		"SA": "\\d{2}[\\dA-Z]{18}",
+		"RS": "\\d{18}",
+		"SK": "\\d{20}",
+		"SI": "\\d{15}",
+		"ES": "\\d{20}",
+		"SE": "\\d{20}",
+		"CH": "\\d{5}[\\dA-Z]{12}",
+		"TN": "\\d{20}",
+		"TR": "\\d{5}[\\dA-Z]{17}",
+		"AE": "\\d{3}\\d{16}",
+		"GB": "[A-Z]{4}\\d{14}",
+		"VG": "[\\dA-Z]{4}\\d{16}"
+	};
+
+	bbanpattern = bbancountrypatterns[countrycode];
+	// As new countries will start using IBAN in the
+	// future, we only check if the countrycode is known.
+	// This prevents false negatives, while almost all
+	// false positives introduced by this, will be caught
+	// by the checksum validation below anyway.
+	// Strict checking should return FALSE for unknown
+	// countries.
+	if (typeof bbanpattern !== "undefined") {
+		ibanregexp = new RegExp("^[A-Z]{2}\\d{2}" + bbanpattern + "$", "");
+		if (!(ibanregexp.test(iban))) {
+			return false; // invalid country specific format
+		}
+	}
+
+	// now check the checksum, first convert to digits
+	ibancheck = iban.substring(4, iban.length) + iban.substring(0, 4);
+	for (i = 0; i < ibancheck.length; i++) {
+		charAt = ibancheck.charAt(i);
+		if (charAt !== "0") {
+			leadingZeroes = false;
+		}
+		if (!leadingZeroes) {
+			ibancheckdigits += "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(charAt);
+		}
+	}
+
+	// calculate the result of: ibancheckdigits % 97
+	for (p = 0; p < ibancheckdigits.length; p++) {
+		cChar = ibancheckdigits.charAt(p);
+		cOperator = "" + cRest + "" + cChar;
+		cRest = cOperator % 97;
+	}
+	return cRest === 1;
     };
 }]);
 angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Bank', function ($scope, $http, $modalInstance, $upload, $route, Global, Bank) {        
@@ -117,7 +292,7 @@ angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http
         account.$save(function (response) {
             console.log(response);
             $modalInstance.close(response);
-            //$location.path("societe/" + response._id);
+            $location.path("bank/" + response._id);
         });
     };
 }]);
