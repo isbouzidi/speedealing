@@ -35,7 +35,7 @@
 			</div>
 		</div>
 
-		<div class="field-block button-height" ng-if="task.type == 'AC_RDV'">
+		<div class="field-block button-height" ng-if="isEvent">
 			<label for="datep"><b>{{t 'tasks:DateActionStart'}}</b></label>
 			<a href="#" ng-show="editable" editable-bsdate="task.datep" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
 				\{{ (task.datep | date:"dd/MM/yyyy") || 'empty'}}
@@ -47,8 +47,8 @@
 		</div>
 
 		<div class="field-block button-height">
-			<label for="datep"><b ng-if="task.type == 'AC_RDV'">{{t 'tasks:DateActionEnd'}}</b>
-				<b ng-if="task.type != 'AC_RDV'">{{t 'tasks:DateEchAction'}}</b></label>
+			<label for="datep"><b ng-if="task.type == 'isEvent'">{{t 'tasks:DateActionEnd'}}</b>
+				<b ng-if="task.type != 'isEvent'">{{t 'tasks:DateEchAction'}}</b></label>
 			<a href="#" ng-show="editable" editable-bsdate="task.datef" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
 				\{{ (task.datef | date:"dd/MM/yyyy") || 'empty'}}
 			</a>

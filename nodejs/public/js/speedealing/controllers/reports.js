@@ -38,22 +38,22 @@ angular.module('mean.reports').controller('ReportCreateController', ['$scope', '
 			products: [],
 			actions: {
 				AC_DOC: {
-					delay: 0.2 //month
+					delay: 1 //day
 				},
 				AC_PROP: {
-					delay: 0.3
+					delay: 1
 				},
 				AC_AUDIT: {
-					delay: 0.5
+					delay: 5
 				},
 				AC_RDV: {
 					delay: 0 //now
 				},
 				AC_REVIVAL: {
-					delay: 1
+					delay: 5
 				},
 				AC_INTERNAL: {
-					delay: 0
+					delay: 4
 				}
 			},
 			optional: {

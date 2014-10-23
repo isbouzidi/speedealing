@@ -114,7 +114,7 @@ function insertEvent(user, event, callback) {
 							var t = new GoogleCalendar(gcommon.getDefaultGoogleContactsParams(user));
 							t.insertEvent(event,
 									{'calendar_id': user.google.calendar.calendar_id},
-							callback);
+									callback);
 						}],
 							cb_google);
 				},
