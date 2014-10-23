@@ -5,16 +5,12 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		$scope.cpt = 0;
 		$scope.hsupp = 0;
 
-		$scope.dateDay = function (day) {
-			var year = parseInt($routeParams.id2);
-			var week = parseInt($routeParams.id1);
+		$scope.dateDay = function (d) {
+			var y = parseInt($routeParams.id2);
+			var w = parseInt($routeParams.id1);
 
-			var d = new Date(year, 0, 0);
-
-			d.setDate(d.getDate() + ((week - 1) * 7) - 1 + day);
-
-			return d;
-
+			var days = 2 + d + (w - 1) * 7 - (new Date(y, 0, 1)).getDay();
+			return new Date(y, 0, days);
 		};
 
 		$scope.find = function () {
