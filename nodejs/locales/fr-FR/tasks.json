@@ -121,5 +121,7 @@
     "AC_PRDV": "Prendre rendez-vous",
     "AC_EAT": "Déjeuner",
     "AC_REVIVAL": "Relance",
-	"AC_DOC":"Envoi de plaquettes/documentations"
+	"AC_DOC":"Envoi de plaquettes/documentations",
+	"AC_DEMO": "Démonstration client",
+	"AC_CRR": "Rédiger compte-rendu"
 }

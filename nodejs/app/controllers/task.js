@@ -13,6 +13,19 @@ var TaskModel = mongoose.model('task');
 
 var googleCalendar = require('./google.calendar');
 
+var Dict = require('../controllers/dict');
+
+var actioncomm = {};
+Dict.dict({dictName: "fk_actioncomm", object: true}, function (err, docs) {
+	actioncomm = docs;
+
+	actioncomm.event = [];
+	for (var i in docs.values) {
+		if (docs.values[i].type == 'event')
+			actioncomm.event.push(i);
+	}
+});
+
 /* Public declaration methods. See definition for documentation. */
 exports.read = readTask;
 exports.create = createTask;
@@ -48,8 +61,11 @@ function readTask(params, callback) {
 			];
 			break;
 		case 'ALLTASK':
-			query.entity = params.entity;
-			query['archived'] = false;
+			query.$or = [
+				{'usertodo.id': params.user, 'userdone.id': null},
+				{'author.id': params.user, archived: false},
+				{entity: params.entity, archived: false}
+			];
 			break;
 		case 'MYARCHIVED':
 			query.$or = [
@@ -57,12 +73,15 @@ function readTask(params, callback) {
 				{'author.id': params.user, archived: true}];
 			break;
 		case 'ARCHIVED':
-			query.entity = params.entity;
-			query['archived'] = true;
+			query.$or = [
+				{'usertodo.id': params.user, 'userdone.id': {$ne: null}},
+				{'author.id': params.user, archived: true},
+				{entity: params.entity, archived: true}
+			];
 			break;
 		case 'TODAYMYRDV':  // For rdv list in menu
 			query['usertodo.id'] = params.user;
-			query.type = 'AC_RDV';
+			query.type = {$in: actioncomm.event};
 			query.datep = {$gte: new Date().setHours(0, 0, 0), $lte: new Date().setHours(23, 59, 59)};
 			return TaskModel.find(query, params.fields, callback);
 			break;
@@ -99,8 +118,11 @@ function countTask(params, callback) {
 			];
 			break;
 		case 'ALLTASK':
-			query.entity = params.entity;
-			query['archived'] = false;
+			query.$or = [
+				{'usertodo.id': params.user, 'userdone.id': null},
+				{'author.id': params.user, archived: false},
+				{entity: params.entity, archived: false}
+			];
 			break;
 		case 'MYARCHIVED':
 			query.$or = [
@@ -108,8 +130,11 @@ function countTask(params, callback) {
 				{'author.id': params.user, archived: true}];
 			break;
 		case 'ARCHIVED':
-			query.entity = params.entity;
-			query['archived'] = true;
+			query.$or = [
+				{'usertodo.id': params.user, 'userdone.id': {$ne: null}},
+				{'author.id': params.user, archived: true},
+				{entity: params.entity, archived: true}
+			];
 			break;
 		default: //'ARCHIVED':
 			query.archived = true;
@@ -137,38 +162,45 @@ function createTask(task, user, usersSocket, callback) {
 	if (new_task.entity == null)
 		new_task.entity = user.entity;
 
-	if (new_task.type != 'AC_RDV')
-		new_task.datep = null;
+	if (new_task.notes[new_task.notes.length - 1].percentage >= 100 && new_task.userdone.id == null) {
+		new_task.userdone = {
+			id: user._id,
+			name: user.firstname + " " + user.lastname
+		};
+		new_task.archived = true;
+	}
 
-	if (new_task.type == 'AC_RDV' && new_task.datep != null) {
+	if (actioncomm.values[new_task.type].type != 'event')
+		new_task.datep = new Date(new_task.datef);
+
+	if (actioncomm.values[new_task.type].type == 'event' && new_task.datep != null) {
 		if (new_task.datef == null || new_task.datef <= new_task.datep) {
-			new_task.datef = new_task.datep;
+			new_task.datef = new Date(new_task.datep);
 			new_task.datef.setHours(new_task.datef.getHours() + 1);
 		}
 	}
 
-	if (new_task.type == 'AC_RDV')
-		googleCalendar.insertEvent(new_task.usertodo.id, {
-			status: "confirmed",
-			start: {
-				dateTime: new_task.datep
-			},
-			end: {
-				dateTime: new_task.datef
-			},
-			summary: new_task.name + " (" + new_task.societe.name + ")",
-			description: "Tache / evenement avec " + new_task.contact.name,
-			location: new_task.societe.name,
-			source: {
-				title: "ERP CRM Speedealing",
-				url: config.url + "/#!/task/" + new_task._id
-			}
-		}, function (err, event_id) {
-			//if (err)
-			//	console.log(err);
+	googleCalendar.insertEvent(new_task.usertodo.id, {
+		status: "confirmed",
+		start: {
+			dateTime: new_task.datep
+		},
+		end: {
+			dateTime: new_task.datef
+		},
+		summary: (actioncomm.values[new_task.type].type == 'task' ? "Tache : " : "") + new_task.name + " (" + new_task.societe.name + ")",
+		description: "Tache / evenement avec " + new_task.contact.name,
+		location: new_task.societe.name,
+		source: {
+			title: "ERP CRM Speedealing",
+			url: config.url + "/#!/task/" + new_task._id
+		}
+	}, function (err, event_id) {
+		//if (err)
+		//	console.log(err);
 
-			//console.log(event_id);
-		});
+		//console.log(event_id);
+	});
 
 	//console.log(bill);
 	new_task.save(function (err, task) {
@@ -186,7 +218,7 @@ function createTask(task, user, usersSocket, callback) {
 					classes: ["orange-gradient"]
 				}
 			});
-		
+
 		//refresh tasklist and counter on users
 		refreshTask(usersSocket[user._id]);
 	});
@@ -198,14 +230,28 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 	newTask = _.extend(oldTask, newTask);
 	//console.log(req.body);
 
-	if (newTask.notes[newTask.notes.length - 1].percentage >= 100 && newTask.userdone.id == null)
+	if (newTask.notes[newTask.notes.length - 1].percentage >= 100 && newTask.userdone.id == null) {
 		newTask.userdone = {
 			id: user._id,
 			name: user.firstname + " " + user.lastname
 		};
 
+		if (newTask.author.id == user._id)
+			newTask.archived = true;
+	}
+
+	if (actioncomm.values[newTask.type].type != 'event')
+		newTask.datep = new Date(newTask.datef);
+
+	if (actioncomm.values[newTask.type].type == 'event' && newTask.datep != null) {
+		if (newTask.datef == null || newTask.datef <= newTask.datep) {
+			newTask.datef = new Date(newTask.datep);
+			newTask.datef.setHours(newTask.datef.getHours() + 1);
+		}
+	}
+
 	//console.log(oldTask.usertodo.id + " " + newTask.usertodo.id);
-	if (newTask.type == 'AC_RDV' && old_userTodo != newTask.usertodo.id)
+	if (old_userTodo != newTask.usertodo.id)
 		googleCalendar.insertEvent(newTask.usertodo.id, {
 			status: "confirmed",
 			start: {
@@ -214,7 +260,7 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 			end: {
 				dateTime: newTask.datef
 			},
-			summary: newTask.name + " (" + newTask.societe.name + ")",
+			summary: (actioncomm.values[newTask.type].type == 'task' ? "Tache : " : "") + newTask.name + " (" + newTask.societe.name + ")",
 			description: "Rendez avec " + newTask.contact.name,
 			location: newTask.societe.name,
 			source: {

@@ -61,7 +61,9 @@ module.exports = function (app, passport, auth, usersSocket) {
 	});
 
 	//add new report
-	app.post('/api/reports', auth.requiresLogin, object.create);
+	app.post('/api/reports', auth.requiresLogin, function (req, res) {
+		object.create(req, res, usersSocket);
+	});
 
 	//get all report of a company
 	app.get('/api/report', auth.requiresLogin, object.read);
@@ -122,14 +124,12 @@ Object.prototype = {
 
 			//console.log(action);
 			//console.log(actioncomm);
-			
+
 			var datef = null;
-			
-			if(!action.datep) {
-				var delay = Math.round(30*action.delay);
-				
+
+			if (!action.datep) {
 				datef = new Date();
-				datef.setDate(datef.getDate()+delay);
+				datef.setDate(datef.getDate() + action.delay);
 			}
 
 			var task = {
@@ -157,10 +157,10 @@ Object.prototype = {
 
 			//console.log(task);
 
-			Task.create(task, req.user, usersSocket, function(err, task){
-				if(err)
+			Task.create(task, req.user, usersSocket, function (err, task) {
+				if (err)
 					console.log(err);
-			//	console.log(task);
+				//	console.log(task);
 			});
 
 		});

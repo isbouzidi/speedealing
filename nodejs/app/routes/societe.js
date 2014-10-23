@@ -1388,7 +1388,10 @@ Object.prototype = {
 			fields = req.query.fields;
 
 		if (req.query.filter) {
-			query.name = new RegExp("\\b" + req.query.filter, "i");
+			query.$or = [
+				{name: new RegExp(req.query.filter, "gi")},
+				{code_client: new RegExp(req.query.filter, "gi")}
+			];
 			//query.$text = {$search: req.query.filter, $language: "fr"};
 		}
 
@@ -1396,11 +1399,11 @@ Object.prototype = {
 			query["commercial_id.id"] = req.user._id;
 
 		/*console.log(query);
-
-		if (req.query.filter)
-			SocieteModel.search({query: req.query.filter}, function (err, result) {
-				console.log(err);
-			});*/
+		 
+		 if (req.query.filter)
+		 SocieteModel.search({query: req.query.filter}, function (err, result) {
+		 console.log(err);
+		 });*/
 
 		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function (err, doc) {
 			if (err) {

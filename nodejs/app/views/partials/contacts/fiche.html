@@ -36,9 +36,22 @@
 
 		<div class="field-block">
             <label><b>{{t 'companies:ThirdPartyName'}}</b></label>
-			<a href="#" ng-class="{red:!contact.societe.id}" editable-text="contact.societe" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
-				\{{contact.societe.name|| "Non defini"}}
-			</a>
+			<a 
+				ng-show ="contact.societe.id"
+                data-ng-href="#!/societes/\{{contact.societe.id}}" 
+                target="_blank"
+				class="icon-home"
+                editable-text="contact.societe"
+				e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
+				buttons="no"
+                e-form="eSocieteBtnForm" 
+                onaftersave="update()"
+                blur="submit">\{{contact.societe.name|| "Non defini"}} </a>
+			<span ng-hide="contact.societe.id"
+				  class="icon-home red"
+				  >\{{contact.societe.name|| "Non defini"}} </span>
+            <span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="eSocieteBtnForm.$visible"></span>
+			
 		</div>
 		
         <div class="field-block">
@@ -71,8 +84,7 @@
 
         </div>
         <div class="field-block">
-            <label><b>{{t
-						'Email'}}</b></label> 
+            <label><b>{{t 'Email'}}</b></label> 
             <a 
                 data-ng-href="mailto:\{{contact.email}}" 
                 target="_blank" 

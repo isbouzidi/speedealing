@@ -5,6 +5,8 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		$scope.task = {};
 		$scope.tasks = [];
 
+		$scope.dict = {};
+
 		$scope.types = [];
 
 		if (Global.user.rights.task && Global.user.rights.task.readAll)
@@ -24,17 +26,19 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		};
 
 		$scope.init = function () {
-			/*var fields = ["tva_tx", "Status", "units"];
-			 
-			 angular.forEach(fields, function(field) {
-			 $http({method: 'GET', url: '/api/product/fk_extrafields/select', params: {
-			 field: field
-			 }
-			 }).success(function(data, status) {
-			 $scope[field] = data;
-			 //console.log(data);
-			 });
-			 });*/
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: "fk_actioncomm"
+				}
+			}).success(function (data, status) {
+				$scope.dict.fk_actioncomm = data;
+
+				$scope.dict.isEvent = [];
+				for (var i = 0; i < data.values.length; i++) {
+					if (data.values[i].type == 'event')
+						$scope.dict.isEvent.push(data.values[i].id);
+				}
+
+			});
 		};
 
 		$scope.update = function () {
@@ -52,7 +56,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 			}
 
 			var p = {
-				fields: "_id percentage name datef societe notes updatedAt author usertodo userdone archived",
+				fields: "_id percentage name datef societe notes updatedAt author usertodo userdone archived entity",
 				query: this.type.id,
 				entity: Global.user.entity,
 				user: $scope.user.id,
@@ -91,9 +95,8 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.showTask = function (id) {
 
-			var scope = $scope;
-
 			var ModalInstanceCtrl = function ($scope, $modalInstance, object) {
+				$scope.isEvent = false;
 
 				$scope.task = {
 				};
@@ -105,6 +108,13 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 						$scope.task = task;
 
 						$scope.editable = !task.archived;
+
+						//console.log(object.isEvent);
+						if (object.isEvent.indexOf(task.type) >= 0)
+							$scope.isEvent = true;
+						else
+							$scope.isEvent = false;
+
 
 					}, function (err) {
 						if (err.status == 401)
@@ -173,7 +183,8 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 				resolve: {
 					object: function () {
 						return {
-							task: id
+							task: id,
+							isEvent: $scope.dict.isEvent
 						};
 					}
 				}
@@ -245,6 +256,10 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 				{field: 'status.name', width: '100px', displayName: 'Etat',
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small></span></div>'
 				},
+				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width: '100px',
+					cellTemplate: '<div class="ngCellText align-center"><span class="icon-home"> {{row.getProperty(col.field)}}</span></div>',
+					visible: $scope.global.user.multiEntities || false
+				},
 				{field: 'updatedAt', displayName: 'Dernière MAJ', width: "150px", cellFilter: "date:'dd-MM-yyyy HH:mm'"},
 				{displayName: "Actions", enableCellEdit: false, width: "90px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button green-gradient icon-like" ng-click="closed(row)" ng-disabled="row.getProperty(\'percentage\')>=100" title="Terminé"></button><button class="button icon-cloud-upload" ng-click="setArchived(row)" ng-disabled="row.getProperty(\'archived\') == true || row.getProperty(\'author.id\') != global.user.id" title="Archiver"></button></div></div>'}
 			]
@@ -252,7 +267,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.closed = function (row) {
 			//console.log(row);
-			if (!row.entity.userdone.id) {
+			if (!row.entity.userdone || !row.entity.userdone.id) {
 				if (row.entity.notes[row.entity.notes.length - 1].author.id == Global.user.id) {
 					row.entity.notes[row.entity.notes.length - 1].percentage = 100;
 					row.entity.notes[row.entity.notes.length - 1].datec = new Date();
@@ -303,6 +318,17 @@ angular.module('mean.system').controller('TaskCreateController', ['$scope', '$ht
 
 		$scope.ismeridian = false;
 
+		$scope.isEvent = true;
+
+		$scope.eventType = {
+			enable: true,
+			id: "AC_RDV",
+			label: "Rendez-vous",
+			order: 1,
+			priority: 10,
+			type: "event"
+		};
+
 		$scope.task = {
 			type: "AC_RDV",
 			usertodo: {
@@ -345,6 +371,17 @@ angular.module('mean.system').controller('TaskCreateController', ['$scope', '$ht
 				$modalInstance.close(response);
 				//$location.path("societe/" + response._id);
 			});
+		};
+
+		$scope.typeChange = function (type) {
+			//console.log(type);
+			//console.log($scope.dict.fk_actioncomm.values[index]);
+			$scope.task.type = type.id;
+			//return false;
+			if (type.type == "event")
+				$scope.isEvent = true;
+			else
+				$scope.isEvent = false;
 		};
 
 		$scope.open = function ($event, idx) {

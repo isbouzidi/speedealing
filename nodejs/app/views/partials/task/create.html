@@ -14,7 +14,7 @@
 				"Type"}}</b></label>
 			<div class="row">
 				<div class="col-md-6">
-					<select class="form-control" id="type" required data-ng-model="task.type" data-ng-options="c.id as c.label for c in dict.fk_actioncomm.values"></select>
+					<select class="form-control" id="type" required data-ng-model="eventType" ng-change="typeChange(eventType)" data-ng-options="c as c.label for c in dict.fk_actioncomm.values track by c.id"></select>
 				</div>
 			</div>
 		</div>
@@ -46,7 +46,7 @@
 			</div>
 		</div>
 
-		<div class="field-block button-height" ng-if="task.type == 'AC_RDV'">
+		<div class="field-block button-height" ng-if="isEvent">
 			<label for="datep"><b>{{t 'tasks:DateActionStart'}}</b></label>
 			<div class="row">
 				<div class="col-md-6" style="margin-top: 34px;">
@@ -64,8 +64,8 @@
 		</div>
 
 		<div class="field-block button-height">
-			<label for="datef"><b ng-if="task.type == 'AC_RDV'">{{t 'tasks:DateActionEnd'}}</b>
-				<b ng-if="task.type != 'AC_RDV'">{{t 'tasks:DateEchAction'}}</b></label>
+			<label for="datef"><b ng-if="isEvent">{{t 'tasks:DateActionEnd'}}</b>
+				<b ng-if="!isEvent">{{t 'tasks:DateEchAction'}}</b></label>
 			<div class="row">
 				<div class="col-md-6" style="margin-top: 34px;">
 					<p class="input-group">
