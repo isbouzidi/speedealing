@@ -47,10 +47,10 @@
                 <small ng-show="bank.libelle!=null && !libelleFound && !validLibelle" class="icon-tick red input-info">Libelle invalide.</small>
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:Type'}}</b></label>
+            <label for="nom"><b>{{t 'bank:AccountType'}}</b></label>
             <select class="form-control" 
-                    id="type" 
-                    data-ng-model="bank.type" 
+                    id="account_type" 
+                    data-ng-model="bank.account_type" 
                     data-ng-options="b.id as b.label for b in dict.fk_account_type.values">                        
             </select>
         </div>
@@ -78,10 +78,6 @@
                 data-ng-model="bank.country" 
                 data-ng-options="c.id as c.label for c in dict.fk_country.values | orderBy:'label'">
             </select>
-        </div>
-        <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:Department'}}</b></label>
-            <div ng-address model="bank" opp="create"></div> 
         </div>
         <div class="field-block button-height">
             <label for="nom"><b>{{t 'bank:AccountingCode'}}</b></label>
