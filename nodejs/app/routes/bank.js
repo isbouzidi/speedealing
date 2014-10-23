@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 		config = require('../../config/config');
 
 var BankModel = mongoose.model('bank');
-
+    
 module.exports = function (app, passport, auth) {
 
     var object = new Object();
@@ -24,12 +24,32 @@ module.exports = function (app, passport, auth) {
     
     //get list of bank account
     app.get('/api/bank', auth.requiresLogin, object.read);
+    
+    //get bank account
+    app.get('/api/bank/:accountId', auth.requiresLogin, object.show);
+    
+    //update an account bank
+    app.put('/api/bank/:accountId', auth.requiresLogin, object.update);
+    
+    app.param('accountId', object.account);
 };
 
 function Object() {
 }
 
 Object.prototype = {
+    account: function (req, res, next, id) {
+        
+        BankModel.findOne({_id: id}, function (err, doc) {
+                if (err)
+                        return next(err);
+                if (!doc)
+                        return next(new Error('Failed to load bank account ' + id));
+
+                req.account = doc;
+                next();
+        });        
+    },
     read: function (req, res) {
 
         BankModel.find({}, function (err, doc) {
@@ -41,6 +61,11 @@ Object.prototype = {
 
             res.send(200, doc);
         });
+    },
+    show: function (req, res) {
+      
+        console.log("show : " + req.account);
+        res.json(req.account);
     },
     create: function (req, res){
         
@@ -58,6 +83,20 @@ Object.prototype = {
             res.json(bank);
         });
     },
+    update: function (req, res) {
+            
+        var account = req.account;
+        account = _.extend(account, req.body);
+
+        account.save(function (err, doc) {
+
+            if (err) {
+                return console.log(err);
+            }
+
+            res.json(200, doc);
+        });
+    },
     uniqRef: function (req, res) {
         
         if (!req.query.ref)
@@ -66,7 +105,7 @@ Object.prototype = {
         var ref = req.query.ref;
 
 
-        BankModel.findOne({ref: ref}, "ref", function (err, doc) {
+        BankModel.findOne({ref: ref}, function (err, doc) {
                 if (err)
                         return next(err);
                 if (!doc)
@@ -83,7 +122,7 @@ Object.prototype = {
         var libelle = req.query.libelle;
 
 
-        BankModel.findOne({libelle: libelle}, "libelle", function (err, doc) {
+        BankModel.findOne({libelle: libelle}, function (err, doc) {
                 if (err)
                         return next(err);
                 if (!doc)
