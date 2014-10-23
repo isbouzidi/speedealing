@@ -12,16 +12,19 @@ var cradle = require('cradle'),
 		config = require(__dirname +'/../../config/config'),
 		fs = require('fs');
 
-var ProductModel = mongoose.model('product');
+if (config.couchdb != undefined)
+{
+	var ProductModel = mongoose.model('product');
 
-var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
-	secure: false,
-	cache: true,
-	cacheSize: 1024,
-	auth: {username: config.couchdb.user, password: config.couchdb.passwd}
-});
+	var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
+		secure: false,
+		cache: true,
+		cacheSize: 1024,
+		auth: {username: config.couchdb.user, password: config.couchdb.passwd}
+	});
 
-var couchdb = connection.database(config.couchdb.db);
+	var couchdb = connection.database(config.couchdb.db);
+}
 
 module.exports = function(app, passport, auth) {
 
