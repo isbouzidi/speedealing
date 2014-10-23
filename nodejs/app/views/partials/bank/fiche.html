@@ -1,9 +1,13 @@
-<section >
-    <div >
+<section data-ng-controller="BankController">
+    <div data-ng-init="findOne()">
+        <p ng-show= "!completeInfos" class="message icon-warning orange-gradient small-margin-bottom">
+            <span class="big-stripes animated"></span>
+            Les contrôles indiquent que les informations de ce compte bancaire sont incomplètes ou incorrectes (vérifier le pays, le numéro de compte ou IBAN).
+        </p>
         <hgroup id="main-title" class="thin">
-            <h1></h1>
+            <h1>\{{bank.libelle}}</h1>
         </hgroup>
-        <div class="with-padding" >
+        <div class="with-padding" data-ng-init="init()">
             <div class="columns">
                 <div class="four-columns twelve-columns-mobile">
                     <div class="boxed">
@@ -13,85 +17,142 @@
                                 <tr>
                                     <th width="40%" scope="row">{{t 'bank:Ref'}}</th>
                                     <td>
-                                        
-                                        
+                                        <a href="#" editable-text="bank.ref" buttons="no" e-form="refForm" onaftersave="update()" blur="submit">
+                                            \{{bank.ref || "Non defini"}}
+                                        </a>
+                                        <span class="icon-pencil grey" ng-click="refForm.$show()" ng-hide="refForm.$visible"></span>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Name'}}</th>
+                                    <th width="40%" scope="row">{{t 'bank:Libelle'}}</th>
                                     <td>
-                                        
+                                        <a href="#" editable-text="bank.libelle" buttons="no" e-form="libForm" onaftersave="update()" blur="submit">
+                                            \{{bank.libelle || "Non defini"}}
+                                        </a>
+                                        <span class="icon-pencil grey" ng-click="libForm.$show()" ng-hide="libForm.$visible"></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th width="40%" scope="row">{{t 'bank:AccountType'}}</th>
                                     <td>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Client'}}</th>
-                                    <td>
+                                        <span class="tag small glossy" 
+                                            editable-select="bank.account_type"
+                                              data-ng-class="bank.acc_type.css"
+                                              buttons="no" e-form="typeForm" 
+                                              onaftersave="update()" 
+                                              e-ng-options="s.id as s.label for s in dict.fk_account_type.values">
+                                            \{{bank.acc_type.name}}
+                                        </span> 
+                                        <span class="icon-pencil grey" ng-click="typeForm.$show()" ng-hide="typeForm.$visible"></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th width="40%" scope="row">{{t 'bank:Status'}}</th>
                                     <td>
+                                        <span class="tag small glossy"
+                                              data-ng-class="bank.acc_status.css"
+                                              editable-select="bank.status" 
+                                              buttons="no" e-form="statusForm" 
+                                              onaftersave="update()" 
+                                              e-ng-options="s.id as s.label for s in dict.fk_account_status.values">
+                                            \{{bank.acc_status.name}}
+                                        </span> 
+                                        <span class="icon-pencil grey" ng-click="statusForm.$show()" ng-hide="statusForm.$visible"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="40%" scope="row">{{t 'bank:Currency'}}</th>
+                                    <td>
+                                        <span editable-select="bank.currency" 
+                                              buttons="no" e-form="currencyForm" 
+                                              onaftersave="update()" 
+                                              e-ng-options="s.id as s.label for s in dict.fk_currencies.values">
+                                            \{{bank.currency}}
+                                        </span> 
+                                        <span class="icon-pencil grey" ng-click="currencyForm.$show()" ng-hide="currencyForm.$visible"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="40%" scope="row">{{t 'bank:Client'}}</th>
+                                    <td>
+                                        <a href="#" 
+                                           editable-text="bank.client" 
+                                           e-typeahead="client as client.name for client in clientAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
+                                           buttons="no" onaftersave="update()" blur="submit">
+                                                \{{bank.client.name|| "Non defini"}}
+                                        </a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th width="40%" scope="row">{{t 'bank:Country'}}</th>
                                     <td>
+                                        <span editable-select="bank.country" 
+                                              buttons="no" e-form="countryForm" 
+                                              onaftersave="update()" 
+                                              e-ng-options="s.id as s.label for s in dict.fk_country.values | orderBy:'label'">
+                                            \{{bank.acc_country}}
+                                        </span> 
+                                        <span class="icon-pencil grey" ng-click="countryForm.$show()" ng-hide="countryForm.$visible"></span>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <div class="eight-columns small-margin-bottom">
+                    <div class="float-right button-height">					
+                        <a class="button" ng-href="#!/bank" title="Retour à la liste">
+                            {{t 'List'}}
+                            <span class="button-icon right-side"><span class="icon-list"></span></span>
+                        </a>
+                    </div>
+                </div>
+                
                 <div class="eight-columns">
                     <tabset>
                         <tab>
                             <tab-heading>
-                                <span class="icon-cart">Fiche compte</span>
+                                <span class="icon-card">Fiche compte</span>
                             </tab-heading>
                             <div class="boxed relative large-box-shadow">
                                 <div class="columns">
-                                    <div class="six-columns">
+                                    <div class="twelve-columns">
                                         <table class="simple-table">
                                             <tbody>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:'}}</th>
+                                                    <th scope="row">{{t 'bank:Rapprochable'}}</th>
                                                     <td>
-                                                        
+                                                        <input type="checkbox" 
+                                                               data-ng-model="bank.rapprochable" 
+                                                               data-ng-checked="bank.rapprochable" 
+                                                               data-ng-change="update()" />
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Adresse</th>
+                                                    <th scope="row">{{t 'bank:AccountingCode'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.accounting_code" buttons="no" e-form="bankAccCodeForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.accounting_code || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="bankAccCodeForm.$show()" ng-hide="bankAccCodeForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Rapprochable</th>
+                                                    <th scope="row">{{t 'bank:MinBalanceAllowed'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.min_balance_allowed" buttons="no" e-form="minBalAllForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.min_balance_allowed || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="minBalAllForm.$show()" ng-hide="minBalAllForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Code compta</th>
+                                                    <th scope="row">{{t 'bank:MinBalanceRequired'}}</th>
                                                     <td>
-                                                        
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Solde minimum autorisé</th>
-                                                    <td>
-                                                        
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Solde minimum désiré</th>
-                                                    <td>
-                                                        
+                                                        <a href="#" editable-text="bank.min_balance_required" buttons="no" e-form="minBalReqForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.min_balance_required || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="minBalReqForm.$show()" ng-hide="minBalReqForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -102,47 +163,82 @@
                         </tab>
                         <tab>
                             <tab-heading>
-                                <span class="icon-cart">Numéro compte</span>
+                                <span class="icon-credit-card">Numéro compte</span>
                             </tab-heading>
                             <div class="boxed relative large-box-shadow">
                                 <div class="columns">
-                                    <div class="six-columns">
+                                    <div class="twelve-columns">
                                         <table class="simple-table">
                                             <tbody>
                                                 <tr>
-                                                    <th scope="row">Nom de la banque</th>
+                                                    <th scope="row">{{t 'bank:BankName'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.name_bank" buttons="no" e-form="bankNameForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.name_bank || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="bankNameForm.$show()" ng-hide="bankNameForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Numéro compte</th>
+                                                    <th scope="row">{{t 'bank:BankCode'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.code_bank" buttons="no" e-form="bankCodeForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.code_bank || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="bankCodeForm.$show()" ng-hide="bankCodeForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Code IBAN</th>
+                                                    <th scope="row">{{t 'bank:CodeCounter'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.code_counter" buttons="no" e-form="codeCounterForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.code_counter || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="codeCounterForm.$show()" ng-hide="codeCounterForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Code BIC/SWIFT</th>
+                                                    <th scope="row">{{t 'bank:AccountNumber'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.account_number" buttons="no" e-form="accNumberForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.account_number || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="accNumberForm.$show()" ng-hide="accNumberForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Domiciliation du compte</th>
+                                                    <th scope="row">{{t 'bank:RIB'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.rib" buttons="no" e-form="ribForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.rib || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="ribForm.$show()" ng-hide="ribForm.$visible"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Solde minimum désiré</th>
+                                                    <th scope="row">{{t 'bank:IBAN'}}</th>
                                                     <td>
-                                                        
+                                                        <a href="#" editable-text="bank.iban" buttons="no" e-form="ibanForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.iban || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="ibanForm.$show()" ng-hide="ibanForm.$visible"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'bank:BIC/SWIFT'}}</th>
+                                                    <td>
+                                                        <a href="#" editable-text="bank.bic" buttons="no" e-form="bicForm" onaftersave="update()" blur="submit">
+                                                            \{{bank.bic || "Non defini"}}
+                                                        </a>
+                                                        <span class="icon-pencil grey" ng-click="bicForm.$show()" ng-hide="bicForm.$visible"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'bank:Domiciliation'}}</th>
+                                                    <td>
+                                                        <form editable-form onaftersave="update()">
+                                                            <div ng-address model="bank" opp="update"></div>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             </tbody>
