@@ -80,7 +80,7 @@ module.exports = function (app, passport, auth, usersSocket) {
 	//cancel task as realised
 	app.put('/api/reports/cancelTaskRealised', auth.requiresLogin, object.cancelTaskRealised);
 
-	app.get('/api/reports/convertTask', auth.requiresLogin, object.convertTask);
+	//app.get('/api/reports/convertTask', auth.requiresLogin, object.convertTask);
 
 	//get report details
 	app.get('/api/reports/:reportId', auth.requiresLogin, object.show);
@@ -283,7 +283,7 @@ Object.prototype = {
 			res.json(200, doc);
 		});
 	},
-	convertTask: function (req, res) {
+	/*convertTask: function (req, res) {
 		ReportModel.aggregate([
 			{$match: {"actions.0": {$exists: true}}},
 			{$unwind: "$actions"}
@@ -354,5 +354,5 @@ Object.prototype = {
 			});
 			res.send(200);
 		});
-	}
+	}*/
 };
