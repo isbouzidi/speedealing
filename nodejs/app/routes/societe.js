@@ -1350,11 +1350,7 @@ Object.prototype = {
 	},
 	read: function (req, res) {
 		var query = {
-			$or: [{
-					entity: "ALL"
-				}, {
-					entity: req.query.entity
-				}]
+			entity: {$in: ["ALL", req.query.entity]}
 		};
 
 		if (req.query.query) {

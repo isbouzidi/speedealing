@@ -294,24 +294,69 @@ Object.prototype = {
 
 			docs.forEach(function (doc) {
 
+				var task = {
+					name: i18n.t("tasks:" + action.id) + " (" + req.body.societe.name + ")",
+					societe: req.body.societe,
+					contact: req.body.contacts[0] || null,
+					datec: new Date(),
+					datep: action.datep || null, // date de debut
+					datef: datef || null,
+					type: action.type,
+					entity: req.user.entity,
+					notes: [
+						{
+							author: {
+								id: req.user._id,
+								name: req.user.firstname + " " + req.user.lastname
+							},
+							datec: new Date(),
+							percentage: 0,
+							note: i18n.t("tasks:" + action.id) + " " + i18n.t("tasks:" + action.type) + "\nCompte rendu du " + dateFormat(req.body.datec, "dd/mm/yyyy")
+						}
+					],
+					lead: req.body.lead
+				};
+
+
+
 				switch (doc.actions.type) {
 					case "Réunion interne":
+						task.type = "AC_INTERNAL";
 						break;
 					case "plaquette":
+						task.type = "AC_DOC";
 						break;
 					case "prochain rendez-vous":
+						task.type = "AC_PRDV";
 						break;
 					case "Rendez-vous":
+						task.type = "AC_RDV";
 						break;
 					case "offre":
+						task.type = "AC_PROP";
 						break;
 					case "visite atelier":
+						task.type = "AC_AUDIT";
 						break;
 					case "prochaine action":
+						task.type = "AC_REVIVAL";
 						break;
 					default:
 						console.log("Manque " + doc.actions.type);
 				}
+				
+				if (!action.datep) {
+					datef = new Date();
+					datef.setDate(datef.getDate() + action.delay);
+				}
+
+				console.log(task);
+
+				//Task.create(task, req.user, usersSocket, function (err, task) {
+				//	if (err)
+				//		console.log(err);
+				//	console.log(task);
+				//});
 
 			});
 			res.send(200);
