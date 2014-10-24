@@ -58,7 +58,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 		};
 
 		$scope.statsGlobal = function () {
-			$http({method: 'GET', url: 'api/statsByEntity', params: {
+			$http({method: 'GET', url: 'api/stats/ByEntity', params: {
 					entity: Global.user.entity
 				}
 			}).success(function (data, status) {
@@ -66,7 +66,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 			});
 
 			if (Global.user.multiEntities)
-				$http({method: 'GET', url: 'api/statsAllEntities', params: {
+				$http({method: 'GET', url: 'api/stats/AllEntities', params: {
 					}
 				}).success(function (data, status) {
 					//console.log(data);
@@ -269,43 +269,43 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 			});
 		};
 
-		$scope.findTasks = function () {
-			$http({method: 'GET', url: '/api/reports/listTasks', params: {
-					user: Global.user._id
-				}
-			}).success(function (data, status) {
-				$scope.listTasks = data;
-			});
+		$scope.gridOptionsTasks = function () {
+			return {
+				data: 'statsByEntity.taskStats',
+				enableRowSelection: false,
+				sortInfo: {fields: ["_id.user"], directions: ["asc"]},
+				showGroupPanel: false,
+				i18n: 'fr',
+				groups: ['_id.user'],
+				groupsCollapsedByDefault: false,
+				//plugins: [new ngGridFlexibleHeightPlugin()],
+				enableColumnResize: true,
+				columnDefs: [
+					{field: '_id.user', width:"35%", displayName: 'Collaborateur'},
+					{field: '_id.type', displayName: 'Actions'},
+					//{field: 'to.town', width: "15%", displayName: 'Dest.'},
+					//{field: 'Status.name', width: "12%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
+					//{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm'"},
+					{field: 'count', width:"50px", displayName: 'Total', cellClass: "align-right"},
+					{width:"3px"}
+				],
+				aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
+						"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}} : {{aggFunc(row,'count')}} action(s)</span></span>" +
+						"    <div class=\"{{row.aggClass()}}\"></div>" +
+						"</div>" +
+						""
+			};
 		};
 
-		$scope.taskRealised = function (id) {
-
-			$http({method: 'PUT', url: '/api/reports/TaskRealised', params: {
-					id: id
-				}
-			}).success(function (status) {
-				$scope.findTasks();
-				$scope.isTaskRealised = true;
-				$scope.idTaskRealised = id;
-
-				$scope.timer = $timeout(function () {
-
-					$scope.isTaskRealised = false;
-				}, 5000);
+		$scope.aggFunc = function (row, idx) {
+			var total = 0;
+			//console.log(row);
+			angular.forEach(row.children, function (cropEntry) {
+				if (cropEntry.entity[idx])
+					total += cropEntry.entity[idx];
 			});
-
+			return total.toString();
 		};
 
-		$scope.cancelTaskReealised = function () {
 
-			$timeout.cancel($scope.timer);
-
-			$http({method: 'PUT', url: '/api/reports/cancelTaskRealised', params: {
-					id: $scope.idTaskRealised
-				}
-			}).success(function (status) {
-				$scope.findTasks();
-				$scope.isTaskRealised = false;
-			});
-		};
 	}]);

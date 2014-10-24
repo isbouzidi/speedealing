@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'),
 		_ = require('lodash'),
 		async = require('async'),
+		i18n = require("i18next"),
 		config = require('../../config/config');
 
 var Dict = require('../controllers/dict');
@@ -14,10 +15,18 @@ var TicketModel = mongoose.model('ticket');
 var LeadModel = mongoose.model('lead');
 var ReportModel = mongoose.model('report');
 var EntityModel = mongoose.model('entity');
+var TaskModel = mongoose.model('task');
+
+var typeAction = {};
+Dict.dict({dictName: "fk_actioncomm", object: true}, function (err, docs) {
+	if (docs) {
+		typeAction = docs;
+	}
+});
 
 module.exports = function (app, passport, auth) {
 
-	app.get('/api/statsByEntity', auth.requiresLogin, function (req, res) {
+	app.get('/api/stats/ByEntity', auth.requiresLogin, function (req, res) {
 
 		var entity = req.query.entity;
 
@@ -87,10 +96,28 @@ module.exports = function (app, passport, auth) {
 				], function (err, docs) {
 					verifyResult(err, docs, cb);
 				});
+			},
+			taskStats: function (cb) {
+				TaskModel.aggregate([
+					{$match: {entity: entity, createdAt: {$gte: dateStart}}},
+					{$project: {_id: 1, user: "$usertodo.name", type: 1}},
+					{$group: {_id: {user: "$user", type: "$type"}, count: {$sum: 1}}},
+					{$sort: {"_id.user": 1}}
+				], function (err, docs) {
+					//console.log(docs);
+					
+					for(var i=0; i<docs.length;i++) {
+						docs[i]._id.type = i18n.t(typeAction.lang + ":" + typeAction.values[docs[i]._id.type].label);
+						//console.log(docs[i]._id.type);
+					}
+					
+					cb(err, docs);
+				});
 			}
 		}, function (err, results) {
 			if (err)
 				return console.log(err);
+
 
 			//console.log(results);
 			res.json(results);
@@ -98,7 +125,7 @@ module.exports = function (app, passport, auth) {
 	});
 
 
-	app.get('/api/statsAllEntities', auth.requiresLogin, function (req, res) {
+	app.get('/api/stats/AllEntities', auth.requiresLogin, function (req, res) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);

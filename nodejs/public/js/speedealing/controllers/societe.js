@@ -766,10 +766,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			enableColumnResize: true,
 			sortInfo: {fields: ['dateReport'], directions: ['desc']},
 			columnDefs: [
-				{field: 'model', displayName: 'Modèle', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(\'_model.name\')}} <small ng-show="row.getProperty(\'lead.name\')">(Affaire : {{row.getProperty(\'lead.name\')}})</small></a>'},
+				{field: 'model', displayName: 'Modèle', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(\'_model.name\')}}</a></div>'},
 				{field: 'dateReport', displayName: 'Date de l\'action', cellFilter: "date:'dd/MM/yyyy'"},
+				{field: 'lead.name', displayName: 'Affaire', cellTemplate: '<div class="ngCellText align-center">{{row.getProperty(col.field)}} <small ng-if="row.getProperty(\'lead.id._id\')" class="tag {{row.getProperty(\'lead.id.Status.css\')}} glossy">{{row.getProperty(\'lead.id.Status.name\')}}</small></div>'},
 				{field: 'author.name', displayName: 'Auteur'},
-				{field: 'RealisedStatus.id', displayName: 'Etat des actions', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'RealisedStatus.css\')}} glossy">{{row.getProperty(\'RealisedStatus.id\')}}</small></div>'},
 				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'comment', displayName: 'Commentaires'}
 			]
