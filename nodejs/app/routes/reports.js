@@ -100,7 +100,7 @@ Object.prototype = {
 	create: function (req, res, usersSocket) {
 
 		var reportModel = new ReportModel(req.body);
-		console.log(req.body);
+		//console.log(req.body);
 
 		function object2array(input) {
 			var out = [];
