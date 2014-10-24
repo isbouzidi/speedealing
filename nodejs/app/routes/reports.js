@@ -80,6 +80,8 @@ module.exports = function (app, passport, auth, usersSocket) {
 	//cancel task as realised
 	app.put('/api/reports/cancelTaskRealised', auth.requiresLogin, object.cancelTaskRealised);
 
+	app.get('/api/reports/convertTask', auth.requiresLogin, object.convertTask);
+
 	//get report details
 	app.get('/api/reports/:reportId', auth.requiresLogin, object.show);
 
@@ -279,6 +281,34 @@ Object.prototype = {
 			}
 
 			res.json(200, doc);
+		});
+	},
+	convertTask: function (req, res) {
+		ReportModel.aggregate([
+			{$match: {"actions.0": {$exists: true}}},
+			{$unwind: "$actions"},
+			{$project: {actions: 1}}
+		], function (err, docs) {
+			if (err)
+				console.log(err);
+
+			docs.forEach(function (doc) {
+
+				switch (doc.actions.type) {
+					case "Réunion interne":
+						break;
+					case "plaquette":
+						break;
+					case "prochain rendez-vous":
+						break;
+					case "Rendez-vous":
+						break;
+					default:
+						console.log("Manque " + doc.actions.type);
+				}
+
+			});
+			res.send(200);
 		});
 	}
 };
