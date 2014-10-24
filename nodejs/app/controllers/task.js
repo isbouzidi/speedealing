@@ -148,10 +148,11 @@ function createTask(task, user, usersSocket, callback) {
 
 	new_task = new TaskModel(task);
 
-	new_task.author = {
-		id: user._id,
-		name: user.firstname + " " + user.lastname
-	};
+	if (task.author == null)
+		new_task.author = {
+			id: user._id,
+			name: user.firstname + " " + user.lastname
+		};
 
 	if (task.usertodo == null)
 		new_task.usertodo = {
@@ -205,6 +206,9 @@ function createTask(task, user, usersSocket, callback) {
 	//console.log(bill);
 	new_task.save(function (err, task) {
 		callback(err, task);
+
+		if (usersSocket == null)
+			return;
 
 		var socket = usersSocket[task.usertodo.id];
 		//console.log(usersSocket);
@@ -276,6 +280,9 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 
 	newTask.save(function (err, task) {
 		callback(err, task);
+
+		if (usersSocket == null)
+			return;
 
 		var socket_author = usersSocket[task.author.id];
 		var socket_todo = usersSocket[task.usertodo.id];

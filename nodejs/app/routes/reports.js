@@ -292,7 +292,7 @@ Object.prototype = {
 				console.log(err);
 
 			docs.forEach(function (doc) {
-				
+
 				console.log(doc);
 
 				var task = {
@@ -302,6 +302,8 @@ Object.prototype = {
 					datep: doc.dueDate,
 					datef: doc.dueDate,
 					entity: doc.entity,
+					author: doc.author,
+					usertodo: doc.author,
 					notes: [
 						{
 							author: doc.author,
@@ -311,8 +313,6 @@ Object.prototype = {
 					],
 					lead: doc.leads || null
 				};
-
-
 
 				switch (doc.actions.type) {
 					case "Réunion interne":
@@ -339,17 +339,17 @@ Object.prototype = {
 					default:
 						console.log("Manque " + doc.actions.type);
 				}
-				
+
 				task.name = i18n.t("tasks:" + task.type) + " (" + doc.societe.name + ")";
 				task.notes[0].note = doc.actions.type + " " + i18n.t("tasks:" + task.type) + "\nCompte rendu du " + dateFormat(task.datec, "dd/mm/yyyy");
-				
+
 				console.log(task);
 
-				//Task.create(task, req.user, usersSocket, function (err, task) {
-				//	if (err)
-				//		console.log(err);
-				//	console.log(task);
-				//});
+				Task.create(task, null, null, function (err, task) {
+					if (err)
+						console.log(err);
+					//	console.log(task);
+				});
 
 			});
 			res.send(200);
