@@ -303,6 +303,12 @@ Object.prototype = {
 						break;
 					case "Rendez-vous":
 						break;
+					case "offre":
+						break;
+					case "visite atelier":
+						break;
+					case "prochaine action":
+						break;
 					default:
 						console.log("Manque " + doc.actions.type);
 				}
