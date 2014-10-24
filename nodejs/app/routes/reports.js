@@ -286,35 +286,30 @@ Object.prototype = {
 	convertTask: function (req, res) {
 		ReportModel.aggregate([
 			{$match: {"actions.0": {$exists: true}}},
-			{$unwind: "$actions"},
-			{$project: {actions: 1}}
+			{$unwind: "$actions"}
 		], function (err, docs) {
 			if (err)
 				console.log(err);
 
 			docs.forEach(function (doc) {
+				
+				console.log(doc);
 
 				var task = {
-					name: i18n.t("tasks:" + action.id) + " (" + req.body.societe.name + ")",
-					societe: req.body.societe,
-					contact: req.body.contacts[0] || null,
-					datec: new Date(),
-					datep: action.datep || null, // date de debut
-					datef: datef || null,
-					type: action.type,
-					entity: req.user.entity,
+					societe: doc.societe,
+					contact: doc.contacts[0] || null,
+					datec: doc.createdAt,
+					datep: doc.dueDate,
+					datef: doc.dueDate,
+					entity: doc.entity,
 					notes: [
 						{
-							author: {
-								id: req.user._id,
-								name: req.user.firstname + " " + req.user.lastname
-							},
-							datec: new Date(),
-							percentage: 0,
-							note: i18n.t("tasks:" + action.id) + " " + i18n.t("tasks:" + action.type) + "\nCompte rendu du " + dateFormat(req.body.datec, "dd/mm/yyyy")
+							author: doc.author,
+							datec: doc.createdAt,
+							percentage: 0
 						}
 					],
-					lead: req.body.lead
+					lead: doc.leads || null
 				};
 
 
@@ -345,11 +340,9 @@ Object.prototype = {
 						console.log("Manque " + doc.actions.type);
 				}
 				
-				if (!action.datep) {
-					datef = new Date();
-					datef.setDate(datef.getDate() + action.delay);
-				}
-
+				task.name = i18n.t("tasks:" + task.type) + " (" + doc.societe.name + ")";
+				task.notes[0].note = doc.actions.type + " " + i18n.t("tasks:" + task.type) + "\nCompte rendu du " + dateFormat(task.datec, "dd/mm/yyyy");
+				
 				console.log(task);
 
 				//Task.create(task, req.user, usersSocket, function (err, task) {
