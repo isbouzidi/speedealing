@@ -77,6 +77,7 @@ module.exports = function(app, passport, db) {
 	hbs.registerPartials(config.root + '/app/views/includes');
 
 	app.configure(function() {
+		app.set('host', config.app.host || '0.0.0.0');
 		app.set('port', config.app.port || 3000);
 		app.set('showStackError', true);
 
