@@ -40,8 +40,8 @@ module.exports = function(app, passport, db) {
 	i18n.init({
 		ns: {namespaces: namespaces, defaultNs: 'main'},
 		supportedLngs: ['fr', 'en'],
-		resSetPath: 'locales/__lng__/new.__ns__.json',
-		resGetPath: 'locales/__lng__/__ns__.json',
+		resSetPath: __dirname + '/../locales/__lng__/new.__ns__.json',
+		resGetPath: __dirname + '/../locales/__lng__/__ns__.json',
 		//load: 'current',
 		preload: ['fr-FR'],
 		useCookie: false,
@@ -77,6 +77,7 @@ module.exports = function(app, passport, db) {
 	hbs.registerPartials(config.root + '/app/views/includes');
 
 	app.configure(function() {
+		app.set('host', config.app.host || '0.0.0.0');
 		app.set('port', config.app.port || 3000);
 		app.set('showStackError', true);
 

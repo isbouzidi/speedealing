@@ -110,8 +110,8 @@ require('./app/routes')(app, passport, auth, usersSocket);
 
 
 //Start the app by listening on <port>
-var server = http.createServer(app).listen(app.get('port'), function() {
-	logger.info('Express server listening on port ' + app.get('port'));
+var server = http.createServer(app).listen(app.get('port'), app.get('host'), function() {
+	logger.info('Express server listening on host ' + app.get('host') + ' and port ' + app.get('port'));
 });
 
 // Start socket.io
