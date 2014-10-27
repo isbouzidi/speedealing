@@ -1148,7 +1148,7 @@ module.exports = function (app, passport, auth) {
 												societe = new SocieteModel(data);
 											else {
 												console.log("Found : update");
-												societe = _.default(societe, data);
+												societe = _.defaults(societe, data);
 											}
 
 											//console.log(row[10]);
