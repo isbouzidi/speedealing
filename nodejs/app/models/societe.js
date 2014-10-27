@@ -90,9 +90,9 @@ var societeSchema = new Schema({
 				name: String
 			},
 			datec: Date,
-			note: String
+			note: {type: String}
 		}],
-	public_notes: String,
+	//public_notes: String,
 	code_compta: String,
 	code_compta_fournisseur: String,
 	user_creat: String,
@@ -127,6 +127,7 @@ var societeSchema = new Schema({
 	risk: {type: String, default: 'NO'},
 	kompass_id: String, // Kompass
 	ha_id: String, // hors antenne
+	oldId: String, // only use for migration
 	soldeOut: Number, // Situation comptable
 	optional: mongoose.Schema.Types.Mixed
 }, {

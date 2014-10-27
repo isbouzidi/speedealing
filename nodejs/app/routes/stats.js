@@ -105,12 +105,12 @@ module.exports = function (app, passport, auth) {
 					{$sort: {"_id.user": 1}}
 				], function (err, docs) {
 					//console.log(docs);
-					
-					for(var i=0; i<docs.length;i++) {
+
+					for (var i = 0; i < docs.length; i++) {
 						docs[i]._id.type = i18n.t(typeAction.lang + ":" + typeAction.values[docs[i]._id.type].label);
 						//console.log(docs[i]._id.type);
 					}
-					
+
 					cb(err, docs);
 				});
 			}

@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
+var UserModel = mongoose.model('user');
 
 var Dict = require('../controllers/dict');
 var DictModel = mongoose.model('dict'); // For update segmentation
@@ -874,236 +875,312 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function (req, res) {
 		req.connection.setTimeout(300000);
 
-		var conv_id = {
-			effectif_id: {
-				"0": "EF0",
-				"1": "EF1-5",
-				"6": "EF6-10",
-				"11": "EF11-50",
-				"51": "EF51-100",
-				"101": "EF101-250",
-				"251": "EF251-500",
-				"501": "EF501-1000",
-				"1001": "EF1001-5000",
-				"5001": "EF5000+"
-			},
-			typent_id: {
-				"Siège": "TE_SIEGE",
-				"Etablissement": "TE_ETABL",
-				"Publique / Administration": "TE_PUBLIC"
-			},
-			Status: {
-				"": "ST_CFID",
-				"Moins de 3 mois": "ST_CINF3",
-				"OK Sensibilisation": "ST_NEW",
-				"Bonne relation": "ST_NEW",
-				"Peu visité": "ST_NEW",
-				"Recontacter dans 2 mois": "ST_NEW",
-				"Ne pas recontacter": "ST_NO",
-				"Chaud": "ST_PCHAU",
-				"Tiède": "ST_PTIED",
-				"Froid": "ST_PFROI",
-				"Non Déterminé": "ST_NEVER"
-			},
-			prospectlevel: {
-				"": "PL_NONE",
-				"Niveau 3": "PL_HIGH",
-				"Niveau 2": "PL_MEDIUM",
-				"Niveau 1": "PL_LOW",
-				"Niveau 0": "PL_NONE"
+		var commercial_list = {};
+
+		UserModel.find({Status: "ENABLE"}, function (err, users) {
+			//console.log(users);
+
+			for (var i = 0; i < users.length; i++) {
+				commercial_list[users[i]._id] = users[i];
 			}
-		};
 
-		var is_Array = [
-			"segmentation"
-		];
+			var conv_id = {
+				effectif_id: {
+					"0": "EF0",
+					"1": "EF1-5",
+					"6": "EF6-10",
+					"11": "EF11-50",
+					"51": "EF51-100",
+					"101": "EF101-250",
+					"251": "EF251-500",
+					"501": "EF501-1000",
+					"1001": "EF1001-5000",
+					"5001": "EF5000+"
+				},
+				typent_id: {
+					"Siège": "TE_SIEGE",
+					"Etablissement": "TE_ETABL",
+					"Publique / Administration": "TE_PUBLIC"
+				},
+				Status: {
+					"": "ST_CFID",
+					"Moins de 3 mois": "ST_CINF3",
+					"OK Sensibilisation": "ST_NEW",
+					"Bonne relation": "ST_NEW",
+					"Peu visité": "ST_NEW",
+					"Recontacter dans 2 mois": "ST_NEW",
+					"Ne pas recontacter": "ST_NO",
+					"Chaud": "ST_PCHAU",
+					"Tiède": "ST_PTIED",
+					"Froid": "ST_PFROI",
+					"Non Déterminé": "ST_NEVER"
+				},
+				prospectlevel: {
+					"": "PL_NONE",
+					"Niveau 3": "PL_HIGH",
+					"Niveau 2": "PL_MEDIUM",
+					"Niveau 1": "PL_LOW",
+					"Niveau 0": "PL_NONE"
+				}
+			};
 
-		var convertRow = function (tab, row, index, cb) {
-			var societe = {};
-			societe.country_id = "FR";
-			societe.segmentation = [];
-			societe.remise_client = 0;
+			var is_Array = [
+				"Tag"
+			];
 
-			for (var i = 0; i < row.length; i++) {
-				if (tab[i] === "false")
-					continue;
+			var convertRow = function (tab, row, index, cb) {
+				var societe = {};
+				societe.country_id = "FR";
+				societe.Tag = [];
+				societe.remise_client = 0;
 
-				/* optional */
-				if (tab[i].indexOf(".") >= 0) {
-					var split = tab[i].split(".");
+				for (var i = 0; i < row.length; i++) {
+					if (tab[i] === "false")
+						continue;
 
-					if (row[i]) {
-						if (typeof societe[split[0]] === "undefined")
-							societe[split[0]] = {};
+					/* optional */
+					if (tab[i].indexOf(".") >= 0) {
+						var split = tab[i].split(".");
 
-						societe[split[0]][split[1]] = row[i];
+						if (row[i]) {
+							if (typeof societe[split[0]] === "undefined")
+								societe[split[0]] = {};
+
+							societe[split[0]][split[1]] = row[i];
+						}
+						continue;
 					}
-					continue;
-				}
 
-				if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
+					if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
 
-					if (tab[i] == "civilite" && conv_id[tab[i]][row[i]] === undefined)
-						row[i] = "";
+						if (tab[i] == "civilite" && conv_id[tab[i]][row[i]] === undefined)
+							row[i] = "";
 
-					if (conv_id[tab[i]][row[i]] === undefined) {
-						console.log("error : unknown " + tab[i] + "->" + row[i] + " ligne " + index);
-						return;
+						if (conv_id[tab[i]][row[i]] === undefined) {
+							console.log("error : unknown " + tab[i] + "->" + row[i] + " ligne " + index);
+							return;
+						}
+
+						row[i] = conv_id[tab[i]][row[i]];
 					}
 
-					row[i] = conv_id[tab[i]][row[i]];
-				}
-
-				switch (tab[i]) {
-					case "address1":
-						if (row[i])
-							societe.address += "\n" + row[i];
-						break;
-					case "BP":
-						if (row[i]) {
-							societe.address += "\n" + row[i].substr(0, row[i].indexOf(','));
-						}
-						break;
-					case "brand" :
-						if (row[i])
-							societe[tab[i]] = row[i].split(',');
-						break;
-					case "segmentation" :
-						if (row[i]) {
-							var seg = row[i].split(',');
-							for (var j = 0; j < seg.length; j++) {
-								seg[j] = seg[j].replace(/\./g, "");
-								seg[j] = seg[j].trim();
-
-								societe[tab[i]].push({text: seg[j]});
+					switch (tab[i]) {
+						case "address1":
+							if (row[i])
+								societe.address += "\n" + row[i];
+							break;
+						case "BP":
+							if (row[i]) {
+								societe.address += "\n" + row[i].substr(0, row[i].indexOf(','));
 							}
-						}
-						break;
-					case "capital" :
-						if (row[i])
-							societe[tab[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
-						break;
-					case "yearCreated" :
-						if (row[i])
-							societe[tab[i]] = parseInt(row[i]) || null;
-						break;
-					case "phone":
-						if (row[i])
-							societe[tab[i]] = row[i].replace(/ /g, "");
-						break;
-					case "fax":
-						if (row[i])
-							societe[tab[i]] = row[i].replace(/ /g, "");
-						break;
-					case "contact_phone":
-						if (row[i])
-							societe[tab[i]] = row[i].replace(/ /g, "");
-						break;
-					case "contact_fax":
-						if (row[i])
-							societe[tab[i]] = row[i].replace(/ /g, "");
-						break;
-					case "idprof2":
-						societe[tab[i]] = row[i].replace(/ /g, "");
-						break;
-					case "idprof1":
-						societe[tab[i]] = row[i].replace(/ /g, "");
-						break;
-					case "idprof3":
-						societe[tab[i]] = row[i].replace(/ /g, "");
-						break;
-					case "effectif_id":
-						societe[tab[i]] = "EF0";
+							break;
+						case "brand" :
+							if (row[i])
+								societe[tab[i]] = row[i].split(',');
+							break;
+						case "Tag" :
+							if (row[i]) {
+								var seg = row[i].split(',');
+								for (var j = 0; j < seg.length; j++) {
+									seg[j] = seg[j].replace(/\./g, "");
+									seg[j] = seg[j].trim();
 
-						for (var idx in conv_id[tab[i]]) {
-							if (parseInt(idx) <= parseInt(row[i]))
-								societe[tab[i]] = conv_id[tab[i]][idx];
-						}
-						break;
-					case "notes":
-						if (row[i]) {
-							if (typeof societe.notes != "array")
-								societe.notes = [];
-
-							societe[tab[i]].push({
-								author: {
-									name: "Inconnu"
-								},
-								datec: new Date(0),
-								note: row[i]
-							});
-						}
-
-						break;
-					default :
-						if (row[i])
-							societe[tab[i]] = row[i];
-				}
-			}
-			//console.log(societe);
-			cb(societe);
-		};
-
-		if (req.files) {
-			var filename = req.files.filedata.path;
-			if (fs.existsSync(filename)) {
-
-				var tab = [];
-
-				csv()
-						.from.path(filename, {delimiter: ';', escape: '"'})
-						.transform(function (row, index, callback) {
-							if (index === 0) {
-								tab = row; // Save header line
-								return callback();
+									societe[tab[i]].push({text: seg[j]});
+								}
 							}
-							//console.log(tab);
-							//console.log(row);
+							break;
+						case "capital" :
+							if (row[i])
+								societe[tab[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
+							break;
+						case "yearCreated" :
+							if (row[i])
+								societe[tab[i]] = parseInt(row[i]) || null;
+							break;
+						case "phone":
+							if (row[i])
+								societe[tab[i]] = row[i].replace(/ /g, "");
+							break;
+						case "phone_mobile":
+							if (row[i])
+								societe["phone"] += "/" + row[i].replace(/ /g, "");
+							break;
+						case "fax":
+							if (row[i])
+								societe[tab[i]] = row[i].replace(/ /g, "");
+							break;
+						case "contact_phone":
+							if (row[i])
+								societe[tab[i]] = row[i].replace(/ /g, "");
+							break;
+						case "contact_fax":
+							if (row[i])
+								societe[tab[i]] = row[i].replace(/ /g, "");
+							break;
+						case "idprof2":
+							societe[tab[i]] = row[i].replace(/ /g, "");
+							break;
+						case "idprof1":
+							societe[tab[i]] = row[i].replace(/ /g, "");
+							break;
+						case "idprof3":
+							societe[tab[i]] = row[i].replace(/ /g, "");
+							break;
+						case "effectif_id":
+							societe[tab[i]] = "EF0";
 
-							//console.log(row[0]);
+							for (var idx in conv_id[tab[i]]) {
+								if (parseInt(idx) <= parseInt(row[i]))
+									societe[tab[i]] = conv_id[tab[i]][idx];
+							}
+							break;
+						case "notes":
+							if (row[i]) {
+								if (typeof societe.notes != "array")
+									societe.notes = [];
 
-							//return;
-
-							convertRow(tab, row, index, function (data) {
-
-								SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
-									if (err) {
-										console.log(err);
-										return callback();
-									}
-
-									if (societe == null)
-										societe = new SocieteModel(data);
-
-									//console.log(row[10]);
-									//console.log(societe)
-									//console.log(societe.datec);
-
-									/*societe.save(function (err, doc) {
-									 if (err)
-									 console.log(err);*/
-
-									callback();
-									//});
-
+								societe[tab[i]].push({
+									author: {
+										name: "Inconnu"
+									},
+									datec: new Date(0),
+									note: row[i]
 								});
-							});
+							}
 
-							//return row;
-						}/*, {parallel: 1}*/)
-						.on("end", function (count) {
-							console.log('Number of lines: ' + count);
-							fs.unlink(filename, function (err) {
-								if (err)
-									console.log(err);
+							break;
+						case "commercial_id":
+							if (row[i]) {
+								societe.commercial_id = {
+									id: row[i],
+									name: (commercial_list[row[i]] ? commercial_list[row[i]].firstname + " " + commercial_list[row[i]].lastname : row[i])
+								}
+							}
+							break;
+						default :
+							if (row[i])
+								societe[tab[i]] = row[i];
+					}
+				}
+
+				cb(societe);
+			};
+
+			if (req.files) {
+				var filename = req.files.filedata.path;
+				if (fs.existsSync(filename)) {
+
+					var tab = [];
+
+					csv()
+							.from.path(filename, {delimiter: ';', escape: '"'})
+							.transform(function (row, index, callback) {
+								if (index === 0) {
+									tab = row; // Save header line
+									return callback();
+								}
+								//console.log(tab);
+								//console.log(row);
+
+								//console.log(row[0]);
+
+								//return;
+
+								convertRow(tab, row, index, function (data) {
+									if (data.code_client)
+										SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
+											if (err) {
+												console.log(err);
+												return callback();
+											}
+
+											if (societe == null)
+												societe = new SocieteModel(data);
+											else
+												societe = _.extend(societe, data);
+
+											//console.log(row[10]);
+											//console.log(societe)
+											//console.log(societe.datec);
+
+											societe.save(function (err, doc) {
+												if (err)
+													console.log(err);
+
+												callback();
+											});
+
+										});
+									else if(data.oldId)
+										SocieteModel.findOne({$or:[{oldId: data.oldId},{name:data.name}]}, function (err, societe) {
+											if (err) {
+												console.log(err);
+												return callback();
+											}
+
+											if (societe == null || societe.zip != data.zip)
+												societe = new SocieteModel(data);
+											else {
+												console.log("Found : update");
+												societe = _.extend(societe, data);
+											}
+
+											//console.log(row[10]);
+											//console.log(societe)
+											//console.log(societe.datec);
+
+											societe.save(function (err, doc) {
+												if (err)
+													console.log(err);
+
+												callback();
+											});
+
+										});
+									else
+										SocieteModel.findOne({name:data.name}, function (err, societe) {
+											if (err) {
+												console.log(err);
+												return callback();
+											}
+
+											if (societe == null || societe.zip != data.zip)
+												societe = new SocieteModel(data);
+											else {
+												console.log("Found : update");
+												societe = _.default(societe, data);
+											}
+
+											//console.log(row[10]);
+											//console.log(societe)
+											//console.log(societe.datec);
+
+											societe.save(function (err, doc) {
+												if (err)
+													console.log(err);
+
+												callback();
+											});
+
+										});
+								});
+
+								//return row;
+							}/*, {parallel: 1}*/)
+							.on("end", function (count) {
+								console.log('Number of lines: ' + count);
+								fs.unlink(filename, function (err) {
+									if (err)
+										console.log(err);
+								});
+								return res.send(200, {count: count});
+							})
+							.on('error', function (error) {
+								console.log(error.message);
 							});
-							return res.send(200, {count: count});
-						})
-						.on('error', function (error) {
-							console.log(error.message);
-						});
+				}
 			}
-		}
+		});
 	});
 
 	app.post('/api/societe/notes/import', /*ensureAuthenticated,*/ function (req, res) {

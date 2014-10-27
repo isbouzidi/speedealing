@@ -41,7 +41,7 @@
 								<tr>
 									<th scope="row">{{t 'companies:Supplier'}}</th>
 									<td><a href="#" editable-select="societe.fournisseur" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_fournisseur.values" onaftersave="update()">
-											\{{ showStatus('fournisseur','fk_fournisseur')}}
+											\{{ showStatus('fournisseur', 'fk_fournisseur')}}
 										</a>
 									</td>
 								</tr>
@@ -100,7 +100,7 @@
 								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
 							</div>
-							<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+							<span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
 						</div>
 					</div>
 				</div>
@@ -225,14 +225,14 @@
 												<tr>
 													<th scope="row">{{t 'companies:ThirdPartyType'}}</th>
 													<td><a href="#" editable-select="societe.typent_id" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_typent.values" onaftersave="update()">
-															\{{ showStatus('typent_id','fk_typent')}}
+															\{{ showStatus('typent_id', 'fk_typent')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:Staff'}}</th>
 													<td><a href="#" editable-select="societe.effectif_id" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_effectif.values" onaftersave="update()">
-															\{{ showStatus('effectif_id','fk_effectif')}}
+															\{{ showStatus('effectif_id', 'fk_effectif')}}
 														</a>
 													</td>
 												</tr>
@@ -240,7 +240,7 @@
 													<th scope="row">{{t 'companies:JuridicalStatus'}}</th>
 													<td>
 														<a href="#" editable-select="societe.forme_juridique_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_forme_juridique.values" onaftersave="update()">
-															\{{ showStatus('forme_juridique_code','fk_forme_juridique') || "-"}}
+															\{{ showStatus('forme_juridique_code', 'fk_forme_juridique') || "-"}}
 														</a></td>
 												</tr>
 												<tr>
@@ -356,7 +356,7 @@
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
 													<td>
 														<a href="#" editable-select="societe.cond_reglement" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_payment_term.values" onaftersave="update()">
-															\{{ showStatus('cond_reglement','fk_payment_term')}}
+															\{{ showStatus('cond_reglement', 'fk_payment_term')}}
 														</a>
 													</td>
 												</tr>
@@ -565,7 +565,7 @@
 													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
 												</div>
-												<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+												<span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
 											</div>
 										</div>
 									</div>
