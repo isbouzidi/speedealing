@@ -9,6 +9,7 @@ var cradle = require('cradle'),
 		mongoose = require('mongoose'),
 		mongodb = require('mongodb'),
 		timestamps = require('mongoose-timestamp'),
+		_ = require('lodash'),
 		config = require(__dirname + '/../../config/config'),
 		fs = require('fs');
 
@@ -28,6 +29,7 @@ if (config.couchdb != undefined)
 
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
+var UserModel = mongoose.model('user');
 
 module.exports = function (app, passport, auth) {
 
@@ -44,6 +46,9 @@ module.exports = function (app, passport, auth) {
 		switch (req.params.moduleId) {
 			case "societe":
 				migrate.societe(req, res);
+				break;
+			case "user":
+				migrate.user(req, res);
 				break;
 		}
 
@@ -308,6 +313,44 @@ Migrate.prototype = {
 						console.log(err);
 					}
 
+				});
+			});
+		});
+	},
+	user: function (req, res) {
+		var couchdb = connection.database("system");
+
+		couchdb.view('User/list', function (err, rows) {
+			if (err)
+				return console.log(err);
+
+			//console.log(rows[0]);
+
+			rows.forEach(function (row) {
+				UserModel.findOne({_id: row._id}, function (err, user) {
+
+					if (user == null)
+						user = new UserModel(row);
+					else
+						user = _.extend(user, row);
+
+					user.lastname = row.Lastname;
+					user.firstname = row.Firstname;
+
+					user.createdAt = new Date(row.tms);
+					if (row.NewConnection)
+						user.NewConnection = new Date(row.NewConnection);
+					if (row.LastConnection)
+						user.LastConnection = new Date(row.LastConnection);
+
+					//console.log(user);
+
+					user.save(function (err, doc) {
+						if (err) {
+							console.log(err);
+						}
+
+					});
 				});
 			});
 		});
