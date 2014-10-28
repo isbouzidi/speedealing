@@ -213,7 +213,7 @@ module.exports = function(passport) {
 
 				//console.log(user);
 
-				user.save(function(err) {
+				user.save(function(err, user) {
 					if (err)
 						console.log(err);
 

@@ -50,6 +50,9 @@ module.exports = function (app, passport, auth) {
 			case "user":
 				migrate.user(req, res);
 				break;
+			case "contact":
+				migrate.contact(req, res);
+				break;
 		}
 
 		res.send(200);
@@ -219,6 +222,69 @@ function Migrate() {
 }
 
 Migrate.prototype = {
+	contact: function (req, res) {
+		couchdb.view('Contact/list', function (err, rows) {
+			if (err)
+				return console.log(err);
+
+			//console.log(rows[0]);
+
+			rows.forEach(function (row) {
+
+				var _id = row._id;
+
+				delete row._id;
+				var notes = row.notes;
+
+				delete row.notes;
+
+				var datec;
+				if (typeof row.datec !== 'undefined')
+					datec = new Date(row.datec);
+				else
+					datec = new Date(row.tms);
+
+//console.log(row.datec + "/"+row.tms+":" + datec);
+
+				delete row.datec;
+
+				var contact = new ContactModel(row);
+
+				societe.datec = datec;
+				societe.createdAt = datec;
+
+				if (notes) {
+					societe.notes.push({
+						note: notes,
+						author: {},
+						datec: new Date(row.tms)
+					});
+				}
+
+				if (row.public_notes)
+					societe.notes.push({
+						note: row.public_notes,
+						author: {},
+						datec: new Date(row.tms)
+					});
+
+				//console.log(row.action_co);
+				if (row.action_co && row.action_co != "ACO_NONE")
+					societe.familyProduct.push(convert_action_co[row.action_co].label);
+
+				societe.oldId = _id;
+
+				//console.log(societe);
+
+				societe.save(function (err, doc) {
+					if (err) {
+						console.log(err);
+					}
+
+				});
+			});
+		});
+	},
 	societe: function (req, res) {
 		var convert_action_co = {
 			"ACO_NONE": {
