@@ -1,0 +1,67 @@
+<form data-ng-init='init()' data-ng-submit='createTransaction()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'bank:NewTransaction'}}</h3>
+
+    <ul class="wizard-steps">
+
+    </ul>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        
+        <div class="field-block">
+            <h4>Interface de création d'une écriture de banque.</h4>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bank:DateTransaction'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input required type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="transaction.date_transaction" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Fermer" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>	
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bank:TypeTransaction'}}</b></label>
+            <select class="form-control" 
+                    data-ng-model="transaction.type_transaction" 
+                    data-ng-options="c.id as c.label for c in transaction_type"></select>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bank:NumberTransaction'}}</b></label>
+            <input required type="text" 
+                   data-ng-model="transaction.number" 
+                   class="input"
+                   autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'Description'}}</b></label>
+            <textarea class="input" rows="3" cols="60" data-ng-model="transaction.description"></textarea>
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:Debit'}}</b></label>
+            <input type="text" 
+                   data-ng-model="transaction.debit"
+                   class="input"
+                   autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label for="nom"><b>{{t 'bank:Credit'}}</b></label>
+            <input type="text" 
+                   data-ng-model="transaction.credit"
+                   class="input"
+                   autocomplete="off">
+        </div>
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right" 
+                    data-ng-disabled="!(transaction.date_transaction && (transaction.credit || transaction.debit))">
+                    <span class="button-icon"><span class="icon-tick"></span></span>
+                    {{t 'Create'}}
+            </button>
+        </div>
+    </fieldset>
+</form>
