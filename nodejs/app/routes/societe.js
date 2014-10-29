@@ -787,6 +787,9 @@ module.exports = function (app, passport, auth) {
 										console.log(err);
 										return callback();
 									}
+									
+									if(index == 1)
+								console.log(societe);
 
 									var isNew = false;
 									if (societe == null) {
