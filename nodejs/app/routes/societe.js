@@ -637,7 +637,7 @@ module.exports = function (app, passport, auth) {
 			var societe = {};
 			societe.typent_id = "TE_PUBLIC";
 			societe.country_id = "FR";
-			societe.segmentation = [];
+			societe.Tag = [];
 			societe.remise_client = 0;
 
 			for (var i = 0; i < row.length; i++) {
