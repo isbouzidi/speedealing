@@ -90,7 +90,7 @@ module.exports = function (app, passport, auth) {
 	// recupere la liste des courses pour verification
 	app.get('/api/delivery/billing', auth.requiresLogin, billing.read);
 
-	// Genere la facturation
+	// Genere la facturation des BL en groupe
 	app.post('/api/delivery/billing', auth.requiresLogin, billing.createAll);
 
 	app.get('/api/delivery/billing/ca', auth.requiresLogin, billing.familyCA);
@@ -487,8 +487,8 @@ Billing.prototype = {
 	create: function (req, res) {
 
 		var delivery = req.delivery;
-
-		SocieteModel.findOne({_id: req.delivery.client.id}, function (err, societe) {
+		
+		SocieteModel.findOne({_id: req.delivery.client.cptBilling.id}, function (err, societe) {
 			var bill = new FactureModel();
 
 			bill.client = {
@@ -534,6 +534,8 @@ Billing.prototype = {
 		//res.send(200);
 	},
 	createAll: function (req, res) {
+		//console.log(req.body.dateEnd);
+		
 		DeliveryModel.aggregate([
 			{"$match": {Status: "SEND", entity: req.body.entity, datec: {$lte: new Date(req.body.dateEnd)}}},
 			{"$project": {"datec": 1, "shipping": 1, "lines": 1, "ref": 1, "societe": "$client.cptBilling"}},
