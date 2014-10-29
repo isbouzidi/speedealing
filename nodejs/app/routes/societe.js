@@ -595,7 +595,8 @@ module.exports = function (app, passport, auth) {
 			"effectif_id", // Nombre d'habitants
 			false,
 			false,
-			"idprof1"
+			"idprof1",
+			"entity"
 		];
 
 		var conv_id = {
