@@ -25,5 +25,12 @@
     "RIB": "Clé RIB",
     "IBAN": "Code IBAN",
     "BIC/SWIFT": "Code BIC/SWIFT",
-    "Domiciliation": "Domiciliation du compte"
+    "Domiciliation": "Domiciliation du compte",
+    "NewTransaction": "Nouvelle écriture",
+    "Debit": "Debit",
+    "Credit": "Credit",
+    "DateTransaction": "Date écriture",
+    "TypeTransaction": "Type",
+    "NumberTransaction": "Numéro",
+    "Transacrtions": "Ecritures"
 }
