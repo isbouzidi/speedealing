@@ -594,7 +594,7 @@ module.exports = function (app, passport, auth) {
 			"segmentation",
 			"effectif_id", // Nombre d'habitants
 			false,
-			"idprof2",
+			false,
 			"idprof1"
 		];
 
@@ -752,9 +752,9 @@ module.exports = function (app, passport, auth) {
 
 								return callback();
 							}
-							
-							if(index == 1)
-								console.log(row);
+
+							//if (index == 1)
+							//	console.log(row);
 
 							var alreadyImport = false;
 							if (is_imported[row[2]])
@@ -772,24 +772,24 @@ module.exports = function (app, passport, auth) {
 
 								//return;
 
-								if (!data.idprof2) // Pas de SIRET
-									return callback();
+								//if (!data.idprof2) // Pas de SIRET
+								//	return callback();
 
 								var query;
 								//console.log(data.idprof2);
-								if (data.idprof2)
-									query = {$or: [{ha_id: data.ha_id}, {idprof2: data.idprof2}]};
-								else
-									query = {ha_id: data.ha_id};
+								//if (data.idprof2)
+								//	query = {$or: [{ha_id: data.ha_id}, {idprof2: data.idprof2}]};
+								//else
+								query = {ha_id: data.ha_id};
 
 								SocieteModel.findOne(query, function (err, societe) {
 									if (err) {
 										console.log(err);
 										return callback();
 									}
-									
-									if(index == 1)
-								console.log(societe);
+
+									//if (index == 1)
+									//	console.log(societe);
 
 									var isNew = false;
 									if (societe == null) {
@@ -813,7 +813,7 @@ module.exports = function (app, passport, auth) {
 										societe.save(function (err, doc) {
 											if (err)
 												console.log("societe : " + JSON.stringify(err));
-											
+
 											//console.log("save");
 
 											/*if (doc == null)
