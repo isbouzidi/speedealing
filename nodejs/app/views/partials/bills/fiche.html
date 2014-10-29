@@ -38,10 +38,18 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'bills:BillTo'}}</th>
-									<td><a href="#" ng-show="editable" editable-text="bill.client" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no"  onbeforesave="updateAddress($data)" onaftersave="update()">
-											\{{bill.client.name|| "Non defini"}}
-										</a>
-										<span ng-hide="editable">\{{bill.client.name|| "Non defini"}}</span>
+									<td><a
+											data-ng-href="#!/societes/\{{bill.client.id}}" 
+											target="_blank"
+											class="icon-home"
+											editable-text="bill.client"
+											e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
+											buttons="no"
+											e-form="eSocieteBtnForm" 
+											onbeforesave="updateAddress($data)"
+											onaftersave="update()"
+											blur="submit">\{{bill.client.name|| "Non defini"}} </a>
+										<span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="!editable || eSocieteBtnForm.$visible"></span>
 									</td>
 								</tr>
 								<tr>

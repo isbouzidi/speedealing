@@ -171,6 +171,11 @@ function createTask(task, user, usersSocket, callback) {
 		new_task.archived = true;
 	}
 
+	if (!actioncomm.values[new_task.type]) {
+		console.log("unknown taskType : " + new_task.type);
+		return;
+	}
+
 	if (actioncomm.values[new_task.type].type != 'event')
 		new_task.datep = new Date(new_task.datef);
 

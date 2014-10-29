@@ -113,7 +113,7 @@ UserSchema.plugin(timestamps);
 UserSchema.plugin(gridfs.pluginGridFs, {root: "User"});
 
 var statusList = {};
-Dict.dict({dictName:'fk_user_status', object:true}, function (err, docs) {
+Dict.dict({dictName: 'fk_user_status', object: true}, function (err, docs) {
 
 	statusList = docs;
 });
@@ -219,9 +219,10 @@ UserSchema.pre('save', function (next) {
 	if (!this.isNew)
 		return next();
 
-	if (!validatePresenceOf(this.password) && authTypes.indexOf(this.provider) === -1)
-		next(new Error('Invalid password'));
-	else
+	if (!validatePresenceOf(this.password) && authTypes.indexOf(this.provider) === -1) {
+		this.password = this.generatePassword(8);
+		next(/*new Error('Invalid password')*/);
+	} else
 		next();
 });
 
@@ -260,6 +261,14 @@ UserSchema.methods = {
 		if (!password)
 			return '';
 		return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+	},
+	generatePassword: function (length) {
+		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+				retVal = "";
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			retVal += charset.charAt(Math.floor(Math.random() * n));
+		}
+		return retVal;
 	}
 };
 

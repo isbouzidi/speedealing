@@ -226,7 +226,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		}, true);
 
 		$scope.$watch('sortOptions', function (newVal, oldVal) {
-			if (newVal.directions[0] !== oldVal.directions[0] && newVal.fields[0] !== oldVal.fields[0]) {
+			if (newVal.directions[0] !== oldVal.directions[0] || newVal.fields[0] !== oldVal.fields[0]) {
 				$scope.find();
 			}
 		}, true);

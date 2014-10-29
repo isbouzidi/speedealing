@@ -38,11 +38,19 @@
                                 </tr>-->
                                 <tr>
                                     <th scope="row">{{t 'deliveries:DeliveryTo'}}</th>
-                                    <td><a href="#" ng-show="editable" editable-text="delivery.client" e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no"  onbeforesave="updateAddress($data)" onaftersave="update()">
-                                            \{{delivery.client.name|| "Non defini"}}
-                                        </a>
-                                        <span ng-hide="editable">\{{delivery.client.name|| "Non defini"}}</span>
-
+                                    <td><a
+											data-ng-href="#!/societes/\{{delivery.client.id}}" 
+											target="_blank"
+											class="icon-home"
+											editable-text="delivery.client"
+											e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
+											buttons="no"
+											e-form="eSocieteBtnForm"
+											onbeforesave="updateAddress($data)"
+											onaftersave="update()"
+											blur="submit">\{{delivery.client.name|| "Non defini"}} </a>
+										<span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="!editable || eSocieteBtnForm.$visible"></span>
+										
 										<form editable-form name="editableFormAddress" onaftersave="update()">
                                             <span editable-textarea="delivery.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ delivery.address ||  "Non defini" }}</pre></span>
 
@@ -70,17 +78,17 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">{{t 'bills:BillTo'}}</th>
-                                    <td>
-                                        <a href="#" 
-                                           ng-show="editable"
-                                           editable-text="delivery.client.cptBilling" 
-                                           e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
-                                           buttons="no"
-                                           onaftersave="update()"
-                                           blur="submit">
-                                            \{{delivery.client.cptBilling.name|| "Non défini"}}
-                                        </a>
-										<span ng-hide="editable">\{{delivery.client.cptBilling.name|| "Non défini"}}</span>
+                                    <td><a
+											data-ng-href="#!/societes/\{{delivery.client.cptBilling.id}}" 
+											target="_blank"
+											class="icon-home"
+											editable-text="delivery.client.cptBilling"
+											e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
+											buttons="no"
+											e-form="eSocieteBillBtnForm"
+											onaftersave="update()"
+											blur="submit">\{{delivery.client.cptBilling.name|| "Non defini"}} </a>
+										<span class="icon-pencil grey" ng-click="eSocieteBillBtnForm.$show()" ng-hide="!editable || eSocieteBillBtnForm.$visible"></span>
                                     </td>
                                 </tr>
                                 <tr>

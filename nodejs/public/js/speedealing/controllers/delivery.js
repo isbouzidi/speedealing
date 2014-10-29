@@ -400,17 +400,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			});
 		};
 
-		$scope.removeLine = function (row) {
-			//console.log(row.entity._id);
-			for (var i = 0; i < $scope.delivery.lines.length; i++) {
-				if (row.entity._id === $scope.delivery.lines[i]._id) {
-					$scope.delivery.lines.splice(i, 1);
-					$scope.update();
-					break;
-				}
-			}
-		};
-
 		$scope.addNote = function () {
 			if (!this.note)
 				return;

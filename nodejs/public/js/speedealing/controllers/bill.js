@@ -45,6 +45,13 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 		$scope.update = function () {
 			var bill = $scope.bill;
+			
+			for (var i = bill.lines.length; i--; ) {
+				// actually delete lines
+				if (bill.lines[i].isDeleted) {
+					bill.lines.splice(i, 1);
+				}
+			}
 
 			bill.$update(function (response) {
 				pageTitle.setTitle('Facture ' + bill.ref);
@@ -370,17 +377,6 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				});
 			}, function () {
 			});
-		};
-
-		$scope.removeLine = function (row) {
-			//console.log(row.entity._id);
-			for (var i = 0; i < $scope.bill.lines.length; i++) {
-				if (row.entity._id === $scope.bill.lines[i]._id) {
-					$scope.bill.lines.splice(i, 1);
-					$scope.update();
-					break;
-				}
-			}
 		};
 
 		$scope.addNote = function () {
