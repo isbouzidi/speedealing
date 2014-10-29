@@ -230,6 +230,8 @@ function Migrate() {
 Migrate.prototype = {
 	task: function (req, res) {
 
+		var htmlToText = require('html-to-text');
+
 		couchdb.view('Agenda/list', function (err, rows) {
 			if (err)
 				return console.log(err);
@@ -277,18 +279,31 @@ Migrate.prototype = {
 					//return;
 
 					var datef = null;
-					if (row.datef)
+					if (typeof row.datef == 'string')
 						datef = new Date(row.datef);
 
 					var datep = null;
-					if (row.datep)
+					if (typeof row.datep == 'string')
 						datep = new Date(row.datep);
-					
+
+					if (!datef)
+						datef = new Date(row.tms);
+
+					if (datep == null || datef == null)
+						console.log(row);
+
 					switch (row.type_code) {
 						case "RDV_RDV" :
 							row.type_code = "AC_RDV";
 							break;
 					}
+
+					var note = "";
+
+					if (row.notes)
+						note = htmlToText.fromString(row.notes, {
+							wordwrap: 130
+						});
 
 					var task = {
 						name: row.label,
@@ -305,7 +320,7 @@ Migrate.prototype = {
 								author: row.author,
 								datec: new Date(row.tms),
 								percentage: row.percentage || 0,
-								note: row.notes || ""
+								note: note
 							}
 						]
 					};
@@ -314,12 +329,22 @@ Migrate.prototype = {
 						case "DONE" :
 							task.archived = true;
 							task.usertodo = row.usertodo;
-							task.userdone = row.userdone;
+							task.notes[0].percentage = 100;
+							if (row.userdone.id)
+								task.userdone = row.userdone;
+							else
+								task.userdone = row.usertodo;
 							break;
 						default:
 							task.usertodo = row.usertodo;
 					}
-
+					
+					if(!task.usertodo.name)
+						task.usertodo.name = task.usertodo.id;
+					
+					if(!task.author.name)
+						task.author.name = task.author.id;
+					
 					//console.log(task);
 					//return;
 					Task.create(task, req.user, null, function (err, task) {
