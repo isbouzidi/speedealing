@@ -18,7 +18,7 @@
                                     <th width="40%" scope="row">{{t 'bank:Ref'}}</th>
                                     <td>
                                         <a href="#" editable-text="bank.ref" buttons="no" e-form="refForm" onaftersave="update()" blur="submit">
-                                            \{{bank.ref || "Non defini"}}
+                                            \{{bank.ref|| "Non defini"}}
                                         </a>
                                         <span class="icon-pencil grey" ng-click="refForm.$show()" ng-hide="refForm.$visible"></span>
                                     </td>
@@ -27,7 +27,7 @@
                                     <th width="40%" scope="row">{{t 'bank:Libelle'}}</th>
                                     <td>
                                         <a href="#" editable-text="bank.libelle" buttons="no" e-form="libForm" onaftersave="update()" blur="submit">
-                                            \{{bank.libelle || "Non defini"}}
+                                            \{{bank.libelle|| "Non defini"}}
                                         </a>
                                         <span class="icon-pencil grey" ng-click="libForm.$show()" ng-hide="libForm.$visible"></span>
                                     </td>
@@ -36,7 +36,7 @@
                                     <th width="40%" scope="row">{{t 'bank:AccountType'}}</th>
                                     <td>
                                         <span class="tag small glossy" 
-                                            editable-select="bank.account_type"
+                                              editable-select="bank.account_type"
                                               data-ng-class="bank.acc_type.css"
                                               buttons="no" e-form="typeForm" 
                                               onaftersave="update()" 
@@ -79,7 +79,7 @@
                                            editable-text="bank.client" 
                                            e-typeahead="client as client.name for client in clientAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" 
                                            buttons="no" onaftersave="update()" blur="submit">
-                                                \{{bank.client.name|| "Non defini"}}
+                                            \{{bank.client.name|| "Non defini"}}
                                         </a>
                                     </td>
                                 </tr>
@@ -107,7 +107,7 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="eight-columns">
                     <tabset>
                         <tab>
@@ -132,7 +132,7 @@
                                                     <th scope="row">{{t 'bank:AccountingCode'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.accounting_code" buttons="no" e-form="bankAccCodeForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.accounting_code || "Non defini"}}
+                                                            \{{bank.accounting_code|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="bankAccCodeForm.$show()" ng-hide="bankAccCodeForm.$visible"></span>
                                                     </td>
@@ -141,7 +141,7 @@
                                                     <th scope="row">{{t 'bank:MinBalanceAllowed'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.min_balance_allowed" buttons="no" e-form="minBalAllForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.min_balance_allowed || "Non defini"}}
+                                                            \{{bank.min_balance_allowed|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="minBalAllForm.$show()" ng-hide="minBalAllForm.$visible"></span>
                                                     </td>
@@ -150,7 +150,7 @@
                                                     <th scope="row">{{t 'bank:MinBalanceRequired'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.min_balance_required" buttons="no" e-form="minBalReqForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.min_balance_required || "Non defini"}}
+                                                            \{{bank.min_balance_required|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="minBalReqForm.$show()" ng-hide="minBalReqForm.$visible"></span>
                                                     </td>
@@ -174,7 +174,7 @@
                                                     <th scope="row">{{t 'bank:BankName'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.name_bank" buttons="no" e-form="bankNameForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.name_bank || "Non defini"}}
+                                                            \{{bank.name_bank|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="bankNameForm.$show()" ng-hide="bankNameForm.$visible"></span>
                                                     </td>
@@ -183,7 +183,7 @@
                                                     <th scope="row">{{t 'bank:BankCode'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.code_bank" buttons="no" e-form="bankCodeForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.code_bank || "Non defini"}}
+                                                            \{{bank.code_bank|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="bankCodeForm.$show()" ng-hide="bankCodeForm.$visible"></span>
                                                     </td>
@@ -192,7 +192,7 @@
                                                     <th scope="row">{{t 'bank:CodeCounter'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.code_counter" buttons="no" e-form="codeCounterForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.code_counter || "Non defini"}}
+                                                            \{{bank.code_counter|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="codeCounterForm.$show()" ng-hide="codeCounterForm.$visible"></span>
                                                     </td>
@@ -201,7 +201,7 @@
                                                     <th scope="row">{{t 'bank:AccountNumber'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.account_number" buttons="no" e-form="accNumberForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.account_number || "Non defini"}}
+                                                            \{{bank.account_number|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="accNumberForm.$show()" ng-hide="accNumberForm.$visible"></span>
                                                     </td>
@@ -210,7 +210,7 @@
                                                     <th scope="row">{{t 'bank:RIB'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.rib" buttons="no" e-form="ribForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.rib || "Non defini"}}
+                                                            \{{bank.rib|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="ribForm.$show()" ng-hide="ribForm.$visible"></span>
                                                     </td>
@@ -219,7 +219,7 @@
                                                     <th scope="row">{{t 'bank:IBAN'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.iban" buttons="no" e-form="ibanForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.iban || "Non defini"}}
+                                                            \{{bank.iban|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="ibanForm.$show()" ng-hide="ibanForm.$visible"></span>
                                                     </td>
@@ -228,7 +228,7 @@
                                                     <th scope="row">{{t 'bank:BIC/SWIFT'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.bic" buttons="no" e-form="bicForm" onaftersave="update()" blur="submit">
-                                                            \{{bank.bic || "Non defini"}}
+                                                            \{{bank.bic|| "Non defini"}}
                                                         </a>
                                                         <span class="icon-pencil grey" ng-click="bicForm.$show()" ng-hide="bicForm.$visible"></span>
                                                     </td>
@@ -249,8 +249,31 @@
                         </tab>
                     </tabset>
                 </div>
+                <div class="twelve-columns">
+                    <h5 class="green underline">{{t 'bank:Transacrtions'}}</h5>
+                    <div class="table-header silver-gradient glossy button-height">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="button-group">
+                                    <button class="button icon-plus blue-gradient" data-ng-click="addNewTransaction()">{{t 'Add'}}</button>
+                                    <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()">
+                                        <span class="icon-redo"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="float-right">
+                                    {{t 'Search'}} <input type="text" data-ng-model="filterOptionsTransaction.filterText" class="input small mid-margin-left">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gridStyle"  data-ng-grid="gridOptionsTransactions"></div>
+                    <div class="table-footer silver-gradient">
+                        \{{countTransactions}} ligne(s)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
-            
