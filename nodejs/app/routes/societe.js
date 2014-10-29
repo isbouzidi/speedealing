@@ -589,9 +589,9 @@ module.exports = function (app, passport, auth) {
 			"town",
 			false,
 			"url",
-			"segmentation",
-			"segmentation",
-			"segmentation",
+			"Tag",
+			"Tag",
+			"Tag",
 			"effectif_id", // Nombre d'habitants
 			false,
 			false,
@@ -629,7 +629,7 @@ module.exports = function (app, passport, auth) {
 		};
 
 		var is_Array = [
-			"segmentation"
+			"Tag"
 		];
 
 		var convertRow = function (row, index, cb) {
@@ -670,7 +670,7 @@ module.exports = function (app, passport, auth) {
 						if (row[i])
 							societe[conv[i]] = row[i].split(',');
 						break;
-					case "segmentation" :
+					case "Tag" :
 						if (row[i]) {
 							var seg = row[i].split(',');
 							for (var j = 0; j < seg.length; j++) {
