@@ -752,6 +752,9 @@ module.exports = function (app, passport, auth) {
 
 								return callback();
 							}
+							
+							if(index == 1)
+								console.log(row);
 
 							var alreadyImport = false;
 							if (is_imported[row[2]])
@@ -790,9 +793,9 @@ module.exports = function (app, passport, auth) {
 										societe = new SocieteModel(data);
 										societe.Status = "ST_NEVER";
 										isNew = true;
-										console.log("new societe");
+										//console.log("new societe");
 									} else {
-										console.log("update societe");
+										//console.log("update societe");
 									}
 									//console.log(data);
 									societe = _.extend(societe, data);
@@ -808,7 +811,7 @@ module.exports = function (app, passport, auth) {
 											if (err)
 												console.log("societe : " + JSON.stringify(err));
 											
-											console.log("save");
+											//console.log("save");
 
 											/*if (doc == null)
 											 console.log("null");
