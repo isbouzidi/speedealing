@@ -5,8 +5,7 @@
 
 "use strict";
 
-var cradle = require('cradle'),
-		mongoose = require('mongoose'),
+var mongoose = require('mongoose'),
 		mongodb = require('mongodb'),
 		timestamps = require('mongoose-timestamp'),
 		_ = require('lodash'),
@@ -16,6 +15,7 @@ var cradle = require('cradle'),
 
 if (config.couchdb != undefined)
 {
+	var cradle = require('cradle');
 	var ProductModel = mongoose.model('product');
 
 	var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
