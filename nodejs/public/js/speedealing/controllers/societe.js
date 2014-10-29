@@ -260,7 +260,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.$watch('filterOptionsSociete', function (newVal, oldVal) {
 			if (newVal.filterText !== oldVal.filterText) {
-				$scope.find();
+				$timeout(function () {
+					$scope.find();
+				}, 300);
 			}
 		}, true);
 
