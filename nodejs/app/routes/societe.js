@@ -553,6 +553,7 @@ module.exports = function (app, passport, auth) {
 	});
 
 	app.post('/api/societe/import/horsAntenne', /*ensureAuthenticated,*/ function (req, res) {
+		req.connection.setTimeout(300000);
 
 		var conv = [
 			false,
@@ -789,6 +790,9 @@ module.exports = function (app, passport, auth) {
 										societe = new SocieteModel(data);
 										societe.Status = "ST_NEVER";
 										isNew = true;
+										console.log("new societe");
+									} else {
+										console.log("update societe");
 									}
 									//console.log(data);
 									societe = _.extend(societe, data);
@@ -1111,8 +1115,8 @@ module.exports = function (app, passport, auth) {
 											});
 
 										});
-									else if(data.oldId)
-										SocieteModel.findOne({$or:[{oldId: data.oldId},{name:data.name}]}, function (err, societe) {
+									else if (data.oldId)
+										SocieteModel.findOne({$or: [{oldId: data.oldId}, {name: data.name}]}, function (err, societe) {
 											if (err) {
 												console.log(err);
 												return callback();
@@ -1138,7 +1142,7 @@ module.exports = function (app, passport, auth) {
 
 										});
 									else
-										SocieteModel.findOne({name:data.name}, function (err, societe) {
+										SocieteModel.findOne({name: data.name}, function (err, societe) {
 											if (err) {
 												console.log(err);
 												return callback();
