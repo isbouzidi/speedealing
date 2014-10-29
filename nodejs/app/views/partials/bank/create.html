@@ -7,8 +7,6 @@
 
     </ul>
 
-    <!-- Each form step should be wrapped in a fieldset -->
-    <!-- 1. Profile-->
     <fieldset class="wizard-fieldset fields-list active">
 
         <div class="field-block">
@@ -90,9 +88,9 @@
         <div class="field-block button-height">
             <label for="nom"><b>{{t 'bank:InitialBalance'}}</b></label>
             <input required type="text" 
-                    data-ng-model="bank.initial_balance"
+                    data-ng-model="bank.transaction[0].credit"
                     id="initial_balance"  
-                    class="input" 
+                    class="input"
                     autocomplete="off">
         </div>
         <div class="field-block button-height">

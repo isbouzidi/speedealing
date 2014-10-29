@@ -1,1 +1,0 @@
-{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "chaumeil.ExtraFields", "name" : "_id_" } ] }

@@ -65,6 +65,7 @@ Object.prototype = {
     show: function (req, res) {
       
         console.log("show : " + req.account);
+        
         res.json(req.account);
     },
     create: function (req, res){
@@ -73,7 +74,7 @@ Object.prototype = {
         bank.author = {};
         bank.author.id = req.user._id;
         bank.author.name = req.user.name;
-
+        
         console.log(bank);
         bank.save(function (err, doc) {
             if (err) {

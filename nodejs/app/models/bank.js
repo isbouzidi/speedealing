@@ -26,23 +26,39 @@ var BankSchema = new Schema({
     currency: String,
     status: String,
     accounting_code: String,
-    rapprochable: Boolean,
-    initial_balance: Number,
+    reconciled: Boolean,
     min_balance_allowed: Number,
     min_balance_required: Number,
     web: String,
-    client: {
-        id: {type: Schema.Types.ObjectId, ref: 'Societe'},
-        name: String
-    },
     address: String,
     zip: String,
     town: String,
     comment: String,
+    owner: {
+        name: String,
+        address: String,
+        zip: String,
+        town: String        
+    },
     author: {
         id: {type: String, ref: 'User'},
         name: String
-    }
+    },    
+    transaction: [{
+        id: {type: Schema.Types.ObjectId},
+        date_transaction: {type: Date, default: Date.now},
+        value: {type: Date, default: Date.now},
+        type_transaction: {type: String, default: "NONE"},
+        number: Number,
+        description: String,
+        Third_party: {
+            id: {type: Schema.Types.ObjectId, ref: 'Societe'},
+            name: String
+        },
+        debit: {type: Number, default: null },
+        credit: Number
+        //balance: Number
+    }]
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
@@ -82,9 +98,6 @@ BankSchema.virtual('acc_type').get(function () {
     
     var acc_type = {};
     var account_type = this.account_type;
-    
-//    if(account_type)
-//       acc_type = typeList.values[account_type].label;
 
     if (account_type && typeList.values[account_type] && typeList.values[account_type].label) {
             acc_type.id = account_type;
