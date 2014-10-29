@@ -78,7 +78,8 @@ var contactSchema = new Schema({
 	birthday: Date,
 	datec: {type: Date},
 	user_creat: String,
-	user_modif: String
+	user_modif: String,
+	oldId: String // only use for migration
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
@@ -186,7 +187,7 @@ contactSchema.virtual('attractivity')
 
 contactSchema.virtual('fullAddress').get(function () {
 
-	return this.address + ', ' + this.zip + ', ' + this.town;
+	return this.address + ', ' + this.zip + ' ' + this.town;
 
 });
 

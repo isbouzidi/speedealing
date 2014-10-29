@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
 		timestamps = require('mongoose-timestamp');
 
-var Task = require('../controllers/task')
+var Task = require('../controllers/task');
 
 
 module.exports = function (app, passport, auth, usersSocket) {

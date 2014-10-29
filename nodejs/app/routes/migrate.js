@@ -10,6 +10,7 @@ var cradle = require('cradle'),
 		mongodb = require('mongodb'),
 		timestamps = require('mongoose-timestamp'),
 		_ = require('lodash'),
+		async = require('async'),
 		config = require(__dirname + '/../../config/config'),
 		fs = require('fs');
 
@@ -30,6 +31,8 @@ if (config.couchdb != undefined)
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var UserModel = mongoose.model('user');
+
+var Task = require('../controllers/task');
 
 module.exports = function (app, passport, auth) {
 
@@ -52,6 +55,9 @@ module.exports = function (app, passport, auth) {
 				break;
 			case "contact":
 				migrate.contact(req, res);
+				break;
+			case "task":
+				migrate.task(req, res);
 				break;
 		}
 
@@ -222,8 +228,9 @@ function Migrate() {
 }
 
 Migrate.prototype = {
-	contact: function (req, res) {
-		couchdb.view('Contact/list', function (err, rows) {
+	task: function (req, res) {
+
+		couchdb.view('Agenda/list', function (err, rows) {
 			if (err)
 				return console.log(err);
 
@@ -231,56 +238,151 @@ Migrate.prototype = {
 
 			rows.forEach(function (row) {
 
-				var _id = row._id;
+				async.parallel({
+					societe: function (callback) {
+						if (row.societe.id == null)
+							return callback(null, null);
 
-				delete row._id;
-				var notes = row.notes;
+						SocieteModel.findOne({oldId: row.societe.id}, "_id name", callback);
+					},
+					contact: function (callback) {
+						if (row.contact.id == null)
+							return callback(null, null);
 
-				delete row.notes;
+						ContactModel.findOne({oldId: row.contact.id}, "_id firstname lastname", callback);
+					}
+				}, function (err, results) {
 
-				var datec;
-				if (typeof row.datec !== 'undefined')
-					datec = new Date(row.datec);
-				else
-					datec = new Date(row.tms);
+					delete row._id;
+
+					if (results.societe)
+						row.societe.id = results.societe._id;
+					else
+						delete row.societe.id;
+
+					if (results.contact)
+						row.contact.id = results.contact._id;
+					else
+						delete row.contact.id;
+
+					var datec;
+					if (typeof row.datec !== 'undefined')
+						datec = new Date(row.datec);
+					else
+						datec = new Date(row.tms);
 
 //console.log(row.datec + "/"+row.tms+":" + datec);
 
-				delete row.datec;
+					//console.log(row);
+					//return;
 
-				var contact = new ContactModel(row);
+					var datef = null;
+					if (row.datef)
+						datef = new Date(row.datef);
 
-				societe.datec = datec;
-				societe.createdAt = datec;
-
-				if (notes) {
-					societe.notes.push({
-						note: notes,
-						author: {},
-						datec: new Date(row.tms)
-					});
-				}
-
-				if (row.public_notes)
-					societe.notes.push({
-						note: row.public_notes,
-						author: {},
-						datec: new Date(row.tms)
-					});
-
-				//console.log(row.action_co);
-				if (row.action_co && row.action_co != "ACO_NONE")
-					societe.familyProduct.push(convert_action_co[row.action_co].label);
-
-				societe.oldId = _id;
-
-				//console.log(societe);
-
-				societe.save(function (err, doc) {
-					if (err) {
-						console.log(err);
+					var datep = null;
+					if (row.datep)
+						datep = new Date(row.datep);
+					
+					switch (row.type_code) {
+						case "RDV_RDV" :
+							row.type_code = "AC_RDV";
+							break;
 					}
 
+					var task = {
+						name: row.label,
+						societe: row.societe,
+						contact: row.contact || null,
+						datec: datec,
+						datep: datep, // date de debut
+						datef: datef,
+						type: row.type_code,
+						entity: row.entity,
+						author: row.author,
+						notes: [
+							{
+								author: row.author,
+								datec: new Date(row.tms),
+								percentage: row.percentage || 0,
+								note: row.notes || ""
+							}
+						]
+					};
+
+					switch (row.Status) {
+						case "DONE" :
+							task.archived = true;
+							task.usertodo = row.usertodo;
+							task.userdone = row.userdone;
+							break;
+						default:
+							task.usertodo = row.usertodo;
+					}
+
+					//console.log(task);
+					//return;
+					Task.create(task, req.user, null, function (err, task) {
+						if (err)
+							console.log(err);
+						//	console.log(task);
+					});
+
+				});
+			});
+		});
+	},
+	contact: function (req, res) {
+
+		couchdb.view('Contact/list', function (err, rows) {
+			if (err)
+				return console.log(err);
+
+			rows.forEach(function (row) {
+
+				var _id = row._id;
+
+				SocieteModel.findOne({oldId: row.societe.id}, "_id name", function (err, societe) {
+					if (err)
+						console.log(err);
+
+					delete row._id;
+
+					if (societe)
+						row.societe.id = societe._id;
+					else
+						delete row.societe.id;
+
+					var datec;
+					if (typeof row.datec !== 'undefined')
+						datec = new Date(row.datec);
+					else
+						datec = new Date(row.tms);
+
+//console.log(row.datec + "/"+row.tms+":" + datec);
+
+					delete row.datec;
+
+					var contact = new ContactModel(row);
+
+					contact.oldId = _id;
+
+					contact.datec = datec;
+					contact.createdAt = datec;
+
+					if (row.Tag && row.Tag.length)
+						contact.Tag = row.Tag;
+
+					//console.log(contact);
+
+					//return;
+
+					contact.save(function (err, doc) {
+						if (err) {
+							console.log(err);
+						}
+
+					});
 				});
 			});
 		});
