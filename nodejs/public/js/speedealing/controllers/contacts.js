@@ -3,7 +3,7 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 		$scope.global = Global;
 		$scope.listCode = {};
 		$scope.active = 1;
-		$scope.jobs = [];
+		$scope.dict = {};
 
 		$scope.soncas = [
 			"Sécurité", 'Orgueil', 'Nouveauté', 'Confort', 'Argent', "Sympathique"
@@ -18,10 +18,10 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 			};
 
 			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_job"
+					dictName: ["fk_civilite","fk_job"]
 				}
 			}).success(function (data, status) {
-				$scope.jobs = data;
+				$scope.dict = data;
 			});
 		};
 
@@ -58,6 +58,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			$location.path('/contacts');
 		};
 		$scope.contact = {};
+		$scope.dict={};
 
 		$scope.etats = [
 			{id: "ST_NEVER", name: "Non déterminé"},
@@ -112,26 +113,10 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 		$scope.init = function () {
 
 			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_contact_status"
-				}
-
-			}).success(function (data) {
-
-				$scope.Status = data;
-			});
-
-			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_job"
+					dictName: ["fk_job","fk_hobbies","fk_civilite","fk_contact_status"]
 				}
 			}).success(function (data, status) {
-				$scope.jobs = data;
-			});
-
-			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_hobbies"
-				}
-			}).success(function (data, status) {
-				$scope.hobbies = data;
+				$scope.dict = data;
 			});
 		};
 

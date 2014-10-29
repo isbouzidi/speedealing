@@ -8,14 +8,25 @@
         <div class="field-block">
             <label><b>{{t 'companies:Lastname'}}</b></label>
 
-            <a href="#" 
+			  <span
+               editable-select="contact.civilite" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="civilite"
+			   e-ng-options="s.label as s.label for s in dict.fk_civilite.values">
+                \{{contact.civilite|| "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="civilite.$show()" ng-hide="civilite.$visible"></span>
+			
+            <span class="margin-left"
                editable-text="contact.lastname" 
                buttons="no"
                onaftersave="update()"
                blur="submit"
                e-form="lastname">
                 \{{contact.lastname|| "Non défini"}}
-            </a>
+            </span>
             <span class="icon-pencil grey" ng-click="lastname.$show()" ng-hide="lastname.$visible"></span>
 
         </div>
@@ -57,15 +68,15 @@
         <div class="field-block">
             <label><b>{{t 'companies:PostOrFunction'}}</b></label>
 
-            <a href="#" 
+            <span
                editable-select="contact.poste" 
                buttons="no"
                onaftersave="update()"
                blur="submit"
                e-form="poste"
-			   e-ng-options="s.label as s.label for s in jobs.values">
+			   e-ng-options="s.label as s.label for s in dict.fk_job.values">
                 \{{contact.poste|| "Non défini"}}
-            </a>
+            </span>
 
             <span class="icon-pencil grey" ng-click="poste.$show()" ng-hide="poste.$visible"></span>
 
@@ -79,7 +90,7 @@
                   buttons="no"
                   onaftersave="update()"
                   blur="submit"
-                  e-ng-options="s.id as s.label for s in Status.values">
+                  e-ng-options="s.id as s.label for s in dict.fk_contact_status.values">
                 \{{contact.status.name|| "Non défini"}}</span>
 
         </div>
@@ -168,7 +179,7 @@
 		<div class="field-block">
             <label><b>{{t 'companies:Hobbies'}}</b></label>
 
-			<a href="#" editable-checklist="contact.hobbies" e-class="xeditable" e-ng-options="s.label as s.label for s in hobbies.values" onaftersave="update()">
+			<a href="#" editable-checklist="contact.hobbies" e-class="xeditable" e-ng-options="s.label as s.label for s in dict.fk_hobbies.values" onaftersave="update()">
 				\{{ contact.hobbies || 'Non défini'}}
 			</a>
 
