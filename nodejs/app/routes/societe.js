@@ -807,6 +807,8 @@ module.exports = function (app, passport, auth) {
 										societe.save(function (err, doc) {
 											if (err)
 												console.log("societe : " + JSON.stringify(err));
+											
+											console.log("save");
 
 											/*if (doc == null)
 											 console.log("null");
