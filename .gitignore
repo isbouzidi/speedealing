@@ -12,6 +12,7 @@ dolibarr_install.log
 doxygen_warnings.log
 .project
 .DS_Store
+.texlipse
 couchdb.stderr
 couchdb.stdout
 *.map
