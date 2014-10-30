@@ -78,7 +78,10 @@ Dict.extrafield({extrafieldName: 'Report'}, function (err, doc) {
 		console.log(err);
 		return;
 	}
-	extrafields = doc.fields;
+	if (doc)
+		extrafields = doc.fields;
+	else
+		console.log('Dict is not loaded');
 });
 
 ReportSchema.virtual('_model')

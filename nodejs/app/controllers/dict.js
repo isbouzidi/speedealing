@@ -43,15 +43,17 @@ exports.dict = readDict;
 exports.extrafield = readExtrafield;
 
 function convertDict(params, doc, callback) {
-	var result = {
-		_id: doc._id,
-		values: []
-	};
+	var result = {};
 
 	if (params.object) // retourne le dict complet
 		return callback(doc);
 
 	if (doc) { // converti le dict en array
+		var result = {
+				_id: doc._id,
+				values: []
+		};
+		
 		if (doc.lang)
 			result.lang = doc.lang;
 		for (var i in doc.values) {
@@ -71,6 +73,8 @@ function convertDict(params, doc, callback) {
 				result.values.push(val);
 			}
 		}
+	} else {
+		console.log('Dict is not loaded');
 	}
 
 	callback(result);

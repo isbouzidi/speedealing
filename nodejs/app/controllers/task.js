@@ -17,12 +17,19 @@ var Dict = require('../controllers/dict');
 
 var actioncomm = {};
 Dict.dict({dictName: "fk_actioncomm", object: true}, function (err, docs) {
-	actioncomm = docs;
-
-	actioncomm.event = [];
-	for (var i in docs.values) {
-		if (docs.values[i].type == 'event')
-			actioncomm.event.push(i);
+	if (err) {
+		console.log(err);
+		return;
+	}
+	if (docs) {
+		actioncomm = docs;
+		actioncomm.event = [];
+		for (var i in docs.values) {
+			if (docs.values[i].type == 'event')
+				actioncomm.event.push(i);
+		}
+	} else {
+		console.log('Dict is not loaded');
 	}
 });
 
