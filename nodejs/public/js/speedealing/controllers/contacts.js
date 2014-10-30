@@ -14,11 +14,14 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 				societe: {
 					id: object.societe._id,
 					name: object.societe.name
-				}
+				},
+				address: object.societe.address,
+				zip: object.societe.zip,
+				town: object.societe.town
 			};
 
 			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: ["fk_civilite","fk_job"]
+					dictName: ["fk_civilite", "fk_job"]
 				}
 			}).success(function (data, status) {
 				$scope.dict = data;
@@ -58,7 +61,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			$location.path('/contacts');
 		};
 		$scope.contact = {};
-		$scope.dict={};
+		$scope.dict = {};
 
 		$scope.etats = [
 			{id: "ST_NEVER", name: "Non déterminé"},
@@ -113,7 +116,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 		$scope.init = function () {
 
 			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: ["fk_job","fk_hobbies","fk_civilite","fk_contact_status"]
+					dictName: ["fk_job", "fk_hobbies", "fk_civilite", "fk_contact_status"]
 				}
 			}).success(function (data, status) {
 				$scope.dict = data;
