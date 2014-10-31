@@ -32,5 +32,8 @@
     "DateTransaction": "Date écriture",
     "TypeTransaction": "Type",
     "NumberTransaction": "Numéro",
-    "Transacrtions": "Ecritures"
+    "Transactions": "Ecritures",
+    "Bank": "Banques/Caisses",
+    "List": "Liste des comptes",
+    "Category": "Rubriques"
 }
