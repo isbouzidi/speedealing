@@ -49,7 +49,7 @@ exports.getDefaultGoogleContactsParams =
 
 exports.forEachGoogleUser = forEachGoogleUser;
 
-eports.refreshGoogleTokens = refreshGoogleTokens;
+exports.refreshGoogleTokens = refreshGoogleTokens;
 
 
 /* Methods definitions. */
