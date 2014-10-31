@@ -93,7 +93,7 @@ function insertEvent(user, event, callback) {
 	if (user == null)
 		return callback("User empty");
 
-	UserModel.findOne({_id: user}, "google", function (err, user) {
+	UserModel.findOne({_id: user}, "google firstname lastname", function (err, user) {
 		if (err)
 			return callback(err);
 		if (user == null)
@@ -108,7 +108,7 @@ function insertEvent(user, event, callback) {
 							if (hasRemoteCalendar(user))
 								return cb();
 							else
-								insertCalendar(user, "CRM", cb);
+								insertCalendar(user, "CRM " + user.firstname + " " + user.lastname, cb);
 						},
 						function (cb) {
 							var t = new GoogleCalendar(gcommon.getDefaultGoogleContactsParams(user));
