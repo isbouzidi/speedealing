@@ -469,7 +469,7 @@ Billing.prototype = {
 		}
 
 		DeliveryModel.aggregate([
-			{$match: {Status: "SEND", entity: req.query.entity, datec: {$lte: new Date(req.query.dateEnd)}}},
+			{$match: {Status: "SEND", entity: req.query.entity, datedl: {$lte: new Date(req.query.dateEnd)}}},
 			{$project: project}
 		])
 				.unwind('lines')
@@ -487,7 +487,7 @@ Billing.prototype = {
 	create: function (req, res) {
 
 		var delivery = req.delivery;
-		
+
 		SocieteModel.findOne({_id: req.delivery.client.cptBilling.id}, function (err, societe) {
 			var bill = new FactureModel();
 
@@ -535,11 +535,11 @@ Billing.prototype = {
 	},
 	createAll: function (req, res) {
 		//console.log(req.body.dateEnd);
-		
+
 		DeliveryModel.aggregate([
-			{"$match": {Status: "SEND", entity: req.body.entity, datec: {$lte: new Date(req.body.dateEnd)}}},
-			{"$project": {"datec": 1, "shipping": 1, "lines": 1, "ref": 1, "societe": "$client.cptBilling"}},
-			{"$sort": {datec: 1}},
+			{"$match": {Status: "SEND", entity: req.body.entity, datedl: {$lte: new Date(req.body.dateEnd)}}},
+			{"$project": {"datec": 1, datedl: 1, "shipping": 1, "lines": 1, "ref": 1, "societe": "$client.cptBilling"}},
+			{"$sort": {datedl: 1}},
 			//{"$unwind": "$lines"},
 			{"$group": {"_id": "$societe.id", "data": {"$push": "$$ROOT"}}}
 		], function (err, docs) {
