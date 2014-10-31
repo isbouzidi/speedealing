@@ -65,23 +65,22 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
         $scope.gridOptionsTransactions = {
             data: 'transactions',
             enableRowSelection: false,
-            filterOptions: $scope.filterOptionstransaction,
+            filterOptions: $scope.filterOptionsTransaction,
             i18n: 'fr',
             showFooter: true,
             footerTemplate: '<div style="padding: 10px;">\n\
             <span class="right"><strong>Solde actuel : \{{totalCurrentBalance | currency:bank.currency}}<strong></span><br>\n\
             <span class="right"><strong>Solde total : \{{totalBalance | currency:bank.currency}}<strong></span>\n\
             </div>',
-            //groups: ['value'],
             footerRowHeight: 50,
             enableColumnResize: true,
             cellClass: 'cellToolTip',
             columnDefs: [
                 {field: 'date_transaction', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
                 {field: 'value', displayName: 'Valeur', cellFilter: "date:'dd-MM-yyyy'"},
-                {field: 'tans_type.name', displayName: 'type'},
+                {field: 'trans_type.name', displayName: 'type'},
                 {field: 'description', displayName: 'Déscription'},
-                {field: 'third_party', displayName: 'Tiers'},
+                {field: 'third_party.name', displayName: 'Tiers'},
                 {field: 'debit', displayName: 'Debit', cellFilter: "currency:''"},
                 {field: 'credit', displayName: 'Credit', cellFilter: "currency:''"},
                 {field: 'balance', displayName: 'Solde', cellFilter: "currency:''"}
@@ -103,12 +102,18 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
                 Id: $routeParams.id
             }, function (bank) {
                 $scope.bank = bank;
-                $scope.countTransactions = bank.transaction.length;
                 pageTitle.setTitle('Fiche ' + $scope.bank.libelle);
-                
-                $scope.RegenerateTransactions(bank.transaction);
-                
                 $scope.completeInfos = $scope.isValidInfo($scope.bank);
+                
+                $http({method: 'GET', url: '/api/transaction', params: {
+                    find: {"bank.id": bank._id}
+                }
+                }).success(function (data, status) {
+                    
+                    $scope.RegenerateTransactions(data);
+                    $scope.countTransactions = data.length;
+                });
+                
             }
             );
 
@@ -134,7 +139,7 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
                     $scope.transactions[i].balance = (-1 * $scope.transactions[i].debit) + $scope.transactions[i].credit + $scope.transactions[i-1].balance;                  
                 }
             $scope.totalBalance = $scope.transactions[transactions.length - 1].balance;
-            
+            console.log($scope.transactions);
             //calculate current and total balance 
             var todayDate = new Date();
             $scope.totalCurrentBalance = 0;
@@ -187,7 +192,7 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
         $scope.addNewTransaction = function () {
             var modalInstance = $modal.open({
                 templateUrl: '/partials/bank/createTransaction.html',
-                controller: "TransactionCreateController",
+                controller: "TransactionController",
                 windowClass: "steps",
                 resolve: {
                     object: function () {
@@ -402,38 +407,5 @@ angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http
                 $modalInstance.close(response);
                 $location.path("/bank/" + response._id);
             });
-        };
-    }]);
-angular.module('mean.bank').controller('TransactionCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', '$location', 'object', 'Bank', function ($scope, $http, $modalInstance, $upload, $route, Global, $location, object, Bank) {
-    
-    $scope.global = Global;
-    
-    $scope.transaction = {
-        value: null
-    };       
-    
-    $scope.init = function(){
-        
-        $scope.bank = object.bank;
-        $scope.transaction_type = object.transaction_type;
-    };
-    
-    $scope.createTransaction = function(){
-                        
-        $scope.transaction.value = $scope.transaction.date_transaction;
-        $scope.bank.transaction.push($scope.transaction);
-
-        var bank = $scope.bank;
-
-        bank.$update(function (response) {
-            $modalInstance.close(response);
-        });
-    };
-        
-        $scope.open = function ($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-
-            $scope.opened = true;
         };
     }]);
