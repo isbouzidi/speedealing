@@ -36,6 +36,10 @@ var TransactionSchema = new Schema({
     author: {
         id: {type: String, ref: 'User'},
         name: String
+    },
+    category:{
+        id: {type: Schema.Types.ObjectId, ref: 'BankCategory'},
+        name: String
     }
 }, {
 	toObject: {virtuals: true},
