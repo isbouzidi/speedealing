@@ -52,12 +52,12 @@
 					<li>
 						<div class="row">
 							<div class="col-md-9">
-								<a href="#!/tickets"> <strong>\{{statsByEntity.newTickets[1].count}}</strong> Nouveaux <br>tickets<br/><small>ce mois-ci</small>
+								<a href="#!/task"> <strong>\{{statsByEntity.newTasks[1].count}}</strong> Nouvelles <br>actions<br/><small>ce mois-ci</small>
 								</a>
 							</div>
 							<div  class="col-md-3">
-								<span class="indic-progress green" ng-show="gain(statsByEntity.newTickets) > 0">+\{{gain(statsByEntity.newTickets) | number:0}}% ▲</span>
-								<span class="indic-progress red" ng-show="gain(statsByEntity.newTickets) < 0">\{{gain(statsByEntity.newTickets) | number:0}}% ▼</span>
+								<span class="indic-progress green" ng-show="gain(statsByEntity.newTasks) > 0">+\{{gain(statsByEntity.newTasks) | number:0}}% ▲</span>
+								<span class="indic-progress red" ng-show="gain(statsByEntity.newTasks) < 0">\{{gain(statsByEntity.newTasks) | number:0}}% ▼</span>
 							</div>
 						</div>
 					</li>

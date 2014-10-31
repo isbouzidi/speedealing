@@ -87,6 +87,16 @@ module.exports = function (app, passport, auth) {
 					verifyResult(err, docs, cb);
 				});
 			},
+			newTasks: function (cb) {
+				TaskModel.aggregate([
+					{$match: {entity: entity, createdAt: {$gte: dateStart}}},
+					{$project: {_id: 1, month: {$month: "$createdAt"}}},
+					{$group: {_id: "$month", count: {$sum: 1}}},
+					{$sort: {_id: 1}}
+				], function (err, docs) {
+					verifyResult(err, docs, cb);
+				});
+			},
 			newLeads: function (cb) {
 				LeadModel.aggregate([
 					{$match: {entity: entity, createdAt: {$gte: dateStart}}},
