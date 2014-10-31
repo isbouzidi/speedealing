@@ -199,10 +199,10 @@ module.exports = function (passport) {
 				if (!user.google.user_id)
 					user.google.user_id = profile.id;
 
-				if (accessToken)
-					user.google.tokens.access_token = accessToken;
-				if (refreshToken)
-					user.google.tokens.refresh_token = refreshToken;
+				user.google.tokens = {
+					access_token: accessToken,
+					refresh_token: refreshToken
+				};
 
 				//console.log(user);
 

@@ -41,6 +41,9 @@ exports.setAccessCodeGoogle = function (req, res, next) {
 
 		googleCommon.setAccessCode(code, user,
 				function (err) {
+					
+					console.log(user.google.tokens);
+					
 					if (err) {
 						console.log(err);
 						res.send(500, "ERR: " + err);
