@@ -10,13 +10,13 @@ var mongoose = require('mongoose'),
 		config = require('./config');
 
 
-module.exports = function(passport) {
+module.exports = function (passport) {
 	//Serialize sessions
-	passport.serializeUser(function(user, done) {
+	passport.serializeUser(function (user, done) {
 		done(null, user.id);
 	});
 
-	passport.deserializeUser(function(id, done) {
+	passport.deserializeUser(function (id, done) {
 		//TODO faire en automatique
 		var rights = {
 			societe: {
@@ -26,12 +26,12 @@ module.exports = function(passport) {
 
 		User.findOne({
 			_id: id
-		}, "-password -google.tokens", function(err, user) {
+		}, "-password -google.tokens", function (err, user) {
 			user.rights = rights;
 
 			//console.log(user.rights);
 			if (user.groupe)
-				UserGroup.findOne({_id: user.groupe}, "rights", function(err, group) {
+				UserGroup.findOne({_id: user.groupe}, "rights", function (err, group) {
 					user.rights = _.extend(user.rights, group.rights);
 					//console.log(user.rights);
 					done(err, user);
@@ -46,10 +46,10 @@ module.exports = function(passport) {
 		usernameField: 'name',
 		passwordField: 'password'
 	},
-	function(login, password, done) {
+	function (login, password, done) {
 		User.findOne({
 			name: login
-		}, function(err, user) {
+		}, function (err, user) {
 			if (err) {
 				return done(err);
 			}
@@ -76,10 +76,10 @@ module.exports = function(passport) {
 		consumerSecret: config.twitter.clientSecret,
 		callbackURL: config.twitter.callbackURL
 	},
-	function(token, tokenSecret, profile, done) {
+	function (token, tokenSecret, profile, done) {
 		User.findOne({
 			'twitter.id_str': profile.id
-		}, function(err, user) {
+		}, function (err, user) {
 			if (err) {
 				return done(err);
 			}
@@ -90,7 +90,7 @@ module.exports = function(passport) {
 					provider: 'twitter',
 					twitter: profile._json
 				});
-				user.save(function(err) {
+				user.save(function (err) {
 					if (err)
 						console.log(err);
 					return done(err, user);
@@ -108,10 +108,10 @@ module.exports = function(passport) {
 		clientSecret: config.facebook.clientSecret,
 		callbackURL: config.facebook.callbackURL
 	},
-	function(accessToken, refreshToken, profile, done) {
+	function (accessToken, refreshToken, profile, done) {
 		User.findOne({
 			'facebook.id': profile.id
-		}, function(err, user) {
+		}, function (err, user) {
 			if (err) {
 				return done(err);
 			}
@@ -123,7 +123,7 @@ module.exports = function(passport) {
 					provider: 'facebook',
 					facebook: profile._json
 				});
-				user.save(function(err) {
+				user.save(function (err) {
 					if (err)
 						console.log(err);
 					return done(err, user);
@@ -141,10 +141,10 @@ module.exports = function(passport) {
 		clientSecret: config.github.clientSecret,
 		callbackURL: config.github.callbackURL
 	},
-	function(accessToken, refreshToken, profile, done) {
+	function (accessToken, refreshToken, profile, done) {
 		User.findOne({
 			'github.id': profile.id
-		}, function(err, user) {
+		}, function (err, user) {
 			if (!user) {
 				user = new User({
 					name: profile.displayName,
@@ -153,7 +153,7 @@ module.exports = function(passport) {
 					provider: 'github',
 					github: profile._json
 				});
-				user.save(function(err) {
+				user.save(function (err) {
 					if (err)
 						console.log(err);
 					return done(err, user);
@@ -171,13 +171,13 @@ module.exports = function(passport) {
 		clientSecret: config.google.clientSecret,
 		callbackURL: config.google.callbackURL
 	},
-	function(accessToken, refreshToken, profile, done) {
+	function (accessToken, refreshToken, profile, done) {
 		//console.log(refreshToken);
 		//console.log(profile);
 		User.findOne({
 			//'google.id': profile.id
 			email: profile._json.email
-		}, function(err, user) {
+		}, function (err, user) {
 
 			if (!user) {
 				user = new User({
@@ -187,7 +187,7 @@ module.exports = function(passport) {
 					provider: 'google',
 					google: profile._json
 				});
-				user.save(function(err) {
+				user.save(function (err) {
 					if (err)
 						console.log(err);
 					return done(err, user);
@@ -196,24 +196,17 @@ module.exports = function(passport) {
 				user.LastConnection = user.NewConnection;
 				user.NewConnection = new Date();
 
-				if (!user.google || !user.google.user_id)
-					user.google = _.extend(user.google,
-							{
-								"user_id": profile.id
-							});
+				if (!user.google.user_id)
+					user.google.user_id = profile.id;
 
-				if (accessToken && refreshToken)
-					user.google = _.extend(user.google,
-							{
-								"tokens": {
-									access_token: accessToken,
-									refresh_token: refreshToken
-								}
-							});
+				if (accessToken)
+					user.google.tokens.access_token = accessToken;
+				if (refreshToken)
+					user.google.tokens.refresh_token = refreshToken;
 
 				//console.log(user);
 
-				user.save(function(err, user) {
+				user.save(function (err, user) {
 					if (err)
 						console.log(err);
 
