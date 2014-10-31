@@ -43,22 +43,7 @@ var BankSchema = new Schema({
     author: {
         id: {type: String, ref: 'User'},
         name: String
-    },    
-    transaction: [{
-        id: {type: Schema.Types.ObjectId},
-        date_transaction: {type: Date, default: Date.now},
-        value: {type: Date, default: Date.now},
-        type_transaction: {type: String, default: "NONE"},
-        number: Number,
-        description: String,
-        Third_party: {
-            id: {type: Schema.Types.ObjectId, ref: 'Societe'},
-            name: String
-        },
-        debit: {type: Number, default: null },
-        credit: Number
-        //balance: Number
-    }]
+    }
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
