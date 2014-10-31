@@ -209,10 +209,10 @@ function createTask(task, user, usersSocket, callback) {
 			url: config.url + "/#!/task/" + new_task._id
 		}
 	}, function (err, event_id) {
-		//if (err)
-		//	console.log(err);
+		if (err)
+			console.log(err);
 
-		//console.log(event_id);
+		console.log(event_id);
 	});
 
 	//console.log(bill);
