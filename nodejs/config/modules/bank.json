@@ -1,0 +1,100 @@
+{
+	"_id": "module:Bank",
+	"enabled": true,
+	"boxes": [
+		{
+			"1": "box_commandes.php"
+		}
+	],
+	"const": [
+		[
+			"COMMANDE_ADDON_PDF",
+			"chaine",
+			"einstein",
+			"Nom du gestionnaire de generation des commandes en PDF",
+			0
+		],
+		[
+			"COMMANDE_ADDON",
+			"chaine",
+			"mod_commande_marbre",
+			"Nom du gestionnaire de numerotation des commandes",
+			0
+		],
+		[
+			"COMMANDE_ADDON_PDF_ODT_PATH",
+			"chaine",
+			"DOL_DATA_ROOT/doctemplates/orders",
+			"",
+			0
+		]
+	],
+	"rights": {
+		"bank": [
+			{
+				"desc": "Lire la liste des banque",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer/modifier les banques",
+				"perm": {
+					"create": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"numero": 25,
+	"family": "crm",
+	"name": "Bank",
+	"description": "Gestion des banques",
+	"version": "speedealing",
+	"const_name": "MAIN_MODULE_Bank",
+	"picto": "order",
+	"config_page_url": [
+		"commande.php@commande"
+	],
+	"depends": [
+		"modSociete"
+	],
+	"requiredby": [
+		"modExpedition"
+	],
+	"conflictwith": [],
+	"langfiles": [
+		"orders",
+		"bills",
+		"companies",
+		"products",
+		"deliveries"
+	],
+	"menus": {
+		"menu:bank": {
+			"position": 81,
+			"perms": "bank.read",
+			"enabled": "$conf->bank->enabled",
+			"usertype": 2,
+			"title": "bank:Bank",
+			"submenus": {
+				"menu:banklist": {
+					"position": 1,
+					"url": "#!/bank",
+					"perms": "bank.read",
+					"enabled": "$conf->bank->enabled",
+					"usertype": 2,
+					"title": "bank:List"
+				},
+				"menu:categorybank": {
+					"position": 10,
+					"url": "#!/categoryBank",
+					"perms": "categorybank.prefac",
+					"enabled": "$conf->facture->enabled",
+					"usertype": 2,
+					"title": "bank:Category"
+				}
+			}
+		}
+	}
+}
