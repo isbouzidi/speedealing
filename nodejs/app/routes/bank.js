@@ -29,7 +29,7 @@ module.exports = function (app, passport, auth) {
     app.get('/api/bank/:accountId', auth.requiresLogin, object.show);
     
     //update an account bank
-    app.put('/api/bank/:accountId', auth.requiresLogin, object.update);
+    app.put('/api/bank/:accountId', auth.requiresLogin, object.update);        
     
     app.param('accountId', object.account);
 };
@@ -64,8 +64,6 @@ Object.prototype = {
     },
     show: function (req, res) {
       
-        console.log("show : " + req.account);
-        
         res.json(req.account);
     },
     create: function (req, res){
