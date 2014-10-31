@@ -358,6 +358,7 @@ angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http
                 $scope.dict = data;
                 
             });
+            
         };
 
         $scope.isValidRef = function () {

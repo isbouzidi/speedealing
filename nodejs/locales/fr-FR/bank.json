@@ -35,5 +35,7 @@
     "Transactions": "Ecritures",
     "Bank": "Banques/Caisses",
     "List": "Liste des comptes",
-    "Category": "Rubriques"
+    "Category": "Rubriques",
+    "ListOfBankCategory": "Rubrique banque",
+    "NewBankCategory": "Nouvelle rubrique de banque"
 }

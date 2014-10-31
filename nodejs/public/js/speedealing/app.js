@@ -35,7 +35,8 @@ window.app = angular.module('mean', [
 	'ui.chart',
 	'checklist-model',
 	'mean.bank',
-        'mean.transaction'
+        'mean.transaction',
+        'mean.bankCategory'
 ]);
 
 angular.module('mean.system', []);
@@ -55,6 +56,7 @@ angular.module('mean.delivery', []);
 angular.module('mean.lead', []);
 angular.module('mean.bank', []);
 angular.module('mean.transaction', []);
+angular.module('mean.bankCategory', []);
 
 angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
 		$i18nextProvider.options = {

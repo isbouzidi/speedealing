@@ -13,6 +13,14 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
         
             $scope.bank = object.bank;
             $scope.transaction_type = object.transaction_type;
+            
+            $http({method: 'GET', url: '/api/bankCategory', params: {
+                    
+                }
+            }).success(function (data, status) {
+                $scope.category = data;
+                
+            });
         }
         if(object.bill){
         
@@ -41,6 +49,11 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
         
         
         $scope.transaction.value = $scope.transaction.date_transaction;
+        
+        $scope.transaction.category = {
+            id: $scope.transaction.category._id,
+            name: $scope.transaction.category.name
+        };
         
         $scope.transaction.bank = {
             id: $scope.bank._id,

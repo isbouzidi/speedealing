@@ -43,6 +43,12 @@
             <textarea class="input" rows="3" cols="60" data-ng-model="transaction.description"></textarea>
         </div>
         <div class="field-block button-height">
+            <label><b>{{t 'bank:Category'}}</b></label>
+            <select class="form-control" 
+                    data-ng-model="transaction.category" 
+                    data-ng-options="c as c.name for c in category"></select>
+        </div>
+        <div class="field-block button-height">
             <label for="nom"><b>{{t 'bank:Debit'}}</b></label>
             <input type="text" 
                    data-ng-model="transaction.debit"

@@ -7,7 +7,8 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.types = [];
 
-		if (Global.user.rights.task.readAll)
+		//if (Global.user.rights.task && Global.user.rights.task.readAll))
+		if (true)
 			$scope.types = [{name: "Mes tâches", id: "MYTASK"},
 				{name: "Toutes les tâches", id: "ALLTASK"},
 				{name: "Mes tâches archivées", id: "MYARCHIVED"},

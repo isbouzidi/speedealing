@@ -88,9 +88,9 @@
 				},
 				"menu:categorybank": {
 					"position": 10,
-					"url": "#!/categoryBank",
-					"perms": "categorybank.prefac",
-					"enabled": "$conf->facture->enabled",
+					"url": "#!/bankCategory",
+					"perms": "categorybank.read",
+					"enabled": "$conf->bankCategory->enabled",
 					"usertype": 2,
 					"title": "bank:Category"
 				}
