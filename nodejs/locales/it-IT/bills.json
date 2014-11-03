@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Fattura",
     "Bills": "Fatture",
+    "List": "Liste des factures",
     "BillsCustomers": "Fatture attive",
     "BillsCustomer": "Fattura attiva",
     "BillsSuppliers": "Fatture dei fornitori",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Modello di fattura Crabe. (Modello raccomandatoi)",
     "PDFOursinDescription": "Modello di fattura oursin.",
     "TerreNumRefModelDesc1": "Restituisce un numero nel formato %syymm-nnnn per le fatture e %syymm-nnnn per le note di credito, dove yy è l'anno, mm è il mese e nnnn è una sequenza progressiva che non si azzera",
-    "TerreNumRefModelError": "Un altro modello di numerazione con sequenza $ syymm è già esistente e non è compatibile con questo modello. Rimuovere o rinominare per attivare questo modulo."
+    "TerreNumRefModelError": "Un altro modello di numerazione con sequenza $ syymm è già esistente e non è compatibile con questo modello. Rimuovere o rinominare per attivare questo modulo.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

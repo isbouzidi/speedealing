@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Invoice",
     "Bills": "Invoices",
+    "List": "Liste des factures",
     "BillsCustomers": "Customer's invoices",
     "BillsCustomer": "Customer's invoice",
     "BillsSuppliers": "Supplier's invoices",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Invoice PDF template Crabe. A complete invoice template (Template recommanded)",
     "PDFOursinDescription": "Invoice PDF template Oursin. A complete invoice template (Template alternative)",
     "TerreNumRefModelDesc1": "Renvoie le numéro sous la forme %syymm-nnnn pour les factures et %syymm-nnnn pour les notes de crédit où yy est l'année, mm le mois et nnnn un compteur séquentiel sans rupture et sans remise à 0",
-    "TerreNumRefModelError": "A bill starting with $syymm already exists and is not compatible with this model of sequence. Remove it or rename it to activate this module."
+    "TerreNumRefModelError": "A bill starting with $syymm already exists and is not compatible with this model of sequence. Remove it or rename it to activate this module.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

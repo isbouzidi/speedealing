@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Számla",
     "Bills": "Számlák",
+    "List": "Liste des factures",
     "BillsCustomers": "Ügyfél számlák",
     "BillsCustomer": "Ügyfél számla",
     "BillsSuppliers": "Szállító számlák",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Számla PDF sablon Crabe. A teljes számla sablon (Template ajánlott)",
     "PDFOursinDescription": "Számla PDF sablon Oursin. A teljes számla sablon (Template alternatív)",
     "TerreNumRefModelDesc1": "Vissza a numero formátumban %syymm-nnnn szabványos számlák és %syymm-nnnn a jóváírási ahol yy év, hónap és mm nnnn sorozata szünet nélkül, és nincs visszaút 0",
-    "TerreNumRefModelError": "A törvényjavaslat kezdődő $ syymm már létezik, és nem kompatibilis ezzel a modellel a sorozatot. Töröld le vagy nevezd át, hogy aktiválja ezt a modult."
+    "TerreNumRefModelError": "A törvényjavaslat kezdődő $ syymm már létezik, és nem kompatibilis ezzel a modellel a sorozatot. Töröld le vagy nevezd át, hogy aktiválja ezt a modult.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

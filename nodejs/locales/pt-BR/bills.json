@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Fatura",
     "Bills": "Faturas",
+    "List": "Liste des factures",
     "BillsCustomers": "Faturas a Clientes",
     "BillsCustomer": "Customer's invoice",
     "BillsSuppliers": "Faturas de Fornecedores",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Modelo de fatura completo  (ICMS,  método de pagamento a mostrar, logotipo...)",
     "PDFOursinDescription": "Modelo de fatura completo  (ICMS, métodos de pagamento, entregas, nome do projeto, referencias de orçamento, logotipo...)",
     "TerreNumRefModelDesc1": "Mostrarr número com formato %syymm-nnnn padrão para faturas e %syymm-nnnn para notas de crédito onde yy é o ano, mm mês e nnnn é uma seq�ência, sem interrupção e não pode mostrar o valor 0",
-    "TerreNumRefModelError": "O projeto começa começado por $syymm já existe e não é compatível com este modelo de seq�ência. Remova-o ou renomei-o para ativar este módulo."
+    "TerreNumRefModelError": "O projeto começa começado por $syymm já existe e não é compatível com este modelo de seq�ência. Remova-o ou renomei-o para ativar este módulo.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

@@ -122,5 +122,7 @@
     "WarningNoDocumentModelActivated": "No hi ha cap model per a la generació del document activat. Es prendrà un model per defecte fins que es configuri el mòdul.",
     "WarningLockFileDoesNotExists": "Atenció: Un cop acabada l'instal·lació, han de desactivar les eines d'instal·lació/actualització afegint l'arxiu <b>install.lock</b> al directori <b>%s</b>. L'absència d'aquest imatge mostra una fallada de seguretat.",
     "WarningUntilDirRemoved": "Aquesta alerta seguirà activa mentre la carpeta existeixi (alerta visible per als usuaris admin solament).",
-    "WarningCloseAlways": "Avís, el tancament és realitzat encara que la quantitat total difereixi entre els elements d'origen i destí. Activi aquesta funcionalitat amb precaució."
+    "WarningCloseAlways": "Avís, el tancament és realitzat encara que la quantitat total difereixi entre els elements d'origen i destí. Activi aquesta funcionalitat amb precaució.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

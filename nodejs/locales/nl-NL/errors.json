@@ -122,5 +122,7 @@
     "WarningNoDocumentModelActivated": "Er is geen model geactiveerd voor het maken van documenten. Er wordt een standaard model gekozen totdat u uw module instellingen heeft gecontroleerd / aangepast.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Alle beveiligingswaarschuwingen (alleen zichtbaar voor de beheerders) zullen actief blijven zolang de kwetsbaarheden nog bestaan. (of totdat de contante MAIN_REMOVE_INSTALL_WARNING wordt toegevoegd aan Home->Instellingen->Overige).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Račun",
     "Bills": "Računi",
+    "List": "Liste des factures",
     "BillsCustomers": "Računi kupcem",
     "BillsCustomer": "Račun kupcem",
     "BillsSuppliers": "Računi dobaviteljev",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Predloga računa Crabe. Predloga kompletnega računa (Podpora DDV opcije, popusti, pogoji plačila, logo, itd...)",
     "PDFOursinDescription": "Predloga računa oursin",
     "TerreNumRefModelDesc1": "Predlaga številko v formatu %syymm-nnnn za standardne račune in %syymm-nnnn za dobropise kjer je yy leto, mm mesec in nnnn zaporedna številka brez presledkov in večja od 0",
-    "TerreNumRefModelError": "Račun z začetkom $syymm že obstaja in ni kompatibilen s tem modelom zaporedja. Odstranite ga ali ga preimenujte za aktiviranje tega modula."
+    "TerreNumRefModelError": "Račun z začetkom $syymm že obstaja in ni kompatibilen s tem modelom zaporedja. Odstranite ga ali ga preimenujte za aktiviranje tega modula.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

@@ -122,5 +122,7 @@
     "WarningNoDocumentModelActivated": "Ei mallia, dokumenttien tuotanto, on aktivoitu. Mallia valitsi oletuksena kunnes olet tarkistanut moduuli setup.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Tämä varoitus pysyy aktiivisena niin kauan kuin tähän hakemistoon on läsnä (Näkyy vain admin-käyttäjät).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }
