@@ -1476,7 +1476,9 @@ Object.prototype = {
 		if (req.query.filter) {
 			query.$or = [
 				{name: new RegExp(req.query.filter, "gi")},
-				{code_client: new RegExp(req.query.filter, "gi")}
+				{code_client: new RegExp(req.query.filter, "gi")},
+				{Tag: req.query.filter},
+				{"segmentation.label": req.query.filter}
 			];
 			//query.$text = {$search: req.query.filter, $language: "fr"};
 		}
