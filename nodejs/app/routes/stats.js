@@ -108,8 +108,12 @@ module.exports = function (app, passport, auth) {
 				});
 			},
 			taskStats: function (cb) {
+				var dateS = new Date(dateStart);
+				dateS.setMonth(dateS.getMonth()+1);
+				
+				//console.log(dateS);
 				TaskModel.aggregate([
-					{$match: {entity: entity, createdAt: {$gte: dateStart}}},
+					{$match: {entity: entity, createdAt: {$gte: dateS}}},
 					{$project: {_id: 1, user: "$usertodo.name", type: 1}},
 					{$group: {_id: {user: "$user", type: "$type"}, count: {$sum: 1}}},
 					{$sort: {"_id.user": 1}}
