@@ -286,7 +286,7 @@ function imp_mergeOneContact(gcontact, callback) {
 function imp_mergeImportedContacts(user, gcontacts, callback) {
 	console.log("\n\n*** MERGE PROCESS ***\n\n");
 
-	async.each(gcontacts,
+	async.eachSeries(gcontacts,
 			function (gcontact, cb) {
 				imp_mergeOneContact(gcontact, cb);
 			},
