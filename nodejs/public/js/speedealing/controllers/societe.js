@@ -111,7 +111,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			}
 
 			var p = {
-				fields: "_id datec commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client",
+				fields: "_id datec commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client Tag",
 				query: this.type.id,
 				entity: Global.user.entity,
 				commercial_id: this.commercial_id,
@@ -295,7 +295,6 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				{field: 'zip', displayName: 'Code Postal', width: '80px'},
 				{field: 'town', displayName: 'Ville'},
 				{field: 'idprof3', displayName: 'APE', width: '40px'},
-				//{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'status.name', width: '150px', displayName: 'Etat',
 					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')" editable-select="row.getProperty(\'Status\')" buttons="no" e-form="StatusBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'Status\', row, $data)" e-ng-options="s.id as s.label for s in dict.fk_stcomm.values">{{row.getProperty(\'status.name\')}}</small> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>'
 				},
@@ -307,6 +306,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					cellTemplate: '<div class="ngCellText align-center"><span editable-select="row.getProperty(col.field)" buttons="no" e-form="EntityBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'entity\', row, $data)" e-ng-options="e.id as e.name for e in entities" ><span class="icon-home" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>',
 					visible: $scope.global.user.rights.societe.entity || false
 				},
+				{field: 'Tag', displayName: 'Mots clés', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'datec', displayName: 'Création fiche', width: "90px", cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'attractivity', width: "50px", displayName: 'Attractivité', cellClass: "align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
