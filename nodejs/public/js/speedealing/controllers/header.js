@@ -1,4 +1,4 @@
-angular.module('mean.system').controller('HeaderController', ['$scope', '$rootScope', '$http', '$route', 'Global', 'pageTitle', function ($scope, $rootScope, $http, $route, Global, pageTitle) {
+angular.module('mean.system').controller('HeaderController', ['$scope', '$rootScope', '$http', '$route', 'Global', 'pageTitle', 'superCache', function ($scope, $rootScope, $http, $route, Global, pageTitle, superCache) {
 		$scope.global = Global;
 		//console.log(Global);
 
@@ -29,6 +29,7 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
 			$scope.title = pageTitle.getTitle();
 			//Global.user.entity = $scope.entity.id;
 			$route.reload();
+			superCache.removeAll();
 		};
 
 		$scope.filteredResults = [];
