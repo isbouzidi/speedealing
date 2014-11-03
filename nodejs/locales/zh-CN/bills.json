@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "发票",
     "Bills": "发票",
+    "Billing": "Facturation",
     "List": "Liste des factures",
     "BillsCustomers": "客户的发票",
     "BillsCustomer": "客户的发票",

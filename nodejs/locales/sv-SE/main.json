@@ -139,7 +139,7 @@
     "Search": "Sök",
     "SearchOf": "Sök",
     "Valid": "Gäller",
-    "ToBill": "Facturer",
+    "ToBill": "Skapa faktura",
     "Approve": "Godkänn",
     "ReOpen": "Öppnar igen",
     "Upload": "Skicka fil",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Starta upp",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

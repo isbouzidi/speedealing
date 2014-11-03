@@ -139,7 +139,7 @@
     "Search": "جستجو",
     "SearchOf": "Search",
     "Valid": "صحيح",
-    "ToBill": "Facturer",
+    "ToBill": "توليد الفاتورة",
     "Approve": "تایید کردن",
     "ReOpen": "دوباره باز کردن",
     "Upload": "بارگذاری(آپلود)",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "شروع آپلود",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

@@ -139,7 +139,7 @@
     "Search": "Haku",
     "SearchOf": "Etsi",
     "Valid": "Voimassa",
-    "ToBill": "Facturer",
+    "ToBill": "Luo lasku",
     "Approve": "Hyväksy",
     "ReOpen": "Re-Open",
     "Upload": "Lähetä tiedosto",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Aloita lataaminen",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

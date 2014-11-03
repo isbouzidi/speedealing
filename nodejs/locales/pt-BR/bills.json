@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Fatura",
     "Bills": "Faturas",
+    "Billing": "Facturation",
     "List": "Liste des factures",
     "BillsCustomers": "Faturas a Clientes",
     "BillsCustomer": "Customer's invoice",

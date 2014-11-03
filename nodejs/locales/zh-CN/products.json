@@ -2,9 +2,9 @@
     "CHARSET": "UTF-8",
     "Products/Services": "Produits/Services",
     "Status": {
-        "OnSell": "En vente",
+        "OnSell": "可用的",
         "None": "Inactif",
-        "OnBuy": "En achat",
+        "OnBuy": "可用的",
         "OnBuySell": "Achat et vente"
     },
     "ProductRef": "产品编号。",

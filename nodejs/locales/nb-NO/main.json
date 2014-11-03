@@ -139,7 +139,7 @@
     "Search": "Søk",
     "SearchOf": "Søk",
     "Valid": "Gyldig",
-    "ToBill": "Facturer",
+    "ToBill": "Oppret faktura",
     "Approve": "Godkjenn",
     "ReOpen": "Gjenåpne",
     "Upload": "Send fil",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Starte opplasting",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

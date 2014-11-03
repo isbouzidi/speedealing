@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Tellimuste arv kuude kaupa",
     "AmountOfOrdersByMonthHT": "summa tellimuste kuu (ilma maksudeta)",
     "ListOfOrders": "List tellimuste",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Tarnija tellimuste",
     "CloseOrder": "Close et",
     "ConfirmCloseOrder": "Oled sa kindel, et tahad sulgeda selles järjekorras? Kui selleks on suletud, saab ainult tasulised.",
     "ConfirmCloseOrderIfSending": "Oled sa kindel, et tahad sulgeda selles järjekorras? Peate te tabama, et ainult siis, kui kõik laevanduse teha.",

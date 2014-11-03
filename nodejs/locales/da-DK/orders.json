@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Antallet af ordrer efter måned",
     "AmountOfOrdersByMonthHT": "størrelsen af ordrer af måneden (efter skat)",
     "ListOfOrders": "Liste af ordrer",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Suppliers' ordrer",
     "CloseOrder": "Luk for",
     "ConfirmCloseOrder": "Er du sikker på du ønsker at lukke denne ordre? Når en ordre er afsluttet, kan den kun blive faktureret.",
     "ConfirmCloseOrderIfSending": "Er du sikker på du ønsker at lukke denne ordre? Du skal lukke en ordre kun, når alle shipping er færdig.",

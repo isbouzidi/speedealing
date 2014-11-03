@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Número de Pedidos por Mês",
     "AmountOfOrdersByMonthHT": "Valor total de pedidos por mês (sem ICMS)",
     "ListOfOrders": "Lista de Pedidos",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Pedidos a Fornecedores",
     "CloseOrder": "Fechar Pedido",
     "ConfirmCloseOrder": "Tem certeza de que deseja fechar este pedido? Quando um pedido é fechado, ele só pode ser cobrado.",
     "ConfirmCloseOrderIfSending": "Tem certeza de que deseja fechar este pedido? Veve fechar no somente quando todos os transfretes marítimos são feitos.",

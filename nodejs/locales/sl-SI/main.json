@@ -139,7 +139,7 @@
     "Search": "Išči",
     "SearchOf": "Iskanje",
     "Valid": "Veljaven",
-    "ToBill": "Facturer",
+    "ToBill": "Kreiraj račun",
     "Approve": "Potrdi",
     "ReOpen": "Ponovno odpri",
     "Upload": "Dodaj datoteko",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Zaženi prenos",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

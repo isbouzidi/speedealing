@@ -139,7 +139,7 @@
     "Search": "חיפוש",
     "SearchOf": "חיפוש",
     "Valid": "תקף",
-    "ToBill": "Facturer",
+    "ToBill": "הפקת חשבונית",
     "Approve": "לאשר",
     "ReOpen": "פתח מחדש",
     "Upload": "שלח קובץ",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "להתחיל להעלות",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

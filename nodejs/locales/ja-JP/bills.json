@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "請求書",
     "Bills": "請求書",
+    "Billing": "Facturation",
     "List": "Liste des factures",
     "BillsCustomers": "顧客の請求書",
     "BillsCustomer": "顧客の請求書",

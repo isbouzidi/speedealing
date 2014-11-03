@@ -139,7 +139,7 @@
     "Search": "Căutare",
     "SearchOf": "Căută",
     "Valid": "Valid",
-    "ToBill": "Facturer",
+    "ToBill": "Generare factură",
     "Approve": "Aprobaţi",
     "ReOpen": "Redeschide",
     "Upload": "Trimite fişier",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Începeţi încărcarea",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

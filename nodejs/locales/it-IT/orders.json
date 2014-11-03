@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Numero di ordini per mese",
     "AmountOfOrdersByMonthHT": "Importo ordini per mese (al netto delle imposte)",
     "ListOfOrders": "Elenco degli ordini",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Ordini fornitori",
     "CloseOrder": "Chiudi ordine",
     "ConfirmCloseOrder": "Vuoi davvero chiudere questo ordine? Una volta chiuso, un ordine può solo essere fatturato.",
     "ConfirmCloseOrderIfSending": "Vuoi davvero chiudere questo ordine? Una volta chiuso, un ordine può solo essere fatturato.",

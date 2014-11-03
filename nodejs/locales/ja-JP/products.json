@@ -2,9 +2,9 @@
     "CHARSET": "UTF-8",
     "Products/Services": "Produits/Services",
     "Status": {
-        "OnSell": "En vente",
+        "OnSell": "販売用",
         "None": "Inactif",
-        "OnBuy": "En achat",
+        "OnBuy": "購入",
         "OnBuySell": "Achat et vente"
     },
     "ProductRef": "製品のref。",

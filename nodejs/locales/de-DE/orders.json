@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Anzahl der Bestellungen pro Monat",
     "AmountOfOrdersByMonthHT": "Anzahl der Aufträge pro Monat (nach Steuern)",
     "ListOfOrders": "Liste der Bestellungen",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Lieferantenbestellungen",
     "CloseOrder": "Bestellung schließen",
     "ConfirmCloseOrder": "Möchten Sie diese Bestellung wirklich schließen? Nach ihrer Schließung kann eine Bestellung nur mehr in Rechnung gestellt werden.",
     "ConfirmCloseOrderIfSending": "Möchten Sie diese Bestellung wirklich schließen? Tun Sie dies erst nachdem alle Versandvorgäng abgeschlossen wurden.",

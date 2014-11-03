@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Aantal opdrachten per maand",
     "AmountOfOrdersByMonthHT": "Bedrag van de opdrachten per maand (exclusief BTW)",
     "ListOfOrders": "Opdrachtenlijst",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Leveranciersopdrachten",
     "CloseOrder": "Opdracht sluiten",
     "ConfirmCloseOrder": "Weet u zeker dat u deze opdracht wilt sluiten? Nadat een opdracht is gesloten, kan deze alleen gefactureerd worden.",
     "ConfirmCloseOrderIfSending": "Weet u zeker dat u deze opdracht wilt sluiten? U moet een opdracht allen sluiten zodra de producten zijn verzonden.",

@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Fjöldi fyrirmæla eftir mánuði",
     "AmountOfOrdersByMonthHT": "magn af skipunum eftir mánuði (að frádregnum skatti)",
     "ListOfOrders": "Listi yfir pantanir",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "pantanir birgis",
     "CloseOrder": "Loka röð",
     "ConfirmCloseOrder": "Ertu viss um að þú viljir loka þessari röð? Einu sinni í röð er lokað, það geta aðeins verið rukkaður.",
     "ConfirmCloseOrderIfSending": "Ertu viss um að þú viljir loka þessari röð? Þú verður að loka að panta aðeins þegar öll siglinga ert.",

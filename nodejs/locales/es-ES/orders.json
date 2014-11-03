@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Número de pedidos por mes",
     "AmountOfOrdersByMonthHT": "Importe total de pedidos por mes (sin IVA)",
     "ListOfOrders": "Listado de pedidos",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Pedidos a proveedor",
     "CloseOrder": "Cerrar pedido",
     "ConfirmCloseOrder": "¿Está seguro de querer cerrar este pedido? Una vez cerrado, deberá facturarse",
     "ConfirmCloseOrderIfSending": "¿Está seguro de querer cerrar este pedido? No debe cerrar un pedido  que aún no tiene sus productos enviados",

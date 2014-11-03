@@ -139,7 +139,7 @@
     "Search": "Ara",
     "SearchOf": "Ara",
     "Valid": "Geçerli",
-    "ToBill": "Facturer",
+    "ToBill": "Fatura oluştur",
     "Approve": "Onayla",
     "ReOpen": "Yeniden aç",
     "Upload": "Dosya gönder",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Yüklemeyi başlat",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

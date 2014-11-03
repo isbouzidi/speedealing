@@ -2,9 +2,9 @@
     "CHARSET": "UTF-8",
     "Products/Services": "Produits/Services",
     "Status": {
-        "OnSell": "En vente",
+        "OnSell": "På sælge",
         "None": "Inactif",
-        "OnBuy": "En achat",
+        "OnBuy": "Tilgængelig",
         "OnBuySell": "Achat et vente"
     },
     "ProductRef": "Produkt ref.",

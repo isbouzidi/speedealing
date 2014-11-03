@@ -152,15 +152,15 @@
     "Salaire-Brut": "Salaire brut",
     "Statut": "Statut",
     "Site": "Site",
-    "Groupe": "Groupe",
+    "Groupe": "Группа",
     "Securite-Sociale": "N° de la sécurité sociale",
     "Libelle-Bank": "Libelle banque",
     "IBAN": "IBAN",
-    "Photo": "Photo",
+    "Photo": "Изображение",
     "Categorie": "Categorie",
     "Temps-Travail": "Temps de travail",
     "Niveau-Etude": "Niveau d'études",
     "Annee-Diplome": "Année d'obtention",
-    "Login": "Login",
-    "Notes": "Notes"
+    "Login": "Войти",
+    "Notes": "Примечания"
 }

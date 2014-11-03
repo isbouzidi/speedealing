@@ -1,6 +1,6 @@
 {
     "CHARSET": "UTF-8",
-    "Category": "Catégorie",
+    "Category": "Category",
     "Categories": "Categories",
     "Rubrique": "Rubrique",
     "Rubriques": "Rubriques",
@@ -19,7 +19,7 @@
     "MembersCategoriesArea": "Espace des catégories d'adhérents",
     "MainCats": "Catégories principales",
     "SubCats": "Sous-catégories",
-    "CatStatistics": "Statistiques",
+    "CatStatistics": "Statistics",
     "CatList": "Liste des catégories",
     "AllCats": "Toutes les catégories",
     "ViewCat": "Visualisation de la catégorie",

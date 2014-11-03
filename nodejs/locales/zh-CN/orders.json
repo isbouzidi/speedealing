@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "按月份订单数",
     "AmountOfOrdersByMonthHT": "按月份订单金额（税后）",
     "ListOfOrders": "名单的订单",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "供应商的订单",
     "CloseOrder": "关闭命令",
     "ConfirmCloseOrder": "您确定要关闭这个秩序？一旦订单是封闭的，它只能产生帐单。",
     "ConfirmCloseOrderIfSending": "您确定要关闭这个秩序？你必须关闭，只有当所有航运完成的顺序。",

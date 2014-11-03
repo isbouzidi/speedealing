@@ -152,15 +152,15 @@
     "Salaire-Brut": "Salaire brut",
     "Statut": "Statut",
     "Site": "Site",
-    "Groupe": "Groupe",
+    "Groupe": "组",
     "Securite-Sociale": "N° de la sécurité sociale",
     "Libelle-Bank": "Libelle banque",
     "IBAN": "银行IBAN",
-    "Photo": "Photo",
+    "Photo": "图片",
     "Categorie": "Categorie",
     "Temps-Travail": "Temps de travail",
     "Niveau-Etude": "Niveau d'études",
     "Annee-Diplome": "Année d'obtention",
-    "Login": "Login",
-    "Notes": "Notes"
+    "Login": "注册",
+    "Notes": "笔记"
 }
