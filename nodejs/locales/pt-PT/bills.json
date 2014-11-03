@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Factura",
     "Bills": "Facturas",
+    "List": "Liste des factures",
     "BillsCustomers": "Facturas de Clientes",
     "BillsCustomer": "Fatura do Cliente",
     "BillsSuppliers": "Facturas de Fornecedores",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Modelo de factura completo (IVA,  método de pago a mostrar, logotipo...)",
     "PDFOursinDescription": "Modelo de factura completo (IVA, métodos de pago, entregas, nome do projecto, referencias de orçamento, logotipo...)",
     "TerreNumRefModelDesc1": "Devolver o numero com formato %syymm-nnnn para facturas standard e %syymm-nnnn para notas de crédito onde yy é o ano, mm é o mês nnnn é a seuqencia numérica sem quebra e sem devolução de 0",
-    "TerreNumRefModelError": "Uma conta a começar com $syymm já existe e não é compatível com este modelo de sequencia. Remove-o ou renomeia para activar este modulo"
+    "TerreNumRefModelError": "Uma conta a começar com $syymm já existe e não é compatível com este modelo de sequencia. Remove-o ou renomeia para activar este modulo",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

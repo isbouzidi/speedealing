@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Faktura",
     "Bills": "Faktury",
+    "List": "Liste des factures",
     "BillsCustomers": "Klientów faktury",
     "BillsCustomer": "Klienta faktura",
     "BillsSuppliers": "Dostawców faktur",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Faktura Crabe modelu. Pełna faktura modelu (VAT Wsparcie opcji, rabaty, warunki płatności, logo, itp. ..)",
     "PDFOursinDescription": "Faktura modelu oursin",
     "TerreNumRefModelDesc1": "Wróć NUMERO z formatu %syymm-nnnn dla standardowych faktur i %syymm-nnnn do not kredytowych, gdzie rr jest rok, mm miesiąc i nnnn jest ciągiem bez przerwy i nie ma powrotu do 0",
-    "TerreNumRefModelError": "Rachunek zaczynające się od $ syymm już istnieje i nie jest kompatybilne z tym modelem sekwencji. Usuń go lub zmienić jego nazwę, aby włączyć ten moduł."
+    "TerreNumRefModelError": "Rachunek zaczynające się od $ syymm już istnieje i nie jest kompatybilne z tym modelem sekwencji. Usuń go lub zmienić jego nazwę, aby włączyć ten moduł.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Faktura",
     "Bills": "Fakturaer",
+    "List": "Liste des factures",
     "BillsCustomers": "Kundernes fakturaer",
     "BillsCustomer": "Kundens faktura",
     "BillsSuppliers": "Leverandørernes fakturaer",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Faktura model Crabe. En fuldstændig faktura model (Support moms option, rabatter, betalinger betingelser, logo, etc. ..)",
     "PDFOursinDescription": "Faktura model oursin",
     "TerreNumRefModelDesc1": "Retur numero med format %syymm-nnnn for standard fakturaer og %syymm-nnnn for kreditnotaer hvor ÅÅ er årstal, MM er måneden og nnnn er en sekvens uden pause, og ikke vende tilbage til 0",
-    "TerreNumRefModelError": "Et lovforslag, der begynder med $ syymm allerede eksisterer og er ikke kompatible med denne model af sekvensinformation. Fjern den eller omdøbe den til at aktivere dette modul."
+    "TerreNumRefModelError": "Et lovforslag, der begynder med $ syymm allerede eksisterer og er ikke kompatible med denne model af sekvensinformation. Fjern den eller omdøbe den til at aktivere dette modul.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

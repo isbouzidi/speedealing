@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Lasku",
     "Bills": "Laskut",
+    "List": "Liste des factures",
     "BillsCustomers": "Asiakkaiden laskut",
     "BillsCustomer": "Asiakkaan laskussa",
     "BillsSuppliers": "Tavarantoimittajat laskujen",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Laskun malli Crabe. Täydellinen laskun malli (Tuki alv vaihtoehto, alennukset, maksut edellytykset, logo, jne. ..)",
     "PDFOursinDescription": "Laskun malli oursin",
     "TerreNumRefModelDesc1": "Paluu numero on muodossa %syymm-nnnn vakiolisäysaineiston laskut ja %syymm-nnnn luotto toteaa jossa VV on vuosi, mm kuukausi ja nnnn on sarja ilman taukoa eikä palata 0",
-    "TerreNumRefModelError": "A bill alkaen $ syymm jo olemassa, ja ei ole yhteensopiva tämän mallin järjestyksessä. Poistaa sen tai nimetä sen aktivoida tämän moduulin."
+    "TerreNumRefModelError": "A bill alkaen $ syymm jo olemassa, ja ei ole yhteensopiva tämän mallin järjestyksessä. Poistaa sen tai nimetä sen aktivoida tämän moduulin.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

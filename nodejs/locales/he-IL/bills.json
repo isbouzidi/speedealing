@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "חשבונית",
     "Bills": "חשבוניות",
+    "List": "Liste des factures",
     "BillsCustomers": "לקוחות של חשבוניות",
     "BillsCustomer": "לקוח של החשבונית",
     "BillsSuppliers": "הספק של חשבוניות",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "חשבונית תבנית PDF Crabe. תבנית חשבונית מלאה (תבנית מומלצים)",
     "PDFOursinDescription": "חשבונית תבנית PDF Oursin. תבנית חשבונית מלאה (חלופה תבנית)",
     "TerreNumRefModelDesc1": "חזור נומרו עם פורמט %syymm-nnnn חשבוניות סטנדרטיים %syymm-nnnn להערות אשראי שבו yy הוא שנה, מ&quot;מ הוא חודש nnnn הוא רצף ללא הפסקה וללא חזרה 0",
-    "TerreNumRefModelError": "ביל החל $ syymm כבר קיים, והוא אינו תואם מודל זה של רצף. להסיר אותה או לשנות אותה כדי להפעיל את מודול זה."
+    "TerreNumRefModelError": "ביל החל $ syymm כבר קיים, והוא אינו תואם מודל זה של רצף. להסיר אותה או לשנות אותה כדי להפעיל את מודול זה.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

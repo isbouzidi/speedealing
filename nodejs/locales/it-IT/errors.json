@@ -122,5 +122,7 @@
     "WarningNoDocumentModelActivated": "Nessun modello per la generazione di documenti attivato. Finché non si verifica la configurazione del modulo, verrà usato un modello predefinito.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Questo avviso sarà visualizzato fino a quando questa directory è presente (disponibile solo per gli utenti admin).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

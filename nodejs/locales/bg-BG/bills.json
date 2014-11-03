@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Фактура",
     "Bills": "Фактури",
+    "List": "Liste des factures",
     "BillsCustomers": "Клиента фактури",
     "BillsCustomer": "Клиента фактура",
     "BillsSuppliers": "Доставчик фактури",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Фактура PDF Crabe шаблон. Пълна шаблон фактура (Шаблон recommanded)",
     "PDFOursinDescription": "Фактура PDF Oursin шаблон. Пълна шаблон фактура (Шаблон алтернатива)",
     "TerreNumRefModelDesc1": "Връщане Numero с формат %syymm-NNNN за стандартни фактури и %syymm-NNNN за кредитни отбелязва, където YY е годината, mm е месец и NNNN е последователност, без почивка и няма връщане назад 0",
-    "TerreNumRefModelError": "Законопроект, който започва с $ syymm вече съществува и не е съвместим с този модел на последователност. Извадете го или го преименувайте да се активира този модул."
+    "TerreNumRefModelError": "Законопроект, който започва с $ syymm вече съществува и не е съвместим с този модел на последователност. Извадете го или го преименувайте да се активира този модул.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

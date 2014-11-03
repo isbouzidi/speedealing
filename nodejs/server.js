@@ -19,8 +19,16 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
 		auth = require('./config/middlewares/authorization'),
 		mongoose = require('mongoose');
 
-//Bootstrap db connection
-var db = mongoose.connect(config.db, {server: {auto_reconnect: true}, replset: {rs_name: config.replset}});
+// Mongodb options
+var options = {
+		server: {auto_reconnect: true},
+		replset: {rs_name: config.replset},
+		user: config.dbUser,
+		pass: config.dbPassword
+}
+
+// Mongodb connection
+var db = mongoose.connect(config.db, options);
 
 var mongoose_connect = mongoose.connection;
 mongoose_connect.on('error', console.error.bind(console, 'connection mongodb error native :'));

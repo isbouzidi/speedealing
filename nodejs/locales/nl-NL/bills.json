@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Factuur",
     "Bills": "Facturen",
+    "List": "Liste des factures",
     "BillsCustomers": "Afnemersfacturen",
     "BillsCustomer": "Afnemersfactuur",
     "BillsSuppliers": "Leveranciersfacturen",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Model van complete factuur (Beheert de mogelijkheid van de BTW-heffingsbelasting, de keuze van de regels display, logo, etc)",
     "PDFOursinDescription": "Model van complete factuur sjabloon (basis, beheert de mogelijkheid van heffing van de BTW belasting, de kortingen, de projectnaam, de referenties, logo, etc)",
     "TerreNumRefModelDesc1": "Geeft het aantal als %syymm-nnnn voor facturen en %syymm-nnnn voor de activa is waar yy jaar, mm de maand en nnnn een opeenvolgend nummer is zonder vervangings 0 (nul)",
-    "TerreNumRefModelError": "Een wetsvoorstel te beginnen met $ syymm bestaat al en is niet compatibel met dit model van de reeks. Verwijderen of hernoemen naar deze module te activeren."
+    "TerreNumRefModelError": "Een wetsvoorstel te beginnen met $ syymm bestaat al en is niet compatibel met dit model van de reeks. Verwijderen of hernoemen naar deze module te activeren.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

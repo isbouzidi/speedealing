@@ -158,7 +158,8 @@ module.exports = function(app, passport, auth) {
 	}), users.signin);
 
 	app.get('/auth/google/callback', users.setAccessCodeGoogle, passport.authenticate('google', {
-		failureRedirect: '/signin'
+		failureRedirect: '/login' // TODO add error message
+		//failureRedirect: '/signin'
 	}), function(req, res) {
 		users.checkIP(req, res, req.user, users.authCallback);
 	});

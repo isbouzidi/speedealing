@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Faktura",
     "Bills": "Fakturor",
+    "List": "Liste des factures",
     "BillsCustomers": "Kundens fakturor",
     "BillsCustomer": "Kundens faktura",
     "BillsSuppliers": "Leverantörens fakturor",
@@ -389,5 +390,7 @@
     "PDFCrabeDescription": "Faktura modell Crabe. En fullständig faktura modell (Stöd moms alternativet, rabatter, betalningar villkor, logotyp, etc. ..)",
     "PDFOursinDescription": "Faktura modell oursin",
     "TerreNumRefModelDesc1": "Återgå numero med format %syymm-nnnn för standard fakturor och %syymm-nnnn för kreditnotor där YY är år, mm månaden och nnnn är en sekvens utan avbrott och ingen återgång till 0",
-    "TerreNumRefModelError": "Ett lagförslag som börjar med $ syymm finns redan och är inte förenligt med denna modell för sekvens. Ta bort den eller byta namn på den för att aktivera denna modul."
+    "TerreNumRefModelError": "Ett lagförslag som börjar med $ syymm finns redan och är inte förenligt med denna modell för sekvens. Ta bort den eller byta namn på den för att aktivera denna modul.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture"
 }

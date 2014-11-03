@@ -180,7 +180,10 @@ module.exports = function (passport) {
 		}, function (err, user) {
 
 			if (!user) {
-				user = new User({
+				return done(null, false, {
+					message: 'Unknown user'
+				});
+				/*user = new User({
 					name: profile.displayName,
 					email: profile.emails[0].value,
 					username: profile.username,
@@ -191,7 +194,7 @@ module.exports = function (passport) {
 					if (err)
 						console.log(err);
 					return done(err, user);
-				});
+				});*/
 			} else {
 				user.LastConnection = user.NewConnection;
 				user.NewConnection = new Date();
