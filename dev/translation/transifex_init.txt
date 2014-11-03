@@ -3,10 +3,10 @@
 #git clone http://git.example.com/git/myproject.git
 #cd myproject
 
-tx init
+#tx init
 
-for resource in admin agenda banks bills bookmarks boxes cashdesk categories commercial commissions companies compta contracts deliveries dict donations ecm errors exports externalsite ftp help holiday install interventions languages ldap mailmanspip mails main margins members orders oscommerce other paybox paypal products projects propal sendings shop sms stocks suppliers trips users withdrawals workflow; do
-	tx set --auto-local -r speedealing.$resource "htdocs/langs/<lang>/$resource.lang.php" --source-lang en_US --execute
+for resource in admin banks bills bookmarks boxes cashdesk categories commercial commissions companies compta contracts deliveries dict donations ecm errors exports externalsite ftp help holiday interventions languages ldap leads mailmanspip mails main margins members orders other paybox paypal products projects propal reports sendings sms stocks suppliers tasks trips users withdrawals workflow; do
+	tx set --auto-local -r speedealing-erp-crm.$resource "locales/<lang>/$resource.json" --source-lang fr_FR --source-file "locales/fr-FR/$resource.json" --execute
 done
 
 tx push -s -t

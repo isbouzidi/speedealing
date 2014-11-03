@@ -1,0 +1,244 @@
+[main]
+host = https://www.transifex.com
+lang_map = fr_FR: fr-FR
+
+[speedealing-erp-crm.admin]
+file_filter = locales/<lang>/admin.json
+source_file = locales/fr-FR/admin.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.banks]
+file_filter = locales/<lang>/banks.json
+source_file = locales/fr-FR/banks.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.bills]
+file_filter = locales/<lang>/bills.json
+source_file = locales/fr-FR/bills.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.bookmarks]
+file_filter = locales/<lang>/bookmarks.json
+source_file = locales/fr-FR/bookmarks.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.boxes]
+file_filter = locales/<lang>/boxes.json
+source_file = locales/fr-FR/boxes.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.cashdesk]
+file_filter = locales/<lang>/cashdesk.json
+source_file = locales/fr-FR/cashdesk.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.categories]
+file_filter = locales/<lang>/categories.json
+source_file = locales/fr-FR/categories.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.commercial]
+file_filter = locales/<lang>/commercial.json
+source_file = locales/fr-FR/commercial.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.commissions]
+file_filter = locales/<lang>/commissions.json
+source_file = locales/fr-FR/commissions.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.companies]
+file_filter = locales/<lang>/companies.json
+source_file = locales/fr-FR/companies.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.compta]
+file_filter = locales/<lang>/compta.json
+source_file = locales/fr-FR/compta.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.contracts]
+file_filter = locales/<lang>/contracts.json
+source_file = locales/fr-FR/contracts.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.deliveries]
+file_filter = locales/<lang>/deliveries.json
+source_file = locales/fr-FR/deliveries.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.dict]
+file_filter = locales/<lang>/dict.json
+source_file = locales/fr-FR/dict.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.donations]
+file_filter = locales/<lang>/donations.json
+source_file = locales/fr-FR/donations.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.ecm]
+file_filter = locales/<lang>/ecm.json
+source_file = locales/fr-FR/ecm.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.errors]
+file_filter = locales/<lang>/errors.json
+source_file = locales/fr-FR/errors.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.exports]
+file_filter = locales/<lang>/exports.json
+source_file = locales/fr-FR/exports.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.externalsite]
+file_filter = locales/<lang>/externalsite.json
+source_file = locales/fr-FR/externalsite.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.ftp]
+file_filter = locales/<lang>/ftp.json
+source_file = locales/fr-FR/ftp.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.help]
+file_filter = locales/<lang>/help.json
+source_file = locales/fr-FR/help.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.holiday]
+file_filter = locales/<lang>/holiday.json
+source_file = locales/fr-FR/holiday.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.interventions]
+file_filter = locales/<lang>/interventions.json
+source_file = locales/fr-FR/interventions.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.languages]
+file_filter = locales/<lang>/languages.json
+source_file = locales/fr-FR/languages.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.ldap]
+file_filter = locales/<lang>/ldap.json
+source_file = locales/fr-FR/ldap.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.leads]
+file_filter = locales/<lang>/leads.json
+source_file = locales/fr-FR/leads.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.mailmanspip]
+file_filter = locales/<lang>/mailmanspip.json
+source_file = locales/fr-FR/mailmanspip.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.mails]
+file_filter = locales/<lang>/mails.json
+source_file = locales/fr-FR/mails.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.main]
+file_filter = locales/<lang>/main.json
+source_file = locales/fr-FR/main.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.margins]
+file_filter = locales/<lang>/margins.json
+source_file = locales/fr-FR/margins.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.members]
+file_filter = locales/<lang>/members.json
+source_file = locales/fr-FR/members.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.orders]
+file_filter = locales/<lang>/orders.json
+source_file = locales/fr-FR/orders.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.other]
+file_filter = locales/<lang>/other.json
+source_file = locales/fr-FR/other.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.paybox]
+file_filter = locales/<lang>/paybox.json
+source_file = locales/fr-FR/paybox.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.paypal]
+file_filter = locales/<lang>/paypal.json
+source_file = locales/fr-FR/paypal.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.products]
+file_filter = locales/<lang>/products.json
+source_file = locales/fr-FR/products.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.projects]
+file_filter = locales/<lang>/projects.json
+source_file = locales/fr-FR/projects.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.propal]
+file_filter = locales/<lang>/propal.json
+source_file = locales/fr-FR/propal.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.reports]
+file_filter = locales/<lang>/reports.json
+source_file = locales/fr-FR/reports.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.sendings]
+file_filter = locales/<lang>/sendings.json
+source_file = locales/fr-FR/sendings.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.sms]
+file_filter = locales/<lang>/sms.json
+source_file = locales/fr-FR/sms.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.stocks]
+file_filter = locales/<lang>/stocks.json
+source_file = locales/fr-FR/stocks.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.suppliers]
+file_filter = locales/<lang>/suppliers.json
+source_file = locales/fr-FR/suppliers.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.tasks]
+file_filter = locales/<lang>/tasks.json
+source_file = locales/fr-FR/tasks.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.trips]
+file_filter = locales/<lang>/trips.json
+source_file = locales/fr-FR/trips.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.users]
+file_filter = locales/<lang>/users.json
+source_file = locales/fr-FR/users.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.withdrawals]
+file_filter = locales/<lang>/withdrawals.json
+source_file = locales/fr-FR/withdrawals.json
+source_lang = fr_FR
+
+[speedealing-erp-crm.workflow]
+file_filter = locales/<lang>/workflow.json
+source_file = locales/fr-FR/workflow.json
+source_lang = fr_FR
+
