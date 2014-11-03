@@ -242,7 +242,7 @@ function forEachGoogleUser(iterator, callback) {
 	}).on('error', function(err) {
 		callback(err);
 	}).on('close', function() {
-		async.each(googleUsers,
+		async.eachSeries(googleUsers,
 				iterator,
 				callback);
 	});
