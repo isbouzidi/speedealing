@@ -2,9 +2,9 @@
     "CHARSET": "UTF-8",
     "Products/Services": "Produits/Services",
     "Status": {
-        "OnSell": "En vente",
+        "OnSell": "Käytössä myydä",
         "None": "Inactif",
-        "OnBuy": "En achat",
+        "OnBuy": "Saatavissa",
         "OnBuySell": "Achat et vente"
     },
     "ProductRef": "Tuote ref.",

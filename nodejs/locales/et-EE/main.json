@@ -139,7 +139,7 @@
     "Search": "Otsing",
     "SearchOf": "Otsing",
     "Valid": "Kehtiv",
-    "ToBill": "Facturer",
+    "ToBill": "Loo arve",
     "Approve": "Heaks kiitma",
     "ReOpen": "Re-Open",
     "Upload": "Saada fail",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Alusta üles",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

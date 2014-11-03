@@ -1,7 +1,7 @@
 {
     "CHARSET": "UTF-8",
     "MenuManager": "Menu handler",
-    "Error": "Erreur",
+    "Error": "Error",
     "Errors": "Erreurs",
     "ErrorBadEMail": "e-mail %s invalide",
     "ErrorBadUrl": "Url %s invalide",

@@ -139,7 +139,7 @@
     "Search": "Поиск",
     "SearchOf": "Поиск",
     "Valid": "Действительный",
-    "ToBill": "Facturer",
+    "ToBill": "Создать счет-фактуру",
     "Approve": "Одобрить",
     "ReOpen": "Переоткрыть",
     "Upload": "Отправить файл",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Начать загрузку",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

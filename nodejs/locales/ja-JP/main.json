@@ -139,7 +139,7 @@
     "Search": "検索",
     "SearchOf": "検索",
     "Valid": "有効な",
-    "ToBill": "Facturer",
+    "ToBill": "請求書を生成します。",
     "Approve": "承認する",
     "ReOpen": "再オープン",
     "Upload": "ファイルを送信する",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "アップロード開始",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

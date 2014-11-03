@@ -139,7 +139,7 @@
     "Search": "Zoeken",
     "SearchOf": "Zoeken",
     "Valid": "Geldig",
-    "ToBill": "Facturer",
+    "ToBill": "Genereer factuur",
     "Approve": "Goedkeuren",
     "ReOpen": "Heropenen",
     "Upload": "Upload",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Start uploaden",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

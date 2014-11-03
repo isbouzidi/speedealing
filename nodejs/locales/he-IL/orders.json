@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "מספר ההזמנות של חודש",
     "AmountOfOrdersByMonthHT": "כמות הזמנות לפי חודש (נטו ממס)",
     "ListOfOrders": "רשימת הזמנות",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "הספק של הזמנות",
     "CloseOrder": "סגור כדי",
     "ConfirmCloseOrder": "האם אתה בטוח שאתה רוצה לסגור את ההזמנה? לאחר הסדר סגור, זה רק יכול להיות מחויב.",
     "ConfirmCloseOrderIfSending": "האם אתה בטוח שאתה רוצה לסגור את ההזמנה? עליך לסגור את ההזמנה רק כאשר כל משלוח עשית.",

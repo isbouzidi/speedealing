@@ -2,9 +2,9 @@
     "CHARSET": "UTF-8",
     "Products/Services": "Produits/Services",
     "Status": {
-        "OnSell": "En vente",
+        "OnSell": "Satılık",
         "None": "Inactif",
-        "OnBuy": "En achat",
+        "OnBuy": "Satınalınır",
         "OnBuySell": "Achat et vente"
     },
     "ProductRef": "Ürün ref.",

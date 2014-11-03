@@ -139,7 +139,7 @@
     "Search": "Suchen",
     "SearchOf": "Suche nach",
     "Valid": "Gültig",
-    "ToBill": "Facturer",
+    "ToBill": "Erzeuge Rechnung",
     "Approve": "Genehmigen",
     "ReOpen": "Wiedereröffnen",
     "Upload": "Datei laden",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Hochladen starten",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

@@ -125,7 +125,7 @@
     "DeleteTransaction": "Supprimer l'écriture",
     "ConfirmDeleteTransaction": "Êtes-vous sûr de vouloir supprimer cette écriture ?",
     "ThisWillAlsoDeleteBankRecord": "Ceci supprimera aussi les écritures bancaires générées",
-    "BankMovements": "Mouvements",
+    "BankMovements": "Movements",
     "CashBudget": "Budget de trésorerie",
     "PlannedTransactions": "Écritures prévues",
     "Graph": "Graphiques",

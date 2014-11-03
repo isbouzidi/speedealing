@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Πλήθος παραγγελιών ανά μήνα",
     "AmountOfOrdersByMonthHT": "amount of orders by month (net of tax)",
     "ListOfOrders": "Λίστα παραγγελιών",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Παραγγελίας Προμηθευτών",
     "CloseOrder": "Κλείσιμο Παραγγελίας",
     "ConfirmCloseOrder": "Είστε σίγουροι ότι θέλετε να κλείσετε την παραγγελία; Μόλις κλείσει θα μπορεί μόνο να πληρωθεί.",
     "ConfirmCloseOrderIfSending": "Είστε σίγουροι ότι θέλετε να κλείσετε την παραγγελία; Μια παραγγελία πρέπει να κλείνει μόλις ολοκληρωθούν όλες οι μεταφορές.",

@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Antal beställningar per månad",
     "AmountOfOrdersByMonthHT": "orderingången per månad (efter skatt)",
     "ListOfOrders": "Lista över beställningar",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Leverantörens order",
     "CloseOrder": "Stäng ordning",
     "ConfirmCloseOrder": "Är du säker på att du vill stänga denna beställning? När en order är stängd, kan den bara faktureras.",
     "ConfirmCloseOrderIfSending": "Är du säker på att du vill stänga denna beställning? Du måste stänga ett beslut först när alla sjöfarten är klar.",

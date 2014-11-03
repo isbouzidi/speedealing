@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Invoice",
     "Bills": "Kvittanir",
+    "Billing": "Facturation",
     "List": "Liste des factures",
     "BillsCustomers": "reikninga viðskiptavinar",
     "BillsCustomer": "Viðskiptavinar Reikningar",

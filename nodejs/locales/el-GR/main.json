@@ -139,7 +139,7 @@
     "Search": "Αναζήτηση",
     "SearchOf": "Αναζήτηση",
     "Valid": "Έγκυρο",
-    "ToBill": "Facturer",
+    "ToBill": "Δημιουργία τιμολογίου",
     "Approve": "Έγκριση",
     "ReOpen": "Εκ νέου άνοιγμα",
     "Upload": "Αποστολή Αρχείου",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Έναρξη μεταφόρτωσης",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

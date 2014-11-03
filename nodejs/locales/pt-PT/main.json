@@ -139,7 +139,7 @@
     "Search": "Procurar",
     "SearchOf": "Pesquisar",
     "Valid": "Confirmar",
-    "ToBill": "Facturer",
+    "ToBill": "Facturar",
     "Approve": "Aprovar",
     "ReOpen": "Reabrir",
     "Upload": "Enviar Ficheiro",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Iniciar upload",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

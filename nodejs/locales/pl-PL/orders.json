@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Liczba zleceń przez miesiąc",
     "AmountOfOrdersByMonthHT": "Kwota zamówienia przez miesiąc (po odliczeniu podatku)",
     "ListOfOrders": "Lista zamówień",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Dostawcy zleceń",
     "CloseOrder": "Zamknij celu",
     "ConfirmCloseOrder": "Czy na pewno chcesz zamknąć to zamówienie? Gdy zamówienie jest zamknięta, to może być rozliczone.",
     "ConfirmCloseOrderIfSending": "Czy na pewno chcesz zamknąć to zamówienie? Musisz zamknąć zamówienie tylko wtedy, gdy wszystkie wysyłki są zrobione.",

@@ -2,6 +2,7 @@
     "CHARSET": "UTF-8",
     "Bill": "Lasku",
     "Bills": "Laskut",
+    "Billing": "Facturation",
     "List": "Liste des factures",
     "BillsCustomers": "Asiakkaiden laskut",
     "BillsCustomer": "Asiakkaan laskussa",

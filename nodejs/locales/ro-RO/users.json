@@ -129,7 +129,7 @@
     "Gestion des conges / absences": "Gestion des conges / absences",
     "Databases": "Base de donnees",
     "NewAbsence": "Nouvel absence",
-    "Employee": "Salarié",
+    "Employee": "Salariat",
     "Address": "Strada",
     "Town": "Oraş",
     "Zip": "Code Postal",
@@ -152,15 +152,15 @@
     "Salaire-Brut": "Salaire brut",
     "Statut": "Statut",
     "Site": "Site",
-    "Groupe": "Groupe",
+    "Groupe": "Grupul",
     "Securite-Sociale": "N° de la sécurité sociale",
     "Libelle-Bank": "Libelle banque",
     "IBAN": "IBAN",
-    "Photo": "Photo",
+    "Photo": "Fotografie",
     "Categorie": "Categorie",
     "Temps-Travail": "Temps de travail",
     "Niveau-Etude": "Niveau d'études",
     "Annee-Diplome": "Année d'obtention",
-    "Login": "Login",
-    "Notes": "Notes"
+    "Login": "Conecta",
+    "Notes": "Note"
 }

@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Aylık sipariş sayısı",
     "AmountOfOrdersByMonthHT": "Aya göre sipariş tutarı (KDV yok)",
     "ListOfOrders": "Sipariş listesi",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Tedarikçilerin siparişleri",
     "CloseOrder": "Siparişi kapat",
     "ConfirmCloseOrder": "Bu siparişi kapatmak istediğinizden emin misiniz? Sipariş birkez kapatılırsa, yalnızca fatura edilebilir.",
     "ConfirmCloseOrderIfSending": "Bu siparişi kapatmak istediğinizden emin misiniz? Bir siparişi ancak tüm sevkiyat yapılmışsa kapatabilirsiniz.",

@@ -139,7 +139,7 @@
     "Search": "Keresés",
     "SearchOf": "Keresés",
     "Valid": "Hiteles",
-    "ToBill": "Facturer",
+    "ToBill": "Számla generálása",
     "Approve": "Jóváhagy",
     "ReOpen": "Újra megnyit",
     "Upload": "Fájl küldése",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Első feltöltés",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

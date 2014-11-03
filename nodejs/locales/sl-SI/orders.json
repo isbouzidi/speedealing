@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Število naročil po mesecih",
     "AmountOfOrdersByMonthHT": "Znesek naročil po mesecih (brez DDV)",
     "ListOfOrders": "Seznam naročil",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Naročila pri dobaviteljih",
     "CloseOrder": "Zaključi naročilo",
     "ConfirmCloseOrder": "Ali zares želite zaključiti to naročilo? Ko je naročilo zaključeno, ga lahko samo še fakturirate.",
     "ConfirmCloseOrderIfSending": "Ali zares želite zaključiti to naročilo? Naročilo morate zaključiti šele, ko so odpremljene vse pošiljke.",

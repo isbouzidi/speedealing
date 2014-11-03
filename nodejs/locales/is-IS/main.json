@@ -139,7 +139,7 @@
     "Search": "Leita",
     "SearchOf": "Leita",
     "Valid": "Gildir",
-    "ToBill": "Facturer",
+    "ToBill": "Búa til reikning",
     "Approve": "Samþykkja",
     "ReOpen": "Re-Open",
     "Upload": "Senda skrá",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Byrja senda",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

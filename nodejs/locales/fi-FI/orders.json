@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Määrä tilauksia kuukausittain",
     "AmountOfOrdersByMonthHT": "määrä tilauksia kuukausittain (ilman veroja)",
     "ListOfOrders": "Luettelo tilaukset",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Toimittajien tilaukset",
     "CloseOrder": "Sulje jotta",
     "ConfirmCloseOrder": "Oletko varma, että haluat sulkea tämän tilauksen? Kun tilaus on päättynyt, se voidaan laskuttaa.",
     "ConfirmCloseOrderIfSending": "Oletko varma, että haluat sulkea tämän tilauksen? Sinun on lähellä tilauksen vasta, kun kaikki merenkulku on valmis.",

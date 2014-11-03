@@ -139,7 +139,7 @@
     "Search": "搜索",
     "SearchOf": "搜索",
     "Valid": "有效",
-    "ToBill": "Facturer",
+    "ToBill": "生成发票",
     "Approve": "批准",
     "ReOpen": "重新开放",
     "Upload": "发送文件",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "开始上传",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",

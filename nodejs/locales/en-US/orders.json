@@ -90,7 +90,7 @@
     "NumberOfOrdersByMonth": "Number of orders by month",
     "AmountOfOrdersByMonthHT": "amount of orders by month (net of tax)",
     "ListOfOrders": "List of orders",
-    "ListOfOrdersSupplier": "Commandes fournisseurs",
+    "ListOfOrdersSupplier": "Supplier's orders",
     "CloseOrder": "Close order",
     "ConfirmCloseOrder": "Are you sure you want to close this order ? Once an order is closed, it can only be billed.",
     "ConfirmCloseOrderIfSending": "Are you sure you want to close this order ? You must close an order only when all shipping are done.",

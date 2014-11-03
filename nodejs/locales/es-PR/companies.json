@@ -43,6 +43,7 @@
     "ThirdPartyType": "Third party type",
     "ThirdPartyBilling": "Compte de facturation",
     "ThirdPartyCode": "Code client/fournisseur",
+    "ThirdPartyInfos": "Infos société",
     "Company/Fundation": "Company/Foundation",
     "Individual": "Private individual",
     "ToCreateContactWithSameName": "Will create automatically a physical contact with same informations",

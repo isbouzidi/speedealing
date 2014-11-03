@@ -2,9 +2,9 @@
     "CHARSET": "UTF-8",
     "Products/Services": "Produits/Services",
     "Status": {
-        "OnSell": "En vente",
+        "OnSell": "على بيع",
         "None": "Inactif",
-        "OnBuy": "En achat",
+        "OnBuy": "متاح",
         "OnBuySell": "Achat et vente"
     },
     "ProductRef": "المرجع المنتج.",

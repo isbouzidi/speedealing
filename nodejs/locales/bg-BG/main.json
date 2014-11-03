@@ -139,7 +139,7 @@
     "Search": "Търсене",
     "SearchOf": "Търсене",
     "Valid": "Валиден",
-    "ToBill": "Facturer",
+    "ToBill": "Генериране на фактура",
     "Approve": "Одобрявам",
     "ReOpen": "Re-Open",
     "Upload": "Изпращане на файл",
@@ -675,7 +675,7 @@
             "Sam"
         ]
     },
-    "Forward": "Transférer",
+    "Forward": "Започнете качване",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
     "Important": "Important",
