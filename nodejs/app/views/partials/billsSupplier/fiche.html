@@ -91,11 +91,36 @@
 								</tr>
 							</tbody>
 						</table>
-						<div class="button-height">
-							<div class="float-right">
-								<button ng-show="editable" class="button orange-gradient" data-ng-click="changeStatus('NOT_PAID')">{{t 'Validate'}}</button>
-							</div>
-						</div>
+					</div>
+				</div>
+				<div class="eight-columns small-margin-bottom">
+
+					<div class="float-right button-height">					
+						<button ng-show="editable" class="button" data-ng-click="changeStatus('NOT_PAID')">
+							<span class="button-icon green-gradient"><span class="icon-like"></span></span>
+							{{t 'Validate'}}
+						</button>
+						<button ng-hide="editable || bill.Status == 'PAID'" class="button" data-ng-click="changeStatus('DRAFT')">
+							<span class="button-icon orange-gradient"><span class="icon-unlike"></span></span>
+							{{t 'ReOpen'}}
+						</button>
+
+						<button ng-hide="editable || bill.Status == 'PAID'" class="button" data-ng-click="changeStatus('PAID')">
+							<span class="button-icon green-gradient"><span class="icon-credit-card"></span></span>
+							{{t 'bills:ClassifyPaid'}}
+						</button>
+
+
+						<button class="button" data-ng-click="clone()">
+							<span class="button-icon anthracite-gradient"><span class="icon-pages"></span></span>
+							{{t 'ToClone'}}
+						</button>
+
+						<!-- Right side -->
+						<button class="button margin-left" ng-disabled="!global.user.rights.bill.delete" ng-show="bill.Status == 'DRAFT'" confirmed-click="remove(bill)" ng-confirm-click="Supprimer la facture ?" title="Supprimer la facture">
+							{{t 'Delete'}}
+							<span class="button-icon right-side red-gradient"><span class="icon-trash"></span></span>
+						</button>
 					</div>
 				</div>
 				<div class="eight-columns">

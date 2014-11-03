@@ -171,6 +171,7 @@ Object.prototype = {
 		//console.log(req.body);
 		bill = _.extend(bill, req.body);
 
+		//console.log(bill);
 		bill.save(function (err, doc) {
 			if (err)
 				console.log(err);

@@ -101,6 +101,7 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 
 		$scope.societeAutoComplete = function(val, field) {
 			return $http.post('api/societe/autocomplete', {
+				fournisseur: ["SUPPLIER","SUBCONTRACTOR"],
 				take: '5',
 				skip: '0',
 				page: '1',
@@ -443,7 +444,7 @@ angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope
 				skip: '0',
 				page: '1',
 				pageSize: '5',
-				fournisseur: {"$in": ["SUPPLIER", "SUBCONTRACTOR"]},
+				fournisseur: ["SUPPLIER","SUBCONTRACTOR"],
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {

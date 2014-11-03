@@ -30,6 +30,11 @@ var billSupplierSchema = new Schema({
 		name: String,
 		isNameModified: {type: Boolean}
 	},
+	address: {type: String, default: ""},
+	zip: {type: String, default: ""},
+	town: {type: String, default: ""},
+	country_id: {type: String, default: 'FR'},
+	state_id: Number,
 	contact: {id: {type: Schema.Types.ObjectId, ref: 'Contact'}, name: String},
 	ref_supplier: {type: String},
 	datec: {type: Date},
@@ -161,7 +166,8 @@ billSupplierSchema.pre('save', function (next) {
 				}
 			});
 		} else {
-			this.Status = "DRAFT";
+			if (this.total_ht == 0)
+				this.Status = "DRAFT";
 			next();
 		}
 	}

@@ -35,7 +35,7 @@ module.exports = function (app, passport, auth) {
 
 	// list for autocomplete
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function (req, res) {
-		console.dir(req.body.filter);
+		//console.dir(req.body.filter);
 
 		if (req.body.filter == null)
 			return res.send(200, {});
@@ -48,10 +48,16 @@ module.exports = function (app, passport, auth) {
 			]
 		};
 
-		if (req.query.fournisseur) {
-			query.fournisseur = req.query.fournisseur;
+		if (req.query.fournisseur || req.body.fournisseur) {
+			if (req.query.fournisseur)
+				query.fournisseur = req.query.fournisseur;
+			else
+				//console.log(req.body.fournisseur);
+				query.fournisseur = {$in : req.body.fournisseur};
 		} else // customer Only
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
+
+		//console.log(query);
 
 		SocieteModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
