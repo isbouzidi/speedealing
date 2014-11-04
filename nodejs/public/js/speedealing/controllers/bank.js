@@ -89,7 +89,7 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
         };
         $scope.isValidInfo = function (bank) {
 
-            if ($scope.isValidIban(bank.iban) && typeof bank.country !== "undefined" && typeof bank.account_number !== "undefined")
+            if (typeof bank.iban !== "undefined" && $scope.isValidIban(bank.iban) && typeof bank.country !== "undefined" && typeof bank.account_number !== "undefined")
                 if (bank.country.length !== 0 && bank.account_number.length !== 0)
                     return true;
 
@@ -215,7 +215,7 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
 
         $scope.isValidIban = function (value) {
 
-
+            
             // remove spaces and to upper case
             var iban = value.replace(/ /g, "").toUpperCase(),
                     ibancheckdigits = "",
