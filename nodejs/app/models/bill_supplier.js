@@ -83,7 +83,12 @@ var billSupplierSchema = new Schema({
 			total_vat_without_discount: Number,
 			total_ht: Number
 		}],
-	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}]
+	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
+	latex: {
+		title: String,
+		createdAt: {type: Date},
+		data: Buffer,
+	}
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}

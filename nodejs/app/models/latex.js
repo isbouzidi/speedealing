@@ -163,6 +163,29 @@ exports.headfoot = function(entity, tex, callback) {
 };
 
 /**
+ * Replace --MYSOC-- and create FOOTER for Supplier
+ */
+exports.headfootlight = function(entity, tex, callback) {
+	mongoose.connection.db.collection('Mysoc', function(err, collection) {
+		collection.findOne({_id: entity}, function(err, doc) {
+
+			tex = tex.replace(/--MYSOC--/g, "\\textbf{\\large " + doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town);
+			//tex = tex.replace(/--FOOT--/g, "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town + " T\\'el.: " + doc.phone + " R.C.S. " + doc.idprof1);
+
+			tex = tex.replace(/--ENTITY--/g, "\\textbf{" + doc.name + "}");
+			if (doc.iban)
+				tex = tex.replace(/--IBAN--/g, doc.iban.name + "\\\\RIB : " + doc.iban.rib + "\\\\ IBAN : " + doc.iban.iban + "\\\\ BIC : " + doc.iban.bic);
+			else
+				tex = tex.replace(/--IBAN--/g, "RIB sur demande.");
+
+			tex = tex.replace(/é/g, "\\'e");
+			tex = tex.replace(/è/g, "\\`e");
+			callback(tex);
+		});
+	});
+};
+
+/**
  * Number price Format
  */
 exports.price = function(price) {

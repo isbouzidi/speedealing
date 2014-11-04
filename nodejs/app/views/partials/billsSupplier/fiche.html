@@ -89,6 +89,16 @@
 									<th scope="row">{{t 'DateLastModification'}}</th>
 									<td class="blue">\{{bill.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
 								</tr>
+								<tr ng-show='bill.Status != "DRAFT"'>
+									<th scope="row">{{t 'DownloadPDF'}}</th>
+									<td><ul class="files-icons">
+											<li style="height: inherit"><a data-ng-href="api/billSupplier/pdf/\{{bill._id}}" target="_blank" class="file-link">
+													<span class="icon file-pdf"></span>
+													\{{bill.ref}}.pdf
+												</a></li>
+										</ul>
+									</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
