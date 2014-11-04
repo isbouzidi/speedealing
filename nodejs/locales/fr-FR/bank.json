@@ -37,5 +37,6 @@
     "List": "Liste des comptes",
     "Category": "Rubriques",
     "ListOfBankCategory": "Rubrique banque",
-    "NewBankCategory": "Nouvelle rubrique de banque"
+    "NewBankCategory": "Nouvelle rubrique de banque",
+    "Reconcile": "Rapprocher"
 }

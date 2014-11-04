@@ -33,6 +33,7 @@ var TransactionSchema = new Schema({
     number_check_transaction: String,
     transmitter: String,
     bank_check: String,
+    bank_statement: Number,
     author: {
         id: {type: String, ref: 'User'},
         name: String

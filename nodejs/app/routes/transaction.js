@@ -18,6 +18,12 @@ module.exports = function (app, passport, auth) {
     
     //get list of transactions
     app.get('/api/transaction', auth.requiresLogin, object.read);
+    
+    //get list of transactions
+    app.get('/api/transaction/reconcile', auth.requiresLogin, object.getReconcile);
+    
+    //reconciliation transactions
+    app.put('/api/transaction/reconcile', auth.requiresLogin, object.updateReconcile);
 };
 
 function Object() {
@@ -50,9 +56,76 @@ Object.prototype = {
                 console.log(err);
                 res.send(500);
             }
-            console.log(doc);
+            
             res.json(doc);
 
         });
+    },
+    getReconcile: function(req, res){
+        var id;
+        var statement;
+        
+        if (req.query.find)
+            id = JSON.parse(req.query.find);
+        
+        statement = {
+            "bank_statement":{
+                $exists: false
+            }
+        };
+        
+        var query = {
+            $and: [
+                id, statement
+            ]
+        };        
+        
+        TransactionModel.find(query, function(err, doc){
+            if(err) {
+                console.log(err);
+                res.send(500);
+            }
+
+            res.json(200, doc);
+
+        });
+    },
+    updateReconcile: function(req, res){
+        
+        var query = {};
+        var bank_statement = 0;
+        var category = {};
+        var updateFields = {};
+        
+        if(req.query.ids){
+            if( Object.prototype.toString.call(req.query.ids) === '[object Array]' ) {
+                query = {_id: { $in: req.query.ids}};
+            }else{
+                query = {_id: req.query.ids};
+            }
+        }
+        
+        updateFields.bank_statement = req.query.bank_statement;        
+        
+        if(typeof req.query.category !== 'undefined'){
+            category = JSON.parse(req.query.category);
+            updateFields.category = {
+                id: category.id,
+                name: category.name                
+            };
+        }
+        
+        TransactionModel.update(
+                query, 
+                updateFields, 
+                { multi: true }, 
+                function(err, doc){
+                    if(err){
+                        console.log(err);
+                        return res.json(500);
+                    }
+                    
+                    res.json(doc);
+                });            
     }
 };

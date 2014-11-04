@@ -24,6 +24,7 @@ angular.module('mean.bankCategory').controller('BankCategoryController', ['$scop
             enableCellSelection: false,
             enableRowSelection: false,
             enableCellEditOnFocus: false,
+            showSelectionCheckbox: true,
             filterOptions: $scope.filterOptions,
             columnDefs: [
                 {field: 'name', displayName: 'Rubrique', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/userGroup/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'> {{row.getProperty(col.field)}}</a></div>'},

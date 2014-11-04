@@ -1,10 +1,10 @@
-angular.module('mean.bank').controller('BankController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', '$filter', '$upload', 'pageTitle', 'Global', 'Bank', function ($scope, $routeParams, $location, $route, $modal, $timeout, $http, $filter, $upload, pageTitle, Global, Bank) {
+angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', '$filter', '$upload', 'pageTitle', 'Global', 'Bank', function ($rootScope, $scope, $routeParams, $location, $route, $modal, $timeout, $http, $filter, $upload, pageTitle, Global, Bank) {
 
         $scope.global = Global;
         pageTitle.setTitle('Gestion des banques');
         $scope.completeInfos = false;
-        
-        
+
+
         $scope.init = function () {
 
             var dict = ["fk_country", "fk_currencies", "fk_account_status", "fk_account_type", "fk_transaction_type"];
@@ -14,7 +14,7 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
                 }
             }).success(function (data, status) {
                 $scope.dict = data;
-                
+
             });
 
         };
@@ -61,7 +61,7 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
         };
 
         $scope.toggle = false;
-        
+
         $scope.gridOptionsTransactions = {
             data: 'transactions',
             enableRowSelection: false,
@@ -83,7 +83,8 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
                 {field: 'third_party.name', displayName: 'Tiers'},
                 {field: 'debit', displayName: 'Debit', cellFilter: "currency:''"},
                 {field: 'credit', displayName: 'Credit', cellFilter: "currency:''"},
-                {field: 'balance', displayName: 'Solde', cellFilter: "currency:''"}
+                {field: 'balance', displayName: 'Solde', cellFilter: "currency:''"},
+                {field: 'bank_statement', displayName: 'Relvé'}
             ]
         };
         $scope.isValidInfo = function (bank) {
@@ -104,52 +105,52 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
                 $scope.bank = bank;
                 pageTitle.setTitle('Fiche ' + $scope.bank.libelle);
                 $scope.completeInfos = $scope.isValidInfo($scope.bank);
-                
+
                 $http({method: 'GET', url: '/api/transaction', params: {
-                    find: {"bank.id": bank._id}
-                }
+                        find: {"bank.id": bank._id}
+                    }
                 }).success(function (data, status) {
-                    
+
                     $scope.RegenerateTransactions(data);
                     $scope.countTransactions = data.length;
                 });
-                
+
             }
             );
 
         };
-        
-        $scope.RegenerateTransactions = function(transactions){
-            
+
+        $scope.RegenerateTransactions = function (transactions) {
+
             $scope.transactions = transactions;
-            
+
             //sorting transactions by date of transaction
-            $scope.transactions.sort(function(a, b){
-                
+            $scope.transactions.sort(function (a, b) {
+
                 var dateA = new Date(a.date_transaction), dateB = new Date(b.date_transaction);
-                return dateA - dateB; 
+                return dateA - dateB;
             });
-            
+
             //calculate balances
-            for(var i = 0; i < transactions.length; i++){
-                
-                if(i === 0)
-                    $scope.transactions[0].balance = (-1 *  $scope.transactions[0].debit) + $scope.transactions[0].credit;
+            for (var i = 0; i < transactions.length; i++) {
+
+                if (i === 0)
+                    $scope.transactions[0].balance = (-1 * $scope.transactions[0].debit) + $scope.transactions[0].credit;
                 else
-                    $scope.transactions[i].balance = (-1 * $scope.transactions[i].debit) + $scope.transactions[i].credit + $scope.transactions[i-1].balance;                  
-                }
+                    $scope.transactions[i].balance = (-1 * $scope.transactions[i].debit) + $scope.transactions[i].credit + $scope.transactions[i - 1].balance;
+            }
             $scope.totalBalance = $scope.transactions[transactions.length - 1].balance;
             console.log($scope.transactions);
             //calculate current and total balance 
             var todayDate = new Date();
             $scope.totalCurrentBalance = 0;
-            
-            for(var i = 0; i < transactions.length; i++){
+
+            for (var i = 0; i < transactions.length; i++) {
                 var dateTransaction = new Date($scope.transactions[i].date_transaction);
-            
-                if(dateTransaction < todayDate)
-                    $scope.totalCurrentBalance += (-1 *  $scope.transactions[i].debit) + $scope.transactions[i].credit;
-            }            
+
+                if (dateTransaction < todayDate)
+                    $scope.totalCurrentBalance += (-1 * $scope.transactions[i].debit) + $scope.transactions[i].credit;
+            }
         };
 
         $scope.update = function () {
@@ -188,7 +189,7 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
             }, function () {
             });
         };
-        
+
         $scope.addNewTransaction = function () {
             var modalInstance = $modal.open({
                 templateUrl: '/partials/bank/createTransaction.html',
@@ -211,7 +212,7 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
             }, function () {
             });
         };
-               
+
         $scope.isValidIban = function (value) {
 
 
@@ -331,6 +332,17 @@ angular.module('mean.bank').controller('BankController', ['$scope', '$routeParam
             }
             return cRest === 1;
         };
+
+        $scope.reconciliation = function (bank, transactions) {
+//            $routeParams.bank = $scope.bank._id;
+            $rootScope.bank = bank;
+            $rootScope.transactions = transactions;
+            //$location.path("module/bank/rapprochement.html");
+            $location.path('module/bank/rapprochement.html').search({bankId: bank._id});
+
+        };
+
+
     }]);
 angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', '$location', 'Bank', function ($scope, $http, $modalInstance, $upload, $route, Global, $location, Bank) {
 
@@ -341,12 +353,12 @@ angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http
         $scope.init = function () {
 
             $scope.bank = {};
-            
+
             $scope.bank = {
                 transaction: [{
-                    description: "Initial balance",
-                    credit: 0
-                }]
+                        description: "Initial balance",
+                        credit: 0
+                    }]
             };
 
             var dict = ["fk_country", "fk_currencies", "fk_account_status", "fk_account_type"];
@@ -356,9 +368,9 @@ angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http
                 }
             }).success(function (data, status) {
                 $scope.dict = data;
-                
+
             });
-            
+
         };
 
         $scope.isValidRef = function () {
@@ -409,4 +421,220 @@ angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http
                 $location.path("/bank/" + response._id);
             });
         };
+    }]);
+
+angular.module('mean.transaction').controller('ReconciliationController', ['$scope', '$rootScope', '$http', '$upload', '$route', 'Global', '$location', 'Transaction', function ($scope, $rootScope, $http, $upload, $route, Global, $location, Transaction) {
+
+        $scope.reconciliation = {
+            category: null
+        };
+        
+        $scope.listReconciliedTrans = [];
+
+        $scope.find = function () {
+
+            $scope.listReconciliedTrans = [];
+            $scope.checkedBox = false;
+
+            var id = $location.search()['bankId'];
+
+            $http({method: 'GET', url: '/api/bank/' + id, params: {
+                }
+            }).success(function (data, status) {
+                $scope.bank = data;
+
+                $http({method: 'GET', url: '/api/transaction/reconcile', params: {
+                        find: {"bank.id": $scope.bank._id}
+                    }
+                }).success(function (data, status) {
+                    $scope.transactions = data;
+                    $scope.count = data.length;
+
+                });
+
+                $http({method: 'GET', url: '/api/bankCategory', params: {
+                    }
+                }).success(function (data, status) {
+                    $scope.category = data;
+                });
+
+            });
+        };
+
+        $scope.filterOptionsTransaction = {
+            filterText: "",
+            useExternalFilter: false
+        };
+
+        $scope.toggle = false;
+        
+        $scope.gridOptionsTransactions = {
+            data: 'transactions',
+            filterOptions: $scope.filterOptionsTransaction,
+            i18n: 'fr',
+            enableColumnResize: true,
+            showSelectionCheckbox: true,
+            selectWithCheckboxOnly: true,
+            beforeSelectionChange: function (row) {
+                row.changed = true;
+                return true;
+            },
+            afterSelectionChange: function (row, event) {
+                if (row.changed) {
+                    if(typeof row.length === 'undefined'){
+                        var index = $scope.listReconciliedTrans.indexOf(row.entity._id);
+                        if (index > -1) {
+                            $scope.listReconciliedTrans.splice(index, 1);
+                        } else {
+                            $scope.listReconciliedTrans.push(row.entity._id);
+                        } 
+                    }else{
+                        if(event){
+                            $scope.listReconciliedTrans = [];
+                            for(var i = 0; i < row.length; i++){
+                                $scope.listReconciliedTrans.push(row[i].entity._id);
+                            }
+                        }else{
+                            $scope.listReconciliedTrans = [];
+                        }
+                    }
+                }
+                row.changed = false;
+            },
+            plugins:[new ngGridSingleSelectionPlugin()],
+            columnDefs: [
+                {field: '_id', displayName: 'Code Transaction', visible: false},
+                {field: 'date_transaction', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
+                {field: 'value', displayName: 'Valeur', cellFilter: "date:'dd-MM-yyyy'"},
+                {field: 'trans_type.name', displayName: 'type'},
+                {field: 'description', displayName: 'Déscription'},
+                {field: 'third_party.name', width: "120px", displayName: 'Tiers'},
+                {field: 'debit', displayName: 'Debit', width: "80px", cellFilter: "currency:''"},
+                {field: 'credit', displayName: 'Credit', width: "80px", cellFilter: "currency:''"}
+            ]
+        };
+        
+        //listen for selected row event
+        $scope.$on('ngGridEventRowSeleted',function(event,row){
+            $scope.selectedRow=row;
+        });
+        
+        $scope.checkTransaction = function (id) {
+
+            var index = $scope.listReconciliedTrans.indexOf(id);
+
+            if (index < 0) {
+                $scope.listReconciliedTrans.push(id);
+            } else {
+                $scope.listReconciliedTrans.splice(index, 1);
+            }
+            ;
+
+        };
+
+        $scope.reconcile = function () {
+            var category = null;
+            
+            if($scope.reconciliation.category){
+                category = {
+                    id: $scope.reconciliation.category._id,
+                    name: $scope.reconciliation.category.name
+                };
+            };
+            
+            if($scope.listReconciliedTrans.length > 0){
+                $http({method: 'PUT', url: '/api/transaction/reconcile', params: {
+                    ids: $scope.listReconciliedTrans,
+                    bank_statement: $scope.bank_statement,
+                    category: category
+                }
+                }).success(function (data, status) {
+
+                    $scope.find();
+                    $scope.reconciliation = {
+                        category: null
+                    };
+                });
+            }
+            
+        };
+
+        $scope.backFiche = function () {
+
+            var id = $location.search()['bankId'];
+            $location.path('/bank/' + id);
+        };
+
+        function ngGridSingleSelectionPlugin() {
+            var self = this;
+            self.lastSelectedRow = null;
+            self.selectedRowItems = [];
+            self.allRowItems = [];
+            self.isAllRowSelected = false;
+            self.grid = null;
+            self.scope = null;
+            self.init = function (scope, grid, services) {
+                self.services = services;
+                self.grid = grid;
+                self.scope = scope;
+                self.initNeddedProprties();
+                // mousedown event on row selection
+                grid.$viewport.on('mousedown', self.onRowMouseDown);
+                // mousedown event on checkbox header selection
+                grid.$headerContainer.on('mousedown', self.onHeaderMouseDown);
+            };
+            //init properties 
+            self.initNeddedProprties = function () {
+                self.grid.config.multiSelect = true;
+                self.grid.config.showSelectionCheckbox = true;
+                self.grid.config.selectWithCheckboxOnly = true;
+            };
+            self.onRowMouseDown = function (event) {
+                // Get the closest row element from where we clicked.
+                var targetRow = $(event.target).closest('.ngRow');
+                // Get the scope from the row element
+                var rowScope = angular.element(targetRow).scope();
+                if (rowScope) {
+                    var row = rowScope.row;
+                    if (event.target.type !== 'checkbox') {
+                        // if  select all rows checkbox was pressed
+                        if (self.isAllRowSelected) {
+                            self.selectedRowItems = self.grid.rowCache;
+                        }
+                        //set to false selected rows with checkbox
+                        angular.forEach(self.selectedRowItems, function (rowItem) {
+                            rowItem.selectionProvider.setSelection(rowItem, false);
+                        });
+                        self.selectedRowItems = [];
+                        //set to false last selected row
+                        if (self.lastSelectedRow) {
+                            self.lastSelectedRow.selectionProvider.setSelection(self.lastSelectedRow, false);
+                        }
+                        if (!row.selected) {
+                            row.selectionProvider.setSelection(row, true);
+                            self.lastSelectedRow = row;
+                            self.scope.$emit('ngGridEventRowSeleted', row);
+                        }
+                    }
+                    else {
+                        if (!row.selected) {
+                            self.selectedRowItems.push(row);
+                            self.scope.$emit('ngGridEventRowSeleted', row);
+
+                        }
+                    }
+                }
+            };
+            // mousedown event for checkbox header selection
+            self.onHeaderMouseDown = function (event) {
+                if (event.target.type === 'checkbox') {
+                    if (!event.target.checked) {
+                        self.isAllRowSelected = true;
+                    } else {
+                        self.isAllRowSelected = false;
+                    }
+                }
+            }
+
+        }
     }]);
