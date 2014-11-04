@@ -255,6 +255,10 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 		if (newTask.author.id == user._id)
 			newTask.archived = true;
 	}
+	
+	if(newTask.notes[newTask.notes.length - 1].percentage < 100)
+		newTask.archived = false;
+		
 
 	if (actioncomm.values[newTask.type].type != 'event')
 		newTask.datep = new Date(newTask.datef);
