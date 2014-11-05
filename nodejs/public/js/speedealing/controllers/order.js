@@ -56,8 +56,22 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 		$scope.update = function () {
 			var order = $scope.order;
 
-			order.$update(function () {
+			order.$update(function (response) {
 				//$location.path('societe/' + societe._id);
+				pageTitle.setTitle('Commande client ' + order.ref);
+
+				if (response.Status == "DRAFT" || response.Status == "NEW" || response.Status == "QUOTES" )
+					$scope.editable = true;
+				else
+					$scope.editable = false;
+				
+				
+			});
+		};
+		
+		$scope.clone = function () {
+			$scope.order.$clone(function (response) {
+				$location.path("orders/" + response._id);
 			});
 		};
 
@@ -86,7 +100,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 					$scope.order.lines[i].idLine = i;
 				}
 
-				if (order.Status === "DRAFT")
+				if (order.Status == "DRAFT" || order.Status == "NEW" || order.Status == "QUOTES")
 					$scope.editable = true;
 				else
 					$scope.editable = false;
@@ -235,6 +249,116 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			$scope.order.Status = Status;
 			$scope.update();
 		};
+		
+		/*
+		 * NG-GRID for bill lines
+		 */
+
+		$scope.filterOptionsLines = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsLines = {
+			data: 'order.lines',
+			enableRowSelection: false,
+			filterOptions: $scope.filterOptionsLines,
+			i18n: 'fr',
+			enableColumnResize: true,
+			groups: ['group'],
+			groupsCollapsedByDefault: false,
+			rowHeight: 50,
+			columnDefs: [
+				{field: 'product.name', width: "60%", displayName: 'Désignation', cellTemplate: '<div class="ngCellText"><span class="blue strong icon-cart">{{row.getProperty(col.field)}}</span> - {{row.getProperty(\'product.label\')}}<pre class="no-padding">{{row.getProperty(\'description\')}}</pre></div>'},
+				{field: 'group', displayName: "Groupe", visible: false},
+				{field: 'qty', displayName: 'Qté', cellClass: "align-right"},
+				{field: 'pu_ht', displayName: 'P.U. HT', cellClass: "align-right", cellFilter: "currency"},
+				{field: 'tva_tx', displayName: 'TVA', cellClass: "align-right"},
+				//{field: '', displayName: 'Réduc'},
+				{field: 'total_ht', displayName: 'Total HT', cellFilter: "currency", cellClass: "align-right"},
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button icon-pencil" title="Editer" ng-disabled="!editable" ng-click="editLine(row)"></button></button><button class="button orange-gradient icon-trash" title="Supprimer" ng-disabled="!editable" ng-confirm-click="Supprimer la ligne ?" confirmed-click="removeLine(row)"></button></div></div>'}
+			],
+			aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
+					"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}}</span><br/><span class=\"anthracite strong\">Total HT: {{aggFunc(row,'total_ht') | currency}}</span></span>" +
+					"    <div class=\"{{row.aggClass()}}\"></div>" +
+					"</div>" +
+					""
+		};
+		
+		$scope.aggFunc = function (row, idx) {
+			var total = 0;
+			//console.log(row);
+			angular.forEach(row.children, function (cropEntry) {
+				if (cropEntry.entity[idx])
+					total += cropEntry.entity[idx];
+			});
+			return total;
+		};
+		
+		$scope.addNewLine = function() {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/lines',
+				controller: "LineController",
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return {
+							qty: 0
+						};
+					},
+					options: function() {
+						return {
+							price_level: $scope.order.price_level
+						};
+					}
+				}
+			});
+
+			modalInstance.result.then(function(line) {
+				$scope.order.lines.push(line);
+				$scope.order.$update(function(response) {
+					$scope.order = response;
+				});
+			}, function() {
+			});
+		};
+
+		$scope.editLine = function(row) {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/lines',
+				controller: "LineController",
+				windowClass: "steps",
+				resolve: {
+					object: function() {
+						return row.entity;
+					},
+					options: function() {
+						return {
+							price_level: $scope.order.price_level
+						};
+					}
+				}
+			});
+
+			modalInstance.result.then(function(line) {
+				$scope.order.$update(function(response) {
+					$scope.order = response;
+				});
+			}, function() {
+			});
+		};
+
+		$scope.removeLine = function(row) {
+			//console.log(row.entity._id);
+			for (var i = 0; i < $scope.order.lines.length; i++) {
+				if (row.entity._id === $scope.order.lines[i]._id) {
+					$scope.order.lines.splice(i, 1);
+					$scope.update();
+					break;
+				}
+			}
+		};
+
 
 		/**
 		 * Get fileType for icon

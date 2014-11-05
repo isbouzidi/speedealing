@@ -492,7 +492,7 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 		$scope.updateLine = function (data) {
 
 			if (!$scope.line.description)
-				$scope.line.description = data.description;
+				$scope.line.description = data.product.id.description;
 
 			$scope.line.minPrice = data.product.id.minPrice;
 

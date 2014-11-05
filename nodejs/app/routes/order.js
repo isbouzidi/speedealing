@@ -31,6 +31,7 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/lines/list', auth.requiresLogin, object.listLines);
 	app.get('/api/commande', auth.requiresLogin, object.all);
 	app.post('/api/commande', auth.requiresLogin, object.create);
+	app.post('/api/commande/:orderId', auth.requiresLogin, object.create);
 	app.get('/api/commande/:orderId', auth.requiresLogin, object.show);
 	app.put('/api/commande/:orderId', auth.requiresLogin, object.update);
 	app.del('/api/commande/:orderId', auth.requiresLogin, object.destroy);
@@ -132,7 +133,26 @@ Object.prototype = {
 	 * Create an order
 	 */
 	create: function (req, res) {
-		var order = new CommandeModel(req.body);
+		var order;
+		
+		if (req.query.clone) {
+			order = req.order.toObject();
+			delete order._id;
+			delete order.__v;
+			delete order.ref;
+			delete order.createdAt;
+			delete order.updatedAt;
+			order.Status = "DRAFT";
+			order.notes = [];
+			order.latex = {};
+			order.datec = new Date();
+			order.date_livraison = new Date();
+
+			order = new CommandeModel(order);
+		} else
+			order = new CommandeModel(req.body);
+		
+		
 		order.author = {};
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
@@ -184,7 +204,7 @@ Object.prototype = {
 			});
 		}
 
-		console.log(order);
+		//console.log(order);
 
 		order.save(function (err, doc) {
 			if (err) {

@@ -48,6 +48,18 @@
 		</div>
 
 		<div class="field-block">
+            <label><b>{{t 'products:PublicPrice'}}</b></label>
+			<span editable-number="product.pu_ht" e-step="0.001" buttons="no" e-form="puhtBtnForm" onaftersave="update()">
+				\{{product.pu_ht | number:3}}</span> <span class="icon-pencil grey" ng-click="puhtBtnForm.$show()" ng-hide="puhtBtnForm.$visible"></span>
+		</div>
+		
+		<div class="field-block">
+            <label><b>{{t 'products:MinPrice'}}</b></label>
+			<span editable-number="product.minPrice" e-step="0.001" buttons="no" e-form="puMinBtnForm" onaftersave="update()">
+				\{{product.minPrice | number:3}}</span> <span class="icon-pencil grey" ng-click="puMinBtnForm.$show()" ng-hide="puMinBtnForm.$visible"></span>
+		</div>
+		
+		<div class="field-block">
             <label><b>{{t 'VAT'}}</b></label>
 			<span editable-select="product.tva_tx" buttons="no" e-form="vatBtnForm" onaftersave="update()" e-ng-options="c.value as c.value for c in dict.fk_tva.values">
 				\{{product.tva_tx| percent}}</span> <span class="icon-pencil grey" ng-click="vatBtnForm.$show()" ng-hide="vatBtnForm.$visible"></span>

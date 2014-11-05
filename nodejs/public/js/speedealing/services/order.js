@@ -5,6 +5,12 @@ angular.module('mean.orders').factory("Orders", ['$resource', function($resource
     }, {
         update: {
             method: 'PUT'
-        }
+        },
+		clone:{
+			method:'POST',
+			params : {
+				clone:1
+			}
+		}
     });
 }]);

@@ -29,8 +29,9 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">{{t 'Status'}}</th>
-                                    <td><span class="tag small glossy" data-ng-class="order.status.css">\{{order.status.name}}</span>
-                                    </td>
+									<td><span class="tag small glossy" data-ng-class="order.status.css" editable-select="order.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_order_status.values">
+											\{{order.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible ||  order.Status == 'BILLED'"></span>
+									</td>
                                 </tr>
 								<tr>
                                     <th scope="row">{{t 'Entity'}}</th>
@@ -181,19 +182,19 @@
                 <div class="eight-columns small-margin-bottom">
 
                     <div class="float-right button-height">
-						<button ng-hide="editable || order.Status == 'BILLED'" ng-disabled="!global.user.rights.order.createBills" class="button" data-ng-click="bill()">
+						<button ng-show="order.Status == 'CLOSED'" ng-disabled="!global.user.rights.order.createBills" class="button" data-ng-click="bill()">
                             <span class="button-icon green-gradient"><span class="icon-area-graph"></span></span>
                             {{t 'ToBill'}}
                         </button>
 
-                        <button ng-show="editable && order.Status != 'BILLED'" ng-disabled="!global.user.rights.order.validate" class="button" data-ng-click="changeStatus('SEND')">
+                        <button ng-show="order.Status == 'NEW'" ng-disabled="!global.user.rights.order.validate" class="button" data-ng-click="changeStatus('VALIDATED')">
                             <span class="button-icon green-gradient"><span class="icon-like"></span></span>
                             {{t 'Validate'}}
                         </button>
-                        <button ng-hide="editable || order.Status == 'BILLED'" ng-disabled="!global.user.rights.order.reopen" class="button" data-ng-click="changeStatus('DRAFT')">
+                        <!--<button ng-hide="editable || order.Status == 'BILLED'" ng-disabled="!global.user.rights.order.reopen" class="button" data-ng-click="changeStatus('DRAFT')">
                             <span class="button-icon orange-gradient"><span class="icon-unlike"></span></span>
                             {{t 'ReOpen'}}
-                        </button>
+                        </button>-->
 
                         <button class="button" data-ng-click="clone()">
                             <span class="button-icon anthracite-gradient"><span class="icon-pages"></span></span>
@@ -231,10 +232,10 @@
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">{{t 'orders:DateDeliveryPlanned'}}</th>
-                                                    <td><a href="#" ng-show="editable" editable-bsdate="order.datedl" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
-                                                            \{{ (order.datedl | date:"dd/MM/yyyy") || 'empty'}}
+                                                    <td><a href="#" ng-show="editable" editable-bsdate="order.date_livraison" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+                                                            \{{ (order.date_livraison | date:"dd/MM/yyyy") || 'empty'}}
                                                         </a>
-                                                        <span ng-hide="editable">\{{ (order.datedl | date:"dd/MM/yyyy") || 'empty'}}</span></td>
+                                                        <span ng-hide="editable">\{{ (order.date_livraison | date:"dd/MM/yyyy") || 'empty'}}</span></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">{{t 'orders:RefCustomerOrder'}}</th>
@@ -482,7 +483,7 @@
 							</div>
 						</div>
 					</div>
-					<!--<div class="gridStyle"  data-ng-grid="gridOptionsLines" ng-style="style(200)" resize></div>-->
+					<div class="gridStyle"  data-ng-grid="gridOptionsLines" ng-style="style(200)" resize></div>
 					<div class="table-footer silver-gradient">
 						<div class="float-right strong">
 							Total HT : \{{order.total_ht| currency}}  

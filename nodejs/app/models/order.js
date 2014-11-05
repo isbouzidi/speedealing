@@ -24,7 +24,6 @@ var orderSchema = new Schema({
 	cond_reglement_code: {type: String, default: 'RECEP'},
 	mode_reglement_code: {type: String, default: 'TIP'},
 	//availability_code: {type: String, default: 'AV_NOW'},
-	datedl: {type: Date, default: Date.now},
 	type: {type: String, default: 'SRC_COMM'},
 	client: {
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
@@ -40,7 +39,7 @@ var orderSchema = new Schema({
 	},
 	ref_client: {type: String},
 	datec: {type: Date},
-	date_livraison: Date,
+	date_livraison: {type: Date},
 	notes: [{
 			title: String,
 			note: String,
@@ -110,27 +109,27 @@ var orderSchema = new Schema({
 			}
 		}],
 	lines: [{
-			pu: {type: Number, default: 0},
+			//pu: {type: Number, default: 0},
 			qty: {type: Number, default: 0},
 			tva_tx: {type: Number, default: 0},
-			price_base_type: String,
+			//price_base_type: String,
 			group: String,
 			title: String,
 			pu_ht: {type: Number, default: 0},
 			description: String,
 			product_type: String,
 			product: {
-				id: {type: Schema.Types.ObjectId, ref: "product"},
-				name: String
+				id: {type: Schema.Types.ObjectId, ref: "Product"},
+				name: {type: String},
+				label: String,
+				template: {type: String, default: "/partials/lines/classic.html"}
 			},
 			total_tva: {type: Number, default: 0},
 			total_ttc: {type: Number, default: 0},
-			total_ht_without_discount: {type: Number, default: 0},
-			total_ttc_without_discount: {type: Number, default: 0},
-			total_vat_without_discount: {type: Number, default: 0},
+			//total_ht_without_discount: {type: Number, default: 0},
+			//total_ttc_without_discount: {type: Number, default: 0},
+			//total_vat_without_discount: {type: Number, default: 0},
 			total_ht: {type: Number, default: 0},
-			pu_ttc: {type: Number, default: 0},
-			pu_tva: {type: Number, default: 0}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {
