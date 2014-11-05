@@ -33,7 +33,8 @@ window.app = angular.module('mean', [
 	'pascalprecht.translate',
 	'jm.i18next',
 	'ui.chart',
-	'checklist-model'
+	'checklist-model',
+	'jsonFormatter'
 ]);
 
 angular.module('mean.system', []);

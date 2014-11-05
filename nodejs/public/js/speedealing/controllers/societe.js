@@ -665,8 +665,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
-						if (!data.update) // if not file update, add file to files[]
-							$scope.societe.files.push(data.file);
+						//if (!data.update) // if not file update, add file to files[]
+						//	$scope.societe.files.push(data.file);
+						$scope.societe = data;
 					});
 				//.error(...)
 				//.then(success, error, progress); 

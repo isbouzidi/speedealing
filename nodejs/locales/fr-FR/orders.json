@@ -162,5 +162,6 @@
     "LinkedProposals": "Propositions commerciales jointes",
     "ShippingHT": "Frais de transport",
 	"DeliveryTo":"Expédiée à",
-	"BillTo":"Facturée à"
+	"BillTo":"Facturée à",
+	"Details": "Détails de la commande"
 }

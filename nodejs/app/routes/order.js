@@ -39,6 +39,61 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
+	
+	app.post('/api/commande/file/:Id', auth.requiresLogin, function (req, res) {
+		var id = req.params.Id;
+		//console.log(id);
+
+		if (req.files && id) {
+			//console.log(req.files);
+
+			gridfs.addFile(SocieteModel, id, req.files.file, function (err, result, file, update) {
+				if (err)
+					return res.send(500, err);
+
+				return res.send(200, {status: "ok", file: file, update: update});
+			});
+		} else
+			res.send(500, "Error in request file");
+	});
+
+	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, function (req, res) {
+		var id = req.params.Id;
+
+		if (id && req.params.fileName) {
+
+			gridfs.getFile(SocieteModel, id, req.params.fileName, function (err, store) {
+				if (err)
+					return res.send(500, err);
+
+				if (req.query.download)
+					res.attachment(store.filename); // for downloading 
+
+				res.type(store.contentType);
+				store.stream(true).pipe(res);
+
+			});
+		} else {
+			res.send(500, "Error in request file");
+		}
+
+	});
+
+	app.del('/api/commande/file/:Id/:fileNames', auth.requiresLogin, function (req, res) {
+		console.log(req.body);
+		var id = req.params.Id;
+		//console.log(id);
+
+		if (req.params.fileNames && id) {
+			gridfs.delFile(SocieteModel, id, req.params.fileNames, function (err) {
+				if (err)
+					res.send(500, err);
+				else
+					res.send(200, {status: "ok"});
+			});
+		} else
+			res.send(500, "File not found");
+	});
 
 	//Finish with setting up the orderId param
 	app.param('orderId', object.order);

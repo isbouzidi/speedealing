@@ -1362,20 +1362,6 @@ module.exports = function (app, passport, auth) {
 			res.send(500, "File not found");
 	});
 
-	app.get('/api/societe/file/remove/:Id/:fileName', auth.requiresLogin, function (req, res) {
-		var id = req.params.Id;
-
-		if (req.params.fileName && id) {
-			gridfs.delFile(SocieteModel, id, req.params.fileName, function (err) {
-				if (err)
-					res.send(500, err);
-				else
-					res.redirect('/societe/fiche.php?id=' + id);
-			});
-		} else
-			res.send(500, "File not found");
-	});
-
 	app.get('/api/societe/contact/select', auth.requiresLogin, function (req, res) {
 		//console.log(req.query);
 		var result = [];

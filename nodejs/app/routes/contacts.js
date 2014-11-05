@@ -578,8 +578,8 @@ Contact.prototype = {
 			]
 		};
 
-		if (req.query.limit)
-			sort.limit = parseInt(req.query.limit);
+		//if (req.query.limit)
+		//	sort.limit = parseInt(req.query.limit);
 
 		ContactModel.find(query, "firstname lastname societe.name Tag phone Status email phone_mobile newsletter sendEmailing sendSMS", sort, function (err, doc) {
 			if (err) {

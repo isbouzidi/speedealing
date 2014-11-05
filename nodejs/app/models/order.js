@@ -54,11 +54,16 @@ var orderSchema = new Schema({
 			}
 		}],
 	total_ht: {type: Number, default: 0},
-	total_tva: {type: Number, default: 0},
+	total_tva: [
+		{
+			tva_tx: Number,
+			total: {type: Number, default: 0}
+		}
+	],
 	total_ttc: {type: Number, default: 0},
 	shipping: {
 		total_ht: {type: Number, default: 0},
-		tva_tx: {type: Number, default: 0},
+		tva_tx: {type: Number, default: 20},
 		total_tva: {type: Number, default: 0},
 		total_ttc: {type: Number, default: 0}
 	},
@@ -147,25 +152,62 @@ orderSchema.plugin(gridfs.pluginGridFs, {root: 'Commande'});
  */
 orderSchema.pre('save', function (next) {
 	this.total_ht = 0;
-	this.total_tva = 0;
+	this.total_tva = [];
 	this.total_ttc = 0;
 
 	for (var i = 0; i < this.lines.length; i++) {
 		//console.log(object.lines[i].total_ht);
 		this.total_ht += this.lines[i].total_ht;
-		this.total_tva += this.lines[i].total_tva;
-		this.total_ttc += this.lines[i].total_ttc;
+		//this.total_ttc += this.lines[i].total_ttc;
+
+		//Add VAT
+		var found = false;
+		for (var j = 0; j < this.total_tva.length; j++)
+			if (this.total_tva[j].tva_tx === this.lines[i].tva_tx) {
+				this.total_tva[j].total += this.lines[i].total_tva;
+				found = true;
+				break;
+			}
+
+		if (!found) {
+			this.total_tva.push({
+				tva_tx: this.lines[i].tva_tx,
+				total: this.lines[i].total_tva
+			});
+		}
 	}
 
-	// Shipping
-	this.total_ht += this.shipping.total_ht;
-	this.total_tva += this.shipping.total_tva;
-	this.total_ttc += this.shipping.total_ttc;
+	// shipping cost
+	if (this.shipping.total_ht) {
+		this.total_ht += this.shipping.total_ht;
 
-	// Round
+		this.shipping.total_tva = this.shipping.total_ht * this.shipping.tva_tx / 100;
+
+		//Add VAT
+		var found = false;
+		for (var j = 0; j < this.total_tva.length; j++)
+			if (this.total_tva[j].tva_tx === this.shipping.tva_tx) {
+				this.total_tva[j].total += this.shipping.total_tva;
+				found = true;
+				break;
+			}
+
+		if (!found) {
+			this.total_tva.push({
+				tva_tx: this.shipping.tva_tx,
+				total: this.shipping.total_tva
+			});
+		}
+	}
+
 	this.total_ht = Math.round(this.total_ht * 100) / 100;
-	this.total_tva = Math.round(this.total_tva * 100) / 100;
-	this.total_ttc = Math.round(this.total_ttc * 100) / 100;
+	//this.total_tva = Math.round(this.total_tva * 100) / 100;
+	this.total_ttc = this.total_ht;
+
+	for (var j = 0; j < this.total_tva.length; j++) {
+		this.total_tva[j].total = Math.round(this.total_tva[j].total * 100) / 100;
+		this.total_ttc += this.total_tva[j].total;
+	}
 
 	var self = this;
 	if (this.isNew && this.ref == null) {
