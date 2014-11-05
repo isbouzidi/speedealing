@@ -1,0 +1,22 @@
+<section data-ng-controller="StatementController" data-ng-init="init()">
+    <hgroup id="main-title" class="thin">
+        <h1>Relevé <b>\{{bank_statement}}</b>, Compte bancaire : <b>\{{bank.libelle}}</b></h1>
+    </hgroup>
+
+    <div class="with-padding">
+
+        <div class="table-header silver-gradient glossy button-height">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="float-right">
+                        {{t 'Search'}} <input type="text" placeholder="..." data-ng-model="filterOptionsBank.filterText" class="input small mid-margin-left">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gridStyle"  data-ng-grid="gridOptions" ng-style="style(170)" resize></div>
+        <div class="table-footer silver-gradient">
+            \{{countTransactions}} ligne(s)
+        </div>
+    </div>
+</section>

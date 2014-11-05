@@ -22,6 +22,9 @@ module.exports = function (app, passport, auth) {
     //get list of transactions
     app.get('/api/transaction/reconcile', auth.requiresLogin, object.getReconcile);
     
+    //get list bank statement
+    app.get('/api/transaction/bankStatement', auth.requiresLogin, object.getStatement);
+    
     //reconciliation transactions
     app.put('/api/transaction/reconcile', auth.requiresLogin, object.updateReconcile);
 };
@@ -127,5 +130,31 @@ Object.prototype = {
                     
                     res.json(doc);
                 });            
+    },
+    getStatement: function(req, res){
+        var bank;
+        var statement;
+        
+        if (req.query.bank)
+            bank =  req.query.bank;            
+        
+        if (req.query.statement)
+            statement = req.query.statement;            
+        
+        var query = {
+            $and: [
+                {"bank.id": bank}, 
+                {"bank_statement": statement}
+            ]
+        };        
+        
+        TransactionModel.find(query, function(err, doc){
+            if(err) {
+                console.log(err);
+                res.send(500);
+            }
+
+            res.json(200, doc);
+        });
     }
 };

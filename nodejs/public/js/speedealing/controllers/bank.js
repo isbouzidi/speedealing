@@ -52,7 +52,7 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
         };
 
         /*
-         * NG-GRID for contact list
+         * NG-GRID for Transaction list
          */
 
         $scope.filterOptionsTransaction = {
@@ -84,7 +84,8 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
                 {field: 'debit', displayName: 'Debit', cellFilter: "currency:''"},
                 {field: 'credit', displayName: 'Credit', cellFilter: "currency:''"},
                 {field: 'balance', displayName: 'Solde', cellFilter: "currency:''"},
-                {field: 'bank_statement', displayName: 'Relvé'}
+                {field: 'bank_statement', displayName: 'Relvé', 
+                    cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/module/bank/bankStatement.html?statement={{row.getProperty(\'bank_statement\')}}&account={{row.getProperty(\'bank.id\')}}">{{row.getProperty(col.field)}} </a>'}
             ]
         };
         $scope.isValidInfo = function (bank) {
