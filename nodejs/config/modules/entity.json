@@ -40,20 +40,19 @@
 		"entity"
 	],
 	"menus": {
-		"menu:entity": {
-			"position": 1200,
-			"perms": "entity.read",
-			"enabled": "$conf->entity->enabled",
-			"usertype": 2,
-			"title": "main:Entities",
+		"menu:parameters": {
 			"submenus": {
-				"menu:entitylist": {
-					"position": 1,
-					"url": "#!/entity",
-					"perms": "entity.read",
-					"enabled": "$conf->entity->enabled",
-					"usertype": 2,
-					"title": "main:List"
+				"menu:setup": {
+					"submenus": {
+						"menu:entity": {
+							"position": 30,
+							"url": "#!/entity",
+							"perms": "admin",
+							"enabled": "$conf->entity->enabled",
+							"usertype": 2,
+							"title": "main:Entities"
+						}
+					}
 				}
 			}
 		}
