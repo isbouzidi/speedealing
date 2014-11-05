@@ -1,34 +1,61 @@
-angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$timeout', 'pageTitle', 'Global', 'Orders', function ($scope, $location, $http, $routeParams, $modal, $timeout, pageTitle, Global, Orders) {
+angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$timeout', 'pageTitle', 'Global', 'Orders', function ($scope, $location, $http, $routeParams, $modal, $filter, $timeout, pageTitle, Global, Orders) {
 
 		pageTitle.setTitle('Liste des commandes');
+		$scope.order = {};
+		$scope.dict = {};
 
 		$scope.types = [{name: "En cours", id: "NOW"},
 			{name: "Clos", id: "CLOSED"}];
 
 		$scope.type = {name: "En cours", id: "NOW"};
 
+		$scope.init = function () {
+			var dict = ["fk_order_status", "fk_paiement", "fk_input_reason", "fk_payment_term", "fk_tva"];
+
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
+				//console.log(data);
+			});
+
+		};
+
+		$scope.listOrders = function () {
+			$location.path('/orders');
+		};
+
+		$scope.showStatus = function (idx, dict) {
+			if (!($scope.dict[dict] && $scope.order[idx]))
+				return;
+			var selected = $filter('filter')($scope.dict[dict].values, {id: $scope.order[idx]});
+
+			return ($scope.order[idx] && selected && selected.length) ? selected[0].label : 'Non défini';
+		};
+
 		$scope.create = function () {
-			var societe = new Societe({
+			var order = new Orders({
 				title: this.title,
 				content: this.content
 			});
-			societe.$save(function (response) {
-				$location.path("societe/" + response._id);
+			order.$save(function (response) {
+				$location.path("orders/" + response._id);
 			});
 
 			this.title = "";
 			this.content = "";
 		};
 
-		$scope.remove = function (societe) {
-			societe.$remove();
+		$scope.remove = function (order) {
+			order.$remove();
 
 		};
 
 		$scope.update = function () {
-			var societe = $scope.societe;
+			var order = $scope.order;
 
-			societe.$update(function () {
+			order.$update(function () {
 				//$location.path('societe/' + societe._id);
 			});
 		};
@@ -48,14 +75,79 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 		};
 
 		$scope.findOne = function () {
-			Societe.get({
+			Orders.get({
 				Id: $routeParams.id
-			}, function (societe) {
-				$scope.societe = societe;
-				pageTitle.setTitle('Fiche ' + $scope.societe.name);
+			}, function (order) {
+				$scope.order = order;
+
+				//on utilise idLine pour definir la ligne produit que nous voulons supprimer
+				for (var i in $scope.order.lines) {
+					$scope.order.lines[i].idLine = i;
+				}
+
+				if (order.Status === "DRAFT")
+					$scope.editable = true;
+				else
+					$scope.editable = false;
+
+				$http({method: 'GET', url: 'api/ticket', params:
+							{
+								find: {"linked.id": order._id},
+								fields: "name ref updatedAt percentage Status task"
+							}
+				}).success(function (data, status) {
+					if (status === 200)
+						$scope.tickets = data;
+
+					$scope.countTicket = $scope.tickets.length;
+				});
+
+				pageTitle.setTitle('Commande client ' + $scope.order.ref);
+			}, function (err) {
+				if (err.status === 401)
+					$location.path("401.html");
 			});
 		};
 
+		$scope.updateAddress = function (data) {
+			//if(mode == 'bill')  {
+			$scope.order.cond_reglement_code = data.cond_reglement_code;
+			$scope.order.mode_reglement_code = data.mode_reglement_code;
+
+			$scope.order.price_level = data.price_level;
+			$scope.order.commercial_id = data.commercial_id;
+			//}
+			//console.log(data);
+			if (data.address) {
+				if (data.id == '5333032036f43f0e1882efce') { // Accueil
+					$scope.order.billing = {
+						sameBL0: true,
+					};
+					$scope.order.bl[0] = {};
+				} else {
+					$scope.order.bl[0].name = data.name;
+					$scope.order.bl[0].address = data.address.address;
+					$scope.order.bl[0].zip = data.address.zip;
+					$scope.order.bl[0].town = data.address.town;
+					$scope.order.billing = {
+						sameBL0: false,
+					};
+				}
+			}
+
+			return true;
+		};
+
+		$scope.updateBillingAddress = function () {
+			if ($scope.order.billing.sameBL0) {
+				$scope.order.billing.name = $scope.order.bl[0].name;
+				$scope.order.billing.address = $scope.order.bl[0].address;
+				$scope.order.billing.zip = $scope.order.bl[0].zip;
+				$scope.order.billing.town = $scope.order.bl[0].town;
+			}
+			
+			return true;
+		};
 		/*
 		 * NG-GRID for order list
 		 */
@@ -74,8 +166,12 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			enableRowSelection: false,
 			enableColumnResize: true,
 			i18n: 'fr',
+			rowTemplate: '<div style="height: 100%" ng-class="{\'green-bg\': (row.getProperty(\'Status\') == \'SEND\'),\'orange-bg\': (row.getProperty(\'Status\') == \'NEW\'), }"><div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
+					'<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"> </div>' +
+					'<div ng-cell></div>' +
+					'</div></div>',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref', width: "140px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty("task")}}\'><span class="icon-bag"></span> {{row.getProperty(col.field)}}</a></div>'},
+				{field: 'ref', displayName: 'Ref.', width: "160px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/orders/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
 				{field: 'client.name', displayName: 'Société'},
 				{field: 'ref_client', displayName: 'Ref. client'},
 				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
@@ -89,8 +185,6 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				{displayName: "Actions", width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a ng-href="/api/commande/pdf/{{row.getProperty(\'_id\')}}" class="button icon-download" title="Bon de commande PDF"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
 		};
-
-		$scope.order = {};
 
 		$scope.addNew = function () {
 			var modalInstance = $modal.open({
@@ -136,13 +230,18 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			return false;
 		};
 
+		$scope.changeStatus = function (Status) {
+			$scope.order.Status = Status;
+			$scope.update();
+		};
+
 	}]);
 
 angular.module('mean.system').controller('OrderCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Order', function ($scope, $http, $modalInstance, $upload, $route, Global, Order) {
 		$scope.global = Global;
 
 		//pageTitle.setTitle('Nouvelle commande');
-		
+
 		$scope.opened = [];
 
 		$scope.init = function () {

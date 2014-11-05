@@ -1,6 +1,5 @@
 angular.module('mean.system').controller('TaskController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'socket', 'pageTitle', 'Task', function ($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, socket, pageTitle, Task) {
 		$scope.global = Global;
-		pageTitle.setTitle('Liste des tâches');
 
 		$scope.task = {};
 		$scope.tasks = [];
@@ -50,6 +49,8 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		};
 
 		$scope.find = function () {
+			pageTitle.setTitle('Liste des tâches');
+			
 			var sb = {};
 			for (var i = 0; i < $scope.sortOptions.fields.length; i++) {
 				sb[$scope.sortOptions.fields[i]] = $scope.sortOptions.directions[i] === "desc" ? -1 : 1;

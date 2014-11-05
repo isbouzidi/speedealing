@@ -23,9 +23,15 @@ var orderSchema = new Schema({
 	Status: {type: Schema.Types.Mixed, default: 'DRAFT'},
 	cond_reglement_code: {type: String, default: 'RECEP'},
 	mode_reglement_code: {type: String, default: 'TIP'},
-	availability_code: {type: String, default: 'AV_NOW'},
-	demand_reason_code: {type: String, default: 'SRC_CAMP_EMAIL'},
-	client: {id: {type: Schema.Types.ObjectId, ref: 'societe'}, name: String},
+	//availability_code: {type: String, default: 'AV_NOW'},
+	datedl: {type: Date, default: Date.now},
+	type: {type: String, default: 'SRC_COMM'},
+	client: {
+		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
+		name: String,
+		isNameModified: {type: Boolean},
+		cptBilling: {id: {type: Schema.Types.ObjectId}, name: String},
+	},
 	contact: {
 		id: {type: Schema.Types.ObjectId, ref: 'contact'},
 		name: String,
@@ -57,6 +63,7 @@ var orderSchema = new Schema({
 		total_ttc: {type: Number, default: 0}
 	},
 	author: {id: String, name: String},
+	commercial_id: {id: {type: String}, name: String},
 	entity: String,
 	modelpdf: String,
 	linked_objects: [{id: Schema.Types.ObjectId, name: String}],
@@ -64,6 +71,7 @@ var orderSchema = new Schema({
 	groups: [Schema.Types.Mixed],
 	optional: Schema.Types.Mixed,
 	billing: {
+		sameBL0: {type: Boolean},
 		name: String,
 		contact: String,
 		address: String,
@@ -76,6 +84,7 @@ var orderSchema = new Schema({
 		},
 		mode: {type: String, default: "BILL"} // TICKET or BILL
 	},
+	price_level: {type: String, default: "BASE", uppercase: true, trim: true},
 	bl: [{
 			label: String,
 			name: String,

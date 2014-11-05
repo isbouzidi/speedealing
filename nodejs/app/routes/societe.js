@@ -93,6 +93,8 @@ module.exports = function (app, passport, auth) {
 
 					result[i].mode_reglement_code = docs[i].mode_reglement;
 					result[i].cond_reglement_code = docs[i].cond_reglement;
+					
+					result[i].commercial_id = docs[i].commercial_id;
 				}
 
 			return res.send(200, result);
