@@ -126,7 +126,7 @@
 	],
 	"menus": {
 		"menu:delivery": {
-			"position": 41,
+			"position": 42,
 			"perms": "delivery.read",
 			"enabled": "$conf->delivery->enabled",
 			"usertype": 2,
