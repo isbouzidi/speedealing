@@ -56,7 +56,7 @@
 					</div>
 				</div>
 					<div class="col-sm-6">
-					\{{'companies:PriceLevel' | i18next}} <select ng-model="price_level" ng-options="c.name as c.name for c in prices_level" data-ng-change="find()" class=""></select>
+					{{t 'products:PriceLevel'}} <select ng-model="price_level" ng-options="c.name as c.name for c in prices_level" data-ng-change="find()" class=""></select>
 				</div>
 				<div class="col-sm-3">
 					<div class="float-right">
