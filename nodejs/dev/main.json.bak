@@ -2,6 +2,26 @@
 	"boxes": [],
 	"const": [],
 	"rights": {
+		"entity": [
+			{
+				"desc": "Lister les entités",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer/modifier les entités",
+				"perm": {
+					"create": false
+				}
+			},
+			{
+				"desc": "Supprimer les entités",
+				"perm": {
+					"delete": false
+				}
+			}
+		],
 		"user": [
 			{
 				"desc": "Consulter les autres utilisateurs",
@@ -159,6 +179,83 @@
 							"perms":"admin",
 							"usertype": 2,
 							"title": "admin:Modules"
+						},
+						"menu:menus": {
+							"position": 3,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:Menus"
+						},
+						"menu:guisetup": {
+							"position": 4,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:GUISetup"
+						},
+						"menu:boxes": {
+							"position": 5,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:Boxes"
+						},
+						"menu:alerts": {
+							"position": 6,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:Alerts"
+						},
+						"menu:security": {
+							"position": 7,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:Security"
+						},
+						"menu:menulimits": {
+							"position": 8,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:MenuLimits"
+						},
+						"menu:pdf": {
+							"position": 9,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:PDF"
+						},
+						"menu:emails": {
+							"position": 10,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:Emails"
+						},
+						"menu:sms": {
+							"position": 11,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:Sms"
+						},
+						"menu:dictionnarysetup": {
+							"position": 12,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:DictionnarySetup"
+						},
+						"menu:othersetup": {
+							"position": 13,
+							"url": "",
+							"perms":"admin",
+							"usertype": 2,
+							"title": "admin:OtherSetup"
 						}
 					}
 				},
