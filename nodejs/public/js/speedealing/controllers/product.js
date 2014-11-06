@@ -324,38 +324,6 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 		};
 
 
-		/*var crudServiceBaseUrl = "api/product";
-		 
-		 
-		 schema: {
-		 model: {
-		 id: "_id",
-		 fields: {
-		 _id: {editable: false, nullable: true},
-		 ref: {editable: true, validation: {required: true}},
-		 qtyMin: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-		 pu_ht: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-		 tms: {type: "date", editable: false, defaultValue: Date().now},
-		 entity: {type: "string", defaultValue: ""},
-		 label: {type: "string", defaultValue: ""},
-		 //Status_ID: {from: "Status.id", defaultValue: "SELL"},
-		 price_level: {type: "string", defaultValue: "BASE"},
-		 ref_customer_code: {type: "string"},
-		 caFamily: {type: "string"},
-		 barCode: {type: "string"},
-		 billingMode: {type: "string", defaultvalue: "QTY"},
-		 compta_buy: {type: "string", defaultValue: ""},
-		 compta_sell: {type: "string", defaultValue: ""},
-		 author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
-		 Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
-		 tva_tx: {type: "string", defaultValue: 20},
-		 type: {defaultValue: {id: "PRODUCT", name: "Produit", css: "blue-gradient"}}
-		 }
-		 }
-		 },
-		 */
-
-
 	}]);
 
 angular.module('mean.products').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function ($scope, $routeParams, Global, $http) {

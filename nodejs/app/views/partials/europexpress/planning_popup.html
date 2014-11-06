@@ -1,0 +1,150 @@
+<form data-ng-init='init()' data-ng-submit='addOrUpdate()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 900px;margin: 0 auto;">
+
+	<!-- Block style is optional, you can use any layout -->
+	<h3 class="block-title">Edition de la tournee  - \{{tournee.client.name}} (\{{tournee.storehouse}})</h3>
+
+	<fieldset class="wizard-fieldset fields-list active">
+		<div class="field-block">
+			<p>Edition de la semaine : \{{tournee.week}}</p>
+		</div>
+
+		<div class="field-block">
+			<label for="tournee.storehouse" class="align-left">
+				<b>Nom de la tournee</b>
+			</label>
+			<div class="row">
+				<div class="col-md-4">
+					<input type="text" id="tournee.storehouse" data-ng-model="tournee.storehouse" class="form-control">
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+			<label for="societe"><b>{{t
+				'CompanyFoundation'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon icon icon-home"></span>
+						<input required type="text" 
+							   data-ng-model="tournee.client" 
+							   typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}" 
+							   id="societe" class="form-control" autocomplete="off">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="field-block button-height">
+		</div>
+
+		<table class="simple-table">
+			<thead>
+				<tr>
+					<th width="180px" scope="row"></th>
+					<th scope="col" width="13%" class="align-center" >{{t
+						'Monday'}} <br/>\{{tournee.details[1].date| date:'dd/MM/yyyy'}}</th>
+					<th scope="col" width="13%" class="align-center" >{{t
+						'Tuesday'}} <br/>\{{tournee.details[2].date| date:'dd/MM/yyyy'}}</th>
+					<th scope="col" width="13%" class="align-center" >{{t
+						'Wednesday'}} <br/>\{{tournee.details[3].date| date:'dd/MM/yyyy'}}</th>
+					<th scope="col" width="13%" class="align-center" >{{t
+						'Thursday'}} <br/>\{{tournee.details[4].date| date:'dd/MM/yyyy'}}</th>
+					<th scope="col" width="13%" class="align-center" >{{t
+						'Friday'}} <br/>\{{tournee.details[5].date| date:'dd/MM/yyyy'}}</th>
+					<th scope="col" width="13%" class="align-center" >{{t
+						'Saturday'}} <br/>\{{tournee.details[6].date| date:'dd/MM/yyyy'}}</th>
+				</tr>
+
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">Mode</th>
+					<td ng-repeat="n in dayList">
+						<select class="form-control"
+								ng-model="tournee.details[n].mode"
+								required
+								ng-options="m as m.name for m in modeList track by m.id"
+								ng-change="updateMode(n)">                                    
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Chauffeur</th>
+					<td ng-repeat="n in dayList">
+						<input ng-hide="tournee.details[n].mode.id == 'NONE'" type="text" data-ng-model="tournee.details[n].driver" typeahead="driver as driver.name for driver in driverAutoComplete($viewValue) | filter:{name:$viewValue}" class="form-control"/>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Heure Supp. chauffeur</th>
+					<td ng-repeat="n in dayList">
+						<input ng-hide="tournee.details[n].mode.id == 'NONE'" type="number" step="0.01" data-ng-model="tournee.details[n].hSupp" class="form-control" />
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Sous-traitant</th>
+					<td ng-repeat="n in dayList">
+						<input ng-hide="tournee.details[n].mode.id == 'NONE'" type="text" data-ng-model="tournee.details[n].sousTraitant" typeahead="subcontractor as subcontractor.name for subcontractor in subcontractorAutoComplete($viewValue) | filter:{name:$viewValue}" class="form-control"/>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Remplacement</th>
+					<td ng-repeat="n in dayList">
+						<input ng-hide="tournee.details[n].mode.id == 'NONE'" type="checkbox" data-ng-checked="tournee.details[n].remplac" data-ng-model="tournee.details[n].remplac" class="" />
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Formation ou  suppléant</th>
+					<td ng-repeat="n in dayList">
+						<input ng-hide="tournee.details[n].mode.id == 'NONE'" type="text" data-ng-model="tournee.details[n].formation" typeahead="driver as driver.name for driver in driverAutoComplete($viewValue) | filter:{name:$viewValue}" class="form-control"/>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Heure Supp. Formation/Supp</th>
+					<td ng-repeat="n in dayList">
+						<input ng-hide="tournee.details[n].mode.id == 'NONE'" type="number" step="0.01" data-ng-model="tournee.details[n].hSuppFormation" class="form-control" />
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Heures de nuit</th>
+					<td ng-repeat="n in dayList">
+						<input ng-hide="tournee.details[n].mode.id == 'NONE'" type="number" step="0.01" data-ng-model="tournee.details[n].hNuit" class="form-control" />
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Paniers</th>
+					<td ng-repeat="n in dayList">
+						<label ng-hide="tournee.details[n].mode.id == 'NONE'" ng-repeat="panier in panierList">
+							<input type="checkbox" checklist-model="tournee.details[n].panier" checklist-value="panier"> \{{panier}}
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">{{t 'Comments'}}</th>
+					<td ng-repeat="n in dayList">
+						<textarea ng-hide="tournee.details[n].mode.id == 'NONE'" cols="30" rows="3" data-ng-model="tournee.details[n].note" class="form-control"></textarea>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="field-block button-height wizard-controls align-right">
+
+			
+			
+			<button class="button glossy mid-margin-right" ng-click="cancel()">
+				<span class="button-icon orange-gradient"><span class="icon-cross"></span></span>
+				{{t
+					'Cancel'}}
+			</button>
+			
+			<button type="submit" class="button glossy mid-margin-right">
+				<span class="button-icon"><span class="icon-tick"></span></span>
+				{{t
+					'Save'}}
+			</button>
+
+		</div>
+	</fieldset>
+
+</form>

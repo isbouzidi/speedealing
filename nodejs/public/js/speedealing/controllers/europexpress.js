@@ -1,4 +1,4 @@
-angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', '$route', 'Global', '$http', 'EEPlanning', function ($scope, $routeParams, $location, $route, Global, $http, Object) {
+angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', '$route', '$modal', 'Global', '$http', 'EEPlanning', function ($scope, $routeParams, $location, $route, $modal, Global, $http, Object) {
 		$scope.global = Global;
 		$scope.showEdit = {};
 
@@ -10,10 +10,12 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			var w = parseInt($routeParams.id1);
 
 			var days = 2 + d + (w - 1) * 7 - (new Date(y, 0, 1)).getDay();
-			return new Date(y, 0, days);
+			return new Date(y, 0, days, 8, 0, 0);
 		};
 
 		$scope.find = function () {
+			$scope.hsupp = 0;
+
 			if ($routeParams.id1 == null)
 				return $scope.today();
 
@@ -29,7 +31,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		};
 
 		$scope.createWeek = function () {
-			$http({method: 'POST', url: 'api/europexpress/planning', data: {
+			$http({method: 'POST', url: 'api/europexpress/planning/newWeek', data: {
 					year: $routeParams.id2,
 					week: $routeParams.id1}
 			}).
@@ -85,6 +87,154 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				$scope.showEdit[i] = false;
 		};
 
+		/*$scope.update = function (id) {
+		 //console.log($scope.aday);
+		 
+		 if (!$scope.aday.driver && !$scope.aday.formation) {
+		 $scope.aday.hSupp = 0;
+		 }
+		 
+		 var article = $scope.aday;
+		 
+		 article.$update(function (doc) {
+		 //$route.reload();
+		 //$location.path('articles/' + article._id);
+		 $scope.showEdit = {};
+		 for (var i = 0; i < $scope.tournees.length; i++) {
+		 //console.log($scope.tournees[i]);
+		 for (var j = 0; j < $scope.tournees[i].details.length; j++) {
+		 if ($scope.tournees[i].details[j] && doc._id == $scope.tournees[i].details[j]._id)
+		 $scope.tournees[i].details[j] = doc;
+		 //console.log(day);
+		 }
+		 }
+		 
+		 
+		 });
+		 };*/
+
+		$scope.findOne = function (id) {
+			Object.get({
+				planningId: id
+			}, function (aday) {
+				$scope.aday = aday;
+			});
+		};
+
+		/*$scope.refresh = function () {
+			
+
+			$http({method: 'POST', url: 'api/europexpress/planning/refresh', data: {
+					year: $routeParams.id2,
+					week: $routeParams.id1}
+			}).
+					success(function (data, status) {
+						$route.reload();
+					}).
+					error(function (data, status) {
+						console.log("Request failed");
+					});
+
+		};*/
+
+		$scope.addNewLine = function () {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/europexpress/planning_popup.html',
+				controller: "EEPlanningLineController",
+				windowClass: "steps",
+				resolve: {
+					object: function () {
+						return {
+							week: $scope.week,
+							details: [
+								{},
+								{mode: {id: "NONE", name: "Inactif"}, date: $scope.dateDay(0)},
+								{mode: {id: "NONE", name: "Inactif"}, date: $scope.dateDay(1)},
+								{mode: {id: "NONE", name: "Inactif"}, date: $scope.dateDay(2)},
+								{mode: {id: "NONE", name: "Inactif"}, date: $scope.dateDay(3)},
+								{mode: {id: "NONE", name: "Inactif"}, date: $scope.dateDay(4)},
+								{mode: {id: "NONE", name: "Inactif"}, date: $scope.dateDay(5)}
+							]
+						};
+					}
+				}
+			});
+
+			modalInstance.result.then(function (tournee) {
+				tournee = new Object(tournee);
+				tournee.$save(function (response) {
+					$scope.find();
+				});
+			}, function () {
+			});
+		};
+
+		$scope.editLine = function (row) {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/europexpress/planning_popup.html',
+				controller: "EEPlanningLineController",
+				windowClass: "steps",
+				resolve: {
+					object: function () {
+						return row;
+					}
+				}
+			});
+
+			modalInstance.result.then(function (tournee) {
+				//console.log(tournee);
+				tournee.$update(function (response) {
+				});
+			}, function () {//on cancel
+				$scope.find();
+			});
+		};
+
+		$scope.removeLine = function (row) {
+			//console.log(row);
+			row.$remove();
+
+			for (var i = 0; i < $scope.tournees.length; i++) {
+				if (row._id === $scope.tournees[i]._id) {
+					$scope.tournees.splice(i, 1);
+					break;
+				}
+			}
+		};
+	}]);
+
+angular.module('mean.europexpress').controller('EEPlanningLineController', ['$scope', '$http', '$modalInstance', 'Global', 'object', function ($scope, $http, $modalInstance, Global, object) {
+		$scope.global = Global;
+
+		$scope.tournee = object;
+		$scope.dayList = [1, 2, 3, 4, 5, 6];
+
+		$scope.modeList = [{id: "NONE", name: "Inactif"},
+			{id: "AM", name: "AM"},
+			{id: "PM", name: "PM"},
+			{id: "DAY", name: "En journée"}];
+
+		$scope.panierList = ["Panier jour", "Panier nuit", "Casse-croute"];
+
+		//console.log(object);
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+
+		$scope.addOrUpdate = function () {
+			$modalInstance.close($scope.tournee);
+		};
+
+		$scope.updateMode = function (idx) {
+			if ($scope.tournee.details[idx].mode.id == 'NONE') {
+				$scope.tournee.details[idx].driver = null;
+				$scope.tournee.details[idx].sousTraitant = null;
+				$scope.tournee.details[idx].formation = null;
+			}
+		};
+
+
 		/**
 		 * AutoComplete User Driver
 		 */
@@ -119,113 +269,6 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 			});
 		};
 
-		$scope.update = function (id) {
-			//console.log($scope.aday);
-
-			if (!$scope.aday.driver && !$scope.aday.formation) {
-				$scope.aday.hSupp = 0;
-			}
-
-			var article = $scope.aday;
-
-			article.$update(function (doc) {
-				//$route.reload();
-				//$location.path('articles/' + article._id);
-				$scope.showEdit = {};
-				for (var i = 0; i < $scope.tournees.length; i++) {
-					//console.log($scope.tournees[i]);
-					for (var j = 0; j < $scope.tournees[i].details.length; j++) {
-						if ($scope.tournees[i].details[j] && doc._id == $scope.tournees[i].details[j]._id)
-							$scope.tournees[i].details[j] = doc;
-						//console.log(day);
-					}
-				}
-
-
-			});
-		};
-
-		$scope.findOne = function (id) {
-			Object.get({
-				planningId: id
-			}, function (aday) {
-				$scope.aday = aday;
-			});
-		};
-
-		$scope.refresh = function () {
-			/*angular.element('#refresh').confirm({
-			 message: 'Are you really really sure?',
-			 onConfirm: function()
-			 {
-			 /* Custom code here */
-
-			// Return false to prevent default action
-			/*	return false;
-			 }
-			 });*/
-
-			$http({method: 'POST', url: 'api/europexpress/planning/refresh', data: {
-					year: $routeParams.id2,
-					week: $routeParams.id1}
-			}).
-					success(function (data, status) {
-						$route.reload();
-					}).
-					error(function (data, status) {
-						console.log("Request failed");
-					});
-
-		};
-
-		$scope.disableRefresh = function () {
-			var d = new Date();
-			d.setHours(0, 0, 0);
-			d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-			var todayWeek = Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7).toString();
-
-			var year = parseInt($routeParams.id2);
-			var week = parseInt($routeParams.id1);
-
-			return (year < d.getFullYear() || week < todayWeek);
-		};
-
-		/* $scope.create = function() {
-		 var article = new Articles({
-		 title: this.title,
-		 content: this.content
-		 });
-		 article.$save(function(response) {
-		 $location.path("articles/" + response._id);
-		 });
-		 
-		 this.title = "";
-		 this.content = "";
-		 };
-		 
-		 $scope.remove = function(article) {
-		 article.$remove();  
-		 
-		 for (var i in $scope.articles) {
-		 if ($scope.articles[i] == article) {
-		 $scope.articles.splice(i, 1);
-		 }
-		 }
-		 };
-		 
-		 $scope.find = function() {
-		 Articles.query(function(articles) {
-		 $scope.articles = articles;
-		 });
-		 };
-		 
-		 $scope.findOne = function() {
-		 Articles.get({
-		 articleId: $routeParams.articleId
-		 }, function(article) {
-		 $scope.article = article;
-		 });
-		 };*/
 	}]);
 
 angular.module('mean.europexpress').controller('EETourneeController', ['$scope', '$routeParams', '$location', '$route', 'Global', 'EEPlanning', function ($scope, $routeParams, $location, $route, Global, Object) {
