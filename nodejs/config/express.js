@@ -12,7 +12,7 @@ var express = require('express'),
 		fs = require('fs'),
 		config = require(__dirname + '/config');
 
-module.exports = function(app, passport, db) {
+module.exports = function (app, passport, db) {
 
 	/** 
 	 * config translate
@@ -33,7 +33,7 @@ module.exports = function(app, passport, db) {
 
 	var namespaces = [];
 
-	fs.readdirSync(__dirname + '/../locales/fr-FR').forEach(function(file) {
+	fs.readdirSync(__dirname + '/../locales/fr-FR').forEach(function (file) {
 		namespaces.push(file.substr(0, file.indexOf(".json")));
 	});
 
@@ -54,16 +54,16 @@ module.exports = function(app, passport, db) {
 	});
 
 	/*i18n.serveClientScript(app)
-			.serveDynamicResources(app)
-			.serveMissingKeyRoute(app);
-*/
-	hbs.registerHelper('t', function(i18n_key) {
+	 .serveDynamicResources(app)
+	 .serveMissingKeyRoute(app);
+	 */
+	hbs.registerHelper('t', function (i18n_key) {
 		var result = i18n.t(i18n_key);
 
 		return new hbs.SafeString(result);
 	});
 
-	hbs.registerHelper('tr', function(context, options) {
+	hbs.registerHelper('tr', function (context, options) {
 		var opts = i18n.functions.extend(options.hash, context);
 		if (options.fn)
 			opts.defaultValue = options.fn(context);
@@ -76,7 +76,7 @@ module.exports = function(app, passport, db) {
 	// include template partials
 	hbs.registerPartials(config.root + '/app/views/includes');
 
-	app.configure(function() {
+	app.configure(function () {
 		app.set('host', config.app.host || '0.0.0.0');
 		app.set('port', config.app.port || 3000);
 		app.set('showStackError', true);
@@ -86,7 +86,7 @@ module.exports = function(app, passport, db) {
 
 		//Should be placed before express.static
 		app.use(express.compress({
-			filter: function(req, res) {
+			filter: function (req, res) {
 				return (/json|text|javascript|css/).test(res.getHeader('Content-Type'));
 			},
 			level: 9
@@ -111,7 +111,7 @@ module.exports = function(app, passport, db) {
 
 
 		// For POST XML in webservices
-		app.use(function(req, res, next) {
+		app.use(function (req, res, next) {
 			var type = req.get('Content-Type');
 			//console.log(type);
 			if (typeof type === 'string' && type.indexOf('text/xml') < 0)
@@ -120,10 +120,10 @@ module.exports = function(app, passport, db) {
 			var data = '';
 			req.setEncoding('utf8');
 
-			req.on('data', function(chunk) {
+			req.on('data', function (chunk) {
 				data += chunk;
 			});
-			req.on('end', function() {
+			req.on('end', function () {
 				req.rawBody = data;
 				next();
 			});
@@ -189,7 +189,7 @@ module.exports = function(app, passport, db) {
 		//}));
 
 		//Assume "not found" in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
-		app.use(function(err, req, res, next) {
+		app.use(function (err, req, res, next) {
 			//Treat as 404
 			if (~err.message.indexOf('not found'))
 				return next();
@@ -204,7 +204,7 @@ module.exports = function(app, passport, db) {
 		});
 
 		//Assume 404 since no middleware responded
-		app.use(function(req, res, next) {
+		app.use(function (req, res, next) {
 			res.status(404).render('404', {
 				url: req.originalUrl,
 				error: 'Not found'

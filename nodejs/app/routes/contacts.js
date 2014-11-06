@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('lodash'),
+		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -22,6 +23,8 @@ module.exports = function (app, passport, auth) {
 
 	//get all contacts for search engine
 	app.get('/api/contact/searchEngine', auth.requiresLogin, contact.showList);
+	
+	app.get('/api/contact/export', auth.requiresLogin, contact.export);
 
 	// list all contact for a societe
 	app.get('/api/contact/societe', auth.requiresLogin, contact.societe);
@@ -631,6 +634,26 @@ Contact.prototype = {
 			} else {
 				res.json(contact);
 			}
+		});
+	},
+	export: function (req, res) {
+		if (!req.user.admin)
+			return console.log("export non autorised");
+
+		var json2csv = require('json2csv');
+
+		ContactModel.find({Tag:"Arseg"}, function (err, contacts) {
+			//console.log(contact);
+			json2csv({data: contacts, fields: ['_id', 'firstname','lastname','societe','poste', 'address', 'zip', 'town', 'phone','phone_mobile','email', 'Tag'], del: ";"}, function (err, csv) {
+				if (err)
+					console.log(err);
+
+				res.type('application/text');
+				res.attachment('contact_' + dateFormat(new Date(), "ddmmyyyy_HH:mm") + '.csv');
+				res.send(csv);
+
+				//console.log(csv);
+			});
 		});
 	}
 };

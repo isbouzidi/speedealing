@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 		csv = require('csv'),
 		_ = require('lodash'),
 		async = require('async'),
+		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -22,6 +23,7 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
 	app.get('/api/societe/count', auth.requiresLogin, object.count);
+	app.get('/api/societe/export', auth.requiresLogin, object.export);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
 	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
 	app.post('/api/societe/segmentation', auth.requiresLogin, object.segmentationRename);
@@ -53,7 +55,7 @@ module.exports = function (app, passport, auth) {
 				query.fournisseur = req.query.fournisseur;
 			else
 				//console.log(req.body.fournisseur);
-				query.fournisseur = {$in : req.body.fournisseur};
+				query.fournisseur = {$in: req.body.fournisseur};
 		} else // customer Only
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
@@ -93,7 +95,7 @@ module.exports = function (app, passport, auth) {
 
 					result[i].mode_reglement_code = docs[i].mode_reglement;
 					result[i].cond_reglement_code = docs[i].cond_reglement;
-					
+
 					result[i].commercial_id = docs[i].commercial_id;
 				}
 
@@ -1806,6 +1808,26 @@ Object.prototype = {
 
 			//console.log(output);
 			res.json(output);
+		});
+	},
+	export: function (req, res) {
+		if (!req.user.admin)
+			return console.log("export non autorised");
+
+		var json2csv = require('json2csv');
+
+		SocieteModel.find({}, function (err, societe) {
+			//console.log(societe);
+			json2csv({data: societe, fields: ['_id', 'name', 'address', 'Tag', 'zip'], del: ";"}, function (err, csv) {
+				if (err)
+					console.log(err);
+
+				res.type('application/text');
+				res.attachment('societe_' + dateFormat(new Date(), "ddmmyyyy_HH:mm") + '.csv');
+				res.send(csv);
+
+				//console.log(csv);
+			});
 		});
 	}
 };
