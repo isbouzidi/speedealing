@@ -336,6 +336,7 @@
     "ContactsForCompany": "Contacts for this third party",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "Events about this third party",
     "ActionsOnMember": "Events about this member",
     "NActions": "%s events",

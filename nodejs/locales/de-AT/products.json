@@ -68,7 +68,7 @@
     "SellingPrice": "Verkaufspreis",
     "SellingPriceHT": "Verkaufspreis (netto)",
     "SellingPriceTTC": "Verkaufspreis (brutto)",
-    "PublicPrice": "Öffentlicher Preis",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Aktueller Preis",
     "NewPrice": "Neuer Preis",
     "MinPrice": "Preisuntergrenze",

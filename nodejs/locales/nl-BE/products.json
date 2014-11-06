@@ -68,7 +68,7 @@
     "SellingPrice": "Verkoopprijs",
     "SellingPriceHT": "Selling price (net of tax)",
     "SellingPriceTTC": "Selling price (inc. tax)",
-    "PublicPrice": "Openbare prijs",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Huidige prijs",
     "NewPrice": "Nieuwe prijs",
     "MinPrice": "Minimum verkoopprijs",

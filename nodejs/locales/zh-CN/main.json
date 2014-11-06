@@ -336,6 +336,7 @@
     "ContactsForCompany": "联系方式/不会忽略这个第三者",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "关于这个第三方的行动",
     "ActionsOnMember": "有关此成员的活动",
     "NActions": "％s的行动",

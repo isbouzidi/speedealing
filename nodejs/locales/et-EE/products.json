@@ -68,7 +68,7 @@
     "SellingPrice": "Müügihind",
     "SellingPriceHT": "Müügihind (ilma maksudeta)",
     "SellingPriceTTC": "Müügihinna (koos käibemaksuga)",
-    "PublicPrice": "Avalik hind",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Jooksevhind",
     "NewPrice": "Uus hind",
     "MinPrice": "Poolnoot. müügihind",

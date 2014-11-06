@@ -336,6 +336,7 @@
     "ContactsForCompany": "Bedrijfscontacten",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "Acties voor bedrijf",
     "ActionsOnMember": "Events over dit lid",
     "NActions": "%s acties",

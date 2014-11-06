@@ -336,6 +336,7 @@
     "ContactsForCompany": "Kontakter for denne tredjeparten",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "Handlinger ifm. denne tredjeparten",
     "ActionsOnMember": "Hendelser om dette medlemmet",
     "NActions": "%s handlinger",

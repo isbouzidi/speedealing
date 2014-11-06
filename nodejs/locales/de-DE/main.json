@@ -336,6 +336,7 @@
     "ContactsForCompany": "Ansprechpartner/Adressen dieses Partners",
     "ContactsAddressesForCompany": "Ansprechpartner / Adressen zu dieser Firma",
     "AddressesForCompany": "Adressen für den Partner",
+    "Address": "Adresse",
     "ActionsOnCompany": "Maßnahmen zu diesem Partner",
     "ActionsOnMember": "Aktionen zu diesem Mitglied",
     "NActions": "%s Maßnahmen",

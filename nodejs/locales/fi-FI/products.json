@@ -68,7 +68,7 @@
     "SellingPrice": "Myyntihinta",
     "SellingPriceHT": "Myyntihinta (ilman veroja)",
     "SellingPriceTTC": "Myyntihinta (sis. alv)",
-    "PublicPrice": "Julkiset hinta",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Nykyinen hinta",
     "NewPrice": "Uusi hinta",
     "MinPrice": "Puolinuotti. myyntihinta",

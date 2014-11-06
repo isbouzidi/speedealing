@@ -336,6 +336,7 @@
     "ContactsForCompany": "Yhteystietoja tämän kolmannen osapuolen",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "Toimet tästä kolmannen osapuolen",
     "ActionsOnMember": "Tapahtumia tästä jäseneksi",
     "NActions": "%s toimet",
