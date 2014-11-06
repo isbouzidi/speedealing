@@ -336,6 +336,7 @@
     "ContactsForCompany": "Kontakty na ten trzeciej",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "Działania na temat tej osoby trzeciej",
     "ActionsOnMember": "Wydarzenia O tego użytkownika",
     "NActions": "%s działania",

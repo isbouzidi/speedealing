@@ -68,7 +68,7 @@
     "SellingPrice": "Selling price",
     "SellingPriceHT": "Selling price (net of tax)",
     "SellingPriceTTC": "Selling price (inc. tax)",
-    "PublicPrice": "Public price",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Current price",
     "NewPrice": "New price",
     "MinPrice": "Minim. selling price",

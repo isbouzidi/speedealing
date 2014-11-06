@@ -336,6 +336,7 @@
     "ContactsForCompany": "Tengiliðir / adresses fyrir þessa þriðja aðila",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "Actions um þessa þriðja aðila",
     "ActionsOnMember": "Viðburðir um þennan notanda",
     "NActions": "%s  aðgerðir",

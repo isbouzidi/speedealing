@@ -336,6 +336,7 @@
     "ContactsForCompany": "Контакти за тази трета страна",
     "ContactsAddressesForCompany": "Контакти / адреси за тази трета страна",
     "AddressesForCompany": "Адреси за тази трета страна",
+    "Address": "Adresse",
     "ActionsOnCompany": "Събития за тази трета страна",
     "ActionsOnMember": "Събития за този потребител",
     "NActions": "%s събития",

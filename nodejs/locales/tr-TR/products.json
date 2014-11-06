@@ -68,7 +68,7 @@
     "SellingPrice": "Satış fiyatı",
     "SellingPriceHT": "Satış Fiyatı (vergisiz net)",
     "SellingPriceTTC": "Satış Fiyatı (vergi dahil)",
-    "PublicPrice": "Perakende fiyatı",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Güncel fiyat",
     "NewPrice": "Yeni fiyat",
     "MinPrice": "Enaz satış fiyatı",

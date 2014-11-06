@@ -68,7 +68,7 @@
     "SellingPrice": "Salgspris",
     "SellingPriceHT": "Salgspris (etter skatt)",
     "SellingPriceTTC": "Salgspris (inkl. skatt)",
-    "PublicPrice": "Veiledende pris",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Gjeldende pris",
     "NewPrice": "Ny pris",
     "MinPrice": "Minim. salgspris",

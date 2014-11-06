@@ -68,7 +68,7 @@
     "SellingPrice": "Prodajna cena",
     "SellingPriceHT": "Prodajne cene (brez DDV)",
     "SellingPriceTTC": "Prodajne cene (z DDV)",
-    "PublicPrice": "Javna cena",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Trenutna cena",
     "NewPrice": "Nova cena",
     "MinPrice": "Minimalna Prodajna cena",

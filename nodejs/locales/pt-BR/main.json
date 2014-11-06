@@ -336,6 +336,7 @@
     "ContactsForCompany": "Contatos desta empresa",
     "ContactsAddressesForCompany": "Contatos/Endereços do Cliente ou Fornecedor",
     "AddressesForCompany": "Addresses for this third party",
+    "Address": "Adresse",
     "ActionsOnCompany": "Ações nesta sociedade",
     "ActionsOnMember": "Events about this member",
     "NActions": "%s ações",

@@ -68,7 +68,7 @@
     "SellingPrice": "Продажная цена",
     "SellingPriceHT": "Продажная цена (за вычетом налогов)",
     "SellingPriceTTC": "Продажная цена (вкл. налоги)",
-    "PublicPrice": "Государственные цены",
+    "PublicPrice": "Prix public HT",
     "CurrentPrice": "Текущая цена",
     "NewPrice": "Новая цена",
     "MinPrice": "Миним. продажная цена",
