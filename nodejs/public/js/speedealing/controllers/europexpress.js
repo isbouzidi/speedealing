@@ -2065,6 +2065,10 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				$scope.productsTab = [];
 				angular.forEach($scope.radio.entrepot.productId, function (code) {
 					var product = angular.copy($scope.productsBarCode[code]);
+
+					if (product == null)
+						return;
+
 					product.barCode = $scope.radio.entrepot.barCode + product.barCode;
 					product.qty = totaux[product.barCode];
 
