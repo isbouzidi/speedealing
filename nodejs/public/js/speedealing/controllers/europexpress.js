@@ -2119,11 +2119,11 @@ console.log(product);
 						}
 					}).success(function (data, status) {
 						//console.log(data);
-						if (!$scope.productsTab[$scope.save.row].qty)
-							$scope.productsTab[$scope.save.row].qty = 0;
+						if (!row.entity.qty)
+							row.entity.qty = 0;
 
-						$scope.productsTab[$scope.save.row].qty += data.qty;
-						$scope.productsTab[$scope.save.row].qtyAdd = null;
+						row.entity.qty += data.qty;
+						row.entity.qtyAdd = null;
 					});
 					$scope.save.pending = false;
 				}, 500);
