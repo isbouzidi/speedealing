@@ -2079,7 +2079,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 						product.typeMove.css = "";
 					}
 
-					//console.log(product);
+					console.log(product);
 					$scope.productsTab.push(product);
 				});
 			});
@@ -2149,6 +2149,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				//	{field: ' fournisseur.name', width: "25%", displayName: 'Sous-traitant', cellTemplate: '<div class="ngCellText"><a ng-href="/api/europexpress/buy/pdf/{{row.getProperty(\'_id\')}}" target="_blank"><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: '_id', displayName: 'id', visible: false, enableCellEdit: false},
 				{field: 'typeMove.name', displayName: 'Ref', enableCellEdit: false, cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy " ng-class="row.getProperty(\'typeMove.css\')">{{row.getProperty(\'typeMove.name\')}}</small></div>'},
+				{field: 'ref', displayName: 'Ref Produit', enableCellEdit: false},
 				{field: 'barCode', displayName: 'Code barre', enableCellEdit: false},
 				{field: 'billingMode', displayName: 'Mode fact.', enableCellEdit: false},
 				{field: 'label', displayName: 'Description', enableCellEdit: false},
