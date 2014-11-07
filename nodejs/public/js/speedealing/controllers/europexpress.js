@@ -122,20 +122,20 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		};
 
 		/*$scope.refresh = function () {
-			
-
-			$http({method: 'POST', url: 'api/europexpress/planning/refresh', data: {
-					year: $routeParams.id2,
-					week: $routeParams.id1}
-			}).
-					success(function (data, status) {
-						$route.reload();
-					}).
-					error(function (data, status) {
-						console.log("Request failed");
-					});
-
-		};*/
+		 
+		 
+		 $http({method: 'POST', url: 'api/europexpress/planning/refresh', data: {
+		 year: $routeParams.id2,
+		 week: $routeParams.id1}
+		 }).
+		 success(function (data, status) {
+		 $route.reload();
+		 }).
+		 error(function (data, status) {
+		 console.log("Request failed");
+		 });
+		 
+		 };*/
 
 		$scope.addNewLine = function () {
 			var modalInstance = $modal.open({
@@ -2002,7 +2002,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 			}).
 					success(function (data, status) {
 						$scope.products = data;
-						for (var i in data) {
+						for (var i = 0; i < data.length; i++) {
 							$scope.productsBarCode[data[i]._id] = data[i];
 						}
 					});
@@ -2079,7 +2079,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 						product.typeMove.css = "";
 					}
 
-					console.log(product);
+					//console.log(product);
 					$scope.productsTab.push(product);
 				});
 			});
