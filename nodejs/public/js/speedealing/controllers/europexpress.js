@@ -2092,10 +2092,10 @@ console.log(product);
 		$scope.update = function (row) {
 			console.log(row);
 			
-			//if (!$scope.productsTab[row.rowIndex].qtyAdd) {
+			if (!row.entity.qtyAdd) {
 			//	console.log("pas de quantite");
-			//	return;
-			//}
+				return;
+			}
 			
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
