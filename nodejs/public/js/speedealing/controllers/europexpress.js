@@ -2092,10 +2092,10 @@ console.log(product);
 		$scope.update = function (row) {
 			console.log(row);
 			
-			if (!$scope.productsTab[row.rowIndex].qtyAdd) {
-				console.log("pas de quantite");
-				return;
-			}
+			//if (!$scope.productsTab[row.rowIndex].qtyAdd) {
+			//	console.log("pas de quantite");
+			//	return;
+			//}
 			
 			if (!$scope.save) {
 				$scope.save = {promise: null, pending: false, row: null};
@@ -2113,8 +2113,8 @@ console.log(product);
 				$scope.save.pending = true;
 				$scope.save.promise = $timeout(function () {
 					$http({method: 'POST', url: 'api/europexpress/stock', data: {
-							barCode: $scope.productsTab[$scope.save.row].barCode,
-							qty: $scope.productsTab[$scope.save.row].qtyAdd,
+							barCode: row.entity.barCode,
+							qty: row.entity.qtyAdd,
 							datec: d
 						}
 					}).success(function (data, status) {
