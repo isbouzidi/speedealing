@@ -2065,7 +2065,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				$scope.productsTab = [];
 				angular.forEach($scope.radio.entrepot.productId, function (code) {
 					var product = angular.copy($scope.productsBarCode[code]);
-
+console.log(product);
 					if (product == null)
 						return;
 
