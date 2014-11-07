@@ -250,7 +250,7 @@ exports.toUppercase = function (req, res) {
 };
 
 exports.findOne = function (query, callback) {
-	PriceLevelModel.findOne(query, "-history", {limit: body.take})
+	PriceLevelModel.findOne(query, "-history")
 			.populate("product.id", "label ref minPrice tva_tx caFamily")
 			.exec(function (err, price) {
 				if (err) {
