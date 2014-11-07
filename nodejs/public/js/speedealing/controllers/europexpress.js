@@ -2090,6 +2090,8 @@ console.log(product);
 		};
 
 		$scope.update = function (row) {
+			console.log(row);
+			
 			if (!$scope.productsTab[row.rowIndex].qtyAdd)
 				return;
 
