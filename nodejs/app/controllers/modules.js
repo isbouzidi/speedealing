@@ -82,53 +82,49 @@ exports.menus = function (req, res) {
 
 	function checkright(perms) {
 		if (!req.user.admin) {
-			if (perms !== null && perms !== undefined) {
+			if (!_.isNull(perms) && !_.isUndefined(perms)) {
 				// For single right
 				// "perms": "admin"
-				if (typeof perms === "string") {
+				if (_.isString(perms)) {
 					if (!checkUserRights(perms))
 						return false;
 				// For several rights
-				// case #1: "perms":{"admin","entity.read"} corresponding to: if (admin && entity.read)
-				// case #2: "perms":{{"admin","entity.read"},{"foo.read"}} corresponding to: if ((admin && entity.read) || foo.read)
-				} else if (typeof perms === "object") {
+				// case #1: "perms":["admin","entity.read"] corresponding to: if (admin && entity.read)
+				// case #2: "perms":[["admin","entity.read"],["foo.read"]] corresponding to: if ((admin && entity.read) || foo.read)
+				} else if (_.isArray(perms)) {
 					
 					var returnRight = true;
-					var bitRight = [];
 					//console.log(perms);
 					
-					loop1:
-					for (var i in perms) {
-						
-						// case #2 (AND / OR operators)
-						//console.log(perms[i]);
-						if (typeof perms[i] === "object") {
-							
-							loop2:
-							for (var j in perms[i]) {
-								//console.log("perms[i][j]=" + perms[i][j]);
-								
-								if (!checkUserRights(perms[i][j])) {
-									returnRight = false;
-									break loop2; // AND operator : break if only once is false
+					_.forEach(perms, function(values) {
+						if (_.isArray(values)) {
+							//console.log(values);
+							_.forEach(values, function(value) {
+								//console.log('checkUserRightsLoop');
+								//console.log('checkUserRights=' + value);
+								if (!checkUserRights(value)) {
+									//console.log('check_false=' + value);
+									returnRight = false; // AND operator : break if only once is false
+									return false; // break this loop
+								} else {
+									//console.log('check_true=' + value);
+									returnRight = true; // AND operator : continue if true
 								}
-								
-								if (perms[i][j+1] === undefined && returnRight == true) // AND operator : break all if true in the last iteration
-									break loop1;
-								
-								if (i > 0 && bitRight[i-1] == false && perms[i][j+1] === undefined && checkUserRights(perms[i][j])) // OR operator
-									returnRight = true;
+							});
+							
+							if (returnRight == true) {
+								//console.log('break the first loop');
+								return false; // AND / OR operators : break all if block is true
 							}
-							bitRight[i] = returnRight;
-						
-						// case #1 (just AND operator)
+								
 						} else {
-							if (!checkUserRights(perms[i])) {
-								returnRight = false;
-								break loop1; // AND operator : break if only once is false
+							if (!checkUserRights(values)) {
+								//console.log('checkUserRights');
+								returnRight = false; // AND operator : break if only once is false
+								return false;
 							}
 						}
-					}
+					});
 					
 					//console.log("returnRight=" + returnRight);
 					return returnRight;
