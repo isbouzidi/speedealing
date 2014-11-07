@@ -5,6 +5,7 @@
     "AccountType": "Type compte",
     "Currency": "Devise",
     "Status": "Etat",
+    "Account": "Compte",
     "Country": "Pays",
     "Department": "Département",
     "AccountingCode": "Code compta",
@@ -38,5 +39,10 @@
     "Category": "Rubriques",
     "ListOfBankCategory": "Rubrique banque",
     "NewBankCategory": "Nouvelle rubrique de banque",
-    "Reconcile": "Rapprocher"
+    "Reconcile": "Rapprocher",
+    "Reconciled": "A rapprocher",
+    "Bank": "Banque",
+    "Transmitter": "Emetteur",
+    "Amount": "montant",
+    "Statement": "Relevé"
 }

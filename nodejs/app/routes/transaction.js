@@ -27,12 +27,32 @@ module.exports = function (app, passport, auth) {
     
     //reconciliation transactions
     app.put('/api/transaction/reconcile', auth.requiresLogin, object.updateReconcile);
+    
+    //get a transactin
+    app.get('/api/transaction/:transactionId', auth.requiresLogin, object.show);
+    
+    //update a transaction
+    app.put('/api/transaction/:transactionId', auth.requiresLogin, object.update);        
+    
+    app.param('transactionId', object.transaction);
 };
 
 function Object() {
 }
 
 Object.prototype = {
+    transaction: function (req, res, next, id) {
+        
+        TransactionModel.findOne({_id: id}, function (err, doc) {
+                if (err)
+                        return next(err);
+                if (!doc)
+                        return next(new Error('Failed to load a transaction ' + id));
+
+                req.transaction = doc;
+                next();
+        });        
+    },
     create: function (req, res){
         
         var transaction = new TransactionModel(req.body);
@@ -63,6 +83,24 @@ Object.prototype = {
             res.json(doc);
 
         });
+    },
+    show: function (req, res) {
+      
+        res.json(req.transaction);
+    },
+    update: function (req, res) {
+        
+        var transaction = req.transaction;
+        transaction = _.extend(transaction, req.body);
+
+        transaction.save(function (err, doc) {
+
+            if (err) {
+                return console.log(err);
+            }
+
+            res.json(200, doc);
+        });                
     },
     getReconcile: function(req, res){
         var id;

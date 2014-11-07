@@ -85,7 +85,9 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
                 {field: 'credit', displayName: 'Credit', cellFilter: "currency:''"},
                 {field: 'balance', displayName: 'Solde', cellFilter: "currency:''"},
                 {field: 'bank_statement', displayName: 'Relvé', 
-                    cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/module/bank/bankStatement.html?statement={{row.getProperty(\'bank_statement\')}}&account={{row.getProperty(\'bank.id\')}}">{{row.getProperty(col.field)}} </a>'}
+                    cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/module/bank/bankStatement.html?statement={{row.getProperty(\'bank_statement\')}}&account={{row.getProperty(\'bank.id\')}}">{{row.getProperty(col.field)}} </a>'},
+                {field: '', displayName: 'Action',
+                    cellTemplate: '<div class="ngCellText"><a class="with-tooltip center button icon-pencil tiny" ng-click="findTransaction(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\'> {{row.getProperty(col.field)}}</a></div>'}
             ]
         };
         $scope.isValidInfo = function (bank) {
@@ -342,7 +344,27 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
             $location.path('module/bank/rapprochement.html').search({bankId: bank._id});
 
         };
-
+        
+        $scope.findTransaction = function (id) {
+            
+            var modalInstance = $modal.open({
+                templateUrl: '/partials/transaction/fiche.html',
+                controller: "TransactionController",
+                windowClass: "steps",
+                resolve: {
+                    object: function () {
+                        return {
+                            transaction: id
+                        };
+                    }
+                }
+            });
+            modalInstance.result.then(function (transactions) {
+                $scope.transactions.push(transactions);
+                $scope.counttransactions++;
+            }, function () {
+            });
+        };
 
     }]);
 angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', '$location', 'Bank', function ($scope, $http, $modalInstance, $upload, $route, Global, $location, Bank) {

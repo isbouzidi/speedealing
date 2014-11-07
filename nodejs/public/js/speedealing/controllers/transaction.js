@@ -98,6 +98,47 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
 
             $scope.opened = true;
         };
+        
+        $scope.findOne = function () {
+            
+            var dict = ["fk_transaction_type", "fk_account_type", "fk_account_status"];
+
+            $http({method: 'GET', url: '/api/dict', params: {
+                    dictName: dict
+                }
+            }).success(function (data, status) {
+                $scope.dict = data;
+            });
+            
+            var id = object.transaction;
+            
+            Transaction.get({
+                Id: id
+            }, function (transaction) {
+                $scope.transaction = transaction;
+            }
+            );  
+        };
+        
+        $scope.update = function () {
+            
+            if($scope.transaction.amount < 0){
+                $scope.transaction.debit = Math.abs($scope.transaction.amount);
+                $scope.transaction.credit = null;
+            }else{
+                $scope.transaction.credit = $scope.transaction.amount;
+                $scope.transaction.debit = null;
+            }
+                
+            var transaction = $scope.transaction;
+
+            transaction.$update(function () {
+                $scope.findOne();
+            }, function (errorResponse) {
+                
+            });
+                        
+        };
     }]);
 
 angular.module('mean.transaction').controller('StatementController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$timeout', 'pageTitle', 'Global', 'Transaction', function ($scope, $location, $http, $routeParams, $modal, $filter, $timeout, pageTitle, Global, Transaction) {

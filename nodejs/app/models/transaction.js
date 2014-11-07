@@ -41,7 +41,8 @@ var TransactionSchema = new Schema({
     category:{
         id: {type: Schema.Types.ObjectId, ref: 'BankCategory'},
         name: String
-    }
+    },
+    reconciled: Boolean
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
@@ -70,6 +71,14 @@ TransactionSchema.virtual('trans_type').get(function () {
     }
        
     return trans_type;
+});
+
+TransactionSchema.virtual('amount').get(function(){
+    
+    if(this.credit)
+        return this.credit;
+    if(this.debit)
+        return (-1 * this.debit);        
 });
 
 mongoose.model('Transaction', TransactionSchema);
