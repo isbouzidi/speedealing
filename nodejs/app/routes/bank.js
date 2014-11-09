@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 		config = require('../../config/config');
 
 var BankModel = mongoose.model('bank');
+var TransactionModel = mongoose.model('Transaction');
     
 module.exports = function (app, passport, auth) {
 
@@ -44,21 +45,21 @@ Object.prototype = {
                 if (err)
                         return next(err);
                 if (!doc)
-                        return next(new Error('Failed to load bank account ' + id));
-
+                
                 req.account = doc;
                 next();
         });        
     },
     read: function (req, res) {
-
+        
+        var balances = [];
+        
         BankModel.find({}, function (err, doc) {
             if (err) {
                     console.log(err);
                     res.send(500, doc);
                     return;
-            }
-
+            }            
             res.send(200, doc);
         });
     },
