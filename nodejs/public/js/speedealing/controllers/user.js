@@ -385,13 +385,18 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 		$scope.showUserGroup = function () {
 
 			var selected = [];
-			angular.forEach($scope.groupe, function (g) {
-				if ($scope.userEdit.groupe === g._id) {
-					selected.push(g.name);
-				}
-			});
-			return selected.length ? selected.join(', ') : 'indéfini';
-
+			var userEdit = $scope.userEdit;
+			
+			if (userEdit) {
+				angular.forEach($scope.groupe, function (g) {
+					if (userEdit.groupe === g._id) {
+						selected.push(g.name);
+					}
+				});
+				return selected.length ? selected.join(', ') : false;
+			} else {
+				return false;
+			}
 		};
 
 		$scope.addNote = function () {
