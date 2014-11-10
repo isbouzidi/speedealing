@@ -470,23 +470,38 @@ angular.module('mean.users').controller('UserCreateController', ['$scope', '$htt
 			$scope.loginFound = "";
 			$scope.validLogin = true;
 
-			if (login)
+			if (typeof login != "undefined") {
 				if (login.indexOf(" ") > -1) {
 					$scope.validLogin = false;
 					return;
 				}
-
-			$http({method: 'GET', url: '/api/createUser/uniqLogin', params: {
-					login: login
+				
+				$http({
+					method: 'GET',
+					url: '/api/createUser/uniqLogin',
+					params: {
+						login: login
+					}
+				}).success(function (data, status) {
+					if (data.fullname)
+						$scope.loginFound = data;
+				});
+			}
+		};
+		
+		$scope.isValidEmail = function () {
+			
+			var email = $scope.user.email;
+			$scope.validEmail = true;
+			
+			if (typeof email != "undefined") {
+				var regEmail = new RegExp('^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,}$','i');
+				console.log(email + ' ' + regEmail.test(email));
+				if (!regEmail.test(email)) {
+					$scope.validEmail = false;
+					return;
 				}
-			}).success(function (data, status) {
-
-				if (data.fullname) {
-					$scope.loginFound = data;
-				}
-
-			});
-
+			}
 		};
 
 	}]);
