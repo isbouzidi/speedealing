@@ -1,7 +1,8 @@
 "use strict";
 
 var mongoose = require('mongoose'),
-		timestamps = require('mongoose-timestamp');
+		timestamps = require('mongoose-timestamp'),
+		_ = require('lodash');
 
 var EntityModel = mongoose.model('entity');
 
@@ -52,11 +53,14 @@ Entity.prototype = {
 		
 		EntityModel.find(function(err, docs){
 			for(var i in docs) {
-				var entity={};
-			
-				entity.id = docs[i]._id;
-				entity.name = docs[i]._id;
-				result.push(entity);
+				if ((!req.user.multiEntities && docs[i]._id == req.user.entity) // Only once entity
+				|| req.user.multiEntities === true // superadmin
+				|| (_.isArray(req.user.multiEntities) && _.contains(req.user.multiEntities, docs[i]._id))) { // Entities assigned
+					var entity={};
+					entity.id = docs[i]._id;
+					entity.name = docs[i]._id;
+					result.push(entity);
+				}
 			}
 				
 			res.json(result);

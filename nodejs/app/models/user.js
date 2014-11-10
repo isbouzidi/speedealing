@@ -24,14 +24,15 @@ var UserSchema = new Schema({
 	Status: {type: String, default: 'DISABLE'},
 	name: {type: String, required: true},
 	email: String,
-	admin: Boolean,
+	admin: {type: Boolean, default: false},
+	superadmin: {type: Boolean, default: false},
 	lastname: {type: String, uppercase: true},
 	firstname: String,
 	provider: String,
 	password: String,
 	hashed_password: String,
 	salt: String,
-	entity: String,
+	entity: String, // The default entity
 	photo: String,
 	telMobile: String,
 	facebook: {},
@@ -68,7 +69,7 @@ var UserSchema = new Schema({
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String
 	},
-	multiEntities: {type: Boolean, default: false}, // Access to all entities ?
+	multiEntities: {type: Schema.Types.Mixed, default: false}, // Access to once or several entities. False: only once, True: all entities, Array: list of entities
 	telFixe: String,
 	address: String,
 	zip: String,
