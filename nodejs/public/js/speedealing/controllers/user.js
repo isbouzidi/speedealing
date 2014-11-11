@@ -362,10 +362,8 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 			});
 		};
 
-		$scope.remove = function (response) {
-
-			var userEdit = $scope.userEdit;
-			userEdit.$remove(function (response) {
+		$scope.remove = function (user) {
+			user.$remove(function () {
 				$location.path('/user');
 			});
 		};
