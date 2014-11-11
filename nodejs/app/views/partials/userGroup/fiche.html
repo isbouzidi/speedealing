@@ -12,7 +12,7 @@
 					</a>
 					<button 
 						class="button"
-						ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.group.delete) || global.user.groupe == userGroup._id" 
+						ng-disabled="!checkUserGroupRights('delete', userGroup)" 
 						confirmed-click="deleteUserGroup()" 
 						ng-confirm-click="Supprimer le groupe ?" 
 						title="Supprimer le groupe">
@@ -57,7 +57,7 @@
                                             <select id="validation-select" 
                                                     name="validation-select" 
                                                     class="select validate[required]" 
-                                                    ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.group.write)"
+                                                    ng-disabled="!checkUserGroupRights('create')"
                                                     ng-model="userGroup.newUser" 
                                                     ng-options="u as u.fullname for u in listNoUsers">
                                                     
@@ -66,7 +66,7 @@
                                         <div style="float: left">
 											<button
 												class="button"
-												ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.group.write)" 
+												ng-disabled="!checkUserGroupRights('create')" 
 												ng-click="addNewUser()" 
 												title="">
 												{{t 'main:Add'}}

@@ -209,6 +209,19 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 				$scope.count = user.length;
 			});
 		};
+		
+		$scope.checkUserRights = function (type, userEdit = null) {
+			
+			if (type == 'delete' && userEdit != null) {
+				if (((!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.user.delete) || Global.user._id == userEdit._id || (!Global.user.superadmin && userEdit.superadmin))
+					return false;
+				else
+					return true;
+			} else if (type == 'create' && (!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.user.write)
+				return false;
+			else
+				return true;
+		}
 
 		$scope.onFileSelect = function ($files) {
 

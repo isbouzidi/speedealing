@@ -16,10 +16,23 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
             });
         };
         
+        $scope.checkUserGroupRights = function (type, userGroup = null) {
+			
+			if (type == 'delete' && userGroup != null) {
+				if (((!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.group.delete) || Global.user.groupe == userGroup._id)
+					return false;
+				else
+					return true;
+			} else if (type == 'create' && (!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.group.write)
+				return false;
+			else
+				return true;
+		}
+        
         $scope.filterOptionsUserGroup = {
             filterText: "",
             useExternalFilter: false
-	};
+        };
         
         $scope.gridOptions = {
             data: 'userGroup',

@@ -10,7 +10,7 @@
 				<div class="col-sm-6">
 					<button 
 						class="button icon-plus blue-gradient" 
-						ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.user.write)" 
+						ng-disabled="!checkUserRights('create')" 
 						data-ng-click="addNew()">
 						{{t 'Add'}}
 					</button>

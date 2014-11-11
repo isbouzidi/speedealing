@@ -8,7 +8,7 @@
                         <span class="button-icon right-side"><span class="icon-list"></span></span>
                     </button>
 					<button class="button" 
-							ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.user.delete) || global.user._id == userEdit._id || (!global.user.superadmin && userEdit.superadmin)" 
+							ng-disabled="!checkUserRights('delete', userEdit)" 
 							confirmed-click="remove(userEdit)" 
 							ng-confirm-click="Supprimer le collaborateur ?" 
 							title="Supprimer le collaborateur">

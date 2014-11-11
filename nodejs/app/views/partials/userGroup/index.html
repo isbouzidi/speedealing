@@ -11,7 +11,7 @@
 					<div class="button-group">
 						<button 
 							class="button icon-plus blue-gradient" 
-							ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.group.write)"
+							ng-disabled="!checkUserGroupRights('create')"
 							data-ng-click="addNew()">
 							{{t 'Add'}}
 						</button>
