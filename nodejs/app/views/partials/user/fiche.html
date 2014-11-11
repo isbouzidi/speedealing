@@ -8,7 +8,7 @@
                         <span class="button-icon right-side"><span class="icon-list"></span></span>
                     </button>
 					<button class="button" 
-							ng-disabled="!checkUserRights('delete', userEdit)" 
+							ng-disabled="!userRightsDelete" 
 							confirmed-click="remove(userEdit)" 
 							ng-confirm-click="Supprimer le collaborateur ?" 
 							title="Supprimer le collaborateur">

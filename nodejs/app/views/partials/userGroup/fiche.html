@@ -12,7 +12,7 @@
 					</a>
 					<button 
 						class="button"
-						ng-disabled="!checkUserGroupRights('delete', userGroup)" 
+						ng-disabled="!userGroupRightsDelete" 
 						confirmed-click="deleteUserGroup()" 
 						ng-confirm-click="Supprimer le groupe ?" 
 						title="Supprimer le groupe">
@@ -57,7 +57,7 @@
                                             <select id="validation-select" 
                                                     name="validation-select" 
                                                     class="select validate[required]" 
-                                                    ng-disabled="!checkUserGroupRights('create')"
+                                                    ng-disabled="!userGroupRightsCreate"
                                                     ng-model="userGroup.newUser" 
                                                     ng-options="u as u.fullname for u in listNoUsers">
                                                     
@@ -66,7 +66,7 @@
                                         <div style="float: left">
 											<button
 												class="button"
-												ng-disabled="!checkUserGroupRights('create')" 
+												ng-disabled="!userGroupRightsCreate" 
 												ng-click="addNewUser()" 
 												title="">
 												{{t 'main:Add'}}
@@ -99,7 +99,7 @@
             
             <div class="gridStyle"  data-ng-grid="gridListUserOptions" ng-style="style(170)"></div>
             </div>
-                    
+            
             <table ng-repeat-start="module in modules" class="table table-hover">
                 <thead>
                     <tr>
@@ -117,13 +117,16 @@
                 <tr ng-repeat="r in right">
                     <td width="80%">\{{r.desc}}</td>
                     <td ng-repeat="(key, value) in r.perm">
-                        <input type="checkbox" ng-model="userGroup.rights[k][key]" ng-change="update()" />
+                        <input 
+                        	type="checkbox" 
+                        	ng-disabled="!userGroupRightsCreate"
+                        	ng-model="userGroup.rights[k][key]" 
+                        	ng-change="update()" />
                     </td>
                 </tr>
                 </tbody>
             <table ng-repeat-end>
-        
-        
+
         </div>
     </div>
 </section>

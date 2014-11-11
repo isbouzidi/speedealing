@@ -42,7 +42,7 @@
 			{
 				"desc": "Consulter ses propres permissions",
 				"perm": {
-					"readperms": false
+					"self_readperms": false
 				}
 			},
 			{

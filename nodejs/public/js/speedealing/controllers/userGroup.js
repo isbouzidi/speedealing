@@ -1,5 +1,20 @@
 angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', '$filter', '$upload', 'pageTitle', 'Global', 'UserGroup', function($scope, $routeParams, $location, $route, $modal, $timeout, $http, $filter, $upload, pageTitle, Global, UserGroup) {
         $scope.global = Global;
+        $scope.userGroupRightsCreate = true;
+		$scope.userGroupRightsDelete = true;
+		$scope.userGroupRightsReadPerms = true;
+		
+		// Check userGroup rights
+		if (!Global.user.admin && !Global.user.superadmin) {
+			
+			if (!Global.user.rights.group.delete)		// check userGroup delete 
+				$scope.userGroupRightsDelete = false;
+			if (!Global.user.rights.group.write)		// check userGroup write
+				$scope.userGroupRightsCreate = false;
+			if (!Global.user.rights.group.readperms)	// check userGroup readperms
+				$scope.userGroupRightsReadPerms = false;
+					
+		}
         
         pageTitle.setTitle('Gestion des Groupes d\'utilisateurs');
         
@@ -15,19 +30,6 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
                     $scope.count = userGroup.length;
             });
         };
-        
-        $scope.checkUserGroupRights = function (type, userGroup = null) {
-			
-			if (type == 'delete' && userGroup != null) {
-				if (((!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.group.delete) || Global.user.groupe == userGroup._id)
-					return false;
-				else
-					return true;
-			} else if (type == 'create' && (!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.group.write)
-				return false;
-			else
-				return true;
-		}
         
         $scope.filterOptionsUserGroup = {
             filterText: "",
@@ -79,39 +81,60 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
             
         };
         
-        $scope.findOne = function() {
-            
-            UserGroup.get({
-                    Id: $routeParams.id
-            }, function(doc) {
-                    $scope.userGroup = doc;
-                    
-                    pageTitle.setTitle('Fiche ' + $scope.userGroup.name);
-                    
-                    $http({method: 'GET', url: '/api/userGroup/users', params: {
-                        groupe: $scope.userGroup._id
-                    }
-                    }).success(function(data, status) {
-                            
-                            $scope.listUsers = data;
-                            $scope.NbrListUsers = data.length;
-                    });
-                    
-                    $http({method: 'GET', url: '/api/userGroup/noUsers', params: {
-                        groupe: $scope.userGroup._id
-                    }
-                    }).success(function(data, status) {
-                            
-                            $scope.listNoUsers = data;
-                    });
-                    
-                    $http({method: 'GET', url: '/rights'}).success(function(data, status) {
-                        $scope.modules = data;
-                                               
-                    });
-                                        
-            });
-                                 
+		$scope.findOne = function() {
+			
+			UserGroup.get({
+				Id: $routeParams.id
+			}, function(doc) {
+				
+				$scope.userGroup = doc;
+				
+				pageTitle.setTitle('Fiche ' + $scope.userGroup.name);
+				
+				$http({
+					method: 'GET',
+					url: '/api/userGroup/users',
+					params: {
+						groupe: $scope.userGroup._id
+					}
+				}).success(function(data, status) {
+					$scope.listUsers = data;
+					$scope.NbrListUsers = data.length;
+				});
+				
+				$http({
+					method: 'GET',
+					url: '/api/userGroup/noUsers',
+					params: {
+						groupe: $scope.userGroup._id
+					}
+				}).success(function(data, status) {
+					$scope.listNoUsers = data;
+				});
+				
+				// Check userGroup rights
+				if (!Global.user.admin && !Global.user.superadmin) {
+					
+					if (Global.user.groupe == $scope.userGroup._id && Global.user.rights.user.self_readperms) // check user self_readperms
+						$scope.userGroupRightsReadPerms = true;
+							
+				} else {
+					
+					if (Global.user.groupe == $scope.userGroup._id) // an admin can not delete a group to which it belongs
+						$scope.userGroupRightsDelete = false;
+					
+				}
+				
+				if ($scope.userGroupRightsReadPerms) {
+					$http({
+						method: 'GET',
+						url: '/rights'
+					}).success(function(data, status) {
+						$scope.modules = data;
+					});
+				}
+        	});
+
         };
         
         $scope.deleteUserGroup = function(){
@@ -160,7 +183,7 @@ angular.module('mean.userGroup').controller('UserGroupController', ['$scope', '$
                     {field: 'entity', displayName: 'Site'},
                     {field: 'contrat', displayName: 'Contrat'},
                     {field: 'status.name', displayName: 'Statut', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'},
-                    {displayName: "Actions", enableCellEdit: false, width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" confirmed-click="removeUser(\'{{row.getProperty(\'_id\')}}\')" ng-confirm-click="Supprimer le collaborateur ?" title="Supprimer"> </button></div></div>'}
+                    {displayName: "Actions", enableCellEdit: false, width: "80px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><button class="button red-gradient icon-trash" ng-disabled="!userGroupRightsCreate" confirmed-click="removeUser(\'{{row.getProperty(\'_id\')}}\')" ng-confirm-click="Supprimer le collaborateur ?" title="Supprimer"> </button></div></div>'}
             ],
                 filterOptions: $scope.filterOptionsListUsers
         };

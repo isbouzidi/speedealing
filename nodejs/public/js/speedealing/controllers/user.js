@@ -194,6 +194,18 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 		$scope.global = Global;
 		$scope.dict = {};
 		$scope.groupe = [];
+		$scope.userRightsCreate = true;
+		$scope.userRightsDelete = true;
+		
+		// Check userGroup rights
+		if (!Global.user.admin && !Global.user.superadmin) {
+			
+			if (!Global.user.rights.user.delete)	// check user delete 
+				$scope.userRightsDelete = false;
+			if (!Global.user.rights.user.write)		// check user write
+				$scope.userRightsCreate = false;
+					
+		}
 
 		pageTitle.setTitle('Gestion des collaborateurs');
 
@@ -209,19 +221,6 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 				$scope.count = user.length;
 			});
 		};
-		
-		$scope.checkUserRights = function (type, userEdit = null) {
-			
-			if (type == 'delete' && userEdit != null) {
-				if (((!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.user.delete) || Global.user._id == userEdit._id || (!Global.user.superadmin && userEdit.superadmin))
-					return false;
-				else
-					return true;
-			} else if (type == 'create' && (!Global.user.admin || !Global.user.superadmin) && !Global.user.rights.user.write)
-				return false;
-			else
-				return true;
-		}
 
 		$scope.onFileSelect = function ($files) {
 
@@ -336,9 +335,7 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 
 		$scope.init = function () {
 
-
 			var dict = ["fk_country", "fk_rh_contrat", "fk_rh_periodeEssai", "fk_rh_tempsTravail", "fk_rh_situationFamiliale", "fk_user_status", "fk_rh_niveauEtude"];
-
 
 			$http({method: 'GET', url: '/api/dict', params: {
 					dictName: dict
@@ -361,7 +358,6 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 
 				$scope.site = data;
 			});
-
 		};
 
 		$scope.update = function () {
@@ -386,11 +382,22 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 			Users.users.get({
 				Id: $routeParams.id
 			}, function (doc) {
+				
 				$scope.userEdit = doc;
-				pageTitle.setTitle('Fiche ' + $scope.fullname);
+				pageTitle.setTitle('Fiche ' + $scope.userEdit.fullname);
+				
+				// Check userGroup rights
+				if (Global.user._id == $scope.userEdit._id)					// a user can not delete itself
+					$scope.userRightsDelete = false;
+				
+				if (Global.user.admin || Global.user.superadmin) {
+					
+					if (!Global.user.superadmin && $scope.userEdit.superadmin)	// an admin can not delete a superadmin
+						$scope.userRightsDelete = false;
+							
+				}
 
 			});
-
 		};
 
 		$scope.showUserGroup = function () {
