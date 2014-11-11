@@ -5,8 +5,6 @@
     "Errors": "أخطاء",
     "ErrorBadEMail": "بريد إلكتروني خاطئ %s",
     "ErrorBadUrl": "عنوان الموقع هو الخطأ %s",
-    "ErrorLoginAlreadyExists": "ادخل ٪ ق موجود بالفعل.",
-    "ErrorGroupAlreadyExists": "المجموعة ٪ ق موجود بالفعل.",
     "ErrorRecordNotFound": "لم يتم العثور على السجل.",
     "ErrorFailToCopyFile": "فشل في نسخ الملف <b>'%s'</b> إلى <b>'%s</b> &quot;.",
     "ErrorFailToRenameFile": "فشل لإعادة تسمية الملف <b>'%s'</b> إلى <b>'%s</b> &quot;.",

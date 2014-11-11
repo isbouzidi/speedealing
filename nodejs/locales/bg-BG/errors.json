@@ -5,8 +5,6 @@
     "Errors": "Грешки",
     "ErrorBadEMail": "EMail %s не е",
     "ErrorBadUrl": "Адреса %s не е",
-    "ErrorLoginAlreadyExists": "Вход %s вече съществува.",
-    "ErrorGroupAlreadyExists": "Група %s вече съществува.",
     "ErrorRecordNotFound": "Запишете не е намерен.",
     "ErrorFailToCopyFile": "Не успя да копира файла <b>&quot;%s&quot;</b> в <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Неуспешно преименуване на файлове <b>&quot;%s&quot;</b> в <b>&quot;%s&quot;.</b>",

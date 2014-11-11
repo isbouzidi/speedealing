@@ -5,8 +5,6 @@
     "Errors": "Virheet",
     "ErrorBadEMail": "EMail %s on väärä",
     "ErrorBadUrl": "Url %s on väärä",
-    "ErrorLoginAlreadyExists": "Kirjaudu %s on jo olemassa.",
-    "ErrorGroupAlreadyExists": "Ryhmän %s on jo olemassa.",
     "ErrorRecordNotFound": "Levykauppa ei löytynyt.",
     "ErrorFailToCopyFile": "Epäonnistui kopioida tiedoston <b>%s</b> ilmaisuksi <b>%s</b> &quot;.",
     "ErrorFailToRenameFile": "Epäonnistui nimetä tiedoston <b>%s</b> ilmaisuksi <b>%s</b> &quot;.",

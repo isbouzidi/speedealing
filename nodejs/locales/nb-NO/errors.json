@@ -5,8 +5,6 @@
     "Errors": "Feil",
     "ErrorBadEMail": "E-post %s er feil",
     "ErrorBadUrl": "Url %s er feil",
-    "ErrorLoginAlreadyExists": "brukernavnet %s eksisterer allerede.",
-    "ErrorGroupAlreadyExists": "Gruppen %s eksisterer allerede.",
     "ErrorRecordNotFound": "Record ikke funnet.",
     "ErrorFailToCopyFile": "Klarte ikke å kopiere filen <b>«%s</b> 'inn' <b>%s</b> '.",
     "ErrorFailToRenameFile": "Kunne ikke omdøpe filen <b>'%s'</b> inn <b>'%s'.</b>",

@@ -336,7 +336,7 @@
     "ContactsForCompany": "Kapcsolat/cím ehhez a harmadikfélhez",
     "ContactsAddressesForCompany": "Contacts/addresses for this third party",
     "AddressesForCompany": "Addresses for this third party",
-    "Address": "Adresse",
+    "Address": "Cím",
     "ActionsOnCompany": "Ezzel a harmadikféllel kapcsolatos cselekvések",
     "ActionsOnMember": "Események ebben a",
     "NActions": "%s cselekvések",

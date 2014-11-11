@@ -5,8 +5,6 @@
     "Errors": "Erori",
     "ErrorBadEMail": "EMail %s este greşit",
     "ErrorBadUrl": "Url-ul %s este greşit",
-    "ErrorLoginAlreadyExists": "Login %s există deja.",
-    "ErrorGroupAlreadyExists": "Grupul %s există deja.",
     "ErrorRecordNotFound": "Înregistrarea nu a fost găsit.",
     "ErrorFailToCopyFile": "Nu a reuşit să copiaţi fişierul <b>&quot;%s&quot;</b> în <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Nu a reuşit să redenumiţi fişierul <b>&quot;%s&quot;</b> în <b>&quot;%s&quot;.</b>",

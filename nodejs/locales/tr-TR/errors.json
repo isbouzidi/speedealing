@@ -5,8 +5,6 @@
     "Errors": "Hatalar",
     "ErrorBadEMail": "%s EPostası yanlış",
     "ErrorBadUrl": "URL %s yanlış",
-    "ErrorLoginAlreadyExists": "%s girişi zaten var.",
-    "ErrorGroupAlreadyExists": "%s Grubu zaten var.",
     "ErrorRecordNotFound": "Kayıt bulunamadı.",
     "ErrorFailToCopyFile": "'<b>%s</b>' dosyası '<b>%s</b>' içine kopyalanamadı.",
     "ErrorFailToRenameFile": "'<b>%s</b>' dosyasının adı '<b>%s</b>' olarak değiştirilemedi.",

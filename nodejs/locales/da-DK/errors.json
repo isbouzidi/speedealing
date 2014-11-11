@@ -5,8 +5,6 @@
     "Errors": "Fejl",
     "ErrorBadEMail": "EMail %s er forkert",
     "ErrorBadUrl": "Url %s er forkert",
-    "ErrorLoginAlreadyExists": "Log ind %s eksisterer allerede.",
-    "ErrorGroupAlreadyExists": "Gruppe %s eksisterer allerede.",
     "ErrorRecordNotFound": "Optag ikke fundet.",
     "ErrorFailToCopyFile": "Kunne ikke kopiere filen <b>&quot;%s&quot;</b> til <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Kunne ikke omdøbe filen <b>'%s'</b> til <b>'%s'.</b>",

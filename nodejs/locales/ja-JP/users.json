@@ -162,5 +162,12 @@
     "Niveau-Etude": "Niveau d'études",
     "Annee-Diplome": "Année d'obtention",
     "Login": "ログイン",
-    "Notes": "注釈"
+    "Notes": "注釈",
+    "LoginDescription": "L'identifiant qui permet de se connecter à l'application. (unique et sans espace)",
+    "LoginIsValid": "Ce login est valide.",
+    "EmailAddressIsValid": "L'adresse e-mail est valide.",
+    "ErrorLoginAlreadyExists": "Ce login existe déjà !",
+    "ErrorInvalidLogin": "Ce login n'est pas valide !",
+    "ErrorInvalidEmailAddress": "L'adresse e-mail n'est pas valide !",
+    "ErrorGroupAlreadyExists": "Ce groupe existe déjà !"
 }

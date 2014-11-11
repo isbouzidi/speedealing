@@ -5,8 +5,6 @@
     "Errors": "Fel",
     "ErrorBadEMail": "EMail %s är fel",
     "ErrorBadUrl": "Url %s är fel",
-    "ErrorLoginAlreadyExists": "Logga %s finns redan.",
-    "ErrorGroupAlreadyExists": "Grupp %s finns redan.",
     "ErrorRecordNotFound": "Spela in hittades inte.",
     "ErrorFailToCopyFile": "Det gick inte att kopiera filen <b>&quot;%s&quot;</b> till <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Det gick inte att byta namn på filen <b>'%s</b> &quot;till&quot; <b>%s</b> &quot;.",

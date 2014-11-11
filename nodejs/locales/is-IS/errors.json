@@ -5,8 +5,6 @@
     "Errors": "Villur",
     "ErrorBadEMail": "Netfang %s  er rangt",
     "ErrorBadUrl": "Url %s  er rangt",
-    "ErrorLoginAlreadyExists": "Innskráning %s  er þegar til.",
-    "ErrorGroupAlreadyExists": "Group %s  er þegar til.",
     "ErrorRecordNotFound": "Upptaka fannst ekki.",
     "ErrorFailToCopyFile": "Mistókst að afrita skrá <b>'%s'</b> í 'á <b>%s</b> &quot;.",
     "ErrorFailToRenameFile": "Ekki tókst að endurnefna skrána 'á <b>%s'</b> í 'á <b>%s</b> &quot;.",

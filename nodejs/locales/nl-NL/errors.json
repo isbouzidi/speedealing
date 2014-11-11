@@ -5,8 +5,6 @@
     "Errors": "Fouten",
     "ErrorBadEMail": "Ongeldige e-mail %s",
     "ErrorBadUrl": "Ongeldige Url %s",
-    "ErrorLoginAlreadyExists": "Inlog %s bestaat reeds.",
-    "ErrorGroupAlreadyExists": "Groep %s bestaat reeds.",
     "ErrorRecordNotFound": "Tabelregel niet gevonden.",
     "ErrorFailToCopyFile": "Kan bestand <b>'%s'</b> in <b>'%s'</b> te kopiëren.",
     "ErrorFailToRenameFile": "Kon het bestand '<b>%s</b>' niet hernoemen naar '<b>%s</b>'.",

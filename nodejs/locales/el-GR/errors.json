@@ -5,8 +5,6 @@
     "Errors": "Λάθη",
     "ErrorBadEMail": "%s email είναι λάθος",
     "ErrorBadUrl": "%s url είναι λάθος",
-    "ErrorLoginAlreadyExists": "Είσοδος %s υπάρχει ήδη.",
-    "ErrorGroupAlreadyExists": "Ομάδα %s υπάρχει ήδη.",
     "ErrorRecordNotFound": "Εγγραφή δεν βρέθηκε.",
     "ErrorFailToCopyFile": "Απέτυχε η αντιγραφή του αρχείου <b>&quot;%s»</b> σε <b>«%s».</b>",
     "ErrorFailToRenameFile": "Απέτυχε η μετονομασία του αρχείου <b>&quot;%s»</b> σε <b>«%s».</b>",

@@ -5,8 +5,6 @@
     "Errors": "错误",
     "ErrorBadEMail": "电子邮件％s是错误的",
     "ErrorBadUrl": "网址％s是错误的",
-    "ErrorLoginAlreadyExists": "登录％s已经存在。",
-    "ErrorGroupAlreadyExists": "组％s已经存在。",
     "ErrorRecordNotFound": "记录没有找到。",
     "ErrorFailToCopyFile": "无法复制文件<b>'%s'</b>成<b>'%s'。</b>",
     "ErrorFailToRenameFile": "无法重新命名为<b>“%s'</b>文件<b>'%s'。</b>",

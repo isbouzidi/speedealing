@@ -5,8 +5,6 @@
     "Errors": "Vead",
     "ErrorBadEMail": "E-post %s on vale",
     "ErrorBadUrl": "Url %s on vale",
-    "ErrorLoginAlreadyExists": "Logi %s juba olemas.",
-    "ErrorGroupAlreadyExists": "Group %s juba olemas.",
     "ErrorRecordNotFound": "Salvestada ei leitud.",
     "ErrorFailToCopyFile": "Ei suutnud kopeerida faili <b>%s</b> &quot;muutmine&quot; <b>%s</b> &quot;.",
     "ErrorFailToRenameFile": "Suutnud ümber faili <b>%s</b> &quot;muutmine&quot; <b>%s</b> &quot;.",
