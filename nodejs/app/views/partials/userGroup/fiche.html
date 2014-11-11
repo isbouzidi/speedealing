@@ -1,21 +1,26 @@
 <section data-ng-controller="UserGroupController">
-    <div data-ng-init="findOne()">
-    <hgroup id="main-title" class="thin">
-        <h1>Fiche groupe : \{{userGroup.name}}</h1>
-    </hgroup>
-        <div class="with-padding" data-ng-init="init()">
-            <div class="columns">
-                <div style="margin-bottom: 10px; float: right;">
-                    <a ng-href="#" class="button" ng-click="retour()" title="Retour à la liste">
-                        Liste Groupes
-                        <span class="button-icon right-side"><span class="icon-list"></span></span>
-                    </a>
-                    <a ng-href="#" class="button" confirmed-click="deleteUserGroup()" ng-confirm-click="Supprimer le groupe ?" title="Supprimer le groupe">
-                        Supprimer
-                        <span class="button-icon right-side"><span class="icon-trash"></span></span>
-                    </a>
-                </div>
-            </div>
+	<div data-ng-init="findOne()">
+	<hgroup id="main-title" class="thin">
+		<h1>Fiche groupe : \{{userGroup.name}}</h1>
+	</hgroup>
+		<div class="with-padding" data-ng-init="init()">
+			<div class="columns">
+				<div style="margin-bottom: 10px; float: right;">
+					<a ng-href="#" class="button" ng-click="retour()" title="Retour à la liste">
+						Liste Groupes
+						<span class="button-icon right-side"><span class="icon-list"></span></span>
+					</a>
+					<button 
+						class="button"
+						ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.group.delete) || global.user.groupe == userGroup._id" 
+						confirmed-click="deleteUserGroup()" 
+						ng-confirm-click="Supprimer le groupe ?" 
+						title="Supprimer le groupe">
+						{{t 'main:Delete'}}
+						<span class="button-icon right-side"><span class="icon-trash"></span></span>
+					</button>
+				</div>
+			</div>
             
             <div class="boxed relative large-box-shadow">
                 <div class="columns">
@@ -52,18 +57,22 @@
                                             <select id="validation-select" 
                                                     name="validation-select" 
                                                     class="select validate[required]" 
+                                                    ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.group.write)"
                                                     ng-model="userGroup.newUser" 
                                                     ng-options="u as u.fullname for u in listNoUsers">
                                                     
                                             </select>
                                         </div>
                                         <div style="float: left">
-                                            <a ng-href="#" class="button" ng-click="addNewUser()" title="">
-                                                Ajouter
-                                                <span class="button-icon right-side"><span class="icon-download"></span></span>
-                                            </a>
-                                            
-                                        </div>
+											<button
+												class="button"
+												ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.group.write)" 
+												ng-click="addNewUser()" 
+												title="">
+												{{t 'main:Add'}}
+												<span class="button-icon right-side"><span class="icon-download"></span></span>
+											</button>
+										</div>
                                     </td>
                                 </tr>
                             </tbody>

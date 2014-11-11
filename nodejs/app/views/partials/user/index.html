@@ -8,12 +8,16 @@
 		<div class="table-header silver-gradient glossy button-height">
 			<div class="row">
 				<div class="col-sm-6">
-					<button class="button icon-plus blue-gradient" data-ng-click="addNew()">{{t 'Add'}}</button>
+					<button 
+						class="button icon-plus blue-gradient" 
+						ng-disabled="((!global.user.admin || !global.user.superadmin) && !global.user.rights.user.write)" 
+						data-ng-click="addNew()">
+						{{t 'Add'}}
+					</button>
 				</div>
 				<div class="col-sm-6">
 					<div class="float-right">
-                                            {{t 'Search'}} <input type="text" placeholder="..." data-ng-model="filterOptionsUser.filterText" class="input small mid-margin-left">
-                                            
+						{{t 'Search'}} <input type="text" placeholder="..." data-ng-model="filterOptionsUser.filterText" class="input small mid-margin-left">
 					</div>
 				</div>
 			</div>
