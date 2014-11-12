@@ -15,19 +15,19 @@
 								<tr>
 									<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
 									<td><a href="#" class="blue h4" editable-text="societe.name" buttons="no" onaftersave="update()">
-											\{{societe.name|| "Non defini"}}
+											\{{ societe.name || '{{t 'main:Undefined'}}' }}
 										</a>
 									</td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:ThirdPartyCode'}}</th>
 									<td><a href="#" editable-text="societe.code_client" buttons="no" onbeforesave="checkCodeClient($data)" onaftersave="update()">
-											\{{societe.code_client|| "Non defini"}}
+											\{{ societe.code_client || '{{t 'main:Undefined'}}' }}
 										</a>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">{{t 'Entity'}}</th>
+									<th scope="row">{{t 'main:Entity'}}</th>
 									<td><span class="tag anthracite-gradient glossy" editable-select="societe.entity" buttons="no" e-form="EntityBtnForm" onaftersave="update()" e-ng-options="e.id as e.name for e in entities">
 											\{{societe.entity}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible || !global.user.rights.societe.entity"></span>
 									</td>
@@ -49,7 +49,7 @@
 									<th scope="row">{{t 'companies:Address'}}</th>
 									<td>
 										<form editable-form name="editableFormAddress" onaftersave="update()">
-											<span editable-textarea="societe.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ societe.address || 'empty' }}</pre></span>
+											<span editable-textarea="societe.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ societe.address || '{{t 'main:Undefined'}}' }}</pre></span>
 
 											<span editable-text="societe.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{societe.zip}}</span> <span editable-text="societe.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{societe.town}}</span>
 											\{{societe.country}}
@@ -58,7 +58,7 @@
 
 
 											<div class="small-margin-top button-group" ng-show="editableFormAddress.$visible">
-												<button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableFormAddress.$waiting"></button>
+												<button type="submit" class="button icon-tick blue-gradient" title="{{t 'main:Save'}}" ng-disabled="editableFormAddress.$waiting"></button>
 
 												<button type="button" class="button icon-cross-round white-gradient" ng-disabled="editableFormAddress.$waiting" title="{{t 'Cancel'}}" ng-click="editableFormAddress.$cancel()"></button>
 											</div>
@@ -68,25 +68,25 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Phone'}}</th>
-									<td ><span editable-tel="societe.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{societe.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
+									<td ><span editable-tel="societe.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{ societe.phone || '{{t 'main:Undefined'}}' | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'companies:Fax'}}</th>
-									<td><span editable-tel="societe.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{societe.fax|| "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
+									<td><span editable-tel="societe.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{ societe.fax || '{{t 'main:Undefined'}}' }}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'EMail'}}</th> 
-									<td><a data-ng-href="mailto:\{{societe.email}}" target="_blank" editable-email="societe.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{societe.email}}</a>
+									<td><a data-ng-href="mailto:\{{societe.email}}" target="_blank" editable-email="societe.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{ societe.email || '{{t 'main:Undefined'}}' }}</a>
 										<span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'Web'}}</th>
-									<td><a data-ng-href="\{{societe.url}}" target="_blank" editable-url="societe.url" e-title="http://www.mysite.com" buttons="no" e-form="urlBtnForm" onaftersave="update()">\{{societe.url}}</a>
+									<td><a data-ng-href="\{{societe.url}}" target="_blank" editable-url="societe.url" e-title="http://www.mysite.com" buttons="no" e-form="urlBtnForm" onaftersave="update()">\{{ societe.url || '{{t 'main:Undefined'}}' }}</a>
 										<span class="icon-pencil grey" ng-click="urlBtnForm.$show()" ng-hide="urlBtnForm.$visible"></span></td>
 								</tr>
 								<tr>
 									<th scope="row">{{t 'DateLastModification'}}</th>
-									<td class="blue">\{{societe.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
+									<td class="blue">\{{ societe.updatedAt | date:'{{t 'main:FormatDateHourMinJava'}}' }}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -97,8 +97,8 @@
 					<div class="scroll" style="height:120px">
 						<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
 							<div class="with-small-padding silver-gradient no-margin-top">
-								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{ vnote.datec | date:'{{t 'main:FormatDateHourMinJava'}}' }}</i></span>
+								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'main:Today'}}</span></div>
 							</div>
 							<span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
 						</div>
@@ -108,11 +108,11 @@
 				<div class="eight-columns small-margin-bottom">
                     <div class="float-right button-height">					
                         <a class="button" ng-href="#!/societes" title="Retour à la liste">
-							{{t 'List'}}
+							{{t 'main:List'}}
 							<span class="button-icon right-side"><span class="icon-list"></span></span>
 						</a>
 						<button class="button" ng-disabled="!global.user.rights.societe.delete" confirmed-click="remove(societe)" ng-confirm-click="Supprimer la société ?" title="Supprimer la société">
-							{{t 'Delete'}}
+							{{t 'main:Delete'}}
 							<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
 						</button>
                     </div>
@@ -246,25 +246,25 @@
 												<tr>
 													<th scope="row">{{t 'companies:Capital'}}</th>
 													<td><a href="#" editable-text="societe.capital" buttons="no" onaftersave="update()">
-															\{{societe.capital|| "Non défini" | euro}}
+															\{{ societe.capital || '{{t 'main:Undefined'}}' | euro}}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ProfId1FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof1" buttons="no" onaftersave="update()">
-															\{{societe.idprof1|| "Non défini"}}
+															\{{ societe.idprof1 || '{{t 'main:Undefined'}}' }}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ProfId2FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof2" buttons="no" onaftersave="update()">
-															\{{societe.idprof2|| "Non défini"}}
+															\{{ societe.idprof2 || '{{t 'main:Undefined'}}' }}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:ProfId3FR'}}</th>
 													<td><a href="#" editable-text="societe.idprof3" buttons="no" onaftersave="update()">
-															\{{societe.idprof3|| "Non défini"}}
+															\{{ societe.idprof3 ||'{{t 'main:Undefined'}}' }}
 														</a></td>
 												</tr>
 												<!--<tr>
@@ -282,13 +282,13 @@
 												<tr>
 													<th scope="row">{{t 'companies:SocGroup'}}</th>
 													<td><a href="#" editable-text="societe.caFamily" e-typeahead="ca as ca for ca in AutoComplete($viewValue,'api/societe/autocomplete/caFamily',10)" buttons="no" onaftersave="update()">
-															\{{societe.caFamily|| "Aucun"}}
+															\{{ societe.caFamily || '{{t 'main:Undefined'}}' }}
 														</a></td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'companies:CustomerSegmentation'}}</th>
 													<td><a href="#" editable-select="societe.segmentation" buttons="no" e-ng-options="s as s.label group by s.group for s in dict.fk_segmentation.values track by s.id" onaftersave="update()">
-															\{{societe.segmentation.label|| 'Non défini'}} <small ng-if="societe.segmentation.group">(\{{societe.segmentation.group}})</small>
+															\{{ societe.segmentation.label || '{{t 'main:Undefined'}}' }} <small ng-if="societe.segmentation.group">(\{{societe.segmentation.group}})</small>
 														</a></td>
 												</tr>
 												<tr>
@@ -301,11 +301,11 @@
 											<tr>
 												<th scope="row">{{t 'companies:Rival'}}</th>
 												<td><a href="#" editable-select="societe.rival" buttons="no" e-ng-options="s.label as s.label for s in dict.fk_rival.values" onaftersave="update()">
-														\{{societe.rival|| 'Non défini'}}
+														\{{ societe.rival || '{{t 'main:Undefined'}}' }}
 													</a></td>
 											</tr>
 											<tr>
-												<th scope="row" colspan="2">{{t 'Keywords'}}<br/>
+												<th scope="row" colspan="2">{{t 'main:Keywords'}}<br/>
 											<tags-input data-ng-model="societe.Tag" placeholder="{{t 'Add'}}" on-tag-added='update()' on-tag-removed="update()">
 												<auto-complete source="AutoComplete($query,'api/societe/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
 											</tags-input>
@@ -331,13 +331,13 @@
 												<tr>
 													<th scope="row">{{t 'compta:CustomerAccountancyCode'}}</th>
 													<td><a href="#" editable-text="societe.code_compta" buttons="no" onaftersave="update()">
-															\{{societe.code_compta|| "Non défini"}}
+															\{{ societe.code_compta || '{{t 'main:Undefined'}}' }}
 														</a></td>
 												</tr>
 												<tr ng-hide="societe.fournisseur == 'NO'">
 													<th scope="row">{{t 'compta:SupplierAccountancyCode'}}</th>
 													<td><a href="#" editable-text="societe.code_compta_fournisseur" buttons="no" onaftersave="update()">
-															\{{societe.code_compta_fournisseur|| "Non défini"}}
+															\{{ societe.code_compta_fournisseur || '{{t 'main:Undefined'}}' }}
 														</a></td>
 												</tr>
 												<tr>
@@ -348,7 +348,7 @@
 												<tr>
 													<th scope="row">{{t 'companies:VATIntra'}}</th>
 													<td><a href="#" editable-text="societe.idprof6" buttons="no" onaftersave="update()">
-															\{{societe.idprof6|| "Non défini"}}
+															\{{ societe.idprof6 || '{{t 'main:Undefined'}}' }}
 														</a>
 													</td>
 												</tr>
@@ -372,7 +372,7 @@
 													<th scope="row">{{t 'products:PriceLevel'}}</th>
 													<td>
 														<a href="#" editable-text="societe.price_level" e-typeahead="price_level.name for price_level in priceLevelAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
-															\{{societe.price_level|| "Non defini"}}
+															\{{ societe.price_level || '{{t 'main:Undefined'}}' }}
 														</a>
 													</td>
 												</tr>
@@ -552,7 +552,7 @@
 											<textarea id="note" cols="30" rows="5" data-ng-model="note" class="input full-width"></textarea>
 
 											<div class="margin-top button-height float-right">
-												<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'Add'}}</button>
+												<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t 'main:Add'}}</button>
 											</div>
 										</div>
 									</div>
@@ -562,8 +562,8 @@
 										<div class="scroll" style="height:360px">
 											<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
-													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{ vnote.datec | date:'{{t 'main:FormatDateHourMinJava'}}' }}</i></span>
+													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'main:Today'}}</span></div>
 												</div>
 												<span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
 											</div>
@@ -584,14 +584,14 @@
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="button-group">
-									<button class="button icon-plus blue-gradient" data-ng-click="addNewContact()">{{t 'Add'}}</button>
+									<button class="button icon-plus blue-gradient" data-ng-click="addNewContact()">{{t 'main:Add'}}</button>
 									<button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
 								</div>
 
 							</div>
 							<div class="col-sm-6">
 								<div class="float-right">
-									{{t 'Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
+									{{t 'main:Search'}} <input type="text" data-ng-model="filterOptionsContact.filterText" class="input small mid-margin-left">
 								</div>
 							</div>
 						</div>
@@ -608,7 +608,7 @@
                         <div class="row">
 							<div class="col-sm-6">
 								<div class="button-group">
-									<button class="button icon-plus blue-gradient" data-ng-click="addNewLead()">{{t 'Add'}}</button>
+									<button class="button icon-plus blue-gradient" data-ng-click="addNewLead()">{{t 'main:Add'}}</button>
 									<button title="{{t 'Refresh'}}" class="button" data-ng-click="refreshLead()"><span class="icon-redo"></span></button>
 								</div>
 
@@ -627,7 +627,7 @@
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="button-group">
-									<button class="button icon-plus blue-gradient" data-ng-click="addNewReport()">{{t 'Add'}}</button>
+									<button class="button icon-plus blue-gradient" data-ng-click="addNewReport()">{{t 'main:Add'}}</button>
 									<button title="{{t 'Refresh'}}" class="button" data-ng-click="refreshReport()"><span class="icon-redo"></span></button>
 								</div>
 
@@ -645,7 +645,7 @@
 
 					<div class="table-header silver-gradient glossy button-height">
 						<div class="float-right">
-							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsTicket.filterText" class="input small mid-margin-left">
+							{{t 'main:Search'}} <input type="text" data-ng-model="filterOptionsTicket.filterText" class="input small mid-margin-left">
 						</div>
 					</div>
 					<div class="gridStyle"  data-ng-grid="gridOptionsTicket"></div>
@@ -659,7 +659,7 @@
 
 					<div class="table-header silver-gradient glossy button-height">
 						<div class="float-right">
-							{{t 'Search'}} <input type="text" data-ng-model="filterOptionsBuy.filterText" class="input small mid-margin-left">
+							{{t 'main:Search'}} <input type="text" data-ng-model="filterOptionsBuy.filterText" class="input small mid-margin-left">
 						</div>
 						\{{searchBuy}}
 					</div>

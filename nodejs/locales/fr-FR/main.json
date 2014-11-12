@@ -5,6 +5,8 @@
     "SeparatorThousand": ",",
     "FormatDateShort": "%d/%m/%Y",
     "FormatDateShortJava": "dd/MM/yyyy",
+    "FormatDateHourMinJava": "dd/MM/yyyy HH:mm",
+    "FormatDateHourMinSecJava": "dd/MM/yyyy HH:mm:ss",
     "FormatDateShortJQuery": "dd/mm/yy",
     "FormatHourShort": "%H:%M",
     "FormatHourShortDuration": "%H:%M",
