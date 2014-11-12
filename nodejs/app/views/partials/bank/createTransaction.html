@@ -1,7 +1,7 @@
 <form data-ng-init='init()' data-ng-submit='createTransaction()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <!-- Block style is optional, you can use any layout -->
-    <h3 class="block-title">{{t 'bank:NewTransaction'}}</h3>
+    <h3 class="block-title">{{t 'banks:NewTransaction'}}</h3>
 
     <ul class="wizard-steps">
 
@@ -13,7 +13,7 @@
             <h4>Interface de création d'une écriture de banque.</h4>
         </div>
         <div class="field-block button-height">
-            <label><b>{{t 'bank:DateTransaction'}}</b></label>
+            <label><b>{{t 'banks:DateTransaction'}}</b></label>
             <div class="row">
                 <div class="col-md-6">
                     <p class="input-group">
@@ -26,13 +26,13 @@
             </div>	
         </div>
         <div class="field-block button-height">
-            <label><b>{{t 'bank:TypeTransaction'}}</b></label>
+            <label><b>{{t 'banks:TypeTransaction'}}</b></label>
             <select class="form-control" 
                     data-ng-model="transaction.type_transaction" 
                     data-ng-options="c.id as c.label for c in transaction_type"></select>
         </div>
         <div class="field-block button-height">
-            <label><b>{{t 'bank:NumberTransaction'}}</b></label>
+            <label><b>{{t 'banks:NumberTransaction'}}</b></label>
             <input required type="text" 
                    data-ng-model="transaction.number" 
                    class="input"
@@ -43,20 +43,20 @@
             <textarea class="input" rows="3" cols="60" data-ng-model="transaction.description"></textarea>
         </div>
         <div class="field-block button-height">
-            <label><b>{{t 'bank:Category'}}</b></label>
+            <label><b>{{t 'banks:Category'}}</b></label>
             <select class="form-control" 
                     data-ng-model="transaction.category" 
                     data-ng-options="c as c.name for c in category"></select>
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:Debit'}}</b></label>
+            <label for="nom"><b>{{t 'banks:Debit'}}</b></label>
             <input type="text" 
                    data-ng-model="transaction.debit"
                    class="input"
                    autocomplete="off">
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:Credit'}}</b></label>
+            <label for="nom"><b>{{t 'banks:Credit'}}</b></label>
             <input type="text" 
                    data-ng-model="transaction.credit"
                    class="input"

@@ -15,7 +15,7 @@
                         <table class="info-table">
                             <tbody>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Ref'}}</th>
+                                    <th width="40%" scope="row">{{t 'banks:Ref'}}</th>
                                     <td>
                                         <a href="#" editable-text="bank.ref" buttons="no" e-form="refForm" onaftersave="update()" blur="submit">
                                             \{{bank.ref|| "Non defini"}}
@@ -24,7 +24,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Libelle'}}</th>
+                                    <th width="40%" scope="row">{{t 'banks:Libelle'}}</th>
                                     <td>
                                         <a href="#" editable-text="bank.libelle" buttons="no" e-form="libForm" onaftersave="update()" blur="submit">
                                             \{{bank.libelle|| "Non defini"}}
@@ -33,7 +33,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:AccountType'}}</th>
+                                    <th width="40%" scope="row">{{t 'banks:AccountType'}}</th>
                                     <td>
                                         <span class="tag small glossy" 
                                               editable-select="bank.account_type"
@@ -47,7 +47,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Status'}}</th>
+                                    <th width="40%" scope="row">{{t 'banks:Status'}}</th>
                                     <td>
                                         <span class="tag small glossy"
                                               data-ng-class="bank.acc_status.css"
@@ -61,7 +61,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Currency'}}</th>
+                                    <th width="40%" scope="row">{{t 'banks:Currency'}}</th>
                                     <td>
                                         <span editable-select="bank.currency" 
                                               buttons="no" e-form="currencyForm" 
@@ -73,7 +73,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Client'}}</th>
+                                    <th width="40%" scope="row">{{t 'banks:Client'}}</th>
                                     <td>
                                         <a href="#" 
                                            editable-text="bank.client" 
@@ -84,7 +84,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th width="40%" scope="row">{{t 'bank:Country'}}</th>
+                                    <th width="40%" scope="row">{{t 'banks:Country'}}</th>
                                     <td>
                                         <span editable-select="bank.country" 
                                               buttons="no" e-form="countryForm" 
@@ -120,7 +120,7 @@
                                         <table class="simple-table">
                                             <tbody>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:Rapprochable'}}</th>
+                                                    <th scope="row">{{t 'banks:Rapprochable'}}</th>
                                                     <td>
                                                         <input type="checkbox" 
                                                                data-ng-model="bank.reconciled" 
@@ -129,7 +129,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:AccountingCode'}}</th>
+                                                    <th scope="row">{{t 'banks:AccountingCode'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.accounting_code" buttons="no" e-form="bankAccCodeForm" onaftersave="update()" blur="submit">
                                                             \{{bank.accounting_code|| "Non defini"}}
@@ -138,7 +138,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:MinBalanceAllowed'}}</th>
+                                                    <th scope="row">{{t 'banks:MinBalanceAllowed'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.min_balance_allowed" buttons="no" e-form="minBalAllForm" onaftersave="update()" blur="submit">
                                                             \{{bank.min_balance_allowed|| "Non defini"}}
@@ -147,7 +147,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:MinBalanceRequired'}}</th>
+                                                    <th scope="row">{{t 'banks:MinBalanceRequired'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.min_balance_required" buttons="no" e-form="minBalReqForm" onaftersave="update()" blur="submit">
                                                             \{{bank.min_balance_required|| "Non defini"}}
@@ -171,7 +171,7 @@
                                         <table class="simple-table">
                                             <tbody>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:BankName'}}</th>
+                                                    <th scope="row">{{t 'banks:BankName'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.name_bank" buttons="no" e-form="bankNameForm" onaftersave="update()" blur="submit">
                                                             \{{bank.name_bank|| "Non defini"}}
@@ -180,7 +180,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:BankCode'}}</th>
+                                                    <th scope="row">{{t 'banks:BankCode'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.code_bank" buttons="no" e-form="bankCodeForm" onaftersave="update()" blur="submit">
                                                             \{{bank.code_bank|| "Non defini"}}
@@ -189,7 +189,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:CodeCounter'}}</th>
+                                                    <th scope="row">{{t 'banks:CodeCounter'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.code_counter" buttons="no" e-form="codeCounterForm" onaftersave="update()" blur="submit">
                                                             \{{bank.code_counter|| "Non defini"}}
@@ -198,7 +198,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:AccountNumber'}}</th>
+                                                    <th scope="row">{{t 'banks:AccountNumber'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.account_number" buttons="no" e-form="accNumberForm" onaftersave="update()" blur="submit">
                                                             \{{bank.account_number|| "Non defini"}}
@@ -207,7 +207,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:RIB'}}</th>
+                                                    <th scope="row">{{t 'banks:RIB'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.rib" buttons="no" e-form="ribForm" onaftersave="update()" blur="submit">
                                                             \{{bank.rib|| "Non defini"}}
@@ -216,7 +216,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:IBAN'}}</th>
+                                                    <th scope="row">{{t 'banks:IBAN'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.iban" buttons="no" e-form="ibanForm" onaftersave="update()" blur="submit">
                                                             \{{bank.iban|| "Non defini"}}
@@ -225,7 +225,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:BIC/SWIFT'}}</th>
+                                                    <th scope="row">{{t 'banks:BIC/SWIFT'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="bank.bic" buttons="no" e-form="bicForm" onaftersave="update()" blur="submit">
                                                             \{{bank.bic|| "Non defini"}}
@@ -234,7 +234,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">{{t 'bank:Domiciliation'}}</th>
+                                                    <th scope="row">{{t 'banks:Domiciliation'}}</th>
                                                     <td>
                                                         <form editable-form onaftersave="update()">
                                                             <div ng-address model="bank" opp="update"></div>
@@ -250,13 +250,13 @@
                     </tabset>
                 </div>
                 <div class="twelve-columns">
-                    <h5 class="green underline">{{t 'bank:Transactions'}}</h5>
+                    <h5 class="green underline">{{t 'banks:Transactions'}}</h5>
                     <div class="table-header silver-gradient glossy button-height">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="button-group">
                                     <button class="button icon-plus blue-gradient" data-ng-click="addNewTransaction()">{{t 'Add'}}</button>
-                                    <button class="button icon-plus green-gradient" data-ng-click="reconciliation(bank, transactions)">{{t 'bank:Reconcile'}}</button>
+                                    <button class="button icon-plus green-gradient" data-ng-click="reconciliation(bank, transactions)">{{t 'banks:Reconcile'}}</button>
                                 </div>
                             </div>
                             <div class="col-sm-6">

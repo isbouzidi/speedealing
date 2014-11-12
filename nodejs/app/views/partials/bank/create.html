@@ -1,7 +1,7 @@
 <form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <!-- Block style is optional, you can use any layout -->
-    <h3 class="block-title">{{t 'bank:NewBankAccount'}}</h3>
+    <h3 class="block-title">{{t 'banks:NewBankAccount'}}</h3>
 
     <ul class="wizard-steps">
 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="field-block button-height">
-                <label for="login"><b>{{t 'bank:Ref'}}</b></label>
+                <label for="login"><b>{{t 'banks:Ref'}}</b></label>
                 <input required type="text" 
                        data-ng-model="bank.ref" 
                        data-ng-change="isValidRef()" 
@@ -31,7 +31,7 @@
         </div>
 
         <div class="field-block button-height">
-                <label for="nom"><b>{{t 'bank:Libelle'}}</b></label>
+                <label for="nom"><b>{{t 'banks:Libelle'}}</b></label>
                 <input required type="text" 
                        data-ng-model="bank.libelle" 
                        data-ng-change="isValidLibelle()" 
@@ -45,7 +45,7 @@
                 <small ng-show="bank.libelle!=null && !libelleFound && !validLibelle" class="icon-tick red input-info">Libelle invalide.</small>
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:AccountType'}}</b></label>
+            <label for="nom"><b>{{t 'banks:AccountType'}}</b></label>
             <select class="form-control" 
                     id="account_type" 
                     data-ng-model="bank.account_type" 
@@ -53,7 +53,7 @@
             </select>
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:Currency'}}</b></label>
+            <label for="nom"><b>{{t 'banks:Currency'}}</b></label>
             <select class="form-control" 
                     id="currency" 
                     data-ng-model="bank.currency" 
@@ -61,7 +61,7 @@
             </select>
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:Status'}}</b></label>
+            <label for="nom"><b>{{t 'banks:Status'}}</b></label>
             <select class="form-control" 
                     id="status" 
                     data-ng-model="bank.status" 
@@ -69,7 +69,7 @@
             </select>
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:Country'}}</b></label>
+            <label for="nom"><b>{{t 'banks:Country'}}</b></label>
             <select
                 class="form-control" 
                 id="country" 
@@ -78,7 +78,7 @@
             </select>
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:AccountingCode'}}</b></label>
+            <label for="nom"><b>{{t 'banks:AccountingCode'}}</b></label>
             <input required type="text" 
                     data-ng-model="bank.accounting_code"
                     id="accounting_code"  
@@ -86,7 +86,7 @@
                     autocomplete="off">
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:InitialBalance'}}</b></label>
+            <label for="nom"><b>{{t 'banks:InitialBalance'}}</b></label>
             <input required type="text" 
                     data-ng-model="bank.transaction[0].credit"
                     id="initial_balance"  
@@ -94,7 +94,7 @@
                     autocomplete="off">
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:MinBalanceAllowed'}}</b></label>
+            <label for="nom"><b>{{t 'banks:MinBalanceAllowed'}}</b></label>
             <input required type="text" 
                     data-ng-model="bank.min_balance_allowed"
                     id="min_balance_allowed"  
@@ -102,7 +102,7 @@
                     autocomplete="off">
         </div>
         <div class="field-block button-height">
-            <label for="nom"><b>{{t 'bank:MinBalanceRequired'}}</b></label>
+            <label for="nom"><b>{{t 'banks:MinBalanceRequired'}}</b></label>
             <input required type="text" 
                     data-ng-model="bank.min_balance_required"
                     id="min_balance_required"  
