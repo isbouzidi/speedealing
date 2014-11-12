@@ -1,0 +1,40 @@
+<section data-ng-controller="ReconciliationController" data-ng-init="find()" class="scroll" style="height:500px" ng-style="style(0)" resize>
+    <hgroup id="main-title" class="thin">
+            <h1>Rapprochement compte bancaire : \{{bank.libelle}}</h1>
+    </hgroup>
+    
+    <div class="six-columns twelve-columns-tablet with-padding margin-top">        
+        
+        <p>
+            <label>
+                relevé bancaire concerné par le rapprochement<br>
+                <small>(Utilisez une valeur numérique triable (par exemple YYYYMM))</small>
+            </label>
+            <input required type="text" data-ng-model="bank_statement" class="input small-margin-top"> 
+        </p>         
+        <p>
+            <strong>
+                {{t 'bank:Category'}}
+            </strong>
+            <select class="form-control" 
+                data-ng-model="reconciliation.category" 
+                data-ng-options="b as b.name for b in category">                        
+            </select>
+        </p> 
+    </div>
+   
+    <div class="with-padding">
+        <div class="gridStyle"  data-ng-grid="gridOptionsTransactions" ng-style="style(170)" resize></div>            
+    </div>
+    <div class="field-block button-height wizard-controls clearfix">
+        <button data-ng-click="reconcile()" class="button glossy mid-margin-right float-right" data-ng-disabled="!bank_statement">
+            <span class="button-icon"><span class="icon-tick"></span></span>
+            {{t 'bank:Reconcile'}}
+        </button>  
+        <button data-ng-click="backFiche()" class="button glossy mid-margin-right float-right">
+            <span class="button-icon"><span class="icon-previous"></span></span>
+            Fiche compte bancaire
+        </button>                
+                      
+    </div>	
+</section>
