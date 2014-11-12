@@ -43,8 +43,9 @@ Object.prototype = {
         
         BankModel.findOne({_id: id}, function (err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
+                    return console.log("failed to load bank account : " + id);
                 
                 req.account = doc;
                 next();
