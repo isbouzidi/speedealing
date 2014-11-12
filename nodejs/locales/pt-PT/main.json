@@ -3,9 +3,71 @@
     "DIRECTION": "ltr",
     "SeparatorDecimal": ",",
     "SeparatorThousand": ",",
+    "date": {
+        "day": {
+            "aShort2": [
+                "Di",
+                "Lu",
+                "Ma",
+                "Me",
+                "Je",
+                "Ve",
+                "Sa"
+            ],
+            "aShort3": [
+                "Dim",
+                "Lun",
+                "Mar",
+                "Mer",
+                "Jeu",
+                "Ven",
+                "Sam"
+            ],
+            "Short1": {
+                "Sunday": "D",
+                "Monday": "L",
+                "Tuesday": "M",
+                "Wednesday": "M",
+                "Thursday": "J",
+                "Friday": "V",
+                "Saturday": "S"
+            },
+            "Short2": {
+                "Sunday": "Di",
+                "Monday": "Lu",
+                "Tuesday": "Ma",
+                "Wednesday": "Me",
+                "Thursday": "Je",
+                "Friday": "Ve",
+                "Saturday": "Sa"
+            },
+            "Sunday": "Dimanche",
+            "Monday": "Lundi",
+            "Tuesday": "Mardi",
+            "Wednesday": "Mercredi",
+            "Thursday": "Jeudi",
+            "Friday": "Vendredi",
+            "Saturday": "Samedi",
+            "sunday": "dimanche",
+            "monday": "lundi",
+            "tuesday": "mardi",
+            "wednesday": "mercredi",
+            "thursday": "jeudi",
+            "friday": "vendredi",
+            "saturday": "samedi"
+        },
+        "format": {
+            "java": {
+                "day": "dd/MM/yyyy",
+                "dayhour": "dd/MM/yyyy HH:mm",
+                "dayhoursec": "dd/MM/yyyy HH:mm:ss"
+            },
+            "jquery": {
+                "day": "dd/mm/yy"
+            }
+        }
+    },
     "FormatDateShort": "%d/%m/%Y",
-    "FormatDateShortJava": "dd/MM/yyyy",
-    "FormatDateShortJQuery": "dd/mm/yy",
     "FormatHourShort": "%H:%M",
     "FormatHourShortDuration": "%H:%M",
     "FormatDateTextShort": "%d %b %Y",
@@ -634,48 +696,9 @@
     "Weeks": "Semaines",
     "To": "à",
     "View": "Voir",
-    "Monday": "Segunda-feira",
-    "Tuesday": "Terça-feira",
-    "Wednesday": "Quarta-feira",
-    "Thursday": "Quinta-feira",
-    "Friday": "Sexta-feira",
-    "Saturday": "Sábado",
-    "Sunday": "Domingo",
-    "MondayMin": "Mo",
-    "TuesdayMin": "Tu",
-    "WednesdayMin": "Nós",
-    "ThursdayMin": "Th",
-    "FridayMin": "Fr",
-    "SaturdayMin": "Sa",
-    "SundayMin": "Su",
-    "Day1": "Segunda-Feira",
-    "Day2": "Terça-Feira",
-    "Day3": "Quarta-Feira",
-    "Day4": "Quinta-Feira",
-    "Day5": "Sexta-Feria",
-    "Day6": "Sábado",
-    "Day0": "Domingo",
-    "ShortMonday": "Seg",
-    "ShortTuesday": "Ter",
-    "ShortWednesday": "Qua",
-    "ShortThursday": "Qui",
-    "ShortFriday": "Sex",
-    "ShortSaturday": "Sab",
-    "ShortSunday": "Dom",
     "Open": "Ouvrir",
     "ControllingPassword": "Connexion en cours...",
     "Hello": "Bonjour",
-    "date": {
-        "dayShort": [
-            "Dim",
-            "Lun",
-            "Mar",
-            "Mer",
-            "Jeu",
-            "Ven",
-            "Sam"
-        ]
-    },
     "Forward": "Iniciar upload",
     "Reply": "Répondre",
     "TimeLeft": "Temps restant",
