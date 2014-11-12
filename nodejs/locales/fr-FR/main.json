@@ -5,7 +5,16 @@
 	"SeparatorThousand": ",",
 	"date": {
 		"day": {
-			"aShort": [
+			"aShort2": [
+				"Di",
+				"Lu",
+				"Ma",
+				"Me",
+				"Je",
+				"Ve",
+				"Sa"
+			],
+			"aShort3": [
 				"Dim",
 				"Lun",
 				"Mar",
@@ -13,7 +22,39 @@
 				"Jeu",
 				"Ven",
 				"Sam"
-			]
+			],
+			"Short1": {
+				"Sunday": "D",
+				"Monday": "L",
+				"Tuesday": "M",
+				"Wednesday": "M",
+				"Thursday": "J",
+				"Friday": "V",
+				"Saturday": "S"
+			},
+			"Short2": {
+				"Sunday": "Di",
+				"Monday": "Lu",
+			    "Tuesday": "Ma",
+			    "Wednesday": "Me",
+			    "Thursday": "Je",
+			    "Friday": "Ve",
+			    "Saturday": "Sa"
+			},
+			"Sunday": "Dimanche",
+			"Monday": "Lundi",
+			"Tuesday": "Mardi",
+			"Wednesday": "Mercredi",
+			"Thursday": "Jeudi",
+			"Friday": "Vendredi",
+			"Saturday": "Samedi",
+			"sunday": "dimanche",
+			"monday": "lundi",
+			"tuesday": "mardi",
+			"wednesday": "mercredi",
+			"thursday": "jeudi",
+			"friday": "vendredi",
+			"saturday": "samedi"
 		},
 		"format": {
 			"java": {
@@ -25,7 +66,7 @@
 				"day": "dd/mm/yy"
 			}
 		}
-	}
+	},
     "FormatDateShort": "%d/%m/%Y",
     "FormatHourShort": "%H:%M",
     "FormatHourShortDuration": "%H:%M",
@@ -655,34 +696,6 @@
     "Weeks": "Semaines",
     "To": "à",
     "View": "Voir",
-    "Monday": "Lundi",
-    "Tuesday": "Mardi",
-    "Wednesday": "Mercredi",
-    "Thursday": "Jeudi",
-    "Friday": "Vendredi",
-    "Saturday": "Samedi",
-    "Sunday": "Dimanche",
-    "MondayMin": "Lu",
-    "TuesdayMin": "Ma",
-    "WednesdayMin": "Me",
-    "ThursdayMin": "Je",
-    "FridayMin": "Ve",
-    "SaturdayMin": "Sa",
-    "SundayMin": "Di",
-    "Day1": "Lundi",
-    "Day2": "Mardi",
-    "Day3": "Mercredi",
-    "Day4": "Jeudi",
-    "Day5": "Vendredi",
-    "Day6": "Samedi",
-    "Day0": "Dimanche",
-    "ShortMonday": "L",
-    "ShortTuesday": "M",
-    "ShortWednesday": "M",
-    "ShortThursday": "J",
-    "ShortFriday": "V",
-    "ShortSaturday": "S",
-    "ShortSunday": "D",
     "Open": "Ouvrir",
     "ControllingPassword": "Connexion en cours...",
     "Hello": "Bonjour",
