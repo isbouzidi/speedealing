@@ -5,7 +5,6 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		$scope.tasks = [];
 
 		$scope.dict = {};
-
 		$scope.types = [];
 
 		if (Global.user.rights.task && Global.user.rights.task.readAll)
@@ -30,14 +29,13 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 				}
 			}).success(function (data, status) {
 				$scope.dict.fk_actioncomm = data;
-
+			 
 				$scope.dict.isEvent = [];
 				for (var i = 0; i < data.values.length; i++) {
 					if (data.values[i].type == 'event')
 						$scope.dict.isEvent.push(data.values[i].id);
-				}
-
-			});
+			 }
+			 });
 		};
 
 		$scope.update = function () {
@@ -50,7 +48,6 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.find = function () {
 			pageTitle.setTitle('Liste des tâches');
-			
 			var sb = {};
 			for (var i = 0; i < $scope.sortOptions.fields.length; i++) {
 				sb[$scope.sortOptions.fields[i]] = $scope.sortOptions.directions[i] === "desc" ? -1 : 1;
@@ -96,6 +93,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.showTask = function (id) {
 
+
 			var ModalInstanceCtrl = function ($scope, $modalInstance, object) {
 				$scope.isEvent = false;
 
@@ -115,8 +113,6 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 							$scope.isEvent = true;
 						else
 							$scope.isEvent = false;
-
-
 					}, function (err) {
 						if (err.status == 401)
 							$location.path("401.html");
@@ -269,18 +265,18 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 		$scope.closed = function (row) {
 			//console.log(row);
 			if (!row.entity.userdone || !row.entity.userdone.id) {
-				if (row.entity.notes[row.entity.notes.length - 1].author.id == Global.user.id) {
-					row.entity.notes[row.entity.notes.length - 1].percentage = 100;
-					row.entity.notes[row.entity.notes.length - 1].datec = new Date();
-				} else
-					row.entity.notes.push({
-						percentage: 100,
-						datec: new Date(),
-						author: {
-							name: Global.user.firstname + " " + Global.user.lastname,
-							id: Global.user.id
-						}
-					});
+			if (row.entity.notes[row.entity.notes.length - 1].author.id == Global.user.id) {
+				row.entity.notes[row.entity.notes.length - 1].percentage = 100;
+				row.entity.notes[row.entity.notes.length - 1].datec = new Date();
+			} else
+				row.entity.notes.push({
+					percentage: 100,
+					datec: new Date(),
+					author: {
+						name: Global.user.firstname + " " + Global.user.lastname,
+						id: Global.user.id
+					}
+				});
 			}
 
 			row.entity.$update();
@@ -288,6 +284,7 @@ angular.module('mean.system').controller('TaskController', ['$scope', '$routePar
 
 		$scope.setArchived = function (row) {
 			row.entity.archived = true;
+
 			$scope.closed(row);
 		};
 
@@ -318,7 +315,6 @@ angular.module('mean.system').controller('TaskCreateController', ['$scope', '$ht
 		$scope.mstep = 15;
 
 		$scope.ismeridian = false;
-
 		$scope.isEvent = true;
 
 		$scope.eventType = {

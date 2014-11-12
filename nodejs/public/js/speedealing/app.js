@@ -34,7 +34,10 @@ window.app = angular.module('mean', [
 	'jm.i18next',
 	'ui.chart',
 	'checklist-model',
-	'jsonFormatter'
+	'jsonFormatter',
+'mean.bank',
+        'mean.transaction',
+        'mean.bankCategory'
 ]);
 
 angular.module('mean.system', []);
@@ -52,6 +55,9 @@ angular.module('mean.contacts', []);
 angular.module('mean.reports', []);
 angular.module('mean.delivery', []);
 angular.module('mean.lead', []);
+angular.module('mean.bank', []);
+angular.module('mean.transaction', []);
+angular.module('mean.bankCategory', []);
 
 angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
 		$i18nextProvider.options = {
@@ -79,7 +85,6 @@ window.app.run(function(editableOptions, editableThemes) {
 	editableThemes.bs3.buttonsClass = 'btn-sm';
 	editableOptions.theme = 'bs3';
 });
-
 window.app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(function ($q) {
         return {

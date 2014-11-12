@@ -14,6 +14,7 @@ var BillModel = mongoose.model('bill');
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
+var BankModel = mongoose.model('bank');
 
 var Dict = require('../controllers/dict');
 
@@ -30,7 +31,24 @@ module.exports = function (app, passport, auth) {
 	app.del('/api/bill/:billId', auth.requiresLogin, object.destroy);
 	app.get('/api/bill/pdf/:billId', auth.requiresLogin, object.pdf);
 	app.get('/api/bill/releveFacture/pdf/:societeId', auth.requiresLogin, object.releve_facture);
+        
+        //add transaction
+        app.post('/api/transaction/add', auth.requiresLogin, function (req, res) {
+            var transaction = req.query.transaction;
+            console.log(req.query.transaction);
+            
+            BankModel.update(
+                { libelle: "salouma bank" }, 
+                { $push: { "transaction": req.query.transaction }},
+                function(err, doc){
+                    if(err){
+                        console.log(err);
+                    return res.send(500);
+                };
 
+                    return res.send(doc);            
+                });
+        });
 	// list for autocomplete
 	app.post('/api/bill/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);

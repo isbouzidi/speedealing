@@ -1823,7 +1823,7 @@ Object.prototype = {
 					console.log(err);
 
 				res.type('application/text');
-				res.attachment('societe_' + dateFormat(new Date(), "ddmmyyyy_HH:mm") + '.csv');
+				res.attachment('societe_' + dateFormat(new Date(), "ddmmyyyy_HH:MM") + '.csv');
 				res.send(csv);
 
 				//console.log(csv);

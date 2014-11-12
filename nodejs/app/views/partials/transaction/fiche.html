@@ -1,0 +1,125 @@
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">Fiche écriture</h3>
+
+    <fieldset class="wizard-fieldset fields-list active" data-ng-init="init()">
+
+        <div class="field-block">
+            <label><b>{{t 'bank:Account'}}</b></label>
+            <strong>\{{transaction.bank.libelle || "Non défini"}}</strong>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'bank:Client'}}</b></label>
+            <strong>\{{transaction.third_party.name || "Non défini"}}</strong>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'bank:TypeTransaction'}}</b></label>
+
+            <a href="#" 
+               editable-select="transaction.type_transaction" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="type_transaction"
+               e-ng-options="c.id as c.label for c in dict.fk_transaction_type.values">
+                \{{transaction.type_transaction || "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="type_transaction.$show()" ng-hide="type_transaction.$visible"></span>
+        </div>  
+        <div class="field-block">
+            <label><b>{{t 'bank:NumberTransaction'}}</b></label>
+            <a href="#" 
+               editable-text="transaction.number" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="number">
+                \{{transaction.number|| "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="number.$show()" ng-hide="number.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'bank:Bank'}}</b></label>
+            <a href="#" 
+               editable-text="transaction.bank_check" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="bank_check">
+                \{{transaction.bank_check|| "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="bank_check.$show()" ng-hide="bank_check.$visible"></span>
+        </div>
+         <div class="field-block">
+            <label><b>{{t 'bank:Transmitter'}}</b></label>
+            <a href="#" 
+               editable-text="transaction.transmitter" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="transmitter">
+                \{{transaction.transmitter || "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="transmitter.$show()" ng-hide="transmitter.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'bank:DateTransaction'}}</b></label>
+
+            <a href="#"
+               editable-date="transaction.date_transaction"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+
+                \{{ (transaction.date_transaction | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>         
+        <div class="field-block">
+            <label><b>{{t 'Description'}}</b></label>
+            <a href="#" 
+               editable-textarea="transaction.description" 
+               e-rows="7" e-cols="40"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="description">
+                <pre>\{{ transaction.description || 'Non défini' }}</pre>
+            </a>
+            <span class="icon-pencil grey" ng-click="description.$show()" ng-hide="description.$visible"></span>
+        </div>
+        
+        <div class="field-block">
+            <label><b>{{t 'bank:Amount'}}</b></label>
+            <a href="#" 
+               editable-text="transaction.amount" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="amount">
+                \{{transaction.amount || "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="amount.$show()" ng-hide="amount.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'bank:Reconciled'}}</b></label>
+            <input 
+                type="checkbox" 
+                data-ng-model="transaction.reconciled" 
+                data-ng-checked="transaction.reconciled" 
+                data-ng-change="update()" />
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'bank:Statement'}}</b></label>
+            <a href="#" 
+               editable-text="transaction.bank_statement" 
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="bank_statement">
+                \{{transaction.bank_statement|| "Non défini"}}
+            </a>
+            <span class="icon-pencil grey" ng-click="bank_statement.$show()" ng-hide="bank_statement.$visible"></span>
+        </div>                                        
+
+    </fieldset>
+</div>
