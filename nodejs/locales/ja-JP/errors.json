@@ -5,8 +5,6 @@
     "Errors": "エラー",
     "ErrorBadEMail": "メールして%sが間違っている",
     "ErrorBadUrl": "URLの%sが間違っている",
-    "ErrorLoginAlreadyExists": "ログイン%sはすでに存在しています。",
-    "ErrorGroupAlreadyExists": "グループ%sはすでに存在しています。",
     "ErrorRecordNotFound": "レコードが見つかりませんでした。",
     "ErrorFailToCopyFile": "<b>&quot;%s&quot;</b>にファイル<b>&quot;%s&quot;を</b>コピーに失敗しました。",
     "ErrorFailToRenameFile": "<b>&quot;%s&quot;</b>にファイル<b>&quot;%s&quot;を</b>リネームに失敗しました。",

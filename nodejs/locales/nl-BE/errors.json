@@ -5,8 +5,6 @@
     "Errors": "Errors",
     "ErrorBadEMail": "EMail %s is wrong",
     "ErrorBadUrl": "Url %s is wrong",
-    "ErrorLoginAlreadyExists": "Inloggen %s bestaat reeds.",
-    "ErrorGroupAlreadyExists": "Groep %s bestaat reeds.",
     "ErrorRecordNotFound": "Record not found.",
     "ErrorFailToCopyFile": "Failed to copy file '<b>%s</b>' into '<b>%s</b>'.",
     "ErrorFailToRenameFile": "Failed to rename file '<b>%s</b>' into '<b>%s</b>'.",

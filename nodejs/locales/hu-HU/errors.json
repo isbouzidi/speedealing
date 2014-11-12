@@ -5,8 +5,6 @@
     "Errors": "Hibák",
     "ErrorBadEMail": "E-mail %s rossz",
     "ErrorBadUrl": "Url %s rossz",
-    "ErrorLoginAlreadyExists": "Bejelentkezés %s már létezik.",
-    "ErrorGroupAlreadyExists": "Csoport %s már létezik.",
     "ErrorRecordNotFound": "Jegyezze fel nem található.",
     "ErrorFailToCopyFile": "Fájl másolása sikertelen <b>&quot;%s&quot;</b> a <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Nem sikerült átnevezni file <b>&quot;%s&quot;</b> a <b>&quot;%s&quot;.</b>",

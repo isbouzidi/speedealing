@@ -5,8 +5,6 @@
     "Errors": "שגיאות",
     "ErrorBadEMail": "%s אימייל הוא בסדר",
     "ErrorBadUrl": "%s URL שגויה",
-    "ErrorLoginAlreadyExists": "כניסה %s כבר קיים.",
-    "ErrorGroupAlreadyExists": "קבוצת %s כבר קיים.",
     "ErrorRecordNotFound": "הקלטת לא נמצא.",
     "ErrorFailToCopyFile": "נכשלה העתקת קובץ <b>&quot;%s</b> 'ל' <b>%s&quot;.</b>",
     "ErrorFailToRenameFile": "נכשל נסיון לשנות את שם הקובץ <b>&quot;%s</b> 'ל' <b>%s&quot;.</b>",

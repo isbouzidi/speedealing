@@ -112,16 +112,18 @@ module.exports = function (app, passport, auth) {
 	//afficher la fiche du collaborateur
 	app.get('/api/users/:userId', auth.requiresLogin, object.show);
 
-	//modifier une ficher de collaborateur
+	//modifier la fiche du collaborateur
 	app.put('/api/users/:userId', auth.requiresLogin, object.update);
 
 	//verifie si le nouveau exite ou pas
 	app.get('/api/createUser/uniqLogin', auth.requiresLogin, object.uniqLogin);
+	
+	app.del('/api/users/:userId', auth.requiresLogin, object.del);
 
-	app.del('/api/user', auth.requiresLogin, function (req, res) {
+	/*app.del('/api/user', auth.requiresLogin, function (req, res) {
 		console.log(JSON.stringify(req.body));
 		return res.send(200, object.update(req));
-	});
+	});*/
 
 	app.get('/api/user/connection', auth.requiresLogin, object.connection);
 
@@ -203,7 +205,7 @@ Object.prototype = {
 			res.json(200, doc);
 		});
 	},
-	del: function (req) {
+	del: function (req, res) {
 		//return req.body.models;
 		var user = req.user;
 		user.remove(function (err) {

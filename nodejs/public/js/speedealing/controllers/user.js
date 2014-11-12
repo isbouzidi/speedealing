@@ -194,6 +194,18 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 		$scope.global = Global;
 		$scope.dict = {};
 		$scope.groupe = [];
+		$scope.userRightsCreate = true;
+		$scope.userRightsDelete = true;
+		
+		// Check userGroup rights
+		if (!Global.user.admin && !Global.user.superadmin) {
+			
+			if (!Global.user.rights.user.delete)	// check user delete 
+				$scope.userRightsDelete = false;
+			if (!Global.user.rights.user.write)		// check user write
+				$scope.userRightsCreate = false;
+					
+		}
 
 		pageTitle.setTitle('Gestion des collaborateurs');
 
@@ -323,9 +335,7 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 
 		$scope.init = function () {
 
-
 			var dict = ["fk_country", "fk_rh_contrat", "fk_rh_periodeEssai", "fk_rh_tempsTravail", "fk_rh_situationFamiliale", "fk_user_status", "fk_rh_niveauEtude"];
-
 
 			$http({method: 'GET', url: '/api/dict', params: {
 					dictName: dict
@@ -348,7 +358,6 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 
 				$scope.site = data;
 			});
-
 		};
 
 		$scope.update = function () {
@@ -362,10 +371,8 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 			});
 		};
 
-		$scope.remove = function (response) {
-
-			var userEdit = $scope.userEdit;
-			userEdit.$remove(function (response) {
+		$scope.remove = function (user) {
+			user.$remove(function () {
 				$location.path('/user');
 			});
 		};
@@ -375,23 +382,39 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 			Users.users.get({
 				Id: $routeParams.id
 			}, function (doc) {
+				
 				$scope.userEdit = doc;
-				pageTitle.setTitle('Fiche ' + $scope.fullname);
+				pageTitle.setTitle('Fiche ' + $scope.userEdit.fullname);
+				
+				// Check userGroup rights
+				if (Global.user._id == $scope.userEdit._id)					// a user can not delete itself
+					$scope.userRightsDelete = false;
+				
+				if (Global.user.admin || Global.user.superadmin) {
+					
+					if (!Global.user.superadmin && $scope.userEdit.superadmin)	// an admin can not delete a superadmin
+						$scope.userRightsDelete = false;
+							
+				}
 
 			});
-
 		};
 
 		$scope.showUserGroup = function () {
 
 			var selected = [];
-			angular.forEach($scope.groupe, function (g) {
-				if ($scope.userEdit.groupe === g._id) {
-					selected.push(g.name);
-				}
-			});
-			return selected.length ? selected.join(', ') : 'indéfini';
-
+			var userEdit = $scope.userEdit;
+			
+			if (userEdit) {
+				angular.forEach($scope.groupe, function (g) {
+					if (userEdit.groupe === g._id) {
+						selected.push(g.name);
+					}
+				});
+				return selected.length ? selected.join(', ') : false;
+			} else {
+				return false;
+			}
 		};
 
 		$scope.addNote = function () {
@@ -470,23 +493,38 @@ angular.module('mean.users').controller('UserCreateController', ['$scope', '$htt
 			$scope.loginFound = "";
 			$scope.validLogin = true;
 
-			if (login)
+			if (typeof login != "undefined") {
 				if (login.indexOf(" ") > -1) {
 					$scope.validLogin = false;
 					return;
 				}
-
-			$http({method: 'GET', url: '/api/createUser/uniqLogin', params: {
-					login: login
+				
+				$http({
+					method: 'GET',
+					url: '/api/createUser/uniqLogin',
+					params: {
+						login: login
+					}
+				}).success(function (data, status) {
+					if (data.fullname)
+						$scope.loginFound = data;
+				});
+			}
+		};
+		
+		$scope.isValidEmail = function () {
+			
+			var email = $scope.user.email;
+			$scope.validEmail = true;
+			
+			if (typeof email != "undefined") {
+				var regEmail = new RegExp('^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,}$','i');
+				console.log(email + ' ' + regEmail.test(email));
+				if (!regEmail.test(email)) {
+					$scope.validEmail = false;
+					return;
 				}
-			}).success(function (data, status) {
-
-				if (data.fullname) {
-					$scope.loginFound = data;
-				}
-
-			});
-
+			}
 		};
 
 	}]);

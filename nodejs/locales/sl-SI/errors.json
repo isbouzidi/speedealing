@@ -5,8 +5,6 @@
     "Errors": "Napake",
     "ErrorBadEMail": "EMail %s je napačen",
     "ErrorBadUrl": "Url %s je napačen",
-    "ErrorLoginAlreadyExists": "Uporabniško ime %s že obstaja.",
-    "ErrorGroupAlreadyExists": "Skupina %s že obstaja.",
     "ErrorRecordNotFound": "Ne najdem zapisa.",
     "ErrorFailToCopyFile": "Ni kopirati Datoteka <b>'%s</b> &quot;nadomesti z&quot; <b>%s</b> &quot;.",
     "ErrorFailToRenameFile": "Napaka pri preimenovanju datoteke '<b>%s</b>' v '<b>%s</b>'.",

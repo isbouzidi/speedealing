@@ -5,8 +5,6 @@
     "Errors": "Erros",
     "ErrorBadEMail": "EMail %s é errado",
     "ErrorBadUrl": "Url %s é errado",
-    "ErrorLoginAlreadyExists": "O login %s já existe.",
-    "ErrorGroupAlreadyExists": "O grupo %s já existe.",
     "ErrorRecordNotFound": "Registro não foi encontrado.",
     "ErrorFailToCopyFile": "Falha ao copiar <b>&quot;%s&quot;</b> arquivo para <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Falha ao renomear <b>&quot;%s&quot;</b> arquivo para <b>&quot;%s&quot;.</b>",

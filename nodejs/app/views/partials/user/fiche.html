@@ -3,15 +3,18 @@
         <div class="with-padding" data-ng-init="init()">
             <div class="columns">
                 <div style="margin-bottom: 10px; float: right;">
-                    <a ng-href="#" class="button" ng-click="retour()" title="Retour à la liste">
+                    <button class="button" ng-click="retour()" title="Retour à la liste">
                         Liste
                         <span class="button-icon right-side"><span class="icon-list"></span></span>
-                    </a>
-
-                    <!--<a ng-href="#" class="button" confirmed-click="remove()" ng-confirm-click="Supprimer le collaborateur ?" title="Supprimer le collaborateur">
-                        Supprimer
-                        <span class="button-icon right-side"><span class="icon-trash"></span></span>
-                    </a>-->
+                    </button>
+					<button class="button" 
+							ng-disabled="!userRightsDelete" 
+							confirmed-click="remove(userEdit)" 
+							ng-confirm-click="Supprimer le collaborateur ?" 
+							title="Supprimer le collaborateur">
+						{{t 'main:Delete'}}
+						<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
+					</button>
                 </div>
 
 				<div class="four-columns twelve-columns-mobile">
@@ -100,7 +103,7 @@
 											buttons="no" 
 											e-ng-options="s.id as s.name for s in site" 
 											onaftersave="update()">
-											\{{userEdit.entity|| "Non defini"}}
+											\{{ userEdit.entity || '{{t 'main:Undefined'}}' }}
 										</a>
 									</td>
 								</tr>
@@ -114,7 +117,7 @@
 											buttons="no" 
 											e-ng-options="g._id as g.name for g in groupe" 
 											onaftersave="update()">
-											\{{ showUserGroup() || 'Aucun'}}
+											\{{ showUserGroup() || '{{t 'main:Undefined'}}' }}
 										</a>
 
 									</td>
@@ -159,7 +162,7 @@
 										   buttons="no"
 										   e-form="telMobFrm"
 										   onaftersave="update()">
-											\{{ userEdit.telMobile || 'Non défini' }}
+											\{{ userEdit.telMobile || '{{t 'main:Undefined'}}' }}
 										</a>
 										<span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
 									</td>
@@ -176,7 +179,7 @@
 										   e-title="Telephone Fixe"
 										   e-placeholder="{{t 'users:Tel-Fixe'}}"
 										   e-form="TelFixFrm">
-											\{{ userEdit.telFixe || 'Non défini' }}
+											\{{ userEdit.telFixe || '{{t 'main:Undefined'}}' }}
 										</a>
 										<span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
 									</td>
@@ -235,7 +238,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="villeNaiss">
-															\{{userEdit.villeNaissance|| "Non défini"}}
+															\{{ userEdit.villeNaissance || '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="villeNaiss.$show()" ng-hide="villeNaiss.$visible"></span>
 													</td>
@@ -265,7 +268,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="nationnalite">
-															\{{userEdit.nationnalite|| "Non defini"}}
+															\{{ userEdit.nationnalite|| '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="nationnalite.$show()" ng-hide="nationnalite.$visible"></span>
 													</td>
@@ -279,7 +282,7 @@
 														   e-ng-options="s.label as s.label for s in dict.fk_rh_situationFamiliale.values" 
 														   onaftersave="update()"
 														   e-form="situationFamiliale">
-															\{{userEdit.situationFamiliale|| "Non defini"}}
+															\{{ userEdit.situationFamiliale|| '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="situationFamiliale.$show()" ng-hide="situationFamiliale.$visible"></span>
 													</td>
@@ -294,7 +297,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="nbrEnfant">
-															\{{userEdit.nbrEnfants|| "Non défini"}}
+															\{{ userEdit.nbrEnfants || '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="nbrEnfant.$show()" ng-hide="nbrEnfant.$visible"></span>
 													</td>
@@ -309,7 +312,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="perCharge">
-															\{{userEdit.perCharges|| "Non défini"}}
+															\{{ userEdit.perCharges|| '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="perCharge.$show()" ng-hide="perCharge.$visible"></span>
 													</td>
@@ -340,7 +343,7 @@
 														   buttons="no"
 														   blur="submit"
 														   onaftersave="update()">
-															\{{ (userEdit.dateArrivee | date:"dd/MM/yyyy") || "Non défini"}}
+															\{{ (userEdit.dateArrivee | date:"dd/MM/yyyy") || '{{t 'main:Undefined'}}' }}
 
 														</a>
 													</td>
@@ -369,7 +372,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="posteFrm">
-															\{{userEdit.poste|| "Non défini"}}
+															\{{ userEdit.poste || '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="posteFrm.$show()" ng-hide="posteFrm.$visible"></span>
 													</td>
@@ -401,7 +404,7 @@
 															e-ng-options="c.id as c.label for c in dict.fk_rh_contrat.values" 
 															onaftersave="update()"
 															blur="submit">
-															\{{userEdit.contrat|| "Non defini"}}
+															\{{ userEdit.contrat || '{{t 'main:Undefined'}}' }}
 														</a>
 													</td>
 												</tr>
@@ -413,7 +416,7 @@
 															editable-number="userEdit.periodeEssai" 
 															buttons="no" 
 															onaftersave="update()">
-															\{{userEdit.periodeEssai|| "Non defini"}}
+															\{{ userEdit.periodeEssai || '{{t 'main:Undefined'}}' }}
 														</a>
 													</td>
 												</tr>
@@ -429,7 +432,7 @@
 															blur="submit"
 															e-placeholder="{{t 'users:Salaire-Brut'}}"
 															e-form="salaireFrm">
-															\{{userEdit.salaire|| "Non défini"}}
+															\{{ userEdit.salaire || '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="salaireFrm.$show()" ng-hide="salaireFrm.$visible"></span>
 													</td>
@@ -443,7 +446,7 @@
 															buttons="no" 
 															e-ng-options="t.label as t.label for t in dict.fk_rh_tempsTravail.values" 
 															onaftersave="update()">
-															\{{userEdit.tempsTravail|| "Non defini"}}
+															\{{ userEdit.tempsTravail || '{{t 'main:Undefined'}}' }}
 														</a>
 													</td>
 												</tr>
@@ -472,7 +475,7 @@
 															buttons="no" 
 															e-ng-options="n.label as n.label for n in dict.fk_rh_niveauEtude.values"
 															onaftersave="update()">
-															\{{userEdit.niveauEtude|| "Non defini"}}
+															\{{ userEdit.niveauEtude || '{{t 'main:Undefined'}}' }}
 														</a>
 													</td>
 												</tr>
@@ -486,7 +489,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="anneeDiplomeFrm">
-															\{{userEdit.anneeDiplome|| "Non défini"}}
+															\{{ userEdit.anneeDiplome || '{{t 'main:Undefined'}}' }}
 															<span class="icon-pencil grey" ng-click="anneeDiplomeFrm.$show()" ng-hide="anneeDiplomeFrm.$visible"></span>
 														</a>
 													</td>
@@ -516,7 +519,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="secSocialeFrm">
-															\{{userEdit.securiteSociale|| "Non défini"}}
+															\{{ userEdit.securiteSociale || '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="secSocialeFrm.$show()" ng-hide="secSocialeFrm.$visible"></span>
 													</td>
@@ -531,7 +534,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="libBankFrm">
-															\{{userEdit.libelleBank|| "Non défini"}}
+															\{{ userEdit.libelleBank || '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="libBankFrm.$show()" ng-hide="libBankFrm.$visible"></span>
 													</td>
@@ -546,7 +549,7 @@
 														   onaftersave="update()"
 														   blur="submit"
 														   e-form="ibanFrm">
-															\{{userEdit.iban|| "Non défini"}}
+															\{{ userEdit.iban|| '{{t 'main:Undefined'}}' }}
 														</a>
 														<span class="icon-pencil grey" ng-click="ibanFrm.$show()" ng-hide="ibanFrm.$visible"></span>
 													</td>
@@ -574,8 +577,9 @@
 											<textarea id="note" cols="30" rows="5" data-ng-model="note" class="input full-width"></textarea>
 
 											<div class="margin-top button-height float-right">
-													<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t
-													'Add'}}</button>
+													<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">
+													{{t 'Add'}}
+													</button>
 											</div>
 										</div>
 									</div>
@@ -602,4 +606,5 @@
 
 			</div>
 		</div>
+	</div>
 </section>
