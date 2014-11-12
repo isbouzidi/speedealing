@@ -76,7 +76,7 @@
 			"perms": "bank.read",
 			"enabled": "$conf->bank->enabled",
 			"usertype": 2,
-			"title": "banks:Bank",
+			"title": "bank:Bank",
 			"submenus": {
 				"menu:banklist": {
 					"position": 1,
@@ -84,7 +84,7 @@
 					"perms": "bank.read",
 					"enabled": "$conf->bank->enabled",
 					"usertype": 2,
-					"title": "main:List"
+					"title": "bank:List"
 				},
 				"menu:categorybank": {
 					"position": 10,
@@ -92,7 +92,7 @@
 					"perms": "categorybank.read",
 					"enabled": "$conf->bankCategory->enabled",
 					"usertype": 2,
-					"title": "main:Category"
+					"title": "bank:Category"
 				}
 			}
 		}

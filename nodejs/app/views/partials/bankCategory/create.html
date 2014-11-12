@@ -2,7 +2,7 @@
 <form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
 
     <!-- Block style is optional, you can use any layout -->
-    <h3 class="block-title">{{t 'banks:NewBankCategory'}}</h3>
+    <h3 class="block-title">{{t 'bank:NewBankCategory'}}</h3>
 
     <!-- Each form step should be wrapped in a fieldset -->
     <!-- 1. Profile-->
@@ -14,7 +14,7 @@
         </div>
 
         <div class="field-block button-height">
-            <label for="name"><b>{{t 'banks:Category'}}</b></label>
+            <label for="name"><b>{{t 'bank:Category'}}</b></label>
             <input required type="text" data-ng-model="bankCategory.name" id="name"  class="input" autocomplete="off">
 
         </div>

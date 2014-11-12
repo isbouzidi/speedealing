@@ -6,15 +6,15 @@
     <fieldset class="wizard-fieldset fields-list active" data-ng-init="init()">
 
         <div class="field-block">
-            <label><b>{{t 'banks:Account'}}</b></label>
+            <label><b>{{t 'bank:Account'}}</b></label>
             <strong>\{{transaction.bank.libelle || "Non défini"}}</strong>
         </div>
         <div class="field-block">
-            <label><b>{{t 'banks:Client'}}</b></label>
+            <label><b>{{t 'bank:Client'}}</b></label>
             <strong>\{{transaction.third_party.name || "Non défini"}}</strong>
         </div>
         <div class="field-block">
-            <label><b>{{t 'banks:TypeTransaction'}}</b></label>
+            <label><b>{{t 'bank:TypeTransaction'}}</b></label>
 
             <a href="#" 
                editable-select="transaction.type_transaction" 
@@ -28,7 +28,7 @@
             <span class="icon-pencil grey" ng-click="type_transaction.$show()" ng-hide="type_transaction.$visible"></span>
         </div>  
         <div class="field-block">
-            <label><b>{{t 'banks:NumberTransaction'}}</b></label>
+            <label><b>{{t 'bank:NumberTransaction'}}</b></label>
             <a href="#" 
                editable-text="transaction.number" 
                buttons="no"
@@ -40,7 +40,7 @@
             <span class="icon-pencil grey" ng-click="number.$show()" ng-hide="number.$visible"></span>
         </div>
         <div class="field-block">
-            <label><b>{{t 'banks:Bank'}}</b></label>
+            <label><b>{{t 'bank:Bank'}}</b></label>
             <a href="#" 
                editable-text="transaction.bank_check" 
                buttons="no"
@@ -52,7 +52,7 @@
             <span class="icon-pencil grey" ng-click="bank_check.$show()" ng-hide="bank_check.$visible"></span>
         </div>
          <div class="field-block">
-            <label><b>{{t 'banks:Transmitter'}}</b></label>
+            <label><b>{{t 'bank:Transmitter'}}</b></label>
             <a href="#" 
                editable-text="transaction.transmitter" 
                buttons="no"
@@ -64,7 +64,7 @@
             <span class="icon-pencil grey" ng-click="transmitter.$show()" ng-hide="transmitter.$visible"></span>
         </div>
         <div class="field-block">
-            <label><b>{{t 'banks:DateTransaction'}}</b></label>
+            <label><b>{{t 'bank:DateTransaction'}}</b></label>
 
             <a href="#"
                editable-date="transaction.date_transaction"
@@ -89,7 +89,7 @@
         </div>
         
         <div class="field-block">
-            <label><b>{{t 'banks:Amount'}}</b></label>
+            <label><b>{{t 'bank:Amount'}}</b></label>
             <a href="#" 
                editable-text="transaction.amount" 
                buttons="no"
@@ -101,7 +101,7 @@
             <span class="icon-pencil grey" ng-click="amount.$show()" ng-hide="amount.$visible"></span>
         </div>
         <div class="field-block">
-            <label><b>{{t 'banks:Reconciled'}}</b></label>
+            <label><b>{{t 'bank:Reconciled'}}</b></label>
             <input 
                 type="checkbox" 
                 data-ng-model="transaction.reconciled" 
@@ -109,7 +109,7 @@
                 data-ng-change="update()" />
         </div>
         <div class="field-block">
-            <label><b>{{t 'banks:Statement'}}</b></label>
+            <label><b>{{t 'bank:Statement'}}</b></label>
             <a href="#" 
                editable-text="transaction.bank_statement" 
                buttons="no"
