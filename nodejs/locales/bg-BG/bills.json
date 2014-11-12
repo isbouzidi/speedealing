@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Връщане Numero с формат %syymm-NNNN за стандартни фактури и %syymm-NNNN за кредитни отбелязва, където YY е годината, mm е месец и NNNN е последователност, без почивка и няма връщане назад 0",
     "TerreNumRefModelError": "Законопроект, който започва с $ syymm вече съществува и не е съвместим с този модел на последователност. Извадете го или го преименувайте да се активира този модул.",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

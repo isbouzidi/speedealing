@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Devuelve el número bajo el formato %syymm-nnnn para las facturas y %syymm-nnnn para los abonos donde yy es el año, mm. el mes y nnnn un contador secuencial sin ruptura y sin permanencia a 0",
     "TerreNumRefModelError": "A bill starting with $syymm already exists and is not compatible with this model of sequence. Remove it or rename it to activate this module.",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

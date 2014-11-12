@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Vissza a numero formátumban %syymm-nnnn szabványos számlák és %syymm-nnnn a jóváírási ahol yy év, hónap és mm nnnn sorozata szünet nélkül, és nincs visszaút 0",
     "TerreNumRefModelError": "A törvényjavaslat kezdődő $ syymm már létezik, és nem kompatibilis ezzel a modellel a sorozatot. Töröld le vagy nevezd át, hogy aktiválja ezt a modult.",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

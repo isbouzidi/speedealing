@@ -7,9 +7,9 @@ file_filter = locales/<lang>/admin.json
 source_file = locales/fr-FR/admin.json
 source_lang = fr_FR
 
-[speedealing-erp-crm.banks]
-file_filter = locales/<lang>/banks.json
-source_file = locales/fr-FR/banks.json
+[speedealing-erp-crm.bank]
+file_filter = locales/<lang>/bank.json
+source_file = locales/fr-FR/bank.json
 source_lang = fr_FR
 
 [speedealing-erp-crm.bills]

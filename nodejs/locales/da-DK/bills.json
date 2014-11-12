@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Retur numero med format %syymm-nnnn for standard fakturaer og %syymm-nnnn for kreditnotaer hvor ÅÅ er årstal, MM er måneden og nnnn er en sekvens uden pause, og ikke vende tilbage til 0",
     "TerreNumRefModelError": "Et lovforslag, der begynder med $ syymm allerede eksisterer og er ikke kompatible med denne model af sekvensinformation. Fjern den eller omdøbe den til at aktivere dette modul.",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }
