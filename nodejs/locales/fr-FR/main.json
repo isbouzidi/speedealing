@@ -1,29 +1,31 @@
 {
-    "CHARSET": "UTF-8",
-    "DIRECTION": "ltr",
-    "SeparatorDecimal": ",",
-    "SeparatorThousand": ",",
-    "date": {
-        "dayShort": [
-            "Dim",
-            "Lun",
-            "Mar",
-            "Mer",
-            "Jeu",
-            "Ven",
-            "Sam"
-        ]
-    },
-    "formatDate": {
-    	"java": {
-    		"day": "dd/MM/yyyy",
-    		"dayhour": "dd/MM/yyyy HH:mm",
-    		"dayhoursec": "dd/MM/yyyy HH:mm:ss"
-    	},
-    	"jquery": {
-    		"day": "dd/mm/yy"
-    	}
-    },
+	"CHARSET": "UTF-8",
+	"DIRECTION": "ltr",
+	"SeparatorDecimal": ",",
+	"SeparatorThousand": ",",
+	"date": {
+		"day": {
+			"aShort": [
+				"Dim",
+				"Lun",
+				"Mar",
+				"Mer",
+				"Jeu",
+				"Ven",
+				"Sam"
+			]
+		},
+		"format": {
+			"java": {
+				"day": "dd/MM/yyyy",
+				"dayhour": "dd/MM/yyyy HH:mm",
+				"dayhoursec": "dd/MM/yyyy HH:mm:ss"
+			},
+			"jquery": {
+				"day": "dd/mm/yy"
+			}
+		}
+	}
     "FormatDateShort": "%d/%m/%Y",
     "FormatHourShort": "%H:%M",
     "FormatHourShortDuration": "%H:%M",

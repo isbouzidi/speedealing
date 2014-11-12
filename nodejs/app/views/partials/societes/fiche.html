@@ -86,7 +86,7 @@
 								</tr>
 								<tr>
 									<th scope="row">{{t 'DateLastModification'}}</th>
-									<td class="blue">\{{ societe.updatedAt | date:'{{t 'main:formatDate.java.dayhour'}}' }}</td>
+									<td class="blue">\{{ societe.updatedAt | date:'{{t 'main:date.format.java.dayhour'}}' }}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -97,7 +97,7 @@
 					<div class="scroll" style="height:120px">
 						<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec' | limitTo:3" class="large-box-shadow white-gradient with-border margin-bottom">
 							<div class="with-small-padding silver-gradient no-margin-top">
-								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{ vnote.datec | date:'{{t 'main:formatDate.java.dayhour'}}' }}</i></span>
+								<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{ vnote.datec | date:'{{t 'main:date.format.java.dayhour'}}' }}</i></span>
 								<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'main:Today'}}</span></div>
 							</div>
 							<span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
@@ -562,7 +562,7 @@
 										<div class="scroll" style="height:360px">
 											<div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
 												<div class="with-small-padding silver-gradient no-margin-top">
-													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{ vnote.datec | date:'{{t 'main:formatDate.java.dayhour'}}' }}</i></span>
+													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{ vnote.datec | date:'{{t 'main:date.format.java.dayhour'}}' }}</i></span>
 													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'main:Today'}}</span></div>
 												</div>
 												<span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
