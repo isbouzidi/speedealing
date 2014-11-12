@@ -215,6 +215,16 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					});
 					$scope.countBuy = $scope.requestBuy.length;
 				});
+                                
+                                $http({method: 'GET', url: 'api/bill', params:
+                                    {
+                                        "client.id": societe._id
+                                    }
+				}).success(function (data, status) {
+
+					$scope.bills = data;
+					$scope.countBills = $scope.bills.length;
+				});
 
 				pageTitle.setTitle('Fiche ' + $scope.societe.name);
 				$scope.checklist = 0;
@@ -817,7 +827,29 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(\'/api/europexpress/buy\',\'total_ht\', row)"/>'}
 			]
 		};
+                
+                $scope.filterOptionsBills = {
+			filterText: "",
+			useExternalFilter: false
+		};
 
+		$scope.gridOptionsBills = {
+			data: 'bills',
+			enableRowSelection: false,
+			sortInfo: {fields: ["createdAt"], directions: ["desc"]},
+			filterOptions: $scope.filterOptionsBills,
+			i18n: 'fr',
+			enableColumnResize: true,
+			enableCellSelection: false,
+			columnDefs: [
+			    {field: 'ref', displayName:'Facture', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/bills/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'> {{row.getProperty(col.field)}} </a></div>'},
+                            {field: 'createdAt', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
+                            {field: 'total_ttc', displayName: 'Montant', cellFilter: "currency:''"},
+                            {field: 'amount.set', displayName: 'Reçu', cellFilter: "currency:''"},
+                            {field: 'amount.rest', displayName: 'Reste à encaisser', cellFilter: "currency:''"}                            
+			]
+		};
+                
 		$scope.priceLevelAutoComplete = function (val, field) {
 			return $http.post('api/product/price_level/select', {
 				take: '5',
@@ -988,6 +1020,29 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				$scope.countReports = $scope.reports.length;
 			});
 		};
+                
+                $scope.paymentBills = function(){
+                  
+                  var modalInstance = $modal.open({
+                        templateUrl: '/partials/transaction/regulationBills.html',
+                        controller: "TransactionController",
+                        windowClass: "steps",
+                        resolve: {
+                            object: function () {
+                                return {
+                                    societe: $scope.societe,
+                                    bills: $scope.bills
+                                };
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function (bills) {
+                        $scope.bills.push(bills);
+                        $scope.countBills++;
+                        $scope.findOne();
+                    }, function () {
+                    });
+                };
 	}]);
 
 angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$route', 'Global', 'Societes', function ($scope, $http, $modalInstance, $route, Global, Societes) {

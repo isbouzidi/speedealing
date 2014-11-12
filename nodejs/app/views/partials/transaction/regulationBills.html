@@ -1,0 +1,69 @@
+<form data-ng-init='init()' data-ng-submit='regulationBills()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'bills:Regulation'}}</h3>
+    <ul class="wizard-steps"></ul>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <h4>Interface de réglement des factures d'un client.</h4>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'Date'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input required type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="transaction.date_transaction" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Fermer" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>	
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bills:TypePayment'}}</b></label>
+            <select class="form-control" 
+                    data-ng-model="transaction.type_transaction" 
+                    data-ng-options="c.id as c.label for c in dict.fk_transaction_type.values"></select>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bills:AccountToCredit'}}</b></label>
+            <select class="form-control" 
+                    data-ng-model="transaction.bank" 
+                    data-ng-options="c as c.libelle for c in bank"></select>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bills:NumberCheckTrans'}}</b></label>
+            <input type="text" 
+                   data-ng-model="transaction.number_check_transaction"
+                   class="input"
+                   autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bills:Transmitter'}}</b></label>
+            <input type="text" 
+                   data-ng-model="transaction.transmitter"
+                   class="input"
+                   autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'bills:Bank'}}</b></label>
+            <input type="text" 
+                   data-ng-model="transaction.bank_check"
+                   class="input"
+                   autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>Factures</b></label>
+            <div class="gridStyle"  data-ng-grid="gridOptionsBills"></div>
+        </div>
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right" 
+                    data-ng-disabled="">
+                    <span class="button-icon"><span class="icon-tick"></span></span>
+                    Valider
+            </button>
+        </div>
+    </fieldset>
+</form>
