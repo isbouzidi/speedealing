@@ -19,6 +19,7 @@ node_js:
 
 env:
  - DB=demo
+ - NODE_ENV=development
   
 before_install:
  - echo Start before install
