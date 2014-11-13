@@ -932,19 +932,16 @@ MigrateMySQL.prototype = {
 			if(err)
 				console.log(err);
 			
-			console.log(rows);
-			console.log(rows.length);
-		});
-		
-		return;
+			//console.log(rows);
+			//console.log(rows.length);
+	
 
-		couchdb.view('Societe/list', function (err, rows) {
-			if (err)
-				return console.log(err);
+			console.log(rows[0]);
+			
+			var tab =[];
+			tab.push(rows[0]);
 
-			//console.log(rows[0]);
-
-			rows.forEach(function (row) {
+			tab.forEach(function (row) {
 
 				var _id = row._id;
 
@@ -984,19 +981,17 @@ MigrateMySQL.prototype = {
 					});
 
 				//console.log(row.action_co);
-				if (row.action_co && row.action_co != "ACO_NONE")
-					societe.familyProduct.push(convert_action_co[row.action_co].label);
+				
+				societe.oldId = row.rowid;
 
-				societe.oldId = _id;
+				console.log(societe);
 
-				//console.log(societe);
+				//societe.save(function (err, doc) {
+				//	if (err) {
+				//		console.log(err);
+				//	}
 
-				societe.save(function (err, doc) {
-					if (err) {
-						console.log(err);
-					}
-
-				});
+				//});
 			});
 		});
 	},

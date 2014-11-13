@@ -87,32 +87,6 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				$scope.showEdit[i] = false;
 		};
 
-		/*$scope.update = function (id) {
-		 //console.log($scope.aday);
-		 
-		 if (!$scope.aday.driver && !$scope.aday.formation) {
-		 $scope.aday.hSupp = 0;
-		 }
-		 
-		 var article = $scope.aday;
-		 
-		 article.$update(function (doc) {
-		 //$route.reload();
-		 //$location.path('articles/' + article._id);
-		 $scope.showEdit = {};
-		 for (var i = 0; i < $scope.tournees.length; i++) {
-		 //console.log($scope.tournees[i]);
-		 for (var j = 0; j < $scope.tournees[i].details.length; j++) {
-		 if ($scope.tournees[i].details[j] && doc._id == $scope.tournees[i].details[j]._id)
-		 $scope.tournees[i].details[j] = doc;
-		 //console.log(day);
-		 }
-		 }
-		 
-		 
-		 });
-		 };*/
-
 		$scope.findOne = function (id) {
 			Object.get({
 				planningId: id
@@ -120,22 +94,6 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 				$scope.aday = aday;
 			});
 		};
-
-		/*$scope.refresh = function () {
-		 
-		 
-		 $http({method: 'POST', url: 'api/europexpress/planning/refresh', data: {
-		 year: $routeParams.id2,
-		 week: $routeParams.id1}
-		 }).
-		 success(function (data, status) {
-		 $route.reload();
-		 }).
-		 error(function (data, status) {
-		 console.log("Request failed");
-		 });
-		 
-		 };*/
 
 		$scope.addNewLine = function () {
 			var modalInstance = $modal.open({

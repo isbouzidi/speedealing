@@ -119,8 +119,10 @@ Object.prototype = {
 			//console.log(actioncomm);
 
 			var datef = null;
-
-			if (!action.datep) {
+			
+			if(action.datef)
+				datef = action.datef;
+			else if (!action.datep) {
 				datef = new Date();
 				datef.setDate(datef.getDate() + action.delay);
 			}

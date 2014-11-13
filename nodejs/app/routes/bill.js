@@ -144,7 +144,7 @@ Object.prototype = {
 	},
 	read: function (req, res) {
 		var query = {};
-
+                
 		if (req.query) {
 			for (var i in req.query) {
 				if (i == "query") {

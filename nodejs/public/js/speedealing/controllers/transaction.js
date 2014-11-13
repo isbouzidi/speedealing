@@ -21,7 +21,7 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
 
                 });
             }
-            if (object.bill) {
+            if (object.bill || object.bills) {
 
                 $scope.bill = object.bill;
 
@@ -39,6 +39,28 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
                 }).success(function (data, status) {
                     $scope.bank = data;
                 });
+            }
+            if(object.societe){
+                if(object.bills){
+                    $scope.bills = [];
+                    $scope.bills = object.bills;
+                    $scope.gridOptionsBills = {
+			data: 'bills',
+			enableRowSelection: false,
+			sortInfo: {fields: ["createdAt"], directions: ["desc"]},
+			i18n: 'fr',
+			enableColumnResize: true,
+			enableCellSelection: false,
+			columnDefs: [
+			    {field: 'ref', displayName:'Facture'},
+                            {field: 'createdAt', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
+                            {field: 'total_ttc', displayName: 'Montant', cellFilter: "currency:''"},
+                            {field: 'amount.rest', displayName: 'Reste à encaisser', cellFilter: "currency:''"},
+                            {field: 'pay', displayName: 'Règlement', 
+                        cellTemplate: '<div class="ngCellText"><input type="text" style="width: 95px" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"></div>'}
+			]
+                    };
+                };
             }
 
         };
@@ -79,6 +101,36 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
             };
 
             $scope.saveTransaction(this.transaction);
+
+        };
+        
+        $scope.regulationBills = function () {
+
+            for(var i = 0; i < $scope.bills.length; i++){
+                if(typeof $scope.bills[i].pay !== 'undefined' && $scope.bills[i].pay > 0){
+                    
+                    $scope.transaction.value = $scope.transaction.date_transaction;
+
+                    if (!$scope.transaction.description)
+                        $scope.transaction.description = 'Règlement client';
+
+                    $scope.transaction.third_party = {
+                        id: $scope.bills[i].client.id,
+                        name: $scope.bills[i].client.name
+                    };
+
+                    $scope.transaction.bill = {
+                        id: $scope.bills[i]._id,
+                        name: $scope.bills[i].ref
+                    };
+                    
+                    $scope.transaction.credit = $scope.bills[i].pay;
+                    
+                    $scope.saveTransaction(this.transaction);
+                    
+                    $scope.transaction.bill = {};
+                }
+            }
 
         };
 

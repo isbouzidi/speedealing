@@ -3,9 +3,13 @@
  */
 var mongoose = require('mongoose'),
     config = require('../../config/config'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    gridfs = require('../controllers/gridfs');
 
 var Dict = require('../controllers/dict');
+
+require('../models/transaction');
+var TransactionModel = mongoose.model('Transaction');
 
 /**
  * Bank Schema
@@ -113,6 +117,39 @@ BankSchema.virtual('acc_country').get(function () {
        acc_country = countryList.values[account_country].label;  
        
     return acc_country;
+});
+
+var transactionList = [];
+
+TransactionModel.aggregate([
+        {$group: {
+                _id: '$bank.id',
+                sumC: {$sum: '$credit'},
+                sumD: {$sum: '$debit'}
+            }}
+    ], function (err, doc) {
+        if (err)
+            return console.log(err);
+        
+        transactionList = doc;
+
+    });
+    
+BankSchema.virtual('balance').get(function () {
+    
+    var balance;
+    var id = this._id;
+    
+    if(transactionList){
+        for(var i = 0; i < transactionList.length; i++){
+            if(id.equals(transactionList[i]._id)){
+                balance = transactionList[i].sumC - transactionList[i].sumD;
+                return balance;
+            }
+        }
+    }
+            
+    return 0;
 });
 
 mongoose.model('bank', BankSchema);
