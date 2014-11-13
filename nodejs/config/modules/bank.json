@@ -43,6 +43,20 @@
 					"create": false
 				}
 			}
+		],
+		"paiment": [
+			{
+				"desc": "Lire les reglements",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Enregistrer les reglements",
+				"perm": {
+					"create": true
+				}
+			}
 		]
 	},
 	"module_parts": [],
