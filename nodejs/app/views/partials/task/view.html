@@ -21,10 +21,22 @@
 				'CompanyFoundation'}}</b></label>
 			<div class="row">
 				<div class="col-md-6">
-					<a href="#" class="icon-home" ng-show="editable" editable-text="task.societe" e-typeahead="societe as societe.name for societe in AutoComplete($viewValue,'api/societe/autocomplete',5) | filter:{name:$viewValue}" buttons="no" onbeforesave="task.contact={};" onaftersave="update()">
-						\{{task.societe.name|| "Non defini"}}
-					</a>
-					<span class="icon-home" ng-hide="editable">\{{task.societe.name|| "Non defini"}}</span>
+					<a 
+						ng-show ="task.societe.id"
+						data-ng-href="#!/societes/\{{task.societe.id}}" 
+						target="_blank"
+						class="icon-home"
+						editable-text="task.societe"
+						e-typeahead="societe as societe.name for societe in AutoComplete($viewValue,'api/societe/autocomplete',5) | filter:{name:$viewValue}"
+						buttons="no"
+						e-form="eSocieteBtnForm"
+						onbeforesave="task.contact={};"
+						onaftersave="update()"
+						blur="submit">\{{task.societe.name|| "Non defini"}} </a>
+					<span ng-hide="task.societe.id"
+						  class="icon-home red"
+						  >\{{task.societe.name|| "Non defini"}} </span>
+					<span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="eSocieteBtnForm.$visible"></span>
 				</div>
 				<div class="col-md-6">
 					<a href="#" class="icon-user" ng-show="editable" editable-select="task.contact" onshow="loadContact(task.societe)" e-ng-options="contact as contact.name for contact in contacts" buttons="no" onaftersave="update()">
@@ -76,7 +88,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="field-block">
             <label><b>{{t 'tasks:CreatedBy'}}</b></label>
 			<span>\{{task.author.name|| "Non defini"}}</span>
@@ -100,14 +112,14 @@
 						<span class="blue">\{{note.datec| date:'MMM dd HH:mm'}}</span>
 					</span>
 					<span>
-						<strong class="blue icon-user">\{{note.author.name}}</strong> - <span class="grey">\{{note.percentage | percent:0}}</span><br>
+						<strong class="blue icon-user">\{{note.author.name}}</strong> - <span class="grey">\{{note.percentage| percent:0}}</span><br>
 						<p class="intro">\{{note.note}}</p>
 					</span>
 				</li>
 			</ul>
 
             <span editable-textarea="newNote" e-rows="4" e-cols="70" e-form="DescriptionBtnForm" onaftersave="addNote()" >
-				</span> <a class="icon-plus grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible || !editable">{{t 'Add'}}</a>
+			</span> <a class="icon-plus grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible || !editable">{{t 'Add'}}</a>
         </div>
 
         <div class="field-block">
