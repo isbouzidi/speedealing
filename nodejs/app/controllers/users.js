@@ -89,7 +89,7 @@ exports.signout = signout;
 function signout(req, res) {
 	console.log("Logout : " + req.user._id);
 	req.logout();
-	res.redirect('/login');
+	res.redirect('/');
 }
 
 /**
@@ -173,7 +173,8 @@ exports.checkIP = function (req, res, user, callback) {
 		console.log(req.headers['x-real-ip']);
 		if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
 			res.json({success: false, errors: "Internet access denied"}, 500);
-			return signout(req, res);
+			//return signout(req, res);
+			return res.redirect('/logout');
 		}
 	}
 
