@@ -168,7 +168,7 @@
                                 <tr ng-show='order.Status != "DRAFT"'>
                                     <th scope="row">{{t 'DownloadPDF'}}</th>
                                     <td><ul class="files-icons">
-                                            <li style="height: inherit"><a data-ng-href="api/order/pdf/\{{order._id}}" target="_blank" class="file-link">
+                                            <li style="height: inherit"><a data-ng-href="api/commande/pdf/\{{order._id}}" target="_blank" class="file-link">
                                                     <span class="icon file-pdf"></span>
                                                     \{{order.ref}}.pdf
                                                 </a></li>
@@ -455,7 +455,7 @@
                             <div class="boxed relative large-box-shadow">
                                 <ul class="list spaced">
                                     <li ng-repeat="order in order.orders">
-                                        <a ng-href="commande/fiche.php?id=\{{order._id}}" class="list-link icon-bag" title="Click to show">
+                                        <a ng-href="commande/\{{order._id}}" class="list-link icon-bag" title="Click to show">
 											<strong>\{{order.ref}}</strong> <small>(\{{order.ref_client}})</small>
 										</a> Total HT : \{{order.total_ht|currency}}
                                     </li>
