@@ -639,7 +639,7 @@
                     </div>
                 </div>
 
-				<div class="twelve-columns">
+				<div class="twelve-columns" ng-show="global.user.rights.ticket.read">
 					<h5 class="green underline">Historique des tickets</h5>
 
 					<div class="table-header silver-gradient glossy button-height">
@@ -653,7 +653,7 @@
 					</div>
 				</div>
 
-				<div class="twelve-columns">
+				<div class="twelve-columns" ng-show="global.user.rights.bill.read">
 					<h5 class="green underline">{{t 'bills:List'}}</h5>
 
 					<div class="table-header silver-gradient glossy button-height">

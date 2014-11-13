@@ -184,17 +184,17 @@ module.exports = function (passport) {
 					message: 'Unknown user'
 				});
 				/*user = new User({
-					name: profile.displayName,
-					email: profile.emails[0].value,
-					username: profile.username,
-					provider: 'google',
-					google: profile._json
-				});
-				user.save(function (err) {
-					if (err)
-						console.log(err);
-					return done(err, user);
-				});*/
+				 name: profile.displayName,
+				 email: profile.emails[0].value,
+				 username: profile.username,
+				 provider: 'google',
+				 google: profile._json
+				 });
+				 user.save(function (err) {
+				 if (err)
+				 console.log(err);
+				 return done(err, user);
+				 });*/
 			} else {
 				user.LastConnection = user.NewConnection;
 				user.NewConnection = new Date();

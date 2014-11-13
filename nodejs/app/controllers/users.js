@@ -53,7 +53,8 @@ exports.setAccessCodeGoogle = function (req, res, next) {
 						console.log(err);
 						res.send(500, "ERR: " + err);
 					} else
-						res.redirect('/');
+						//res.redirect('/');
+							next();
 				}
 		);
 	} else
@@ -86,6 +87,7 @@ exports.signup = function (req, res) {
 exports.signout = signout;
 
 function signout(req, res) {
+	console.log("Logout : " + req.user._id);
 	req.logout();
 	res.redirect('/');
 }
@@ -171,7 +173,7 @@ exports.checkIP = function (req, res, user, callback) {
 		console.log(req.headers['x-real-ip']);
 		if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
 			res.json({success: false, errors: "Internet access denied"}, 500);
-			return signout;
+			return signout(req, res);
 		}
 	}
 
