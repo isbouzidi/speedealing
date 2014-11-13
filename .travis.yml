@@ -48,7 +48,7 @@ script:
  - npm test
 
 after_failure:
- - echo "Travis jscs failure" | mutt -a /home/travis/build/symeos/speedealing/nodejs/jscsreport.log -s "Travis jscs failure" regis@capnetworks.com
+ - echo "Travis jscs failure" | mutt -a /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt -s "Travis jscs failure" regis@capnetworks.com
 
 after_script:
  - echo End travis
