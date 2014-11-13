@@ -10,10 +10,10 @@ notifications:
 services:
  - mongodb # will start mongodb
 
-# This will tell travis to run phpunit
+# This will tell travis to run nodejs
 language: node_js
- node_js:
-   - "0.10"
+node_js:
+ - "0.10"
 
 env:
  - DB=demo
