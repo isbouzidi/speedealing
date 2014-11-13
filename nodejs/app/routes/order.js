@@ -407,7 +407,7 @@ Object.prototype = {
 				//tex = tex.replace(/--NOTE--/g, doc.desc.replace(/\n/g, "\\\\"));
 				tex = tex.replace(/--NOTE--/g, "");
 
-				console.log(doc);
+				//console.log(doc);
 
 				var products = [];
 
@@ -434,7 +434,7 @@ Object.prototype = {
 
 					tex = tex.replace(/undefined/g, "");
 
-					doc.latex.data = new Buffer(tex);
+					//doc.latex.data = new Buffer(tex);
 					doc.latex.createdAt = new Date();
 					doc.latex.title = "Order " + doc.ref;
 
