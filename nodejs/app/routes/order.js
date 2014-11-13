@@ -252,6 +252,9 @@ Object.prototype = {
 
 
 		order.save(function (err, doc) {
+			if(err)
+				return console.log(err)
+			
 			res.json(doc);
 		});
 	},
@@ -434,7 +437,7 @@ Object.prototype = {
 
 					tex = tex.replace(/undefined/g, "");
 
-					doc.latex.data = new Buffer(tex);
+					//doc.latex.data = new Buffer(tex);
 					doc.latex.createdAt = new Date();
 					doc.latex.title = "Order " + doc.ref;
 

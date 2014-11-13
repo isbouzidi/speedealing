@@ -140,6 +140,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 					};
 					$scope.order.bl[0] = {};
 				} else {
+					$scope.order.bl = [{}];
 					$scope.order.bl[0].name = data.name;
 					$scope.order.bl[0].address = data.address.address;
 					$scope.order.bl[0].zip = data.address.zip;
