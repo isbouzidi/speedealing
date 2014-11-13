@@ -252,6 +252,9 @@ Object.prototype = {
 
 
 		order.save(function (err, doc) {
+			if(err)
+				return console.log(err)
+			
 			res.json(doc);
 		});
 	},
