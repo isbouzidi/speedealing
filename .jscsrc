@@ -284,7 +284,7 @@
         },
         "lastParam": {
           "for": [ "Identifier" ],
-          "allowParamPrecedingWhitespaces": 1
+          "allowParamPrecedingWhitespaces": 1,
           "allowParamTrailingWhitespaces": 0
         }
       }
@@ -384,4 +384,4 @@
     "ArrayLiteralConventions": {
       "requireOnePerLineWhenMultiline": true
     }
-  }
+}
