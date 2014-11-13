@@ -86,6 +86,7 @@ exports.signup = function (req, res) {
 exports.signout = signout;
 
 function signout(req, res) {
+	console.log("Logout : " + req.user._id);
 	req.logout();
 	res.redirect('/');
 }
