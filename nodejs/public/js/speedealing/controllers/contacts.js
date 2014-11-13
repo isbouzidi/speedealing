@@ -10,15 +10,16 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 		];
 
 		$scope.init = function () {
-			$scope.contact = {
-				societe: {
-					id: object.societe._id,
-					name: object.societe.name
-				},
-				address: object.societe.address,
-				zip: object.societe.zip,
-				town: object.societe.town
-			};
+			if (object.societe)
+				$scope.contact = {
+					societe: {
+						id: object.societe._id,
+						name: object.societe.name
+					},
+					address: object.societe.address,
+					zip: object.societe.zip,
+					town: object.societe.town
+				};
 
 			$http({method: 'GET', url: '/api/dict', params: {
 					dictName: ["fk_civilite", "fk_job"]
