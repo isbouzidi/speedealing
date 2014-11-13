@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 var EntityModel = mongoose.model('entity');
-
+var TransactionModel = mongoose.model('Transaction');
 var Dict = require('../controllers/dict');
 
 /**
@@ -305,5 +305,37 @@ billSchema.virtual('status')
 			return res_status;
 
 		});
+                
+var transactionList = [];
 
+TransactionModel.aggregate([
+    {$group: {
+        _id: '$bill.id',
+        sum: {$sum: '$credit'}
+    }}
+], function(err, doc){
+    if(err)
+        return console.log(err);
+       
+    transactionList = doc;
+ });
+
+billSchema.virtual('amount').get(function () {
+    
+    var amount = {};
+    var id = this._id;    
+    
+    if(transactionList){
+        for(var i = 0; i < transactionList.length; i++){
+            if(id.equals(transactionList[i]._id)){
+                amount.rest = this. total_ttc - transactionList[i].sum;
+                amount.set = transactionList[i].sum;
+                return amount;
+            }
+        }
+    }
+            
+    return 0;
+});
+ 
 mongoose.model('bill', billSchema, 'Facture');

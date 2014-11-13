@@ -47,7 +47,7 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
                 {field: 'acc_status.name', displayName: 'Etat', width: '80px',
                     cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'acc_status.css\')}} glossy">{{row.getProperty(col.field)}}</small></div>'
                 },
-                {field: 'initial_balance', displayName: 'Solde', width: '80px'}
+                {field: 'balance', displayName: 'Solde', width: '80px', cellFilter: "currency:''"}
             ]
         };
 
