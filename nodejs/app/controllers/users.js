@@ -53,7 +53,8 @@ exports.setAccessCodeGoogle = function (req, res, next) {
 						console.log(err);
 						res.send(500, "ERR: " + err);
 					} else
-						res.redirect('/');
+						//res.redirect('/');
+							next();
 				}
 		);
 	} else
