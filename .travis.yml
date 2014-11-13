@@ -45,6 +45,9 @@ before_script:
 script: 
  - echo Start script
  - npm test
- 
+
+after_failure:
+ - cat report_jscs.log
+
 after_script:
  - echo End travis
