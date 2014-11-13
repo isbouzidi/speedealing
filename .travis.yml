@@ -23,15 +23,27 @@ env:
 before_install:
  - echo Start before install
  - sudo apt-get update -qq
+ - sudo apt-get install -qq texlive texlive-latex-extra texlive-fonts-extra
  
 install:
  - echo Start install
+ - cd nodejs
+ - npm install
+ - npm install -g bower
+ - npm install -g nodemon
+ - npm install -g latex
+ - npm install -g pdflatex
+ - bower install --allow-root --config.interactive=false
 
 before_script:
  - echo Start before script
  - sleep 15
  - mongo $DB --eval 'db.addUser("travis", "test");'
- - mongorestore --port 27017 nodejs/dump/demo/ --db $DB
+ - mongorestore --port 27017 dump/demo/ --db $DB
 
 script: 
  - echo Start script
+ - npm test
+ 
+after_script:
+ - echo End travis
