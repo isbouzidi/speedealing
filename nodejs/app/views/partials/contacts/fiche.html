@@ -8,23 +8,23 @@
         <div class="field-block">
             <label><b>{{t 'companies:Lastname'}}</b></label>
 
-			  <span
-               editable-select="contact.civilite" 
-               buttons="no"
-               onaftersave="update()"
-               blur="submit"
-               e-form="civilite"
-			   e-ng-options="s.label as s.label for s in dict.fk_civilite.values">
+			<span
+				editable-select="contact.civilite" 
+				buttons="no"
+				onaftersave="update()"
+				blur="submit"
+				e-form="civilite"
+				e-ng-options="s.label as s.label for s in dict.fk_civilite.values">
                 \{{contact.civilite|| "Non défini"}}
             </span>
             <span class="icon-pencil grey" ng-click="civilite.$show()" ng-hide="civilite.$visible"></span>
-			
+
             <span class="margin-left"
-               editable-text="contact.lastname" 
-               buttons="no"
-               onaftersave="update()"
-               blur="submit"
-               e-form="lastname">
+				  editable-text="contact.lastname" 
+				  buttons="no"
+				  onaftersave="update()"
+				  blur="submit"
+				  e-form="lastname">
                 \{{contact.lastname|| "Non défini"}}
             </span>
             <span class="icon-pencil grey" ng-click="lastname.$show()" ng-hide="lastname.$visible"></span>
@@ -62,19 +62,19 @@
 				  class="icon-home red"
 				  >\{{contact.societe.name|| "Non defini"}} </span>
             <span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="eSocieteBtnForm.$visible"></span>
-			
+
 		</div>
-		
+
         <div class="field-block">
             <label><b>{{t 'companies:PostOrFunction'}}</b></label>
 
             <span
-               editable-select="contact.poste" 
-               buttons="no"
-               onaftersave="update()"
-               blur="submit"
-               e-form="poste"
-			   e-ng-options="s.label as s.label for s in dict.fk_job.values">
+				editable-select="contact.poste" 
+				buttons="no"
+				onaftersave="update()"
+				blur="submit"
+				e-form="poste"
+				e-ng-options="s.label as s.label for s in dict.fk_job.values">
                 \{{contact.poste|| "Non défini"}}
             </span>
 
@@ -95,7 +95,8 @@
 
         </div>
         <div class="field-block">
-            <label><b>{{t 'Email'}}</b></label> 
+            <label><b>{{t
+				'Email'}}</b></label> 
             <a 
                 data-ng-href="mailto:\{{contact.email}}" 
                 target="_blank" 
@@ -255,6 +256,15 @@
                 </div>
 
             </form>
+		</div>
+
+		<div class="twelve-columns small-margin-bottom">
+			<div class="float-right button-height">					
+				<button class="button" ng-disabled="!global.user.rights.contact.delete" confirmed-click="remove(contact)" ng-confirm-click="Supprimer définitivement le contact ?" title="Supprimer le contact">
+					{{t 'main:Delete'}}
+					<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
+				</button>
+			</div>
 		</div>
 
     </fieldset>

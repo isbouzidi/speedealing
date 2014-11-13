@@ -576,29 +576,6 @@
 						</tab>
 					</tabset>
 				</div>
-                                <div class="twelve-columns">
-                                    <h5 class="green underline">{{t 'companies:ListOfBills'}}</h5>
-
-                                    <div class="table-header silver-gradient glossy button-height">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="button-group">
-                                                    <button class="button icon-credit-card blue-gradient" data-ng-click="paymentBills()">Emettre paiement</button>
-                                                    <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="float-right">
-                                                    {{t 'Search'}} <input type="text" data-ng-model="filterOptionsBills.filterText" class="input small mid-margin-left">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="gridStyle"  data-ng-grid="gridOptionsBills"></div>
-                                    <div class="table-footer silver-gradient">
-                                        \{{countBills}} ligne(s)
-                                    </div>
-                                </div>
 				<div class="twelve-columns">
                     <h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
 
@@ -673,6 +650,30 @@
 					<div class="gridStyle"  data-ng-grid="gridOptionsTicket"></div>
 					<div class="table-footer silver-gradient">
 						\{{countTicket}} ligne(s)
+					</div>
+				</div>
+
+				<div class="twelve-columns">
+					<h5 class="green underline">{{t 'bills:List'}}</h5>
+
+					<div class="table-header silver-gradient glossy button-height">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="button-group">
+									<button class="button icon-credit-card blue-gradient" data-ng-click="paymentBills()">Emettre paiement</button>
+									<button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="float-right">
+									{{t 'Search'}} <input type="text" data-ng-model="filterOptionsBills.filterText" class="input small mid-margin-left">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="gridStyle"  data-ng-grid="gridOptionsBills"></div>
+					<div class="table-footer silver-gradient">
+						\{{countBills}} ligne(s)
 					</div>
 				</div>
 

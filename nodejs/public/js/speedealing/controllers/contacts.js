@@ -55,7 +55,9 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 
 	}]);
 
-angular.module('mean.contacts').controller('ContactsController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'object', 'Global', 'Contacts', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, object, Global, Contacts) {
+angular.module('mean.contacts').controller('ContactsController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$route', '$modal', '$filter', '$upload', '$timeout', '$modalInstance', 'pageTitle', 'object', 'Global', 'Contacts', function ($scope, $rootScope, $location, $http, $routeParams, $route, $modal, $filter, $upload, $timeout, $modalInstance, pageTitle, object, Global, Contacts) {
+
+		$scope.global = Global;
 
 		$scope.retour = function () {
 			$location.path('/contacts');
@@ -142,11 +144,10 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			});
 		};
 
-		$scope.deleteContact = function () {
-
-			var contact = $scope.contact;
+		$scope.remove = function (contact) {
 			contact.$remove(function (response) {
-				$location.path('/contacts');
+				$modalInstance.dismiss('cancel');
+				$route.reload();
 			});
 		};
 
