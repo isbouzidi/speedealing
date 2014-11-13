@@ -4,8 +4,8 @@
 
 notifications:
   email:
-	recipients:
-	  - commits@forge.speedealing.com
+    recipients:
+      - commits@forge.speedealing.com
     on_success: never # [always|never|change] default: change
     on_failure: change # [always|never|change] default: always
     
