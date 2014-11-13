@@ -13,7 +13,7 @@ var googleCommon = require('./google.common');
  */
 exports.authCallback = authCallback;
 
-function authCallback(req, res, next) {
+function authCallback(req, res) {
 	if (req.user.google && req.user.google.user_id) {
 		User.findOne({_id: req.user._id}, function (err, user) {
 			if (user.google.tokens.refresh_token)
@@ -54,7 +54,7 @@ exports.setAccessCodeGoogle = function (req, res, next) {
 						res.send(500, "ERR: " + err);
 					} else
 						//res.redirect('/');
-							next();
+						next();
 				}
 		);
 	} else
@@ -89,7 +89,7 @@ exports.signout = signout;
 function signout(req, res) {
 	console.log("Logout : " + req.user._id);
 	req.logout();
-	res.redirect('/');
+	res.redirect('/login');
 }
 
 /**
