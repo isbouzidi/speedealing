@@ -59,10 +59,18 @@ module.exports = function(grunt) {
             test: {
                 NODE_ENV: 'test'
             }
+        },
+        // Validate against jQuery coding standard
+        jscs: {
+           options: {
+               "standard": "Jquery"
+           },
+           all: ["js-folder"]
         }
     });
 
     //Load NPM tasks 
+    grunt.loadNpmTasks('grunt-contrib-jscs');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
