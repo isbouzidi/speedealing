@@ -113,7 +113,7 @@ var orderSchema = new Schema({
 			qty: {type: Number, default: 0},
 			tva_tx: {type: Number, default: 0},
 			//price_base_type: String,
-			group: String,
+			group: {type: String, default: "GLOBAL", uppercase: true, trim: true},
 			title: String,
 			pu_ht: {type: Number, default: 0},
 			description: String,
