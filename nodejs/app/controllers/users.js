@@ -13,7 +13,7 @@ var googleCommon = require('./google.common');
  */
 exports.authCallback = authCallback;
 
-function authCallback(req, res, next) {
+function authCallback(req, res) {
 	if (req.user.google && req.user.google.user_id) {
 		User.findOne({_id: req.user._id}, function (err, user) {
 			if (user.google.tokens.refresh_token)
@@ -54,7 +54,7 @@ exports.setAccessCodeGoogle = function (req, res, next) {
 						res.send(500, "ERR: " + err);
 					} else
 						//res.redirect('/');
-							next();
+						next();
 				}
 		);
 	} else
@@ -173,7 +173,8 @@ exports.checkIP = function (req, res, user, callback) {
 		console.log(req.headers['x-real-ip']);
 		if (!(ip.isPrivate(req.headers['x-real-ip']) || user.externalConnect || config.externalIPAllowed.indexOf(req.headers['x-real-ip']) >= 0)) {
 			res.json({success: false, errors: "Internet access denied"}, 500);
-			return signout(req, res);
+			//return signout(req, res);
+			return res.redirect('/logout');
 		}
 	}
 
