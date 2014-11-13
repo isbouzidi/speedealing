@@ -19,7 +19,6 @@ node_js:
 
 env:
  - DB=demo
- - NODE_PATH=/home/travis/build/symeos/speedealing/nodejs/node_modules
   
 before_install:
  - echo Start before install
@@ -29,6 +28,7 @@ before_install:
 install:
  - echo Start install
  - cd nodejs
+ - npm install
  - npm install -g bower
  - npm install -g nodemon
  - npm install -g latex
