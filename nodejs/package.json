@@ -66,6 +66,6 @@
 		"grunt-nodemon": "latest",
 		"grunt-concurrent": "latest",
 		"grunt-mocha-test": "latest",
-		"grunt-contrib-jscs": "*"
+		"grunt-contrib-jscs": "latest"
 	}
 }
