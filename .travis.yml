@@ -18,7 +18,6 @@ node_js:
  - "0.10"
 
 env:
- - DB=demo
  - NODE_ENV=development
   
 before_install:
@@ -39,8 +38,8 @@ install:
 before_script:
  - echo Start before script
  - sleep 15
- - mongo $DB --eval 'db.addUser("travis", "test");'
- - mongorestore --port 27017 dump/demo/ --db $DB
+ - mongo demo --eval 'db.addUser("travis", "test");'
+ - mongorestore --port 27017 dump/demo/ --db demo
 
 script: 
  - echo Start script
