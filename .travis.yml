@@ -42,3 +42,7 @@ before_script:
 
 script: 
  - echo Start script
+ - npm test
+ 
+after_script:
+ - echo End travis
