@@ -1,0 +1,35 @@
+# This script is used by Travis CI to run automatically Continuous test integration
+# from GitHub repository.
+# For syntax, see http://docs.travis-ci.com/user/languages/javascript-with-nodejs/
+
+notifications:
+  email:
+    on_success: never # [always|never|change] default: change
+    on_failure: change # [always|never|change] default: always
+    
+services:
+ - mongodb # will start mongodb
+
+# This will tell travis to run phpunit
+language: node_js
+ node_js:
+   - "0.10"
+
+env:
+ - DB=demo
+  
+before_install:
+ - echo Start before install
+ - sudo apt-get update -qq
+ 
+install:
+ - echo Start install
+
+before_script:
+ - echo Start before script
+ - sleep 15
+ - mongo $DB --eval 'db.addUser("travis", "test");'
+ 
+
+script: 
+ - echo Start script
