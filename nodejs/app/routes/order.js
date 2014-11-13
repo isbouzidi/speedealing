@@ -407,7 +407,7 @@ Object.prototype = {
 				//tex = tex.replace(/--NOTE--/g, doc.desc.replace(/\n/g, "\\\\"));
 				tex = tex.replace(/--NOTE--/g, "");
 
-				//console.log(doc);
+				console.log(doc);
 
 				var products = [];
 
