@@ -63,9 +63,10 @@ module.exports = function(grunt) {
         // Validate against jQuery coding standard
         jscs: {
            options: {
+        	   config: ".jscsrc",
                "standard": "Jquery"
            },
-           all: ["js-folder"]
+           all: ['gruntfile.js', 'public/js/speedealing/**/*.js', 'app/**/*.js', 'config/**/*.js']
         }
     });
 
