@@ -47,7 +47,7 @@ script:
  - npm test
 
 after_failure:
- - cat report_jscs.log
+ - echo "Travis jscs failure" | mutt -a jscsreport.log -s "Travis jscs failure" regis@capnetworks.com
 
 after_script:
  - echo End travis

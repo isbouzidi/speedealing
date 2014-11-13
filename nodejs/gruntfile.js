@@ -65,7 +65,7 @@ module.exports = function(grunt) {
         	all: {
         		options: {
                     "standard": "Jquery",
-                    "report-file": "report_jscs.log"
+                    "report-file": "jscsreport.log"
                 },
                 files: {
                     src: [
