@@ -437,7 +437,7 @@ Object.prototype = {
 
 					tex = tex.replace(/undefined/g, "");
 
-					//doc.latex.data = new Buffer(tex);
+					doc.latex.data = new Buffer(tex);
 					doc.latex.createdAt = new Date();
 					doc.latex.title = "Order " + doc.ref;
 
