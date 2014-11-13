@@ -67,7 +67,17 @@ module.exports = function(grunt) {
                     "standard": "Jquery"
                 },
                 files: {
-                    src: [ 'gruntfile.js', 'public/js/speedealing/**/*.js', 'app/**/*.js', 'config/**/*.js' ]
+                    src: [
+                          'gruntfile.js',
+                          'server.js',
+                          'config/',
+                          'app/controllers/',
+                          'app/models/',
+                          'app/routes/',
+                          'public/js/speedealing/',
+                          'public/js/speedealing/controllers/',
+                          'public/js/speedealing/services/'
+                          ]
                 }
             }
         }
