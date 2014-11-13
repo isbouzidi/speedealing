@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Возвращать Номер с форматом %syymm-nnnn для стандартных счетов-фактур и %syymm-nnnn для кредитовых авизо, где yy - это год, mm - месяц, и nnnn - последовательная нумерация без обнуления",
     "TerreNumRefModelError": "Документ, начинающийся с $syymm, уже существует и не совместим с этой моделью последовательности. Удалите или переименуйте его, чтобы активировать этот модуль.",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

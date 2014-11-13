@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Paluu numero on muodossa %syymm-nnnn vakiolisäysaineiston laskut ja %syymm-nnnn luotto toteaa jossa VV on vuosi, mm kuukausi ja nnnn on sarja ilman taukoa eikä palata 0",
     "TerreNumRefModelError": "A bill alkaen $ syymm jo olemassa, ja ei ole yhteensopiva tämän mallin järjestyksessä. Poistaa sen tai nimetä sen aktivoida tämän moduulin.",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

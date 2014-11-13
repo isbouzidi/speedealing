@@ -11,6 +11,7 @@ default.properties
 dolibarr_install.log
 doxygen_warnings.log
 .project
+.tern-project
 .DS_Store
 .texlipse
 couchdb.stderr
@@ -19,3 +20,4 @@ couchdb.stdout
 nodejs/locales/dev/
 nodejs/uploads/
 nodejs/public/js/lib
+nodejs/bower_components

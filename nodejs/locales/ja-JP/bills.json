@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "yyは年である貸方の標準的な請求書と%syymm-nnnnの形式%syymm-NNNN withニュメロを返し、mmは月とnnnnはありません休憩0〜ノーリターンでシーケンスです。",
     "TerreNumRefModelError": "$ syymm始まる法案はすでに存在し、シーケンスのこのモデルと互換性がありません。それを削除するか、このモジュールを有効にするために名前を変更します。",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

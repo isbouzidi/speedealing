@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Geeft het aantal als %syymm-nnnn voor facturen en %syymm-nnnn voor de activa is waar yy jaar, mm de maand en nnnn een opeenvolgend nummer is zonder vervangings 0 (nul)",
     "TerreNumRefModelError": "Een wetsvoorstel te beginnen met $ syymm bestaat al en is niet compatibel met dit model van de reeks. Verwijderen of hernoemen naar deze module te activeren.",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

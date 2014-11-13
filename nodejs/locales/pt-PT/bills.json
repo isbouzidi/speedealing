@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "Devolver o numero com formato %syymm-nnnn para facturas standard e %syymm-nnnn para notas de crédito onde yy é o ano, mm é o mês nnnn é a seuqencia numérica sem quebra e sem devolução de 0",
     "TerreNumRefModelError": "Uma conta a começar com $syymm já existe e não é compatível com este modelo de sequencia. Remove-o ou renomeia para activar este modulo",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

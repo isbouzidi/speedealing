@@ -393,5 +393,12 @@
     "TerreNumRefModelDesc1": "返回格式％syymm为标准的发票和信用票据其中YY是年％syymm，○○○○numero，MM是月，nnnn是一个没有休息，没有返回0序列",
     "TerreNumRefModelError": "美元的法案syymm起已经存在，而不是与此序列模型兼容。删除或重新命名它激活该模块。",
     "Date": "Date de facture",
-    "Details": "Détail de la facture"
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }
