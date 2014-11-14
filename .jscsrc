@@ -1,8 +1,8 @@
 {
     "Indentation": {
-      "allowOnlyTabs": true,
-      "allowOnlySpaces": true,
-      "disallowMixed": true
+      "allowOnlyTabs": false,
+      "allowOnlySpaces": false,
+      "disallowMixed": false
     },
     "LineSpacing": {
       "allowLineTrailingSpaces": false
@@ -81,7 +81,7 @@
     },
     "QuoteConventions": {
       "allowDoubleQuotes": true,
-      "allowSingleQuotes": false
+      "allowSingleQuotes": true
     },
     "VariableNamingConventions": {
       "allowCase": ["camel"],
