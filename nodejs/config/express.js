@@ -100,7 +100,7 @@ module.exports = function (app, passport, db) {
 		if (process.env.NODE_ENV !== 'test') {
 			app.use(express.logger('dev'));
 		}
-console.log(config.root + '/app/views');
+
 		//Set views path, template engine and default layout
 		app.set('views', config.root + '/app/views');
 		app.set('view engine', 'html');
