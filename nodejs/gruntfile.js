@@ -65,6 +65,7 @@ module.exports = function(grunt) {
         	all: {
         		options: {
                     "standard": "Jquery",
+                    "reportFull": true,
                     "reportFile": "/home/travis/build/symeos/speedealing/nodejs/jscsReport.txt"
                 },
                 files: {
