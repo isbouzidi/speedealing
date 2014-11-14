@@ -77,8 +77,8 @@ module.exports = function (app, passport, db) {
 	hbs.registerPartials(config.root + '/app/views/includes');
 
 	app.configure(function () {
-		app.set('host', config.app.host || '0.0.0.0');
-		app.set('port', config.app.port || 3000);
+		app.set('host', config.app.host || process.env.IP || '0.0.0.0');
+		app.set('port', config.app.port || process.env.PORT || 3000);
 		app.set('showStackError', true);
 
 		//Prettify HTML
@@ -100,7 +100,7 @@ module.exports = function (app, passport, db) {
 		if (process.env.NODE_ENV !== 'test') {
 			app.use(express.logger('dev'));
 		}
-
+console.log(config.root + '/app/views');
 		//Set views path, template engine and default layout
 		app.set('views', config.root + '/app/views');
 		app.set('view engine', 'html');
