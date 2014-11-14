@@ -64,7 +64,9 @@ module.exports = function(grunt) {
         jscs: {
         	all: {
         		options: {
-                    "standard": "Jquery"
+                    "standard": "Jquery",
+                    "reportFull": true,
+                    "reportFile": "/home/travis/build/symeos/speedealing/nodejs/jscsReport.txt"
                 },
                 files: {
                     src: [

@@ -23,6 +23,7 @@ env:
 before_install:
  - echo Start before install
 # - sudo apt-get update -qq
+# - sudo apt-get install -qq mutt
 # - sudo apt-get install -qq texlive texlive-latex-extra texlive-fonts-extra
  
 install:
@@ -45,6 +46,10 @@ before_script:
 script: 
  - echo Start script
  - npm test
- 
+
+after_failure:
+ - cat /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt
+# - echo "Travis jscs failure" | mutt -a /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt -s "Travis jscs failure" -- regis@capnetworks.com
+
 after_script:
  - echo End travis
