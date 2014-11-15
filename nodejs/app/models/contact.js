@@ -42,8 +42,8 @@ var setTags = function (tags) {
  */
 var contactSchema = new Schema({
 	ref: String,
-	firstname: String,
-	lastname: {type: String, uppercase: true},
+	firstname: {type: String, trim: true},
+	lastname: {type: String, uppercase: true, trim: true},
 	poste: String,
 	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
 	Status: {type: String, default: "ST_ENABLE"},
@@ -57,7 +57,7 @@ var contactSchema = new Schema({
 	phone_perso: String,
 	phone_mobile: String, // pro
 	fax: String, // pro
-	email: String,
+	email: {type: String, lowercase: true, trim: true},
 	emails: [{
 			type: {type: String, default: "pro"},
 			address: String
@@ -70,7 +70,7 @@ var contactSchema = new Schema({
 			text: String
 		}],
 	notes: String,
-	entity: String,
+	entity: {type: String, lowercase: true, trim: true},
 	sex: {type: String, default: "H"},
 	newsletter: Boolean,
 	sendEmailing: {type: Boolean, default: true},
