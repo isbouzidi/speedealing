@@ -22,6 +22,7 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
 	app.get('/api/societe/count', auth.requiresLogin, object.count);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
+        app.get('/api/societe/listCommercial', auth.requiresLogin, object.listCommercial);
 	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
 	app.post('/api/societe/segmentation', auth.requiresLogin, object.segmentationRename);
 	app.put('/api/societe/segmentation', auth.requiresLogin, object.segmentationUpdate);
@@ -1722,5 +1723,23 @@ Object.prototype = {
 			//console.log(output);
 			res.json(output);
 		});
-	}
+	},
+        listCommercial: function(req, res){
+            
+            var query = {};
+                        
+            query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}};
+
+            SocieteModel.aggregate([
+                {$match: query},
+                {$project: {_id: 0, "commercial_id.id": 1, "commercial_id.name": 1}},
+                {$group: {_id: {id: "$commercial_id.id", name: "$commercial_id.name"}}}
+            ], function (err, doc) {
+                
+                if(err)
+                    return console.log(err);
+                    
+                res.json(doc);
+            });
+        }
 };

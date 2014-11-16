@@ -1,0 +1,70 @@
+{
+    "_id": "module:Lead",
+    "enabled": true,
+    "rights": {
+        "lead": [
+            {
+                "desc": "Lire les affaires",
+                "perm": {
+                    "read": true
+                }
+            },
+            {
+                "desc": "Creer/modifier les affaires",
+                "perm": {
+                    "create": false
+                }
+            },
+            {
+                "desc": "Supprimer les affaires",
+                "perm": {
+                    "delete": false
+                }
+            }
+        ]
+    },
+    "module_parts": [],
+    "numero": 25,
+    "family": "crm",
+    "name": "Lead",
+    "description": "Gestion affaires",
+    "version": "speedealing",
+    "const_name": "MAIN_MODULE_LEAD",
+    "picto": "order",
+    "config_page_url": [
+        "commande.php@commande"
+    ],
+    "depends": [
+        "modSociete"
+    ],
+    "requiredby": [
+        "modExpedition"
+    ],
+    "conflictwith": [],
+    "langfiles": [
+        "orders",
+        "bills",
+        "companies",
+        "products",
+        "deliveries"
+    ],
+    "menus": {
+        "menu:lead": {
+            "position": 82,
+            "perms": "lead.read",
+            "enabled": "$conf->lead->enabled",
+            "usertype": 2,
+            "title": "leads:Lead",
+            "submenus": {
+                "menu:leadlist": {
+                    "position": 1,
+                    "url": "#!/leads",
+                    "perms": "lead.read",
+                    "enabled": "$conf->lead->enabled",
+                    "usertype": 2,
+                    "title": "leads:ListLeads"
+                }
+            }
+        }
+    }
+}
