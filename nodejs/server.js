@@ -1,4 +1,5 @@
 "use strict";
+/*global exports:true*/
 
 /**
  * Module dependencies.
