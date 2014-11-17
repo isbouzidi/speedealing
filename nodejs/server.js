@@ -25,7 +25,7 @@ var options = {
 		replset: {rs_name: config.replset},
 		user: config.dbUser,
 		pass: config.dbPassword
-}
+};
 
 // Mongodb connection
 var db = mongoose.connect(config.db, options);
