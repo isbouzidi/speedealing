@@ -27,7 +27,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/product/autocomplete', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 		var query = {
 			"$or": [
@@ -81,7 +81,7 @@ module.exports = function (app, passport, auth) {
 			for (var i in docs.values) {
 				if (docs.values[i].label)
 					docs.values[i].value = docs.values[i].label;
-				if (docs.values[i].label == null && docs.values[i].value == null)
+				if (docs.values[i].label == null && docs.values[i].value === null)
 					docs.values[i].value = 0;
 				delete docs.values[i].label;
 				//console.log(docs.values[i]);
@@ -116,7 +116,7 @@ module.exports = function (app, passport, auth) {
 		StorehouseModel.findOne({name: req.body.name}, function (err, storehouse) {
 			if (err)
 				return console.log(err);
-			if (storehouse == null)
+			if (storehouse === null)
 				storehouse = new StorehouseModel(req.body);
 			var max = 0;
 			for (var i in storehouse.subStock) {
@@ -183,7 +183,7 @@ module.exports = function (app, passport, auth) {
 									return callback();
 								}
 
-								if (societe == null)
+								if (societe === null)
 									societe = new SocieteModel();
 								for (var i = 0; i < row.length; i++) {
 									societe[tab[i]] = row[i];
@@ -198,7 +198,7 @@ module.exports = function (app, passport, auth) {
 								societe.save(function (err, doc) {
 									if (err)
 										console.log(err);
-									/*if (doc == null)
+									/*if (doc === null)
 									 console.log("null");
 									 else
 									 console.log(doc);*/
@@ -241,7 +241,7 @@ module.exports = function (app, passport, auth) {
 			}
 
 			var result = [];
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
 					result[i] = {};
@@ -294,7 +294,7 @@ module.exports = function (app, passport, auth) {
 			}
 
 			var result = [];
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
 					result[i] = {};
@@ -483,15 +483,15 @@ Object.prototype = {
 				row.type = doc[i].type;
 				row.compta_buy = doc[i].compta_buy;
 				row.compta_sell = doc[i].compta_sell;
-				if (doc[i].caFamily == null)
+				if (doc[i].caFamily === null)
 					row.caFamily = "OTHER";
 				else
 					row.caFamily = doc[i].caFamily;
-				if (doc[i].barCode == null)
+				if (doc[i].barCode === null)
 					row.barCode = "";
 				else
 					row.barCode = doc[i].barCode;
-				if (doc[i].billingMode == null)
+				if (doc[i].billingMode === null)
 					row.billingMode = "QTY";
 				else
 					row.billingMode = doc[i].billingMode;
@@ -500,7 +500,7 @@ Object.prototype = {
 				row.tms = doc[i].price.tms;
 				row.ref_customer_code = doc[i].price.ref_customer_code;
 				row.tva_tx = doc[i].price.tva_tx;
-				if (doc[i].price.qtyMin == null)
+				if (doc[i].price.qtyMin === null)
 					row.qtyMin = 0;
 				else
 					row.qtyMin = doc[i].price.qtyMin;

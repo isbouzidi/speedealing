@@ -16,7 +16,7 @@ angular.module('mean.europexpress').controller('EEPlanningController', ['$scope'
 		$scope.find = function () {
 			$scope.hsupp = 0;
 
-			if ($routeParams.id1 == null)
+			if ($routeParams.id1 === null)
 				return $scope.today();
 
 			//console.log($routeParams);
@@ -755,7 +755,7 @@ angular.module('mean.europexpress').controller('EETransportCreateController', ['
 			if ($scope.course.type.id !== "MESSAGERIE")
 				return;
 
-			if ($scope.course.total_soustraitant == null)
+			if ($scope.course.total_soustraitant === null)
 				$scope.course.total_soustraitant = 0;
 
 			if (!$scope.course.poids || !$scope.course.to.zip)
@@ -848,7 +848,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 
 		$scope.$watch('course.date_enlevement', function (date)
 		{
-			if (date == null)
+			if (date === null)
 				return;
 			var time = new Date(date);
 			if (new Date($scope.dateEnlevement).getTime() != time.getTime())
@@ -857,7 +857,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 
 		$scope.$watch('course.date_livraison', function (date)
 		{
-			if (date == null)
+			if (date === null)
 				return;
 			var time = new Date(date);
 			if (new Date($scope.dateLivraison).getTime() != time.getTime())
@@ -866,7 +866,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 
 		$scope.$watch('course.ETA.date', function (date)
 		{
-			if (date == null)
+			if (date === null)
 				return;
 			var time = new Date(date);
 			if (new Date($scope.ETADate).getTime() != time.getTime())
@@ -924,7 +924,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 		};
 
 		$scope.refreshContact = function () {
-			if ($scope.course.client.id == null) {
+			if ($scope.course.client.id === null) {
 				$scope.contacts = [];
 				return;
 			}
@@ -941,7 +941,7 @@ angular.module('mean.europexpress').controller('EETransportEditController', ['$s
 			if ($scope.course.type.id !== "MESSAGERIE")
 				return;
 
-			if ($scope.course.total_soustraitant == null)
+			if ($scope.course.total_soustraitant === null)
 				$scope.course.total_soustraitant = 0;
 
 			if (!$scope.course.poids || !$scope.course.to.zip)
@@ -1359,7 +1359,7 @@ angular.module('mean.europexpress').controller('EEVehiculeController', ['$scope'
 angular.module('mean.europexpress').controller('EEFacturationController', ['$scope', '$routeParams', '$http', '$location', 'Global', function ($scope, $routeParams, $http, $location, Global) {
 
 		$scope.find = function () {
-			if ($routeParams.id1 == null)
+			if ($routeParams.id1 === null)
 				return $scope.today();
 
 			//console.log($routeParams);
@@ -1969,7 +1969,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		function getTotaux(cb) {
 			var totaux = {};
 
-			if ($routeParams.id1 == null)
+			if ($routeParams.id1 === null)
 				return;
 
 			$http({method: 'GET', url: 'api/europexpress/stock/total/' + $routeParams.id1 + '/' + $routeParams.id2
@@ -1984,7 +1984,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 		}
 
 		$scope.entrepotsList = function () {
-			if ($routeParams.id1 == null)
+			if ($routeParams.id1 === null)
 				return $scope.today();
 
 			initProducts();
@@ -2024,7 +2024,7 @@ angular.module('mean.europexpress').controller('EEMouvementStockController', ['$
 				angular.forEach($scope.radio.entrepot.productId, function (code) {
 					var product = angular.copy($scope.productsBarCode[code]);
 console.log(product);
-					if (product == null)
+					if (product === null)
 						return;
 
 					product.barCode = $scope.radio.entrepot.barCode + product.barCode;

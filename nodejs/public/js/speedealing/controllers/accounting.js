@@ -25,7 +25,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 		};
 
 		$scope.find = function() {
-			if ($routeParams.id1 == null)
+			if ($routeParams.id1 === null)
 				return $scope.today();
 
 			$scope.sum = {
@@ -42,7 +42,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 				angular.forEach(journal, function(data) {
 					$scope.sum.credit += data.credit;
 					$scope.sum.debit += data.debit;
-					if(data.compte == null)
+					if(data.compte === null)
 						$scope.editable=true;
 				});
 

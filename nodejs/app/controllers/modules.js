@@ -14,7 +14,7 @@ console.log("Loading Speedealing modules...");
 fs.readdirSync(__dirname + '/../../config/modules').forEach(function (file) {
 	if (file === "index.js")
 		return;
-	if (file.indexOf('.json') == null) // exclude not json
+	if (file.indexOf('.json') === null) // exclude not json
 		return;
 
 	fs.readFile(__dirname + '/../../config/modules/' + file, 'utf8', function (err, data) {

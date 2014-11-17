@@ -31,7 +31,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/delivery/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {
@@ -56,13 +56,13 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i].ref);
 					result[i] = {};
 					result[i].name = docs[i].name;
 					result[i].id = docs[i]._id;
-					if (docs[i].cptBilling.id == null) {
+					if (docs[i].cptBilling.id === null) {
 						result[i].cptBilling = {};
 						result[i].cptBilling.name = docs[i].name;
 						result[i].cptBilling.id = docs[i]._id;
@@ -184,7 +184,7 @@ Object.prototype = {
 		delivery.author.id = req.user._id;
 		delivery.author.name = req.user.name;
 
-		if (delivery.entity == null)
+		if (delivery.entity === null)
 			delivery.entity = req.user.entity;
 
 		//console.log(delivery);
@@ -216,7 +216,7 @@ Object.prototype = {
 		delivery.author.id = req.user._id;
 		delivery.author.name = req.user.name;
 
-		if (delivery.entity == null)
+		if (delivery.entity === null)
 			delivery.entity = req.user.entity;
 
 		//console.log(delivery);
@@ -496,7 +496,7 @@ Billing.prototype = {
 				name: societe.name
 			};
 
-			if (societe == null)
+			if (societe === null)
 				console.log("Error : pas de societe pour le clientId : " + clientId);
 
 			bill.price_level = societe.price_level;
@@ -566,7 +566,7 @@ Billing.prototype = {
 						type: 'INVOICE_AUTO'
 					});
 
-					if (societe == null)
+					if (societe === null)
 						console.log("Error : pas de societe pour le clientId : " + client._id);
 
 					facture.client.name = societe.name;

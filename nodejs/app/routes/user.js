@@ -28,7 +28,7 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
 					if (req.query.agenda) { // for calendar
@@ -81,7 +81,7 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
 

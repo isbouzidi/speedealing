@@ -28,7 +28,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/orderSupplier/autocomplete', auth.requiresLogin, function(req, res) {
 		console.dir(req.body.filter);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {
@@ -53,13 +53,13 @@ module.exports = function(app, passport, auth) {
 
 			var result = [];
 
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i].ref);
 					result[i] = {};
 					result[i].name = docs[i].name;
 					result[i].id = docs[i]._id;
-					if (docs[i].cptBilling.id == null) {
+					if (docs[i].cptBilling.id === null) {
 						result[i].cptBilling = {};
 						result[i].cptBilling.name = docs[i].name;
 						result[i].cptBilling.id = docs[i]._id;
@@ -140,7 +140,7 @@ Object.prototype = {
 			}
 
 			//console.log(doc);
-			if(doc == null)
+			if(doc === null)
 				doc=[];
 
 			res.json(200, doc);
@@ -155,7 +155,7 @@ Object.prototype = {
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
 
-		if (order.entity == null)
+		if (order.entity === null)
 			order.entity = req.user.entity;
 
 		order.save(function(err, doc) {

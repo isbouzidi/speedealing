@@ -226,7 +226,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/api/zipcode/autocomplete', auth.requiresLogin, function(req, res) {
 
 
-		if (req.body.val === null)
+		if (req.body.val ==== null)
 			return res.send(200, {});
 
 		var val = "^" + req.body.val;

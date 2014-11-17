@@ -39,7 +39,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/societe/autocomplete', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body.filter);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {
@@ -70,13 +70,13 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i].ref);
 					result[i] = {};
 					result[i].name = docs[i].name;
 					result[i].id = docs[i]._id;
-					if (docs[i].cptBilling.id == null) {
+					if (docs[i].cptBilling.id === null) {
 						result[i].cptBilling = {};
 						result[i].cptBilling.name = docs[i].name;
 						result[i].cptBilling.id = docs[i]._id;
@@ -106,7 +106,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/societe/autocomplete/:field', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {};
@@ -130,7 +130,7 @@ module.exports = function (app, passport, auth) {
 				//console.log(docs);
 				var result = [];
 
-				if (docs !== null)
+				if (docs !=== null)
 					for (var i in docs) {
 						//result.push({text: docs[i]._id});
 						result.push(docs[i]._id);
@@ -152,7 +152,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/societe/segmentation/autocomplete', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {
@@ -175,7 +175,7 @@ module.exports = function (app, passport, auth) {
 			//console.log(docs);
 			var result = [];
 
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					result.push({text: docs[i]._id});
 				}
@@ -487,7 +487,7 @@ module.exports = function (app, passport, auth) {
 									}
 
 									var isNew = false
-									if (societe == null) {
+									if (societe === null) {
 										societe = new SocieteModel(data);
 										societe.Status = "ST_NEVER";
 										isNew = true;
@@ -505,7 +505,7 @@ module.exports = function (app, passport, auth) {
 										societe.save(function (err, doc) {
 											if (err)
 												console.log(err);
-											/*if (doc == null)
+											/*if (doc === null)
 											 console.log("null");
 											 else
 											 console.log(doc);*/
@@ -520,7 +520,7 @@ module.exports = function (app, passport, auth) {
 												return callback();
 											}
 
-											if (contact == null) {
+											if (contact === null) {
 												contact = new ContactModel(data);
 
 												contact.societe.id = societe.id;
@@ -803,7 +803,7 @@ module.exports = function (app, passport, auth) {
 									//	console.log(societe);
 
 									var isNew = false;
-									if (societe == null) {
+									if (societe === null) {
 										societe = new SocieteModel(data);
 										societe.Status = "ST_NEVER";
 										isNew = true;
@@ -827,7 +827,7 @@ module.exports = function (app, passport, auth) {
 
 											//console.log("save");
 
-											/*if (doc == null)
+											/*if (doc === null)
 											 console.log("null");
 											 else
 											 console.log(doc);*/
@@ -842,7 +842,7 @@ module.exports = function (app, passport, auth) {
 												return callback();
 											}
 
-											if (contact == null) {
+											if (contact === null) {
 												contact = new ContactModel(data);
 
 												contact.societe.id = societe.id;
@@ -1125,7 +1125,7 @@ module.exports = function (app, passport, auth) {
 												return callback();
 											}
 
-											if (societe == null)
+											if (societe === null)
 												societe = new SocieteModel(data);
 											else
 												societe = _.extend(societe, data);
@@ -1277,7 +1277,7 @@ module.exports = function (app, passport, auth) {
 										return callback();
 									}
 
-									if (societe == null) {
+									if (societe === null) {
 										console.log("Societe not found : " + data.oldId);
 										return callback();
 									}
@@ -1290,7 +1290,7 @@ module.exports = function (app, passport, auth) {
 									societe.save(function (err, doc) {
 										if (err)
 											console.log(err);
-										/*if (doc == null)
+										/*if (doc === null)
 										 console.log("null");
 										 else
 										 console.log(doc);*/
@@ -1382,7 +1382,7 @@ module.exports = function (app, passport, auth) {
 				if (err)
 					console.log(err);
 
-				if (docs === null)
+				if (docs ==== null)
 					return res.send(200, []);
 
 				for (var i in docs) {
@@ -1399,7 +1399,7 @@ module.exports = function (app, passport, auth) {
 				if (err)
 					console.log(err);
 
-				if (docs === null)
+				if (docs ==== null)
 					return res.send(200, []);
 
 				for (var i in docs) {
@@ -1566,7 +1566,7 @@ Object.prototype = {
 		societe.author.id = req.user._id;
 		societe.author.name = req.user.name;
 
-		if (societe.entity == null)
+		if (societe.entity === null)
 			societe.entity = req.user.entity;
 
 		console.log(societe);
@@ -1644,7 +1644,7 @@ Object.prototype = {
 				}
 
 				var result = [];
-				if (docs == null)
+				if (docs === null)
 					docs = [];
 
 				for (var i = 0; i < docs.length; i++) {
@@ -1662,7 +1662,7 @@ Object.prototype = {
 	},
 	segmentationUpdate: function (req, res) {
 		DictModel.findOne({_id: "fk_segmentation"}, function (err, doc) {
-			if (doc == null)
+			if (doc === null)
 				return console.log("fk_segmentation doesn't exist !");
 
 			if (req.body.attractivity)

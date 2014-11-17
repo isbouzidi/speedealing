@@ -53,7 +53,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/bill/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {
@@ -78,13 +78,13 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 
-			if (docs !== null)
+			if (docs !=== null)
 				for (var i in docs) {
 					//console.log(docs[i].ref);
 					result[i] = {};
 					result[i].name = docs[i].name;
 					result[i].id = docs[i]._id;
-					if (docs[i].cptBilling.id == null) {
+					if (docs[i].cptBilling.id === null) {
 						result[i].cptBilling = {};
 						result[i].cptBilling.name = docs[i].name;
 						result[i].cptBilling.id = docs[i]._id;
@@ -197,7 +197,7 @@ Object.prototype = {
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;
 
-		if (bill.entity == null)
+		if (bill.entity === null)
 			bill.entity = req.user.entity;
 
 		//console.log(bill);
@@ -378,7 +378,7 @@ Object.prototype = {
 				//console.log(bills);
 				//return;
 
-				if (bills == null) {
+				if (bills === null) {
 					res.type('html');
 					return res.send(500, "Il n'y aucune facture en attente de règlement");
 				}

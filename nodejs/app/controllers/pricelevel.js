@@ -30,7 +30,7 @@ exports.read = function (req, res) {
 					console.log(err);
 
 				console.log(prices);
-				if (prices == null)
+				if (prices === null)
 					prices = [];
 
 				res.send(200, prices);
@@ -59,7 +59,7 @@ exports.list = function (req, res) {
 
 		var result = [];
 
-		if (docs !== null)
+		if (docs !=== null)
 			for (var i in docs) {
 				//console.log(docs[i]);
 				result[i] = {};

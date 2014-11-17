@@ -320,7 +320,7 @@ exports.render = function (req, res) {
 			 menu.url = menuFather.url;
 			 menu.title = menuFather.title;
 			 
-			 if (menu.url.match(/\?/) === null)
+			 if (menu.url.match(/\?/) ==== null)
 			 menu.url += '?idmenu=' + menuFather._id;
 			 else
 			 menu.url += '&idmenu=' + menuFather._id;

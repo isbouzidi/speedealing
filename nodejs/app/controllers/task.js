@@ -155,22 +155,22 @@ function createTask(task, user, usersSocket, callback) {
 
 	new_task = new TaskModel(task);
 
-	if (task.author == null)
+	if (task.author === null)
 		new_task.author = {
 			id: user._id,
 			name: user.firstname + " " + user.lastname
 		};
 
-	if (task.usertodo == null)
+	if (task.usertodo === null)
 		new_task.usertodo = {
 			id: user._id,
 			name: user.firstname + " " + user.lastname
 		};
 
-	if (new_task.entity == null)
+	if (new_task.entity === null)
 		new_task.entity = user.entity;
 
-	if (new_task.notes[new_task.notes.length - 1].percentage >= 100 && new_task.userdone.id == null) {
+	if (new_task.notes[new_task.notes.length - 1].percentage >= 100 && new_task.userdone.id === null) {
 		new_task.userdone = {
 			id: user._id,
 			name: user.firstname + " " + user.lastname
@@ -219,7 +219,7 @@ function createTask(task, user, usersSocket, callback) {
 	new_task.save(function (err, task) {
 		callback(err, task);
 
-		if (usersSocket == null)
+		if (usersSocket === null)
 			return;
 
 		var socket = usersSocket[task.usertodo.id];
@@ -246,7 +246,7 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 	newTask = _.extend(oldTask, newTask);
 	//console.log(req.body);
 
-	if (newTask.notes[newTask.notes.length - 1].percentage >= 100 && newTask.userdone.id == null) {
+	if (newTask.notes[newTask.notes.length - 1].percentage >= 100 && newTask.userdone.id === null) {
 		newTask.userdone = {
 			id: user._id,
 			name: user.firstname + " " + user.lastname
@@ -297,7 +297,7 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 	newTask.save(function (err, task) {
 		callback(err, task);
 
-		if (usersSocket == null)
+		if (usersSocket === null)
 			return;
 
 		var socket_author = usersSocket[task.author.id];
