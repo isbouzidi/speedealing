@@ -988,9 +988,13 @@ module.exports = function (app, passport, auth) {
 					}
 
 					switch (tab[i]) {
-						case "address1":
-							if (row[i])
-								societe.address += "\n" + row[i];
+						case "address":
+							if (row[i]) {
+								if (societe.address)
+									societe.address += "\n" + row[i];
+								else
+									societe.address = row[i];
+							}
 							break;
 						case "BP":
 							if (row[i]) {
@@ -1079,6 +1083,10 @@ module.exports = function (app, passport, auth) {
 									name: (commercial_list[row[i]] ? commercial_list[row[i]].firstname + " " + commercial_list[row[i]].lastname : row[i])
 								}
 							}
+							break;
+						case "datec":
+							if (row[i])
+								societe[tab[i]] = new Date(row[i]);
 							break;
 						default :
 							if (row[i])
@@ -1263,18 +1271,19 @@ module.exports = function (app, passport, auth) {
 									return callback();
 								}
 
-								SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
+								SocieteModel.findOne({oldId: data.oldId}, function (err, societe) {
 									if (err) {
 										console.log(err);
 										return callback();
 									}
 
 									if (societe == null) {
-										console.log("Societe not found : " + data.code_client);
+										console.log("Societe not found : " + data.oldId);
 										return callback();
 									}
 
 									societe.notes.push(data.notes);
+									//console.log(data.notes);
 
 									//console.log(societe);
 

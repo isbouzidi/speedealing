@@ -23,7 +23,7 @@ module.exports = function (app, passport, auth) {
 
 	//get all contacts for search engine
 	app.get('/api/contact/searchEngine', auth.requiresLogin, contact.showList);
-	
+
 	app.get('/api/contact/export', auth.requiresLogin, contact.export);
 
 	// list all contact for a societe
@@ -246,21 +246,13 @@ module.exports = function (app, passport, auth) {
 						}
 
 						break;
-					case "address1":
-						if (row[i])
-							contact.address += "\n" + row[i];
-						break;
-					case "address2":
-						if (row[i])
-							contact.address += "\n" + row[i];
-						break;
-					case "address3":
-						if (row[i])
-							contact.address += "\n" + row[i];
-						break;
-					case "address4":
-						if (row[i])
-							contact.address += "\n" + row[i];
+					case "address":
+						if (row[i]) {
+							if (contact.address)
+								contact.address += "\n" + row[i];
+							else
+								contact.address = row[i];
+						}
 						break;
 					case "BP":
 						if (row[i]) {
@@ -348,15 +340,21 @@ module.exports = function (app, passport, auth) {
 
 							convertRow(tab, row, index, function (data) {
 
-								if (data.code_client) {
-									SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
+								if (data.code_client || data.oldId) {
+									var querySoc = {};
+									if (data.code_client)
+										querySoc = {code_client: data.code_client};
+									else
+										querySoc = {oldId: data.oldId};
+
+									SocieteModel.findOne(querySoc, function (err, societe) {
 										if (err) {
 											console.log(err);
 											return callback();
 										}
 
 										if (societe == null) {
-											console.log("Societe not found : " + data.code_client);
+											console.log("Societe not found : " + data.code_client + '/' + data.oldId);
 											return callback();
 										}
 
@@ -365,7 +363,26 @@ module.exports = function (app, passport, auth) {
 											name: societe.name
 										};
 
-										ContactModel.findOne({"societe.id": data.societe.id, lastname: data.lastname}, function (err, contact) {
+										var query = {
+											$or: []
+										};
+
+										if (data.email != null)
+											query.$or.push({email: data.email.toLowerCase()});
+										//if (data.phone != null)
+										//	query.$or.push({phone: data.phone});
+										if (data.phone_mobile != null)
+											query.$or.push({phone_mobile: data.phone_mobile});
+
+										if (!query.$or.length)
+											query = {
+												"societe.id": data.societe.id,
+												lastname: (data.lastname?data.lastname.toUpperCase():"")
+											};
+										
+										//console.log(query);
+
+										ContactModel.findOne(query, function (err, contact) {
 
 											if (err) {
 												console.log(err);
@@ -375,6 +392,8 @@ module.exports = function (app, passport, auth) {
 											if (contact == null) {
 												contact = new ContactModel(data);
 											} else {
+												console.log("Contact found");
+												
 												if (data.Tag)
 													data.Tag = _.union(contact.Tag, data.Tag); // Fusion Tag
 
@@ -642,9 +661,9 @@ Contact.prototype = {
 
 		var json2csv = require('json2csv');
 
-		ContactModel.find({Tag:"Arseg"}, function (err, contacts) {
+		ContactModel.find({Tag: "Arseg"}, function (err, contacts) {
 			//console.log(contact);
-			json2csv({data: contacts, fields: ['_id', 'firstname','lastname','societe','poste', 'address', 'zip', 'town', 'phone','phone_mobile','email', 'Tag'], del: ";"}, function (err, csv) {
+			json2csv({data: contacts, fields: ['_id', 'firstname', 'lastname', 'societe', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'], del: ";"}, function (err, csv) {
 				if (err)
 					console.log(err);
 
