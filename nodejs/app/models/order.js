@@ -162,7 +162,7 @@ orderSchema.pre('save', function (next) {
 		//Add VAT
 		var found = false;
 		for (var j = 0; j < this.total_tva.length; j++)
-			if (this.total_tva[j].tva_tx === this.lines[i].tva_tx) {
+			if (this.total_tva[j].tva_tx == this.lines[i].tva_tx) {
 				this.total_tva[j].total += this.lines[i].total_tva;
 				found = true;
 				break;
@@ -185,7 +185,7 @@ orderSchema.pre('save', function (next) {
 		//Add VAT
 		var found = false;
 		for (var j = 0; j < this.total_tva.length; j++)
-			if (this.total_tva[j].tva_tx === this.shipping.tva_tx) {
+			if (this.total_tva[j].tva_tx == this.shipping.tva_tx) {
 				this.total_tva[j].total += this.shipping.total_tva;
 				found = true;
 				break;
