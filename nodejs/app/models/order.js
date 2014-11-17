@@ -176,6 +176,7 @@ orderSchema.pre('save', function (next) {
 		}
 	}
 	
+	console.log("Save order !");
 	console.log(this.total_tva);
 
 	// shipping cost
