@@ -165,7 +165,10 @@ module.exports = function (app, passport, auth) {
 
 			for (var i = 0; i < docs.length; i++) {
 				var idx = _.findIndex(result, {_id: docs[i]._id});
-				result[idx].count = docs[i].count;
+				if(idx === -1)
+					console.log("Error index stats.js : " + docs[i]._id);
+				else
+					result[idx].count = docs[i].count;
 			}
 
 			return cb(null, result);
