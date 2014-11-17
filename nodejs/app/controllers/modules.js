@@ -141,7 +141,7 @@ exports.menus = function (req, res) {
 		var perm = perms.split(".");
 		console.log(perm);
 
-		if (perm[0] === "admin") // only administrator
+		if (perm[0] === "admin" || perm[0] === "superadmin") // only superadmin and administrators
 			return false;
 
 		if (perm.length == 2) {
