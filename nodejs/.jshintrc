@@ -37,7 +37,7 @@
         "it"
     ],
     "indent": 4, // Specify indentation spacing
-    "maxlen": 320, // Max line lenght
+    "maxlen": 1000, // Max line lenght
     "devel": true, // Allow development statements e.g. `console.log();`.
     "noempty": true // Prohibit use of empty blocks.
 }
