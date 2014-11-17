@@ -109,8 +109,8 @@ module.exports = function (app, passport, auth) {
 			},
 			taskStats: function (cb) {
 				var dateS = new Date(dateStart);
-				dateS.setMonth(dateS.getMonth()+1);
-				
+				dateS.setMonth(dateS.getMonth() + 1);
+
 				//console.log(dateS);
 				TaskModel.aggregate([
 					{$match: {entity: entity, createdAt: {$gte: dateS}}},
@@ -165,9 +165,10 @@ module.exports = function (app, passport, auth) {
 
 			for (var i = 0; i < docs.length; i++) {
 				var idx = _.findIndex(result, {_id: docs[i]._id});
-				if(idx === -1)
-					console.log("Error index stats.js : " + docs[i]._id.toString());
-				else
+				if (idx === -1) {
+					console.log("Error index stats.js : ");
+					console.log(docs[i]._id);
+				} else
 					result[idx].count = docs[i].count;
 			}
 
