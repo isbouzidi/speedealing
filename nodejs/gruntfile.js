@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            all: ['gruntfile.js', 'public/js/**/*.js', 'test/**/*.js', 'app/**/*.js']
+            all: ['gruntfile.js', 'server.js', 'public/js/speedealing/**/*.js', 'config/**/*.js', 'app/**/*.js']
         },
         nodemon: {
             dev: {
