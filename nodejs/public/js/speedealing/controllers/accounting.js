@@ -28,7 +28,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 		};
 
 		$scope.find = function() {
-			if ($routeParams.id1 === null)
+			if (!$routeParams.id1)
 				return $scope.today();
 
 			$scope.sum = {
