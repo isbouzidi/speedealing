@@ -153,6 +153,8 @@ orderSchema.pre('save', function (next) {
 	this.total_ht = 0;
 	this.total_tva = [];
 	this.total_ttc = 0;
+	
+	return next();
 
 	for (var i = 0; i < this.lines.length; i++) {
 		//console.log(object.lines[i].total_ht);
@@ -175,9 +177,6 @@ orderSchema.pre('save', function (next) {
 			});
 		}
 	}
-	
-	console.log("Save order !");
-	console.log(this.total_tva);
 
 	// shipping cost
 	if (this.shipping.total_ht) {
