@@ -13,7 +13,7 @@ var mongoose = require('mongoose'),
 		config = require(__dirname + '/../../config/config'),
 		fs = require('fs');
 
-if (config.couchdb != undefined) {
+if (config.couchdb !== undefined) {
 	var cradle = require('cradle');
 	var ProductModel = mongoose.model('product');
 
@@ -27,7 +27,7 @@ if (config.couchdb != undefined) {
 	var couchdb = connection.database(config.couchdb.db);
 }
 
-if (config.mysql != undefined) {
+if (config.mysql !== undefined) {
 	var mysql = require('mysql');
 	var connection = mysql.createConnection({
 		host: config.mysql.host,

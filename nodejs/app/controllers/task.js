@@ -186,7 +186,7 @@ function createTask(task, user, usersSocket, callback) {
 	if (actioncomm.values[new_task.type].type != 'event')
 		new_task.datep = new Date(new_task.datef);
 
-	if (actioncomm.values[new_task.type].type == 'event' && new_task.datep != null) {
+	if (actioncomm.values[new_task.type].type == 'event' && new_task.datep !== null) {
 		if (new_task.datef == null || new_task.datef <= new_task.datep) {
 			new_task.datef = new Date(new_task.datep);
 			new_task.datef.setHours(new_task.datef.getHours() + 1);
@@ -263,7 +263,7 @@ function updateTask(oldTask, newTask, user, usersSocket, callback) {
 	if (actioncomm.values[newTask.type].type != 'event')
 		newTask.datep = new Date(newTask.datef);
 
-	if (actioncomm.values[newTask.type].type == 'event' && newTask.datep != null) {
+	if (actioncomm.values[newTask.type].type == 'event' && newTask.datep !== null) {
 		if (newTask.datef == null || newTask.datef <= newTask.datep) {
 			newTask.datef = new Date(newTask.datep);
 			newTask.datef.setHours(newTask.datef.getHours() + 1);
