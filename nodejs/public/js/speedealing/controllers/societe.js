@@ -781,7 +781,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			columnDefs: [
 				{field: 'model', displayName: 'Modèle', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(\'_model.name\')}}</a></div>'},
 				{field: 'dateReport', displayName: 'Date de l\'action', cellFilter: "date:'dd/MM/yyyy'"},
-				{field: 'lead.name', displayName: 'Affaire', cellTemplate: '<div class="ngCellText align-center">{{row.getProperty(col.field)}} <small ng-if="row.getProperty(\'lead.id._id\')" class="tag {{row.getProperty(\'lead.id.Status.css\')}} glossy">{{row.getProperty(\'lead.id.Status.name\')}}</small></div>'},
+				{field: 'lead.name', displayName: 'Projet', cellTemplate: '<div class="ngCellText align-center">{{row.getProperty(col.field)}} <small ng-if="row.getProperty(\'lead.id._id\')" class="tag {{row.getProperty(\'lead.id.Status.css\')}} glossy">{{row.getProperty(\'lead.id.Status.name\')}}</small></div>'},
 				{field: 'author.name', displayName: 'Auteur'},
 				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'comment', displayName: 'Commentaires'}
