@@ -70,7 +70,7 @@ var contactSchema = new Schema({
 			text: String
 		}],
 	notes: String,
-	entity: {type: String, lowercase: true, trim: true},
+	entity: {type: String, trim: true},
 	sex: {type: String, default: "H"},
 	newsletter: Boolean,
 	sendEmailing: {type: Boolean, default: true},

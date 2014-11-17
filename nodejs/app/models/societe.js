@@ -98,7 +98,7 @@ var societeSchema = new Schema({
 	user_creat: String,
 	user_modif: String,
 	remise_client: Number,
-	entity: {type: String, trim:true, lowercase:true},
+	entity: {type: String, trim:true},
 	fournisseur: {type: String, default: 'NO'},
 	gps: [Number],
 	contractID: String,
