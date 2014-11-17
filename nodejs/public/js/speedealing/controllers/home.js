@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('IndexHomeController', ['$scope', '$rootScope', '$modal', '$location', '$http', '$anchorScroll', 'Global', 'pageTitle', '$timeout', 'Users', 'Reports', function ($scope, $rootScope, $modal, $location, $http, $anchorScroll, Global, pageTitle, $timeout, Users, Reports) {
 		$scope.global = Global;
 
@@ -76,7 +79,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 
 		$scope.gain = function (tab, idx) {
 			// idx 1 mois en cous, idx 0 mois precedent
-			if (idx == null)
+			if (idx === null)
 				idx = 0;
 
 			if (!tab || tab[idx].count == 0)

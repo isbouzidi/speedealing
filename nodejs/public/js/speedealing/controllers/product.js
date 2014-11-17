@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.products').controller('ProductController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'pageTitle', 'Products', function ($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, pageTitle, Product) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des produits');

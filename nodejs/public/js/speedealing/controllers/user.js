@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.users').controller('UserRhAbsenceController', ['$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', 'pageTitle', 'Global', 'Users', function ($scope, $routeParams, $location, $route, $modal, $timeout, $http, pageTitle, Global, Users) {
 		$scope.global = Global;
 

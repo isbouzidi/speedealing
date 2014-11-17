@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('TicketController', ['$scope', '$routeParams', '$location', '$route', '$timeout', 'Global', 'pageTitle', '$http', 'socket', 'Ticket', function($scope, $routeParams, $location, $route, $timeout, Global, pageTitle, $http, socket, Ticket) {
 		$scope.global = Global;
 
@@ -429,7 +432,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		});
 
 		$scope.ticketRead = function(read, user) {
-			if (user == null)
+			if (user === null)
 				user = Global.user._id;
 			if (read.indexOf(user) >= 0)
 				return "white-gradient";

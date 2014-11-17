@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.accounting').controller('AccountingController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Accounting', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Accounting) {
 
 		pageTitle.setTitle('Journal des ventes');
@@ -25,7 +28,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 		};
 
 		$scope.find = function() {
-			if ($routeParams.id1 == null)
+			if ($routeParams.id1 === null)
 				return $scope.today();
 
 			$scope.sum = {
@@ -42,7 +45,7 @@ angular.module('mean.accounting').controller('AccountingController', ['$scope', 
 				angular.forEach(journal, function(data) {
 					$scope.sum.credit += data.credit;
 					$scope.sum.debit += data.debit;
-					if(data.compte == null)
+					if(data.compte === null)
 						$scope.editable=true;
 				});
 

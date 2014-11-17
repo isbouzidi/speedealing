@@ -19,17 +19,6 @@ var UserModel = mongoose.model('user');
 var gcommon = require('./google.common');
 
 
-/* Public declaration methods. See definition for documentation. */
-
-// test
-exports.insertCalendar = insertCalendar;
-
-exports.insertEvent = insertEvent;
-
-exports.insertQuickAddEvent = insertQuickAddEvent;
-
-
-
 /* Methods definitions */
 
 function _makeCalendarParams(user) {
@@ -90,13 +79,13 @@ function hasRemoteCalendar(user) {
  callback = function(err, event_id)
  */
 function insertEvent(user, event, callback) {
-	if (user == null)
+	if (user === null)
 		return callback("User empty");
 
 	UserModel.findOne({_id: user}, "google firstname lastname", function (err, user) {
 		if (err)
 			return callback(err);
-		if (user == null)
+		if (user === null)
 			return callback("User empty");
 
 		if (!gcommon.isGoogleUser(user))
@@ -130,13 +119,13 @@ function insertEvent(user, event, callback) {
  callback = function(err, event_id)
  */
 function insertQuickAddEvent(user, eventString, callback) {
-	if (user == null)
+	if (user === null)
 		return callback("User empty");
 
 	UserModel.findOne({_id: user}, "google", function (err, user) {
 		if (err)
 			return callback(err);
-		if (user == null)
+		if (user === null)
 			return callback("User empty");
 
 
@@ -162,6 +151,17 @@ function insertQuickAddEvent(user, eventString, callback) {
 				);
 	});
 }
+
+/* Public declaration methods. See definition for documentation. */
+
+//test
+exports.insertCalendar = insertCalendar;
+
+exports.insertEvent = insertEvent;
+
+exports.insertQuickAddEvent = insertQuickAddEvent;
+
+
 
 /* *************************************************** */
 

@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('HeaderController', ['$scope', '$rootScope', '$http', '$route', 'Global', 'pageTitle', 'superCache', function ($scope, $rootScope, $http, $route, Global, pageTitle, superCache) {
 		$scope.global = Global;
 		//console.log(Global);

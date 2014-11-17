@@ -76,7 +76,7 @@ module.exports = function (app, passport, auth) {
 					result[i] = {};
 					result[i].name = docs[i].name;
 					result[i].id = docs[i]._id;
-					if (docs[i].cptBilling.id == null) {
+					if (docs[i].cptBilling.id === null) {
 						result[i].cptBilling = {};
 						result[i].cptBilling.name = docs[i].name;
 						result[i].cptBilling.id = docs[i]._id;
@@ -104,7 +104,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/contact/autocomplete/:field', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
-		if (req.body.filter == null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {};
@@ -353,7 +353,7 @@ module.exports = function (app, passport, auth) {
 											return callback();
 										}
 
-										if (societe == null) {
+										if (societe === null) {
 											console.log("Societe not found : " + data.code_client + '/' + data.oldId);
 											return callback();
 										}
@@ -367,11 +367,11 @@ module.exports = function (app, passport, auth) {
 											$or: []
 										};
 
-										if (data.email != null)
+										if (data.email !== null)
 											query.$or.push({email: data.email.toLowerCase()});
-										//if (data.phone != null)
+										//if (data.phone !== null)
 										//	query.$or.push({phone: data.phone});
-										if (data.phone_mobile != null)
+										if (data.phone_mobile !== null)
 											query.$or.push({phone_mobile: data.phone_mobile});
 
 										if (!query.$or.length)
@@ -389,7 +389,7 @@ module.exports = function (app, passport, auth) {
 												return callback();
 											}
 
-											if (contact == null) {
+											if (contact === null) {
 												contact = new ContactModel(data);
 											} else {
 												console.log("Contact found");
@@ -409,7 +409,7 @@ module.exports = function (app, passport, auth) {
 											contact.save(function (err, doc) {
 												if (err)
 													console.log(err);
-												/*if (doc == null)
+												/*if (doc === null)
 												 console.log("null");
 												 else
 												 console.log(doc);*/
@@ -425,11 +425,11 @@ module.exports = function (app, passport, auth) {
 										$or: []
 									};
 
-									if (data.email != null)
+									if (data.email !== null)
 										query.$or.push({email: data.email});
-									//if (data.phone != null)
+									//if (data.phone !== null)
 									//	query.$or.push({phone: data.phone});
-									if (data.phone_mobile != null)
+									if (data.phone_mobile !== null)
 										query.$or.push({phone_mobile: data.phone_mobile});
 
 									if (query.$or.length) {
@@ -440,7 +440,7 @@ module.exports = function (app, passport, auth) {
 												return callback();
 											}
 
-											if (contact == null) {
+											if (contact === null) {
 												contact = new ContactModel(data);
 											} else {
 												console.log("Found / update");
@@ -467,7 +467,7 @@ module.exports = function (app, passport, auth) {
 											contact.save(function (err, doc) {
 												if (err)
 													console.log(err);
-												/*if (doc == null)
+												/*if (doc === null)
 												 console.log("null");
 												 else
 												 console.log(doc);*/
@@ -481,7 +481,7 @@ module.exports = function (app, passport, auth) {
 										contact.save(function (err, doc) {
 											if (err)
 												console.log(err);
-											/*if (doc == null)
+											/*if (doc === null)
 											 console.log("null");
 											 else
 											 console.log(doc);*/

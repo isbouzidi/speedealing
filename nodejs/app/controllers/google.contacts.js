@@ -1022,7 +1022,7 @@ GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
 					}
 				}
 
-				if (new_contact.email != null || new_contact.lastname != null)
+				if (new_contact.email !== null || new_contact.lastname !== null)
 					self.contacts.push(new_contact);
 			}
 			catch (e) {

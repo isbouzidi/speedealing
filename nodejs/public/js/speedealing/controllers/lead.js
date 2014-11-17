@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http', '$modalInstance', 'Global', 'Lead', 'object', function ($scope, $http, $modalInstance, Global, Lead, object) {
 
 		$scope.global = Global;
