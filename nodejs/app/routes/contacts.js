@@ -367,11 +367,11 @@ module.exports = function (app, passport, auth) {
 											$or: []
 										};
 
-										if (data.email !== null)
+										if (data.email)
 											query.$or.push({email: data.email.toLowerCase()});
 										//if (data.phone !== null)
 										//	query.$or.push({phone: data.phone});
-										if (data.phone_mobile !== null)
+										if (data.phone_mobile)
 											query.$or.push({phone_mobile: data.phone_mobile});
 
 										if (!query.$or.length)
