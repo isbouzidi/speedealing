@@ -19,17 +19,6 @@ var UserModel = mongoose.model('user');
 var gcommon = require('./google.common');
 
 
-/* Public declaration methods. See definition for documentation. */
-
-// test
-exports.insertCalendar = insertCalendar;
-
-exports.insertEvent = insertEvent;
-
-exports.insertQuickAddEvent = insertQuickAddEvent;
-
-
-
 /* Methods definitions */
 
 function _makeCalendarParams(user) {
@@ -162,6 +151,17 @@ function insertQuickAddEvent(user, eventString, callback) {
 				);
 	});
 }
+
+/* Public declaration methods. See definition for documentation. */
+
+//test
+exports.insertCalendar = insertCalendar;
+
+exports.insertEvent = insertEvent;
+
+exports.insertQuickAddEvent = insertQuickAddEvent;
+
+
 
 /* *************************************************** */
 
