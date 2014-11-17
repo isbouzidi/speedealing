@@ -180,7 +180,7 @@ exports.addFile = function (Model, id, file, callback) {
 	if (fs.existsSync(filename)) {
 		//console.log(filename);
 		Model.findOne({_id: id}, function (err, doc) {
-			if (err || doc ==== null) {
+			if (err || doc === null) {
 				console.log(err);
 				return callback({status: "Id not found"});
 			}
@@ -203,7 +203,7 @@ exports.addFile = function (Model, id, file, callback) {
 exports.getFile = function (Model, id, fileName, callback) {
 	Model.findOne({_id: id}, function (err, doc) {
 
-		if (err || doc ==== null) {
+		if (err || doc === null) {
 			console.log(err);
 			return callback({status: "Id not found"}, null);
 		}

@@ -59,7 +59,7 @@ exports.list = function (req, res) {
 
 		var result = [];
 
-		if (docs !=== null)
+		if (docs !== null)
 			for (var i in docs) {
 				//console.log(docs[i]);
 				result[i] = {};

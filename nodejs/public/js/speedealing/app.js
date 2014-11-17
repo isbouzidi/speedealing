@@ -1,3 +1,5 @@
+"use strict";
+
 window.app = angular.module('mean', [
 	'ngRoute',
 	'ngCookies',

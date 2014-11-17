@@ -241,7 +241,7 @@ module.exports = function (app, passport, auth) {
 			}
 
 			var result = [];
-			if (docs !=== null)
+			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
 					result[i] = {};
@@ -294,7 +294,7 @@ module.exports = function (app, passport, auth) {
 			}
 
 			var result = [];
-			if (docs !=== null)
+			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i]);
 					result[i] = {};

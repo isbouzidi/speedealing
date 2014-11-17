@@ -1,3 +1,5 @@
+"use strict";
+
 //Setting up route
 window.app.config(['$routeProvider',
 	function($routeProvider) {

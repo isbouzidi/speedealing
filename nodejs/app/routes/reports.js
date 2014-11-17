@@ -23,7 +23,7 @@ module.exports = function (app, passport, auth, usersSocket) {
 
 	app.get('/api/report/contacts', auth.requiresLogin, function (req, res) {
 
-		if (req.query.societe ==== null)
+		if (req.query.societe === null)
 			return res.send(200, {});
 
 		console.log("contacts : " + req.query.contacts);

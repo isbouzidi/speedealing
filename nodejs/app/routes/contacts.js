@@ -44,7 +44,7 @@ module.exports = function (app, passport, auth) {
 	app.post('/api/contact/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
 
-		if (req.body.filter ==== null)
+		if (req.body.filter === null)
 			return res.send(200, {});
 
 		var query = {
@@ -70,7 +70,7 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 
-			if (docs !=== null)
+			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i].ref);
 					result[i] = {};
@@ -128,7 +128,7 @@ module.exports = function (app, passport, auth) {
 				//console.log(docs);
 				var result = [];
 
-				if (docs !=== null)
+				if (docs !== null)
 					for (var i in docs) {
 						//result.push({text: docs[i]._id});
 						result.push(docs[i]._id);

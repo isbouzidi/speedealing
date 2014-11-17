@@ -132,7 +132,7 @@ module.exports = function (app, passport, auth) {
 						}
 					}
 
-					/*	if (doc !=== null) {
+					/*	if (doc !== null) {
 					 var update = {};
 					 update[key] = row[key];
 					 update[key].id = doc._id;
@@ -594,7 +594,7 @@ Migrate.prototype = {
 					if (err)
 						console.log(err);
 
-					if (doc !=== null) {
+					if (doc !== null) {
 						var update = {};
 						update[key] = row[key];
 						update[key].id = doc._id;
@@ -1048,7 +1048,7 @@ MigrateMySQL.prototype = {
 					if (err)
 						console.log(err);
 
-					if (doc !=== null) {
+					if (doc !== null) {
 						var update = {};
 						update[key] = row[key];
 						update[key].id = doc._id;

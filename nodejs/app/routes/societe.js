@@ -70,7 +70,7 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 
-			if (docs !=== null)
+			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i].ref);
 					result[i] = {};
@@ -130,7 +130,7 @@ module.exports = function (app, passport, auth) {
 				//console.log(docs);
 				var result = [];
 
-				if (docs !=== null)
+				if (docs !== null)
 					for (var i in docs) {
 						//result.push({text: docs[i]._id});
 						result.push(docs[i]._id);
@@ -175,7 +175,7 @@ module.exports = function (app, passport, auth) {
 			//console.log(docs);
 			var result = [];
 
-			if (docs !=== null)
+			if (docs !== null)
 				for (var i in docs) {
 					result.push({text: docs[i]._id});
 				}
@@ -1382,7 +1382,7 @@ module.exports = function (app, passport, auth) {
 				if (err)
 					console.log(err);
 
-				if (docs ==== null)
+				if (docs === null)
 					return res.send(200, []);
 
 				for (var i in docs) {
@@ -1399,7 +1399,7 @@ module.exports = function (app, passport, auth) {
 				if (err)
 					console.log(err);
 
-				if (docs ==== null)
+				if (docs === null)
 					return res.send(200, []);
 
 				for (var i in docs) {
