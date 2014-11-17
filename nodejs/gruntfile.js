@@ -101,5 +101,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['jshint', 'concurrent']);
 
     //Test task.
-    grunt.registerTask('test', ['env:test', 'mochaTest', 'jscs']);
+    //grunt.registerTask('test', ['env:test', 'mochaTest', 'jscs']);
+    grunt.registerTask('test', ['env:test', 'mochaTest', 'jshint']);
 };
