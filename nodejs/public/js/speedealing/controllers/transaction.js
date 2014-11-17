@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.transaction').controller('TransactionController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$timeout', 'pageTitle', 'Global', 'object', 'Transaction', function ($scope, $location, $http, $routeParams, $modal, $filter, $timeout, pageTitle, Global, object, Transaction) {
 
         $scope.global = Global;

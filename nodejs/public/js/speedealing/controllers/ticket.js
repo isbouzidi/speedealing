@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('TicketController', ['$scope', '$routeParams', '$location', '$route', '$timeout', 'Global', 'pageTitle', '$http', 'socket', 'Ticket', function($scope, $routeParams, $location, $route, $timeout, Global, pageTitle, $http, socket, Ticket) {
 		$scope.global = Global;
 

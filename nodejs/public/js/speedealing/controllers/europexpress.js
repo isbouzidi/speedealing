@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.europexpress').controller('EEPlanningController', ['$scope', '$routeParams', '$location', '$route', '$modal', 'Global', '$http', 'EEPlanning', function ($scope, $routeParams, $location, $route, $modal, Global, $http, Object) {
 		$scope.global = Global;
 		$scope.showEdit = {};

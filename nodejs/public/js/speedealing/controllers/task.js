@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('TaskController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'socket', 'pageTitle', 'Task', function ($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, socket, pageTitle, Task) {
 		$scope.global = Global;
 

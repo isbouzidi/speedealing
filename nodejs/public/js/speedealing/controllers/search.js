@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('SearchController', ['$rootScope', '$scope', '$location', '$routeParams', '$modal', 'Global', 'socket', '$http', function ($rootScope, $scope, $location, $routeParams, $modal, Global, socket, $http) {
 		$scope.global = Global;
 

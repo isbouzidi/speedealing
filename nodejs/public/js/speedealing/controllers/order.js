@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.orders').controller('OrderController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$timeout', '$upload', 'pageTitle', 'Global', 'Orders', function ($scope, $location, $http, $routeParams, $modal, $filter, $timeout, $upload, pageTitle, Global, Orders) {
 
 		pageTitle.setTitle('Liste des commandes');

@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('MenuController', ['$rootScope', '$scope', '$routeParams', 'Global', 'socket', '$http', '$translate', '$location', function($rootScope, $scope, $routeParams, Global, socket, $http, $translate, $location) {
 		$scope.global = Global;
 

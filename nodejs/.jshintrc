@@ -19,12 +19,13 @@
     "trailing": true, // Prohibit trailing whitespaces.
     "smarttabs": false, // Suppresses warnings about mixed tabs and spaces
     "globals": { // Globals variables.
-        "angular": true,
+        "angular": false,
         "define": false,
         "require": false,
         "exports": false
     },
     "predef": [ // Extra globals.
+        "angular",
         "define",
         "require",
         "exports",

@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.contacts').controller('ContactCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Contacts', 'object', function ($scope, $http, $modalInstance, $upload, $route, Global, Contacts, object) {
 
 		$scope.global = Global;

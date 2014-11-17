@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTitle', '$http', '$timeout', '$upload', '$route', 'Global', 'Order', function($scope, pageTitle, $http, $timeout, $upload, $route, Global, Order) {
 		$scope.global = Global;
 
