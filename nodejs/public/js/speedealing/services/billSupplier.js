@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 //Bills service used for REST endpoint
 angular.module('mean.bills').factory("BillsSupplier", ['$resource', function($resource) {
     return $resource('api/billSupplier/:Id', {

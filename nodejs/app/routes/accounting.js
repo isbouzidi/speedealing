@@ -99,7 +99,7 @@ Object.prototype = {
 									datec: bill.datec,
 									journal: "VT",
 									compte: null,
-									piece: parseInt(bill.ref.substr(7)),
+									piece: parseInt(bill.ref.substr(7), 10),
 									libelle: bill.ref + ' ' + lineBill.product.name + ' (INCONNU)',
 									debit: 0,
 									credit: 0,
@@ -110,7 +110,7 @@ Object.prototype = {
 									datec: bill.datec,
 									journal: "VT",
 									compte: product.compta_sell,
-									piece: parseInt(bill.ref.substr(7)),
+									piece: parseInt(bill.ref.substr(7), 10),
 									libelle: bill.ref + " " + societe.name,
 									debit: 0,
 									credit: 0,
@@ -137,7 +137,7 @@ Object.prototype = {
 								datec: bill.datec,
 								journal: "VT",
 								compte: tva_code[bill.total_tva[i].tva_tx],
-								piece: parseInt(bill.ref.substr(7)),
+								piece: parseInt(bill.ref.substr(7), 10),
 								libelle: bill.ref + " " + societe.name,
 								debit: 0,
 								credit: 0,
@@ -231,7 +231,7 @@ Object.prototype = {
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;
 
-		if (bill.entity == null)
+		if (!bill.entity)
 			bill.entity = req.user.entity;
 
 		//console.log(bill);

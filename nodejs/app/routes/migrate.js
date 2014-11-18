@@ -13,11 +13,13 @@ var mongoose = require('mongoose'),
 		config = require(__dirname + '/../../config/config'),
 		fs = require('fs');
 
+var connection;
+
 if (config.couchdb !== undefined) {
 	var cradle = require('cradle');
 	var ProductModel = mongoose.model('product');
 
-	var connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
+	connection = new (cradle.Connection)(config.couchdb.host, config.couchdb.port, {
 		secure: false,
 		cache: true,
 		cacheSize: 1024,
@@ -29,7 +31,7 @@ if (config.couchdb !== undefined) {
 
 if (config.mysql !== undefined) {
 	var mysql = require('mysql');
-	var connection = mysql.createConnection({
+	connection = mysql.createConnection({
 		host: config.mysql.host,
 		user: config.mysql.user,
 		password: config.mysql.password,

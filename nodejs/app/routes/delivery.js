@@ -327,7 +327,7 @@ Object.prototype = {
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 
-				var tab_latex = "";
+				tab_latex = "";
 				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
 				for (var i = 0; i < doc.total_tva.length; i++) {
 					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
@@ -373,7 +373,7 @@ Object.prototype = {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 10), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		var ca = {};
@@ -480,7 +480,7 @@ Billing.prototype = {
 						return console.log(err);
 
 					//console.log(docs);
-					result.GroupBL = docs
+					result.GroupBL = docs;
 					res.json(result);
 				});
 	},
@@ -497,7 +497,7 @@ Billing.prototype = {
 			};
 
 			if (societe == null)
-				console.log("Error : pas de societe pour le clientId : " + clientId);
+				console.log("Error : pas de societe pour le clientId : " + req.delivery.client.cptBilling.id);
 
 			bill.price_level = societe.price_level;
 			bill.mode_reglement_code = societe.mode_reglement;
@@ -723,7 +723,7 @@ Billing.prototype = {
 
 					//apply sum on ca
 					for (var i = 0; i < 12; i++)
-						if (i == 0)
+						if (i === 0)
 							result.sum[i] = result.total[i];
 						else
 							result.sum[i] = result.total[i] + result.sum[i - 1];

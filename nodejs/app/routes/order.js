@@ -157,7 +157,7 @@ Object.prototype = {
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
 
-		if (order.entity == null)
+		if (!order.entity)
 			order.entity = req.user.entity;
 
 		if (req.user.societe.id) { // It's an external order
@@ -165,7 +165,7 @@ Object.prototype = {
 				if (err)
 					console.log(err);
 
-				if (contact == null)
+				if (!contact)
 					contact = new ContactModel();
 
 				contact.entity = req.user.entity;
@@ -252,8 +252,8 @@ Object.prototype = {
 
 
 		order.save(function (err, doc) {
-			if(err)
-				return console.log(err)
+			if (err)
+				return console.log(err);
 			
 			res.json(doc);
 		});

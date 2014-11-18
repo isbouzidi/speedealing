@@ -71,7 +71,7 @@ module.exports = function (app, passport, auth, usersSocket) {
 		var update = {
 			'$set': {datef: datef},
 			'$push': {comments: addComment}
-		}
+		};
 		if (req.user._id != req.body.controller.id)
 			update['$pull'] = {read: req.body.controller.id};
 
@@ -278,7 +278,7 @@ module.exports = function (app, passport, auth, usersSocket) {
 		// notify controller chnge date
 		var socket = usersSocket[req.body.controller.id];
 		if (req.body.controller.id != req.user._id && socket) {
-			if (parseInt(req.body.percentage) === 100)
+			if (parseInt(req.body.percentage, 10) === 100)
 				socket.emit('notify', {
 					title: 'Ticket : ' + req.body.name,
 					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a terminé le ticket ' + req.body.ref + '.',

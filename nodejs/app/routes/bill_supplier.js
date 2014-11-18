@@ -157,7 +157,7 @@ Object.prototype = {
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;
 
-		if (bill.entity == null)
+		if (!bill.entity)
 			bill.entity = req.user.entity;
 
 		//console.log(bill);
@@ -199,7 +199,7 @@ Object.prototype = {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 10), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		async.parallel({
@@ -327,7 +327,7 @@ Object.prototype = {
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 
-				var tab_latex = "";
+				tab_latex = "";
 				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
 				for (var i = 0; i < doc.total_tva.length; i++) {
 					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
