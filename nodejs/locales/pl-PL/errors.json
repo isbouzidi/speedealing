@@ -5,8 +5,6 @@
     "Errors": "Błędy",
     "ErrorBadEMail": "EMail %s jest nie tak",
     "ErrorBadUrl": "Url %s jest nie tak",
-    "ErrorLoginAlreadyExists": "Zaloguj %s już istnieje.",
-    "ErrorGroupAlreadyExists": "Grupa %s już istnieje.",
     "ErrorRecordNotFound": "Rekord nie został znaleziony.",
     "ErrorFailToCopyFile": "Nie udało się skopiować pliku <b>'%s</b> &quot;na&quot; <b>%s</b> strony'.",
     "ErrorFailToRenameFile": "Nie można zmienić nazwy pliku <b>'%s</b> &quot;na&quot; <b>%s</b> strony'.",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Nie modelu do generowania dokumentu, został aktywowany. Model będzie wybraną domyślnie dopóki nie zajrzysz do modułu konfiguracji.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "To ostrzeżenie pozostanie aktywne, dopóki ten katalog jest obecny (Widoczne tylko admin użytkowników).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

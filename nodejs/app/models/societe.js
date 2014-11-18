@@ -42,21 +42,21 @@ var setTags = function (tags) {
  */
 var societeSchema = new Schema({
 	ref: String,
-	name: {type: String, require: true/*, es_indexed: true*/},
-	code_client: {type: String},
-	code_fournisseur: String,
-	barCode: String,
+	name: {type: String, require: true, trim:true/*, es_indexed: true*/},
+	code_client: {type: String, trim:true, uppercase:true},
+	code_fournisseur: {type: String, trim:true, uppercase:true},
+	barCode: {type: String, trim:true, uppercase:true},
 	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
 	dateLastStatus: {type: Date, default: Date.now},
 	blocked: Boolean, // Compte bloque
 	address: String,
 	zip: String,
 	town: String,
-	country_id: {type: String, default: 'FR'},
+	country_id: {type: String, default: 'FR', uppercase:true},
 	state_id: Number,
 	phone: String,
 	fax: String,
-	email: String,
+	email: {type:String,lowercase:true, trim:true},
 	url: String,
 	typent_id: {type: String, default: 'TE_UNKNOWN'},
 	effectif_id: {type: String, default: 'EF0'},
@@ -90,15 +90,15 @@ var societeSchema = new Schema({
 				name: String
 			},
 			datec: Date,
-			note: String
+			note: {type: String}
 		}],
-	public_notes: String,
+	//public_notes: String,
 	code_compta: String,
 	code_compta_fournisseur: String,
 	user_creat: String,
 	user_modif: String,
 	remise_client: Number,
-	entity: {type: String, default: "ALL"},
+	entity: {type: String, trim:true},
 	fournisseur: {type: String, default: 'NO'},
 	gps: [Number],
 	contractID: String,
@@ -127,6 +127,7 @@ var societeSchema = new Schema({
 	risk: {type: String, default: 'NO'},
 	kompass_id: String, // Kompass
 	ha_id: String, // hors antenne
+	oldId: String, // only use for migration
 	soldeOut: Number, // Situation comptable
 	optional: mongoose.Schema.Types.Mixed
 }, {
@@ -134,7 +135,7 @@ var societeSchema = new Schema({
 	toJSON: {virtuals: true}
 });
 
-societeSchema.index({name: 'text', zip: 'text', town: 'text', Tag: 'text', rival: 'text', "segmentation.label": 'text'});
+societeSchema.index({name: 'text', zip: 'text', Tag: 'text', rival: 'text', "segmentation.label": 'text'});
 
 societeSchema.plugin(timestamps);
 

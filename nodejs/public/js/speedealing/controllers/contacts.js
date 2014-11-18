@@ -1,27 +1,34 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.contacts').controller('ContactCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', 'Contacts', 'object', function ($scope, $http, $modalInstance, $upload, $route, Global, Contacts, object) {
 
 		$scope.global = Global;
 		$scope.listCode = {};
 		$scope.active = 1;
-		$scope.jobs = [];
+		$scope.dict = {};
 
 		$scope.soncas = [
 			"Sécurité", 'Orgueil', 'Nouveauté', 'Confort', 'Argent', "Sympathique"
 		];
 
 		$scope.init = function () {
-			$scope.contact = {
-				societe: {
-					id: object.societe._id,
-					name: object.societe.name
-				}
-			};
+			if (object.societe)
+				$scope.contact = {
+					societe: {
+						id: object.societe._id,
+						name: object.societe.name
+					},
+					address: object.societe.address,
+					zip: object.societe.zip,
+					town: object.societe.town
+				};
 
 			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_job"
+					dictName: ["fk_civilite", "fk_job"]
 				}
 			}).success(function (data, status) {
-				$scope.jobs = data;
+				$scope.dict = data;
 			});
 		};
 
@@ -52,12 +59,15 @@ angular.module('mean.contacts').controller('ContactCreateController', ['$scope',
 
 	}]);
 
-angular.module('mean.contacts').controller('ContactsController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'object', 'Global', 'Contacts', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, object, Global, Contacts) {
+angular.module('mean.contacts').controller('ContactsController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$route', '$modal', '$filter', '$upload', '$timeout', '$modalInstance', 'pageTitle', 'object', 'Global', 'Contacts', function ($scope, $rootScope, $location, $http, $routeParams, $route, $modal, $filter, $upload, $timeout, $modalInstance, pageTitle, object, Global, Contacts) {
+
+		$scope.global = Global;
 
 		$scope.retour = function () {
 			$location.path('/contacts');
 		};
 		$scope.contact = {};
+		$scope.dict = {};
 
 		$scope.etats = [
 			{id: "ST_NEVER", name: "Non déterminé"},
@@ -83,7 +93,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			Contacts.query({Status: this.etat.id}, function (contact) {
 
 				$scope.contacts = contact;
-				$scope.count = contacts.length;
+				$scope.count = contact.length;
 			});
 		};
 
@@ -112,26 +122,10 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 		$scope.init = function () {
 
 			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_contact_status"
-				}
-
-			}).success(function (data) {
-
-				$scope.Status = data;
-			});
-
-			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_job"
+					dictName: ["fk_job", "fk_hobbies", "fk_civilite", "fk_contact_status"]
 				}
 			}).success(function (data, status) {
-				$scope.jobs = data;
-			});
-
-			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: "fk_hobbies"
-				}
-			}).success(function (data, status) {
-				$scope.hobbies = data;
+				$scope.dict = data;
 			});
 		};
 
@@ -154,11 +148,10 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			});
 		};
 
-		$scope.deleteContact = function () {
-
-			var contact = $scope.contact;
+		$scope.remove = function (contact) {
 			contact.$remove(function (response) {
-				$location.path('/contacts');
+				$modalInstance.dismiss('cancel');
+				$route.reload();
 			});
 		};
 

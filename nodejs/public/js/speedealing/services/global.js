@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').factory("Global", [function() {
 		var _this = this;
 		_this._data = {

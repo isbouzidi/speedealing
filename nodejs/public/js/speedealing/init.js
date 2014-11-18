@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 window.bootstrap = function() {
     angular.bootstrap(document, ['mean']);
 };

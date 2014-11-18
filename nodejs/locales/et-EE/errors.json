@@ -5,8 +5,6 @@
     "Errors": "Vead",
     "ErrorBadEMail": "E-post %s on vale",
     "ErrorBadUrl": "Url %s on vale",
-    "ErrorLoginAlreadyExists": "Logi %s juba olemas.",
-    "ErrorGroupAlreadyExists": "Group %s juba olemas.",
     "ErrorRecordNotFound": "Salvestada ei leitud.",
     "ErrorFailToCopyFile": "Ei suutnud kopeerida faili <b>%s</b> &quot;muutmine&quot; <b>%s</b> &quot;.",
     "ErrorFailToRenameFile": "Suutnud ümber faili <b>%s</b> &quot;muutmine&quot; <b>%s</b> &quot;.",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Ei mudel, dokumentide tootmine, on aktiveeritud. Mudelit valis vaikimisi kuni te vaadata oma moodul setup.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Kõik turvahoiatuste (nähtav admin kasutajate puhul) jääb aktiivseks nii kaua, kui haavatavus on olemas (või et pidev MAIN_REMOVE_INSTALL_WARNING lisatakse Setup-> Other setup).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

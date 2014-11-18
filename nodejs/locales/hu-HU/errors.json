@@ -5,8 +5,6 @@
     "Errors": "Hibák",
     "ErrorBadEMail": "E-mail %s rossz",
     "ErrorBadUrl": "Url %s rossz",
-    "ErrorLoginAlreadyExists": "Bejelentkezés %s már létezik.",
-    "ErrorGroupAlreadyExists": "Csoport %s már létezik.",
     "ErrorRecordNotFound": "Jegyezze fel nem található.",
     "ErrorFailToCopyFile": "Fájl másolása sikertelen <b>&quot;%s&quot;</b> a <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Nem sikerült átnevezni file <b>&quot;%s&quot;</b> a <b>&quot;%s&quot;.</b>",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Nem modell, a dokumentum generáció, be van kapcsolva. A modell kerül választottunk alapértelmezés szerint amíg ellenőrizze a modul beállításait.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Minden biztonsági figyelmeztetések (látható: admin felhasználó esetén) továbbra is aktív marad, amíg a biztonsági rés van jelen (vagy állandó MAIN_REMOVE_INSTALL_WARNING egészül ki a Setup-> Egyéb beállítás).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

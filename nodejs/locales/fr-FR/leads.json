@@ -1,10 +1,11 @@
 {
 	"CHARSET": "UTF-8",
-	"Leads": "Affaire détectée",
-	"Lead": "Affaire",
-        "ListLeads": "Liste des affaires",
-	"New Lead": "Nouvelle affaire",
-	"Potential": "Potentiel de l'affaire",
-	"Type": "Type d'affaire",
-	"Step": "Etape / status affaire"
+	"Leads": "Projets",
+	"LeadsDetected": "Projets détectés",
+	"Lead": "Projet",
+	"ListLeads": "Liste des projets",
+	"New Lead": "Nouveau projet",
+	"Potential": "Potentiel du projet",
+	"Type": "Type de projet",
+	"Step": "Etape / status projet"
 }

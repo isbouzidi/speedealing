@@ -29,7 +29,7 @@
     "ForceBuyingPriceIfNullDetails": "daca \"ON\", marja va fi zero pe linie (pret cumparare= pret vanzare), altfel(\"OFF\"), marja va fi egala cu pretul de vanzare pentru aceasta linie (pret cumparare = 0).",
     "MARGIN_METHODE_FOR_DISCOUNT": "Metoda gestionare discounturi globale",
     "UseDiscountAsProduct": "Ca produs",
-    "UseDiscountAsService": " Ca serviciu",
+    "UseDiscountAsService": "Ca serviciu",
     "UseDiscountOnTotal": "Pe total",
     "MARGIN_METHODE_FOR_DISCOUNT_DETAILS": "Definiti daca discontul global e tratat ca un produs, serviciu, sau numai pe total la calcularea marjei.",
     "MARGIN_TYPE": "Tip de marja",

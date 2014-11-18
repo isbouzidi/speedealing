@@ -2,6 +2,8 @@
     "CHARSET": "UTF-8",
     "Bill": "Invoice",
     "Bills": "Kvittanir",
+    "Billing": "Facturation",
+    "List": "Liste des factures",
     "BillsCustomers": "reikninga viðskiptavinar",
     "BillsCustomer": "Viðskiptavinar Reikningar",
     "BillsSuppliers": "reikningum birgis",
@@ -389,5 +391,14 @@
     "PDFCrabeDescription": "Invoice líkan Crabe. A heill Reikningar líkan (styður VSK valkostur, afslætti, greiðslur skilyrði, merki, osfrv ..)",
     "PDFOursinDescription": "Invoice líkan oursin",
     "TerreNumRefModelDesc1": "Fara aftur numero með snið %s yymm-NNNN standard nótur og %s yymm-NNNN fyrir minnismiða kredit þar sem YY er ári, mm er mánuður og NNNN er röð án brot og ekki aftur snúið til 0",
-    "TerreNumRefModelError": "A frumvarpið hófst með $ syymm er til nú þegar og er ekki með þessari tegund af röð. Fjarlægja hana eða gefa henni nýtt heiti þess að virkja þessa einingu."
+    "TerreNumRefModelError": "A frumvarpið hófst með $ syymm er til nú þegar og er ekki með þessari tegund af röð. Fjarlægja hana eða gefa henni nýtt heiti þess að virkja þessa einingu.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

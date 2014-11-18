@@ -31,6 +31,7 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/lines/list', auth.requiresLogin, object.listLines);
 	app.get('/api/commande', auth.requiresLogin, object.all);
 	app.post('/api/commande', auth.requiresLogin, object.create);
+	app.post('/api/commande/:orderId', auth.requiresLogin, object.create);
 	app.get('/api/commande/:orderId', auth.requiresLogin, object.show);
 	app.put('/api/commande/:orderId', auth.requiresLogin, object.update);
 	app.del('/api/commande/:orderId', auth.requiresLogin, object.destroy);
@@ -39,6 +40,61 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
+	
+	app.post('/api/commande/file/:Id', auth.requiresLogin, function (req, res) {
+		var id = req.params.Id;
+		//console.log(id);
+
+		if (req.files && id) {
+			//console.log(req.files);
+
+			gridfs.addFile(SocieteModel, id, req.files.file, function (err, result, file, update) {
+				if (err)
+					return res.send(500, err);
+
+				return res.send(200, {status: "ok", file: file, update: update});
+			});
+		} else
+			res.send(500, "Error in request file");
+	});
+
+	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, function (req, res) {
+		var id = req.params.Id;
+
+		if (id && req.params.fileName) {
+
+			gridfs.getFile(SocieteModel, id, req.params.fileName, function (err, store) {
+				if (err)
+					return res.send(500, err);
+
+				if (req.query.download)
+					res.attachment(store.filename); // for downloading 
+
+				res.type(store.contentType);
+				store.stream(true).pipe(res);
+
+			});
+		} else {
+			res.send(500, "Error in request file");
+		}
+
+	});
+
+	app.del('/api/commande/file/:Id/:fileNames', auth.requiresLogin, function (req, res) {
+		console.log(req.body);
+		var id = req.params.Id;
+		//console.log(id);
+
+		if (req.params.fileNames && id) {
+			gridfs.delFile(SocieteModel, id, req.params.fileNames, function (err) {
+				if (err)
+					res.send(500, err);
+				else
+					res.send(200, {status: "ok"});
+			});
+		} else
+			res.send(500, "File not found");
+	});
 
 	//Finish with setting up the orderId param
 	app.param('orderId', object.order);
@@ -77,12 +133,31 @@ Object.prototype = {
 	 * Create an order
 	 */
 	create: function (req, res) {
-		var order = new CommandeModel(req.body);
+		var order;
+		
+		if (req.query.clone) {
+			order = req.order.toObject();
+			delete order._id;
+			delete order.__v;
+			delete order.ref;
+			delete order.createdAt;
+			delete order.updatedAt;
+			order.Status = "DRAFT";
+			order.notes = [];
+			order.latex = {};
+			order.datec = new Date();
+			order.date_livraison = new Date();
+
+			order = new CommandeModel(order);
+		} else
+			order = new CommandeModel(req.body);
+		
+		
 		order.author = {};
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
 
-		if (order.entity == null)
+		if (!order.entity)
 			order.entity = req.user.entity;
 
 		if (req.user.societe.id) { // It's an external order
@@ -90,7 +165,7 @@ Object.prototype = {
 				if (err)
 					console.log(err);
 
-				if (contact == null)
+				if (!contact)
 					contact = new ContactModel();
 
 				contact.entity = req.user.entity;
@@ -129,7 +204,7 @@ Object.prototype = {
 			});
 		}
 
-		console.log(order);
+		//console.log(order);
 
 		order.save(function (err, doc) {
 			if (err) {
@@ -177,6 +252,9 @@ Object.prototype = {
 
 
 		order.save(function (err, doc) {
+			if (err)
+				return console.log(err);
+			
 			res.json(doc);
 		});
 	},

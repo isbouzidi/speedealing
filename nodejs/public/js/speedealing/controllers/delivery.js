@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q', '$location', '$http', '$routeParams', '$rootScope', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function ($scope, $q, $location, $http, $routeParams, $rootScope, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste bons de livraison');
@@ -313,7 +316,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			columnDefs: [
 				{field: 'ref', displayName: 'Ref.', width: "150px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/delivery/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
 				{field: 'title.ref', displayName: 'Titre'},
-				{field: 'datec', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'datec', displayName: 'Date création', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'datedl', displayName: 'Date expédition', cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'client.name', displayName: 'Société', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/societes/{{row.getProperty(\'client.id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-home"></span> {{row.getProperty(col.field)}}</a></div>'},
 				{field: 'commercial_id.name', displayName: 'Commercial', cellTemplate: '<div class="ngCellText" ng-show="row.getProperty(col.field)"><span class="icon-user"> {{row.getProperty(col.field)}}</span></div>'},
@@ -400,17 +403,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			});
 		};
 
-		$scope.removeLine = function (row) {
-			//console.log(row.entity._id);
-			for (var i = 0; i < $scope.delivery.lines.length; i++) {
-				if (row.entity._id === $scope.delivery.lines[i]._id) {
-					$scope.delivery.lines.splice(i, 1);
-					$scope.update();
-					break;
-				}
-			}
-		};
-
 		$scope.addNote = function () {
 			if (!this.note)
 				return;
@@ -418,7 +410,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 

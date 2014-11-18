@@ -90,7 +90,7 @@ module.exports = function (app, passport, auth) {
 	// recupere la liste des courses pour verification
 	app.get('/api/delivery/billing', auth.requiresLogin, billing.read);
 
-	// Genere la facturation
+	// Genere la facturation des BL en groupe
 	app.post('/api/delivery/billing', auth.requiresLogin, billing.createAll);
 
 	app.get('/api/delivery/billing/ca', auth.requiresLogin, billing.familyCA);
@@ -327,7 +327,7 @@ Object.prototype = {
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 
-				var tab_latex = "";
+				tab_latex = "";
 				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
 				for (var i = 0; i < doc.total_tva.length; i++) {
 					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
@@ -373,7 +373,7 @@ Object.prototype = {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 10), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		var ca = {};
@@ -469,7 +469,7 @@ Billing.prototype = {
 		}
 
 		DeliveryModel.aggregate([
-			{$match: {Status: "SEND", entity: req.query.entity, datec: {$lte: new Date(req.query.dateEnd)}}},
+			{$match: {Status: "SEND", entity: req.query.entity, datedl: {$lte: new Date(req.query.dateEnd)}}},
 			{$project: project}
 		])
 				.unwind('lines')
@@ -480,7 +480,7 @@ Billing.prototype = {
 						return console.log(err);
 
 					//console.log(docs);
-					result.GroupBL = docs
+					result.GroupBL = docs;
 					res.json(result);
 				});
 	},
@@ -488,7 +488,7 @@ Billing.prototype = {
 
 		var delivery = req.delivery;
 
-		SocieteModel.findOne({_id: req.delivery.client.id}, function (err, societe) {
+		SocieteModel.findOne({_id: req.delivery.client.cptBilling.id}, function (err, societe) {
 			var bill = new FactureModel();
 
 			bill.client = {
@@ -497,7 +497,7 @@ Billing.prototype = {
 			};
 
 			if (societe == null)
-				console.log("Error : pas de societe pour le clientId : " + clientId);
+				console.log("Error : pas de societe pour le clientId : " + req.delivery.client.cptBilling.id);
 
 			bill.price_level = societe.price_level;
 			bill.mode_reglement_code = societe.mode_reglement;
@@ -534,10 +534,12 @@ Billing.prototype = {
 		//res.send(200);
 	},
 	createAll: function (req, res) {
+		//console.log(req.body.dateEnd);
+
 		DeliveryModel.aggregate([
-			{"$match": {Status: "SEND", entity: req.body.entity, datec: {$lte: new Date(req.body.dateEnd)}}},
-			{"$project": {"datec": 1, "shipping": 1, "lines": 1, "ref": 1, "societe": "$client.cptBilling"}},
-			{"$sort": {datec: 1}},
+			{"$match": {Status: "SEND", entity: req.body.entity, datedl: {$lte: new Date(req.body.dateEnd)}}},
+			{"$project": {"datec": 1, datedl: 1, "shipping": 1, "lines": 1, "ref": 1, "societe": "$client.cptBilling"}},
+			{"$sort": {datedl: 1}},
 			//{"$unwind": "$lines"},
 			{"$group": {"_id": "$societe.id", "data": {"$push": "$$ROOT"}}}
 		], function (err, docs) {
@@ -721,7 +723,7 @@ Billing.prototype = {
 
 					//apply sum on ca
 					for (var i = 0; i < 12; i++)
-						if (i == 0)
+						if (i === 0)
 							result.sum[i] = result.total[i];
 						else
 							result.sum[i] = result.total[i] + result.sum[i - 1];

@@ -33,10 +33,10 @@ var ReportSchema = new Schema({
 	products: [String],
 	realised: {type: Boolean, default: false},
 	dueDate: Date,
-	actions: [{
-			type: {type: String},
-			method: String
-		}],
+	//actions: [{
+	//		type: {type: String},
+	//		method: String
+	//	}],
 	optional: Schema.Types.Mixed,
 	comment: String,
 	proposal_ht: Number,
@@ -46,7 +46,7 @@ var ReportSchema = new Schema({
 		name: String
 	},
 	lead: {
-		id: Schema.Types.ObjectId,
+		id: {type: Schema.Types.ObjectId, ref: "lead"},
 		name: String
 	},
 	entity: String
@@ -56,21 +56,21 @@ var ReportSchema = new Schema({
 });
 
 ReportSchema.plugin(timestamps);
-ReportSchema.virtual('RealisedStatus').get(function () {
-
-	var realisedStat = {};
-
-	if (this.actions.length > 0) {
-		if (this.realised)
-			realisedStat = {id: 'Réalisé', css: 'green-gradient'};
-		else
-			realisedStat = {id: 'Non Réalisé', css: 'red-gradient'};
-	} else {
-		realisedStat = {id: 'Aucun', css: 'grey-gradient'};
-	}
-
-	return realisedStat;
-});
+/*ReportSchema.virtual('RealisedStatus').get(function () {
+ 
+ var realisedStat = {};
+ 
+ if (this.actions.length > 0) {
+ if (this.realised)
+ realisedStat = {id: 'Réalisé', css: 'green-gradient'};
+ else
+ realisedStat = {id: 'Non Réalisé', css: 'red-gradient'};
+ } else {
+ realisedStat = {id: 'Aucun', css: 'grey-gradient'};
+ }
+ 
+ return realisedStat;
+ });*/
 
 var extrafields = {};
 Dict.extrafield({extrafieldName: 'Report'}, function (err, doc) {
@@ -78,7 +78,10 @@ Dict.extrafield({extrafieldName: 'Report'}, function (err, doc) {
 		console.log(err);
 		return;
 	}
-	extrafields = doc.fields;
+	if (doc)
+		extrafields = doc.fields;
+	else
+		console.log('Dict is not loaded');
 });
 
 ReportSchema.virtual('_model')

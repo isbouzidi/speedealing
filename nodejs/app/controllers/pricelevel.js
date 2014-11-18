@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Module dependencies.
  */
@@ -7,7 +8,7 @@ var mongoose = require('mongoose'),
 var PriceLevelModel = mongoose.model('pricelevel');
 var ProductModel = mongoose.model('product');
 
-exports.read = function(req, res) {
+exports.read = function (req, res) {
 	var query = {};
 
 	if (req.query.price_level)
@@ -25,7 +26,7 @@ exports.read = function(req, res) {
 
 	PriceLevelModel.find(query, "-history", {sort: {qtyMin: -1}})
 			.populate("product.id", "label pu_ht")
-			.exec(function(err, prices) {
+			.exec(function (err, prices) {
 				if (err)
 					console.log(err);
 
@@ -37,7 +38,7 @@ exports.read = function(req, res) {
 			});
 };
 
-exports.list = function(req, res) {
+exports.list = function (req, res) {
 	var query = [];
 
 	if (req.body.filter)
@@ -46,11 +47,11 @@ exports.list = function(req, res) {
 	query.push({'$group': {_id: '$price_level'}});
 
 	if (req.body.take)
-		query.push({'$limit': parseInt(req.body.take)});
+		query.push({'$limit': parseInt(req.body.take, 10)});
 
 	query.push({'$sort': {_id: 1}});
 
-	PriceLevelModel.aggregate(query, function(err, docs) {
+	PriceLevelModel.aggregate(query, function (err, docs) {
 		if (err) {
 			console.log("err : /api/product/price_level/select");
 			console.log(err);
@@ -71,10 +72,10 @@ exports.list = function(req, res) {
 	});
 };
 
-exports.update = function(req, res) {
+exports.update = function (req, res) {
 	PriceLevelModel.update({_id: req.body._id},
 	{
-		tms: new Date,
+		tms: new Date(),
 		pu_ht: req.body.pu_ht,
 		qtyMin: req.body.qtyMin,
 		discount: req.body.discount,
@@ -85,7 +86,7 @@ exports.update = function(req, res) {
 		optional: req.body.optional,
 		$addToSet: {
 			history: {
-				tms: new Date,
+				tms: new Date(),
 				user_mod: {
 					id: req.user._id,
 					name: req.user.name
@@ -97,7 +98,7 @@ exports.update = function(req, res) {
 		}
 	},
 	{upsert: false},
-	function(err, numberAffected, price) {
+	function (err, numberAffected, price) {
 		if (err)
 			return console.log(err);
 
@@ -107,7 +108,7 @@ exports.update = function(req, res) {
 	//console.log(req.body);
 };
 
-exports.add = function(req, res) {
+exports.add = function (req, res) {
 	var price = new PriceLevelModel(req.body);
 
 	price.user_mod = {
@@ -116,7 +117,7 @@ exports.add = function(req, res) {
 	};
 
 	price.history.push({
-		tms: new Date,
+		tms: new Date(),
 		user_mod: {
 			id: req.user._id,
 			name: req.user.name
@@ -126,7 +127,7 @@ exports.add = function(req, res) {
 		discount: req.body.discount
 	});
 
-	price.save(function(err, price) {
+	price.save(function (err, price) {
 		if (err)
 			return console.log(err);
 
@@ -136,15 +137,15 @@ exports.add = function(req, res) {
 	//console.log(req.body);
 };
 
-exports.remove = function(req, res) {
-	PriceLevelModel.remove({_id: req.body._id}, function(err) {
+exports.remove = function (req, res) {
+	PriceLevelModel.remove({_id: req.body._id}, function (err) {
 		if (err)
 			return console.log(err);
 		res.send(200);
 	});
 };
 
-exports.autocomplete = function(body, callback) {
+exports.autocomplete = function (body, callback) {
 	var query = {
 		"product.name": new RegExp(body.filter.filters[0].value, "i"),
 		price_level: body.price_level
@@ -152,7 +153,7 @@ exports.autocomplete = function(body, callback) {
 
 	PriceLevelModel.find(query, "-history", {limit: body.take})
 			.populate("product.id", "label ref minPrice tva_tx caFamily")
-			.exec(function(err, prices) {
+			.exec(function (err, prices) {
 				if (err) {
 					console.log("err : /api/product/price/autocomplete");
 					console.log(err);
@@ -163,9 +164,9 @@ exports.autocomplete = function(body, callback) {
 			});
 };
 
-exports.upgrade = function(req, res) {
-	ProductModel.find(function(err, products) {
-		async.each(products, function(product, callback) {
+exports.upgrade = function (req, res) {
+	ProductModel.find(function (err, products) {
+		async.each(products, function (product, callback) {
 
 			for (var i = 0; i < product.price.length; i++) {
 				if (product.price[i].price_level === 'BASE')
@@ -175,7 +176,7 @@ exports.upgrade = function(req, res) {
 						tms: product.price[i].tms
 					},
 					{upsert: false},
-					function(err, numberAffected, price) {
+					function (err, numberAffected, price) {
 						if (err)
 							return console.log(err);
 
@@ -208,7 +209,7 @@ exports.upgrade = function(req, res) {
 						}
 					},
 					{upsert: true},
-					function(err, numberAffected, price) {
+					function (err, numberAffected, price) {
 						if (err)
 							return console.log(err);
 
@@ -217,7 +218,7 @@ exports.upgrade = function(req, res) {
 			}
 
 			callback();
-		}, function(err) {
+		}, function (err) {
 			if (err)
 				return res.json(err);
 			res.send(200);
@@ -225,9 +226,9 @@ exports.upgrade = function(req, res) {
 	});
 };
 
-exports.toUppercase = function(req, res) {
+exports.toUppercase = function (req, res) {
 
-	PriceLevelModel.find({price_level: {$ne: null}}, function(err, prices) {
+	PriceLevelModel.find({price_level: {$ne: null}}, function (err, prices) {
 		if (err) {
 			console.log("err : /api/product/price_level/toUppercase");
 			console.log(err);
@@ -236,10 +237,10 @@ exports.toUppercase = function(req, res) {
 		//console.log(prices);
 
 
-		prices.forEach(function(price) {
+		prices.forEach(function (price) {
 			PriceLevelModel.update({_id: price._id},
 			{$set: {price_level: price.price_level.toUpperCase()}},
-			{multi: true}, function(err, docs) {
+			{multi: true}, function (err, docs) {
 				//console.log(docs);
 			});
 		});
@@ -247,4 +248,18 @@ exports.toUppercase = function(req, res) {
 		res.send(200);
 
 	});
+};
+
+exports.findOne = function (query, callback) {
+	PriceLevelModel.findOne(query, "-history")
+			.populate("product.id", "label ref minPrice tva_tx caFamily")
+			.exec(function (err, price) {
+				if (err) {
+					console.log("err : /api/product/price/autocomplete");
+					callback(err);
+					return;
+				}
+				console.log(price);
+				callback(null, price);
+			});
 };

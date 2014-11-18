@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 window.app = angular.module('mean', [
 	'ngRoute',
 	'ngCookies',
@@ -7,7 +10,7 @@ window.app = angular.module('mean', [
 	'ui.bootstrap',
 	'dialogs.main',
 	'kendo.directives',
-	'ngAnimate',
+	//'ngAnimate',
 	'angularFileUpload',
 	'ngGrid',
 	"highcharts-ng",
@@ -34,7 +37,8 @@ window.app = angular.module('mean', [
 	'jm.i18next',
 	'ui.chart',
 	'checklist-model',
-	'mean.bank',
+	'jsonFormatter',
+'mean.bank',
         'mean.transaction',
         'mean.bankCategory'
 ]);
@@ -84,3 +88,20 @@ window.app.run(function(editableOptions, editableThemes) {
 	editableThemes.bs3.buttonsClass = 'btn-sm';
 	editableOptions.theme = 'bs3';
 });
+window.app.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($q) {
+        return {
+            'response': function (response) {
+                //Will only be called for HTTP up to 300
+                //console.log(response);
+                return response;
+            },
+            'responseError': function (rejection) {
+                if(rejection.status === 401) {
+                    location.replace("/login");
+                }
+                return $q.reject(rejection);
+            }
+        };
+    });
+}]);

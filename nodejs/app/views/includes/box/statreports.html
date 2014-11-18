@@ -1,0 +1,90 @@
+<div ng-if="global.user.rights.box.reportStatAllEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>Modifs de comptes</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
+		</div>
+
+		<ul class="events">
+			<li ng-repeat="entity in entities">
+				<span class="event-date">
+					\{{statsAllEntities.sumSocietes[$index*2 + 1].count}} <span class="event-hour"></span>
+					<span class="indic-progress green" ng-show="gain(statsAllEntities.sumSocietes,$index*2) > 0">+\{{gain(statsAllEntities.sumSocietes,$index*2) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(statsAllEntities.sumSocietes,$index*2) < 0">\{{gain(statsAllEntities.sumSocietes,$index*2) | number:0}}% ▼</span>
+				</span>
+				<h4>\{{entity.id}}</h4>
+				<small>Ce mois-ci</small>
+				
+			</li>
+
+		</ul>
+
+	</div>
+</div>
+
+<div ng-if="global.user.rights.box.reportStatAllEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>Nombre de projets</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
+		</div>
+
+		<ul class="events">
+			<li ng-repeat="entity in entities">
+				<span class="event-date">
+					\{{statsAllEntities.sumLeads[$index*2 + 1].count}} <span class="event-hour"></span>
+					<span class="indic-progress green" ng-show="gain(statsAllEntities.sumLeads,$index*2) > 0">+\{{gain(statsAllEntities.sumLeads,$index*2) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(statsAllEntities.sumLeads,$index*2) < 0">\{{gain(statsAllEntities.sumLeads,$index*2) | number:0}}% ▼</span>
+				</span>
+				<h4>\{{entity.id}}</h4>
+				<small>Ce mois-ci</small>
+				
+			</li>
+
+		</ul>
+
+	</div>
+</div>
+
+<div ng-if="global.user.rights.box.reportStatAllEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>Nombre de compte-rendus</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
+		</div>
+
+		<ul class="events">
+			<li ng-repeat="entity in entities">
+				<span class="event-date">
+					\{{statsAllEntities.sumReports[$index*2 + 1].count}} <span class="event-hour"></span>
+					<span class="indic-progress green" ng-show="gain(statsAllEntities.sumReports,$index*2) > 0">+\{{gain(statsAllEntities.sumReports,$index*2) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(statsAllEntities.sumReports,$index*2) < 0">\{{gain(statsAllEntities.sumReports,$index*2) | number:0}}% ▼</span>
+				</span>
+				<h4>\{{entity.id}}</h4>
+				<small>Ce mois-ci</small>
+				
+			</li>
+
+		</ul>
+
+	</div>
+</div>
+
+<div ng-if="global.user.rights.box.reportStatAllEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>Nombre d'actions du mois</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
+		</div>
+
+		<div class="gridStyle"  data-ng-grid="gridOptionsTasks()" style="height:300px"></div>
+	</div>
+</div>

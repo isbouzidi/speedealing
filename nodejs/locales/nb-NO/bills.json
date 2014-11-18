@@ -2,6 +2,8 @@
     "CHARSET": "UTF-8",
     "Bill": "Faktura",
     "Bills": "Fakturaer",
+    "Billing": "Facturation",
+    "List": "Liste des factures",
     "BillsCustomers": "Kundefakturaer",
     "BillsCustomer": "Kundens faktura",
     "BillsSuppliers": "Leverandørfakturaer",
@@ -389,5 +391,14 @@
     "PDFCrabeDescription": "Fakturamal Crabe. En komplett mal (Støtter MVA, rabatter, betalingsbetingelser, logo, osv...)",
     "PDFOursinDescription": "Fakturamal oursin",
     "TerreNumRefModelDesc1": "Gir nummer med formatet %sååmm-nnnn for standardfakturaer og %sååmm-nnnn for kreditnotaer hvor åå er år, mm er måned og nnnn er et sekvensielt nummer uten brudd og som aldri settes tilbake til 0",
-    "TerreNumRefModelError": "En faktura som starter med $sååmm finnes allerede og er ikke kompatibel med denne nummereringsmodulen. Du må slette den eller gi den ett nytt navn for å aktivere denne modulen."
+    "TerreNumRefModelError": "En faktura som starter med $sååmm finnes allerede og er ikke kompatibel med denne nummereringsmodulen. Du må slette den eller gi den ett nytt navn for å aktivere denne modulen.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

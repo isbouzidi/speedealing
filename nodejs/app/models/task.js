@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
@@ -36,6 +38,10 @@ var taskSchema = new Schema({
 			note: String
 		}
 	],
+	lead: {
+		id: {type: Schema.Types.ObjectId, ref: 'Lead'},
+		name: String
+	},
 	archived: {type: Boolean, default: false}
 }, {
 	toObject: {virtuals: true},

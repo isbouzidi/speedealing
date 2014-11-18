@@ -1,0 +1,55 @@
+# This script is used by Travis CI to run automatically Continuous test integration
+# from GitHub repository.
+# For syntax, see http://docs.travis-ci.com/user/languages/javascript-with-nodejs/
+
+notifications:
+  email:
+    recipients:
+      - commits@forge.speedealing.com
+    on_success: never # [always|never|change] default: change
+    on_failure: change # [always|never|change] default: always
+    
+services:
+ - mongodb # will start mongodb
+
+# This will tell travis to run nodejs
+language: node_js
+node_js:
+ - "0.10"
+
+env:
+ - NODE_ENV=development
+  
+before_install:
+ - echo Start before install
+# - sudo apt-get update -qq
+# - sudo apt-get install -qq mutt
+# - sudo apt-get install -qq texlive texlive-latex-extra texlive-fonts-extra
+ 
+install:
+ - echo Start install
+ - cd nodejs
+ - npm install
+ - npm install -g bower
+ - npm install -g nodemon
+ - npm  install -g jscodesniffer
+# - npm install -g latex
+# - npm install -g pdflatex
+ - bower install --allow-root --config.interactive=false
+
+before_script:
+ - echo Start before script
+ - sleep 15
+ - mongo demo --eval 'db.addUser("travis", "test");'
+ - mongorestore --port 27017 dump/demo/ --db demo
+
+script: 
+ - echo Start script
+ - npm test
+
+after_failure:
+ - cat /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt
+# - echo "Travis jscs failure" | mutt -a /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt -s "Travis jscs failure" -- regis@capnetworks.com
+
+after_script:
+ - echo End travis

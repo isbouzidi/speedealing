@@ -6,8 +6,24 @@
     <fieldset class="wizard-fieldset fields-list active">
         <div class="field-block button-height">
             <label for="name"><b>{{t "Name"}}</b></label>
-            <input type="text" ng-model="lead.name" id="name" class="input" autocomplete="off">
+            <input type="text" ng-model="lead.name" id="name" class="form-control" autocomplete="off">
         </div>
+		
+		 <div class="field-block button-height">
+		<label for="societe"><b>{{t
+				'CompanyFoundation'}}</b></label>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="input-group">
+						<span class="input-group-addon icon icon-home"></span>
+						<input required type="text" 
+							   data-ng-model="lead.societe" 
+							   typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}" 
+							   id="societe" class="form-control" autocomplete="off">
+					</div>
+				</div>
+			</div>
+		 </div>
 
         <div class="field-block button-height">
             <label for="dueDate"><b>{{t

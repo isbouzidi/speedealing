@@ -120,7 +120,7 @@
 	],
 	"menus": {
 		"menu:factures": {
-			"position": 42,
+			"position": 45,
 			"perms": "bill.read",
 			"enabled": "$conf->facture->enabled",
 			"usertype": 2,

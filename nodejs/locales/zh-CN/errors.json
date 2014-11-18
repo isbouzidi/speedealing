@@ -5,8 +5,6 @@
     "Errors": "错误",
     "ErrorBadEMail": "电子邮件％s是错误的",
     "ErrorBadUrl": "网址％s是错误的",
-    "ErrorLoginAlreadyExists": "登录％s已经存在。",
-    "ErrorGroupAlreadyExists": "组％s已经存在。",
     "ErrorRecordNotFound": "记录没有找到。",
     "ErrorFailToCopyFile": "无法复制文件<b>'%s'</b>成<b>'%s'。</b>",
     "ErrorFailToRenameFile": "无法重新命名为<b>“%s'</b>文件<b>'%s'。</b>",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "没有模型，对文档生成，已被激活。一个模式是选用默认，直到您检查您的模块设置。",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "所有安全警告（可见由管理员用户只）将保持活跃，只要是存在的脆弱性（或常数MAIN_REMOVE_INSTALL_WARNING是在安装程序->其他设置添加）。",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

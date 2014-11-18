@@ -1,3 +1,7 @@
+"use strict";
+/* global angular: true */
+/* jshint multistr: true */
+
 angular.module('mean.bills').controller('BillController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Bills', function ($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
 		pageTitle.setTitle('Liste des factures');
 
@@ -45,6 +49,13 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		$scope.update = function () {
 			var bill = $scope.bill;
 
+			for (var i = bill.lines.length; i--; ) {
+				// actually delete lines
+				if (bill.lines[i].isDeleted) {
+					bill.lines.splice(i, 1);
+				}
+			}
+
 			bill.$update(function (response) {
 				pageTitle.setTitle('Facture ' + bill.ref);
 
@@ -78,7 +89,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					$scope.editable = true;
 				else
 					$scope.editable = false;
-				
+
 				//on utilise idLine pour deffinier la ligne produit que nous voulons supprimer
 				for (var i in $scope.bill.lines) {
 					$scope.bill.lines[i].idLine = i;
@@ -109,23 +120,23 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				angular.forEach(bill.deliveries, function (delivery) {
 					$scope.totalDeliveries += delivery.total_ht;
 				});
-                                
-                                $http({method: 'GET', url: '/api/transaction', params: {
-                                   find: {"bill.id": bill._id}
-                                    }
+
+				$http({method: 'GET', url: '/api/transaction', params: {
+						find: {"bill.id": bill._id}
+					}
 				}).success(function (data, status) {
-                                    if (status === 200){
-                                        $scope.payments = data;
-                                        
-                                        $scope.paid = 0;
-                                        
-                                        for(var i = 0; i < data.length; i++){
-                                            $scope.paid += data[i].credit;
-                                        };
-                                        
-                                        $scope.billed = $scope.bill.total_ttc;
-                                        $scope.remainderToPay = $scope.billed - $scope.paid;
-                                    }
+					if (status === 200) {
+						$scope.payments = data;
+
+						$scope.paid = 0;
+
+						for (var i = 0; i < data.length; i++) {
+							$scope.paid += data[i].credit;
+						}
+
+						$scope.billed = $scope.bill.total_ttc;
+						$scope.remainderToPay = $scope.billed - $scope.paid;
+					}
 				});
 
 			}, function (err) {
@@ -133,7 +144,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 					$location.path("401.html");
 			});
 		};
-		
+
 		$scope.productAutoComplete = function (val) {
 
 			return $http.post('api/product/autocomplete', {
@@ -149,7 +160,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				return res.data;
 			});
 		};
-		
+
 		$scope.checkLine = function (data) {
 
 			if (!data)
@@ -190,6 +201,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 
 			line.total_ht = line.qty * (line.pu_ht * (1 - (line.discount / 100)));
 			line.total_tva = line.total_ht * line.tva_tx / 100;
+			//console.log(data);
 		};
 		// filter lines to show
 		$scope.filterLine = function (line) {
@@ -261,7 +273,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function (res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -389,17 +401,6 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			});
 		};
 
-		$scope.removeLine = function (row) {
-			//console.log(row.entity._id);
-			for (var i = 0; i < $scope.bill.lines.length; i++) {
-				if (row.entity._id === $scope.bill.lines[i]._id) {
-					$scope.bill.lines.splice(i, 1);
-					$scope.update();
-					break;
-				}
-			}
-		};
-
 		$scope.addNote = function () {
 			if (!this.note)
 				return;
@@ -407,7 +408,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 
@@ -524,54 +525,54 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			$scope.bill.Status = Status;
 			$scope.update();
 		};
-                
-                $scope.payment = function () {
-                    var modalInstance = $modal.open({
-                        templateUrl: '/partials/bank/regulationPayment.html',
-                        controller: "TransactionController",
-                        windowClass: "steps",
-                        resolve: {
-                            object: function () {
-                                return {
-                                    bill: $scope.bill
-                                };
-                            }
-                        }
-                    });
-                    modalInstance.result.then(function (transaction) {
-                        $scope.payments.push(transaction);
-                        $scope.count++;
-                        $scope.findOne();
-                    }, function () {
-                    });
-                };
-                
-                $scope.filterOptionsPayment = {
-                    filterText: "",
-                    useExternalFilter: false
-                };
 
-                $scope.gridOptionsPayment = {
-                    data: 'payments',
-                    enableRowSelection: false,
-                    filterOptions: $scope.filterOptionsPayment,
-                    enableColumnResize: true,
-                    showFooter: true,
-                    footerRowHeight: 65,
-                    footerTemplate: '<div style="padding: 10px;">\n\
+		$scope.payment = function () {
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/bank/regulationPayment.html',
+				controller: "TransactionController",
+				windowClass: "steps",
+				resolve: {
+					object: function () {
+						return {
+							bill: $scope.bill
+						};
+					}
+				}
+			});
+			modalInstance.result.then(function (transaction) {
+				$scope.payments.push(transaction);
+				$scope.count++;
+				$scope.findOne();
+			}, function () {
+			});
+		};
+
+		$scope.filterOptionsPayment = {
+			filterText: "",
+			useExternalFilter: false
+		};
+
+		$scope.gridOptionsPayment = {
+			data: 'payments',
+			enableRowSelection: false,
+			filterOptions: $scope.filterOptionsPayment,
+			enableColumnResize: true,
+			showFooter: true,
+			footerRowHeight: 65,
+			footerTemplate: '<div style="padding: 10px;">\n\
                     <span class="right"><strong>Déjà réglé : \{{paid | currency:bank.currency}}<strong></span><br>\n\
                     <span class="right"><strong>Facturé : \{{billed | currency:bank.currency}}<strong></span><br>\n\
                     <span class="right"><strong>Reste à payer : \{{remainderToPay | currency:bank.currency}}<strong></span>\n\
                     </div>',
-                    i18n: 'fr',
-                    columnDefs: [
-                        {field: 'date_transaction', displayName: 'Paiement', cellFilter: "date:'dd-MM-yyyy'"},
-                        {field: 'trans_type.name', displayName: 'Type'},
-                        {field: 'bank.libelle', displayName: 'Compte bancaire'},
-                        {field: 'credit', displayName: 'Montant', cellFilter: 'currency:""'}
-                        
-                    ]
-                };
+			i18n: 'fr',
+			columnDefs: [
+				{field: 'date_transaction', displayName: 'Paiement', cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'trans_type.name', displayName: 'Type'},
+				{field: 'bank.libelle', displayName: 'Compte bancaire'},
+				{field: 'credit', displayName: 'Montant', cellFilter: 'currency:""'}
+
+			]
+		};
 	}]);
 
 angular.module('mean.bills').controller('BillCreateController', ['$scope', '$http', '$modalInstance', '$upload', '$route', 'Global', function ($scope, $http, $modalInstance, $upload, $route, Global) {
@@ -663,7 +664,7 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function (res) {
-				return res.data
+				return res.data;
 			});
 		};
 

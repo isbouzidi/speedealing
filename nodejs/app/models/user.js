@@ -24,14 +24,15 @@ var UserSchema = new Schema({
 	Status: {type: String, default: 'DISABLE'},
 	name: {type: String, required: true},
 	email: String,
-	admin: Boolean,
+	admin: {type: Boolean, default: false},
+	superadmin: {type: Boolean, default: false},
 	lastname: {type: String, uppercase: true},
 	firstname: String,
 	provider: String,
 	password: String,
 	hashed_password: String,
 	salt: String,
-	entity: String,
+	entity: String, // The default entity
 	photo: String,
 	telMobile: String,
 	facebook: {},
@@ -68,7 +69,7 @@ var UserSchema = new Schema({
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String
 	},
-	multiEntities: {type: Boolean, default: false}, // Access to all entities ?
+	multiEntities: {type: Schema.Types.Mixed, default: false}, // Access to once or several entities. False: only once, True: all entities, Array: list of entities
 	telFixe: String,
 	address: String,
 	zip: String,
@@ -113,7 +114,7 @@ UserSchema.plugin(timestamps);
 UserSchema.plugin(gridfs.pluginGridFs, {root: "User"});
 
 var statusList = {};
-Dict.dict({dictName:'fk_user_status', object:true}, function (err, docs) {
+Dict.dict({dictName: 'fk_user_status', object: true}, function (err, docs) {
 
 	statusList = docs;
 });
@@ -219,9 +220,10 @@ UserSchema.pre('save', function (next) {
 	if (!this.isNew)
 		return next();
 
-	if (!validatePresenceOf(this.password) && authTypes.indexOf(this.provider) === -1)
-		next(new Error('Invalid password'));
-	else
+	if (!validatePresenceOf(this.password) && authTypes.indexOf(this.provider) === -1) {
+		this.password = this.generatePassword(8);
+		next(/*new Error('Invalid password')*/);
+	} else
 		next();
 });
 
@@ -238,7 +240,7 @@ UserSchema.methods = {
 	 */
 	authenticate: function (plainText) {
 		return this.password === plainText;
-		return this.encryptPassword(plainText) === this.hashed_password;
+		//return this.encryptPassword(plainText) === this.hashed_password; // FIXME return after return
 	},
 	/**
 	 * Make salt
@@ -260,6 +262,14 @@ UserSchema.methods = {
 		if (!password)
 			return '';
 		return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+	},
+	generatePassword: function (length) {
+		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+				retVal = "";
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			retVal += charset.charAt(Math.floor(Math.random() * n));
+		}
+		return retVal;
 	}
 };
 

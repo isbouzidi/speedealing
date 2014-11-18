@@ -2,6 +2,8 @@
     "CHARSET": "UTF-8",
     "Bill": "Factură",
     "Bills": "Facturi",
+    "Billing": "Facturation",
+    "List": "Liste des factures",
     "BillsCustomers": "Clienţii \"facturi",
     "BillsCustomer": "Clientului factura",
     "BillsSuppliers": "Furnizori-facturi",
@@ -389,5 +391,14 @@
     "PDFCrabeDescription": "Model de factură Crabe. Un model de factură (Sprijin TVA opţiune, reduceri, plăţi condiţii, logo-ul, etc ..)",
     "PDFOursinDescription": "Model de factură oursin",
     "TerreNumRefModelDesc1": "Întoarceţi-vă cu NUMERO format %syymm-NNNN standard pentru facturi şi %syymm-NNNN de credit, în cazul în care constată aa este ani, mm este luna şi NNNN este o secvenţă fără nici o pauză şi a reveni la 0",
-    "TerreNumRefModelError": "Un proiect de lege incepand cu $ syymm există deja şi nu este compatibilă cu acest model de succesiune. Eliminaţi-o sau redenumiţi-o pentru a activa acest modul."
+    "TerreNumRefModelError": "Un proiect de lege incepand cu $ syymm există deja şi nu este compatibilă cu acest model de succesiune. Eliminaţi-o sau redenumiţi-o pentru a activa acest modul.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

@@ -2,6 +2,8 @@
     "CHARSET": "UTF-8",
     "Bill": "Fatura",
     "Bills": "Faturalar",
+    "Billing": "Facturation",
+    "List": "Liste des factures",
     "BillsCustomers": "Müşteri faturaları",
     "BillsCustomer": "Müşteri faturası",
     "BillsSuppliers": "Tedarikçi faturaları",
@@ -389,5 +391,14 @@
     "PDFCrabeDescription": "Fatura PDF şablonu Crabe. Tam fatura şablonu  (Önerilen şablon)",
     "PDFOursinDescription": "Fatura şablonu oursin",
     "TerreNumRefModelDesc1": "Standart faturalar için numarayı  %syymm-nnnn biçiminde ve iade faturaları için %syymm-nnnn biçiminde göster, yy yıl, mm ay ve nnnn boşluksuz ve sıfıra dönüşmeyen bir dizidir.",
-    "TerreNumRefModelError": "$syymm ile başlayan bir fatura hali hazırda vardır ve bu sıra dizisi için uygun değildir. Bu modülü etkinleştirmek için onu kaldırın ya da adını değiştirin."
+    "TerreNumRefModelError": "$syymm ile başlayan bir fatura hali hazırda vardır ve bu sıra dizisi için uygun değildir. Bu modülü etkinleştirmek için onu kaldırın ya da adını değiştirin.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

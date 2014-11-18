@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
@@ -119,15 +121,17 @@ billSchema.pre('save', function (next) {
 	this.total_ht = 0;
 	this.total_tva = [];
 	this.total_ttc = 0;
+	
+	var i, j, found;
 
-	for (var i = 0; i < this.lines.length; i++) {
+	for (i = 0; i < this.lines.length; i++) {
 		//console.log(object.lines[i].total_ht);
 		this.total_ht += this.lines[i].total_ht;
 		//this.total_ttc += this.lines[i].total_ttc;
 
 		//Add VAT
-		var found = false;
-		for (var j = 0; j < this.total_tva.length; j++)
+		found = false;
+		for (j = 0; j < this.total_tva.length; j++)
 			if (this.total_tva[j].tva_tx === this.lines[i].tva_tx) {
 				this.total_tva[j].total += this.lines[i].total_tva;
 				found = true;
@@ -149,8 +153,8 @@ billSchema.pre('save', function (next) {
 		this.shipping.total_tva = this.shipping.total_ht * this.shipping.tva_tx / 100;
 
 		//Add VAT
-		var found = false;
-		for (var j = 0; j < this.total_tva.length; j++)
+		found = false;
+		for (j = 0; j < this.total_tva.length; j++)
 			if (this.total_tva[j].tva_tx === this.shipping.tva_tx) {
 				this.total_tva[j].total += this.shipping.total_tva;
 				found = true;
@@ -170,7 +174,7 @@ billSchema.pre('save', function (next) {
 	//this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = this.total_ht;
 
-	for (var j = 0; j < this.total_tva.length; j++) {
+	for (j = 0; j < this.total_tva.length; j++) {
 		this.total_tva[j].total = Math.round(this.total_tva[j].total * 100) / 100;
 		this.total_ttc += this.total_tva[j].total;
 	}

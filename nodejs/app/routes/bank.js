@@ -108,9 +108,9 @@ Object.prototype = {
 
         BankModel.findOne({ref: ref}, function (err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
-                        return res.json({});
+                    return res.json({});
 
                 res.json(doc);
         });
@@ -125,9 +125,9 @@ Object.prototype = {
 
         BankModel.findOne({libelle: libelle}, function (err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
-                        return res.json({});
+                    return res.json({});
 
                 res.json(doc);
         });

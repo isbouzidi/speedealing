@@ -5,8 +5,6 @@
     "Errors": "エラー",
     "ErrorBadEMail": "メールして%sが間違っている",
     "ErrorBadUrl": "URLの%sが間違っている",
-    "ErrorLoginAlreadyExists": "ログイン%sはすでに存在しています。",
-    "ErrorGroupAlreadyExists": "グループ%sはすでに存在しています。",
     "ErrorRecordNotFound": "レコードが見つかりませんでした。",
     "ErrorFailToCopyFile": "<b>&quot;%s&quot;</b>にファイル<b>&quot;%s&quot;を</b>コピーに失敗しました。",
     "ErrorFailToRenameFile": "<b>&quot;%s&quot;</b>にファイル<b>&quot;%s&quot;を</b>リネームに失敗しました。",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "ドキュメント生成のためのモデルは、活性化されていません。あなたのモジュールのセットアップを確認するまでモデルは、デフォルトで選びましたされます。",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "すべてのセキュリティ警告は、（のみの管理者ユーザでは表示）の脆弱性が存在する（またはその定数MAIN_REMOVE_INSTALL_WARNINGがセットアップ] - &gt; [その他の設定に追加される）である限り、アクティブのままです。",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

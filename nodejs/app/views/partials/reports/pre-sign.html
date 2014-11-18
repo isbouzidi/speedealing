@@ -22,7 +22,7 @@
 
     <span ng-show="showReasonValue">
 		<br/>
-        <span ng-repeat="rb in reasonBusiness">
+        <span ng-repeat="rb in extrafield.fields.reasonBusiness.values">
 			<input type="checkbox" 
 				   name="selectedReason[]" 
 				   value="\{{rb.label}}" 
@@ -32,4 +32,29 @@
         </span>
     </span>
 
+</div>
+<div class="field-block button-height">
+    <label for="nextAction"><b>{{t "reports:Next Action"}}</b></label>
+
+    <span>
+		<input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="NONE" class=""/> Aucune <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_TEL" class=""> Relance téléphonique <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_PRDV" class=""> Prendre rendez-vous <br/>
+        <input type="radio" name="nextAction" required ng-model="report.actions.AC_REVIVAL.type" value="AC_EMAIL" class=""> Relance email<br/>
+    </span>
+
+	<div class="row" ng-if="report.actions.AC_REVIVAL.type && report.actions.AC_REVIVAL.type != 'NONE'">
+		<div class="col-md-6" style="margin-top: 9px;">
+			<b>{{t 'reports:DateRevival'}}</b>
+			<p class="input-group">
+				<input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="report.actions.AC_REVIVAL.datef" is-open="opened[6]" datepicker-options="dateOptions" ng-required="true" close-text="Fermer" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="open($event, 6)"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</p>
+		</div>
+		<div class="col-md-6">
+			<timepicker ng-model="report.actions.AC_REVIVAL.datef" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+		</div>
+	</div>
 </div>

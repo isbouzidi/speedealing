@@ -1,0 +1,128 @@
+\documentclass[a4paper, oneside, 10pt, french]{article}
+
+\usepackage[a4paper]{geometry}
+\geometry{top=1.5cm, bottom=1cm, left=1.5cm, right=1.5cm,foot=1.5cm,head=2cm,headsep=.5cm,includefoot}
+
+%\newcommand{\FOOT}{--FOOT--\\
+%P\'enlit\'e pour paiement tardif : inter\^et l\'egal x3 et une indemnit\'e forfaitaire pour frais de recouvrement de 40 euros. R\`eglement anticip\'e, pas d'escompte.}
+
+\usepackage{symeos_article}
+
+\definecolor{violet}{rgb}{0.58,0.07,0.47}
+\definecolor{bleu}{rgb}{0.01,0.28,0.58}
+\newcommand{\vhline}{\arrayrulecolor{violet}\hline\arrayrulecolor{black}}
+\newcommand{\ghline}{\arrayrulecolor{gray}\hline\arrayrulecolor{black}}
+\newcommand{\bhline}{\arrayrulecolor{bleu}\hline\arrayrulecolor{black}}
+\makeatletter
+\renewcommand{\section}{\@startsection {section}{1}{\z@}%
+             {-0ex \@plus -1ex \@minus -.2ex}%
+             {0.01ex \@plus.1ex}%
+             {\footnotesize\sffamily}}
+\makeatother
+
+%%ligne de tableau avec \\
+\newcommand{\specialcell}[2][c]{
+	\parbox[#1]{6.3cm}{#2}}
+
+
+\begin{document}
+
+
+\begin{tabular}{p{9cm} p{8cm}}
+    \vspace{0pt} 
+    %\includegraphics[width=8cm]{logo.jpg}
+    & 
+    \vspace{0pt}
+   \raggedleft
+	%\begin{flushright}
+	\textcolor{violet}{\textsc{\Large Facture --NUM--}}\\
+	Date de facture : --DATEC--\\
+	{\small Date d'échéance : \textbf{--DATEECH--}\\
+	Ref. commande : --REFCLIENT--\\}~\\
+\end{tabular}
+
+\vspace{-0.7cm}
+
+\begin{minipage}[t]{0.40\textwidth}
+{\small Emetteur :}\\
+\begin{fminipage}
+--DESTINATAIRE--
+\end{fminipage}
+\end{minipage}
+\hspace{1cm}
+\begin{minipage}[t]{0.52\textwidth}
+{\small Destinataire :}
+
+\begin{fminipage}
+--MYSOC--\\
+\begin{minipage}{\textwidth}
+\flushright
+{\tiny --CODECLIENT--}
+\end{minipage}
+\end{fminipage}
+\end{minipage}
+
+Informations : --NOTE--
+
+\tablefirsthead{%
+\hline
+\multicolumn{1}{|c}{Réf} &
+\multicolumn{1}{c}{Désignation} &
+\multicolumn{1}{c}{TVA}&
+\multicolumn{1}{c}{PU} &
+\multicolumn{1}{c}{Qté} &
+\multicolumn{1}{c|}{Total HT} \\
+\hline
+\hline}
+\tablehead{%
+\hline
+\multicolumn{6}{|l|}{\small\sl suite de la page précédente}\\
+\hline
+\multicolumn{1}{|c}{Réf} &
+\multicolumn{1}{c}{Désignation} &
+TVA &
+PU &
+Qté &
+\multicolumn{1}{c|}{Total HT} \\
+\hline
+\hline}
+\tabletail{%
+\hline
+\multicolumn{6}{|r|}{\small\sl suite sur la prochaine page}\\
+\hline}
+\tablelasttail{\hline}
+\begin{minipage}{\textwidth}
+\flushright 
+{\footnotesize \textit{Montants exprimés en €}}
+\end{minipage}\\
+\begin{supertabular*}{\textwidth}{|p{2.5cm}|p{6.5cm}@{\extracolsep{1mm plus 1fil}}|c|r|r|r|}
+--TABULAR--
+\end{supertabular*}
+
+
+\begin{minipage}[t]{0.48\textwidth}
+{\footnotesize \textbf{Conditions de règlement :} --REGLEMENT--}\\
+%{\footnotesize Règlement TTC par \textbf{--PAID--} --BK--}\\
+\end{minipage}
+\hspace{2mm}
+\begin{minipage}[t]{0.50\textwidth}
+\begin{flushright}
+\begin{tabular}{p{4.5cm} r}
+--TOTAL--
+\rowcolor{violet}\textcolor{white}{NET à payer} &\textcolor{white}{--APAYER--} \\ 
+\end{tabular} 
+\end{flushright}
+%\begin{flushright}
+%\begin{footnotesize}
+%Versements déjà effectués :
+% \begin{tabular}{p{1.8cm} c p{1.8cm} c}
+%Règlement & Montant & Type & Numéro \\ 
+%\ghline 
+% --DATEACPTE--& --ACPTE-- & --MODEREG-- & --NUMP-- \\ 
+%\ghline 
+%\end{tabular}
+% \end{footnotesize} 
+%\end{flushright}
+\end{minipage}
+
+\end{document}

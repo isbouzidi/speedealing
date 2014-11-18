@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'BillsSupplier', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
 
 		pageTitle.setTitle('Liste des factures fournisseurs');
@@ -101,6 +104,7 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 
 		$scope.societeAutoComplete = function(val, field) {
 			return $http.post('api/societe/autocomplete', {
+				fournisseur: ["SUPPLIER","SUBCONTRACTOR"],
 				take: '5',
 				skip: '0',
 				page: '1',
@@ -108,7 +112,7 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -254,7 +258,7 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 
@@ -403,7 +407,7 @@ angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope
 			$scope.bill.commercial_id = {
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
-			}
+			};
 		};
 
 		$scope.create = function() {
@@ -443,11 +447,11 @@ angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope
 				skip: '0',
 				page: '1',
 				pageSize: '5',
-				fournisseur: {"$in": ["SUPPLIER", "SUBCONTRACTOR"]},
+				fournisseur: ["SUPPLIER","SUBCONTRACTOR"],
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 

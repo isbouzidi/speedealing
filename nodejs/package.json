@@ -30,7 +30,7 @@
 		"passport-github": "latest",
 		"passport-google-oauth": "latest",
 		"passport.socketio": "latest",
-		"lodash": "latest",
+		"lodash": "^2.4.1",
 		"mongodb": "1.4.*",
 		"mongoose": "3.8.16",
 		"mongoose-timestamp": ">=0.1.1",
@@ -65,6 +65,7 @@
 		"grunt-contrib-jshint": "latest",
 		"grunt-nodemon": "latest",
 		"grunt-concurrent": "latest",
-		"grunt-mocha-test": "latest"
+		"grunt-mocha-test": "latest",
+		"grunt-contrib-jscs": "latest"
 	}
 }

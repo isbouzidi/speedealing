@@ -1,4 +1,5 @@
 # SPEEDEALING DISTRIBUTED ERP & CRM
+[![Build Status](https://travis-ci.org/symeos/speedealing.png)](https://travis-ci.org/symeos/speedealing)
 
 Speedealing ERP & CRM is a modern software to manage yours companies or foundations activities (contacts, suppliers, invoices, orders, stocks, agenda, ...).It's an opensource software (wrote with PHP language) designed for distant small and medium companies, foundation and freelances. You can freely install, use and distribute it as an offline application or as a web application to use it from every internet access and media.
 

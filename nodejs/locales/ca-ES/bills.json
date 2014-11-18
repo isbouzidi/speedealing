@@ -2,6 +2,8 @@
     "CHARSET": "UTF-8",
     "Bill": "Factura",
     "Bills": "Factures",
+    "Billing": "Facturation",
+    "List": "Liste des factures",
     "BillsCustomers": "Factures a clients",
     "BillsCustomer": "Factures al client",
     "BillsSuppliers": "Factures de proveïdors",
@@ -389,5 +391,14 @@
     "PDFCrabeDescription": "Model de factura complet (model recomanat per defecte)",
     "PDFOursinDescription": "Model de factura complet (model alternatiu)",
     "TerreNumRefModelDesc1": "Retorna el nombre sota el format %syymm-nnnn per a les factures i %syymm-nnnn per als abonaments on yy és l'any, mm. el mes i nnnn un comptador seqüencial sense ruptura i sense permanència a 0",
-    "TerreNumRefModelError": "A bill starting with $syymm already exists and is not compatible with this model of sequence. Remove it or rename it to activate this module."
+    "TerreNumRefModelError": "A bill starting with $syymm already exists and is not compatible with this model of sequence. Remove it or rename it to activate this module.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

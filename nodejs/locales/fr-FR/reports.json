@@ -5,13 +5,14 @@
 	"Satisfaction Survey": "Enquête satisfaction",
 	"Progress Points": "Points progrés",
 	"Appointment": "Rendez-vous",
-	"Next Appointment": "Prochain rendez-vous",
+	"Next Appointment": "Rendez-vous planifié",
 	"Internal Meeting": "Réunion interne",
 	"Report": "Rapport",
 	"Prospect Level": "Potentiel",
 	"Products": "Produits",
 	"Send Booklet": "Envoi plaquette",
 	"Send Offer": "Envoi offre",
+	"Do Offer": "Faire offre",
 	"Next Action": "Prochaine action",
 	"Visit Workshop": "Visite atelier",
 	"Business Offer": "Nouvelle offre (euros)",
@@ -20,5 +21,6 @@
 	"DateCall": "Date d'appel",
 	"DurationPrepare": "Durée de préparation",
 	"Potential": "Potentiel du compte",
-	"Details Report": "Fiche Compte Rendu"
+	"Details Report": "Fiche Compte Rendu",
+	"DateRevival":"Date de relance"
 }

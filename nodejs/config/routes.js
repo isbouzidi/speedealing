@@ -148,7 +148,7 @@ module.exports = function(app, passport, auth) {
 		//approvalPrompt: 'force',
 		scope: [
 			'https://www.googleapis.com/auth/userinfo.profile',
-			'https://www.googleapis.com/auth/userinfo.email',
+			'https://www.googleapis.com/auth/userinfo.email'
 					//	'https://www.googleapis.com/auth/contacts',
 					//	'https://www.googleapis.com/auth/tasks',
 					//	'https://www.googleapis.com/auth/tasks.readonly',
@@ -158,7 +158,8 @@ module.exports = function(app, passport, auth) {
 	}), users.signin);
 
 	app.get('/auth/google/callback', users.setAccessCodeGoogle, passport.authenticate('google', {
-		failureRedirect: '/signin'
+		failureRedirect: '/login' // TODO add error message
+		//failureRedirect: '/signin'
 	}), function(req, res) {
 		users.checkIP(req, res, req.user, users.authCallback);
 	});
@@ -179,57 +180,7 @@ module.exports = function(app, passport, auth) {
 
 	//latex Routes
 	var latex = require('../app/models/latex');
-	app.get('/servepdf/:pdfId', auth.requiresLogin, latex.servePDF);
-
-	// File type icons TODO put it in dict
-	app.get('/dict/filesIcons', auth.requiresLogin, function(req, res) {
-		var iconList = {
-			aac: "file-aac",
-			avi: "file-avi",
-			bat: "file-bat",
-			bmp: "file-bmp",
-			chm: "file-chm",
-			css: "file-css",
-			dat: "file-dat",
-			default: "file-default",
-			dll: "file-dll",
-			xls: "file-excel",
-			xlsx: "file-excel",
-			exe: "file-exe",
-			fon: "file-fon",
-			gif: "file-gif",
-			html: "file-html",
-			tiff: "file-image",
-			ini: "file-ini",
-			jar: "file-jar",
-			jpg: "file-jpg",
-			js: "file-js",
-			log: "file-log",
-			mov: "file-mov",
-			mp3: "file-mp",
-			mpg: "file-mpg",
-			otf: "file-otf",
-			pdf: "file-pdf",
-			png: "file-png",
-			ppt: "file-powerpoint",
-			reg: "file-reg",
-			rtf: "file-rtf",
-			swf: "file-swf",
-			sys: "file-sys",
-			txt: "file-txt",
-			ttc: "file-ttc",
-			ttf: "file-ttf",
-			vbs: "file-vbs",
-			wav: "file-wav",
-			wma: "file-wma",
-			wmv: "file-wmv",
-			doc: "file-word",
-			docx: "file-word",
-			xml: "file-xml"
-		};
-
-		res.send(200, iconList);
-	});
+	app.get('/servepdf/:pdfId', auth.requiresAuthenticate, latex.servePDF);
 
 	app.get('/locales/:lng/:jsonFile', auth.requiresLogin, function(req, res) {
 		var file = __dirname + '/../locales/' + req.params.lng + '/' + req.params.jsonFile;
@@ -247,14 +198,14 @@ module.exports = function(app, passport, auth) {
 	});
 
 	var index = require('../app/controllers/index');
-	app.get('/partials/home', auth.requiresLogin, index.home);
+	app.get('/partials/home', auth.html.hasAuthorization, index.home);
 
-	app.get('/partials/:view', auth.requiresLogin, auth.html.hasAuthorization, function(req, res) {
+	app.get('/partials/:view', auth.html.hasAuthorization, function(req, res) {
 		var view = req.params.view;
 		res.render('partials/' + view, {user: req.user}); // Mode list view
 	});
 
-	app.get('/partials/ticket/:id', auth.requiresLogin, function(req, res) {
+	app.get('/partials/ticket/:id', auth.html.hasAuthorization, function(req, res) {
 		var view = "ticket";
 		var pos = req.params.id.search(".html"); // search if id is an html page
 		if (pos > 0) { // is a subview in directory
@@ -263,7 +214,7 @@ module.exports = function(app, passport, auth) {
 			res.render('partials/' + view, {user: req.user});
 	});
 
-	app.get('/partials/:view/:id', auth.requiresLogin, function(req, res) {
+	app.get('/partials/:view/:id', auth.html.hasAuthorization, function(req, res) {
 		var view = req.params.view;
 		var pos = req.params.id.search(".html"); // search if id is an html page
 		if (pos > 0) // is a subview in directory
@@ -306,5 +257,5 @@ module.exports = function(app, passport, auth) {
 	 });*/
 
 	// Master angular Page
-	app.get('/', auth.requiresLogin, index.render);
+	app.get('/', auth.requiresAuthenticate, index.render);
 };

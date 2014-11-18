@@ -3,588 +3,608 @@
         <div class="with-padding" data-ng-init="init()">
             <div class="columns">
                 <div style="margin-bottom: 10px; float: right;">
-                    <a ng-href="#" class="button" ng-click="retour()" title="Retour à la liste">
+                    <button class="button" ng-click="retour()" title="Retour à la liste">
                         Liste
                         <span class="button-icon right-side"><span class="icon-list"></span></span>
-                    </a>
-
-                    <!--<a ng-href="#" class="button" confirmed-click="remove()" ng-confirm-click="Supprimer le collaborateur ?" title="Supprimer le collaborateur">
-                        Supprimer
-                        <span class="button-icon right-side"><span class="icon-trash"></span></span>
-                    </a>-->
+                    </button>
+					<button class="button" 
+							ng-disabled="!userRightsDelete" 
+							confirmed-click="remove(userEdit)" 
+							ng-confirm-click="Supprimer le collaborateur ?" 
+							title="Supprimer le collaborateur">
+						{{t 'main:Delete'}}
+						<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
+					</button>
                 </div>
-            
-            <div class="four-columns twelve-columns-mobile">
 
-                <div class="boxed">
-                    <p class="icon-info green underline square-46">Infos collaborateur</p>
+				<div class="four-columns twelve-columns-mobile">
 
-                    <div id="profile">
-                        <div ng-if="userEdit.photo">
+					<div class="boxed">
+						<p class="icon-info green underline square-46">Infos collaborateur</p>
 
-                            <img alt="User name" ng-src="img/profile/\{{userEdit.photo}}" width="100" class="user-icon">
-                        </div>
-                        <div ng-if="!userEdit.photo">
-                            <img src="img/user.png" width="100" class="user-icon" alt="User name">
-                        </div>
+						<div id="profile">
+							<div ng-if="userEdit.photo">
 
-                        <div>
-                            <span class="name">\{{userEdit.firstname}} 
-                                <b> \{{userEdit.lastname}}</b>
-                            </span>
-                        </div>
-                        <div>
-                            <div data-ng-repeat="file in userEdit.files">
-                                <a href="api/ticket/file/\{{rh._id}}/\{{file.name}}" class="icon-download">\{{file.name}}</a><br/>
-                            </div>
-                        </div>
-                        <input type="file" name="files" class="button compact" id="files" kendo-upload k-options="kendoUpload" />
+								<img alt="User name" ng-src="img/profile/\{{userEdit.photo}}" width="100" class="user-icon">
+							</div>
+							<div ng-if="!userEdit.photo">
+								<img src="img/user.png" width="100" class="user-icon" alt="User name">
+							</div>
 
-                    </div>
+							<div>
+								<span class="name">\{{userEdit.firstname}} 
+									<b> \{{userEdit.lastname}}</b>
+								</span>
+							</div>
+							<div>
+								<div data-ng-repeat="file in userEdit.files">
+									<a href="api/ticket/file/\{{rh._id}}/\{{file.name}}" class="icon-download">\{{file.name}}</a><br/>
+								</div>
+							</div>
+							<input type="file" name="files" class="button compact" id="files" kendo-upload k-options="kendoUpload" />
 
-                    <table class="info-table">
+						</div>
 
-                        <tbody>
+						<table class="info-table">
 
-                            <tr>
-                                <th width="40%" scope="row">{{t 'users:LastName'}}</th>
-                                <td>
-                                    <a 
-                                        href="#" 
-                                        class="blue h4" 
-                                        editable-text="userEdit.lastname" 
-                                        buttons="no" 
-                                        onaftersave="update()"
-                                        blur="submit"
-                                        e-form="lastnameFrm">
-                                        \{{userEdit.lastname}}
-                                    </a>
-                                    <span class="icon-pencil grey" ng-click="lastnameFrm.$show()" ng-hide="lastnameFrm.$visible"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th width="40%" scope="row">{{t 'users:FirstName'}}</th>
-                                <td>
-                                    <a 
-                                        href="#" 
-                                        class="blue h4" 
-                                        editable-text="userEdit.firstname" 
-                                        buttons="no" 
-                                        onaftersave="update()"
-                                        blur="submit"
-                                        e-form="firstnameFrm">
-                                        \{{userEdit.firstname}}
-                                    </a>
-                                    <span class="icon-pencil grey" ng-click="firstnameFrm.$show()" ng-hide="firstnameFrm.$visible"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{t 'users:Statut'}}</th>
-                                <td>
-                                    <span class="tag small glossy" 
-                                          data-ng-class="userEdit.status.css" 
-                                          editable-select="userEdit.Status" 
-                                          buttons="no"
-                                          onaftersave="update()"
-                                          blur="submit"
-                                          e-ng-options="s.id as s.label for s in dict.fk_user_status.values">
-                                        \{{userEdit.status.name}}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{t 'users:Email'}}</th> 
-                                <td><a 
-                                        data-ng-href="mailto:\{{userEdit.email}}" 
-                                        target="_blank" 
-                                        editable-email="userEdit.email" 
-                                        buttons="no" 
-                                        e-placeholder="{{t 'users:Email'}}"
-                                        e-form="eMailBtnForm" 
-                                        onaftersave="update()"
-                                        blur="submit">\{{userEdit.email}}</a>
-                                    <span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{t 'users:Tel-Mobile'}}</th>
-                                <td >
-                                    <a href="#"
-                                       editable-tel="userEdit.telMobile" 
-                                       e-pattern="\d{11}" 
-                                       e-title="11(x)" 
-                                       blur="submit" 
-                                       buttons="no"
-                                       e-form="telMobFrm"
-                                       onaftersave="update()">
-                                        \{{ userEdit.telMobile || 'Non défini' }}
-                                    </a>
-                                    <span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{t 'users:Tel-Fixe'}}</th>
-                                <td>
-                                    <a href="#" 
-                                       editable-tel="userEdit.telFixe" 
-                                       e-pattern="\d{11}" 
-                                       blur="submit" 
-                                       buttons="no"
-                                       onaftersave="update()" 
-                                       e-title="Telephone Fixe"
-                                       e-placeholder="{{t 'users:Tel-Fixe'}}"
-                                       e-form="TelFixFrm">
-                                        \{{ userEdit.telFixe || 'Non défini' }}
-                                    </a>
-                                    <span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
-                                </td>
-                            </tr>
+							<tbody>
 
-                            <tr>
-                                <th scope="row">{{t 'users:Address'}}</th>
-                                <td>
-                                    <form editable-form onaftersave="update()">
-                                        <div ng-address model="userEdit" opp="update"></div>
-                                    </form>
+								<tr>
+									<th width="40%" scope="row">{{t 'users:LastName'}}</th>
+									<td>
+										<a 
+											href="#" 
+											class="blue h4" 
+											editable-text="userEdit.lastname" 
+											buttons="no" 
+											onaftersave="update()"
+											blur="submit"
+											e-form="lastnameFrm">
+											\{{userEdit.lastname}}
+										</a>
+										<span class="icon-pencil grey" ng-click="lastnameFrm.$show()" ng-hide="lastnameFrm.$visible"></span>
+									</td>
+								</tr>
+								<tr>
+									<th width="40%" scope="row">{{t 'users:FirstName'}}</th>
+									<td>
+										<a 
+											href="#" 
+											class="blue h4" 
+											editable-text="userEdit.firstname" 
+											buttons="no" 
+											onaftersave="update()"
+											blur="submit"
+											e-form="firstnameFrm">
+											\{{userEdit.firstname}}
+										</a>
+										<span class="icon-pencil grey" ng-click="firstnameFrm.$show()" ng-hide="firstnameFrm.$visible"></span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'users:Statut'}}</th>
+									<td>
+										<span class="tag small glossy" 
+											  data-ng-class="userEdit.status.css" 
+											  editable-select="userEdit.Status" 
+											  buttons="no"
+											  onaftersave="update()"
+											  blur="submit"
+											  e-ng-options="s.id as s.label for s in dict.fk_user_status.values">
+											\{{userEdit.status.name}}</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'users:Site'}}</th>
+									<td>
+										<a 
+											href="#" 
+											editable-select="userEdit.entity" 
+											buttons="no" 
+											e-ng-options="s.id as s.name for s in site" 
+											onaftersave="update()">
+											\{{ userEdit.entity || '{{t 'main:Undefined'}}' }}
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'users:Groupe'}}</th>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{{t 'DateLastModification'}}</th>
-                                <td class="blue">\{{userEdit.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="eight-columns">
+									<td>
+										<a 
+											href="#" 
+											editable-select="userEdit.groupe" 
+											buttons="no" 
+											e-ng-options="g._id as g.name for g in groupe" 
+											onaftersave="update()">
+											\{{ showUserGroup() || '{{t 'main:Undefined'}}' }}
+										</a>
 
-                <tabset>
-                    <tab>
-                        <tab-heading>
-                            <span class="icon-card">Etat Civil</span>
-                        </tab-heading>
-                        <div class="boxed relative large-box-shadow">
-                            <div class="columns">
-                                <div class="twelve-columns">
+									</td>
+								</tr>
+								<tr ng-hide="!global.user.admin">
+									<th scope="row">{{t 'users:Password'}}</th>
 
-                                    <table class="simple-table">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Date-Naissance'}}</th>
-                                                <td>
-                                                    <a href="#"
-                                                       editable-date="userEdit.dateNaissance"
-                                                       buttons="no"
-                                                       onaftersave="update()"
-                                                       blur="submit">
+									<td>
+										<a 
+											href="#" 
+											editable-text="userEdit.password" 
+											buttons="no"
+											class=""
+											onaftersave="update()">
+											\{{userEdit.password}}
+										</a>
 
-                                                        \{{ (userEdit.dateNaissance | date:"dd/MM/yyyy") || 'empty'}}</a>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'users:Email'}}</th> 
+									<td><a 
+											data-ng-href="mailto:\{{userEdit.email}}" 
+											target="_blank" 
+											editable-email="userEdit.email" 
+											buttons="no" 
+											e-placeholder="{{t 'users:Email'}}"
+											e-form="eMailBtnForm" 
+											onaftersave="update()"
+											blur="submit">\{{userEdit.email}}</a>
+										<span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'users:Tel-Mobile'}}</th>
+									<td >
+										<a href="#"
+										   editable-tel="userEdit.telMobile" 
+										   e-pattern="\d{11}" 
+										   e-title="11(x)" 
+										   blur="submit" 
+										   buttons="no"
+										   e-form="telMobFrm"
+										   onaftersave="update()">
+											\{{ userEdit.telMobile || '{{t 'main:Undefined'}}' }}
+										</a>
+										<span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'users:Tel-Fixe'}}</th>
+									<td>
+										<a href="#" 
+										   editable-tel="userEdit.telFixe" 
+										   e-pattern="\d{11}" 
+										   blur="submit" 
+										   buttons="no"
+										   onaftersave="update()" 
+										   e-title="Telephone Fixe"
+										   e-placeholder="{{t 'users:Tel-Fixe'}}"
+										   e-form="TelFixFrm">
+											\{{ userEdit.telFixe || '{{t 'main:Undefined'}}' }}
+										</a>
+										<span class="icon-pencil grey" ng-click="TelFixFrm.$show()" ng-hide="TelFixFrm.$visible"></span>
+									</td>
+								</tr>
 
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Ville-Naissance'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-text="userEdit.villeNaissance" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:Ville-Naissance'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="villeNaiss">
-                                                        \{{userEdit.villeNaissance|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="villeNaiss.$show()" ng-hide="villeNaiss.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Pays-Naissance'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-select="userEdit.paysNaissance" 
-                                                       buttons="no" 
-                                                       e-ng-options="p.label as p.label for p in dict.fk_country.values | orderBy:'label'"
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="paysNaissance">
-                                                        \{{userEdit.paysNaissance|| "Non defini"}}
-                                                        <span class="icon-pencil grey" ng-click="paysNaissance.$show()" ng-hide="paysNaissance.$visible"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Nationnalite'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-select="userEdit.nationnalite" 
-                                                       buttons="no" 
-                                                       e-ng-options="p.label as p.label for p in dict.fk_country.values | orderBy:'label'" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="nationnalite">
-                                                        \{{userEdit.nationnalite|| "Non defini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="nationnalite.$show()" ng-hide="nationnalite.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Situation'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-select="userEdit.situationFamiliale" 
-                                                       buttons="no" 
-                                                       e-ng-options="s.label as s.label for s in dict.fk_rh_situationFamiliale.values" 
-                                                       onaftersave="update()"
-                                                       e-form="situationFamiliale">
-                                                        \{{userEdit.situationFamiliale|| "Non defini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="situationFamiliale.$show()" ng-hide="situationFamiliale.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:NbrEnfants'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-number="userEdit.nbrEnfants" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:NbrEnfants'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="nbrEnfant">
-                                                        \{{userEdit.nbrEnfants|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="nbrEnfant.$show()" ng-hide="nbrEnfant.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:PerCharges'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-number="userEdit.perCharges" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:PerCharges'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="perCharge">
-                                                        \{{userEdit.perCharges|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="perCharge.$show()" ng-hide="perCharge.$visible"></span>
-                                                </td>
-                                            </tr>
+								<tr>
+									<th scope="row">{{t 'users:Address'}}</th>
+									<td>
+										<form editable-form onaftersave="update()">
+											<div ng-address model="userEdit" opp="update"></div>
+										</form>
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">{{t 'DateLastModification'}}</th>
+									<td class="blue">\{{userEdit.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="eight-columns">
 
+					<tabset>
+						<tab>
+							<tab-heading>
+								<span class="icon-card">Etat Civil</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="twelve-columns">
 
-                        </div>
-                    </tab>
-                    <tab>
-                        <tab-heading>
-                            <span class="icon-briefcase">Emploi</span>
-                        </tab-heading>
-                        <div class="boxed relative large-box-shadow">
-                            <div class="columns">
-                                <div class="twelve-columns">
-                                    <table class="simple-table">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Date-Arrivee'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-date="userEdit.dateArrivee" 
-                                                       buttons="no"
-                                                       blur="submit"
-                                                       onaftersave="update()">
-                                                        \{{ (userEdit.dateArrivee | date:"dd/MM/yyyy") || "Non défini"}}
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th scope="row">{{t 'users:Date-Naissance'}}</th>
+													<td>
+														<a href="#"
+														   editable-date="userEdit.dateNaissance"
+														   buttons="no"
+														   onaftersave="update()"
+														   blur="submit">
 
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Date-Depart'}}</th>
-                                                <td>
+															\{{ (userEdit.dateNaissance | date:"dd/MM/yyyy") || 'empty'}}</a>
 
-                                                    <a href="#" 
-                                                       editable-date="userEdit.dateDepart"
-                                                       buttons="no"
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-title="Date de Depart">
-                                                        \{{ (userEdit.dateDepart | date:"dd/MM/yyyy") || "Indéterminée"}}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Poste'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-text="userEdit.poste" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:Poste'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="posteFrm">
-                                                        \{{userEdit.poste|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="posteFrm.$show()" ng-hide="posteFrm.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Description-Poste'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-textarea="userEdit.descriptionPoste" 
-                                                       e-rows="7" 
-                                                       e-cols="40"
-                                                       e-form="descFrm"
-                                                       e-placeholder="{{t 'users:Description-Poste'}}"
-                                                       blur="submit"
-                                                       buttons="no">
-                                                        \{{ userEdit.descriptionPoste || 'pas de déscription' }}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="descFrm.$show()" ng-hide="descFrm.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Ville-Naissance'}}</th>
+													<td>
+														<a href="#" 
+														   editable-text="userEdit.villeNaissance" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:Ville-Naissance'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="villeNaiss">
+															\{{ userEdit.villeNaissance || '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="villeNaiss.$show()" ng-hide="villeNaiss.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Pays-Naissance'}}</th>
+													<td>
+														<a href="#" 
+														   editable-select="userEdit.paysNaissance" 
+														   buttons="no" 
+														   e-ng-options="p.label as p.label for p in dict.fk_country.values | orderBy:'label'"
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="paysNaissance">
+															\{{userEdit.paysNaissance|| "Non defini"}}
+															<span class="icon-pencil grey" ng-click="paysNaissance.$show()" ng-hide="paysNaissance.$visible"></span>
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Nationnalite'}}</th>
+													<td>
+														<a href="#" 
+														   editable-select="userEdit.nationnalite" 
+														   buttons="no" 
+														   e-ng-options="p.label as p.label for p in dict.fk_country.values | orderBy:'label'" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="nationnalite">
+															\{{ userEdit.nationnalite|| '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="nationnalite.$show()" ng-hide="nationnalite.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Situation'}}</th>
+													<td>
+														<a href="#" 
+														   editable-select="userEdit.situationFamiliale" 
+														   buttons="no" 
+														   e-ng-options="s.label as s.label for s in dict.fk_rh_situationFamiliale.values" 
+														   onaftersave="update()"
+														   e-form="situationFamiliale">
+															\{{ userEdit.situationFamiliale|| '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="situationFamiliale.$show()" ng-hide="situationFamiliale.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:NbrEnfants'}}</th>
+													<td>
+														<a href="#" 
+														   editable-number="userEdit.nbrEnfants" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:NbrEnfants'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="nbrEnfant">
+															\{{ userEdit.nbrEnfants || '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="nbrEnfant.$show()" ng-hide="nbrEnfant.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:PerCharges'}}</th>
+													<td>
+														<a href="#" 
+														   editable-number="userEdit.perCharges" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:PerCharges'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="perCharge">
+															\{{ userEdit.perCharges|| '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="perCharge.$show()" ng-hide="perCharge.$visible"></span>
+													</td>
+												</tr>
 
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Site'}}</th>
-                                                <td>
-                                                    <a 
-                                                        href="#" 
-                                                        editable-select="userEdit.entity" 
-                                                        buttons="no" 
-                                                        e-ng-options="s.id as s.name for s in site" 
-                                                        onaftersave="update()">
-                                                        \{{userEdit.entity|| "Non defini"}}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Groupe'}}</th>
-
-                                                <td>
-                                                    <a 
-                                                        href="#" 
-                                                        editable-select="userEdit.groupe" 
-                                                        buttons="no" 
-                                                        e-ng-options="g._id as g.name for g in groupe" 
-                                                        onaftersave="update()">
-                                                        \{{ showUserGroup() || 'Aucun'}}
-                                                    </a>
-                                                    
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Type-Contrat'}}</th>
-                                                <td>
-                                                    <a 
-                                                        href="#" 
-                                                        editable-select="userEdit.contrat" 
-                                                        buttons="no" 
-                                                        e-ng-options="c.id as c.label for c in dict.fk_rh_contrat.values" 
-                                                        onaftersave="update()"
-                                                        blur="submit">
-                                                        \{{userEdit.contrat|| "Non defini"}}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Periode-Essai'}}</th>
-                                                <td>
-                                                    <a 
-                                                        href="#" 
-                                                        editable-number="userEdit.periodeEssai" 
-                                                        buttons="no" 
-                                                        onaftersave="update()">
-                                                        \{{userEdit.periodeEssai|| "Non defini"}}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Salaire-Brut'}}</th>
-                                                <td>
-                                                    <a 
-                                                        href="#"
-                                                        blur ="submit"
-                                                        editable-number="userEdit.salaire" 
-                                                        buttons="no" 
-                                                        onaftersave="update()"
-                                                        blur="submit"
-                                                        e-placeholder="{{t 'users:Salaire-Brut'}}"
-                                                        e-form="salaireFrm">
-                                                        \{{userEdit.salaire|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="salaireFrm.$show()" ng-hide="salaireFrm.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Temps-Travail'}}</th>
-                                                <td>
-                                                    <a 
-                                                        href="#" 
-                                                        editable-select="userEdit.tempsTravail" 
-                                                        buttons="no" 
-                                                        e-ng-options="t.label as t.label for t in dict.fk_rh_tempsTravail.values" 
-                                                        onaftersave="update()">
-                                                        \{{userEdit.tempsTravail|| "Non defini"}}
-                                                    </a>
-                                                </td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </tab>
-                    <tab>
-                        <tab-heading>
-                            <span class="icon-graduation-cap">Formation</span>
-                        </tab-heading>
-                        <div class="boxed relative large-box-shadow">
-                            <div class="columns">
-                                <div class="twelve-columns">
-                                    <table class="simple-table">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Niveau-Etude'}}</th>
-                                                <td>
-                                                    <a 
-                                                        href="#" 
-                                                        editable-select="userEdit.niveauEtude" 
-                                                        buttons="no" 
-                                                        e-ng-options="n.label as n.label for n in dict.fk_rh_niveauEtude.values"
-                                                        onaftersave="update()">
-                                                        \{{userEdit.niveauEtude|| "Non defini"}}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Annee-Diplome'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-number="userEdit.anneeDiplome" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:Annee-Diplome'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="anneeDiplomeFrm">
-                                                        \{{userEdit.anneeDiplome|| "Non défini"}}
-                                                        <span class="icon-pencil grey" ng-click="anneeDiplomeFrm.$show()" ng-hide="anneeDiplomeFrm.$visible"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </tab>
-                    <tab>
-                        <tab-heading>
-                            <span class="icon-paperclip">Informations Administratives</span>
-                        </tab-heading>
-                        <div class="boxed relative large-box-shadow">
-                            <div class="columns">
-                                <div class="twelve-columns">
-                                    <table class="simple-table">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Securite-Sociale'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-text="userEdit.securiteSociale" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:Securite-Sociale'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="secSocialeFrm">
-                                                        \{{userEdit.securiteSociale|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="secSocialeFrm.$show()" ng-hide="secSocialeFrm.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:Libelle-Bank'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-text="userEdit.libelleBank" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:Libelle-Bank'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="libBankFrm">
-                                                        \{{userEdit.libelleBank|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="libBankFrm.$show()" ng-hide="libBankFrm.$visible"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">{{t 'users:IBAN'}}</th>
-                                                <td>
-                                                    <a href="#" 
-                                                       editable-text="userEdit.iban" 
-                                                       buttons="no" 
-                                                       e-placeholder="{{t 'users:IBAN'}}" 
-                                                       onaftersave="update()"
-                                                       blur="submit"
-                                                       e-form="ibanFrm">
-                                                        \{{userEdit.iban|| "Non défini"}}
-                                                    </a>
-                                                    <span class="icon-pencil grey" ng-click="ibanFrm.$show()" ng-hide="ibanFrm.$visible"></span>
-                                                </td>
-                                            </tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </tab>
-                    <tab>
-                        <tab-heading>
-                            <span class="icon-pencil">Notes</span>
-                        </tab-heading>
-                        <div class="boxed relative large-box-shadow">
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-briefcase">Emploi</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="twelve-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th scope="row">{{t 'users:Date-Arrivee'}}</th>
+													<td>
+														<a href="#" 
+														   editable-date="userEdit.dateArrivee" 
+														   buttons="no"
+														   blur="submit"
+														   onaftersave="update()">
+															\{{ (userEdit.dateArrivee | date:"dd/MM/yyyy") || '{{t 'main:Undefined'}}' }}
 
-                            <div class="columns">
-                                <div class="twelve-columns">
-                                    <div class="button-height block-label margin-bottom">
-                                        <h5 for="note" class="underline green">
-                                            Ajouter une note
-                                        </h5>
-                                        <textarea id="note" cols="30" rows="5" data-ng-model="note" class="input full-width"></textarea>
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Date-Depart'}}</th>
+													<td>
 
-                                        <div class="margin-top button-height float-right">
-                                            <button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">{{t
-                                                    'Add'}}</button>
-                                        </div>
-                                    </div>
-                                </div>
+														<a href="#" 
+														   editable-date="userEdit.dateDepart"
+														   buttons="no"
+														   onaftersave="update()"
+														   blur="submit"
+														   e-title="Date de Depart">
+															\{{ (userEdit.dateDepart | date:"dd/MM/yyyy") || "Indéterminée"}}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Poste'}}</th>
+													<td>
+														<a href="#" 
+														   editable-text="userEdit.poste" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:Poste'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="posteFrm">
+															\{{ userEdit.poste || '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="posteFrm.$show()" ng-hide="posteFrm.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Description-Poste'}}</th>
+													<td>
+														<a href="#" 
+														   editable-textarea="userEdit.descriptionPoste" 
+														   e-rows="7" 
+														   e-cols="40"
+														   e-form="descFrm"
+														   e-placeholder="{{t 'users:Description-Poste'}}"
+														   blur="submit"
+														   buttons="no">
+															\{{ userEdit.descriptionPoste || 'pas de déscription' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="descFrm.$show()" ng-hide="descFrm.$visible"></span>
+
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Type-Contrat'}}</th>
+													<td>
+														<a 
+															href="#" 
+															editable-select="userEdit.contrat" 
+															buttons="no" 
+															e-ng-options="c.id as c.label for c in dict.fk_rh_contrat.values" 
+															onaftersave="update()"
+															blur="submit">
+															\{{ userEdit.contrat || '{{t 'main:Undefined'}}' }}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Periode-Essai'}}</th>
+													<td>
+														<a 
+															href="#" 
+															editable-number="userEdit.periodeEssai" 
+															buttons="no" 
+															onaftersave="update()">
+															\{{ userEdit.periodeEssai || '{{t 'main:Undefined'}}' }}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Salaire-Brut'}}</th>
+													<td>
+														<a 
+															href="#"
+															blur ="submit"
+															editable-number="userEdit.salaire" 
+															buttons="no" 
+															onaftersave="update()"
+															blur="submit"
+															e-placeholder="{{t 'users:Salaire-Brut'}}"
+															e-form="salaireFrm">
+															\{{ userEdit.salaire || '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="salaireFrm.$show()" ng-hide="salaireFrm.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Temps-Travail'}}</th>
+													<td>
+														<a 
+															href="#" 
+															editable-select="userEdit.tempsTravail" 
+															buttons="no" 
+															e-ng-options="t.label as t.label for t in dict.fk_rh_tempsTravail.values" 
+															onaftersave="update()">
+															\{{ userEdit.tempsTravail || '{{t 'main:Undefined'}}' }}
+														</a>
+													</td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-graduation-cap">Formation</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="twelve-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th scope="row">{{t 'users:Niveau-Etude'}}</th>
+													<td>
+														<a 
+															href="#" 
+															editable-select="userEdit.niveauEtude" 
+															buttons="no" 
+															e-ng-options="n.label as n.label for n in dict.fk_rh_niveauEtude.values"
+															onaftersave="update()">
+															\{{ userEdit.niveauEtude || '{{t 'main:Undefined'}}' }}
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Annee-Diplome'}}</th>
+													<td>
+														<a href="#" 
+														   editable-number="userEdit.anneeDiplome" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:Annee-Diplome'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="anneeDiplomeFrm">
+															\{{ userEdit.anneeDiplome || '{{t 'main:Undefined'}}' }}
+															<span class="icon-pencil grey" ng-click="anneeDiplomeFrm.$show()" ng-hide="anneeDiplomeFrm.$visible"></span>
+														</a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-paperclip">Informations Administratives</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+								<div class="columns">
+									<div class="twelve-columns">
+										<table class="simple-table">
+											<tbody>
+												<tr>
+													<th scope="row">{{t 'users:Securite-Sociale'}}</th>
+													<td>
+														<a href="#" 
+														   editable-text="userEdit.securiteSociale" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:Securite-Sociale'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="secSocialeFrm">
+															\{{ userEdit.securiteSociale || '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="secSocialeFrm.$show()" ng-hide="secSocialeFrm.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:Libelle-Bank'}}</th>
+													<td>
+														<a href="#" 
+														   editable-text="userEdit.libelleBank" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:Libelle-Bank'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="libBankFrm">
+															\{{ userEdit.libelleBank || '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="libBankFrm.$show()" ng-hide="libBankFrm.$visible"></span>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">{{t 'users:IBAN'}}</th>
+													<td>
+														<a href="#" 
+														   editable-text="userEdit.iban" 
+														   buttons="no" 
+														   e-placeholder="{{t 'users:IBAN'}}" 
+														   onaftersave="update()"
+														   blur="submit"
+														   e-form="ibanFrm">
+															\{{ userEdit.iban|| '{{t 'main:Undefined'}}' }}
+														</a>
+														<span class="icon-pencil grey" ng-click="ibanFrm.$show()" ng-hide="ibanFrm.$visible"></span>
+													</td>
+												</tr>
 
 
-                                <div class="twelve-columns">
-                                    <div class="scroll" style="height:360px">
-                                        <div data-ng-repeat="vnote in userEdit.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
-                                            <div class="with-small-padding silver-gradient no-margin-top">
-                                                <span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
-                                                <div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
-                                            </div>
-                                            <pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</tab>
+						<tab>
+							<tab-heading>
+								<span class="icon-pencil">Notes</span>
+							</tab-heading>
+							<div class="boxed relative large-box-shadow">
+
+								<div class="columns">
+									<div class="twelve-columns">
+										<div class="button-height block-label margin-bottom">
+											<h5 for="note" class="underline green">
+												Ajouter une note
+											</h5>
+											<textarea id="note" cols="30" rows="5" data-ng-model="note" class="input full-width"></textarea>
+
+											<div class="margin-top button-height float-right">
+													<button type="button" data-ng-click="addNote()" class="button icon-plus blue-gradient">
+													{{t 'Add'}}
+													</button>
+											</div>
+										</div>
+									</div>
 
 
-                        </div>
-                    </tab>
-                </tabset>
-            </div>		
+									<div class="twelve-columns">
+										<div class="scroll" style="height:360px">
+											<div data-ng-repeat="vnote in userEdit.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
+												<div class="with-small-padding silver-gradient no-margin-top">
+													<span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
+													<div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+												</div>
+												<pre class="with-small-padding" data-ng-if="vnote.note">\{{vnote.note}}</pre>
+											</div>
+										</div>
+									</div>
+								</div>
 
-        </div>
-    </div>
+
+							</div>
+						</tab>
+					</tabset>
+				</div>		
+
+			</div>
+		</div>
+	</div>
 </section>

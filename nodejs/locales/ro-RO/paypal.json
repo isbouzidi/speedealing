@@ -1,6 +1,6 @@
 {
     "CHARSET": "UTF-8",
-    "PaypalSetup": "Configurare modul PayPal ",
+    "PaypalSetup": "Configurare modul PayPal",
     "PaypalDesc": "Aceast modul  ofertă  pagini pentru a permite plata pe <a href=\"http://www.paypal.com\" target=\"_blank\">PayPal</a> de catre clientii. Acest lucru poate fi folosit pentru o plată gratuită sau pentru o plată a unui anumit obiect Speedealing (facturi, ordine, ...)",
     "PaypalOrCBDoPayment": "Plata cu card de credit sau Paypal",
     "PaypalDoPayment": "Plata cu Paypal",

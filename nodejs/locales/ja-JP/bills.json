@@ -2,6 +2,8 @@
     "CHARSET": "UTF-8",
     "Bill": "請求書",
     "Bills": "請求書",
+    "Billing": "Facturation",
+    "List": "Liste des factures",
     "BillsCustomers": "顧客の請求書",
     "BillsCustomer": "顧客の請求書",
     "BillsSuppliers": "仕入先の請求書",
@@ -389,5 +391,14 @@
     "PDFCrabeDescription": "請求書PDFテンプレートのカニ。完全な請求書テンプレート（テンプレートをおすすめ）",
     "PDFOursinDescription": "請求書PDFテンプレートOursin。完全な請求書テンプレート（テンプレートの代替）",
     "TerreNumRefModelDesc1": "yyは年である貸方の標準的な請求書と%syymm-nnnnの形式%syymm-NNNN withニュメロを返し、mmは月とnnnnはありません休憩0〜ノーリターンでシーケンスです。",
-    "TerreNumRefModelError": "$ syymm始まる法案はすでに存在し、シーケンスのこのモデルと互換性がありません。それを削除するか、このモジュールを有効にするために名前を変更します。"
+    "TerreNumRefModelError": "$ syymm始まる法案はすでに存在し、シーケンスのこのモデルと互換性がありません。それを削除するか、このモジュールを有効にするために名前を変更します。",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

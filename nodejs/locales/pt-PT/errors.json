@@ -5,8 +5,6 @@
     "Errors": "Erros",
     "ErrorBadEMail": "EMail %s é errado",
     "ErrorBadUrl": "Url %s é errado",
-    "ErrorLoginAlreadyExists": "O login %s já existe.",
-    "ErrorGroupAlreadyExists": "O grupo %s já existe.",
     "ErrorRecordNotFound": "Registro não foi encontrado.",
     "ErrorFailToCopyFile": "Falha ao copiar <b>&quot;%s&quot;</b> arquivo para <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Falha ao renomear <b>&quot;%s&quot;</b> arquivo para <b>&quot;%s&quot;.</b>",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Não existe um modelo para geração de documentos, foi ativado. A modelo será escolhida por padrão até que você verifique a configuração do módulo.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Esta alerta seguirá activa mientras a pasta exista (alerta visivel para Os Utilizadores admin somente).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

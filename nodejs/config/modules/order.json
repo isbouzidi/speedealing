@@ -50,6 +50,12 @@
 				}
 			},
 			{
+				"desc": "Re-ouvrir les commandes clients",
+				"perm": {
+					"reopen": false
+				}
+			},
+			{
 				"desc": "Envoyer les commandes clients",
 				"perm": {
 					"send": true

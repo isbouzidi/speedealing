@@ -1,3 +1,5 @@
+"use strict";
+
 //Setting up route
 window.app.config(['$routeProvider',
 	function($routeProvider) {
@@ -56,28 +58,28 @@ window.app.config(['$httpProvider',
 ]);
 
 // For dialog box
-window.app.config(['dialogsProvider','$translateProvider',function(dialogsProvider,$translateProvider){
-		dialogsProvider.useBackdrop('static');
-		dialogsProvider.useEscClose(true);
-		dialogsProvider.useCopy(false);
-		dialogsProvider.setSize('sm');
+window.app.config(['dialogsProvider','$translateProvider',function(dialogsProvider,$translateProvider) {
+	dialogsProvider.useBackdrop('static');
+	dialogsProvider.useEscClose(true);
+	dialogsProvider.useCopy(false);
+	dialogsProvider.setSize('sm');
 
-		$translateProvider.translations('fr-FR',{
-			DIALOGS_ERROR: "Erreur",
-			DIALOGS_ERROR_MSG: "Erreur inconnue.",
-			DIALOGS_CLOSE: "Fermer",
-			DIALOGS_PLEASE_WAIT: "Attendre",
-			DIALOGS_PLEASE_WAIT_ELIPS: "Veuillez patienter...",
-			DIALOGS_PLEASE_WAIT_MSG: "Veuiller attendre la fin de l'operation.",
-			DIALOGS_PERCENT_COMPLETE: "% complete",
-			DIALOGS_NOTIFICATION: "Notificacion",
-			DIALOGS_NOTIFICATION_MSG: "Notificacion inconnue.",
-			DIALOGS_CONFIRMATION: "Confirmation",
-			DIALOGS_CONFIRMATION_MSG: "Confirmation requise.",
-			DIALOGS_OK: "Ok",
-			DIALOGS_YES: "Oui",
-			DIALOGS_NO: "Non"
-		});
+	$translateProvider.translations('fr-FR',{
+		DIALOGS_ERROR: "Erreur",
+		DIALOGS_ERROR_MSG: "Erreur inconnue.",
+		DIALOGS_CLOSE: "Fermer",
+		DIALOGS_PLEASE_WAIT: "Attendre",
+		DIALOGS_PLEASE_WAIT_ELIPS: "Veuillez patienter...",
+		DIALOGS_PLEASE_WAIT_MSG: "Veuiller attendre la fin de l'operation.",
+		DIALOGS_PERCENT_COMPLETE: "% complete",
+		DIALOGS_NOTIFICATION: "Notificacion",
+		DIALOGS_NOTIFICATION_MSG: "Notificacion inconnue.",
+		DIALOGS_CONFIRMATION: "Confirmation",
+		DIALOGS_CONFIRMATION_MSG: "Confirmation requise.",
+		DIALOGS_OK: "Ok",
+		DIALOGS_YES: "Oui",
+		DIALOGS_NO: "Non"
+	});
 
-		$translateProvider.preferredLanguage('fr-FR');
-	}]);
+	$translateProvider.preferredLanguage('fr-FR');
+}]);

@@ -1,0 +1,72 @@
+{
+	"_id": "module:Report",
+	"enabled": true,
+	"boxes": [
+	],
+	"const": [
+	],
+	"rights": {
+		"report": [
+			{
+				"desc": "Lire les compte-rendus",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer/modifier des compte-rendus",
+				"perm": {
+					"create": false
+				}
+			},
+			{
+				"desc": "Supprimer des compte-rendus",
+				"perm": {
+					"delete": false
+				}
+			},
+			{
+				"desc": "Voir les compte-rendus des autres utilisateurs",
+				"perm": {
+					"readAll": false
+				}
+			}
+		],
+		"box": [
+			{
+				"desc": "Dernier comptes rendus",
+				"perm": {
+					"report": false
+				}
+			},
+			{
+				"desc": "Statisque des compte-rendus de toutes les entites (CODIR)",
+				"perm": {
+					"reportStatAllEntity": false
+				}
+			},
+			{
+				"desc": "Statisque des compte-rendus par entite",
+				"perm": {
+					"reportStatEntity": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"family": "main",
+	"name": "Compte-rendu commercial",
+	"description": "Gestion des compte-rendus",
+	"version": "speedealing",
+	"picto": "bill",
+	"depends": [
+		"modSociete"
+	],
+	"requiredby": [
+	],
+	"conflictwith": [],
+	"config_page_url": [
+	],
+	"menus": {
+	}
+}

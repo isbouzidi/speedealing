@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true, $: true, jQuery: true */
+
 angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'superCache', 'pageTitle', 'Global', 'Societes', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, superCache, pageTitle, Global, Societe) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des sociétés');
@@ -31,7 +34,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.clearCache = function () {
 			superCache.removeAll();
-		}
+		};
 
 		$scope.init = function () {
 			var dict = ["fk_stcomm", "fk_fournisseur", "fk_prospectlevel", "fk_typent", "fk_effectif", "fk_forme_juridique", "fk_payment_term", "fk_paiement", "fk_segmentation", "fk_rival"];
@@ -111,7 +114,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			}
 
 			var p = {
-				fields: "_id datec commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client",
+				fields: "_id datec commercial_id Status name zip town prospectlevel entity attractivity idprof3 effectif_id typent_id code_client Tag",
 				query: this.type.id,
 				entity: Global.user.entity,
 				commercial_id: this.commercial_id,
@@ -130,7 +133,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			$http({method: 'GET', url: '/api/societe/count', params: p
 			}).success(function (data, status) {
 				$scope.totalCountSociete = data.count;
-				$scope.maxPageSociete = Math.ceil(data.count / 1000);
+				$scope.maxPageSociete = Math.ceil(data.count / $scope.pagingOptionsSociete.pageSize);
 			});
 
 			$scope.initCharts();
@@ -270,7 +273,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.$watch('filterOptionsSociete', function (newVal, oldVal) {
 			if (newVal.filterText !== oldVal.filterText) {
-				$scope.find();
+				$timeout(function () {
+					$scope.find();
+				}, 1000);
 			}
 		}, true);
 
@@ -303,18 +308,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				{field: 'zip', displayName: 'Code Postal', width: '80px'},
 				{field: 'town', displayName: 'Ville'},
 				{field: 'idprof3', displayName: 'APE', width: '40px'},
-				//{field: 'Tag', displayName: 'Catégories', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'status.name', width: '150px', displayName: 'Etat',
-					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')" editable-select="row.getProperty(\'Status\')" buttons="no" e-form="StatusBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'Status\', row, $data)" e-ng-options="s.id as s.label for s in Status.values">{{row.getProperty(\'status.name\')}}</small> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>'
+					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')" editable-select="row.getProperty(\'Status\')" buttons="no" e-form="StatusBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'Status\', row, $data)" e-ng-options="s.id as s.label for s in dict.fk_stcomm.values">{{row.getProperty(\'status.name\')}}</small> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span>'
 				},
 				{field: 'prospectLevel.name', displayName: 'Potentiel', width: '130px',
 					//cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'prospectLevel.css\')}} glossy">{{row.getProperty(\'prospectLevel.name\')}}</small></div>'},
-					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'prospectLevel.css\')" editable-select="row.getProperty(\'prospectlevel\')" buttons="no" e-form="ProspectLevelBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'prospectlevel\', row, $data)" e-ng-options="s.id as s.label for s in prospectlevel.values">{{row.getProperty(\'prospectLevel.name\')}}</small> <span class="icon-pencil grey" ng-click="ProspectLevelBtnForm.$show()" ng-hide="ProspectLevelBtnForm.$visible"></span>'
+					cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'prospectLevel.css\')" editable-select="row.getProperty(\'prospectlevel\')" buttons="no" e-form="ProspectLevelBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'prospectlevel\', row, $data)" e-ng-options="s.id as s.label for s in dict.fk_prospectlevel.values">{{row.getProperty(\'prospectLevel.name\')}}</small> <span class="icon-pencil grey" ng-click="ProspectLevelBtnForm.$show()" ng-hide="ProspectLevelBtnForm.$visible"></span>'
 				},
 				{field: 'entity', displayName: 'Entité', cellClass: "align-center", width: '100px',
 					cellTemplate: '<div class="ngCellText align-center"><span editable-select="row.getProperty(col.field)" buttons="no" e-form="EntityBtnForm" onbeforesave="updateInPlace(\'/api/societe\',\'entity\', row, $data)" e-ng-options="e.id as e.name for e in entities" ><span class="icon-home" ng-show="row.getProperty(col.field)"></span> {{row.getProperty(col.field)}}</span> <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible"></span>',
 					visible: $scope.global.user.rights.societe.entity || false
 				},
+				{field: 'Tag', displayName: 'Mots clés', cellTemplate: '<div class="ngCellText"><small ng-repeat="category in row.getProperty(col.field)" class="tag anthracite-gradient glossy small-margin-right">{{category}}</small></div>'},
 				{field: 'datec', displayName: 'Création fiche', width: "90px", cellFilter: "date:'dd-MM-yyyy'"},
 				{field: 'attractivity', width: "50px", displayName: 'Attractivité', cellClass: "align-right"}
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"}
@@ -400,7 +405,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			for (var i = 0; i < $scope.segmentations.length; i++) {
 				if (row.entity._id === $scope.segmentations[i]._id) {
 					$http({method: 'DELETE', url: 'api/societe/segmentation', data: row.entity
-					}).success(function (data, status) {
+					}).success(function (data, status) {  // FIXME function in a loop !
 						$scope.segmentations.splice(i, 1);
 						$scope.countSegmentations--;
 					});
@@ -414,17 +419,17 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			for (var i = 0; i < $scope.segmentations.length; i++) {
 				if (row.entity._id === $scope.segmentations[i]._id) {
 					dlg = $dialogs.create('rename.html', 'SocieteSegmentationRenameController', row.entity, {key: false, back: 'static'});
-					dlg.result.then(function (newval) {
+					dlg.result.then(function (newval) {  // FIXME function in a loop !
 
 						//console.log(newval);
 						$http({method: 'POST', url: 'api/societe/segmentation', data: {
 								old: row.entity._id,
 								new : newval
 							}
-						}).success(function (data, status) {
+						}).success(function (data, status) {  // FIXME function in a loop !
 							$scope.findSegmentation();
 						});
-					}, function () {
+					}, function () { // FIXME function in a loop !
 					});
 
 					break;
@@ -450,7 +455,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					series.push({label: data.commercial[i]._id.name});
 				}
 
-				if ($scope.commercialList.length == 0) {
+				if ($scope.commercialList.length === 0) {
 					$scope.commercialList = data.commercial;
 					$scope.setCache('commercialList', data.commercial);
 				}
@@ -667,14 +672,15 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function (evt) {
-						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-					}).success(function (data, status, headers, config) {
+					}).progress(function (evt) { // FIXME function in a loop !
+						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total, 10));
+					}).success(function (data, status, headers, config) { // FIXME function in a loop !
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
-						if (!data.update) // if not file update, add file to files[]
-							$scope.societe.files.push(data.file);
+						//if (!data.update) // if not file update, add file to files[]
+						//	$scope.societe.files.push(data.file);
+						$scope.societe = data;
 					});
 				//.error(...)
 				//.then(success, error, progress); 
@@ -776,10 +782,10 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			enableColumnResize: true,
 			sortInfo: {fields: ['dateReport'], directions: ['desc']},
 			columnDefs: [
-				{field: 'model', displayName: 'Modèle', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(\'_model.name\')}} <small ng-show="row.getProperty(\'lead.name\')">(Affaire : {{row.getProperty(\'lead.name\')}})</small></a>'},
+				{field: 'model', displayName: 'Modèle', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-click="findReport(row.getProperty(\'_id\'))" data-tooltip-options=\'{"position":"right"}\' title=\'{{row.getProperty(col.field)}}\'><span class="icon-home"></span> {{row.getProperty(\'_model.name\')}}</a></div>'},
 				{field: 'dateReport', displayName: 'Date de l\'action', cellFilter: "date:'dd/MM/yyyy'"},
+				{field: 'lead.name', displayName: 'Projet', cellTemplate: '<div class="ngCellText align-center">{{row.getProperty(col.field)}} <small ng-if="row.getProperty(\'lead.id._id\')" class="tag {{row.getProperty(\'lead.id.Status.css\')}} glossy">{{row.getProperty(\'lead.id.Status.name\')}}</small></div>'},
 				{field: 'author.name', displayName: 'Auteur'},
-				{field: 'RealisedStatus.id', displayName: 'Etat des actions', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'RealisedStatus.css\')}} glossy">{{row.getProperty(\'RealisedStatus.id\')}}</small></div>'},
 				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'comment', displayName: 'Commentaires'}
 			]
@@ -1150,16 +1156,16 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				var somme = 0;
 				var tmp;
 				for (var cpt = 0; cpt < siret.length; cpt++) {
-					if ((cpt % 2) == 0) { // Les positions impaires : 1er, 3è, 5è, etc... 
+					if ((cpt % 2) === 0) { // Les positions impaires : 1er, 3è, 5è, etc... 
 						tmp = siret.charAt(cpt) * 2; // On le multiplie par 2
 						if (tmp > 9)
 							tmp -= 9;	// Si le résultat est supérieur à 9, on lui soustrait 9
 					}
 					else
 						tmp = siret.charAt(cpt);
-					somme += parseInt(tmp);
+					somme += parseInt(tmp, 10);
 				}
-				if ((somme % 10) == 0) {
+				if ((somme % 10) === 0) {
 					isValide = true; // Si la somme est un multiple de 10 alors le SIRET est valide 
 					$scope.societe.idprof1 = siret.substr(0, 9);
 				} else {

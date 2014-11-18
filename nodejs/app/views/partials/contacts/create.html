@@ -13,11 +13,22 @@
 	<fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
 		<div class="field-block button-height">
 			<label for="lastname"><b>{{t 'companies:Lastname'}}</b></label>
-			<input required type="text" id="nom" data-ng-model="contact.lastname" class="input" autocomplete="off">		
+			<div class="row">
+				<div class="col-md-3">
+					<select class="form-control" required data-ng-model="contact.civilite" id="poste" data-ng-options="c.label as c.label for c in dict.fk_civilite.values"></select>
+				</div>
+				<div class="col-md-6">
+					<input required type="text" id="nom" data-ng-model="contact.lastname" class="form-control" autocomplete="off">		
+				</div>
+			</div>	
 		</div>
 		<div class="field-block button-height">
 			<label for="firstName"><b>{{t 'companies:Firstname'}}</b></label>
-			<input required type="text" data-ng-model="contact.firstname" id="firstName" class="input" autocomplete="off">
+			<div class="row">
+				<div class="col-md-6">
+					<input required type="text" data-ng-model="contact.firstname" id="firstName" class="form-control" autocomplete="off">
+				</div>
+			</div>
 		</div>
 		<div class="field-block button-height">
 			<label for="birthday"><b>{{t 'companies:birthday'}}</b></label>
@@ -57,7 +68,11 @@
 		</div>
 		<div class="field-block button-height">
 			<label for="poste"><b>{{t 'companies:PostOrFunction'}}</b></label>
-			<select class="form-control" required data-ng-model="contact.poste" id="poste" data-ng-options="c.label as c.label for c in jobs.values"></select>
+			<div class="row">
+				<div class="col-md-6">
+					<select class="form-control" required data-ng-model="contact.poste" id="poste" data-ng-options="c.label as c.label for c in dict.fk_job.values"></select>
+				</div>
+			</div>
 		</div>
 
 		<div class="field-block button-height">

@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'OrdersSupplier', function($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, OrdersSupplier) {
 
 		pageTitle.setTitle('Liste des commandes fournisseurs');
@@ -107,7 +110,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -242,7 +245,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierController', ['$s
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 
@@ -390,7 +393,7 @@ angular.module('mean.ordersSupplier').controller('OrderSupplierCreateController'
 			$scope.order.commercial_id = {
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
-			}
+			};
 		};
 
 		$scope.create = function() {

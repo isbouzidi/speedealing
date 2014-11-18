@@ -35,6 +35,11 @@ module.exports = function (app, passport, auth) {
 				{label: new RegExp(req.body.filter.filters[0].value, "i")}
 			]
 		};
+		
+		/*
+		 * EN FONCTION DU PRICELEVEL
+		 */
+		
 		if (req.body.price_level && req.body.price_level !== 'BASE')
 			return pricelevel.autocomplete(req.body, function (prices) {
 				res.json(200, prices);
@@ -118,7 +123,7 @@ module.exports = function (app, passport, auth) {
 				if (storehouse.subStock.length && req.body.substock == storehouse.subStock[i].name)
 					return res.send(200, {}); //Already exist
 				if (storehouse.subStock[i].barCode > max)
-					max = storehouse.subStock[i].barCode
+					max = storehouse.subStock[i].barCode;
 			}
 
 			var subStock = {};
@@ -281,7 +286,7 @@ module.exports = function (app, passport, auth) {
 			};
 		else
 			query = {ref: new RegExp(req.body.filter.filters[0].value, "i")};
-		ProductModel.find(query, "_id ref", {limit: parseInt(req.body.take)}, function (err, docs) {
+		ProductModel.find(query, "_id ref", {limit: parseInt(req.body.take, 10)}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/product/ref/autocomplete");
 				console.log(err);
@@ -385,7 +390,7 @@ Object.prototype = {
 		if (req.query.sort)
 			sort = JSON.parse(req.query.sort);
 
-		ProductModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: sort}, function (err, docs) {
+		ProductModel.find(query, fields, {skip: parseInt(req.query.skip, 10) * parseInt(req.query.limit, 10) || 0, limit: req.query.limit || 100, sort: sort}, function (err, docs) {
 			if (err)
 				console.log(err);
 			//console.log(docs);

@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.products').controller('ProductController', ['$scope', '$routeParams', '$location', '$timeout', '$http', '$route', '$modal', 'Global', 'pageTitle', 'Products', function ($scope, $routeParams, $location, $timeout, $http, $route, $modal, Global, pageTitle, Product) {
 		$scope.global = Global;
 		pageTitle.setTitle('Liste des produits');
@@ -93,7 +96,7 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 
 		$scope.showProduct = function (id) {
 
-			var scope = $scope;
+			var scope = $scope; // FIXME unused variable ?
 
 			var ModalInstanceCtrl = function ($scope, $modalInstance, object) {
 				$scope.product = {
@@ -324,38 +327,6 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 		};
 
 
-		/*var crudServiceBaseUrl = "api/product";
-		 
-		 
-		 schema: {
-		 model: {
-		 id: "_id",
-		 fields: {
-		 _id: {editable: false, nullable: true},
-		 ref: {editable: true, validation: {required: true}},
-		 qtyMin: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-		 pu_ht: {type: "string", validation: {required: true, min: 0}, defaultValue: 0},
-		 tms: {type: "date", editable: false, defaultValue: Date().now},
-		 entity: {type: "string", defaultValue: ""},
-		 label: {type: "string", defaultValue: ""},
-		 //Status_ID: {from: "Status.id", defaultValue: "SELL"},
-		 price_level: {type: "string", defaultValue: "BASE"},
-		 ref_customer_code: {type: "string"},
-		 caFamily: {type: "string"},
-		 barCode: {type: "string"},
-		 billingMode: {type: "string", defaultvalue: "QTY"},
-		 compta_buy: {type: "string", defaultValue: ""},
-		 compta_sell: {type: "string", defaultValue: ""},
-		 author: {editable: false, defaultValue: {id: "{{user.id}}", name: "{{user.name}}"}},
-		 Status: {defaultValue: {id: "SELL", name: "En vente", css: "green-gradient"}},
-		 tva_tx: {type: "string", defaultValue: 20},
-		 type: {defaultValue: {id: "PRODUCT", name: "Produit", css: "blue-gradient"}}
-		 }
-		 }
-		 },
-		 */
-
-
 	}]);
 
 angular.module('mean.products').controller('ProductBarCodeController', ['$scope', '$routeParams', 'Global', '$http', function ($scope, $routeParams, Global, $http) {
@@ -447,7 +418,7 @@ angular.module('mean.products').controller('ProductBarCodeController', ['$scope'
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function (res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -492,7 +463,7 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 		$scope.updateLine = function (data) {
 
 			if (!$scope.line.description)
-				$scope.line.description = data.description;
+				$scope.line.description = data.product.id.description;
 
 			$scope.line.minPrice = data.product.id.minPrice;
 
@@ -660,7 +631,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 			}
 			$scope.save.row = row.rowIndex;
 
-			var d = new Date();
+			var d = new Date(); // FIXME unused variable ?
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
@@ -677,7 +648,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 			for (var i = 0; i < $scope.priceLevel.length; i++) {
 				if (row.entity._id === $scope.priceLevel[i]._id) {
 					$http({method: 'DELETE', url: 'api/product/price_level', data: row.entity
-					}).success(function (data, status) {
+					}).success(function (data, status) {  // FIXME function in a loop !
 						$scope.priceLevel.splice(i, 1);
 					});
 					break;
@@ -724,7 +695,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 				discount: 0,
 				qtyMin: 0,
 				price_level: options.price_level,
-				tms: new Date
+				tms: new Date()
 			};
 
 			$scope.productAutoComplete = function (val) {

@@ -5,8 +5,6 @@
     "Errors": "أخطاء",
     "ErrorBadEMail": "بريد إلكتروني خاطئ %s",
     "ErrorBadUrl": "عنوان الموقع هو الخطأ %s",
-    "ErrorLoginAlreadyExists": "ادخل ٪ ق موجود بالفعل.",
-    "ErrorGroupAlreadyExists": "المجموعة ٪ ق موجود بالفعل.",
     "ErrorRecordNotFound": "لم يتم العثور على السجل.",
     "ErrorFailToCopyFile": "Failed to copy file '<b>%s</b>' into '<b>%s</b>'.",
     "ErrorFailToRenameFile": "Failed to rename file '<b>%s</b>' into '<b>%s</b>'.",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "لا يوجد نموذج لجيل وثيقة ، قد تم تنشيط. سيكون نموذج المختار افتراضيا حتى يمكنك التحقق من إعداد وحدة الخاص.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "هذا التحذير وسوف تظل نشطة ما دام هذا الدليل هو هذا (يظهر فقط لمستخدمي المشرف).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

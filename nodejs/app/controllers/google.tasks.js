@@ -4,10 +4,10 @@
 * Module dependencies.
 */
 var mongoose = require('mongoose'),
-_ = require('lodash'),
-xml2js = require('xml2js'),
-googleapis = require('googleapis'),
-async = require("async");
+		_ = require('lodash'),
+		xml2js = require('xml2js'),
+		googleapis = require('googleapis'),
+		async = require("async");
 
 var gcommon = require('./google.common');
 
@@ -191,13 +191,12 @@ function updateTask(user, task_id, task, callback) {
 
 
 /* Module */
-var _ = require('lodash'),
-qs = require('querystring'),
-util = require('util'),
-url = require('url'),
-https = require('https'),
-querystring = require('querystring'),
-XMLWriter = require('xml-writer');
+var qs = require('querystring'),
+		util = require('util'),
+		url = require('url'),
+		https = require('https'),
+		querystring = require('querystring'),
+		XMLWriter = require('xml-writer');
 
 var GoogleTasks = function (opts) {
 	if (!opts) {
@@ -210,7 +209,7 @@ var GoogleTasks = function (opts) {
 	this.token = opts.token ? opts.token : null;
 	this.refreshToken = opts.refreshToken ? opts.refreshToken : null;
 
-	this.host = 'www.googleapis.com'
+	this.host = 'www.googleapis.com';
 	this.port = 443;
 };
 
@@ -223,12 +222,12 @@ GoogleTasks.prototype = {};
 	method = http method
 	header = hash headers to add to request. Optional
 	*/
-	GoogleTasks.prototype._createHttpsReqOptions = function(path, method, headers) {
+GoogleTasks.prototype._createHttpsReqOptions = function(path, method, headers) {
+	
+	if (!headers)
+		headers = {};
 
-		if (!headers)
-			headers = {}
-
-		headers['Authorization'] = 'OAuth ' + this.token;
+	headers['Authorization'] = 'OAuth ' + this.token;
 	//headers['GData-Version'] = '3.0';
 
 	return {
@@ -238,7 +237,7 @@ GoogleTasks.prototype = {};
 		'method': method,
 		'headers': headers
 	};
-}
+};
 
 GoogleTasks.prototype._buildPath = function (params) {
 	if (params.path) return params.path;
@@ -307,7 +306,7 @@ GoogleTasks.prototype._buildPath = function (params) {
 			req.write(body);
 		req.end();
 		return req;
-	}
+	};
 
 // *****************
 
@@ -361,7 +360,7 @@ GoogleTasks.prototype._treatTasks = function (data, params, callback) {
 		}],
 		callback
 		);
-}
+};
 
 /* Get google contacts
 * @param params Hash parameters to get contacts.
@@ -399,7 +398,7 @@ GoogleTasks.prototype.listTasks = function (params, callback) {
 			callback(err, that.tasks);
 		}
 		);
-}
+};
 
 // ********************************************************************
 
@@ -547,7 +546,3 @@ GoogleTasks.prototype.updateTask = function (task, params, callback) {
 		}
 		);
 };
-
-
-
-

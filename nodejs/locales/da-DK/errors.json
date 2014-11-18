@@ -5,8 +5,6 @@
     "Errors": "Fejl",
     "ErrorBadEMail": "EMail %s er forkert",
     "ErrorBadUrl": "Url %s er forkert",
-    "ErrorLoginAlreadyExists": "Log ind %s eksisterer allerede.",
-    "ErrorGroupAlreadyExists": "Gruppe %s eksisterer allerede.",
     "ErrorRecordNotFound": "Optag ikke fundet.",
     "ErrorFailToCopyFile": "Kunne ikke kopiere filen <b>&quot;%s&quot;</b> til <b>&quot;%s&quot;.</b>",
     "ErrorFailToRenameFile": "Kunne ikke omdøbe filen <b>'%s'</b> til <b>'%s'.</b>",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Ingen model, for dokument generation, er blevet aktiveret. En model vil være choosed som standard, indtil du tjekke din modul opsætning.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Denne advarsel vil forblive aktiv, så længe denne mappe er til stede (vises kun til admin-brugere).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

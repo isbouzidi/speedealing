@@ -5,8 +5,6 @@
     "Errors": "Λάθη",
     "ErrorBadEMail": "%s email είναι λάθος",
     "ErrorBadUrl": "%s url είναι λάθος",
-    "ErrorLoginAlreadyExists": "Είσοδος %s υπάρχει ήδη.",
-    "ErrorGroupAlreadyExists": "Ομάδα %s υπάρχει ήδη.",
     "ErrorRecordNotFound": "Εγγραφή δεν βρέθηκε.",
     "ErrorFailToCopyFile": "Απέτυχε η αντιγραφή του αρχείου <b>&quot;%s»</b> σε <b>«%s».</b>",
     "ErrorFailToRenameFile": "Απέτυχε η μετονομασία του αρχείου <b>&quot;%s»</b> σε <b>«%s».</b>",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Κανένα μοντέλο, για την παραγωγή εγγράφων, έχει ενεργοποιηθεί. Ένα μοντέλο θα είναι επιλεγμένο από προεπιλογή μέχρι να ελέγξετε την εγκατάσταση μονάδας σας.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Όλες οι προειδοποιήσεις ασφαλείας (ορατό από το admin χρήστες μόνο) θα παραμείνει ενεργό για όσο διάστημα η ευπάθεια είναι παρούσα (ή ότι η συνεχής MAIN_REMOVE_INSTALL_WARNING προστίθεται στο Setup-> Άλλες setup).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

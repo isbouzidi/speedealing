@@ -2,6 +2,8 @@
     "CHARSET": "UTF-8",
     "Bill": "فاتورة",
     "Bills": "فواتير",
+    "Billing": "Facturation",
+    "List": "Liste des factures",
     "BillsCustomers": "العملاء والفواتير",
     "BillsCustomer": "الزبون فاتورة",
     "BillsSuppliers": "الموردين",
@@ -389,5 +391,14 @@
     "PDFCrabeDescription": "نموذج فاتورة Crabe. نموذج الفاتورة كاملة (دعم الخيار الضريبة على القيمة المضافة ، والخصومات ، وشروط الدفع ، والشعار ، الخ..)",
     "PDFOursinDescription": "نموذج فاتورة oursin",
     "TerreNumRefModelDesc1": "عودة número مع الشكل nnnn - ٪ syymm القياسية للفواتير وnnnn - ٪ syymm للائتمان ويلاحظ فيها السنة هي السنة ، هو شهر ملم وnnnn هو كسر التسلسل وليس هناك عودة لل0",
-    "TerreNumRefModelError": "وهناك مشروع قانون بدءا من دولار ويوجد بالفعل syymm لا تتفق مع هذا النموذج من التسلسل. إزالة أو تغيير تسميتها لتصبح لتفعيل هذه الوحدة."
+    "TerreNumRefModelError": "وهناك مشروع قانون بدءا من دولار ويوجد بالفعل syymm لا تتفق مع هذا النموذج من التسلسل. إزالة أو تغيير تسميتها لتصبح لتفعيل هذه الوحدة.",
+    "Date": "Date de facture",
+    "Details": "Détail de la facture",
+    "ListOfPayments": "Règlements",
+    "TypePayment": "Mode de règlement",
+    "AccountToCredit": "Compte à créditer",
+    "PaymentAmout": "Montant règlement",
+    "NumberCheckTrans": "Numéro (Chèque/Virement N°)",
+    "Transmitter": "Emetteur (Emetteur du chèque)",
+    "Bank": "Banque (Banque du chèque)"
 }

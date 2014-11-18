@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function(grunt) {
     // Project Configuration
     grunt.initConfig({
@@ -7,14 +9,14 @@ module.exports = function(grunt) {
                 files: ['public/js/**', 'app/**/*.js'],
                 tasks: ['jshint'],
                 options: {
-                    livereload: true,
-                },
+                    livereload: true
+                }
             },
             html: {
                 files: ['public/views/**', 'app/views/**'],
                 options: {
-                    livereload: true,
-                },
+                    livereload: true
+                }
             },
             css: {
                 files: ['public/css/**'],
@@ -24,7 +26,10 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            all: ['gruntfile.js', 'public/js/**/*.js', 'test/**/*.js', 'app/**/*.js']
+            all: ['gruntfile.js', 'server.js', 'public/js/speedealing/**/*.js', 'config/**/*.js', 'app/**/*.js'],
+            options: {
+                jshintrc: '.jshintrc'
+                }
         },
         nodemon: {
             dev: {
@@ -59,10 +64,34 @@ module.exports = function(grunt) {
             test: {
                 NODE_ENV: 'test'
             }
+        },
+        // Validate against jQuery coding standard
+        jscs: {
+        	all: {
+        		options: {
+                    "standard": "Jquery",
+                    "reportFull": true,
+                    "reportFile": "/home/travis/build/symeos/speedealing/nodejs/jscsReport.txt"
+                },
+                files: {
+                    src: [
+                          'gruntfile.js',
+                          'server.js',
+                          'config/',
+                          'app/controllers/',
+                          'app/models/',
+                          'app/routes/',
+                          'public/js/speedealing/',
+                          'public/js/speedealing/controllers/',
+                          'public/js/speedealing/services/'
+                          ]
+                }
+            }
         }
     });
 
     //Load NPM tasks 
+    grunt.loadNpmTasks('grunt-contrib-jscs');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-mocha-test');
@@ -77,5 +106,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['jshint', 'concurrent']);
 
     //Test task.
-    grunt.registerTask('test', ['env:test', 'mochaTest']);
+    //grunt.registerTask('test', ['env:test', 'mochaTest', 'jscs']);
+    grunt.registerTask('test', ['env:test', 'mochaTest', 'jshint']);
 };

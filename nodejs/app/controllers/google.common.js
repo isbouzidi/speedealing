@@ -20,9 +20,6 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var UserModel = mongoose.model('user');
 
-// Global google configuration
-var config = require(__dirname + '/../../config/config');
-
 var GOOGLE_CLIENT_ID = config.google.clientID,
 		GOOGLE_CLIENT_SECRET = config.google.clientSecret,
 		GOOGLE_REDIRECT_URL = config.google.callbackURL;
@@ -31,23 +28,6 @@ var OAuth2Client = googleapis.auth.OAuth2;
 var oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID,
 		GOOGLE_CLIENT_SECRET,
 		GOOGLE_REDIRECT_URL);
-
-/* Public declaration methods. See definition for documentation. */
-exports.generateAuthUrl = generateAuthUrl;
-
-exports.isGoogleUser = isGoogleUser;
-
-//exports.isGoogleUserAndHasGrantedAccess =
-//		isGoogleUserAndHasGrantedAccess;
-
-exports.setAccessCode = setAccessCode;
-
-exports.googleAction = googleAction;
-
-exports.getDefaultGoogleContactsParams =
-		getDefaultGoogleContactsParams;
-
-exports.forEachGoogleUser = forEachGoogleUser;
 
 
 /* Methods definitions. */
@@ -91,7 +71,6 @@ function generateAuthUrl(submodules) {
 }
 
 
-
 function isGoogleUser(user) {
 	return (user.google.user_id
 			&& user.google.sync
@@ -103,10 +82,6 @@ function isGoogleUser(user) {
 //function isGoogleUserAndHasGrantedAccess(user) {
 //	return (user.google.user_id && user.google.tokens.access_token);
 //}
-
-
-
-
 
 
 function setAccessCode(code, user, callback) {
@@ -160,9 +135,6 @@ function setAccessCode(code, user, callback) {
 }
 
 
-
-
-
 function googleAction(user, strategy, callback) {
 	if (!isGoogleUser(user))
 		return callback(new Error("The user isn't a google user or he doesn't granted access."));
@@ -176,8 +148,6 @@ function googleAction(user, strategy, callback) {
 			callback
 			);
 }
-
-
 
 
 function getDefaultGoogleContactsParams(user) {
@@ -221,9 +191,6 @@ function refreshGoogleTokens(user, callback) {
 }
 
 
-
-
-
 function forEachGoogleUser(iterator, callback) {
 	var googleUsers = [];
 
@@ -240,11 +207,26 @@ function forEachGoogleUser(iterator, callback) {
 	}).on('error', function(err) {
 		callback(err);
 	}).on('close', function() {
-		async.each(googleUsers,
+		async.eachSeries(googleUsers,
 				iterator,
 				callback);
 	});
 }
 
+/* Public declaration methods. See definition for documentation. */
+exports.generateAuthUrl = generateAuthUrl;
 
+exports.isGoogleUser = isGoogleUser;
 
+//exports.isGoogleUserAndHasGrantedAccess =
+//		isGoogleUserAndHasGrantedAccess;
+
+exports.setAccessCode = setAccessCode;
+
+exports.googleAction = googleAction;
+
+exports.getDefaultGoogleContactsParams = getDefaultGoogleContactsParams;
+
+exports.forEachGoogleUser = forEachGoogleUser;
+
+exports.refreshGoogleTokens = refreshGoogleTokens;

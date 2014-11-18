@@ -13,7 +13,19 @@ var BillModel = mongoose.model('bill');
 var SocieteModel = mongoose.model('societe');
 var ProductModel = mongoose.model('product');
 
-module.exports = function(app, passport, auth) {
+var Dict = require('../controllers/dict');
+
+var tva_code = {};
+Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
+	for (var i = 0; i < docs.values.length; i++) {
+		if (docs.values[i].pays_code === 'FR' && docs.values[i].enable)
+			tva_code[docs.values[i].value] = docs.values[i].code_compta;
+		//console.log(docs.values[i]);
+	}
+	//tva_code = docs;
+});
+
+module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 
@@ -27,28 +39,7 @@ function Object() {
 }
 
 Object.prototype = {
-	bill: function(req, res, next, id) {
-		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
-		var query = {};
-
-		if (checkForHexRegExp.test(id))
-			query = {_id: id};
-		else
-			query = {ref: id};
-
-		//console.log(query);
-
-		BillModel.findOne(query, "-latex", function(err, doc) {
-			if (err)
-				return next(err);
-
-			req.bill = doc;
-
-			//console.log(doc);
-			next();
-		});
-	},
-	read: function(req, res) {
+	read: function (req, res) {
 		var dateStart = new Date(req.query.year, parseInt(req.query.month) - 1, 1);
 		var dateEnd = new Date(req.query.year, parseInt(req.query.month), 1);
 
@@ -61,18 +52,18 @@ Object.prototype = {
 
 		var result = [];
 
-		BillModel.find(query, "ref title client datec total_ttc total_tva lines", {sort: {datec: 1}}, function(err, doc) {
+		BillModel.find(query, "ref title client datec total_ttc total_tva lines", {sort: {datec: 1}}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
 				return;
 			}
 
-			async.eachSeries(doc, function(bill, callback) {
+			async.eachSeries(doc, function (bill, callback) {
 
 				//console.log(bill);
 
-				SocieteModel.findOne({_id: bill.client.id}, "code_compta name", function(err, societe) {
+				SocieteModel.findOne({_id: bill.client.id}, "code_compta name", function (err, societe) {
 					//console.log(societe);
 
 					// ligne client
@@ -94,10 +85,10 @@ Object.prototype = {
 
 					result.push(line);
 
-					async.each(bill.lines, function(lineBill, cb) {
+					async.each(bill.lines, function (lineBill, cb) {
 
 						//lignes produit
-						ProductModel.findOne({_id: lineBill.product.id}, "", function(err, product) {
+						ProductModel.findOne({_id: lineBill.product.id}, "", function (err, product) {
 							if (err)
 								return cb(err);
 
@@ -108,7 +99,7 @@ Object.prototype = {
 									datec: bill.datec,
 									journal: "VT",
 									compte: null,
-									piece: parseInt(bill.ref.substr(7)),
+									piece: parseInt(bill.ref.substr(7), 10),
 									libelle: bill.ref + ' ' + lineBill.product.name + ' (INCONNU)',
 									debit: 0,
 									credit: 0,
@@ -119,7 +110,7 @@ Object.prototype = {
 									datec: bill.datec,
 									journal: "VT",
 									compte: product.compta_sell,
-									piece: parseInt(bill.ref.substr(7)),
+									piece: parseInt(bill.ref.substr(7), 10),
 									libelle: bill.ref + " " + societe.name,
 									debit: 0,
 									credit: 0,
@@ -132,17 +123,21 @@ Object.prototype = {
 							result.push(line);
 							cb();
 						});
-					}, function(err) {
+					}, function (err) {
 						if (err)
 							return callback(err);
 
 						//lignes TVA
 						for (var i = 0; i < bill.total_tva.length; i++) {
+							//console.log(bill.total_tva[i]);
+							if(!tva_code[bill.total_tva[i].tva_tx])
+								console.log("Compta TVA inconnu : " + bill.total_tva[i].tva_tx);
+							
 							var line = {
 								datec: bill.datec,
 								journal: "VT",
-								compte: "445782",
-								piece: parseInt(bill.ref.substr(7)),
+								compte: tva_code[bill.total_tva[i].tva_tx],
+								piece: parseInt(bill.ref.substr(7), 10),
 								libelle: bill.ref + " " + societe.name,
 								debit: 0,
 								credit: 0,
@@ -157,7 +152,7 @@ Object.prototype = {
 						callback();
 					});
 				});
-			}, function(err) {
+			}, function (err) {
 				if (err)
 					console.log(err);
 				//console.log(doc);
@@ -214,7 +209,7 @@ Object.prototype = {
 			});
 		});
 	},
-	create: function(req, res) {
+	create: function (req, res) {
 		var bill = {};
 		if (req.query.clone) {
 			bill = req.bill.toObject();
@@ -236,11 +231,11 @@ Object.prototype = {
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;
 
-		if (bill.entity == null)
+		if (!bill.entity)
 			bill.entity = req.user.entity;
 
 		//console.log(bill);
-		bill.save(function(err, doc) {
+		bill.save(function (err, doc) {
 			if (err) {
 				return console.log(err);
 			}

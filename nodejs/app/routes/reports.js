@@ -4,6 +4,8 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('lodash'),
+		i18n = require("i18next"),
+		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
 
@@ -12,7 +14,9 @@ var ContactModel = mongoose.model('contact');
 var ProductModel = mongoose.model('product');
 var SocieteModel = mongoose.model('societe');
 
-module.exports = function (app, passport, auth) {
+var Task = require('../controllers/task');
+
+module.exports = function (app, passport, auth, usersSocket) {
 
 	var object = new Object();
 
@@ -30,7 +34,7 @@ module.exports = function (app, passport, auth) {
 				console.log(err);
 				return;
 			}
-			;
+
 			return res.send(200, doc);
 
 		});
@@ -57,7 +61,9 @@ module.exports = function (app, passport, auth) {
 	});
 
 	//add new report
-	app.post('/api/reports', auth.requiresLogin, object.create);
+	app.post('/api/reports', auth.requiresLogin, function (req, res) {
+		object.create(req, res, usersSocket);
+	});
 
 	//get all report of a company
 	app.get('/api/report', auth.requiresLogin, object.read);
@@ -65,14 +71,7 @@ module.exports = function (app, passport, auth) {
 	//get reports of other users
 	app.get('/api/reports/listReports', auth.requiresLogin, object.listReports);
 
-	//get all the task not realised of a user
-	app.get('/api/reports/listTasks', auth.requiresLogin, object.listTasks);
-
-	//mark a task as realised
-	app.put('/api/reports/taskRealised', auth.requiresLogin, object.taskRealised);
-
-	//cancel task as realised
-	app.put('/api/reports/cancelTaskRealised', auth.requiresLogin, object.cancelTaskRealised);
+	//app.get('/api/reports/convertTask', auth.requiresLogin, object.convertTask);
 
 	//get report details
 	app.get('/api/reports/:reportId', auth.requiresLogin, object.show);
@@ -98,12 +97,68 @@ Object.prototype = {
 			next();
 		});
 	},
-	create: function (req, res) {
+	create: function (req, res, usersSocket) {
 
 		var reportModel = new ReportModel(req.body);
-		console.log(req.body);
-		
-		
+		//console.log(req.body);
+
+		function object2array(input) {
+			var out = [];
+			for (var i in input) {
+				input[i].id = i;
+				out.push(input[i]);
+			}
+			return out;
+		}
+
+		object2array(req.body.actions).forEach(function (action) {
+			if (!action.type || action.type == "NONE")
+				return;
+
+			//console.log(action);
+			//console.log(actioncomm);
+
+			var datef = null;
+			
+			if(action.datef)
+				datef = action.datef;
+			else if (!action.datep) {
+				datef = new Date();
+				datef.setDate(datef.getDate() + action.delay);
+			}
+
+			var task = {
+				name: i18n.t("tasks:" + action.id) + " (" + req.body.societe.name + ")",
+				societe: req.body.societe,
+				contact: req.body.contacts[0] || null,
+				datec: new Date(),
+				datep: action.datep || null, // date de debut
+				datef: datef || null,
+				type: action.type,
+				entity: req.user.entity,
+				notes: [
+					{
+						author: {
+							id: req.user._id,
+							name: req.user.firstname + " " + req.user.lastname
+						},
+						datec: new Date(),
+						percentage: 0,
+						note: i18n.t("tasks:" + action.id) + " " + i18n.t("tasks:" + action.type) + "\nCompte rendu du " + dateFormat(req.body.datec, "dd/mm/yyyy")
+					}
+				],
+				lead: req.body.lead
+			};
+
+			//console.log(task);
+
+			Task.create(task, req.user, usersSocket, function (err, task) {
+				if (err)
+					console.log(err);
+				//	console.log(task);
+			});
+
+		});
 
 		reportModel.save(function (err, doc) {
 			if (err) {
@@ -124,15 +179,17 @@ Object.prototype = {
 			fields = req.query.fields;
 		}
 
-		ReportModel.find(query, fields, function (err, doc) {
-			if (err) {
-				console.log(err);
-				res.send(500, doc);
-				return;
-			}
+		ReportModel.find(query, fields)
+				.populate("lead.id", "status")
+				.exec(function (err, doc) {
+					if (err) {
+						console.log(err);
+						res.send(500, doc);
+						return;
+					}
 
-			res.send(200, doc);
-		});
+					res.send(200, doc);
+				});
 	},
 	show: function (req, res) {
 		//console.log("show : " + req.report);
@@ -160,53 +217,6 @@ Object.prototype = {
 			res.send(200, doc);
 		});
 	},
-	listTasks: function (req, res) {
-
-		var user = req.query.user;
-
-		var query = {
-			"author.id": {"$in": [user]},
-			"realised": false
-		};
-		ReportModel.find(query, "_id societe actions", function (err, doc) {
-			if (err) {
-				console.log(err);
-				res.send(500, doc);
-				return;
-			}
-
-			res.send(200, doc);
-		});
-	},
-	taskRealised: function (req, res) {
-
-		var id = req.query.id;
-
-		if (id)
-			ReportModel.update({"_id": id}, {$set: {"realised": true, dueDate: new Date()}}, function (err, doc) {
-
-				if (err)
-					return console.log(err);
-
-				res.send(200);
-
-			});
-	}
-	,
-	cancelTaskRealised: function (req, res) {
-
-		var id = req.query.id;
-
-		if (id)
-			ReportModel.update({"_id": id}, {$set: {"realised": false, dueDate: null}}, function (err, doc) {
-
-				if (err)
-					return console.log(err);
-
-				res.send(200);
-
-			});
-	},
 	update: function (req, res) {
 
 		var report = req.report;
@@ -220,5 +230,77 @@ Object.prototype = {
 
 			res.json(200, doc);
 		});
-	}
+	},
+	/*convertTask: function (req, res) {
+	 ReportModel.aggregate([
+	 {$match: {"actions.0": {$exists: true}}},
+	 {$unwind: "$actions"}
+	 ], function (err, docs) {
+	 if (err)
+	 console.log(err);
+	 
+	 docs.forEach(function (doc) {
+	 
+	 console.log(doc);
+	 
+	 var task = {
+	 societe: doc.societe,
+	 contact: doc.contacts[0] || null,
+	 datec: doc.createdAt,
+	 datep: doc.dueDate,
+	 datef: doc.dueDate,
+	 entity: doc.entity,
+	 author: doc.author,
+	 usertodo: doc.author,
+	 notes: [
+	 {
+	 author: doc.author,
+	 datec: doc.createdAt,
+	 percentage: 0
+	 }
+	 ],
+	 lead: doc.leads || null
+	 };
+	 
+	 switch (doc.actions.type) {
+	 case "Réunion interne":
+	 task.type = "AC_INTERNAL";
+	 break;
+	 case "plaquette":
+	 task.type = "AC_DOC";
+	 break;
+	 case "prochain rendez-vous":
+	 task.type = "AC_PRDV";
+	 break;
+	 case "Rendez-vous":
+	 task.type = "AC_RDV";
+	 break;
+	 case "offre":
+	 task.type = "AC_PROP";
+	 break;
+	 case "visite atelier":
+	 task.type = "AC_AUDIT";
+	 break;
+	 case "prochaine action":
+	 task.type = "AC_REVIVAL";
+	 break;
+	 default:
+	 console.log("Manque " + doc.actions.type);
+	 }
+	 
+	 task.name = i18n.t("tasks:" + task.type) + " (" + doc.societe.name + ")";
+	 task.notes[0].note = doc.actions.type + " " + i18n.t("tasks:" + task.type) + "\nCompte rendu du " + dateFormat(task.datec, "dd/mm/yyyy");
+	 
+	 console.log(task);
+	 
+	 Task.create(task, null, null, function (err, task) {
+	 if (err)
+	 console.log(err);
+	 //	console.log(task);
+	 });
+	 
+	 });
+	 res.send(200);
+	 });
+	 }*/
 };

@@ -5,8 +5,6 @@
     "Errors": "Feil",
     "ErrorBadEMail": "E-post %s er feil",
     "ErrorBadUrl": "Url %s er feil",
-    "ErrorLoginAlreadyExists": "brukernavnet %s eksisterer allerede.",
-    "ErrorGroupAlreadyExists": "Gruppen %s eksisterer allerede.",
     "ErrorRecordNotFound": "Record ikke funnet.",
     "ErrorFailToCopyFile": "Klarte ikke å kopiere filen <b>«%s</b> 'inn' <b>%s</b> '.",
     "ErrorFailToRenameFile": "Kunne ikke omdøpe filen <b>'%s'</b> inn <b>'%s'.</b>",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Ingen modell, for dokument generasjon, har blitt aktivert. En modell vil bli choosed av retten til du sjekke modulen oppsett.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Denne advarselen vil være aktivert så lenge denne mappen eksisterer (Den vises kun til administratorer).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

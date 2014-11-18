@@ -65,7 +65,7 @@ Object.prototype = {
 
 		return;
 
-
+		// FIXME the code below not used after "return" above?
 		var query = {};
 
 		if (req.query) {

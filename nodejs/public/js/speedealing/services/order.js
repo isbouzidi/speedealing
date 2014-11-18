@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 //Orders service used for articles REST endpoint
 angular.module('mean.orders').factory("Orders", ['$resource', function($resource) {
     return $resource('api/commande/:Id', {
@@ -5,6 +8,12 @@ angular.module('mean.orders').factory("Orders", ['$resource', function($resource
     }, {
         update: {
             method: 'PUT'
-        }
+        },
+		clone:{
+			method:'POST',
+			params : {
+				clone:1
+			}
+		}
     });
 }]);

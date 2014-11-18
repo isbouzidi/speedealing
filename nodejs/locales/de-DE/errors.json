@@ -5,8 +5,6 @@
     "Errors": "Fehler",
     "ErrorBadEMail": "E-Mail %s ist nicht korrekt",
     "ErrorBadUrl": "URL %s ist nicht korrekt",
-    "ErrorLoginAlreadyExists": "Login %s existiert bereits.",
-    "ErrorGroupAlreadyExists": "Gruppe %s existiert bereits.",
     "ErrorRecordNotFound": "Eintrag wurde nicht gefunden.",
     "ErrorFailToCopyFile": "Konnte die Datei <b>'%s'</b> nicht nach <b>'%s'</b> kopieren.",
     "ErrorFailToRenameFile": "Konnte die Datei <b>'%s'</b> nicht in <b>'%s'</b> umzubenennen.",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Für das Erstellen von Dokumenten ist keine Vorlage gewählt. Eine Vorlage wird standardmäßig ausgewählt, bis Sie die Moduleinstellungen angepasst haben.",
     "WarningLockFileDoesNotExists": "Warnung, wenn Setup abgeschlossen ist, müssen Sie die Installations- und Migration-Tools deaktivieren. Dazu fügen Sie die Datei <b>install.lock</b> dem Verzeichnis <b> %s</b> hinzu. Das fehlend dieser Datei stelle eine Sicherheitslücke dar.",
     "WarningUntilDirRemoved": "Diese Warnung bleibt so lange bestehen, bis die Sicherheitslücke geschlossen wurde (nur für Administratoren sichtbar).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

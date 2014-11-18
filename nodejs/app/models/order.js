@@ -23,9 +23,14 @@ var orderSchema = new Schema({
 	Status: {type: Schema.Types.Mixed, default: 'DRAFT'},
 	cond_reglement_code: {type: String, default: 'RECEP'},
 	mode_reglement_code: {type: String, default: 'TIP'},
-	availability_code: {type: String, default: 'AV_NOW'},
-	demand_reason_code: {type: String, default: 'SRC_CAMP_EMAIL'},
-	client: {id: {type: Schema.Types.ObjectId, ref: 'societe'}, name: String},
+	//availability_code: {type: String, default: 'AV_NOW'},
+	type: {type: String, default: 'SRC_COMM'},
+	client: {
+		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
+		name: String,
+		isNameModified: {type: Boolean},
+		cptBilling: {id: {type: Schema.Types.ObjectId}, name: String},
+	},
 	contact: {
 		id: {type: Schema.Types.ObjectId, ref: 'contact'},
 		name: String,
@@ -34,7 +39,7 @@ var orderSchema = new Schema({
 	},
 	ref_client: {type: String},
 	datec: {type: Date},
-	date_livraison: Date,
+	date_livraison: {type: Date},
 	notes: [{
 			title: String,
 			note: String,
@@ -48,15 +53,21 @@ var orderSchema = new Schema({
 			}
 		}],
 	total_ht: {type: Number, default: 0},
-	total_tva: {type: Number, default: 0},
+	total_tva: [
+		{
+			tva_tx: Number,
+			total: {type: Number, default: 0}
+		}
+	],
 	total_ttc: {type: Number, default: 0},
 	shipping: {
 		total_ht: {type: Number, default: 0},
-		tva_tx: {type: Number, default: 0},
+		tva_tx: {type: Number, default: 20},
 		total_tva: {type: Number, default: 0},
 		total_ttc: {type: Number, default: 0}
 	},
 	author: {id: String, name: String},
+	commercial_id: {id: {type: String}, name: String},
 	entity: String,
 	modelpdf: String,
 	linked_objects: [{id: Schema.Types.ObjectId, name: String}],
@@ -64,6 +75,7 @@ var orderSchema = new Schema({
 	groups: [Schema.Types.Mixed],
 	optional: Schema.Types.Mixed,
 	billing: {
+		sameBL0: {type: Boolean},
 		name: String,
 		contact: String,
 		address: String,
@@ -76,6 +88,7 @@ var orderSchema = new Schema({
 		},
 		mode: {type: String, default: "BILL"} // TICKET or BILL
 	},
+	price_level: {type: String, default: "BASE", uppercase: true, trim: true},
 	bl: [{
 			label: String,
 			name: String,
@@ -96,27 +109,27 @@ var orderSchema = new Schema({
 			}
 		}],
 	lines: [{
-			pu: {type: Number, default: 0},
+			//pu: {type: Number, default: 0},
 			qty: {type: Number, default: 0},
 			tva_tx: {type: Number, default: 0},
-			price_base_type: String,
-			group: String,
+			//price_base_type: String,
+			group: {type: String, default: "GLOBAL", uppercase: true, trim: true},
 			title: String,
 			pu_ht: {type: Number, default: 0},
 			description: String,
 			product_type: String,
 			product: {
-				id: {type: Schema.Types.ObjectId, ref: "product"},
-				name: String
+				id: {type: Schema.Types.ObjectId, ref: "Product"},
+				name: {type: String},
+				label: String,
+				template: {type: String, default: "/partials/lines/classic.html"}
 			},
 			total_tva: {type: Number, default: 0},
 			total_ttc: {type: Number, default: 0},
-			total_ht_without_discount: {type: Number, default: 0},
-			total_ttc_without_discount: {type: Number, default: 0},
-			total_vat_without_discount: {type: Number, default: 0},
+			//total_ht_without_discount: {type: Number, default: 0},
+			//total_ttc_without_discount: {type: Number, default: 0},
+			//total_vat_without_discount: {type: Number, default: 0},
 			total_ht: {type: Number, default: 0},
-			pu_ttc: {type: Number, default: 0},
-			pu_tva: {type: Number, default: 0}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {
@@ -138,28 +151,67 @@ orderSchema.plugin(gridfs.pluginGridFs, {root: 'Commande'});
  */
 orderSchema.pre('save', function (next) {
 	this.total_ht = 0;
-	this.total_tva = 0;
+	this.total_tva = [];
 	this.total_ttc = 0;
+	
+	//return next();
 
 	for (var i = 0; i < this.lines.length; i++) {
 		//console.log(object.lines[i].total_ht);
 		this.total_ht += this.lines[i].total_ht;
-		this.total_tva += this.lines[i].total_tva;
-		this.total_ttc += this.lines[i].total_ttc;
+		//this.total_ttc += this.lines[i].total_ttc;
+
+		//Add VAT
+		var found = false;
+		for (var j = 0; j < this.total_tva.length; j++)
+			if (this.total_tva[j].tva_tx === this.lines[i].tva_tx) {
+				this.total_tva[j].total += this.lines[i].total_tva;
+				found = true;
+				break;
+			}
+
+		if (!found) {
+			this.total_tva.push({
+				tva_tx: this.lines[i].tva_tx,
+				total: this.lines[i].total_tva
+			});
+		}
 	}
 
-	// Shipping
-	this.total_ht += this.shipping.total_ht;
-	this.total_tva += this.shipping.total_tva;
-	this.total_ttc += this.shipping.total_ttc;
+	// shipping cost
+	if (this.shipping.total_ht) {
+		this.total_ht += this.shipping.total_ht;
 
-	// Round
+		this.shipping.total_tva = this.shipping.total_ht * this.shipping.tva_tx / 100;
+
+		//Add VAT
+		var found = false;
+		for (var j = 0; j < this.total_tva.length; j++)
+			if (this.total_tva[j].tva_tx === this.shipping.tva_tx) {
+				this.total_tva[j].total += this.shipping.total_tva;
+				found = true;
+				break;
+			}
+
+		if (!found) {
+			this.total_tva.push({
+				tva_tx: this.shipping.tva_tx,
+				total: this.shipping.total_tva
+			});
+		}
+	}
+
 	this.total_ht = Math.round(this.total_ht * 100) / 100;
-	this.total_tva = Math.round(this.total_tva * 100) / 100;
-	this.total_ttc = Math.round(this.total_ttc * 100) / 100;
+	//this.total_tva = Math.round(this.total_tva * 100) / 100;
+	this.total_ttc = this.total_ht;
+
+	for (var j = 0; j < this.total_tva.length; j++) {
+		this.total_tva[j].total = Math.round(this.total_tva[j].total * 100) / 100;
+		this.total_ttc += this.total_tva[j].total;
+	}
 
 	var self = this;
-	if (this.isNew && this.ref == null) {
+	if (this.isNew && !this.ref) {
 		SeqModel.inc("CO", function (seq) {
 			//console.log(seq);
 			EntityModel.findOne({_id: self.entity}, "cptRef", function (err, entity) {

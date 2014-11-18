@@ -5,8 +5,6 @@
     "Errors": "Napake",
     "ErrorBadEMail": "EMail %s je napačen",
     "ErrorBadUrl": "Url %s je napačen",
-    "ErrorLoginAlreadyExists": "Uporabniško ime %s že obstaja.",
-    "ErrorGroupAlreadyExists": "Skupina %s že obstaja.",
     "ErrorRecordNotFound": "Ne najdem zapisa.",
     "ErrorFailToCopyFile": "Ni kopirati Datoteka <b>'%s</b> &quot;nadomesti z&quot; <b>%s</b> &quot;.",
     "ErrorFailToRenameFile": "Napaka pri preimenovanju datoteke '<b>%s</b>' v '<b>%s</b>'.",
@@ -122,5 +120,7 @@
     "WarningNoDocumentModelActivated": "Noben model za ustvarjanje dokumentov ni aktiviran. Dokler ne preverite nastavitve modula, bo uporabljen privzet model.",
     "WarningLockFileDoesNotExists": "Warning, once setup is finished, you must disable install/migrate tools by adding a file <b>install.lock</b> into directory <b>%s</b>. Missing this file is a security hole.",
     "WarningUntilDirRemoved": "Vsi varnostni opozorila (vidna le uporabniki admin) ostane aktiven, dokler je prisotna ranljivost (ali stalno MAIN_REMOVE_INSTALL_WARNING se doda v Setup-> druge nastavitve).",
-    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution."
+    "WarningCloseAlways": "Warning, closing is done even if amount differs between source and target elements. Enable this feature with caution.",
+    "ErrorEnterYourLogin": "Identifiant vide",
+    "ErrorEnterYourPassword": "Mot de passe vide"
 }

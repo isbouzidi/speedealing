@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
@@ -19,7 +21,7 @@ var ticketSchema = new Schema({
 	affectedTo: [{id: String, name: String}],
 	read: [String], // readed is in this array
 	controlledBy: {id: {type: String}, name: String},
-	datec: {type: Date, default: new Date},
+	datec: {type: Date, default: new Date()},
 	percentage: {type: Number, default: 0},
 	datef: Date,
 	linked: [{//link internal object
@@ -34,7 +36,7 @@ var ticketSchema = new Schema({
 			author: {id: String, name: String},
 			note: String,
 			title: String, //top of the bar
-			datec: {type: Date, default: new Date},
+			datec: {type: Date, default: new Date()},
 			icon: String
 		}],
 	callback: Date,

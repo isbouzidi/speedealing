@@ -81,53 +81,109 @@ exports.menus = function (req, res) {
 	//console.dir(menus);
 
 	function checkright(perms) {
-		if (!req.user.admin && typeof perms == "string") {
-			var perm = perms.split(".");
-			console.log(perm);
-
-			if (perm[0] === "admin" && !req.user.admin) // super administrator
-				return false;
-
-			if (perm.length == 2) {
-				if (!req.user.rights[perm[0]] || !req.user.rights[perm[0]][perm[1]])
+		if (!req.user.admin) {
+			if (!_.isNull(perms) && !_.isUndefined(perms)) {
+				// For single right
+				// "perms": "admin"
+				if (_.isString(perms)) {
+					if (!checkUserRights(perms))
+						return false;
+				// For several rights
+				// case #1: "perms":["admin","entity.read"] corresponding to: if (admin && entity.read)
+				// case #2: "perms":[["admin","entity.read"],["foo.read"]] corresponding to: if ((admin && entity.read) || foo.read)
+				} else if (_.isArray(perms)) {
+					
+					var returnRight = true;
+					//console.log(perms);
+					
+					_.forEach(perms, function(values) {
+						if (_.isArray(values)) {
+							//console.log(values);
+							_.forEach(values, function(value) {
+								//console.log('checkUserRightsLoop');
+								//console.log('checkUserRights=' + value);
+								if (!checkUserRights(value)) {
+									//console.log('check_false=' + value);
+									returnRight = false; // AND operator : break if only once is false
+									return false; // break this loop
+								} else {
+									//console.log('check_true=' + value);
+									returnRight = true; // AND operator : continue if true
+								}
+							});
+							
+							if (returnRight == true) {
+								//console.log('break the first loop');
+								return false; // AND / OR operators : break all if block is true
+							}
+								
+						} else {
+							if (!checkUserRights(values)) {
+								//console.log('checkUserRights');
+								returnRight = false; // AND operator : break if only once is false
+								return false;
+							}
+						}
+					});
+					
+					//console.log("returnRight=" + returnRight);
+					return returnRight;
+					
+				} else
 					return false;
-			}
+			} else
+				return false;
 		}
+		return true;
+	}
+	
+	function checkUserRights(perms) {
+		var perm = perms.split(".");
+		console.log(perm);
+
+		if (perm[0] === "admin" || perm[0] === "superadmin") // only superadmin and administrators
+			return false;
+
+		if (perm.length == 2) {
+			if (!req.user.rights[perm[0]] || !req.user.rights[perm[0]][perm[1]])
+				return false;
+		}
+		
 		return true;
 	}
 
 	for (var i in menus) {
 		// Check right
-		var found0 = false;
+		var level0 = false;
 
 		if (checkright(menus[i].perms))
-			found0 = true;
+			level0 = true;
 
 		result[i] = _.clone(menus[i], true);
 
 		for (var j in menus[i].submenus) {
-			var found1 = false;
+			var level1 = false;
 			
 			if (checkright(menus[i].submenus[j].perms)) {
-				found1 = true;
-				found0 = true;
+				level0 = true;
+				level1 = true;
 			}
 
 			for (var k in menus[i].submenus[j].submenus) {
 				if (checkright(menus[i].submenus[j].submenus[k].perms)) {
-					found0=true;
-					found1=true;
+					level0=true;
+					level1=true;
 				}
 				else
 					delete result[i].submenus[j].submenus[k];
 			}
 			
-			if(!found1)
+			if(!level1)
 				delete result[i].submenus[j];
 			
 		}
 		
-		if(!found0)
+		if(!level0)
 			delete result[i];
 	}
 	res.json(result);

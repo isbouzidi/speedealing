@@ -1,0 +1,142 @@
+<section data-ng-controller="TaskController">
+	<div data-ng-init="findOne()">
+		<hgroup id ="main-title" class="thin">
+			<h1>{{t 'tasks:Task'}} <span class="tag glossy h3" ng-class="task.status.css">\{{task.status.name}}</span></h1>
+		</hgroup>
+		<div class="with-padding" data-ng-init="init()">
+
+			<fieldset class="wizard-fieldset fields-list active">
+				<div class="field-block">
+					<label><b>{{t
+								'Title'}}</b></label>
+					<a href="#"  ng-show="editable" class="blue h5" editable-text="task.name" buttons="no" onaftersave="update()">
+						\{{task.name|| "Non defini"}}
+					</a>
+					<span class="blue h5" ng-hide="editable">\{{task.name|| "Non defini"}}</span>
+				</div>
+				<div class="field-block">
+					<label><b>{{t
+								'Type'}}</b></label>
+					\{{task._type.name}}
+				</div>
+				<div class="field-block">
+					<label><b>{{t
+								'CompanyFoundation'}}</b></label>
+					<div class="row">
+						<div class="col-md-6">
+							<a 
+								ng-show ="task.societe.id"
+								data-ng-href="#!/societes/\{{task.societe.id}}" 
+								target="_blank"
+								class="icon-home"
+								editable-text="task.societe"
+								e-typeahead="societe as societe.name for societe in AutoComplete($viewValue,'api/societe/autocomplete',5) | filter:{name:$viewValue}"
+								buttons="no"
+								e-form="eSocieteBtnForm"
+								onbeforesave="task.contact={};"
+								onaftersave="update()"
+								blur="submit">\{{task.societe.name|| "Non defini"}} </a>
+							<span ng-hide="task.societe.id"
+								  class="icon-home red"
+								  >\{{task.societe.name|| "Non defini"}} </span>
+							<span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="eSocieteBtnForm.$visible"></span>
+						</div>
+						<div class="col-md-6">
+							<a href="#" class="icon-user" ng-show="editable" editable-select="task.contact" onshow="loadContact(task.societe)" e-ng-options="contact as contact.name for contact in contacts" buttons="no" onaftersave="update()">
+								\{{task.contact.name|| "Non defini"}}
+							</a>
+							<span class="icon-user" ng-hide="editable">\{{task.contact.name|| "Non defini"}}</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="field-block button-height" ng-if="task.type == 'AC_RDV'">
+					<label for="datep"><b>{{t 'tasks:DateActionStart'}}</b></label>
+					<a href="#" ng-show="editable" editable-bsdate="task.datep" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+						\{{ (task.datep | date:"dd/MM/yyyy") || 'empty'}}
+					</a>
+					<a ng-show="editable" href="#" editable-bstime="task.datep" e-show-meridian="false" e-minute-step="10" onaftersave="update()">
+						\{{ (task.datep | date:"HH:mm") || 'empty'}}
+					</a>
+					<span ng-hide="editable">\{{ (task.datep | date:"dd/MM/yyyy HH:mm") || 'empty'}}</span></td>
+				</div>
+
+				<div class="field-block button-height">
+					<label for="datep"><b ng-if="task.type == 'AC_RDV'">{{t 'tasks:DateActionEnd'}}</b>
+						<b ng-if="task.type != 'AC_RDV'">{{t 'tasks:DateEchAction'}}</b></label>
+					<a href="#" ng-show="editable" editable-bsdate="task.datef" e-datepicker-popup="dd/MM/yyyy" buttons="no" onaftersave="update()">
+						\{{ (task.datef | date:"dd/MM/yyyy") || 'empty'}}
+					</a>
+					<a ng-show="editable" href="#" editable-bstime="task.datef" e-show-meridian="false" e-minute-step="10" onaftersave="update()">
+						\{{ (task.datef | date:"HH:mm") || 'empty'}}
+					</a>
+					<span ng-hide="editable">\{{ (task.datef | date:"dd/MM/yyyy HH:mm") || 'empty'}}</span></td>
+				</div>
+
+				<div class="field-block button-height">
+					<label for="percentage"><b>{{t
+								'Status'}}</b></label>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="input-group" ng-show="editable">
+								<span class="input-group-btn btn-group-xs">
+									<button ng-disabled="task.percentage == 0" type="button" class="btn btn-default" ng-click="updatePercent(task.percentage - 25 < 0 ? 0 : task.percentage - 25);"><i class="glyphicon glyphicon-minus"></i></button>
+								</span>
+							<progressbar animate="true" value="task.percentage" type="success"><b>\{{task.percentage}}%</b></progressbar>
+							<span class="input-group-btn btn-group-xs">
+								<button ng-disabled="task.percentage == 100" type="button" class="btn btn-default" ng-click="updatePercent(task.percentage + 25 > 100 ? 100 : task.percentage + 25);"><i class="glyphicon glyphicon-plus"></i></button>
+							</span>
+							</p>
+							<progressbar ng-hide="editable" animate="true" value="task.percentage" type="success"><b>\{{task.percentage}}%</b></progressbar>
+						</div>
+					</div>
+				</div>
+
+				<div class="field-block">
+					<label><b>{{t 'tasks:CreatedBy'}}</b></label>
+					<span>\{{task.author.name|| "Non defini"}}</span>
+				</div>
+
+				<div class="field-block">
+					<label><b>{{t 'tasks:AffectedTo'}}</b></label>
+					<a href="#" ng-show="editable" editable-text="task.usertodo" e-typeahead="user as user.name for user in AutoComplete($viewValue,'api/user/name/autocomplete',5) | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
+						\{{task.usertodo.name|| "Non defini"}}
+					</a>
+					<span ng-hide="editable">\{{task.usertodo.name|| "Non defini"}}</span>
+				</div>
+
+				<div class="field-block">
+					<label><b>{{t
+								'Comments'}}</b></label>
+
+					<ul class="message-menu">
+						<li ng-repeat="note in task.notes">
+							<span class="message-info">
+								<span class="blue">\{{note.datec| date:'MMM dd HH:mm'}}</span>
+							</span>
+							<span>
+								<strong class="blue icon-user">\{{note.author.name}}</strong> - <span class="grey">\{{note.percentage| percent:0}}</span><br>
+								<p class="intro">\{{note.note}}</p>
+							</span>
+						</li>
+					</ul>
+
+					<span editable-textarea="newNote" e-rows="4" e-cols="70" e-form="DescriptionBtnForm" onaftersave="addNote()" >
+					</span> <a class="icon-plus grey" ng-click="DescriptionBtnForm.$show()" ng-hide="DescriptionBtnForm.$visible || !editable">{{t 'Add'}}</a>
+				</div>
+
+				<div class="field-block">
+					<label><b>{{t
+								'DateCreation'}}</b></label>
+					\{{task.createdAt|date:'dd/MM/yyyy HH:mm'}}
+				</div>
+				<div class="field-block">
+					<label><b>{{t
+								'DateLastModification'}}</b></label>
+					\{{task.updatedAt|date:'dd/MM/yyyy HH:mm'}}
+				</div>
+
+			</fieldset>
+		</div>
+	</div>
+</section>
