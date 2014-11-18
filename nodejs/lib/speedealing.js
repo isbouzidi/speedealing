@@ -5,13 +5,13 @@
 "use strict";
 
 exports.do_line_tva = function(line, callback) {
-	if (line.qty === null)
+	if (line.qty == null)
 		line.qty = 0;
-	if (line.tva_tx === null)
+	if (line.tva_tx == null)
 		line.tva_tx = 0;
-	if (line.remise === null) // remise sur ligne
+	if (line.remise == null) // remise sur ligne
 		line.remise = 0;
-	if (line.remise_percent === null) // remise sur total
+	if (line.remise_percent == null) // remise sur total
 		line.remise_percent = 0;
 
 	calcul_price_total(line, callback);

@@ -103,7 +103,7 @@ Object.prototype = {
 
 							var line = {};
 
-							if (product === null)
+							if (product == null)
 								line = {
 									datec: bill.datec,
 									journal: "VT",
@@ -165,11 +165,11 @@ Object.prototype = {
 				if (req.query.csv) {
 					var tab_csv = {};
 					for (var i = 0; i < result.length; i++) {
-						if (tab_csv[result[i].piece] === null) {
+						if (tab_csv[result[i].piece] == null) {
 							tab_csv[result[i].piece] = {};
 						}
 
-						if (tab_csv[result[i].piece][result[i].compte] === null) {
+						if (tab_csv[result[i].piece][result[i].compte] == null) {
 							tab_csv[result[i].piece][result[i].compte] = result[i];
 						} else {
 							tab_csv[result[i].piece][result[i].compte].debit += result[i].debit;
@@ -236,7 +236,7 @@ Object.prototype = {
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;
 
-		if (bill.entity === null)
+		if (bill.entity == null)
 			bill.entity = req.user.entity;
 
 		//console.log(bill);

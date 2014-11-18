@@ -43,7 +43,7 @@ angular.module('mean.system').filter('object2Array', function () {
 
 angular.module('mean.system').filter('capitalize', function () {
 	return function (input, scope) {
-		if (input === null)
+		if (input == null)
 			return;
 
 		input = input.toLowerCase();

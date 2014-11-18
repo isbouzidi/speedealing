@@ -432,7 +432,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		});
 
 		$scope.ticketRead = function(read, user) {
-			if (user === null)
+			if (user == null)
 				user = Global.user._id;
 			if (read.indexOf(user) >= 0)
 				return "white-gradient";

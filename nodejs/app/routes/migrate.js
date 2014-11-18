@@ -273,13 +273,13 @@ Migrate.prototype = {
 
 				async.parallel({
 					societe: function (callback) {
-						if (row.societe.id === null)
+						if (row.societe.id == null)
 							return callback(null, null);
 
 						SocieteModel.findOne({oldId: row.societe.id}, "_id name", callback);
 					},
 					contact: function (callback) {
-						if (row.contact.id === null)
+						if (row.contact.id == null)
 							return callback(null, null);
 
 						ContactModel.findOne({oldId: row.contact.id}, "_id firstname lastname", callback);
@@ -320,7 +320,7 @@ Migrate.prototype = {
 					if (!datef)
 						datef = new Date(row.tms);
 
-					if (datep == null || datef === null)
+					if (datep == null || datef == null)
 						console.log(row);
 
 					switch (row.type_code) {
@@ -553,7 +553,7 @@ Migrate.prototype = {
 			rows.forEach(function (row) {
 				UserModel.findOne({_id: row._id}, function (err, user) {
 
-					if (user === null)
+					if (user == null)
 						user = new UserModel(row);
 					else
 						user = _.extend(user, row);
@@ -757,13 +757,13 @@ MigrateMySQL.prototype = {
 
 				async.parallel({
 					societe: function (callback) {
-						if (row.societe.id === null)
+						if (row.societe.id == null)
 							return callback(null, null);
 
 						SocieteModel.findOne({oldId: row.societe.id}, "_id name", callback);
 					},
 					contact: function (callback) {
-						if (row.contact.id === null)
+						if (row.contact.id == null)
 							return callback(null, null);
 
 						ContactModel.findOne({oldId: row.contact.id}, "_id firstname lastname", callback);
@@ -804,7 +804,7 @@ MigrateMySQL.prototype = {
 					if (!datef)
 						datef = new Date(row.tms);
 
-					if (datep == null || datef === null)
+					if (datep == null || datef == null)
 						console.log(row);
 
 					switch (row.type_code) {
@@ -1007,7 +1007,7 @@ MigrateMySQL.prototype = {
 			rows.forEach(function (row) {
 				UserModel.findOne({_id: row._id}, function (err, user) {
 
-					if (user === null)
+					if (user == null)
 						user = new UserModel(row);
 					else
 						user = _.extend(user, row);

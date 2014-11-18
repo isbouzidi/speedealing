@@ -42,7 +42,7 @@ Object.prototype = {
 					if (err)
 						return console.log(err);
 
-					if (doc === null)
+					if (doc == null)
 						doc = new ZipCodeModel(zip);
 
 					//console.log(zip);

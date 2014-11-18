@@ -209,7 +209,7 @@ orderSchema.pre('save', function (next) {
 	}
 
 	var self = this;
-	if (this.isNew && this.ref === null) {
+	if (this.isNew && this.ref == null) {
 		SeqModel.inc("CO", function (seq) {
 			//console.log(seq);
 			EntityModel.findOne({_id: self.entity}, "cptRef", function (err, entity) {
