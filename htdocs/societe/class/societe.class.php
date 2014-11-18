@@ -122,10 +122,22 @@ class Societe extends nosqlDocument {
 	public function __construct($db = null) {
 		parent::__construct($db);
 
+<<<<<<< HEAD
 		$this->fk_extrafields = new ExtraFields($db);
 		$this->fk_extrafields->fetch(get_class($this));
 
 		$this->commercial_id = new stdClass();
+=======
+		try {
+			$fk_extrafields = new ExtraFields($db);
+			$this->fk_extrafields = $fk_extrafields->load("extrafields:" . get_class($this), true); // load and cache
+			$this->fk_country = $this->couchdb->getDoc("dict:fk_country"); //load country table
+		} catch (Exception $e) {
+			$error = "Something weird happened: " . $e->getMessage() . " (errcode=" . $e->getCode() . ")\n";
+			print $error;
+			exit;
+		}
+>>>>>>> upstream/master
 
 		return 1;
 	}
