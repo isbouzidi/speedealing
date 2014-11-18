@@ -224,7 +224,7 @@ RhSchema.methods = {
 	 */
 	authenticate: function(plainText) {
 		return this.password === plainText;
-		return this.encryptPassword(plainText) === this.hashed_password;
+		//return this.encryptPassword(plainText) === this.hashed_password; // FIXME return after return
 	},
 	/**
 	 * Make salt

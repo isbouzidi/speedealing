@@ -49,7 +49,7 @@ function convertDict(params, doc, callback) {
 		return callback(doc);
 
 	if (doc) { // converti le dict en array
-		var result = {
+		result = {
 				_id: doc._id,
 				values: []
 		};
