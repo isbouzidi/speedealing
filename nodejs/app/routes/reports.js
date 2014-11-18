@@ -18,7 +18,7 @@ var Task = require('../controllers/task');
 
 module.exports = function (app, passport, auth, usersSocket) {
 
-	var object = new Object();
+	var object = {};
 
 
 	app.get('/api/report/contacts', auth.requiresLogin, function (req, res) {

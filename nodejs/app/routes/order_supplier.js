@@ -16,7 +16,7 @@ var ContactModel = mongoose.model('contact');
 
 module.exports = function(app, passport, auth) {
 
-	var object = new Object();
+	var object = {};
 
 	app.get('/api/orderSupplier', auth.requiresLogin, object.read);
 	app.get('/api/orderSupplier/:orderSupplierId', auth.requiresLogin, object.show);
@@ -140,8 +140,8 @@ Object.prototype = {
 			}
 
 			//console.log(doc);
-			if(doc == null)
-				doc=[];
+			if (!_.isArray(doc))
+				doc = [];
 
 			res.json(200, doc);
 		});
@@ -155,7 +155,7 @@ Object.prototype = {
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
 
-		if (order.entity == null)
+		if (!order.entity)
 			order.entity = req.user.entity;
 
 		order.save(function(err, doc) {

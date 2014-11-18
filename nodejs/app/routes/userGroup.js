@@ -15,7 +15,7 @@ var UserGroupModel = mongoose.model('userGroup');
 
 module.exports = function(app, passport, auth) {
 
-	var object = new Object();
+	var object = {};
         
 	//afficher la liste des groupes de collaborateurs
         app.get('/api/userGroup', auth.requiresLogin, object.read);
@@ -108,9 +108,9 @@ Object.prototype = {
         
         UserGroupModel.findOne({_id: id}, "name", function(err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
-                        return res.json({});
+                    return res.json({});
                 
                 res.json(doc);
         });
@@ -125,9 +125,9 @@ Object.prototype = {
         
         UserModel.find({groupe: groupe}, function(err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
-                        return res.json({});
+                    return res.json({});
                 
                 res.send(200, doc);
                 
@@ -143,9 +143,9 @@ Object.prototype = {
         
         UserModel.find({groupe: {$nin: [groupe]}}, "_id lastname firstname", function(err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
-                        return res.json({});
+                    return res.json({});
                 
                 res.send(200, doc);
                 

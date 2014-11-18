@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
@@ -106,4 +108,4 @@ Articles.prototype = {
 			}
 		});
 	}
-}
+};

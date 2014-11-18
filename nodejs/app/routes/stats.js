@@ -32,7 +32,7 @@ module.exports = function (app, passport, auth) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 10), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		function verifyResult(err, docs, cb) {
@@ -40,7 +40,7 @@ module.exports = function (app, passport, auth) {
 			if (err)
 				return cb(err);
 
-			if (docs.length == 0)
+			if (docs.length === 0)
 				return cb(null, [{_id: dateStart.getMonth() + 1, count: 0}, {_id: dateStart.getMonth() + 2, count: 0}]);
 
 			if (docs.length == 1) {
@@ -143,7 +143,7 @@ module.exports = function (app, passport, auth) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 10), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		var entityList = [];

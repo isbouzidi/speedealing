@@ -20,7 +20,7 @@ var Dict = require('../controllers/dict');
 
 module.exports = function (app, passport, auth) {
 
-	var object = new Object();
+	var object = {};
 
 	app.get('/api/bill', auth.requiresLogin, object.read);
 	app.get('/api/bill/caFamily', auth.requiresLogin, object.caFamily);
@@ -32,23 +32,23 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/bill/pdf/:billId', auth.requiresLogin, object.pdf);
 	app.get('/api/bill/releveFacture/pdf/:societeId', auth.requiresLogin, object.releve_facture);
         
-        //add transaction
-        app.post('/api/transaction/add', auth.requiresLogin, function (req, res) {
-            var transaction = req.query.transaction;
-            console.log(req.query.transaction);
-            
-            BankModel.update(
-                { libelle: "salouma bank" }, 
-                { $push: { "transaction": req.query.transaction }},
-                function(err, doc){
-                    if(err){
-                        console.log(err);
-                    return res.send(500);
-                };
-
-                    return res.send(doc);            
-                });
-        });
+	//add transaction
+	app.post('/api/transaction/add', auth.requiresLogin, function (req, res) {
+		var transaction = req.query.transaction;
+		console.log(req.query.transaction);
+		
+		BankModel.update(
+			{ libelle: "salouma bank" },
+			{ $push: { "transaction": req.query.transaction }},
+			function (err, doc) {
+				if (err) {
+					console.log(err);
+					return res.send(500);
+				}
+				
+				return res.send(doc);
+			});
+	});
 	// list for autocomplete
 	app.post('/api/bill/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
@@ -197,7 +197,7 @@ Object.prototype = {
 		bill.author.id = req.user._id;
 		bill.author.name = req.user.name;
 
-		if (bill.entity == null)
+		if (!bill.entity)
 			bill.entity = req.user.entity;
 
 		//console.log(bill);
@@ -314,7 +314,7 @@ Object.prototype = {
 
 				tex = tex.replace("--TABULAR--", tab_latex);
 
-				var tab_latex = "";
+				tab_latex = "";
 				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
 				for (var i = 0; i < doc.total_tva.length; i++) {
 					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
@@ -467,7 +467,7 @@ Object.prototype = {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 10), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		var ca = {};

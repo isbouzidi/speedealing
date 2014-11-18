@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean.system').filter('euro', function () {
 	return function (text, size) {
 

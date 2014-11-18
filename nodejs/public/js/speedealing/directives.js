@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true */
+
 angular.module('mean').directive('resize', ['$window', function($window) {
 		return function(scope, element) {
 			var w = angular.element($window);
@@ -183,4 +186,4 @@ angular.module('mean.system').directive('ngAddress', function($http) {
 angular.module('mean.system')
   .factory('superCache', ['$cacheFactory', function($cacheFactory) {
     return $cacheFactory('super-cache');
-  }]);
+ }]);

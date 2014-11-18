@@ -12,7 +12,7 @@ var ZipCodeModel = mongoose.model('zipCode');
 
 module.exports = function(app, passport, auth) {
 
-	var object = new Object();
+	var object = {};
 
 	app.get('/install/zipcode', auth.requiresLogin, object.installZipCode);
 
@@ -65,7 +65,7 @@ Object.prototype = {
 
 		return;
 
-
+		// FIXME the code below not used after "return" above?
 		var query = {};
 
 		if (req.query) {

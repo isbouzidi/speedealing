@@ -12,7 +12,7 @@ var TransactionModel = mongoose.model('Transaction');
     
 module.exports = function (app, passport, auth) {
 
-    var object = new Object();
+    var object = {};
     
     //verifie si la ref du nouveau compte bancaire exite ou pas
     app.get('/api/createBankAccount/uniqRef', auth.requiresLogin, object.uniqRef);
@@ -108,9 +108,9 @@ Object.prototype = {
 
         BankModel.findOne({ref: ref}, function (err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
-                        return res.json({});
+                    return res.json({});
 
                 res.json(doc);
         });
@@ -125,9 +125,9 @@ Object.prototype = {
 
         BankModel.findOne({libelle: libelle}, function (err, doc) {
                 if (err)
-                        return next(err);
+                    return next(err);
                 if (!doc)
-                        return res.json({});
+                    return res.json({});
 
                 res.json(doc);
         });

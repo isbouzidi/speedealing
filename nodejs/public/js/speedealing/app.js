@@ -1,4 +1,5 @@
 "use strict";
+/* global angular: true */
 
 window.app = angular.module('mean', [
 	'ngRoute',

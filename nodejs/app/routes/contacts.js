@@ -296,7 +296,7 @@ module.exports = function (app, passport, auth) {
 						break;
 					case "notes":
 						if (row[i]) {
-							if (typeof contact.notes != "array")
+							if (!_.isArray(contact.notes))
 								contact.notes = [];
 
 							contact[tab[i]].push({

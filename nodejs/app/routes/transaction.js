@@ -11,7 +11,7 @@ var TransactionModel = mongoose.model('Transaction');
     
 module.exports = function (app, passport, auth) {
     
-    var object = new Object();
+    var object = {};
     
     //create a new bank account
     app.post('/api/transaction', auth.requiresLogin, object.create);

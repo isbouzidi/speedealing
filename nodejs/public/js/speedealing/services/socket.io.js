@@ -1,3 +1,6 @@
+"use strict";
+/* global angular: true, io: true */
+
 angular.module('mean.system').factory('socket', function ($rootScope) {
   var socket = io.connect();
   return {

@@ -18,7 +18,7 @@ var DictModel = mongoose.model('dict'); // For update segmentation
 
 module.exports = function (app, passport, auth) {
 
-	var object = new Object();
+	var object = {};
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);
@@ -382,11 +382,11 @@ module.exports = function (app, passport, auth) {
 						break;
 					case "capital" :
 						if (row[i])
-							societe[conv[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
+							societe[conv[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')), 10);
 						break;
 					case "yearCreated" :
 						if (row[i])
-							societe[conv[i]] = parseInt(row[i]) || null;
+							societe[conv[i]] = parseInt(row[i], 10) || null;
 						break;
 					case "phone":
 						if (row[i])
@@ -412,8 +412,8 @@ module.exports = function (app, passport, auth) {
 							for (var j in tmp) {
 								var data = tmp[j].split("=");
 								var obj = {
-									year: parseInt(data[0]),
-									amount: parseInt(data[1])
+									year: parseInt(data[0], 10),
+									amount: parseInt(data[1], 10)
 								};
 								societe[conv[i]].push(obj);
 							}
@@ -426,8 +426,8 @@ module.exports = function (app, passport, auth) {
 							for (var j in tmp) {
 								var data = tmp[j].split("=");
 								var obj = {
-									year: parseInt(data[0]),
-									amount: parseInt(data[1])
+									year: parseInt(data[0], 10),
+									amount: parseInt(data[1], 10)
 								};
 								societe[conv[i]].push(obj);
 							}
@@ -486,7 +486,7 @@ module.exports = function (app, passport, auth) {
 										return callback();
 									}
 
-									var isNew = false
+									var isNew = false;
 									if (societe == null) {
 										societe = new SocieteModel(data);
 										societe.Status = "ST_NEVER";
@@ -694,11 +694,11 @@ module.exports = function (app, passport, auth) {
 						break;
 					case "capital" :
 						if (row[i])
-							societe[conv[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
+							societe[conv[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')), 10);
 						break;
 					case "yearCreated" :
 						if (row[i])
-							societe[conv[i]] = parseInt(row[i]) || null;
+							societe[conv[i]] = parseInt(row[i], 10) || null;
 						break;
 					case "phone":
 						if (row[i])
@@ -729,7 +729,7 @@ module.exports = function (app, passport, auth) {
 						societe[conv[i]] = "EF0";
 
 						for (var idx in conv_id[conv[i]]) {
-							if (parseInt(idx) <= parseInt(row[i]))
+							if (parseInt(idx, 10) <= parseInt(row[i], 10))
 								societe[conv[i]] = conv_id[conv[i]][idx];
 						}
 						break;
@@ -1018,11 +1018,11 @@ module.exports = function (app, passport, auth) {
 							break;
 						case "capital" :
 							if (row[i])
-								societe[tab[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')));
+								societe[tab[i]] = parseInt(row[i].substr(0, row[i].indexOf(' ')), 10);
 							break;
 						case "yearCreated" :
 							if (row[i])
-								societe[tab[i]] = parseInt(row[i]) || null;
+								societe[tab[i]] = parseInt(row[i], 10) || null;
 							break;
 						case "phone":
 							if (row[i])
@@ -1057,13 +1057,13 @@ module.exports = function (app, passport, auth) {
 							societe[tab[i]] = "EF0";
 
 							for (var idx in conv_id[tab[i]]) {
-								if (parseInt(idx) <= parseInt(row[i]))
+								if (parseInt(idx, 10) <= parseInt(row[i], 10))
 									societe[tab[i]] = conv_id[tab[i]][idx];
 							}
 							break;
 						case "notes":
 							if (row[i]) {
-								if (typeof societe.notes != "array")
+								if (!_.isArray(societe.notes))
 									societe.notes = [];
 
 								societe[tab[i]].push({
@@ -1081,7 +1081,7 @@ module.exports = function (app, passport, auth) {
 								societe.commercial_id = {
 									id: row[i],
 									name: (commercial_list[row[i]] ? commercial_list[row[i]].firstname + " " + commercial_list[row[i]].lastname : row[i])
-								}
+								};
 							}
 							break;
 						case "datec":
@@ -1498,7 +1498,7 @@ Object.prototype = {
 		 console.log(err);
 		 });*/
 
-		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip) * parseInt(req.query.limit) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function (err, doc) {
+		SocieteModel.find(query, fields, {skip: parseInt(req.query.skip, 10) * parseInt(req.query.limit, 10) || 0, limit: req.query.limit || 100, sort: JSON.parse(req.query.sort)}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
@@ -1794,7 +1794,7 @@ Object.prototype = {
 			for (var i = 0; i < results.commercial.length; i++) {
 				for (var j = 0; j < results.fk_status.length; j++) {
 
-					if (j == 0)
+					if (j === 0)
 						output.data[i] = [];
 
 					output.data[i][j] = 0;
