@@ -18,7 +18,7 @@ var DictModel = mongoose.model('dict'); // For update segmentation
 
 module.exports = function (app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
 
 	app.get('/api/societe', auth.requiresLogin, object.read);
 	app.get('/api/societe/uniqId', auth.requiresLogin, object.uniqId);

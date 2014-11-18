@@ -27,7 +27,7 @@ Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 
 module.exports = function (app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
 
 	app.get('/api/accounting', auth.requiresLogin, object.read);
 	app.post('/api/accounting', auth.requiresLogin, object.create);

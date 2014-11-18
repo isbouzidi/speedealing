@@ -16,7 +16,7 @@ var ContactModel = mongoose.model('contact');
 
 module.exports = function(app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
 
 	app.get('/api/orderSupplier', auth.requiresLogin, object.read);
 	app.get('/api/orderSupplier/:orderSupplierId', auth.requiresLogin, object.show);

@@ -12,7 +12,7 @@ var BankCategoryModel = mongoose.model('BankCategory');
 
 module.exports = function (app, passport, auth) {
 
-    var object = {};
+    var object = new Object();
 
     //afficher la liste des rubriques des banques
     app.get('/api/bankCategory', auth.requiresLogin, object.read);

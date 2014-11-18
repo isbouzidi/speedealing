@@ -11,7 +11,7 @@ var Dict = require('../controllers/dict');
 
 module.exports = function (app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
 	var pricelevel = require('../controllers/pricelevel.js');
 	Dict.extrafield({extrafieldName:'Product'}, function (err, doc) {
 		if (err) {

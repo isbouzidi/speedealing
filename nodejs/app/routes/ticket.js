@@ -14,7 +14,7 @@ var Dict = require('../controllers/dict');
 
 module.exports = function (app, passport, auth, usersSocket) {
 
-	var object = {};
+	var object = new Object();
 	object.usersSocket = usersSocket;
 
 	app.get('/api/ticket', auth.requiresLogin, object.read);

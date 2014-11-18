@@ -12,7 +12,7 @@ var ZipCodeModel = mongoose.model('zipCode');
 
 module.exports = function(app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
 
 	app.get('/install/zipcode', auth.requiresLogin, object.installZipCode);
 

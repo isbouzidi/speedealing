@@ -20,7 +20,7 @@ var Dict = require('../controllers/dict');
 
 module.exports = function (app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
 
 	app.get('/api/bill', auth.requiresLogin, object.read);
 	app.get('/api/bill/caFamily', auth.requiresLogin, object.caFamily);

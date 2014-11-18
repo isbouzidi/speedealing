@@ -18,7 +18,7 @@ var smtpTransporter = nodemailer.createTransport(smtpTransport(config.transport)
 
 module.exports = function (app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
 
 	Dict.extrafield({extrafieldName: 'Commande'}, function (err, doc) {
 		if (err) {

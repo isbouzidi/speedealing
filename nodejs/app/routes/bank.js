@@ -12,7 +12,7 @@ var TransactionModel = mongoose.model('Transaction');
     
 module.exports = function (app, passport, auth) {
 
-    var object = {};
+    var object = new Object();
     
     //verifie si la ref du nouveau compte bancaire exite ou pas
     app.get('/api/createBankAccount/uniqRef', auth.requiresLogin, object.uniqRef);

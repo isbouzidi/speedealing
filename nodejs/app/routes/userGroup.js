@@ -15,7 +15,7 @@ var UserGroupModel = mongoose.model('userGroup');
 
 module.exports = function(app, passport, auth) {
 
-	var object = {};
+	var object = new Object();
         
 	//afficher la liste des groupes de collaborateurs
         app.get('/api/userGroup', auth.requiresLogin, object.read);
