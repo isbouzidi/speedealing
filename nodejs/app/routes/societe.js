@@ -1325,11 +1325,11 @@ module.exports = function (app, passport, auth) {
 		if (req.files && id) {
 			//console.log(req.files);
 
-			gridfs.addFile(SocieteModel, id, req.files.file, function (err, result, file, update) {
+			gridfs.addFile(SocieteModel, id, req.files.file, function (err, result) {
 				if (err)
 					return res.send(500, err);
 
-				return res.send(200, {status: "ok", file: file, update: update});
+				return res.send(200, result);
 			});
 		} else
 			res.send(500, "Error in request file");
