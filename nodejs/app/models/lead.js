@@ -11,6 +11,9 @@ var mongoose = require('mongoose'),
 var Dict = require('../controllers/dict');
 
 
+require('../models/societe');
+var SocieteModel = mongoose.model('societe');
+
 /**
  * Lead Schema
  */
@@ -105,5 +108,32 @@ leadSchema.virtual('Type')
 			return res;
 
 		});
+    
+var commercialSociete = [];
+
+SocieteModel.find({}, "_id commercial_id", function(err, doc){
+    if(err)
+        return console.log(err);
+    
+    commercialSociete = doc;
+    
+});
+
+leadSchema.virtual('commercial_id').get(function () {
+
+    var commercial = {};
+    var id = this.societe.id;
+    
+    if(commercialSociete.length){
+        for(var i = 0; i < commercialSociete.length; i++){
+            if(id.equals(commercialSociete[i]._id)){
+                commercial = commercialSociete[i].commercial_id;
+                return commercial;
+            }
+        }
+    }
+    
+    return commercial;
+});
 mongoose.model('lead', leadSchema, 'Lead');
 

@@ -25,6 +25,7 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/societe/count', auth.requiresLogin, object.count);
 	app.get('/api/societe/export', auth.requiresLogin, object.export);
 	app.get('/api/societe/statistic', auth.requiresLogin, object.statistic);
+	app.get('/api/societe/listCommercial', auth.requiresLogin, object.listCommercial);
 	app.get('/api/societe/segmentation', auth.requiresLogin, object.segmentation);
 	app.post('/api/societe/segmentation', auth.requiresLogin, object.segmentationRename);
 	app.put('/api/societe/segmentation', auth.requiresLogin, object.segmentationUpdate);
@@ -60,7 +61,6 @@ module.exports = function (app, passport, auth) {
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
 		//console.log(query);
-
 		SocieteModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/societe/autocomplete");
@@ -95,7 +95,6 @@ module.exports = function (app, passport, auth) {
 
 					result[i].mode_reglement_code = docs[i].mode_reglement;
 					result[i].cond_reglement_code = docs[i].cond_reglement;
-
 					result[i].commercial_id = docs[i].commercial_id;
 				}
 
@@ -763,7 +762,6 @@ module.exports = function (app, passport, auth) {
 
 								return callback();
 							}
-
 							//if (index == 1)
 							//	console.log(row);
 
@@ -798,7 +796,6 @@ module.exports = function (app, passport, auth) {
 										console.log(err);
 										return callback();
 									}
-
 									//if (index == 1)
 									//	console.log(societe);
 
@@ -826,7 +823,6 @@ module.exports = function (app, passport, auth) {
 												console.log("societe : " + JSON.stringify(err));
 
 											//console.log("save");
-
 											/*if (doc == null)
 											 console.log("null");
 											 else
@@ -897,7 +893,6 @@ module.exports = function (app, passport, auth) {
 
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function (req, res) {
 		req.connection.setTimeout(300000);
-
 		var commercial_list = {};
 
 		UserModel.find({Status: "ENABLE"}, function (err, users) {
@@ -1093,7 +1088,7 @@ module.exports = function (app, passport, auth) {
 								societe[tab[i]] = row[i];
 					}
 				}
-
+				//console.log(societe);
 				cb(societe);
 			};
 
@@ -1118,6 +1113,7 @@ module.exports = function (app, passport, auth) {
 								//return;
 
 								convertRow(tab, row, index, function (data) {
+
 									if (data.code_client)
 										SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
 											if (err) {
@@ -1837,6 +1833,24 @@ Object.prototype = {
 
 				//console.log(csv);
 			});
+		});
+	},
+	listCommercial: function (req, res) {
+
+		var query = {};
+
+		query = {entity: {$in: ["ALL", req.query.entity]}, "commercial_id.name": {$ne: null}};
+
+		SocieteModel.aggregate([
+			{$match: query},
+			{$project: {_id: 0, "commercial_id.id": 1, "commercial_id.name": 1}},
+			{$group: {_id: {id: "$commercial_id.id", name: "$commercial_id.name"}}}
+		], function (err, doc) {
+
+			if (err)
+				return console.log(err);
+
+			res.json(doc);
 		});
 	}
 };

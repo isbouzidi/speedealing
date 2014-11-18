@@ -1,0 +1,76 @@
+{
+	"_id": "module:Lead",
+	"enabled": true,
+	"rights": {
+		"lead": [
+			{
+				"desc": "Lire les projets",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Lire les projets des autres collaborateurs",
+				"perm": {
+					"readAll": true
+				}
+			},
+			{
+				"desc": "Creer/modifier les projets",
+				"perm": {
+					"create": false
+				}
+			},
+			{
+				"desc": "Supprimer les projets",
+				"perm": {
+					"delete": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"numero": 25,
+	"family": "crm",
+	"name": "Lead",
+	"description": "Gestion affaires",
+	"version": "speedealing",
+	"const_name": "MAIN_MODULE_LEAD",
+	"picto": "order",
+	"config_page_url": [
+		"commande.php@commande"
+	],
+	"depends": [
+		"modSociete"
+	],
+	"requiredby": [
+		"modExpedition"
+	],
+	"conflictwith": [],
+	"langfiles": [
+		"orders",
+		"bills",
+		"companies",
+		"products",
+		"deliveries"
+	],
+	"menus": {
+		"menu:lead": {
+			"position": 13,
+			"perms": "lead.read",
+			"enabled": "$conf->lead->enabled",
+			"usertype": 2,
+			"title": "leads:Lead",
+			"submenus": {
+				"menu:leadlist": {
+					"position": 1,
+					"url": "#!/leads",
+					"perms": "lead.read",
+					"enabled": "$conf->lead->enabled",
+					"usertype": 2,
+					"title": "leads:ListLeads"
+				}
+			}
+		}
+	}
+}

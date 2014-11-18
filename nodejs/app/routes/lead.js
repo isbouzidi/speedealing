@@ -64,15 +64,29 @@ Lead.prototype = {
 		});
 	},
 	read: function(req, res) {
-
+                
 		var query = req.query;
-
+                var commercial = null;
+                
+                if(typeof(query.commercial) !== {}){
+                    commercial = query.commercial;
+                    delete query['commercial'];  
+                };
+                
 		LeadModel.find(query, function(err, doc) {
 			if (err) {
 				console.log(err);
 				return;
 			}
-
+                        
+                        if(commercial){
+                            for(var i = 0; i < doc.length; i++){
+                                if(commercial !== doc[i].commercial_id.id){
+                                    doc.splice(i, 1);
+                                    i = i - 1;
+                                }
+                            }
+                        }
 			return res.json(200, doc);
 		});
 
