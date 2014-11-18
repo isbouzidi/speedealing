@@ -1,10 +1,10 @@
 "use strict";
 /* global angular: true */
 
-angular.module('mean.system').controller('TicketController', ['$scope', '$routeParams', '$location', '$route', '$timeout', 'Global', 'pageTitle', '$http', 'socket', 'Ticket', function($scope, $routeParams, $location, $route, $timeout, Global, pageTitle, $http, socket, Ticket) {
+angular.module('mean.system').controller('TicketController', ['$scope', '$routeParams', '$location', '$route', '$timeout', 'Global', 'pageTitle', '$http', 'socket', 'Ticket', function ($scope, $routeParams, $location, $route, $timeout, Global, pageTitle, $http, socket, Ticket) {
 		$scope.global = Global;
 
-		pageTitle.setTitle('Gestion des tickets');
+		pageTitle.setTitle('Alertes multi-entités');
 
 //MyCtrl.$inject = ['pageTitleSetter'];
 
@@ -117,16 +117,16 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				removeVerb: "DELETE",
 				autoUpload: true
 			},
-			error: function(e) {
+			error: function (e) {
 				// log error
 				console.log(e);
 				console.log($scope.ticket._id);
 			},
-			upload: function(e) {
+			upload: function (e) {
 				e.sender.options.async.saveUrl = "api/ticket/file/" + $scope.ticket._id;
 				e.sender.options.async.removeUrl = "api/ticket/file/" + $scope.ticket._id;
 			},
-			complete: function() {
+			complete: function () {
 				$route.reload();
 			},
 			localization: {
@@ -140,45 +140,45 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 
 		$scope.new = false;
 
-		$scope.enableNew = function() {
+		$scope.enableNew = function () {
 			$scope.new = true;
 			$scope.ticket = angular.copy(ticket);
-			$timeout(function() {
+			$timeout(function () {
 				angular.element('select').change();
 			}, 300);
 		};
 
-		$scope.enableEdit = function() {
+		$scope.enableEdit = function () {
 			$scope.edit = true;
-			$timeout(function() {
+			$timeout(function () {
 				angular.element('select').change();
 			}, 300);
 		};
 
-		$scope.disableNew = function() {
+		$scope.disableNew = function () {
 			$scope.new = false;
 			$location.path("ticket/");
 		};
 
-		$scope.enableComment = function() {
+		$scope.enableComment = function () {
 			$scope.editMode = "comment";
 		};
 
-		$scope.enableReply = function() {
+		$scope.enableReply = function () {
 			$scope.editMode = "reply";
 		};
 
-		$scope.enableForward = function() {
+		$scope.enableForward = function () {
 			$scope.editMode = "forward";
 		};
 
-		$scope.ficheCancel = function() {
+		$scope.ficheCancel = function () {
 			$scope.editMode = null;
 
 			//$scope.ticket = angular.copy(ticket);
 		};
 
-		$scope.icon = function(item) {
+		$scope.icon = function (item) {
 			for (var i in modules) {
 				if (item.title == modules[i].name)
 					return modules[i].icon;
@@ -186,7 +186,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			return "icon-question-round";
 		};
 
-		$scope.url = function(item) {
+		$scope.url = function (item) {
 			for (var i in modules) {
 				if (item.title == modules[i].name)
 					return modules[i].url + item.id;
@@ -194,7 +194,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			return "";
 		};
 
-		$scope.userAutoComplete = function(val) {
+		$scope.userAutoComplete = function (val) {
 			return $http.post('api/user/name/autocomplete?status=ENABLE', {
 				take: '5',
 				skip: '0',
@@ -202,12 +202,12 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.linkAutoComplete = function(val) {
+		$scope.linkAutoComplete = function (val) {
 			return $http.post($scope.module.searchUrl, {
 				take: '5',
 				skip: '0',
@@ -215,12 +215,12 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.deleteLink = function(index) {
+		$scope.deleteLink = function (index) {
 			$scope.ticket.linked.splice(index, 1);
 		};
 
@@ -250,14 +250,14 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		};
 
 		// Convert date to IsoString date
-		$scope.$watch('ticket.datef', function(date)
+		$scope.$watch('ticket.datef', function (date)
 		{
 			var time = new Date(date);
 			if (new Date($scope.dateString).getTime() != time.getTime())
 				$scope.dateString = time;
 		});
 
-		$scope.$watch('ticket.callback', function(date)
+		$scope.$watch('ticket.callback', function (date)
 		{
 			var time = new Date(date);
 			if (new Date($scope.dateString).getTime() != time.getTime())
@@ -267,7 +267,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				$scope.ticket.datef = time;
 		});
 
-		$scope.updateExpire = function(e) {
+		$scope.updateExpire = function (e) {
 			//console.log(e.sender);
 
 			$http({method: 'PUT', url: 'api/ticket/expire', data: {
@@ -278,14 +278,14 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 					name: $scope.ticket.name
 				}
 			}).
-					success(function(data, status) {
-				$route.reload();
-				//$scope.ticket = ticket;
-				//$location.path('ticket/' + data._id);
-			});
+					success(function (data, status) {
+						$route.reload();
+						//$scope.ticket = ticket;
+						//$location.path('ticket/' + data._id);
+					});
 		};
 
-		$scope.updatePercentage = function() {
+		$scope.updatePercentage = function () {
 			//console.log(data);
 			$http({method: 'PUT', url: 'api/ticket/percentage', data: {
 					id: $scope.ticket._id,
@@ -295,14 +295,14 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 					name: $scope.ticket.name
 				}
 			}).
-					success(function(data, status) {
-				$route.reload();
-				//$scope.ticket = ticket;
-				//$location.path('ticket/' + data._id);
-			});
+					success(function (data, status) {
+						$route.reload();
+						//$scope.ticket = ticket;
+						//$location.path('ticket/' + data._id);
+					});
 		};
 
-		$scope.addComment = function() {
+		$scope.addComment = function () {
 			$http({method: 'POST', url: 'api/ticket/comment', data: {
 					id: $scope.ticket._id,
 					note: $scope.ticket.newNote,
@@ -313,28 +313,28 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 					name: $scope.ticket.name
 				}
 			}).
-					success(function(data, status) {
-				$route.reload();
-				//$scope.ticket = ticket;
-				//$location.path('ticket/' + data._id);
-			});
+					success(function (data, status) {
+						$route.reload();
+						//$scope.ticket = ticket;
+						//$location.path('ticket/' + data._id);
+					});
 		};
 
-		$scope.setImportant = function() {
+		$scope.setImportant = function () {
 			$http({method: 'POST', url: 'api/ticket/important', data: {
 					id: $scope.ticket._id,
 					ref: $scope.ticket.ref,
 					name: $scope.ticket.name
 				}
 			}).
-					success(function(data, status) {
-				$route.reload();
-				//$scope.ticket = ticket;
-				//$location.path('ticket/' + data._id);
-			});
+					success(function (data, status) {
+						$route.reload();
+						//$scope.ticket = ticket;
+						//$location.path('ticket/' + data._id);
+					});
 		};
 
-		$scope.setClosed = function() {
+		$scope.setClosed = function () {
 			$http({method: 'PUT', url: 'api/ticket/status', data: {
 					id: $scope.ticket._id,
 					Status: 'CLOSED',
@@ -344,41 +344,41 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 					name: $scope.ticket.name
 				}
 			}).
-					success(function(data, status) {
-				//$route.reload();
-				//$scope.ticket = ticket;
-				$location.path('ticket/');
-			});
+					success(function (data, status) {
+						//$route.reload();
+						//$scope.ticket = ticket;
+						$location.path('ticket/');
+					});
 		};
 
-		$scope.deleteAffected = function(index) {
+		$scope.deleteAffected = function (index) {
 			$scope.ticket.affectedTo.splice(index, 1);
 		};
 
 
-		$scope.create = function() {
+		$scope.create = function () {
 			var new_ticket = new Ticket($scope.ticket);
-			new_ticket.$save(function(response) {
+			new_ticket.$save(function (response) {
 				$location.path("ticket/" /*+ response._id*/);
 			});
 
 			$scope.ticket = angular.copy(ticket);
 		};
 
-		$scope.update = function() {
+		$scope.update = function () {
 			var ticket = $scope.ticket;
 
-			ticket.$update(function() {
+			ticket.$update(function () {
 				//$location.path("ticket/" /*+ response._id*/);
 				$route.reload();
 			});
 		};
 
-		$scope.findOne = function() {
+		$scope.findOne = function () {
 			if ($routeParams.id) {
 				Ticket.get({
 					id: $routeParams.id
-				}, function(ticket) {
+				}, function (ticket) {
 					$scope.ticket = ticket;
 
 					//angular.element('.slider').setSliderValue(ticket.percentage);
@@ -391,21 +391,21 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 								name: $scope.ticket.name
 							}
 						}).
-								success(function(data, status) {
-						});
+								success(function (data, status) {
+								});
 					}
 				});
 			}
 		};
 
-		$scope.selected = function() {
+		$scope.selected = function () {
 			if ($routeParams.id)
 				return true;
 			else
 				return false;
 		};
 
-		$scope.addLink = function() {
+		$scope.addLink = function () {
 			var link = $scope.item;
 			if (link.id) {
 				$scope.ticket.linked.push({id: link.id, name: link.name, collection: $scope.module.collection, title: $scope.module.name});
@@ -417,13 +417,13 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		 * For Menu
 		 */
 
-		$scope.find = function() {
-			Ticket.query(function(tickets) {
+		$scope.find = function () {
+			Ticket.query(function (tickets) {
 				$scope.menuTickets = tickets;
 			});
 		};
 
-		socket.on('refreshTicket', function(data) {
+		socket.on('refreshTicket', function (data) {
 			//window.setInterval(function() {
 			$scope.find();
 			//$scope.$apply();
@@ -431,7 +431,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			//}, 60000);
 		});
 
-		$scope.ticketRead = function(read, user) {
+		$scope.ticketRead = function (read, user) {
 			if (user == null)
 				user = Global.user._id;
 			if (read.indexOf(user) >= 0)
@@ -440,7 +440,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				return "orange-gradient";
 		};
 
-		$scope.countDown = function(date, reverse) {
+		$scope.countDown = function (date, reverse) {
 			var today = new Date();
 			var day = new Date(date);
 			//console.log(date);
