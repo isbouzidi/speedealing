@@ -60,7 +60,7 @@
 			"perms": "lead.read",
 			"enabled": "$conf->lead->enabled",
 			"usertype": 2,
-			"title": "leads:Lead",
+			"title": "leads:Leads",
 			"submenus": {
 				"menu:leadlist": {
 					"position": 1,
