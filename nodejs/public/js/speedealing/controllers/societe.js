@@ -1,5 +1,5 @@
 "use strict";
-/* global angular: true */
+/* global angular: true, $: true, jQuery: true */
 
 angular.module('mean.societes').controller('SocieteController', ['$scope', '$rootScope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'dialogs', 'superCache', 'pageTitle', 'Global', 'Societes', function ($scope, $rootScope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, $dialogs, superCache, pageTitle, Global, Societe) {
 		$scope.global = Global;
@@ -34,7 +34,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.clearCache = function () {
 			superCache.removeAll();
-		}
+		};
 
 		$scope.init = function () {
 			var dict = ["fk_stcomm", "fk_fournisseur", "fk_prospectlevel", "fk_typent", "fk_effectif", "fk_forme_juridique", "fk_payment_term", "fk_paiement", "fk_segmentation", "fk_rival"];
@@ -405,7 +405,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			for (var i = 0; i < $scope.segmentations.length; i++) {
 				if (row.entity._id === $scope.segmentations[i]._id) {
 					$http({method: 'DELETE', url: 'api/societe/segmentation', data: row.entity
-					}).success(function (data, status) {
+					}).success(function (data, status) {  // FIXME function in a loop !
 						$scope.segmentations.splice(i, 1);
 						$scope.countSegmentations--;
 					});
@@ -419,17 +419,17 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			for (var i = 0; i < $scope.segmentations.length; i++) {
 				if (row.entity._id === $scope.segmentations[i]._id) {
 					dlg = $dialogs.create('rename.html', 'SocieteSegmentationRenameController', row.entity, {key: false, back: 'static'});
-					dlg.result.then(function (newval) {
+					dlg.result.then(function (newval) {  // FIXME function in a loop !
 
 						//console.log(newval);
 						$http({method: 'POST', url: 'api/societe/segmentation', data: {
 								old: row.entity._id,
 								new : newval
 							}
-						}).success(function (data, status) {
+						}).success(function (data, status) {  // FIXME function in a loop !
 							$scope.findSegmentation();
 						});
-					}, function () {
+					}, function () { // FIXME function in a loop !
 					});
 
 					break;
@@ -455,7 +455,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					series.push({label: data.commercial[i]._id.name});
 				}
 
-				if ($scope.commercialList.length == 0) {
+				if ($scope.commercialList.length === 0) {
 					$scope.commercialList = data.commercial;
 					$scope.setCache('commercialList', data.commercial);
 				}
@@ -672,9 +672,9 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function (evt) {
-						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-					}).success(function (data, status, headers, config) {
+					}).progress(function (evt) { // FIXME function in a loop !
+						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total, 10));
+					}).success(function (data, status, headers, config) { // FIXME function in a loop !
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
@@ -1156,16 +1156,16 @@ angular.module('mean.societes').controller('SocieteCreateController', ['$scope',
 				var somme = 0;
 				var tmp;
 				for (var cpt = 0; cpt < siret.length; cpt++) {
-					if ((cpt % 2) == 0) { // Les positions impaires : 1er, 3è, 5è, etc... 
+					if ((cpt % 2) === 0) { // Les positions impaires : 1er, 3è, 5è, etc... 
 						tmp = siret.charAt(cpt) * 2; // On le multiplie par 2
 						if (tmp > 9)
 							tmp -= 9;	// Si le résultat est supérieur à 9, on lui soustrait 9
 					}
 					else
 						tmp = siret.charAt(cpt);
-					somme += parseInt(tmp);
+					somme += parseInt(tmp, 10);
 				}
-				if ((somme % 10) == 0) {
+				if ((somme % 10) === 0) {
 					isValide = true; // Si la somme est un multiple de 10 alors le SIRET est valide 
 					$scope.societe.idprof1 = siret.substr(0, 9);
 				} else {

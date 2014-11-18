@@ -1,5 +1,6 @@
 "use strict";
 /* global angular: true */
+/* jshint multistr: true */
 
 angular.module('mean.bills').controller('BillController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Bills', function ($scope, $location, $http, $routeParams, $modal, $filter, $upload, $timeout, pageTitle, Global, Bills) {
 		pageTitle.setTitle('Liste des factures');
@@ -132,7 +133,6 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 						for (var i = 0; i < data.length; i++) {
 							$scope.paid += data[i].credit;
 						}
-						;
 
 						$scope.billed = $scope.bill.total_ttc;
 						$scope.remainderToPay = $scope.billed - $scope.paid;
@@ -273,7 +273,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function (res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -408,7 +408,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 
@@ -664,7 +664,7 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function (res) {
-				return res.data
+				return res.data;
 			});
 		};
 

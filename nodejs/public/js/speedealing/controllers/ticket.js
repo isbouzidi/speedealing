@@ -203,7 +203,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -403,7 +403,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 				return true;
 			else
 				return false;
-		}
+		};
 
 		$scope.addLink = function() {
 			var link = $scope.item;
@@ -451,13 +451,13 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			else
 				seconds_left = Math.round(seconds_left / 1000);
 
-			var days = parseInt(seconds_left / 86400);
+			var days = parseInt(seconds_left / 86400, 10);
 			seconds_left = seconds_left % 86400;
 
-			var hours = parseInt(seconds_left / 3600);
+			var hours = parseInt(seconds_left / 3600, 10);
 			seconds_left = seconds_left % 3600;
 
-			var minutes = parseInt(seconds_left / 60);
+			var minutes = parseInt(seconds_left / 60, 10);
 			if (reverse)
 				minutes = Math.abs(minutes);
 

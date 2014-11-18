@@ -112,7 +112,7 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -258,7 +258,7 @@ angular.module('mean.bills').controller('BillSupplierController', ['$scope', '$l
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 
@@ -407,7 +407,7 @@ angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope
 			$scope.bill.commercial_id = {
 				id: Global.user._id,
 				name: Global.user.firstname + " " + Global.user.lastname
-			}
+			};
 		};
 
 		$scope.create = function() {
@@ -451,7 +451,7 @@ angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 

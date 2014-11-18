@@ -1,5 +1,6 @@
 "use strict";
 /* global angular: true */
+/* jshint multistr: true */
 
 angular.module('mean.transaction').controller('TransactionController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$timeout', 'pageTitle', 'Global', 'object', 'Transaction', function ($scope, $location, $http, $routeParams, $modal, $filter, $timeout, pageTitle, Global, object, Transaction) {
 
@@ -43,8 +44,8 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
                     $scope.bank = data;
                 });
             }
-            if(object.societe){
-                if(object.bills){
+            if (object.societe) {
+                if (object.bills) {
                     $scope.bills = [];
                     $scope.bills = object.bills;
                     $scope.gridOptionsBills = {
@@ -63,7 +64,7 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
                         cellTemplate: '<div class="ngCellText"><input type="text" style="width: 95px" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\"></div>'}
 			]
                     };
-                };
+                }
             }
 
         };

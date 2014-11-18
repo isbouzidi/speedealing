@@ -1,5 +1,6 @@
 "use strict";
-/* global angular: true */
+/* global angular: true, $: true */
+/* jshint multistr: true */
 
 angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', '$filter', '$upload', 'pageTitle', 'Global', 'Bank', function ($rootScope, $scope, $routeParams, $location, $route, $modal, $timeout, $http, $filter, $upload, pageTitle, Global, Bank) {
 
@@ -541,7 +542,7 @@ angular.module('mean.transaction').controller('ReconciliationController', ['$sco
         };
         
         //listen for selected row event
-        $scope.$on('ngGridEventRowSeleted',function(event,row){
+        $scope.$on('ngGridEventRowSeleted',function(event,row) {
             $scope.selectedRow=row;
         });
         
@@ -554,21 +555,19 @@ angular.module('mean.transaction').controller('ReconciliationController', ['$sco
             } else {
                 $scope.listReconciliedTrans.splice(index, 1);
             }
-            ;
-
         };
 
         $scope.reconcile = function () {
             var category = null;
             
-            if($scope.reconciliation.category){
+            if ($scope.reconciliation.category){
                 category = {
                     id: $scope.reconciliation.category._id,
                     name: $scope.reconciliation.category.name
                 };
-            };
+            }
             
-            if($scope.listReconciliedTrans.length > 0){
+            if ($scope.listReconciliedTrans.length > 0) {
                 $http({method: 'PUT', url: '/api/transaction/reconcile', params: {
                     ids: $scope.listReconciliedTrans,
                     bank_statement: $scope.bank_statement,
@@ -660,7 +659,7 @@ angular.module('mean.transaction').controller('ReconciliationController', ['$sco
                         self.isAllRowSelected = false;
                     }
                 }
-            }
+            };
 
         }
     }]);

@@ -235,9 +235,9 @@ angular.module('mean.users').controller('UserController', ['$scope', '$routePara
 					url: 'api/user/file/' + $scope.userEdit._id,
 					method: 'POST',
 					file: $scope.myFiles
-				}).progress(function (evt) {
-					console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-				}).success(function (data, status, headers, config) {
+				}).progress(function (evt) { // FIXME function in a loop !
+					console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total, 10));
+				}).success(function (data, status, headers, config) { // FIXME function in a loop !
 					if (!data.update) // if not file update, add file to files[]
 						$scope.societe.files.push(data.file);
 

@@ -93,7 +93,7 @@ angular.module('mean.contacts').controller('ContactsController', ['$scope', '$ro
 			Contacts.query({Status: this.etat.id}, function (contact) {
 
 				$scope.contacts = contact;
-				$scope.count = contacts.length;
+				$scope.count = contact.length;
 			});
 		};
 

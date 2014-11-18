@@ -79,10 +79,10 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 
 		$scope.gain = function (tab, idx) {
 			// idx 1 mois en cous, idx 0 mois precedent
-			if (idx == null)
+			if (idx === null)
 				idx = 0;
 
-			if (!tab || tab[idx].count == 0)
+			if (!tab || tab[idx].count === 0)
 				return 0;
 
 			return (tab[idx + 1].count - tab[idx].count) / tab[idx].count * 100;
@@ -147,7 +147,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 			}).success(function (data, status) {
 				$scope.caChartConfig.series = data;
 			});
-		}
+		};
 
 		$scope.caChartConfig = {
 			options: {
@@ -244,7 +244,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 		};
 
 		$scope.late = function (date) {
-			if (new Date(date) <= new Date)
+			if (new Date(date) <= new Date())
 				return "red";
 		};
 

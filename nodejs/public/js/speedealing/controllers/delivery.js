@@ -410,7 +410,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			var note = {};
 			note.note = this.note;
 			note.datec = new Date();
-			note.author = {}
+			note.author = {};
 			note.author.id = Global.user._id;
 			note.author.name = Global.user.firstname + " " + Global.user.lastname;
 

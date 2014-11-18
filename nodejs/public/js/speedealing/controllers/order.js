@@ -394,9 +394,9 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function (evt) {
-						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-					}).success(function (data, status, headers, config) {
+					}).progress(function (evt) { // FIXME function in a loop !
+						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total, 10));
+					}).success(function (data, status, headers, config) { // FIXME function in a loop !
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);

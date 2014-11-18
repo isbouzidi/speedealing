@@ -96,7 +96,7 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 
 		$scope.showProduct = function (id) {
 
-			var scope = $scope;
+			var scope = $scope; // FIXME unused variable ?
 
 			var ModalInstanceCtrl = function ($scope, $modalInstance, object) {
 				$scope.product = {
@@ -418,7 +418,7 @@ angular.module('mean.products').controller('ProductBarCodeController', ['$scope'
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function (res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -631,7 +631,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 			}
 			$scope.save.row = row.rowIndex;
 
-			var d = new Date();
+			var d = new Date(); // FIXME unused variable ?
 
 			if (!$scope.save.pending) {
 				$scope.save.pending = true;
@@ -648,7 +648,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 			for (var i = 0; i < $scope.priceLevel.length; i++) {
 				if (row.entity._id === $scope.priceLevel[i]._id) {
 					$http({method: 'DELETE', url: 'api/product/price_level', data: row.entity
-					}).success(function (data, status) {
+					}).success(function (data, status) {  // FIXME function in a loop !
 						$scope.priceLevel.splice(i, 1);
 					});
 					break;
@@ -695,7 +695,7 @@ angular.module('mean.products').controller('ProductPriceLevelController', ['$sco
 				discount: 0,
 				qtyMin: 0,
 				price_level: options.price_level,
-				tms: new Date
+				tms: new Date()
 			};
 
 			$scope.productAutoComplete = function (val) {

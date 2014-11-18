@@ -97,7 +97,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				filter: {logic: 'and', filters: [{value: val}]
 				}
 			}).then(function(res) {
-				return res.data
+				return res.data;
 			});
 		};
 
@@ -136,7 +136,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				{name: 'cd', qty: 0}
 			];
 
-		}
+		};
 
 		$scope.initSelectFiles = function() {
 			$http({method: 'GET', url: 'api/chaumeil/otis/selectFiles'
@@ -168,9 +168,11 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			$scope.order.date_livraison.setDate($scope.order.date_livraison.getDate() + 5);
 
 			$scope.order.Status = "NEW"; // commande validee
+			
+			var note;
 
 			for (var i in this.order.bl) {
-				var note = "";
+				note = "";
 				note += "Numero de DF (Uniquement pour la facturation) : " + this.order.optional.numDF + "<br/><br/>";
 				note += "Adresse de livraison : <br/><p>" + this.order.bl[i].name + "<br/>";
 				note += this.order.bl[i].contact + "<br/>";
@@ -184,7 +186,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 				$scope.order.notes.push({
 					note: note,
-					title: "Destinataire " + (parseInt(i) + 1),
+					title: "Destinataire " + (parseInt(i, 10) + 1), // parseInt(string, radix) eg base 10
 					edit: false
 				});
 			}
@@ -192,7 +194,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			for (var j in $scope.order.optional.dossiers) {
 				// Add specific files
 
-				var note = "";
+				note = "";
 				note += '<h4 class="green underline">' + "Liste des fichiers natifs</h4>";
 				note += '<ul>';
 				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
@@ -204,15 +206,12 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				}
 				note += '</ul>';
 
-
 				$scope.order.notes.push({
 					note: note,
-					title: "Fichiers webdoc dossier " + (parseInt(j) + 1),
+					title: "Fichiers webdoc dossier " + (parseInt(j, 10) + 1), // parseInt(string, radix) eg base 10
 					edit: false
 				});
 				//console.log(note);
-
-
 			}
 
 			$scope.update($scope.next);
@@ -241,10 +240,10 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
 						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
 						//formDataAppender: function(formData, key, val){} 
-					}).progress(function(evt) {
-						$scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+					}).progress(function(evt) { // FIXME function in a loop !
+						$scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total, 10)); // parseInt(string, radix) eg base 10
 						//console.log(evt);
-					}).success(function(data, status, headers, config) {
+					}).success(function(data, status, headers, config) { // FIXME function in a loop !
 						// file is uploaded successfully
 						//$scope.myFiles = "";
 						//console.log(data);
