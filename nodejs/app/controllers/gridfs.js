@@ -36,7 +36,6 @@ function putGridFile(buf, name, options, fn) {
 		//TODO: Should we gridStore.close() manully??
 	});
 }
-;
 
 function putGridFileByPath(path, name, original, options, fn) {
 	var db = mongoose.connection.db,
@@ -51,7 +50,6 @@ function putGridFileByPath(path, name, original, options, fn) {
 			file.writeFile(path, fn);
 	});
 }
-;
 
 function deleteGridFile(id, options, fn) {
 	console.log('Deleting GridFile ' + id);
@@ -66,7 +64,6 @@ function deleteGridFile(id, options, fn) {
 		return fn(null);
 	});
 }
-;
 
 function parse(options) {
 	var opts = {};

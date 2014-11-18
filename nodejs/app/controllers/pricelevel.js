@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Module dependencies.
  */
@@ -46,7 +47,7 @@ exports.list = function (req, res) {
 	query.push({'$group': {_id: '$price_level'}});
 
 	if (req.body.take)
-		query.push({'$limit': parseInt(req.body.take)});
+		query.push({'$limit': parseInt(req.body.take, 10)});
 
 	query.push({'$sort': {_id: 1}});
 
@@ -74,7 +75,7 @@ exports.list = function (req, res) {
 exports.update = function (req, res) {
 	PriceLevelModel.update({_id: req.body._id},
 	{
-		tms: new Date,
+		tms: new Date(),
 		pu_ht: req.body.pu_ht,
 		qtyMin: req.body.qtyMin,
 		discount: req.body.discount,
@@ -85,7 +86,7 @@ exports.update = function (req, res) {
 		optional: req.body.optional,
 		$addToSet: {
 			history: {
-				tms: new Date,
+				tms: new Date(),
 				user_mod: {
 					id: req.user._id,
 					name: req.user.name
@@ -116,7 +117,7 @@ exports.add = function (req, res) {
 	};
 
 	price.history.push({
-		tms: new Date,
+		tms: new Date(),
 		user_mod: {
 			id: req.user._id,
 			name: req.user.name

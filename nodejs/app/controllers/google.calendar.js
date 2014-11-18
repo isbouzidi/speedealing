@@ -167,8 +167,7 @@ function insertQuickAddEvent(user, eventString, callback) {
 
 /* Module */
 
-var _ = require('lodash'),
-		qs = require('querystring'),
+var qs = require('querystring'),
 		util = require('util'),
 		url = require('url'),
 		https = require('https'),
@@ -186,7 +185,7 @@ var GoogleCalendar = function (opts) {
 	this.token = opts.token ? opts.token : null;
 	this.refreshToken = opts.refreshToken ? opts.refreshToken : null;
 
-	this.host = 'www.googleapis.com'
+	this.host = 'www.googleapis.com';
 	this.port = 443;
 };
 
@@ -202,7 +201,7 @@ GoogleCalendar.prototype = {};
 GoogleCalendar.prototype._createHttpsReqOptions = function (path, method, headers) {
 
 	if (!headers)
-		headers = {}
+		headers = {};
 
 	headers['Authorization'] = 'OAuth ' + this.token;
 	//headers['GData-Version'] = '3.0';
@@ -214,7 +213,7 @@ GoogleCalendar.prototype._createHttpsReqOptions = function (path, method, header
 		'method': method,
 		'headers': headers
 	};
-}
+};
 
 
 GoogleCalendar.prototype._buildPath = function (params) {
@@ -280,7 +279,7 @@ GoogleCalendar.prototype._sendHttpsRequest = function (opts, body, callback) {
 		req.write(body);
 	req.end();
 	return req;
-}
+};
 
 
 

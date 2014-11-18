@@ -59,7 +59,6 @@ function readTask(params, callback) {
 
 	var result = [];
 
-
 	switch (params.query) {
 		case 'MYTASK':
 			query.$or = [
@@ -97,7 +96,7 @@ function readTask(params, callback) {
 	}
 
 	//console.log(query);
-	TaskModel.find(query, params.fields, {skip: parseInt(params.skip) * parseInt(params.limit) || 0, limit: params.limit || 100, sort: JSON.parse(params.sort)}, callback);
+	TaskModel.find(query, params.fields, {skip: parseInt(params.skip, 10) * parseInt(params.limit, 10) || 0, limit: params.limit || 100, sort: JSON.parse(params.sort)}, callback);
 }
 
 function countTask(params, callback) {
@@ -115,7 +114,6 @@ function countTask(params, callback) {
 	 }*/
 
 	var result = [];
-
 
 	switch (params.query) {
 		case 'MYTASK':

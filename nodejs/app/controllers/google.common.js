@@ -20,9 +20,6 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var UserModel = mongoose.model('user');
 
-// Global google configuration
-var config = require(__dirname + '/../../config/config');
-
 var GOOGLE_CLIENT_ID = config.google.clientID,
 		GOOGLE_CLIENT_SECRET = config.google.clientSecret,
 		GOOGLE_REDIRECT_URL = config.google.callbackURL;
