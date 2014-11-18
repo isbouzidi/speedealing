@@ -20,9 +20,6 @@ var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var UserModel = mongoose.model('user');
 
-// Global google configuration
-var config = require(__dirname + '/../../config/config');
-
 var GOOGLE_CLIENT_ID = config.google.clientID,
 		GOOGLE_CLIENT_SECRET = config.google.clientSecret,
 		GOOGLE_REDIRECT_URL = config.google.callbackURL;
@@ -315,33 +312,15 @@ function imp_treatGoogleUser(user, callback) {
 								});
 					},
 					function (cb) {
-						imp_mergeImportedContacts(user, my_gcontacts, cb)
+						imp_mergeImportedContacts(user, my_gcontacts, cb);
 					}
 				],
-						cb_google
-						);
+				cb_google
+				);
 			},
 			callback
 			);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* Insert contacts in users' google address book.
@@ -480,7 +459,7 @@ function up_checkGoogleContacts(user, gcontacts, callback) {
 
 
 function up_listContactsBySociete(user, societe, callback) {
-	var my_contacts = []
+	var my_contacts = [];
 
 	var stream = ContactModel.find({"societe.id": societe.id}).stream();
 	stream.on('data', function (contact) {
@@ -503,7 +482,7 @@ function up_listContactsBySociete(user, societe, callback) {
 }
 
 function up_insertContactsFromSociete(user, callback) {
-	var my_societes = []
+	var my_societes = [];
 
 	var stream = SocieteModel.find({"commercial_id.id": user.id}).stream();
 	stream.on('data', function (societe) {
@@ -747,21 +726,6 @@ function contactChanged(contact, old_societe_id, new_societe_id, callback) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ****************************************** */
 
 /* ****************************************** */
@@ -773,8 +737,7 @@ function contactChanged(contact, old_societe_id, new_societe_id, callback) {
 /* Personal module */
 
 
-var _ = require('lodash'),
-		qs = require('querystring'),
+var qs = require('querystring'),
 		util = require('util'),
 		url = require('url'),
 		https = require('https'),
@@ -783,7 +746,7 @@ var _ = require('lodash'),
 
 var GoogleContacts = function (opts) {
 	if (typeof opts === 'string') {
-		opts = {token: opts}
+		opts = {token: opts};
 	}
 	if (!opts) {
 		opts = {};
@@ -885,7 +848,6 @@ GoogleContacts.prototype.getContacts = function (params, cb) {
 			cb(null, self.contacts);
 		}
 	}
-	;
 };
 
 GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
@@ -1037,7 +999,7 @@ GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
 	console.log("\n_saveContactsFromFeed");
 	console.log(JSON.stringify(self.contacts, null, 2));
 	console.log("Nb contacts = ", self.contacts.length);
-}
+};
 
 GoogleContacts.prototype._buildPath = function (params) {
 	if (params.path)
@@ -1049,7 +1011,7 @@ GoogleContacts.prototype._buildPath = function (params) {
 	params.projection = params.projection || 'thin';
 	params.email = params.email || 'default';
 	params['max-results'] = params['max-results'] || 20000;
-	params.updatedMin = params.updatedMin || '1980-01-01'
+	params.updatedMin = params.updatedMin || '1980-01-01';
 
 	var query = {
 		alt: params.alt,
@@ -1211,7 +1173,7 @@ GoogleContacts.prototype._buildPathInsert = function (params) {
 };
 
 GoogleContacts.prototype._contactToXML = function (contact) {
-	var x = new XMLWriter;
+	var x = new XMLWriter();
 
 	x.startElement('atom:entry')
 			.writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom')
@@ -1305,7 +1267,7 @@ GoogleContacts.prototype._contactToXML = function (contact) {
 	x.endElement();
 
 	return x.toString();
-}
+};
 
 // ***************************************************
 // delete contact
@@ -1341,7 +1303,7 @@ GoogleContacts.prototype.deleteContact = function (contact_id, params, cb) {
 
 
 GoogleContacts.prototype._groupToXML = function (group) {
-	x = new XMLWriter;
+	var x = new XMLWriter();
 
 	x.startElement('atom:entry')
 			.writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom')
@@ -1359,13 +1321,13 @@ GoogleContacts.prototype._groupToXML = function (group) {
 			.endElement();
 
 	return x.toString();
-}
+};
 
 
 GoogleContacts.prototype._getGroupId = function (json) {
 	var id = json.entry.id["$t"];
 	return id.substring(id.lastIndexOf("/") + 1);
-}
+};
 
 /* group format :
  *  { title }
@@ -1430,4 +1392,3 @@ GoogleContacts.prototype.createGroup = function (group, params, callback) {
 		callback(err);
 	});
 };
-
