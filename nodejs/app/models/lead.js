@@ -124,7 +124,7 @@ leadSchema.virtual('commercial_id').get(function () {
     var commercial = {};
     var id = this.societe.id;
     
-    if(commercialSociete.length){
+    if(id && commercialSociete.length){
         for(var i = 0; i < commercialSociete.length; i++){
             if(id.equals(commercialSociete[i]._id)){
                 commercial = commercialSociete[i].commercial_id;
@@ -132,8 +132,8 @@ leadSchema.virtual('commercial_id').get(function () {
             }
         }
     }
-    
-    return commercial;
+	
+	return null;
 });
 mongoose.model('lead', leadSchema, 'Lead');
 
