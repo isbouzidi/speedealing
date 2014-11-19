@@ -1,3 +1,5 @@
+"use strict";
+
 var async = require('async'),
 		fs = require('fs'),
 		modules = require('../app/controllers/modules'),

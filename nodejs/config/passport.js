@@ -1,3 +1,5 @@
+"use strict";
+
 var mongoose = require('mongoose'),
 		_ = require('lodash'),
 		LocalStrategy = require('passport-local').Strategy,
