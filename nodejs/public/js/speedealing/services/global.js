@@ -26,7 +26,7 @@ angular.module('mean.system').service('pageTitle', function($window, Global) {
 
 	myService.getTitle = function() {
 		return data;
-	}
+	};
 
 	return myService;
 }, {$inject: ['$window','Global']});

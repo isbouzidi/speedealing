@@ -1,3 +1,5 @@
+"use strict";
+
 var async = require('async'),
 		fs = require('fs'),
 		modules = require('../app/controllers/modules'),
@@ -29,7 +31,7 @@ module.exports = function(app, passport, auth) {
 	app.post('/login', function(req, res, next) {
 		passport.authenticate('local', function(err, user, info) {
 			if (err) {
-				return next(err)
+				return next(err);
 			}
 
 			if (!user) {

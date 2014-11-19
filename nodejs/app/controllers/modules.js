@@ -14,7 +14,7 @@ console.log("Loading Speedealing modules...");
 fs.readdirSync(__dirname + '/../../config/modules').forEach(function (file) {
 	if (file === "index.js")
 		return;
-	if (file.indexOf('.json') == null) // exclude not json
+	if (!_.contains(file, '.json')) // exclude not json
 		return;
 
 	fs.readFile(__dirname + '/../../config/modules/' + file, 'utf8', function (err, data) {
@@ -112,7 +112,7 @@ exports.menus = function (req, res) {
 								}
 							});
 							
-							if (returnRight == true) {
+							if (returnRight === true) {
 								//console.log('break the first loop');
 								return false; // AND / OR operators : break all if block is true
 							}
