@@ -58,8 +58,8 @@ function Object() {
 
 Object.prototype = {
 	read: function (req, res) {
-		var dateStart = new Date(req.query.year, parseInt(req.query.month) - 1, 1);
-		var dateEnd = new Date(req.query.year, parseInt(req.query.month), 1);
+		var dateStart = new Date(req.query.year, parseInt(req.query.month, 10) - 1, 1);
+		var dateEnd = new Date(req.query.year, parseInt(req.query.month, 10), 1);
 
 		var query = {
 			entity: req.query.entity,
@@ -89,7 +89,7 @@ Object.prototype = {
 						datec: bill.datec,
 						journal: globalConst.SELLS_JOURNAL || "VT",
 						compte: societe.code_compta,
-						piece: parseInt(bill.ref.substr(7)),
+						piece: parseInt(bill.ref.substr(7), 10),
 						libelle: bill.ref + " " + societe.name,
 						debit: 0,
 						credit: 0,
