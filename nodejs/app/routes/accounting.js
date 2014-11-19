@@ -1,6 +1,7 @@
 "use strict";
 
 var mongoose = require('mongoose'),
+		mongodb = require('mongodb'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('lodash'),
@@ -23,6 +24,22 @@ Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 		//console.log(docs.values[i]);
 	}
 	//tva_code = docs;
+});
+
+var globalConst = {};
+
+mongodb.connect(config.db, function (err, db) {
+	if (err)
+		return console.log(err);
+
+	db.collection("Conf").findOne({_id: "const"}, function (err, doc) {
+		if (err)
+			return console.log(err);
+
+		globalConst = doc;
+
+	});
+
 });
 
 module.exports = function (app, passport, auth) {
@@ -70,7 +87,7 @@ Object.prototype = {
 					// ligne client
 					var line = {
 						datec: bill.datec,
-						journal: "VT",
+						journal: globalConst.SELLS_JOURNAL || "VT",
 						compte: societe.code_compta,
 						piece: parseInt(bill.ref.substr(7)),
 						libelle: bill.ref + " " + societe.name,
@@ -98,7 +115,7 @@ Object.prototype = {
 							if (product == null)
 								line = {
 									datec: bill.datec,
-									journal: "VT",
+									journal: globalConst.SELLS_JOURNAL || "VT",
 									compte: null,
 									piece: parseInt(bill.ref.substr(7), 10),
 									libelle: bill.ref + ' ' + lineBill.product.name + ' (INCONNU)',
@@ -109,7 +126,7 @@ Object.prototype = {
 							else
 								line = {
 									datec: bill.datec,
-									journal: "VT",
+									journal: globalConst.SELLS_JOURNAL || "VT",
 									compte: product.compta_sell,
 									piece: parseInt(bill.ref.substr(7), 10),
 									libelle: bill.ref + " " + societe.name,
@@ -136,7 +153,7 @@ Object.prototype = {
 
 							var line = {
 								datec: bill.datec,
-								journal: "VT",
+								journal: globalConst.SELLS_JOURNAL || "VT",
 								compte: tva_code_collec[bill.total_tva[i].tva_tx],
 								piece: parseInt(bill.ref.substr(7), 10),
 								libelle: bill.ref + " " + societe.name,
@@ -177,7 +194,7 @@ Object.prototype = {
 					var out = "";
 
 					//entete
-					out += "Date;Journal;compte;Numéro de piéce;Libellé;Débit;Crédit;Monnaie\n";
+					out += "DTOPE;NUMJL;NUMCP;NPIEC;LIBEC;MTDEB;MTCRE;MONNAIE_IDENT\n";
 
 					var debit = 0;
 					var credit = 0;
@@ -282,26 +299,26 @@ Object.prototype = {
 				var out = "";
 
 				/*ProductModel.find({$or: [{compta_buy: {$ne: null}}, {compta_sell: {$ne: null}}]}, {ref: 1, compta_buy: 1, compta_sell: 1}, function (err, rows) {
-					if (err)
-						console.log(err);
+				 if (err)
+				 console.log(err);
+				 
+				 //console.log(rows);
+				 
+				 for (var i = 0; i < rows.length; i++) {
+				 if (rows[i].compta_sell) {
+				 out += rows[i].compta_sell;
+				 out += ";" + rows[i].ref;
+				 out += "\n";
+				 }
+				 
+				 if (rows[i].compta_buy && rows[i].compta_buy != rows[i].compta_sell) {
+				 out += rows[i].compta_buy;
+				 out += ";" + rows[i].ref;
+				 out += "\n";
+				 }
+				 }*/
 
-					//console.log(rows);
-
-					for (var i = 0; i < rows.length; i++) {
-						if (rows[i].compta_sell) {
-							out += rows[i].compta_sell;
-							out += ";" + rows[i].ref;
-							out += "\n";
-						}
-
-						if (rows[i].compta_buy && rows[i].compta_buy != rows[i].compta_sell) {
-							out += rows[i].compta_buy;
-							out += ";" + rows[i].ref;
-							out += "\n";
-						}
-					}*/
-
-					callback(null, out);
+				callback(null, out);
 				//});
 			}
 		], function (err, results) {
