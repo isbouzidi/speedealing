@@ -980,7 +980,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/view.html',
-				controller: "LeadController",
+				controller: "LeadViewController",
 				windowClass: "steps",
 				resolve: {
 					object: function () {

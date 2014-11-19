@@ -43,7 +43,7 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http
 
 
 	}]);
-angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$routeParams', '$modal', '$filter', 'dialogs', 'pageTitle', 'Global', /*'object',*/ 'Lead', function ($scope, $http, $routeParams, $modal, $filter, $dialogs, pageTitle, Global, /*object,*/ Lead) {
+angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$routeParams', '$modal', '$filter', 'dialogs', 'pageTitle', 'Global', 'Lead', function ($scope, $http, $routeParams, $modal, $filter, $dialogs, pageTitle, Global, Lead) {
 
 		$scope.global = Global;
 
@@ -115,7 +115,7 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 		$scope.findLead = function (id) {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/view.html',
-				controller: "LeadController",
+				controller: "LeadViewController",
 				windowClass: "steps",
 				resolve: {
 					object: function () {
@@ -149,4 +149,17 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 			});
 		};
 
+	}]);
+
+angular.module('mean.lead').controller('LeadViewController', ['$scope', '$http', '$modal', '$filter', 'pageTitle', 'Global', 'Lead', 'object', function ($scope, $http, $modal, $filter, pageTitle, Global, Lead, object) {
+
+		$scope.lead = {};
+		
+		$scope.findOne = function () {
+			Lead.get({
+				Id: object.lead
+			}, function (lead) {
+				$scope.lead = lead;
+			});
+		};
 	}]);

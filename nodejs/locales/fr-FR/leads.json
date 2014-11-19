@@ -7,5 +7,6 @@
 	"New Lead": "Nouveau projet",
 	"Potential": "Potentiel du projet",
 	"Type": "Type de projet",
-	"Step": "Etape / status projet"
+	"Step": "Etape / status projet",
+	"Details Lead":"Fiche projet"
 }
