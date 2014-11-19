@@ -31,7 +31,7 @@
             </li>
             <li style="width: 20%;" data-ng-init="ticketCounter()">
                 <a ng-if="global.user.rights.ticket.read" ng-href='#!/ticket' title="{{t 'ticket:TicketCenter'}}" >
-                    <span class="icon-warning"></span>
+                    <span class="icon-warning" ng-class="{red:ticketCpt}"></span>
                     <span data-ng-if="ticketCpt" class="count">\{{ticketCpt}}</span>
                 </a>
 				<span ng-if="!global.user.rights.ticket.read">

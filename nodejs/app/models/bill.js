@@ -41,7 +41,7 @@ var billSchema = new Schema({
 	country_id: {type: String, default: 'FR'},
 	state_id: Number,
 	datec: {type: Date},
-	dater: {type: Date},
+	dater: {type: Date}, // date limit reglement
 	notes: [{
 			author: {
 				id: {type: String, ref: 'User'},
@@ -98,7 +98,8 @@ var billSchema = new Schema({
 		createdAt: {type: Date},
 		data: Buffer,
 	},
-	feeBilling: {type: Boolean, default: true} // Frais de facturation
+	feeBilling: {type: Boolean, default: true}, // Frais de facturation
+	oldId: String // Only for import migration
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}

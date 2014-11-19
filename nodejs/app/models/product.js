@@ -16,6 +16,7 @@ var Dict = require('../controllers/dict');
  * Product Schema
  */
 var productSchema = new Schema({
+	oldId: String, // Only for import migration
 	ref: {type: String, require: true, unique: true, uppercase: true},
 	compta_buy: {type: String},
 	compta_sell: {type: String},
@@ -29,7 +30,7 @@ var productSchema = new Schema({
 	units: {type: String, default: "unit"},
 	minPrice: {type: Number, default: 0},
 	finished: String,
-	price_base_type: String,
+	//price_base_type: String,
 	tms: Date, // Not used ??
 	datec: {type: Date, default: Date.now},
 	billingMode: {type: String, uppercase: true, default: "QTY"}, //MONTH, QTY, ...
