@@ -15,11 +15,11 @@ var ProductModel = mongoose.model('product');
 
 var Dict = require('../controllers/dict');
 
-var tva_code = {};
+var tva_code_collec = {};
 Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 	for (var i = 0; i < docs.values.length; i++) {
 		if (docs.values[i].pays_code === 'FR' && docs.values[i].enable)
-			tva_code[docs.values[i].value] = docs.values[i].code_compta;
+			tva_code_collec[docs.values[i].value] = docs.values[i].code_compta_colle;
 		//console.log(docs.values[i]);
 	}
 	//tva_code = docs;
@@ -131,13 +131,13 @@ Object.prototype = {
 						//lignes TVA
 						for (var i = 0; i < bill.total_tva.length; i++) {
 							//console.log(bill.total_tva[i]);
-							if (!tva_code[bill.total_tva[i].tva_tx])
+							if (!tva_code_collec[bill.total_tva[i].tva_tx])
 								console.log("Compta TVA inconnu : " + bill.total_tva[i].tva_tx);
 
 							var line = {
 								datec: bill.datec,
 								journal: "VT",
-								compte: tva_code[bill.total_tva[i].tva_tx],
+								compte: tva_code_collec[bill.total_tva[i].tva_tx],
 								piece: parseInt(bill.ref.substr(7), 10),
 								libelle: bill.ref + " " + societe.name,
 								debit: 0,
