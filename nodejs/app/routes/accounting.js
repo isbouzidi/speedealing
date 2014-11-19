@@ -31,6 +31,7 @@ module.exports = function (app, passport, auth) {
 
 	app.get('/api/accounting', auth.requiresLogin, object.read);
 	app.post('/api/accounting', auth.requiresLogin, object.create);
+	app.get('/api/accounting/list', auth.requiresLogin, object.getAccountsList);
 
 	//other routes..
 };
@@ -130,9 +131,9 @@ Object.prototype = {
 						//lignes TVA
 						for (var i = 0; i < bill.total_tva.length; i++) {
 							//console.log(bill.total_tva[i]);
-							if(!tva_code[bill.total_tva[i].tva_tx])
+							if (!tva_code[bill.total_tva[i].tva_tx])
 								console.log("Compta TVA inconnu : " + bill.total_tva[i].tva_tx);
-							
+
 							var line = {
 								datec: bill.datec,
 								journal: "VT",
@@ -241,6 +242,75 @@ Object.prototype = {
 			}
 
 			res.json(bill);
+		});
+	},
+	getAccountsList: function (req, res) {
+		var csv = "";
+
+		//entete
+		csv += "NUMCP;LIBCP\n";
+
+		async.series([
+			function (callback) {
+				var out = "";
+
+				SocieteModel.find({$or: [{code_compta: {$ne: null}}, {code_compta_fournisseur: {$ne: null}}]}, {name: 1, code_compta: 1, code_compta_fournisseur: 1}, function (err, rows) {
+					if (err)
+						console.log(err);
+
+					//console.log(rows);
+
+					for (var i = 0; i < rows.length; i++) {
+						if (rows[i].code_compta) {
+							out += rows[i].code_compta;
+							out += ";" + rows[i].name;
+							out += "\n";
+						}
+
+						if (rows[i].code_compta_fournisseur && rows[i].code_compta != rows[i].code_compta_fournisseur) {
+							out += rows[i].code_compta_fournisseur;
+							out += ";" + rows[i].name;
+							out += "\n";
+						}
+					}
+
+					callback(null, out);
+
+
+				});
+			}, function (callback) {
+				var out = "";
+
+				/*ProductModel.find({$or: [{compta_buy: {$ne: null}}, {compta_sell: {$ne: null}}]}, {ref: 1, compta_buy: 1, compta_sell: 1}, function (err, rows) {
+					if (err)
+						console.log(err);
+
+					//console.log(rows);
+
+					for (var i = 0; i < rows.length; i++) {
+						if (rows[i].compta_sell) {
+							out += rows[i].compta_sell;
+							out += ";" + rows[i].ref;
+							out += "\n";
+						}
+
+						if (rows[i].compta_buy && rows[i].compta_buy != rows[i].compta_sell) {
+							out += rows[i].compta_buy;
+							out += ";" + rows[i].ref;
+							out += "\n";
+						}
+					}*/
+
+					callback(null, out);
+				//});
+			}
+		], function (err, results) {
+
+			for (var i = 0; i < results.length; i++)
+				csv += results[i];
+
+			res.attachment('CPTLIST.csv');
+			res.send(200, csv);
 		});
 	}
 };

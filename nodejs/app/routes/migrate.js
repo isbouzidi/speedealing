@@ -1,5 +1,5 @@
 /**
- * Migration from Couchdb to MongoDB
+ * Migration from Mysql Dolibarr to MongoDB
  * @type type
  */
 
@@ -42,6 +42,8 @@ if (config.mysql !== undefined) {
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var UserModel = mongoose.model('user');
+var ProductModel = mongoose.model('product');
+var BillModel = mongoose.model('bill');
 
 var Task = require('../controllers/task');
 
@@ -88,6 +90,12 @@ module.exports = function (app, passport, auth) {
 				break;
 			case "contact":
 				migrateMySQL.contact(req, res);
+				break;
+			case "product":
+				migrateMySQL.product(req, res);
+				break;
+			case "bill":
+				migrateMySQL.bills(req, res);
 				break;
 			case "task":
 				migrateMySQL.task(req, res);
@@ -875,25 +883,44 @@ MigrateMySQL.prototype = {
 		});
 	},
 	contact: function (req, res) {
+		var $sql = "";
 
-		couchdb.view('Contact/list', function (err, rows) {
+		$sql = "SELECT s.*, s.name as lastname, ";
+		$sql += " p.code, u1.login as user_creat, u2.login as user_modif";
+		$sql += " FROM (llx_socpeople as s";
+		$sql += " ) ";
+		$sql += " LEFT JOIN llx_c_pays as p on (p.rowid = s.fk_pays)";
+		$sql += " LEFT JOIN llx_user AS u1 ON u1.rowid = s.fk_user_creat";
+		$sql += " LEFT JOIN llx_user AS u2 ON u2.rowid = s.fk_user_modif";
+
+		connection.query($sql, function (err, rows) {
 			if (err)
-				return console.log(err);
+				console.log(err);
+
+			//console.log(rows);
+			//console.log(rows.length);
+
+
+			//console.log(rows[0]);
+
+			var tab = [];
+			tab.push(rows[0]);
 
 			rows.forEach(function (row) {
 
 				var _id = row._id;
 
-				SocieteModel.findOne({oldId: row.societe.id}, "_id name", function (err, societe) {
+				SocieteModel.findOne({oldId: row.fk_soc}, "_id name", function (err, societe) {
 					if (err)
 						console.log(err);
 
 					delete row._id;
 
-					if (societe)
+					row.societe = {};
+					if (societe) {
 						row.societe.id = societe._id;
-					else
-						delete row.societe.id;
+						row.societe.name = societe.name;
+					}
 
 					var datec;
 					if (typeof row.datec !== 'undefined')
@@ -905,52 +932,77 @@ MigrateMySQL.prototype = {
 
 					delete row.datec;
 
-					var contact = new ContactModel(row);
+					ContactModel.findOne({oldId: row.rowid}, function (err, contact) {
 
-					contact.oldId = _id;
+						if (!contact)
+							contact = new ContactModel(row);
+						else
+							contact = _.extend(contact, row);
 
-					contact.datec = datec;
-					contact.createdAt = datec;
+						contact.oldId = row.rowid;
 
-					if (row.Tag && row.Tag.length)
-						contact.Tag = row.Tag;
+						contact.datec = datec;
+						contact.createdAt = datec;
 
-					//console.log(contact);
+						if (row.Tag && row.Tag.length)
+							contact.Tag = row.Tag;
 
-					//return;
+						//console.log(contact);
 
-					contact.save(function (err, doc) {
-						if (err) {
-							console.log(err);
-						}
+						//return;
 
+						contact.save(function (err, doc) {
+							if (err) {
+								console.log(err);
+							}
+
+						});
 					});
 				});
 			});
 		});
 	},
 	societe: function (req, res) {
-		connection.query('SELECT * FROM llx_societe', function (err, rows) {
-			if(err)
+		var $sql = "";
+
+		$sql = "SELECT s.*, s.cp as zip, s.ville as town, s.nom as name, ";
+		$sql += " st.code as Status, p.code as country_id, u1.login as user_creat, u2.login as user_modif ";
+		$sql += ",c.label, cp.code as mode_reglement, pt.code as cond_reglement ";
+		$sql += ",u.login";
+
+		$sql += " FROM ( llx_societe as s";
+		$sql += " ) ";
+		$sql += " LEFT JOIN llx_c_pays as p on (p.rowid = s.fk_pays)";
+		$sql += " LEFT JOIN llx_c_stcomm as st ON st.id = s.fk_stcomm";
+		$sql += " LEFT JOIN llx_user AS u1 ON u1.rowid = s.fk_user_creat";
+		$sql += " LEFT JOIN llx_user AS u2 ON u2.rowid = s.fk_user_modif";
+		$sql += " LEFT JOIN llx_categorie_societe as cs ON cs.fk_societe = s.rowid ";
+		$sql += " LEFT JOIN llx_categorie as c ON c.rowid=cs.fk_categorie ";
+		$sql += " LEFT JOIN llx_c_paiement as cp ON cp.id=s.mode_reglement ";
+		$sql += " LEFT JOIN llx_c_payment_term as pt ON pt.rowid=s.cond_reglement ";
+
+		$sql += " LEFT JOIN llx_societe_commerciaux as sc ON sc.fk_soc = s.rowid";
+		$sql += " LEFT JOIN llx_user AS u ON u.rowid = sc.fk_user ";
+
+
+		connection.query($sql, function (err, rows) {
+			if (err)
 				console.log(err);
-			
+
 			//console.log(rows);
 			//console.log(rows.length);
-	
 
-			console.log(rows[0]);
-			
-			var tab =[];
-			tab.push(rows[0]);
 
-			tab.forEach(function (row) {
+			//console.log(rows[0]);
+
+			rows.forEach(function (row) {
 
 				var _id = row._id;
 
 				delete row._id;
-				var notes = row.notes;
+				var notes = row.note;
 
-				delete row.notes;
+				delete row.note;
 
 				var datec;
 				if (typeof row.datec !== 'undefined')
@@ -962,38 +1014,59 @@ MigrateMySQL.prototype = {
 
 				delete row.datec;
 
-				var societe = new SocieteModel(row);
+				row.state_id = row.fk_departement;
+				row.phone = row.tel;
 
-				societe.datec = datec;
-				societe.createdAt = datec;
-
-				if (notes) {
-					societe.notes.push({
-						note: notes,
-						author: {},
-						datec: new Date(row.tms)
-					});
+				row.idprof1 = row.siren;
+				row.idprof2 = row.siret;
+				row.idprof3 = row.ape;
+				if (row.latitude && row.longitude) {
+					row.gps = [];
+					row.gps[0] = row.latitude;
+					row.gps[1] = row.longitude;
 				}
+				row.entity = 'ALL';
 
-				if (row.public_notes)
-					societe.notes.push({
-						note: row.public_notes,
-						author: {},
-						datec: new Date(row.tms)
+				SocieteModel.findOne({oldId: row.rowid}, function (err, societe) {
+
+					if (!societe) {
+						societe = new SocieteModel(row);
+
+						if (notes) {
+							societe.notes.push({
+								note: notes,
+								author: {},
+								datec: new Date(row.tms)
+							});
+						}
+
+						if (row.public_notes)
+							societe.notes.push({
+								note: row.public_notes,
+								author: {},
+								datec: new Date(row.tms)
+							});
+
+					} else
+						societe = _.extend(societe, row);
+
+					societe.datec = datec;
+					societe.createdAt = datec;
+
+
+					//console.log(row.action_co);
+
+					societe.oldId = row.rowid;
+
+					//console.log(societe);
+
+					societe.save(function (err, doc) {
+						if (err) {
+							console.log(err);
+						}
+
 					});
-
-				//console.log(row.action_co);
-				
-				societe.oldId = row.rowid;
-
-				console.log(societe);
-
-				//societe.save(function (err, doc) {
-				//	if (err) {
-				//		console.log(err);
-				//	}
-
-				//});
+				});
 			});
 		});
 	},
@@ -1035,162 +1108,183 @@ MigrateMySQL.prototype = {
 			});
 		});
 	},
-	exec: function () {
+	product: function (req, res) {
+		var $sql = "";
 
-		var res = this.res;
+		$sql = "SELECT p.*, p.code_comptable_achat as compta_buy, p.price as pu_ht, p.code_comptable_vente as compta_sell,  c.code, u1.login as user_author ";
+		$sql += " FROM ( llx_product as p";
+		$sql += " ) ";
+		$sql += " LEFT JOIN llx_c_pays as c on (c.rowid = p.fk_country)";
+		$sql += " LEFT JOIN llx_user AS u1 ON u1.rowid = p.fk_user_author";
 
-		couchdb.view('unlink/all', function (err, rows) {
+		connection.query($sql, function (err, rows) {
 			if (err)
-				return console.log(err);
+				console.log(err);
 
-			var i = 1;
+			//console.log(rows);
+			//console.log(rows.length);
 
-			var oldId = function (db, value, row, key, collection) {
-				db.collection(collection).findOne({oldId: row[key].id}, function (err, doc) {
-					if (err)
-						console.log(err);
+			//console.log(rows[0]);
 
-					if (doc !== null) {
-						var update = {};
-						update[key] = row[key];
-						update[key].id = doc._id;
-						db.collection(value).update({_id: row._id}, {$set: update}, {w: 1}, function (err) {
-							if (err)
-								console.warn(err.message);
-						});
-					}
-				});
-			};
-			var cb = function (db) {
-				if (i >= rows.length) {
-					/**
-					 * Match old_ID to new Object_ID
-					 */
-					db.collectionNames(function (err, collections) {
-						//for each collection
-						collections.forEach(function (value) {
-							if (value.name.indexOf("system") !== -1)
-								return;
+			//var tab = [];
+			//tab.push(rows[0]);
 
-							var dbCollect = value.name.slice(value.name.indexOf(".") + 1); // collection name
-							//console.log(dbCollect);
-							db.collection(dbCollect).find().toArray(function (err, results) {
-								//console.log("res"+dbCollect+results.length);
-								// for each values in a collection
-								if (err)
-									console.log(err);
-								results.forEach(function (row) {
-									//console.log(row);
-									var object = ["societe", "contact", "product", "client"];
+			rows.forEach(function (row) {
 
-									for (var j in object) {
-										// if societe.id exist
-										//console.log();
-										if (typeof row[object[j]] === 'object'
-												&& typeof row[object[j]].id !== 'undefined') {
-											// search oldId
-											var collection = "";
+				delete row.entity;
+				delete row.price;
 
-											if (object[j] == 'client')
-												collection = 'Societe';
-											else
-												collection = object[j].charAt(0).toUpperCase() + object[j].slice(1); // to upper case first letter
-											oldId(db, dbCollect, row, object[j], collection);
-										}
-									}
-								});
-							});
-						});
-					});
-					/**
-					 * Remove old_ID
-					 */
+				delete row._id;
+				var notes = row.note;
 
-					//db.close();
-					res.send(200, {"ok": rows.length});
-				}
+				delete row.note;
+
+				var datec;
+				if (typeof row.datec !== 'undefined')
+					datec = new Date(row.datec);
 				else
-					i++;
-			};
-			mongodb.connect(config.db, function (err, db) {
-				if (err)
-					return console.log(err);
+					datec = new Date(row.tms);
 
-				rows.forEach(function (value) {
-					if (typeof value.class !== 'undefined') {
+//console.log(row.datec + "/"+row.tms+":" + datec);
 
-						//correct class
-						if (value.class === 'extrafields')
-							value.class = 'ExtraFields';
-						if (value.class === 'system')
-							value.class = 'Conf';
+				delete row.datec;
+
+				if (row.tosell && row.tobuy)
+					row.Status = "SELLBUY";
+				else if (row.tosell)
+					row.Status = "SELL";
+				else if (row.tobuy)
+					row.Status = "BUY";
+				else
+					row.Status = "NONE";
+
+				ProductModel.findOne({oldId: row.rowid}, function (err, product) {
+
+					if (!product) {
+						product = new ProductModel(row);
+					} else
+						product = _.extend(product, row);
+
+					product.datec = datec;
+					product.createdAt = datec;
 
 
-						// Get the class collection
-						var classs = value.class;
+					//console.log(row.action_co);
 
-						// _id
-						if (classs !== 'User'
-								&& classs !== 'ExtraFields'
-								&& classs !== 'Conf'
-								&& classs !== 'Dict'
-								&& classs !== 'menu'
-								&& classs !== 'UserGroup'
-								&& classs !== 'DolibarrModules') {
-							value.oldId = value._id;
-							delete value._id;
+					product.oldId = row.rowid;
 
-						}
-						var convert_date = function (object) {
-							var tabdate = ["tms", "datec", "datep", "datef", "date", "date_commande"];
+					console.log(product);
+					//return;
 
-							for (var j in tabdate) {
-								if (typeof object[tabdate[j]] !== 'undefined') {
-									object[tabdate[j]] = new Date(object[tabdate[j]]);
-								}
-							}
-						};
-
-						convert_date(value);
-
-						if (typeof value.history !== 'undefined') {
-							for (var j in value.history) {
-								convert_date(value.history[j]);
-							}
+					product.save(function (err, doc) {
+						if (err) {
+							console.log(err);
 						}
 
-						if (typeof value.trashed_by !== 'undefined') {
-							convert_date(value.trashed_by);
-						}
-
-						//$value->id = $value->_id;
-
-						//clean specific value for couchdb
-						delete value.class;
-						delete value._rev;
-						delete value._deleted_conflicts;
-						delete value._conflicts;
-
-						//if (value._id == "module:User")
-						//		console.log(value)
-
-						db.collection(classs).save(value, {w: 1}, function (err, objects) {
-							if (err)
-								console.warn(err.message);
-
-							cb(db);
-							// Insert this new document into mongo class collection
-						});
-					}
+					});
 				});
 			});
 		});
 	},
-	send: function (err, data) {
-		this.db.close();
-		if (err)
-			this.res.send(500);
-		else
-			this.res.send(200, data);
+	bills: function (req, res) {
+		var $sql = "";
+
+		/*$sql = 'SELECT f.*, l.rowid, l.fk_product, l.fk_parent_line, l.description, l.product_type, l.price, l.qty, l.tva_tx, ';
+		 $sql += ' l.localtax1_tx, l.localtax2_tx, l.remise, l.remise_percent, l.fk_remise_except, l.subprice,';
+		 $sql += ' l.rang, l.special_code,';
+		 $sql += ' l.date_start as date_start, l.date_end as date_end,';
+		 $sql += ' l.info_bits, l.total_ht, l.total_tva, l.total_localtax1, l.total_localtax2, l.total_ttc, l.fk_code_ventilation, l.fk_export_compta, ';
+		 $sql += ' p.ref as product_ref, p.fk_product_type as fk_product_type, p.label as product_label, p.description as product_desc';
+		 $sql += ' FROM llx_facturedet as l';
+		 $sql += ' LEFT JOIN llx_product as p ON l.fk_product = p.rowid';
+		 $sql += ' LEFT JOIN llx_facture as f ON l.fk_facture = f.rowid';
+		 $sql += ' ORDER BY l.rang';*/
+
+		$sql = 'SELECT f.*, f.facnumber as ref, pt.code as cond_reglement_code, cp.code as mode_reglement_code ';
+		$sql += ' FROM llx_facture as f';
+		$sql += " LEFT JOIN llx_c_paiement as cp ON cp.id=f.fk_mode_reglement ";
+		$sql += " LEFT JOIN llx_c_payment_term as pt ON pt.rowid=f.fk_cond_reglement ";
+
+		connection.query($sql, function (err, rows) {
+			if (err)
+				console.log(err);
+
+			//console.log(rows);
+			//console.log(rows.length);
+
+			//console.log(rows[0]);
+
+			//var tab = [];
+			//tab.push(rows[0]);
+
+			rows.forEach(function (row) {
+
+				delete row.entity;
+
+				delete row._id;
+				var notes = row.note;
+
+				delete row.note;
+
+				var datec;
+				if (typeof row.datec !== 'undefined')
+					datec = new Date(row.datec);
+				else
+					datec = new Date(row.tms);
+
+//console.log(row.datec + "/"+row.tms+":" + datec);
+
+				delete row.datec;
+
+				if (row.paye)
+					row.Status = "PAID";
+				else if (row.fk_status == 0)
+					row.Status = "DRAFT";
+				else if (row.fk_status == 1)
+					row.Status = "NOT_PAID";
+				else
+					row.Status = "DRAFT";
+
+				row.entity = "symeos";
+
+				if (!row.cond_reglement_code)
+					delete row.cond_reglement_code;
+
+				SocieteModel.findOne({oldId: row.fk_soc}, function (err, societe) {
+
+					BillModel.findOne({oldId: row.rowid}, function (err, bill) {
+
+						if (!bill) {
+							bill = new BillModel(row);
+						} else
+							bill = _.extend(bill, row);
+						bill.datec = datec;
+						bill.createdAt = datec;
+
+						bill.lines = [];
+
+						bill.dater = row.date_lim_reglement;
+
+						bill.client = {
+							id: societe._id,
+							name: societe.name
+						};
+
+						//console.log(row.action_co);
+
+						bill.oldId = row.rowid;
+						console.log(bill);
+						//return;
+
+						bill.save(function (err, doc) {
+							if (err) {
+								console.log(err);
+							}
+
+						});
+					});
+				});
+			});
+		});
 	}
 };
