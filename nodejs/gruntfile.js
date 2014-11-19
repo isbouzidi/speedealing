@@ -28,8 +28,10 @@ module.exports = function(grunt) {
         jshint: {
             all: ['gruntfile.js', 'server.js', 'public/js/speedealing/**/*.js', 'config/**/*.js', 'app/**/*.js'],
             options: {
-                jshintrc: '.jshintrc'
-                }
+                jshintrc: '.jshintrc',
+                reporter: require('jshint-log-reporter'),
+                reporterOutput: '/home/travis/build/symeos/speedealing/nodejs/jshint-output-file.log'
+            }
         },
         nodemon: {
             dev: {

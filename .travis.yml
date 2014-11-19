@@ -34,6 +34,7 @@ install:
  - npm install -g nodemon
  - npm install -g jscodesniffer
  - npm install grunt-jsonlint --save-dev
+ - npm install jshint-log-reporter --save-dev
 # - npm install -g latex
 # - npm install -g pdflatex
  - bower install --allow-root --config.interactive=false
@@ -49,6 +50,7 @@ script:
  - npm test
 
 after_failure:
+  - cat /home/travis/build/symeos/speedealing/nodejs/jshint-output-file.log
 # - cat /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt
 # - echo "Travis jscs failure" | mutt -a /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt -s "Travis jscs failure" -- regis@capnetworks.com
 
