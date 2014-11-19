@@ -43,7 +43,7 @@ module.exports = exports = function(server, db, socketsUser) {
 				// We use this callback to log all of our failed connections.
 				accept(null, false);
 			}
-		}))
+		}));
 	}, 300);
 
 
