@@ -32,14 +32,15 @@ install:
  - npm install
  - npm install -g bower
  - npm install -g nodemon
- - npm  install -g jscodesniffer
+ - npm install -g jscodesniffer
+ - npm install grunt-jsonlint --save-dev
 # - npm install -g latex
 # - npm install -g pdflatex
  - bower install --allow-root --config.interactive=false
 
 before_script:
  - echo Start before script
- - sleep 15
+# - sleep 15
  - mongo demo --eval 'db.addUser("travis", "test");'
  - mongorestore --port 27017 dump/demo/ --db demo
 
@@ -48,7 +49,7 @@ script:
  - npm test
 
 after_failure:
- - cat /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt
+# - cat /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt
 # - echo "Travis jscs failure" | mutt -a /home/travis/build/symeos/speedealing/nodejs/jscsReport.txt -s "Travis jscs failure" -- regis@capnetworks.com
 
 after_script:
