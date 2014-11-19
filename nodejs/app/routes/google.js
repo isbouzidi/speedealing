@@ -47,7 +47,7 @@ module.exports = function(app, passport, auth) {
 
 	// Used in the importation process : get back the google access code
 	// associeted to the current connected user.
-	app.get( '/api/google/callback', auth.requiresLogin, googleRoutes.oauth2callback)
+	app.get( '/api/google/callback', auth.requiresLogin, googleRoutes.oauth2callback);
 
 	// Launch the process of exportation : update address book of all users.
 	// Delete and insert contacts.
