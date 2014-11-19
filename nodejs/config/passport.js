@@ -180,11 +180,15 @@ module.exports = function (passport) {
 			//'google.id': profile.id
 			email: profile._json.email
 		}, function (err, user) {
+			if(err)
+				console.log(err);
 
 			if (!user) {
 				return done(null, false, {
 					message: 'Unknown user'
 				});
+				
+				console.log("User unknown !");
 				/*user = new User({
 				 name: profile.displayName,
 				 email: profile.emails[0].value,

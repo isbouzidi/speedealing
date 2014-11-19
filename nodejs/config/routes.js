@@ -8,10 +8,10 @@ var async = require('async'),
 
 var ZipCodeModel = mongoose.model('zipCode');
 
-module.exports = function(app, passport, auth) {
+module.exports = function (app, passport, auth) {
 	//User Routes
 	var users = require('../app/controllers/users');
-	app.get('/login', function(req, res) {
+	app.get('/login', function (req, res) {
 		console.log(req.locale);
 		var navigator = require('ua-parser').parse(req.headers['user-agent']);
 		var error = "";
@@ -28,8 +28,8 @@ module.exports = function(app, passport, auth) {
 	//Setting up the users api
 	//app.post('/users', users.create);
 
-	app.post('/login', function(req, res, next) {
-		passport.authenticate('local', function(err, user, info) {
+	app.post('/login', function (req, res, next) {
+		passport.authenticate('local', function (err, user, info) {
 			if (err) {
 				return next(err);
 			}
@@ -39,9 +39,9 @@ module.exports = function(app, passport, auth) {
 				return res.json({success: false, errors: req.i18n.t('errors:ErrorBadLoginPassword')}, 401);
 			}
 
-			users.checkIP(req, res, user, function() {
+			users.checkIP(req, res, user, function () {
 
-				req.logIn(user, function(err) {
+				req.logIn(user, function (err) {
 					if (err) {
 						return next(err);
 					}
@@ -49,7 +49,7 @@ module.exports = function(app, passport, auth) {
 					user.LastConnection = user.NewConnection;
 					user.NewConnection = new Date();
 
-					user.save(function(err) {
+					user.save(function (err) {
 						if (err)
 							console.log(err);
 					});
@@ -65,7 +65,7 @@ module.exports = function(app, passport, auth) {
 	 failureFlash: 'Invalid login or password.'
 	 }), users.session);*/
 
-	app.get('/api/session', function(req, res) {
+	app.get('/api/session', function (req, res) {
 		if (typeof req.session.nb === 'undefined')
 			req.session.nb = 0;
 
@@ -111,7 +111,7 @@ module.exports = function(app, passport, auth) {
 	//app.get('/users/:userId', users.show);
 
 	app.get('/menus', auth.requiresLogin, modules.menus);
-	
+
 	//import rights from config/modules/..
 	app.get('/rights', auth.requiresLogin, modules.rights);
 
@@ -184,10 +184,10 @@ module.exports = function(app, passport, auth) {
 	var latex = require('../app/models/latex');
 	app.get('/servepdf/:pdfId', auth.requiresAuthenticate, latex.servePDF);
 
-	app.get('/locales/:lng/:jsonFile', auth.requiresLogin, function(req, res) {
+	app.get('/locales/:lng/:jsonFile', auth.requiresLogin, function (req, res) {
 		var file = __dirname + '/../locales/' + req.params.lng + '/' + req.params.jsonFile;
 
-		fs.readFile(file, 'utf8', function(err, data) {
+		fs.readFile(file, 'utf8', function (err, data) {
 			if (err) {
 				console.log('Error: ' + err);
 				return res.send(500);
@@ -202,12 +202,12 @@ module.exports = function(app, passport, auth) {
 	var index = require('../app/controllers/index');
 	app.get('/partials/home', auth.html.hasAuthorization, index.home);
 
-	app.get('/partials/:view', auth.html.hasAuthorization, function(req, res) {
+	app.get('/partials/:view', auth.html.hasAuthorization, function (req, res) {
 		var view = req.params.view;
 		res.render('partials/' + view, {user: req.user}); // Mode list view
 	});
 
-	app.get('/partials/ticket/:id', auth.html.hasAuthorization, function(req, res) {
+	app.get('/partials/ticket/:id', auth.html.hasAuthorization, function (req, res) {
 		var view = "ticket";
 		var pos = req.params.id.search(".html"); // search if id is an html page
 		if (pos > 0) { // is a subview in directory
@@ -216,7 +216,7 @@ module.exports = function(app, passport, auth) {
 			res.render('partials/' + view, {user: req.user});
 	});
 
-	app.get('/partials/:view/:id', auth.html.hasAuthorization, function(req, res) {
+	app.get('/partials/:view/:id', auth.html.hasAuthorization, function (req, res) {
 		var view = req.params.view;
 		var pos = req.params.id.search(".html"); // search if id is an html page
 		if (pos > 0) // is a subview in directory
@@ -225,7 +225,7 @@ module.exports = function(app, passport, auth) {
 			res.render('partials/' + view + "/fiche.html", {user: req.user}); // Mode fiche view 
 	});
 
-	app.post('/api/zipcode/autocomplete', auth.requiresLogin, function(req, res) {
+	app.post('/api/zipcode/autocomplete', auth.requiresLogin, function (req, res) {
 
 
 		if (req.body.val === null)
@@ -241,7 +241,7 @@ module.exports = function(app, passport, auth) {
 
 		//var query = {$or: [{"code" : {$regex: /val.*/ }}, {"city" : { $regex: val, $options: 'i'}}]};
 
-		ZipCodeModel.find(query, {}, {limit: 5}, function(err, doc) {
+		ZipCodeModel.find(query, {}, {limit: 5}, function (err, doc) {
 			if (err) {
 				console.log(err);
 				return;

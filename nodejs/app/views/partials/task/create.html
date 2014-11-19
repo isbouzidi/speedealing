@@ -26,7 +26,7 @@
 				<div class="col-md-6">
 					<div class="input-group">
 						<span class="input-group-addon icon icon-home"></span>
-						<input required type="text" 
+						<input type="text" 
 							   data-ng-model="task.societe" 
 							   typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}" 
 							   typeahead-on-select="searchContact($item)"
