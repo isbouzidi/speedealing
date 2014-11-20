@@ -195,8 +195,8 @@ Object.prototype = {
 							out += ";" + tab_csv[i][j].compte;
 							out += ";" + tab_csv[i][j].piece;
 							out += ";" + tab_csv[i][j].libelle;
-							out += ";" + Math.round(tab_csv[i][j].debit * 100) / 100;
-							out += ";" + Math.round(tab_csv[i][j].credit * 100) / 100;
+							out += ";" + tab_csv[i][j].debit;//Math.round(tab_csv[i][j].debit * 100) / 100;
+							out += ";" + tab_csv[i][j].credit;//Math.round(tab_csv[i][j].credit * 100) / 100;
 							out += ";" + tab_csv[i][j].monnaie;
 							out += "\n";
 
