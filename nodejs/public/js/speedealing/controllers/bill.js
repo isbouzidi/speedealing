@@ -199,7 +199,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			if (varname)
 				line[varname] = data;
 
-			line.total_ht = line.qty * (line.pu_ht * (1 - (line.discount / 100)));
+			line.total_ht = Math.round(line.qty * (line.pu_ht * (1 - (line.discount / 100)))*100)/100;
 			line.total_tva = line.total_ht * line.tva_tx / 100;
 			//console.log(data);
 		};
