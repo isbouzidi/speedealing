@@ -42,6 +42,10 @@ module.exports = function (app, passport, auth) {
 	//other routes..
 };
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+};
+
 function Object() {
 }
 
@@ -195,13 +199,13 @@ Object.prototype = {
 							out += ";" + tab_csv[i][j].compte;
 							out += ";" + tab_csv[i][j].piece;
 							out += ";" + tab_csv[i][j].libelle;
-							out += ";" + Math.round(tab_csv[i][j].debit * 100) / 100;
-							out += ";" + Math.round(tab_csv[i][j].credit * 100) / 100;
+							out += ";" + round(tab_csv[i][j].debit, 2);
+							out += ";" + round(tab_csv[i][j].credit, 2);
 							out += ";" + tab_csv[i][j].monnaie;
 							out += "\n";
 
-							debit += tab_csv[i][j].debit;
-							credit += tab_csv[i][j].credit;
+							debit += round(tab_csv[i][j].debit, 2);
+							credit += round(tab_csv[i][j].credit, 2);
 						}
 					}
 
@@ -260,7 +264,7 @@ Object.prototype = {
 			function (callback) {
 				var out = "";
 
-				SocieteModel.find({$or: [{code_compta: {$ne: null}}, {code_compta_fournisseur: {$ne: null}}]}, {name: 1, Status:1, fournisseur:1, code_compta: 1, code_compta_fournisseur: 1}, function (err, rows) {
+				SocieteModel.find({$or: [{code_compta: {$ne: null}}, {code_compta_fournisseur: {$ne: null}}]}, {name: 1, Status: 1, fournisseur: 1, code_compta: 1, code_compta_fournisseur: 1}, function (err, rows) {
 					if (err)
 						console.log(err);
 
