@@ -42,5 +42,7 @@
     "maxlen": 1000, // Max line lenght
     "devel": true, // Allow development statements e.g. `console.log();`.
     "noempty": true, // Prohibit use of empty blocks.
-    "laxbreak": true // Allow line breaking
+    "laxbreak": true, // Allow line breaking
+    "laxcomma": true, // Allow line breaking with comma-first
+    "multistr": true // Allow multi-line string with escape `\`
 }
