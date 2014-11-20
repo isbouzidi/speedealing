@@ -26,7 +26,7 @@ Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 });
 
 var globalConst = {};
-Dict.dict({dictName: "const", object: true}, function (err, doc) {
+Dict.conf({dictName: "const", object: true}, function (err, doc) {
 	globalConst = doc.values;
 });
 

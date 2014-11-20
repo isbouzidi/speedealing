@@ -6,6 +6,17 @@ var mongoose = require('mongoose'),
 var Dict = require('../controllers/dict')
 
 module.exports = function(app, passport, auth) {
+	
+	app.get('/api/conf', auth.requiresLogin, function(req, res) {
+		Dict.conf(req.query, function(err, dict){
+			if(err) {
+				console.log(err);
+				res.send(500);
+			}
+			res.json(conf);
+				
+		});
+	});
 
 	app.get('/api/dict', auth.requiresLogin, function(req, res) {
 		Dict.dict(req.query, function(err, dict){

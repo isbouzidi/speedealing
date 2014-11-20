@@ -9,6 +9,16 @@ var mongoose = require('mongoose'),
 		i18n = require("i18next"),
 		async = require("async");
 
+/* Conf */
+var confSchema = new mongoose.Schema({
+	_id: String,
+	entity: String,
+	values: {type: mongoose.Schema.Types.Mixed}
+});
+
+var ConfModel = mongoose.model('conf', confSchema, 'Conf');
+
+/* Extrafields */
 var extrafieldSchema = new mongoose.Schema({
 	_id: String,
 	ico: String,
@@ -26,6 +36,7 @@ var extrafieldSchema = new mongoose.Schema({
 
 var ExtrafieldModel = mongoose.model('extrafields', extrafieldSchema, 'ExtraFields');
 
+/* Dict */
 var dictSchema = new mongoose.Schema({
 	_id: String,
 	lang: String,
@@ -39,6 +50,7 @@ var DictModel = mongoose.model('dict', dictSchema, 'Dict');
 
 
 /* Public declaration methods. See definition for documentation. */
+exports.conf = readConf;
 exports.dict = readDict;
 exports.extrafield = readExtrafield;
 
@@ -80,6 +92,9 @@ function convertDict(params, doc, callback) {
 	callback(result);
 }
 
+function readConf(params, callback) {
+	// TODO complete this
+}
 
 function readDict(params, callback) {
 
