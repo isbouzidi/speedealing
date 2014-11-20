@@ -2,7 +2,6 @@
     <hgroup id="main-title" class="thin">
         <h1>{{t 'leads:ListLeads'}}</h1>
     </hgroup>
-
     <div class="with-padding" data-ng-init="find()">
 
         <div class="table-header silver-gradient glossy button-height">
@@ -22,10 +21,9 @@
 
                 </div>
                 <div class="col-sm-8">
-
-                    <select ng-model="commercial_id"
-                            ng-change="changeParams('commercial', commercial_id);
-										find();"
+                    
+                    <select ng-show="global.user.rights.lead.readAll" ng-model="commercial_id"
+                            ng-change="changeParams('commercial', commercial_id); find();"
                             ng-options="c._id.id as c._id.name for c in commercial" class="">
                         <option value="">-- {{t 'Select'}} {{t 'companies:Deal'}} --</option>
                     </select>

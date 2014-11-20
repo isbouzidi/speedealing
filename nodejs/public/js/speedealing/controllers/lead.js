@@ -56,7 +56,7 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 			$scope.params[key] = value;
 		};
 
-		$scope.find = function () {
+		$scope.find = function () {                                                
                         
 			var dict = ["fk_stcomm", "fk_lead_status"];
 
@@ -75,7 +75,11 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 
 				$scope.commercial = data;
 			});
-
+                        
+                        if(!$scope.global.user.rights.lead.readAll){
+                            $scope.params['commercial'] = $scope.global.user._id;
+                        }
+                        
 			Lead.query($scope.params, function (leads) {
 				$scope.leads = leads;
 				$scope.count = leads.length;
