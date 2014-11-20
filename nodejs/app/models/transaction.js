@@ -62,7 +62,7 @@ TransactionSchema.virtual('trans_type').get(function () {
     var trans_type = {};
     var transaction_type = this.type_transaction;
 
-    if (transaction_type && transTypeList.values[transaction_type] && transTypeList.values[transaction_type].label) {
+    if (transaction_type && transTypeList && transTypeList.values[transaction_type] && transTypeList.values[transaction_type].label) {
             trans_type.id = transaction_type;
             trans_type.name = transTypeList.values[transaction_type].label;
             trans_type.css = transTypeList.values[transaction_type].cssClass;
