@@ -72,8 +72,8 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
             i18n: 'fr',
             showFooter: true,
             footerTemplate: '<div style="padding: 10px;">\n\
-            <span class="right"><strong>Solde actuel : \{{totalCurrentBalance | currency:bank.currency}}<strong></span><br>\n\
-            <span class="right"><strong>Solde total : \{{totalBalance | currency:bank.currency}}<strong></span>\n\
+            <span class="right"><strong>Solde actuel : {{totalCurrentBalance | currency:bank.currency}}<strong></span><br>\n\
+            <span class="right"><strong>Solde total : {{totalBalance | currency:bank.currency}}<strong></span>\n\
             </div>',
             footerRowHeight: 50,
             enableColumnResize: true,

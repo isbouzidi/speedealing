@@ -260,7 +260,7 @@ angular.module('mean.transaction').controller('StatementController', ['$scope', 
             i18n: 'fr',
             showFooter: true,
             footerTemplate: '<div style="padding: 10px;">\n\
-            <span class="right"><strong>Solde final : \{{totalBalance | currency:bank.currency}}<strong></span>\n\
+            <span class="right"><strong>Solde final : {{totalBalance | currency:bank.currency}}<strong></span>\n\
             </div>',
             footerRowHeight: 40,
             enableColumnResize: true,
