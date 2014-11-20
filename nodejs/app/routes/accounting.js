@@ -95,9 +95,9 @@ Object.prototype = {
 					};
 
 					if (bill.total_ttc > 0)
-						line.debit = round(bill.total_ttc, 2);
+						line.debit = bill.total_ttc;
 					else
-						line.credit = round(Math.abs(bill.total_ttc), 2);
+						line.credit = Math.abs(bill.total_ttc);
 
 					result.push(line);
 
@@ -133,7 +133,7 @@ Object.prototype = {
 									monnaie: "E"
 								};
 
-							line.credit = round(lineBill.total_ht,2);
+							line.credit = lineBill.total_ht;
 
 							//console.log(line);
 							result.push(line);

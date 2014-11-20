@@ -112,6 +112,10 @@ Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 	cond_reglement = docs;
 });
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+};
+
 /**
  * Pre-save hook
  */
@@ -122,7 +126,7 @@ billSchema.pre('save', function (next) {
 	this.total_ht = 0;
 	this.total_tva = [];
 	this.total_ttc = 0;
-	
+
 	var i, j, found;
 
 	for (i = 0; i < this.lines.length; i++) {
@@ -171,12 +175,12 @@ billSchema.pre('save', function (next) {
 	}
 
 
-	this.total_ht = Math.round(this.total_ht * 100) / 100;
+	this.total_ht = round(this.total_ht, 2);
 	//this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = this.total_ht;
 
 	for (j = 0; j < this.total_tva.length; j++) {
-		this.total_tva[j].total = Math.round(this.total_tva[j].total * 100) / 100;
+		this.total_tva[j].total = round(this.total_tva[j].total, 2);
 		this.total_ttc += this.total_tva[j].total;
 	}
 
@@ -310,37 +314,37 @@ billSchema.virtual('status')
 			return res_status;
 
 		});
-                
+
 var transactionList = [];
 
 TransactionModel.aggregate([
-    {$group: {
-        _id: '$bill.id',
-        sum: {$sum: '$credit'}
-    }}
-], function(err, doc){
-    if(err)
-        return console.log(err);
-       
-    transactionList = doc;
- });
+	{$group: {
+			_id: '$bill.id',
+			sum: {$sum: '$credit'}
+		}}
+], function (err, doc) {
+	if (err)
+		return console.log(err);
+
+	transactionList = doc;
+});
 
 billSchema.virtual('amount').get(function () {
-    
-    var amount = {};
-    var id = this._id;    
-    
-    if(transactionList){
-        for(var i = 0; i < transactionList.length; i++){
-            if(id.equals(transactionList[i]._id)){
-                amount.rest = this. total_ttc - transactionList[i].sum;
-                amount.set = transactionList[i].sum;
-                return amount;
-            }
-        }
-    }
-            
-    return 0;
+
+	var amount = {};
+	var id = this._id;
+
+	if (transactionList) {
+		for (var i = 0; i < transactionList.length; i++) {
+			if (id.equals(transactionList[i]._id)) {
+				amount.rest = this.total_ttc - transactionList[i].sum;
+				amount.set = transactionList[i].sum;
+				return amount;
+			}
+		}
+	}
+
+	return 0;
 });
- 
+
 mongoose.model('bill', billSchema, 'Facture');
