@@ -560,9 +560,9 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			showFooter: true,
 			footerRowHeight: 65,
 			footerTemplate: '<div style="padding: 10px;">\n\
-                    <span class="right"><strong>Déjà réglé : \{{paid | currency:bank.currency}}<strong></span><br>\n\
-                    <span class="right"><strong>Facturé : \{{billed | currency:bank.currency}}<strong></span><br>\n\
-                    <span class="right"><strong>Reste à payer : \{{remainderToPay | currency:bank.currency}}<strong></span>\n\
+                    <span class="right"><strong>Déjà réglé : {{paid | currency:bank.currency}}<strong></span><br>\n\
+                    <span class="right"><strong>Facturé : {{billed | currency:bank.currency}}<strong></span><br>\n\
+                    <span class="right"><strong>Reste à payer : {{remainderToPay | currency:bank.currency}}<strong></span>\n\
                     </div>',
 			i18n: 'fr',
 			columnDefs: [
