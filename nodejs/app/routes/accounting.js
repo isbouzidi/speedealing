@@ -28,7 +28,7 @@ Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 var globalConst = {};
 Dict.dict({dictName: "const", object: true}, function (err, doc) {
 	globalConst = doc.values;
-	console.log(doc);
+	//console.log(doc);
 });
 
 module.exports = function (app, passport, auth) {
@@ -72,8 +72,6 @@ Object.prototype = {
 
 				SocieteModel.findOne({_id: bill.client.id}, "code_compta name", function (err, societe) {
 					//console.log(societe);
-					
-					console.log(globalConst);
 
 					// ligne client
 					var line = {
