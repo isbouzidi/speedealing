@@ -43,8 +43,7 @@ module.exports = function (app, passport, auth) {
 };
 
 var round = function (value, decimals) {
-	var val=Number(Math.round(value + 'e' + (decimals+1)) + 'e-' + (decimals+1));
-	return Number(Math.round(val + 'e' + (decimals)) + 'e-' + (decimals));
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
 };
 
 //var val = 650.1445;
@@ -96,9 +95,9 @@ Object.prototype = {
 					};
 
 					if (bill.total_ttc > 0)
-						line.debit = bill.total_ttc;
+						line.debit = round(bill.total_ttc, 2);
 					else
-						line.credit = Math.abs(bill.total_ttc);
+						line.credit = round(Math.abs(bill.total_ttc), 2);
 
 					result.push(line);
 
