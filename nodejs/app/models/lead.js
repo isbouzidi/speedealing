@@ -126,7 +126,7 @@ leadSchema.virtual('commercial_id').get(function () {
     
     if(commercialSociete.length){
         for(var i = 0; i < commercialSociete.length; i++){
-            if(id === commercialSociete[i]._id){
+            if(id.equals(commercialSociete[i]._id)){
                 commercial = commercialSociete[i].commercial_id;
                 return commercial;
             }
