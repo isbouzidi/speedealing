@@ -43,8 +43,14 @@ module.exports = function (app, passport, auth) {
 };
 
 var round = function (value, decimals) {
-	return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+	var val=Number(Math.round(value + 'e' + (decimals+1)) + 'e-' + (decimals+1));
+	return Number(Math.round(val + 'e' + (decimals)) + 'e-' + (decimals));
 };
+
+//var val = 650.1445;
+//val=1.0445;
+//console.log(round(val,2));
+//console.log(Math.round(val*100)/100);
 
 function Object() {
 }
