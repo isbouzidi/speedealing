@@ -37,26 +37,35 @@ var setTags = function (tags) {
 	return result;
 };
 
+var setAccount = function (account) {
+	if (account) {
+		account = account.replace(/ /g, "");
+		account = account.substring(0, 13); //limit a 13 character
+	}
+
+	return account;
+};
+
 /**
  * Article Schema
  */
 var societeSchema = new Schema({
 	ref: String,
-	name: {type: String, require: true, trim:true/*, es_indexed: true*/},
-	code_client: {type: String, trim:true, uppercase:true},
-	code_fournisseur: {type: String, trim:true, uppercase:true},
-	barCode: {type: String, trim:true, uppercase:true},
+	name: {type: String, require: true, trim: true/*, es_indexed: true*/},
+	code_client: {type: String, trim: true, uppercase: true},
+	code_fournisseur: {type: String, trim: true, uppercase: true},
+	barCode: {type: String, trim: true, uppercase: true},
 	Status: {type: Schema.Types.Mixed, default: 'ST_NEVER'},
 	dateLastStatus: {type: Date, default: Date.now},
 	blocked: Boolean, // Compte bloque
 	address: String,
 	zip: String,
 	town: String,
-	country_id: {type: String, default: 'FR', uppercase:true},
+	country_id: {type: String, default: 'FR', uppercase: true},
 	state_id: Number,
 	phone: String,
 	fax: String,
-	email: {type:String,lowercase:true, trim:true},
+	email: {type: String, lowercase: true, trim: true},
 	url: String,
 	typent_id: {type: String, default: 'TE_UNKNOWN'},
 	effectif_id: {type: String, default: 'EF0'},
@@ -93,12 +102,12 @@ var societeSchema = new Schema({
 			note: {type: String}
 		}],
 	//public_notes: String,
-	code_compta: String,
-	code_compta_fournisseur: String,
+	code_compta: {type: String, set: setAccount},
+	code_compta_fournisseur: {type: String, set: setAccount},
 	user_creat: String,
 	user_modif: String,
 	remise_client: Number,
-	entity: {type: String, trim:true},
+	entity: {type: String, trim: true},
 	fournisseur: {type: String, default: 'NO'},
 	gps: [Number],
 	contractID: String,
