@@ -28,6 +28,7 @@ Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 var globalConst = {};
 Dict.conf({dictName: "const", object: true}, function (err, doc) {
 	globalConst = doc.values;
+	console.log(doc);
 });
 
 module.exports = function (app, passport, auth) {
