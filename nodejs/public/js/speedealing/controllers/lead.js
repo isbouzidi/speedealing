@@ -57,7 +57,7 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 		};
 
 		$scope.find = function () {
-
+                        
 			var dict = ["fk_stcomm", "fk_lead_status"];
 
 			$http({method: 'GET', url: '/api/dict', params: {
@@ -105,25 +105,21 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 		};
 
 		$scope.findOne = function () {
+                    
 			Lead.get({
-				Id: object.lead
+				//Id: object.lead
+                                Id: $routeParams.lead
 			}, function (lead) {
 				$scope.lead = lead;
 			});
 		};
 
 		$scope.findLead = function (id) {
+                    $routeParams.lead = id;
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/view.html',
 				controller: "LeadController",
-				windowClass: "steps",
-				resolve: {
-					object: function () {
-						return {
-							lead: id
-						};
-					}
-				}
+				windowClass: "steps"
 			});
 		};
 
