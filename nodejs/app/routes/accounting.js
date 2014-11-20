@@ -259,20 +259,20 @@ Object.prototype = {
 			function (callback) {
 				var out = "";
 
-				SocieteModel.find({$or: [{code_compta: {$ne: null}}, {code_compta_fournisseur: {$ne: null}}]}, {name: 1, code_compta: 1, code_compta_fournisseur: 1}, function (err, rows) {
+				SocieteModel.find({$or: [{code_compta: {$ne: null}}, {code_compta_fournisseur: {$ne: null}}]}, {name: 1, Status:1, fournisseur:1, code_compta: 1, code_compta_fournisseur: 1}, function (err, rows) {
 					if (err)
 						console.log(err);
 
 					//console.log(rows);
 
 					for (var i = 0; i < rows.length; i++) {
-						if (rows[i].code_compta) {
+						if (rows[i].Status !== 'ST_NEVER' && rows[i].code_compta) {
 							out += rows[i].code_compta;
 							out += ";" + rows[i].name;
 							out += "\n";
 						}
 
-						if (rows[i].code_compta_fournisseur && rows[i].code_compta != rows[i].code_compta_fournisseur) {
+						if (rows[i].fournisseur !== 'NO' && rows[i].code_compta_fournisseur && rows[i].code_compta != rows[i].code_compta_fournisseur) {
 							out += rows[i].code_compta_fournisseur;
 							out += ";" + rows[i].name;
 							out += "\n";
