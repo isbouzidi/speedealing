@@ -42,21 +42,24 @@ exports.setAccessCodeGoogle = function (req, res, next) {
 		//console.log("oauth2callback: user = " + user.id + " ; code = " + code);
 
 		googleCommon.setAccessCode(code, user,
-				function (err) {
+				function (err, user) {
 
 					console.log(user.google.tokens);
-					if (user.google.tokens.refresh_token)
-						googleCommon.refreshGoogleTokens(user, function (err) {
+					console.log("toto");
+
+					if (!user.google.tokens.refresh_token)
+						return googleCommon.refreshGoogleTokens(user, function (err) {
 							if (err)
 								console.log(err);
+							res.redirect('/');
 						});
 
 					if (err) {
 						console.log(err);
 						res.send(500, "ERR: " + err);
 					} else
-						//res.redirect('/');
-						next();
+						res.redirect('/');
+						//next();
 				}
 		);
 	} else

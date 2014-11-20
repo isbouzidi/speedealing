@@ -88,7 +88,7 @@ function setAccessCode(code, user, callback) {
 
 	// request access token
 	oauth2Client.getToken(code,
-			function(err, tokens) {
+			function (err, tokens) {
 				if (err) {
 					console.log("getTokenError. Code : " + code);
 					return callback(err);
@@ -101,14 +101,14 @@ function setAccessCode(code, user, callback) {
 				// Get the google user id
 				googleapis.discover('oauth2', 'v2')
 						.execute(
-								function(err, client) {
+								function (err, client) {
 									if (err)
 										return callback(err);
 
 									client.oauth2.userinfo.v2.me.get()
 											.withAuthClient(oauth2Client)
 											.execute(
-													function(err, userinfo) {
+													function (err, userinfo) {
 														if (err)
 															return callback(err);
 
@@ -123,8 +123,8 @@ function setAccessCode(code, user, callback) {
 																			})
 																});
 
-														user.save(function(err, doc) {
-															callback(err);
+														user.save(function (err, doc) {
+															callback(err, doc);
 														});
 													}
 											);
@@ -140,7 +140,7 @@ function googleAction(user, strategy, callback) {
 		return callback(new Error("The user isn't a google user or he doesn't granted access."));
 
 	async.series([
-		function(cb) {
+		function (cb) {
 			refreshGoogleTokens(user, cb);
 		},
 		strategy
@@ -164,7 +164,7 @@ function refreshGoogleTokens(user, callback) {
 	oauth2Client.setCredentials(user.google.tokens);
 
 	oauth2Client.refreshAccessToken(
-			function(err, tokens) {
+			function (err, tokens) {
 				if (err)
 					return callback(err);
 
@@ -180,7 +180,7 @@ function refreshGoogleTokens(user, callback) {
 								}
 							});
 
-					user.save(function(err, doc) {
+					user.save(function (err, doc) {
 						callback(err);
 					});
 				} else { // no need to update
@@ -195,7 +195,7 @@ function forEachGoogleUser(iterator, callback) {
 	var googleUsers = [];
 
 	var stream = UserModel.find().stream();
-	stream.on('data', function(user) {
+	stream.on('data', function (user) {
 		console.log(">> Scan user : " + user._id);
 
 		if (isGoogleUser(user)) {
@@ -204,9 +204,9 @@ function forEachGoogleUser(iterator, callback) {
 		}
 
 		//console.log("");
-	}).on('error', function(err) {
+	}).on('error', function (err) {
 		callback(err);
-	}).on('close', function() {
+	}).on('close', function () {
 		async.eachSeries(googleUsers,
 				iterator,
 				callback);
