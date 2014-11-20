@@ -14,6 +14,14 @@ var EntityModel = mongoose.model('entity');
 
 var Dict = require('../controllers/dict');
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+};
+
+var setPrice = function (value) {
+	return round(value, 2);
+};
+
 /**
  * Article Schema
  */
@@ -53,7 +61,7 @@ var deliverySchema = new Schema({
 			datec: Date,
 			note: String
 		}],
-	total_ht: {type: Number, default: 0},
+	total_ht: {type: Number, default: 0, set: setPrice},
 	total_tva: [
 		{
 			tva_tx: Number,
@@ -62,7 +70,7 @@ var deliverySchema = new Schema({
 	],
 	total_ttc: {type: Number, default: 0},
 	shipping: {
-		total_ht: {type: Number, default: 0},
+		total_ht: {type: Number, default: 0, set: setPrice},
 		tva_tx: {type: Number, default: 20},
 		total_tva: {type: Number, default: 0}
 	},
@@ -86,7 +94,7 @@ var deliverySchema = new Schema({
 			pu_ht: Number,
 			tva_tx: Number,
 			total_tva: Number,
-			total_ht: Number,
+			total_ht: {type: Number, set: setPrice},
 			discount: {type: Number, default: 0},
 			no_package: Number // Colis Number
 		}],
@@ -104,10 +112,6 @@ var deliverySchema = new Schema({
 
 deliverySchema.plugin(timestamps);
 
-var round = function (value, decimals) {
-	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
-};
-
 /**
  * Pre-save hook
  */
@@ -116,7 +120,7 @@ deliverySchema.pre('save', function (next) {
 	this.total_ht = 0;
 	this.total_tva = [];
 	this.total_ttc = 0;
-	
+
 	var i, j, found;
 
 	for (i = 0; i < this.lines.length; i++) {
@@ -248,7 +252,7 @@ deliverySchema.methods = {
 };
 
 var statusList = {};
-Dict.dict({dictName:'fk_delivery_status', object:true}, function (err, doc) {
+Dict.dict({dictName: 'fk_delivery_status', object: true}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
