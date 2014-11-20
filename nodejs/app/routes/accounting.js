@@ -133,7 +133,7 @@ Object.prototype = {
 									monnaie: "E"
 								};
 
-							line.credit = lineBill.total_ht;
+							line.credit = round(lineBill.total_ht,2);
 
 							//console.log(line);
 							result.push(line);
