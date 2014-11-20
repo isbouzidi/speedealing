@@ -96,7 +96,7 @@ function setAccessCode(code, user, callback) {
 				}
 				// set tokens to the client
 				oauth2Client.setCredentials(tokens);
-				console.log("Tokens =", tokens);
+				//console.log("Tokens =", tokens);
 
 				// Get the google user id
 				googleapis.discover('oauth2', 'v2')
@@ -112,7 +112,7 @@ function setAccessCode(code, user, callback) {
 														if (err)
 															return callback(err);
 
-														console.log("userinfo ", userinfo);
+														//console.log("userinfo ", userinfo);
 
 														user = _.extend(user,
 																{
