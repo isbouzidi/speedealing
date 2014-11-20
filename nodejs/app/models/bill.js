@@ -14,6 +14,14 @@ var EntityModel = mongoose.model('entity');
 var TransactionModel = mongoose.model('Transaction');
 var Dict = require('../controllers/dict');
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+};
+
+var setPrice = function (value) {
+	return round(value, 2);
+};
+
 /**
  * Article Schema
  */
@@ -50,7 +58,7 @@ var billSchema = new Schema({
 			datec: Date,
 			note: String
 		}],
-	total_ht: {type: Number, default: 0},
+	total_ht: {type: Number, default: 0, set: setPrice},
 	total_tva: [
 		{
 			tva_tx: Number,
@@ -59,7 +67,7 @@ var billSchema = new Schema({
 	],
 	total_ttc: {type: Number, default: 0},
 	shipping: {
-		total_ht: {type: Number, default: 0},
+		total_ht: {type: Number, default: 0, set: setPrice},
 		tva_tx: {type: Number, default: 20},
 		total_tva: {type: Number, default: 0}
 	},
@@ -90,7 +98,7 @@ var billSchema = new Schema({
 			total_ttc: Number,
 			discount: {type: Number, default: 0},
 			no_package: Number, // Colis Number
-			total_ht: Number
+			total_ht: {type: Number, set: setPrice}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {
@@ -111,10 +119,6 @@ var cond_reglement = {};
 Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 	cond_reglement = docs;
 });
-
-var round = function (value, decimals) {
-	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
-};
 
 /**
  * Pre-save hook
