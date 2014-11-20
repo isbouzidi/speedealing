@@ -1,6 +1,5 @@
 "use strict";
 /* global angular: true, $: true */
-/* jshint multistr: true */
 
 angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope', '$routeParams', '$location', '$route', '$modal', '$timeout', '$http', '$filter', '$upload', 'pageTitle', 'Global', 'Bank', function ($rootScope, $scope, $routeParams, $location, $route, $modal, $timeout, $http, $filter, $upload, pageTitle, Global, Bank) {
 

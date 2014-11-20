@@ -44,5 +44,6 @@
     "noempty": true, // Prohibit use of empty blocks.
     "laxbreak": true, // Allow line breaking
     "laxcomma": true, // Allow line breaking with comma-first
-    "multistr": true // Allow multi-line string with escape `\`
+    "multistr": true, // Allow multi-line string with escape `\`
+    "eqnull": true // Suppresses warnings about == null
 }
