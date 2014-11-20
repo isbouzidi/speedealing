@@ -71,6 +71,8 @@ Object.prototype = {
 
 				SocieteModel.findOne({_id: bill.client.id}, "code_compta name", function (err, societe) {
 					//console.log(societe);
+					
+					console.log(globalConst);
 
 					// ligne client
 					var line = {
