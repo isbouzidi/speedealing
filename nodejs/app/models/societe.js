@@ -102,8 +102,8 @@ var societeSchema = new Schema({
 			note: {type: String}
 		}],
 	//public_notes: String,
-	code_compta: {type: String, set: setAccount},
-	code_compta_fournisseur: {type: String, set: setAccount},
+	code_compta: {type: String, set: setAccount, trim: true},
+	code_compta_fournisseur: {type: String, set: setAccount, trim: true},
 	user_creat: String,
 	user_modif: String,
 	remise_client: Number,

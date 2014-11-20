@@ -11,6 +11,15 @@ var mongoose = require('mongoose'),
 
 var SeqModel = mongoose.model('Sequence');
 
+var setAccount = function (account) {
+	if (account) {
+		account = account.replace(/ /g, "");
+		account = account.substring(0, 13); //limit a 13 character
+	}
+
+	return account;
+};
+
 var Dict = require('../controllers/dict');
 /**
  * Product Schema
@@ -18,8 +27,8 @@ var Dict = require('../controllers/dict');
 var productSchema = new Schema({
 	oldId: String, // Only for import migration
 	ref: {type: String, require: true, unique: true, uppercase: true},
-	compta_buy: {type: String},
-	compta_sell: {type: String},
+	compta_buy: {type: String, set: setAccount, trim: true},
+	compta_sell: {type: String, set: setAccount, trim: true},
 	label: {type: String, default: ""},
 	description: {type: String, default: ""},
 	barCode: String,
@@ -65,10 +74,10 @@ var productSchema = new Schema({
 
 productSchema.plugin(timestamps);
 
-productSchema.pre('save', function(next) {
+productSchema.pre('save', function (next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incNumber("P", 10, function(seq) {
+		SeqModel.incNumber("P", 10, function (seq) {
 			self.barCode = "P" + seq;
 			next();
 		});
@@ -77,7 +86,7 @@ productSchema.pre('save', function(next) {
 });
 
 var dict = {};
-Dict.dict({dictName:['fk_product_status','fk_units'],object:true}, function(err, doc) {
+Dict.dict({dictName: ['fk_product_status', 'fk_units'], object: true}, function (err, doc) {
 	if (err) {
 		console.log(err);
 		return;
@@ -86,7 +95,7 @@ Dict.dict({dictName:['fk_product_status','fk_units'],object:true}, function(err,
 });
 
 productSchema.virtual('status')
-		.get(function() {
+		.get(function () {
 			var res_status = {};
 
 			var status = this.Status;
@@ -107,7 +116,7 @@ productSchema.virtual('status')
 		});
 
 productSchema.virtual('_units')
-		.get(function() {
+		.get(function () {
 			var res = {};
 
 			var units = this.units;
@@ -141,10 +150,10 @@ var storehouseSchema = new Schema({
 		}]
 });
 
-storehouseSchema.pre('save', function(next) {
+storehouseSchema.pre('save', function (next) {
 	var self = this;
 	if (this.isNew) {
-		SeqModel.incCpt("S", function(seq) {
+		SeqModel.incCpt("S", function (seq) {
 			self.barCode = seq;
 			next();
 		});
