@@ -104,6 +104,10 @@ var deliverySchema = new Schema({
 
 deliverySchema.plugin(timestamps);
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+};
+
 /**
  * Pre-save hook
  */
@@ -160,12 +164,12 @@ deliverySchema.pre('save', function (next) {
 		}
 	}
 
-	this.total_ht = Math.round(this.total_ht * 100) / 100;
+	this.total_ht = round(this.total_ht, 2);
 	//this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = this.total_ht;
 
 	for (j = 0; j < this.total_tva.length; j++) {
-		this.total_tva[j].total = Math.round(this.total_tva[j].total * 100) / 100;
+		this.total_tva[j].total = round(this.total_tva[j].total, 2);
 		this.total_ttc += this.total_tva[j].total;
 	}
 

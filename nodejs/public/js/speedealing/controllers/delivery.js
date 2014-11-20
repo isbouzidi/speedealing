@@ -37,7 +37,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			});
 
 		};
-		
+
 		$scope.productAutoComplete = function (val) {
 
 			return $http.post('api/product/autocomplete', {
@@ -92,7 +92,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			if (varname)
 				line[varname] = data;
 
-			line.total_ht = line.qty * (line.pu_ht * (1 - (line.discount / 100)));
+			line.total_ht = Math.round(line.qty * (line.pu_ht * (1 - (line.discount / 100))) * 100) / 100;
 			line.total_tva = line.total_ht * line.tva_tx / 100;
 		};
 		// filter lines to show
@@ -639,7 +639,7 @@ angular.module('mean.delivery').controller('DeliveryBillingController', ['$scope
 		var d = new Date();
 		d.setHours(0, 0, 0);
 		$scope.dateEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-		$scope.dateEnd.setHours(23,59);
+		$scope.dateEnd.setHours(23, 59);
 
 		$scope.find = function () {
 
