@@ -1,7 +1,6 @@
 "use strict";
 
 var mongoose = require('mongoose'),
-		mongodb = require('mongodb'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('lodash'),
@@ -27,20 +26,9 @@ Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 });
 
 var globalConst = {};
-
-/*mongodb.connect(config.db, function (err, db) {
-	if (err)
-		return console.log(err);
-
-	db.collection("Conf").findOne({_id: "const"}, function (err, doc) {
-		if (err)
-			return console.log(err);
-
-		globalConst = doc;
-
-	});
-
-});*/
+Dict.dict({dictName: "const", object: true}, function (err, doc) {
+	globalConst = doc.values;
+});
 
 module.exports = function (app, passport, auth) {
 
