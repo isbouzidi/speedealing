@@ -28,7 +28,7 @@ Dict.dict({dictName: "fk_tva", object: true}, function (err, docs) {
 
 var globalConst = {};
 
-mongodb.connect(config.db, function (err, db) {
+/*mongodb.connect(config.db, function (err, db) {
 	if (err)
 		return console.log(err);
 
@@ -40,7 +40,7 @@ mongodb.connect(config.db, function (err, db) {
 
 	});
 
-});
+});*/
 
 module.exports = function (app, passport, auth) {
 
