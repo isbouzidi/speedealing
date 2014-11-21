@@ -452,8 +452,12 @@ angular.module('mean.products').controller('LineController', ['$scope', '$http',
 			});
 		};
 
+		var round = function (value, decimals) {
+			return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+		};
+
 		$scope.addOrUpdate = function () {
-			$scope.line.total_ht = $scope.line.pu_ht * $scope.line.qty;
+			$scope.line.total_ht = round($scope.line.pu_ht * $scope.line.qty * 100, 2);
 			$scope.line.total_tva = $scope.line.total_ht * $scope.line.tva_tx / 100;
 			$scope.line.total_ttc = $scope.line.total_ht + $scope.line.total_tva;
 

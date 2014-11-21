@@ -87,12 +87,15 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			}
 		};
 
+		var round = function (value, decimals) {
+			return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+		};
 
 		$scope.calculMontantHT = function (line, data, varname) {
 			if (varname)
 				line[varname] = data;
 
-			line.total_ht = Math.round(line.qty * (line.pu_ht * (1 - (line.discount / 100))) * 100) / 100;
+			line.total_ht = round(line.qty * (line.pu_ht * (1 - (line.discount / 100))), 2);
 			line.total_tva = line.total_ht * line.tva_tx / 100;
 		};
 		// filter lines to show

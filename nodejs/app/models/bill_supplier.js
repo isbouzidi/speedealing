@@ -14,6 +14,14 @@ var EntityModel = mongoose.model('entity');
 
 var Dict = require('../controllers/dict');
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+};
+
+var setPrice = function (value) {
+	return round(value, 2);
+};
+
 /**
  * Article Schema
  */
@@ -49,7 +57,7 @@ var billSupplierSchema = new Schema({
 			datec: Date,
 			note: String
 		}],
-	total_ht: {type: Number, default: 0},
+	total_ht: {type: Number, default: 0, set: setPrice},
 	total_tva: [
 		{
 			tva_tx: Number,
@@ -80,10 +88,10 @@ var billSupplierSchema = new Schema({
 			},
 			total_tva: Number,
 			total_ttc: Number,
-			total_ht_without_discount: Number,
-			total_ttc_without_discount: Number,
-			total_vat_without_discount: Number,
-			total_ht: Number
+			//total_ht_without_discount: Number,
+			//total_ttc_without_discount: Number,
+			//total_vat_without_discount: Number,
+			total_ht: {type: Number, set: setPrice}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {

@@ -15,6 +15,14 @@ var EntityModel = mongoose.model('entity');
 
 var Dict = require('../controllers/dict');
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+};
+
+var setPrice = function (value) {
+	return round(value, 2);
+};
+
 /**
  * Article Schema
  */
@@ -52,7 +60,7 @@ var orderSchema = new Schema({
 				default: false
 			}
 		}],
-	total_ht: {type: Number, default: 0},
+	total_ht: {type: Number, default: 0, set: setPrice},
 	total_tva: [
 		{
 			tva_tx: Number,
@@ -61,7 +69,7 @@ var orderSchema = new Schema({
 	],
 	total_ttc: {type: Number, default: 0},
 	shipping: {
-		total_ht: {type: Number, default: 0},
+		total_ht: {type: Number, default: 0, set: setPrice},
 		tva_tx: {type: Number, default: 20},
 		total_tva: {type: Number, default: 0},
 		total_ttc: {type: Number, default: 0}
@@ -129,7 +137,7 @@ var orderSchema = new Schema({
 			//total_ht_without_discount: {type: Number, default: 0},
 			//total_ttc_without_discount: {type: Number, default: 0},
 			//total_vat_without_discount: {type: Number, default: 0},
-			total_ht: {type: Number, default: 0},
+			total_ht: {type: Number, default: 0, set: setPrice},
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {
@@ -153,7 +161,7 @@ orderSchema.pre('save', function (next) {
 	this.total_ht = 0;
 	this.total_tva = [];
 	this.total_ttc = 0;
-	
+
 	//return next();
 
 	for (var i = 0; i < this.lines.length; i++) {

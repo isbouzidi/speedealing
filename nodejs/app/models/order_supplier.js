@@ -14,6 +14,14 @@ var EntityModel = mongoose.model('entity');
 
 var Dict = require('../controllers/dict');
 
+var round = function (value, decimals) {
+	return Number(Math.round(value + 'e' + (decimals)) + 'e-' + (decimals));
+};
+
+var setPrice = function (value) {
+	return round(value, 2);
+};
+
 /**
  * Article Schema
  */
@@ -40,7 +48,7 @@ var orderSupplierSchema = new Schema({
 			datec: Date,
 			note: String
 		}],
-	total_ht: {type: Number, default: 0},
+	total_ht: {type: Number, default: 0, set: setPrice},
 	total_tva: [
 		{
 			tva_tx: Number,
@@ -66,7 +74,7 @@ var orderSupplierSchema = new Schema({
 			},
 			total_tva: Number,
 			total_ttc: Number,
-			total_ht: Number,
+			total_ht: {type: Number, set: setPrice},
 			discount: {type: Number, default: 0},
 			optional: {}
 		}],
@@ -82,7 +90,7 @@ orderSupplierSchema.plugin(timestamps);
 /**
  * Pre-save hook
  */
-orderSupplierSchema.pre('save', function(next) {
+orderSupplierSchema.pre('save', function (next) {
 
 	this.total_ht = 0;
 	this.total_tva = [];
@@ -121,18 +129,18 @@ orderSupplierSchema.pre('save', function(next) {
 
 	var self = this;
 	if (this.isNew) {
-		EntityModel.findOne({_id: self.entity}, "cptRef", function(err, entity) {
+		EntityModel.findOne({_id: self.entity}, "cptRef", function (err, entity) {
 			if (err)
 				console.log(err);
 
 			if (entity && entity.cptRef) {
-				SeqModel.inc("CF" + entity.cptRef, self.datec, function(seq) {
+				SeqModel.inc("CF" + entity.cptRef, self.datec, function (seq) {
 					//console.log(seq);
 					self.ref = "CF" + entity.cptRef + seq;
 					next();
 				});
 			} else {
-				SeqModel.inc("CF", self.datec, function(seq) {
+				SeqModel.inc("CF", self.datec, function (seq) {
 					//console.log(seq);
 					self.ref = "CF" + seq;
 					next();
@@ -144,12 +152,12 @@ orderSupplierSchema.pre('save', function(next) {
 });
 
 var statusList = {};
-Dict.dict({dictName: "fk_order_status_supplier", object:true}, function(err, docs) {
+Dict.dict({dictName: "fk_order_status_supplier", object: true}, function (err, docs) {
 	statusList = docs;
 });
 
 orderSupplierSchema.virtual('status')
-		.get(function() {
+		.get(function () {
 			var res_status = {};
 
 			var status = this.Status;
