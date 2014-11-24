@@ -1026,6 +1026,7 @@ MigrateMySQL.prototype = {
 					row.gps[1] = row.longitude;
 				}
 				row.entity = 'ALL';
+				delete row.price_level;
 
 				SocieteModel.findOne({oldId: row.rowid}, function (err, societe) {
 
@@ -1187,104 +1188,180 @@ MigrateMySQL.prototype = {
 		});
 	},
 	bills: function (req, res) {
-		var $sql = "";
 
-		/*$sql = 'SELECT f.*, l.rowid, l.fk_product, l.fk_parent_line, l.description, l.product_type, l.price, l.qty, l.tva_tx, ';
-		 $sql += ' l.localtax1_tx, l.localtax2_tx, l.remise, l.remise_percent, l.fk_remise_except, l.subprice,';
-		 $sql += ' l.rang, l.special_code,';
-		 $sql += ' l.date_start as date_start, l.date_end as date_end,';
-		 $sql += ' l.info_bits, l.total_ht, l.total_tva, l.total_localtax1, l.total_localtax2, l.total_ttc, l.fk_code_ventilation, l.fk_export_compta, ';
-		 $sql += ' p.ref as product_ref, p.fk_product_type as fk_product_type, p.label as product_label, p.description as product_desc';
-		 $sql += ' FROM llx_facturedet as l';
-		 $sql += ' LEFT JOIN llx_product as p ON l.fk_product = p.rowid';
-		 $sql += ' LEFT JOIN llx_facture as f ON l.fk_facture = f.rowid';
-		 $sql += ' ORDER BY l.rang';*/
+		var tabBills = {};
+		var tabLines = [];
 
-		$sql = 'SELECT f.*, f.facnumber as ref, pt.code as cond_reglement_code, cp.code as mode_reglement_code ';
-		$sql += ' FROM llx_facture as f';
-		$sql += " LEFT JOIN llx_c_paiement as cp ON cp.id=f.fk_mode_reglement ";
-		$sql += " LEFT JOIN llx_c_payment_term as pt ON pt.rowid=f.fk_cond_reglement ";
+		async.parallel({
+			bills: function (callback) {
 
-		connection.query($sql, function (err, rows) {
-			if (err)
-				console.log(err);
+				var $sql = "";
 
-			//console.log(rows);
-			//console.log(rows.length);
+				$sql = 'SELECT f.*, f.facnumber as ref, pt.code as cond_reglement_code, cp.code as mode_reglement_code ';
+				$sql += ' FROM llx_facture as f';
+				$sql += " LEFT JOIN llx_c_paiement as cp ON cp.id=f.fk_mode_reglement ";
+				$sql += " LEFT JOIN llx_c_payment_term as pt ON pt.rowid=f.fk_cond_reglement ";
 
-			//console.log(rows[0]);
+				connection.query($sql, function (err, rows) {
+					if (err)
+						console.log(err);
 
-			//var tab = [];
-			//tab.push(rows[0]);
+					//console.log(rows);
+					//console.log(rows.length);
 
-			rows.forEach(function (row) {
+					//console.log(rows[0]);
 
-				delete row.entity;
+					//var tab = [];
+					//tab.push(rows[0]);
 
-				delete row._id;
-				var notes = row.note;
+					async.each(rows, function (row, cb) {
 
-				delete row.note;
+						delete row.entity;
 
-				var datec;
-				if (typeof row.datec !== 'undefined')
-					datec = new Date(row.datec);
-				else
-					datec = new Date(row.tms);
+						delete row._id;
+						var notes = row.note;
+
+						delete row.note;
+
+						var datec;
+						if (typeof row.datec !== 'undefined')
+							datec = new Date(row.datec);
+						else
+							datec = new Date(row.tms);
 
 //console.log(row.datec + "/"+row.tms+":" + datec);
 
-				delete row.datec;
+						delete row.datec;
 
-				if (row.paye)
-					row.Status = "PAID";
-				else if (row.fk_status == 0)
-					row.Status = "DRAFT";
-				else if (row.fk_status == 1)
-					row.Status = "NOT_PAID";
-				else
-					row.Status = "DRAFT";
+						if (row.paye)
+							row.Status = "PAID";
+						else if (row.fk_status == 0)
+							row.Status = "DRAFT";
+						else if (row.fk_status == 1)
+							row.Status = "NOT_PAID";
+						else
+							row.Status = "DRAFT";
 
-				row.entity = "symeos";
+						row.entity = "symeos";
 
-				if (!row.cond_reglement_code)
-					delete row.cond_reglement_code;
+						if (!row.cond_reglement_code)
+							delete row.cond_reglement_code;
 
-				SocieteModel.findOne({oldId: row.fk_soc}, function (err, societe) {
+						SocieteModel.findOne({oldId: row.fk_soc}, function (err, societe) {
 
-					BillModel.findOne({oldId: row.rowid}, function (err, bill) {
+							BillModel.findOne({oldId: row.rowid}, function (err, bill) {
 
-						if (!bill) {
-							bill = new BillModel(row);
-						} else
-							bill = _.extend(bill, row);
-						bill.datec = datec;
-						bill.createdAt = datec;
+								if (!bill) {
+									bill = new BillModel(row);
+								} else
+									bill = _.extend(bill, row);
+								bill.datec = datec;
+								bill.createdAt = datec;
 
-						bill.lines = [];
+								bill.lines = [];
+								bill.total_ht = 1;
 
-						bill.dater = row.date_lim_reglement;
+								bill.dater = row.date_lim_reglement;
 
-						bill.client = {
-							id: societe._id,
-							name: societe.name
-						};
+								bill.client = {
+									id: societe._id,
+									name: societe.name
+								};
 
-						//console.log(row.action_co);
+								bill.address = societe.address;
+								bill.zip = societe.zip;
+								bill.town = societe.town;
 
-						bill.oldId = row.rowid;
-						console.log(bill);
-						//return;
+								//console.log(row.action_co);
 
-						bill.save(function (err, doc) {
-							if (err) {
-								console.log(err);
-							}
+								bill.oldId = row.rowid;
+								//console.log(bill);
+								//return;
 
+								tabBills[row.rowid] = bill;
+								cb();
+							});
 						});
+					}, function () {
+						callback();
 					});
 				});
-			});
+			},
+			lines: function (callback) {
+				var $sql = "";
+
+				$sql = 'SELECT l.rowid, l.fk_product, l.fk_facture, l.fk_parent_line, l.description, l.product_type, l.price, l.qty, l.tva_tx, ';
+				$sql += ' l.localtax1_tx, l.localtax2_tx, l.remise, l.remise_percent, l.fk_remise_except, l.subprice,';
+				$sql += ' l.rang, l.special_code,';
+				$sql += ' l.date_start as date_start, l.date_end as date_end,';
+				$sql += ' l.info_bits, l.total_ht, l.total_tva, l.total_localtax1, l.total_localtax2, l.total_ttc, l.fk_code_ventilation, l.fk_export_compta, ';
+				$sql += ' p.ref as product_ref, p.fk_product_type as fk_product_type, p.label as product_label, p.description as product_desc';
+				$sql += ' FROM llx_facturedet as l';
+				$sql += ' LEFT JOIN llx_product as p ON l.fk_product = p.rowid';
+				$sql += ' ORDER BY l.rang';
+
+				connection.query($sql, function (err, rows) {
+					if (err)
+						console.log(err);
+
+					async.each(rows, function (row, cb) {
+						var line = {
+							fk_facture: row.fk_facture,
+							qty: row.qty,
+							tva_tx: row.tva_tx,
+							pu_ht: row.price,
+							description: row.product_desc,
+							product: {},
+							product_type: (row.fk_product_type == 1 ? "SERVICE" : "PRODUCT"),
+							total_tva: row.total_tva,
+							total_ttc: row.total_ttc,
+							discount: row.remise_percent,
+							total_ht: row.total_ht,
+							date_start: (row.date_start instanceof Date ? row.date_start : null),
+							date_end: (row.date_end instanceof Date ? row.date_end : null)
+						};
+
+						ProductModel.findOne({oldId: row.fk_product}, {_id: 1, ref: 1}, function (err, product) {
+							if (err)
+								console.log(err);
+
+							if (!product)
+								return "produit manquant " + row.fk_product;
+
+							line.product = {
+								id: product._id,
+								name: product.ref,
+								label: row.product_label
+							};
+
+							tabLines.push(line);
+							//console.log(row);
+
+							cb();
+						});
+					}, function () {
+						callback();
+					});
+				});
+			}
+		}, function () {
+
+			//add lines to bills
+			for (var i = 0; i < tabLines.length; i++) {
+				tabBills[tabLines[i].fk_facture].lines.push(tabLines[i]);
+			}
+
+
+			for (var i in tabBills) {
+				tabBills[i].save(function (err, doc) {
+					if (err) {
+						console.log(err);
+					}
+
+				});
+			}
+			console.log("save bills : ok");
+
 		});
 	}
 };

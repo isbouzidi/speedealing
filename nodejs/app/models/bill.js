@@ -83,7 +83,7 @@ var billSchema = new Schema({
 			qty: Number,
 			tva_tx: Number,
 			group: {type: String, default: "1. DEFAULT"},
-			title: String,
+			//title: String,
 			pu_ht: Number,
 			description: {type: String, default: ""},
 			product_type: String,
@@ -98,7 +98,9 @@ var billSchema = new Schema({
 			total_ttc: Number,
 			discount: {type: Number, default: 0},
 			no_package: Number, // Colis Number
-			total_ht: {type: Number, set: setPrice}
+			total_ht: {type: Number, set: setPrice},
+			date_start: Date,
+			date_end: Date
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {
@@ -189,7 +191,7 @@ billSchema.pre('save', function (next) {
 	}
 
 	var self = this;
-	if (this.isNew) {
+	if (!this.ref && this.isNew) {
 		SeqModel.inc("PROV", function (seq) {
 			//console.log(seq);
 			self.ref = "PROV" + seq;

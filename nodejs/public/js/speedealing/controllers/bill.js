@@ -17,9 +17,9 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		$scope.bills = [];
 		$scope.gridOptionsBills = {};
 
-		$scope.types = [{name: "Toutes", id: "ALL"}];
+		$scope.types = [{name: "En cours", id: "WAIT"}, {name: "Toutes", id: "ALL"}];
 
-		$scope.type = {name: "Toutes", id: "ALL"};
+		$scope.type = {name: "En cours", id: "WAIT"};
 
 		$scope.init = function () {
 			var dict = ["fk_bill_status", "fk_payment_term", "fk_bill_type", "fk_paiement", "fk_tva"];
@@ -318,7 +318,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			data: 'bills',
 			enableRowSelection: false,
 			filterOptions: $scope.filterOptionsBill,
-			sortInfo: {fields: ["ref"], directions: ["desc"]},
+			sortInfo: {fields: ["datec"], directions: ["desc"]},
 			//showFilter:true,
 			enableColumnResize: true,
 			i18n: 'fr',

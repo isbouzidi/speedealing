@@ -149,8 +149,8 @@ Object.prototype = {
 			for (var i in req.query) {
 				if (i == "query") {
 					switch (req.query.query) {
-						case "NOTPAID" :
-							query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
+						case "WAIT" :
+							query.Status = {"$nin": ["PAID", "CANCELLED"]};
 							break;
 						default :
 							break;
