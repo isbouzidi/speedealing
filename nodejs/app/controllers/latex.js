@@ -146,8 +146,30 @@ exports.headfoot = function (entity, tex, callback) {
 	mongoose.connection.db.collection('Mysoc', function (err, collection) {
 		collection.findOne({_id: entity}, function (err, doc) {
 
-			tex = tex.replace(/--MYSOC--/g, "\\textbf{\\large " + doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town + "\\\\Tel : " + doc.phone + "\\\\ Fax : " + doc.fax + "\\\\ TVA Intra. : " + doc.tva_intra);
-			tex = tex.replace(/--FOOT--/g, "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town + " T\\'el.: " + doc.phone + " R.C.S. " + doc.idprof1);
+			var mysoc = "";
+			mysoc = "\\textbf{\\large " + doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town;
+
+			if (doc.phone)
+				mysoc += "\\\\Tel : " + doc.phone;
+			if (doc.fax)
+				mysoc += "\\\\ Fax : " + doc.fax;
+			if (doc.email)
+				mysoc += "\\\\ Email : " + doc.email;
+			if (doc.tva_intra)
+				mysoc += "\\\\ TVA Intra. : " + doc.tva_intra;
+
+			tex = tex.replace(/--MYSOC--/g, mysoc);
+
+			var foot = "";
+
+			foot = "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town;
+			
+			if (doc.phone)
+				foot += " T\\'el.: " + doc.phone;
+			if (doc.idprof1)
+				foot += " R.C.S. " + doc.idprof1;
+
+			tex = tex.replace(/--FOOT--/g, foot);
 
 			tex = tex.replace(/--ENTITY--/g, "\\textbf{" + doc.name + "}");
 			if (doc.iban)
