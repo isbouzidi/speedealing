@@ -392,7 +392,7 @@ Object.prototype = {
 			res.send(500, "File not found");
 	},
 	genPDF: function (req, res) {
-		var latex = require('../models/latex');
+		var latex = require('../controllers/latex');
 
 		latex.loadModel("order.tex", function (err, tex) {
 			var doc = req.order;

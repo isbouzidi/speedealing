@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config'),
 		async = require('async'),
-		latex = require('../models/latex');
+		latex = require('../controllers/latex');
 
 var DeliveryModel = mongoose.model('delivery');
 var SocieteModel = mongoose.model('societe');

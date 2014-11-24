@@ -181,7 +181,7 @@ module.exports = function (app, passport, auth) {
 	 app.param('articleId', articles.article);*/
 
 	//latex Routes
-	var latex = require('../app/models/latex');
+	var latex = require('../app/controllers/latex');
 	app.get('/servepdf/:pdfId', auth.requiresAuthenticate, latex.servePDF);
 
 	app.get('/locales/:lng/:jsonFile', auth.requiresLogin, function (req, res) {
