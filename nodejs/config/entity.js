@@ -28,11 +28,11 @@ var entitySchema = new Schema({
 	effectif_id: String,
 	forme_juridique_code: String,
 	datec: Date,
-	logo: String,
+	logo: {type: String, default: "logo.jpg"},
 	_id: String,
 	currency: String,
 	fiscal_month_start: Number,
-	cptRef:String //used for numerotation ex : COIV0314-000001
+	cptRef: String //used for numerotation ex "IV" for : COIV0314-000001
 });
 
 mongoose.model('entity', entitySchema, 'Mysoc');
