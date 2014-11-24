@@ -184,6 +184,7 @@ Object.prototype = {
 			delete bill.ref;
 			delete bill.createdAt;
 			delete bill.updatedAt;
+			delete bill.oldId;
 			bill.Status = "DRAFT";
 			bill.notes = [];
 			bill.latex = {};
