@@ -116,7 +116,7 @@
 				<div class="eight-columns small-margin-bottom">
 
 					<div class="float-right button-height">					
-                                                <button ng-show="editable" class="button" data-ng-click="changeStatus('NOT_PAID')">
+						<button ng-show="editable" class="button" data-ng-click="changeStatus('NOT_PAID')">
 							<span class="button-icon green-gradient"><span class="icon-like"></span></span>
 							{{t
 										'Validate'}}
@@ -581,7 +581,7 @@
 									<div class="btn-toolbar" role="toolbar">
 										<div class="btn-group btn-group-sm">
 											<button type="button" ng-show="!tableform.$visible && editable" ng-disabled="$index == 0" ng-click="upDownLine($index, 'UP')" class="btn btn-default glyphicon glyphicon-chevron-up" title="Monter"></button>
-											<button type="button" ng-show="!tableform.$visible && editable" ng-disabled="$index == (delivery.lines.length - 1)" ng-click="upDownLine($index, 'DOWN')" class="btn btn-default glyphicon glyphicon-chevron-down" title="Descendre"></button>
+											<button type="button" ng-show="!tableform.$visible && editable" ng-disabled="$index == (bill.lines.length - 1)" ng-click="upDownLine($index, 'DOWN')" class="btn btn-default glyphicon glyphicon-chevron-down" title="Descendre"></button>
 										</div>
 										<div class="btn-group btn-group-sm">
 											<button type="button" ng-show="tableform.$visible" ng-click="deleteLine(line.idLine)" class="btn btn-danger glyphicon glyphicon-trash" title="Supprimer"></button>
@@ -610,28 +610,28 @@
 					</form>
 
 				</div>
-                            <div class="twelve-columns">
-                                <h5 class="green underline">{{t 'bills:ListOfPayments'}}</h5>
-                                <div class="table-header silver-gradient glossy button-height">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="button-group">
-                                                <button class="button icon-credit-card blue-gradient" data-ng-click="payment()">Emettre paiement</button>
-                                                <button title="{{t 'Refresh'}}" class="button" data-ng-click="findPayment()"><span class="icon-redo"></span></button>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="float-right">
-                                                {{t 'Search'}} <input type="text" data-ng-model="filterOptionsPayment.filterText" class="input small mid-margin-left">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="gridStyle"  data-ng-grid="gridOptionsPayment"></div>
-                                <div class="table-footer silver-gradient">
-                                    \{{totalPayment}} ligne(s)
-                                </div>
-                            </div>
+				<div class="twelve-columns">
+					<h5 class="green underline">{{t 'bills:ListOfPayments'}}</h5>
+					<div class="table-header silver-gradient glossy button-height">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="button-group">
+									<button class="button icon-credit-card blue-gradient" data-ng-click="payment()">Emettre paiement</button>
+									<button title="{{t 'Refresh'}}" class="button" data-ng-click="findPayment()"><span class="icon-redo"></span></button>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="float-right">
+									{{t 'Search'}} <input type="text" data-ng-model="filterOptionsPayment.filterText" class="input small mid-margin-left">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="gridStyle"  data-ng-grid="gridOptionsPayment"></div>
+					<div class="table-footer silver-gradient">
+						\{{totalPayment}} ligne(s)
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

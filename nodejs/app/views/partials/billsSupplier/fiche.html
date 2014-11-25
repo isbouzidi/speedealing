@@ -1,4 +1,9 @@
 <section data-ng-controller="BillSupplierController">
+	<script type="text/ng-template" id="searchproduct.html">
+		<a>
+		<span bind-html-unsafe="match.model.product.id.ref | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.product.id.label"></span> (\{{match.model.price_level}} : \{{match.model.pu_ht|currency}})
+		</a>
+	</script>
 	<div data-ng-init="findOne()">
 		<hgroup id="main-title" class="thin">
 			<h1>Facture \{{bill.ref}} (\{{bill.supplier.name}})</h1>
@@ -148,7 +153,7 @@
 												<tr>
 													<th scope="row">{{t 'Type'}}</th>
 													<td><span editable-select="bill.type" buttons="no" e-form="typeBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_bill_type.values">
-															\{{showStatus('type','fk_bill_type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
+															\{{showStatus('type', 'fk_bill_type')}}</span> <span class="icon-pencil grey" ng-show="editable && !typeBtnForm.$visible" ng-click="typeBtnForm.$show()"></span>
 													</td>
 												</tr>
 												<tr>
@@ -161,14 +166,14 @@
 												<tr>
 													<th scope="row">{{t 'bills:PaymentConditions'}}</th>
 													<td><a href="#" editable-select="bill.cond_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_payment_term.values" onaftersave="update()">
-															\{{ showStatus('cond_reglement_code','fk_payment_term')}}
+															\{{ showStatus('cond_reglement_code', 'fk_payment_term')}}
 														</a>
 													</td>
 												</tr>
 												<tr>
 													<th scope="row">{{t 'bills:PaymentMode'}}</th>
 													<td><a href="#" editable-select="bill.mode_reglement_code" buttons="no" e-ng-options="s.id as s.label for s in dict.fk_paiement.values" onaftersave="update()">
-															\{{ showStatus('mode_reglement_code','fk_paiement')}}
+															\{{ showStatus('mode_reglement_code', 'fk_paiement')}}
 														</a>
 													</td>
 												</tr>
@@ -182,7 +187,19 @@
 											<tbody>
 												<tr>
 													<th>{{t 'AmountHT'}}</th>
-													<td class="align-right">\{{bill.shipping| currency}}</td>
+                                                    <td class="align-right">
+                                                        <a href="#" 
+														   editable-text="bill.shipping.total_ht"
+														   e-style="width: 80px"
+														   blur="submit"
+														   buttons="no"
+														   onaftersave="update()"
+														   e-form="shipping">
+															\{{bill.shipping.total_ht| currency}}
+														</a>
+														<span class="icon-pencil grey" ng-click="shipping.$show()" ng-hide="shipping.$visible"></span>
+
+                                                    </td>
 												</tr>
 											</tbody>
 										</table>
@@ -405,31 +422,133 @@
 				<div class="twelve-columns">
 					<h5 class="green underline">{{t 'bills:Details'}}</h5>
 
-					<div class="table-header silver-gradient glossy button-height">
-						<div class="row">
-							<div class="col-sm-8">
-								<div class="button-group">
-									<button class="button icon-plus blue-gradient"  ng-disabled="!editable" data-ng-click="addNewLine()">{{t 'Add'}}</button>
-									<button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+					<!--	<div class="table-header silver-gradient glossy button-height">
+							<div class="row">
+								<div class="col-sm-8">
+									<div class="button-group">
+										<button class="button icon-plus blue-gradient"  ng-disabled="!editable" data-ng-click="addNewLine()">{{t 'Add'}}</button>
+										<button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+									</div>
 								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="float-right">
-									{{t 'Search'}} <input type="text" data-ng-model="filterOptionsLines.filterText" class="input small mid-margin-left">
+								<div class="col-sm-4">
+									<div class="float-right">
+										{{t 'Search'}} <input type="text" data-ng-model="filterOptionsLines.filterText" class="input small mid-margin-left">
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="gridStyle"  data-ng-grid="gridOptionsLines" ng-style="style(200)" resize></div>
-					<div class="table-footer silver-gradient">
-						<div class="float-right strong">
-							Total HT : \{{bill.total_ht| currency}}  
+						<div class="gridStyle"  data-ng-grid="gridOptionsLines" ng-style="style(200)" resize></div>
+						<div class="table-footer silver-gradient">
+							<div class="float-right strong">
+								Total HT : \{{bill.total_ht| currency}}  
+							</div>
+							\{{bill.lines.length}} ligne(s)
 						</div>
-						\{{bill.lines.length}} ligne(s)
-					</div>
-				</div>
+					</div>-->
 
+					<form editable-form name="tableform" onaftersave="update()" oncancel="cancel()">
+						<!-- table -->
+						<table class="table table-bordered table-hover table-condensed">
+							<tr style="font-weight: bold">
+								<td >Code produit</td>
+								<td>Nom</td>
+								<td>Description</td>
+								<td >Nbr de pièces</td>
+								<td >Qté facturée</td>
+								<td >Prix HT</td>
+								<td >Remise %</td>
+								<td >TVA %</td>
+								<td >Total HT</td>
+								<td ><span ng-show="tableform.$visible">Action</span></td>
+							</tr>
+							<tr ng-repeat="line in bill.lines| filter:filterLine">
+								<td>
+									<span editable-text="line.product.name" 
+										  e-typeahead="product as product.name for product in productAutoComplete($viewValue, 'name')"
+										  e-typeahead-template-url="searchproduct.html"
+										  e-typeahead-on-select ="addProduct($item, line.idLine)"
+										  e-form="tableform"
+										  onbeforesave="checkLine($data)"
+										  e-style="width: 140px">
+										\{{ line.product.name || 'empty' }}
+									</span>
+
+								</td>
+								<td>
+									<span editable-text="line.product.label" e-style="width: 140px" e-form="tableform">
+										\{{ line.product.label || 'empty' }}
+									</span>
+								</td>
+								<td>
+									<!-- editable username (text with validation) -->
+									<span editable-textarea="line.description" e-rows="4" e-cols="50" e-style="width: 180px" e-form="tableform">
+										<pre class="no-padding small">\{{ line.description || 'empty' }}</pre>
+									</span>
+								</td>
+								<td class="align-right">
+									<span editable-number="line.no_package" e-min="0" e-step="0.1" e-style="width: 60px" e-form="tableform">
+										\{{ line.no_package || 0 }}
+									</span>
+								</td>
+								<td class="align-right">
+									<span editable-number="line.qty" e-ng-change="calculMontantHT(line, $data, 'qty')" e-step="0.001" e-style="width: 80px" e-form="tableform">
+										\{{ line.qty || 0 }}
+									</span>
+								</td>
+								<td class="align-right">
+									<span editable-number="line.pu_ht" e-ng-change="calculMontantHT(line, $data, 'pu_ht')" e-min="0" e-step="0.001" e-style="width: 80px" e-form="tableform">
+										\{{ line.pu_ht || 0 | number:3}}
+									</span>
+								</td>
+								<td class="align-right">
+									<span editable-number="line.discount" e-style="width: 60px" e-ng-change="calculMontantHT(line, $data, 'discount')" e-min="0" e-step="0.001" e-form="tableform">
+										\{{ line.discount || 0 | percent:3}}
+									</span>
+								</td>
+								<td class="align-right">
+									<span editable-select="line.tva_tx" e-ng-change="calculMontantHT(line, $data, 'tva_tx')" e-style="width: 60px" e-form="tableform" e-ng-options="c.value as c.value for c in dict.fk_tva.values">
+										\{{ line.tva_tx|percent:2}}
+									</span>
+								</td>
+								<td class="align-right">
+									<span ng-model="montantHT[$index]" form="tableform" style="width: 60px"">
+										\{{ line.total_ht | number:2 }}
+									</span>
+								</td>
+								<td>
+									<div class="btn-toolbar" role="toolbar">
+										<div class="btn-group btn-group-sm">
+											<button type="button" ng-show="!tableform.$visible && editable" ng-disabled="$index == 0" ng-click="upDownLine($index, 'UP')" class="btn btn-default glyphicon glyphicon-chevron-up" title="Monter"></button>
+											<button type="button" ng-show="!tableform.$visible && editable" ng-disabled="$index == (bill.lines.length - 1)" ng-click="upDownLine($index, 'DOWN')" class="btn btn-default glyphicon glyphicon-chevron-down" title="Descendre"></button>
+										</div>
+										<div class="btn-group btn-group-sm">
+											<button type="button" ng-show="tableform.$visible" ng-click="deleteLine(line.idLine)" class="btn btn-danger glyphicon glyphicon-trash" title="Supprimer"></button>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+
+						<!-- buttons -->
+						<div class="btn-edit">
+							<button type="button" class="btn btn-default" ng-show="!tableform.$visible && editable" ng-click="tableform.$show()">
+								{{t
+											'Modify'}}
+							</button>
+						</div>
+						<div class="btn-form" ng-show="tableform.$visible">
+							<button type="button" ng-disabled="tableform.$waiting" ng-click="addLine()" class="btn btn-default pull-right">{{t
+										'AddNewLine'}}</button>
+							<button type="submit" ng-disabled="tableform.$waiting" class="btn btn-primary">{{t
+										'Save'}}</button>
+							<button type="button" ng-disabled="tableform.$waiting" ng-click="tableform.$cancel()" class="btn btn-default">{{t
+										'Cancel'}}</button>
+						</div> 
+
+					</form>
+
+
+				</div>
 			</div>
 		</div>
-	</div>
 </section>

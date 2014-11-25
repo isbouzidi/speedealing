@@ -65,7 +65,11 @@ var billSupplierSchema = new Schema({
 		}
 	],
 	total_ttc: {type: Number, default: 0},
-	shipping: {type: Number, default: 0},
+	shipping: {
+		total_ht: {type: Number, default: 0, set: setPrice},
+		tva_tx: {type: Number, default: 20},
+		total_tva: {type: Number, default: 0}
+	},
 	author: {id: String, name: String},
 	entity: {type: String},
 	orders: [{
@@ -83,15 +87,15 @@ var billSupplierSchema = new Schema({
 			product: {
 				id: {type: Schema.Types.ObjectId, ref: "Product"},
 				name: {type: String},
-				label: String,
-				template: {type: String, default: "/partials/lines/classic.html"}
+				label: String
 			},
 			total_tva: Number,
 			total_ttc: Number,
 			//total_ht_without_discount: Number,
 			//total_ttc_without_discount: Number,
 			//total_vat_without_discount: Number,
-			total_ht: {type: Number, set: setPrice}
+			total_ht: {type: Number, set: setPrice},
+			discount: {type: Number, default: 0}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
 	latex: {
@@ -122,14 +126,16 @@ billSupplierSchema.pre('save', function (next) {
 	this.total_tva = [];
 	this.total_ttc = 0;
 
-	for (var i = 0; i < this.lines.length; i++) {
+	var i, j, found;
+
+	for (i = 0; i < this.lines.length; i++) {
 		//console.log(object.lines[i].total_ht);
 		this.total_ht += this.lines[i].total_ht;
 		//this.total_ttc += this.lines[i].total_ttc;
 
 		//Add VAT
-		var found = false;
-		for (var j = 0; j < this.total_tva.length; j++)
+		found = false;
+		for (j = 0; j < this.total_tva.length; j++)
 			if (this.total_tva[j].tva_tx === this.lines[i].tva_tx) {
 				this.total_tva[j].total += this.lines[i].total_tva;
 				found = true;
@@ -144,12 +150,36 @@ billSupplierSchema.pre('save', function (next) {
 		}
 	}
 
-	this.total_ht = Math.round(this.total_ht * 100) / 100;
+	// shipping cost
+	if (this.shipping.total_ht) {
+		this.total_ht += this.shipping.total_ht;
+
+		this.shipping.total_tva = this.shipping.total_ht * this.shipping.tva_tx / 100;
+
+		//Add VAT
+		found = false;
+		for (j = 0; j < this.total_tva.length; j++)
+			if (this.total_tva[j].tva_tx === this.shipping.tva_tx) {
+				this.total_tva[j].total += this.shipping.total_tva;
+				found = true;
+				break;
+			}
+
+		if (!found) {
+			this.total_tva.push({
+				tva_tx: this.shipping.tva_tx,
+				total: this.shipping.total_tva
+			});
+		}
+	}
+
+
+	this.total_ht = round(this.total_ht, 2);
 	//this.total_tva = Math.round(this.total_tva * 100) / 100;
 	this.total_ttc = this.total_ht;
 
-	for (var j = 0; j < this.total_tva.length; j++) {
-		this.total_tva[j].total = Math.round(this.total_tva[j].total * 100) / 100;
+	for (j = 0; j < this.total_tva.length; j++) {
+		this.total_tva[j].total = round(this.total_tva[j].total, 2);
 		this.total_ttc += this.total_tva[j].total;
 	}
 
