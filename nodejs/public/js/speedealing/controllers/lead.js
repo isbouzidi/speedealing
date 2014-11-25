@@ -43,7 +43,7 @@ angular.module('mean.lead').controller('LeadCreateController', ['$scope', '$http
 
 
 	}]);
-angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$routeParams', '$modal', '$filter', 'dialogs', 'pageTitle', 'Global', 'Lead', function ($scope, $http, $routeParams, $modal, $filter, $dialogs, pageTitle, Global, Lead) {
+angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$routeParams', '$modal', '$filter', 'dialogs', 'pageTitle', 'Global', /*'object',*/ 'Lead', function ($scope, $http, $routeParams, $modal, $filter, $dialogs, pageTitle, Global, /*object,*/ Lead) {
 
 		$scope.global = Global;
 
@@ -76,6 +76,9 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 				$scope.commercial = data;
 			});
 
+			if (!$scope.global.user.rights.lead || !$scope.global.user.rights.lead.readAll) {
+				$scope.params['commercial'] = $scope.global.user._id;
+			}
 			Lead.query($scope.params, function (leads) {
 				$scope.leads = leads;
 				$scope.count = leads.length;
@@ -106,24 +109,19 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 
 		$scope.findOne = function () {
 			Lead.get({
-				Id: object.lead
+				//Id: object.lead
+				Id: $routeParams.lead
 			}, function (lead) {
 				$scope.lead = lead;
 			});
 		};
 
 		$scope.findLead = function (id) {
+			$routeParams.lead = id;
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/view.html',
-				controller: "LeadViewController",
-				windowClass: "steps",
-				resolve: {
-					object: function () {
-						return {
-							lead: id
-						};
-					}
-				}
+				controller: "LeadController",
+				windowClass: "steps"
 			});
 		};
 
@@ -149,17 +147,4 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 			});
 		};
 
-	}]);
-
-angular.module('mean.lead').controller('LeadViewController', ['$scope', '$http', '$modal', '$filter', 'pageTitle', 'Global', 'Lead', 'object', function ($scope, $http, $modal, $filter, pageTitle, Global, Lead, object) {
-
-		$scope.lead = {};
-		
-		$scope.findOne = function () {
-			Lead.get({
-				Id: object.lead
-			}, function (lead) {
-				$scope.lead = lead;
-			});
-		};
 	}]);

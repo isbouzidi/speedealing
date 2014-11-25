@@ -978,17 +978,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.findLead = function (id) {
 
+                        $routeParams.lead = id;
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/view.html',
-				controller: "LeadViewController",
-				windowClass: "steps",
-				resolve: {
-					object: function () {
-						return {
-							lead: id
-						};
-					}
-				}
+				controller: "LeadController",
+				windowClass: "steps"
+				//resolve: {
+				//	object: function () {
+				//		return {
+				//			lead: id
+				//		};
+				//	}
+				//}
 			});
 		};
 
