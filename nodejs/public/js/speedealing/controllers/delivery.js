@@ -1,9 +1,9 @@
 "use strict";
 /* global angular: true */
 
-angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q', '$location', '$http', '$routeParams', '$rootScope', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function ($scope, $q, $location, $http, $routeParams, $rootScope, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
+angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$location', '$http', '$routeParams', '$rootScope', '$modal', '$filter', '$upload', '$timeout', 'pageTitle', 'Global', 'Deliveries', function ($scope, $location, $http, $routeParams, $rootScope, $modal, $filter, $upload, $timeout, pageTitle, Global, Deliveries) {
 		$scope.global = Global;
-		pageTitle.setTitle('Liste bons de livraison');
+		pageTitle.setTitle('Liste des bons de livraisons / interventions');
 
 		$scope.editable = false;
 
@@ -73,12 +73,14 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 						product: {
 							id: data.product.id._id,
 							name: data.product.id.ref,
-							label: data.product.id.label
+							label: data.product.id.label,
+							unit: data.product.unit
 						},
 						description: data.product.id.description,
 						isNew: true,
 						qty: $scope.delivery.lines[i].qty,
-						no_package: $scope.delivery.lines[i].no_package, // nombre de pieces
+						no_package: $scope.delivery.lines[i].no_package, // nombre de pieces TODO Delete
+						qty_order: $scope.delivery.lines[i].qty_order, // qty from order
 						idLine: index
 					};
 
@@ -345,14 +347,14 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 			});
 		};
 
-		$scope.addNewLine = function () {
+		/*$scope.addNewLine = function () {
 
 			/*
 			 * cette variable "$rootScope.module" est utilisé dans le controller "LineController"
 			 * pour determiner que l'url "/partials/lines" est appelé 
 			 * depuis le module delivery (bon de livraison)
 			 */
-			$rootScope.callModule = 'delivery';
+			/*$rootScope.callModule = 'delivery';
 
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
@@ -379,9 +381,9 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				});
 			}, function () {
 			});
-		};
+		};*/
 
-		$scope.editLine = function (row) {
+		/*$scope.editLine = function (row) {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",
@@ -404,7 +406,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$q'
 				});
 			}, function () {
 			});
-		};
+		};*/
 
 		$scope.addNote = function () {
 			if (!this.note)

@@ -49,7 +49,7 @@ module.exports = function (app, passport, auth) {
 		else
 			query.Status = {'$in': ["SELL", "SELLBUY"]};
 		//console.log(query);
-		ProductModel.find(query, "ref _id label template pu_ht tva_tx minPrice description caFamily",
+		ProductModel.find(query, "ref _id label template pu_ht tva_tx minPrice units description caFamily",
 				{limit: req.body.take}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/product/autocomplete");
@@ -67,7 +67,8 @@ module.exports = function (app, passport, auth) {
 					qtyMin: 0,
 					product: {
 						id: docs[i],
-						name: docs[i].ref
+						name: docs[i].ref,
+						unit : docs[i]._units.name
 					}
 				};
 				result.push(obj);

@@ -144,56 +144,6 @@ angular.module('mean.products').controller('ProductController', ['$scope', '$rou
 					product.$update(function (response) {
 					});
 				};
-
-				/*$scope.price = {
-				 product: {
-				 name: ""
-				 },
-				 pu_ht: 0,
-				 discount: 0,
-				 qtyMin: 0,
-				 price_level: object.price_level,
-				 tms: new Date
-				 };
-				 
-				 $scope.productAutoComplete = function(val) {
-				 return $http.post('api/product/autocomplete', {
-				 take: 5,
-				 skip: 0,
-				 page: 1,
-				 pageSize: 5,
-				 filter: {logic: 'and', filters: [{value: val}]
-				 }
-				 }).then(function(res) {
-				 for (var i in res.data) {
-				 res.data[i] = res.data[i].product.id;
-				 res.data[i].name = res.data[i].ref;
-				 //console.log(res.data[i]);
-				 }
-				 return res.data;
-				 });
-				 };
-				 
-				 $scope.priceLevelAutoComplete = function(val) {
-				 return $http.post('api/product/price_level/select', {
-				 take: 5,
-				 skip: 0,
-				 page: 1,
-				 pageSize: 5,
-				 filter: {logic: 'and', filters: [{value: val}]
-				 }
-				 }).then(function(res) {
-				 return res.data;
-				 });
-				 };
-				 
-				 $scope.ok = function() {
-				 $modalInstance.close($scope.price);
-				 };
-				 
-				 $scope.cancel = function() {
-				 $modalInstance.dismiss('cancel');
-				 };*/
 			};
 
 			var modalInstance = $modal.open({

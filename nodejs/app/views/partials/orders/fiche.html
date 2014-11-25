@@ -5,6 +5,7 @@
 			<span bind-html-unsafe="match.model.product.id.ref | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.product.id.label"></span> (\{{match.model.price_level}} : \{{match.model.pu_ht|currency}})
             </a>
 		</script>
+		
         <hgroup id="main-title" class="thin">
             <h1>{{t 'orders:CustomerOrder'}} \{{order.ref}} (\{{order.client.name}})</h1>
             <!--<span class="valign-top tag glossy" data-ng-class="order.status.css">\{{order.status.name}}</span>-->
@@ -182,12 +183,12 @@
                 <div class="eight-columns small-margin-bottom">
 
                     <div class="float-right button-height">
-						<button ng-show="order.Status == 'CLOSED'" ng-disabled="!global.user.rights.order.createBills" class="button" data-ng-click="bill()">
-                            <span class="button-icon green-gradient"><span class="icon-area-graph"></span></span>
-                            {{t 'ToBill'}}
+						<button ng-show="order.Status == 'PROCESSING' || order.Status == 'SHIPPING'" ng-disabled="!global.user.rights.order.createDelivery" class="button" ng-confirm-click="{{t 'orders:ConfirmCloseOrder'}}" ng-confirm-title="{{t 'orders:CloseOrder'}}" confirmed-click="createDelivery(1)" canceled-click="createDelivery(0)">
+                            <span class="button-icon green-gradient"><span class="icon-fwd"></span></span>
+                            {{t 'orders:CreateDelivery'}}
                         </button>
 
-                        <button ng-show="order.Status == 'NEW'" ng-disabled="!global.user.rights.order.validate" class="button" data-ng-click="changeStatus('VALIDATED')">
+                        <button ng-show="order.Status == 'NEW' || order.Status == 'DRAFT'" ng-disabled="!global.user.rights.order.validate" class="button" data-ng-click="changeStatus('VALIDATED')">
                             <span class="button-icon green-gradient"><span class="icon-like"></span></span>
                             {{t 'Validate'}}
                         </button>

@@ -22,7 +22,7 @@
 
 %%ligne de tableau avec \\
 \newcommand{\specialcell}[2][c]{
-	\parbox[#1]{9.3cm}{#2}}
+	\parbox[#1]{8.3cm}{#2}}
 
 
 \begin{document}
@@ -37,7 +37,8 @@
 	\textcolor{violet}{\textsc{\Large Bon de livraison --NUM--}}\\
 	Date du bon de livraison : --DATEC--\\
 	{\small Date de commande : \textbf{--DATEECH--}\\
-	Ref. commande : --REFCLIENT--\\}~\\
+	Ref. commande : --ORDER--\\
+	Ref. commande client : --REFCLIENT--\\}~\\
 \end{tabular}
 
 \vspace{1cm}
@@ -68,8 +69,8 @@ Informations : --NOTE--
 \hline
 \multicolumn{1}{|c}{Réf} &
 \multicolumn{1}{c}{Désignation} &
-\multicolumn{1}{c}{Nbr de pièces} &
-\multicolumn{1}{c|}{Quantité} \\
+\multicolumn{1}{c}{Qté cmdée} &
+\multicolumn{1}{c|}{Qté livrée} \\
 \hline
 \hline}
 \tablehead{%
@@ -78,8 +79,8 @@ Informations : --NOTE--
 \hline
 \multicolumn{1}{|c}{Réf} &
 \multicolumn{1}{c}{Désignation} &
-Nbr de pièces&
-\multicolumn{1}{c|}{Quantité} \\
+Qté cmdée&
+\multicolumn{1}{c|}{Qté livrée} \\
 \hline
 \hline}
 \tabletail{%
@@ -91,7 +92,7 @@ Nbr de pièces&
 \flushright 
 %{\footnotesize \textit{Poids exprimés en kg}}
 \end{minipage}\\
-\begin{supertabular*}{\textwidth}{|p{2.5cm}|p{9.5cm}@{\extracolsep{1mm plus 1fil}}|r|r|}
+\begin{supertabular*}{\textwidth}{|p{2.5cm}|p{8.5cm}@{\extracolsep{1mm plus 1fil}}|r|r|}
 --TABULAR--
 \end{supertabular*}
 

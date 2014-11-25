@@ -31,7 +31,12 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/lines/list', auth.requiresLogin, object.listLines);
 	app.get('/api/commande', auth.requiresLogin, object.all);
 	app.post('/api/commande', auth.requiresLogin, object.create);
-	app.post('/api/commande/:orderId', auth.requiresLogin, object.create);
+	app.post('/api/commande/:orderId', auth.requiresLogin, function (req, res) {
+		if (req.query.delivery)
+			object.createDelivery(req, res);
+		else
+			object.create(req, res);
+	});
 	app.get('/api/commande/:orderId', auth.requiresLogin, object.show);
 	app.put('/api/commande/:orderId', auth.requiresLogin, object.update);
 	app.del('/api/commande/:orderId', auth.requiresLogin, object.destroy);
@@ -40,7 +45,7 @@ module.exports = function (app, passport, auth) {
 	app.get('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.getFile);
 	app.del('/api/commande/file/:Id/:fileName', auth.requiresLogin, object.deleteFile);
 	app.get('/api/commande/pdf/:orderId', auth.requiresLogin, object.genPDF);
-	
+
 	app.post('/api/commande/file/:Id', auth.requiresLogin, function (req, res) {
 		var id = req.params.Id;
 		//console.log(id);
@@ -134,7 +139,7 @@ Object.prototype = {
 	 */
 	create: function (req, res) {
 		var order;
-		
+
 		if (req.query.clone) {
 			order = req.order.toObject();
 			delete order._id;
@@ -151,8 +156,8 @@ Object.prototype = {
 			order = new CommandeModel(order);
 		} else
 			order = new CommandeModel(req.body);
-		
-		
+
+
 		order.author = {};
 		order.author.id = req.user._id;
 		order.author.name = req.user.name;
@@ -254,7 +259,7 @@ Object.prototype = {
 		order.save(function (err, doc) {
 			if (err)
 				return console.log(err);
-			
+
 			res.json(doc);
 		});
 	},
@@ -463,6 +468,43 @@ Object.prototype = {
 					});
 				});
 			});
+		});
+	},
+	createDelivery: function (req, res) {
+		var DeliveryModel = mongoose.model('delivery');
+
+		req.body.order = req.body._id;
+		delete req.body._id;
+		delete req.body.Status;
+		delete req.body.latex;
+		delete req.body.datec;
+		delete req.body.datel;
+		delete req.body.createdAt;
+		delete req.body.updatedAt;
+		delete req.body.ref;
+		req.body.author.id = req.user.id;
+		req.body.author.name = req.user.name;
+		delete req.body.notes;
+
+		console.log(req.body.bl);
+
+		//Copy first address BL
+		req.body.address = req.body.bl[0].address;
+		req.body.zip = req.body.bl[0].zip;
+		req.body.town = req.body.bl[0].town;
+
+		for (var i = 0; i < req.body.lines.length; i++) {
+			req.body.lines[i].qty_order = req.body.lines[i].qty;
+		}
+
+		var delivery = new DeliveryModel(req.body);
+
+		delivery.save(function (err, doc) {
+			if (err)
+				console.log(err);
+
+			console.log(doc);
+			res.json(doc);
 		});
 	}
 };

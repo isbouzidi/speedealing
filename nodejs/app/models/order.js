@@ -107,7 +107,7 @@ var orderSchema = new Schema({
 			products: [{
 					id: Schema.Types.ObjectId,
 					name: String,
-					qty: {type: Number, default: 0}
+					qty: {type: Number, default: 0} // QTY Order
 				}],
 			shipping: {
 				id: String,

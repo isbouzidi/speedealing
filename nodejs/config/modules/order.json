@@ -80,6 +80,12 @@
 				}
 			},
 			{
+				"desc": "Expedier les commandes clients",
+				"perm": {
+					"createDelivery": false
+				}
+			},
+			{
 				"desc": "Exporter les commandes clients et attributs",
 				"perm": {
 					"export": false

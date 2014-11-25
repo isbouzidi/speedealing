@@ -83,7 +83,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 			if (idx === null)
 				idx = 0;
 
-			if (!tab || tab[idx].count === 0)
+			if (!tab || !tab[idx] || tab[idx].count === 0)
 				return 0;
 
 			return (tab[idx + 1].count - tab[idx].count) / tab[idx].count * 100;

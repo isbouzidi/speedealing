@@ -63,15 +63,15 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				//$location.path('societe/' + societe._id);
 				pageTitle.setTitle('Commande client ' + order.ref);
 
-				if (response.Status == "DRAFT" || response.Status == "NEW" || response.Status == "QUOTES" )
+				if (response.Status == "DRAFT" || response.Status == "NEW" || response.Status == "QUOTES")
 					$scope.editable = true;
 				else
 					$scope.editable = false;
-				
-				
+
+
 			});
 		};
-		
+
 		$scope.clone = function () {
 			$scope.order.$clone(function (response) {
 				$location.path("orders/" + response._id);
@@ -167,6 +167,22 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 
 			return true;
 		};
+
+		$scope.createDelivery = function (mode) {
+			if (mode === 1) { // CLOSE ORDER
+				$scope.order.Status = "CLOSED";
+				$scope.update();
+			} else { // LEAVE IT OPENED
+				$scope.order.Status = "SHIPPING";
+				$scope.update();
+			}
+
+			$scope.order.$delivery(function (response) {
+				$location.path("delivery/" + response._id);
+			});
+
+		};
+
 		/*
 		 * NG-GRID for order list
 		 */
@@ -190,7 +206,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 					'<div ng-cell></div>' +
 					'</div></div>',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref.', width: "160px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
+				{field: 'ref', displayName: 'Ref.', width: "160px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/orders/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
 				{field: 'client.name', displayName: 'Société'},
 				{field: 'ref_client', displayName: 'Ref. client'},
 				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
@@ -253,7 +269,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			$scope.order.Status = Status;
 			$scope.update();
 		};
-		
+
 		/*
 		 * NG-GRID for bill lines
 		 */
@@ -288,7 +304,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 					"</div>" +
 					""
 		};
-		
+
 		$scope.aggFunc = function (row, idx) {
 			var total = 0;
 			//console.log(row);
@@ -298,19 +314,19 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 			});
 			return total;
 		};
-		
-		$scope.addNewLine = function() {
+
+		$scope.addNewLine = function () {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return {
 							qty: 0
 						};
 					},
-					options: function() {
+					options: function () {
 						return {
 							price_level: $scope.order.price_level
 						};
@@ -318,25 +334,25 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				}
 			});
 
-			modalInstance.result.then(function(line) {
+			modalInstance.result.then(function (line) {
 				$scope.order.lines.push(line);
-				$scope.order.$update(function(response) {
+				$scope.order.$update(function (response) {
 					$scope.order = response;
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.editLine = function(row) {
+		$scope.editLine = function (row) {
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/lines',
 				controller: "LineController",
 				windowClass: "steps",
 				resolve: {
-					object: function() {
+					object: function () {
 						return row.entity;
 					},
-					options: function() {
+					options: function () {
 						return {
 							price_level: $scope.order.price_level
 						};
@@ -344,15 +360,15 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 				}
 			});
 
-			modalInstance.result.then(function(line) {
-				$scope.order.$update(function(response) {
+			modalInstance.result.then(function (line) {
+				$scope.order.$update(function (response) {
 					$scope.order = response;
 				});
-			}, function() {
+			}, function () {
 			});
 		};
 
-		$scope.removeLine = function(row) {
+		$scope.removeLine = function (row) {
 			//console.log(row.entity._id);
 			for (var i = 0; i < $scope.order.lines.length; i++) {
 				if (row.entity._id === $scope.order.lines[i]._id) {
@@ -376,7 +392,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 						}
 					});
 		};
-		
+
 		$scope.onFileSelect = function ($files) {
 			//$files: an array of files selected, each file has name, size, and type.
 			for (var i = 0; i < $files.length; i++) {

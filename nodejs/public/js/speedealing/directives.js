@@ -1,21 +1,21 @@
 "use strict";
 /* global angular: true */
 
-angular.module('mean').directive('resize', ['$window', function($window) {
-		return function(scope, element) {
+angular.module('mean').directive('resize', ['$window', function ($window) {
+		return function (scope, element) {
 			var w = angular.element($window);
 			//var w = element;
 			//console.log(element.height());
 			//console.log(element.width());
 			//console.log(w);
-			scope.getWindowDimensions = function() {
+			scope.getWindowDimensions = function () {
 				return {'h': w.height(), 'w': w.width()};
 			};
-			scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
+			scope.$watch(scope.getWindowDimensions, function (newValue, oldValue) {
 				scope.windowHeight = newValue.h;
 				//scope.windowWidth = newValue.w;
 
-				scope.style = function(height) {
+				scope.style = function (height) {
 					return {
 						'height': (newValue.h - 35 - height) + 'px'
 								//	'width': (newValue.w - 100) + 'px'
@@ -24,13 +24,13 @@ angular.module('mean').directive('resize', ['$window', function($window) {
 
 			}, true);
 
-			w.bind('resize', function() {
+			w.bind('resize', function () {
 				scope.$apply();
 			});
 		};
 	}]);
 
-angular.module('mean.system').directive('sdBarcode', function() {
+angular.module('mean.system').directive('sdBarcode', function () {
 	return {
 		// Restrict tells AngularJS how you will be declaring your directive in the markup.
 		// A = attribute, C = class, E = element and M = comment
@@ -38,7 +38,7 @@ angular.module('mean.system').directive('sdBarcode', function() {
 		scope: {
 			barcodeValue: '@'
 		},
-		link: function(scope, elem, attrs) {
+		link: function (scope, elem, attrs) {
 			elem.barcode(attrs.barcodeValue.toString(), "code128");
 		}
 	};
@@ -70,11 +70,11 @@ angular.module('mean.system').directive('sdBarcode', function() {
  };
  });*/
 
-angular.module('mean.system').directive('ngEnter', function() {
-	return function(scope, element, attrs) {
-		element.bind("keydown keypress", function(event) {
+angular.module('mean.system').directive('ngEnter', function () {
+	return function (scope, element, attrs) {
+		element.bind("keydown keypress", function (event) {
 			if (event.which === 13) {
-				scope.$apply(function() {
+				scope.$apply(function () {
 					scope.$eval(attrs.ngEnter, {'event': event});
 				});
 
@@ -84,37 +84,39 @@ angular.module('mean.system').directive('ngEnter', function() {
 	};
 });
 
-angular.module('mean.system').directive('ngBlur', function() {
-	return function(scope, elem, attrs) {
-		elem.bind('blur', function(event) {
+angular.module('mean.system').directive('ngBlur', function () {
+	return function (scope, elem, attrs) {
+		elem.bind('blur', function (event) {
 			scope.$eval(attrs.ngBlur);
 		});
 	};
 });
 
-angular.module('mean.system').directive('ngConfirmClick', ['dialogs', function(dialogs) {
+angular.module('mean.system').directive('ngConfirmClick', ['dialogs', function (dialogs) {
 		return {
 			restrict: 'A',
-			link: function(scope, element, attrs) {
-				element.bind('click', function() {
-					var message = attrs.ngConfirmClick || "Etes-vous sur ?";
+			link: function (scope, element, attrs) {
+				element.bind('click', function () {
+					var message = attrs.ngConfirmClick || "Are you sure ?";
+					var title = attrs.ngConfirmTitle || "Confirmation"
 
-					var dlg = dialogs.confirm("Confirmation", message);
-					dlg.result.then(function(btn) {
+					var dlg = dialogs.confirm(title, message);
+					dlg.result.then(function (btn) {
 						scope.$eval(attrs.confirmedClick);
-					}, function(btn) {
-						// Button NO
+					}, function (btn) {
+						if (attrs.canceledClick)
+							scope.$eval(attrs.canceledClick);
 					});
 				});
 			}
 		};
 	}]);
 
-angular.module('mean.system').directive('myFocus', function() {
+angular.module('mean.system').directive('myFocus', function () {
 	return {
 		restrict: 'A',
-		link: function(scope, element, attr) {
-			scope.$watch(attr.myFocus, function(n, o) {
+		link: function (scope, element, attr) {
+			scope.$watch(attr.myFocus, function (n, o) {
 				if (n != 0 && n) {
 					element[0].focus();
 				}
@@ -122,14 +124,14 @@ angular.module('mean.system').directive('myFocus', function() {
 		}
 	};
 });
-angular.module('mean.system').directive('ngAddress', function($http) {
+angular.module('mean.system').directive('ngAddress', function ($http) {
 	return {
 		restrict: 'A',
 		scope: {
 			addressModel: '=model',
 			opp: '=?'
 		},
-		templateUrl: function(el, attr) {
+		templateUrl: function (el, attr) {
 			if (attr.opp) {
 				if (attr.opp === 'create') {
 					return '/partials/address.html';
@@ -140,7 +142,7 @@ angular.module('mean.system').directive('ngAddress', function($http) {
 			} else
 				return '/partials/address.html';
 		},
-		link: function(scope) {
+		link: function (scope) {
 
 			scope.updateAddressDir = true;
 
@@ -150,7 +152,7 @@ angular.module('mean.system').directive('ngAddress', function($http) {
 				town: null
 			};
 
-			scope.enableUpdateAddress = function() {
+			scope.enableUpdateAddress = function () {
 				scope.deletedAddress = {
 					address: scope.addressModel.address,
 					zip: scope.addressModel.zip,
@@ -160,22 +162,22 @@ angular.module('mean.system').directive('ngAddress', function($http) {
 				scope.updateAddressDir = !scope.updateAddressDir;
 			};
 
-			scope.cancelUpdateAddress = function() {
+			scope.cancelUpdateAddress = function () {
 				scope.addressModel.address = scope.deletedAddress.address;
 				scope.addressModel.zip = scope.deletedAddress.zip;
 				scope.addressModel.town = scope.deletedAddress.town;
 				scope.updateAddressDir = !scope.updateAddressDir;
 			};
-			scope.getLocation = function(val) {
+			scope.getLocation = function (val) {
 				return $http.post('api/zipcode/autocomplete', {
 					val: val
-				}).then(function(res) {
+				}).then(function (res) {
 
 					return res.data;
 				});
 			};
 
-			scope.generateZip = function(item) {
+			scope.generateZip = function (item) {
 				scope.addressModel.zip = item.code;
 				scope.addressModel.town = item.city;
 			};
@@ -184,6 +186,6 @@ angular.module('mean.system').directive('ngAddress', function($http) {
 });
 
 angular.module('mean.system')
-  .factory('superCache', ['$cacheFactory', function($cacheFactory) {
-    return $cacheFactory('super-cache');
- }]);
+		.factory('superCache', ['$cacheFactory', function ($cacheFactory) {
+				return $cacheFactory('super-cache');
+			}]);

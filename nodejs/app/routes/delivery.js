@@ -132,6 +132,7 @@ Object.prototype = {
 
 		DeliveryModel.findOne(query, "-latex")
 				.populate("orders", "ref ref_client total_ht")
+				.populate("order", "ref ref_client total_ht")
 				.exec(function (err, doc) {
 					if (err)
 						return next(err);
@@ -293,6 +294,7 @@ Object.prototype = {
 				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
 				tex = tex.replace(/--TITLE--/g, doc.title);
 				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
+				tex = tex.replace(/--ORDER--/g, (doc.order && doc.order.ref ? doc.order.ref : "-"));
 				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
 				tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
 
@@ -319,7 +321,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
-					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/%/gi, "\\%") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].no_package + "&" + latex.number(doc.lines[i].qty, 3) + (doc.lines[i].units ? " " + doc.lines[i].units : " kg") + "\\tabularnewline\n";
+					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].qty_order + "&" + latex.number(doc.lines[i].qty, 3) + (doc.lines[i].product.unit ? " " + doc.lines[i].product.unit : " U") + "\\tabularnewline\n";
 				}
 				//console.log(products)
 				//console.log(tab_latex);

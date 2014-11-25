@@ -92,7 +92,7 @@
     "ListOfOrders": "Commandes clients",
 	"ListOfOrdersSupplier": "Commandes fournisseurs",
     "CloseOrder": "Clôturer commande",
-    "ConfirmCloseOrder": "Êtes-vous sûr de vouloir clôturer cette commande ? Une fois une commande clôturée, elle peut être facturée.",
+    "ConfirmCloseOrder": "Voulez-vous clôturer cette commande ? Une fois la commande clôturée, vous ne pourrez plus créer d'autres bons de livraison ou bons d'intervention.",
     "ConfirmCloseOrderIfSending": "Êtes-vous sûr de vouloir clôturer cette commande ? Vous ne devez clôturer une commande qu'une fois les produits expédiés.",
     "ConfirmDeleteOrder": "Êtes-vous sûr de vouloir effacer cette commande ?",
     "ConfirmValidateOrder": "Êtes-vous sûr de vouloir valider cette commande sous la référence <b>%s</b> ?",
@@ -163,5 +163,6 @@
     "ShippingHT": "Frais de transport",
 	"DeliveryTo":"Expédiée à",
 	"BillTo":"Facturée à",
-	"Details": "Détails de la commande"
+	"Details": "Détails de la commande",
+	"CreateDelivery":"Créer un nouveau BI / BL"
 }
