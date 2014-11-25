@@ -348,65 +348,65 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 		};
 
 		/*$scope.addNewLine = function () {
-
-			/*
-			 * cette variable "$rootScope.module" est utilisé dans le controller "LineController"
-			 * pour determiner que l'url "/partials/lines" est appelé 
-			 * depuis le module delivery (bon de livraison)
-			 */
-			/*$rootScope.callModule = 'delivery';
-
-			var modalInstance = $modal.open({
-				templateUrl: '/partials/lines',
-				controller: "LineController",
-				windowClass: "steps",
-				resolve: {
-					object: function () {
-						return {
-							qty: 0
-						};
-					},
-					options: function () {
-						return {
-							price_level: $scope.delivery.price_level
-						};
-					}
-				}
-			});
-
-			modalInstance.result.then(function (line) {
-				$scope.delivery.lines.push(line);
-				$scope.delivery.$update(function (response) {
-					$scope.delivery = response;
-				});
-			}, function () {
-			});
-		};*/
+		 
+		 /*
+		 * cette variable "$rootScope.module" est utilisé dans le controller "LineController"
+		 * pour determiner que l'url "/partials/lines" est appelé 
+		 * depuis le module delivery (bon de livraison)
+		 */
+		/*$rootScope.callModule = 'delivery';
+		 
+		 var modalInstance = $modal.open({
+		 templateUrl: '/partials/lines',
+		 controller: "LineController",
+		 windowClass: "steps",
+		 resolve: {
+		 object: function () {
+		 return {
+		 qty: 0
+		 };
+		 },
+		 options: function () {
+		 return {
+		 price_level: $scope.delivery.price_level
+		 };
+		 }
+		 }
+		 });
+		 
+		 modalInstance.result.then(function (line) {
+		 $scope.delivery.lines.push(line);
+		 $scope.delivery.$update(function (response) {
+		 $scope.delivery = response;
+		 });
+		 }, function () {
+		 });
+		 };*/
 
 		/*$scope.editLine = function (row) {
-			var modalInstance = $modal.open({
-				templateUrl: '/partials/lines',
-				controller: "LineController",
-				windowClass: "steps",
-				resolve: {
-					object: function () {
-						return row.entity;
-					},
-					options: function () {
-						return {
-							price_level: $scope.delivery.price_level
-						};
-					}
-				}
-			});
-
-			modalInstance.result.then(function (line) {
-				$scope.delivery.$update(function (response) {
-					$scope.delivery = response;
-				});
-			}, function () {
-			});
-		};*/
+		 var modalInstance = $modal.open({
+		 templateUrl: '/partials/lines',
+		 controller: "LineController",
+		 windowClass: "steps",
+		 resolve: {
+		 object: function () {
+		 return row.entity;
+		 },
+		 options: function () {
+		 return {
+		 price_level: $scope.delivery.price_level
+		 };
+		 }
+		 }
+		 });
+		 
+		 modalInstance.result.then(function (line) {
+		 $scope.delivery.$update(function (response) {
+		 $scope.delivery = response;
+		 });
+		 }, function () {
+		 });
+		 };*/
 
 		$scope.addNote = function () {
 			if (!this.note)
@@ -545,7 +545,8 @@ angular.module('mean.delivery').controller('DeliveryCreateController', ['$scope'
 			Status: "DRAFT",
 			cond_reglement_code: '30D',
 			mode_reglement_code: 'CHQ',
-			datec: new Date()
+			datec: new Date(),
+			entity: Global.user.entity
 		};
 		$scope.dict = {};
 
