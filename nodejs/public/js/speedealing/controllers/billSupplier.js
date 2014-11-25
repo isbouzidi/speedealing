@@ -492,6 +492,8 @@ angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope
 		$scope.bill = {
 			Status: "DRAFT"
 		};
+		
+		$scope.dict = {};
 
 		$scope.isActive = function (idx) {
 			if (idx == $scope.active)
@@ -515,17 +517,13 @@ angular.module('mean.bills').controller('BillSupplierCreateController', ['$scope
 		};
 
 		$scope.init = function () {
-			var fields = ["Status", "mode_reglement_code", "cond_reglement_code"];
+			var dict = ["fk_bill_status", "fk_payment_term", "fk_bill_type", "fk_paiement"];
 
-			angular.forEach(fields, function (field) {
-				$http({method: 'GET', url: '/api/bill/fk_extrafields/select', params: {
-						field: field
-					}
-				}).success(function (data, status) {
-					$scope[field] = data;
-					//console.log(data);
-					$scope.bill[field] = data.default;
-				});
+			$http({method: 'GET', url: '/api/dict', params: {
+					dictName: dict,
+				}
+			}).success(function (data, status) {
+				$scope.dict = data;
 			});
 
 			$scope.bill.commercial_id = {
