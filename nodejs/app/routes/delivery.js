@@ -321,7 +321,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
-					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].qty_order + "&" + latex.number(doc.lines[i].qty, 3) + (doc.lines[i].product.unit ? " " + doc.lines[i].product.unit : " U") + "\\tabularnewline\n";
+					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].qty_order + "&" + /*latex.number(doc.lines[i].qty, 3)*/ Math.round(doc.lines[i].qty *1000)/1000 + (doc.lines[i].product.unit ? " " + doc.lines[i].product.unit : " U") + "\\tabularnewline\n";
 				}
 				//console.log(products)
 				//console.log(tab_latex);
