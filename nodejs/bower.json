@@ -3,13 +3,13 @@
   "version": "0.4.22",
   "main": "public/lib",
   "dependencies": {
-    "angular": "1.2.x",
-    "angular-resource": "1.2.x",
-    "angular-cookies": "1.2.x",
-    "angular-mocks": "1.2.x",
-    "angular-sanitize": "1.2.x",
-    "angular-route": "1.2.x",
-    "angular-animate": "1.2.x",
+    "angular": "~1.2.x",
+    "angular-resource": "~1.2.x",
+    "angular-cookies": "~1.2.x",
+    "angular-mocks": "~1.2.x",
+    "angular-sanitize": "~1.2.x",
+    "angular-route": "~1.2.x",
+    "angular-animate": "~1.2.x",
     "bootstrap": "latest",
     "angular-bootstrap": "latest",
     "angular-ui-utils": "latest",
@@ -33,6 +33,7 @@
   },
   "resolutions": {
     "kendo-ui": "2013.3.1119",
-    "jquery": "1.10.2"
+    "jquery": "1.10.2",
+    "angular": "~1.2.x"
   }
 }
