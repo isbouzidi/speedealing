@@ -240,5 +240,8 @@
 	"SizeUnitinch": "pouce",
 	"SizeUnitfoot": "pied",
 	"SizeUnitpoint": "point",
-	"Pages": "page(s)"
+	"Pages": "page(s)",
+	"Day":"jour",
+	"Hour":"h",
+	"Bundle":"forfait"
 }
