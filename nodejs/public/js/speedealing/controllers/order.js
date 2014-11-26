@@ -206,7 +206,7 @@ angular.module('mean.orders').controller('OrderController', ['$scope', '$locatio
 					'<div ng-cell></div>' +
 					'</div></div>',
 			columnDefs: [
-				{field: 'ref', displayName: 'Ref.', width: "160px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/orders/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
+				{field: 'ref', displayName: 'Ref.', width: "160px", cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="commande/fiche.php?id={{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"right"}\'><span class="icon-cart"></span> {{row.getProperty(col.field)}}</a> <span data-ng-if="row.getProperty(\'notes\')" class="count inset orange-bg">{{row.getProperty(\'notes\').length}}</span></div>'},
 				{field: 'client.name', displayName: 'Société'},
 				{field: 'ref_client', displayName: 'Ref. client'},
 				{field: 'contact.name', displayName: 'Contact', /*cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="/contact/fiche.php?id={{row.getProperty(\'contact.id\')}}" title="Voir le contact"><span class="icon-user"></span> {{row.getProperty(col.field)}}</a>'*/},
