@@ -32,7 +32,7 @@ sequenceSchema.statics = {
 			if (err)
 				console.log(err);
 
-			return cb(numberFormat((date.getMonth() + 1), 2) + date.getFullYear().toString().substr(2, 2) + "-" + numberFormat(doc.seq, 6));
+			return cb(date.getFullYear().toString().substr(2, 2) + numberFormat((date.getMonth() + 1), 2) + "-" + numberFormat(doc.seq, 6));
 		});
 	},
 	incNumber: function(name, length, cb) {

@@ -242,6 +242,6 @@
 	"SizeUnitpoint": "point",
 	"Pages": "page(s)",
 	"Day":"jour",
-	"Hour":"h",
+	"Hour":"H",
 	"Bundle":"forfait"
 }
