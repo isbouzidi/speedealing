@@ -249,7 +249,7 @@ module.exports = function (app, passport, auth) {
 						break;
 					case "address":
 						if (row[i]) {
-							if (contact.address)
+							if (contact.address != null)
 								contact.address += "\n" + row[i];
 							else
 								contact.address = row[i];
