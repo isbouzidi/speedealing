@@ -710,7 +710,12 @@ Contact.prototype = {
 
 		ContactModel.find({Tag: "Arseg"}, function (err, contacts) {
 			//console.log(contact);
-			json2csv({data: contacts, fields: ['_id', 'firstname', 'lastname', 'societe.name', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'], del: ";"}, function (err, csv) {
+			
+			for(var i=0; i<contacts.length;i++) {
+				contacts[i].optional = contacts[i].societe.name;
+			}
+			
+			json2csv({data: contacts, fields: ['_id', 'firstname', 'lastname', 'optional', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'], del: ";"}, function (err, csv) {
 				if (err)
 					console.log(err);
 

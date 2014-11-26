@@ -79,7 +79,8 @@ var contactSchema = new Schema({
 	datec: {type: Date},
 	user_creat: String,
 	user_modif: String,
-	oldId: String // only use for migration
+	oldId: String, // only use for migration
+	optional: {type: Schema.Types.Mixed}
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}
