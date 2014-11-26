@@ -67,9 +67,9 @@ module.exports = function (app, passport, auth) {
 				]};
 
 		if (req.query.status) {
-			query.Status = {$in : req.query.status};
+			query.Status = {$in: req.query.status};
 		} else {
-			query.Status = {$ne : "DISABLE"};
+			query.Status = {$ne: "DISABLE"};
 		}
 
 		UserModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
@@ -117,19 +117,20 @@ module.exports = function (app, passport, auth) {
 
 	//verifie si le nouveau exite ou pas
 	app.get('/api/createUser/uniqLogin', auth.requiresLogin, object.uniqLogin);
-	
+
 	app.del('/api/users/:userId', auth.requiresLogin, object.del);
 
 	/*app.del('/api/user', auth.requiresLogin, function (req, res) {
-		console.log(JSON.stringify(req.body));
-		return res.send(200, object.update(req));
-	});*/
+	 console.log(JSON.stringify(req.body));
+	 return res.send(200, object.update(req));
+	 });*/
 
 	app.get('/api/user/connection', auth.requiresLogin, object.connection);
 
 	app.get('/api/user/absence', auth.requiresLogin, absence.read);
 	app.post('/api/user/absence', auth.requiresLogin, absence.create);
 	app.put('/api/user/absence/:id', auth.requiresLogin, absence.update);
+	app.del('/api/user/absence/:id', auth.requiresLogin, absence.delete);
 
 	app.get('/api/user/absence/count', auth.requiresLogin, absence.count);
 
@@ -187,7 +188,7 @@ Object.prototype = {
 				res.send(500, doc);
 				return;
 			}
-			
+
 			res.send(200, doc);
 		});
 	},
@@ -307,8 +308,17 @@ Absence.prototype = {
 			});
 		});
 	},
-	del: function (req) {
-		return req.body.models;
+	delete: function (req, res) {
+
+		UserAbsenceModel.remove({_id: req.params.id}, function (err, doc) {
+			if (err) {
+				res.render('error', {
+					status: 500
+				});
+			} else {
+				res.json(doc);
+			}
+		});
 	},
 	count: function (req, res) {
 		var d = new Date();

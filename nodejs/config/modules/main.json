@@ -96,6 +96,26 @@
 				}
 			}
 		],
+		"absence": [
+			{
+				"desc": "Consulter les absences",
+				"perm": {
+					"read": false
+				}
+			},
+			{
+				"desc": "Creer/modifier les absences",
+				"perm": {
+					"write": false
+				}
+			},
+			{
+				"desc": "Supprimer les absences",
+				"perm": {
+					"delete": false
+				}
+			}
+		],
 		"box": [
 			{
 				"desc": "Connexion des utilisateurs",
@@ -134,7 +154,7 @@
 		"menu:parameters": {
 			"position": 1000,
 			"url": "",
-			"perms":"admin",
+			"perms": "admin",
 			"enabled": "$user->admin",
 			"usertype": 2,
 			"title": "Parameters",
@@ -143,20 +163,20 @@
 					"position": 1,
 					"usertype": 2,
 					"enabled": "$user->admin",
-					"perms":"admin",
+					"perms": "admin",
 					"title": "admin:Setup",
 					"submenus": {
 						"menu:menucompanysetup": {
 							"position": 1,
 							"url": "",
-							"perms":"admin",
+							"perms": "admin",
 							"usertype": 2,
 							"title": "admin:MenuCompanySetup"
 						},
 						"menu:modules": {
 							"position": 2,
 							"url": "",
-							"perms":"admin",
+							"perms": "admin",
 							"usertype": 2,
 							"title": "admin:Modules"
 						}
@@ -167,18 +187,18 @@
 					"usertype": 2,
 					"enabled": "$user->admin",
 					"title": "admin:SystemTools",
-					"perms":"admin",
+					"perms": "admin",
 					"submenus": {
 						"menu:audit": {
 							"position": 1,
-							"perms":"admin",
+							"perms": "admin",
 							"url": "/admin/tools/listevents.php",
 							"usertype": 2,
 							"title": "admin:Audit"
 						},
 						"menu:sessions": {
 							"position": 2,
-							"perms":"admin",
+							"perms": "admin",
 							"url": "/admin/tools/listsessions.php",
 							"usertype": 2,
 							"title": "admin:Sessions"

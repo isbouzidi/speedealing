@@ -40,6 +40,7 @@ var BankSchema = new Schema({
     zip: String,
     town: String,
     comment: String,
+	entity: String,
     owner: {
         name: String,
         address: String,
