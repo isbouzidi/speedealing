@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
 		_ = require('lodash'),
+		async = require('async'),
 		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
@@ -274,6 +275,21 @@ module.exports = function (app, passport, auth) {
 							//console.log(typeof contact[tab[i]]);
 						}
 						break;
+					case "JSON_Tag" :
+						if (row[i]) {
+							var seg = JSON.parse(row[i]);
+							if (typeof contact.Tag != "object")
+								contact.Tag = [];
+
+							for (var j = 0; j < seg.length; j++) {
+								seg[j] = seg[j].replace(/\./g, "");
+								seg[j] = seg[j].trim();
+
+								contact.Tag.push({text: seg[j]});
+							}
+							//console.log(typeof contact[tab[i]]);
+						}
+						break;
 					case "phone_mobile":
 						if (row[i])
 							contact[tab[i]] = row[i].replace(/ /g, "");
@@ -294,6 +310,18 @@ module.exports = function (app, passport, auth) {
 						if (row[i])
 							contact[tab[i]] = row[i].toLowerCase();
 						break;
+					case "JSON_societe" :
+						if (row[i]) {
+							var societe = {};
+							try {
+								societe = JSON.parse(row[i]);
+							} catch (e) {
+								societe.name = row[i];
+							}
+
+							contact.societe = societe;
+						}
+						break;
 					case "notes":
 						if (row[i]) {
 							if (!_.isArray(contact.notes))
@@ -307,7 +335,6 @@ module.exports = function (app, passport, auth) {
 								note: row[i]
 							});
 						}
-
 						break;
 					default :
 						if (row[i])
@@ -340,96 +367,116 @@ module.exports = function (app, passport, auth) {
 
 							convertRow(tab, row, index, function (data) {
 
-								if (data.code_client || data.oldId) {
-									var querySoc = {};
-									if (data.code_client)
-										querySoc = {code_client: data.code_client};
-									else
-										querySoc = {oldId: data.oldId};
+								if (data.code_client || data.oldId || data.societe) {
 
-									SocieteModel.findOne(querySoc, function (err, societe) {
-										if (err) {
-											console.log(err);
-											return callback();
-										}
+									async.series([
+										function (cb) {
 
-										if (societe == null) {
-											console.log("Societe not found : " + data.code_client + '/' + data.oldId);
-											return callback();
-										}
+											var querySoc = {};
 
-										data.societe = {
-											id: societe._id,
-											name: societe.name
-										};
+											if (data.societe) {
+												//console.log(data.societe);
+												return cb();
+											} else if (data.code_client)
+												querySoc = {code_client: data.code_client};
+											else
+												querySoc = {oldId: data.oldId};
 
-										var query = {
-											$or: []
-										};
-
-										if (data.email)
-											query.$or.push({email: data.email.toLowerCase()});
-										//if (data.phone !== null)
-										//	query.$or.push({phone: data.phone});
-										if (data.phone_mobile)
-											query.$or.push({phone_mobile: data.phone_mobile});
-
-										if (!query.$or.length)
-											query = {
-												"societe.id": data.societe.id,
-												lastname: (data.lastname?data.lastname.toUpperCase():"")
-											};
-										
-										//console.log(query);
-
-										ContactModel.findOne(query, function (err, contact) {
-
-											if (err) {
-												console.log(err);
-												return callback();
-											}
-
-											if (contact == null) {
-												contact = new ContactModel(data);
-											} else {
-												console.log("Contact found");
-												
-												if (data.Tag)
-													data.Tag = _.union(contact.Tag, data.Tag); // Fusion Tag
-
-												contact = _.extend(contact, data);
-											}
-
-											//console.log(data);
-
-											//console.log(row[10]);
-											//console.log(contact);
-											//console.log(societe.datec);
-
-											contact.save(function (err, doc) {
-												if (err)
+											SocieteModel.findOne(querySoc, function (err, societe) {
+												if (err) {
 													console.log(err);
-												/*if (doc == null)
-												 console.log("null");
-												 else
-												 console.log(doc);*/
+													return callback();
+												}
 
-												callback();
+												if (societe == null) {
+													console.log("Societe not found : " + data.code_client + '/' + data.oldId);
+													return callback();
+												}
+
+												data.societe = {
+													id: societe._id,
+													name: societe.name
+												};
+
+												cb();
+
 											});
-										});
+										}, function (cb) {
+
+											var query = {
+												$or: []
+											};
+
+											if (data._id)
+												query.$or.push({_id: data._id});
+
+											if (data.email)
+												query.$or.push({email: data.email.toLowerCase()});
+											//if (data.phone !== null)
+											//	query.$or.push({phone: data.phone});
+											if (data.phone_mobile)
+												query.$or.push({phone_mobile: data.phone_mobile});
+
+											if (!query.$or.length)
+												query = {
+													"societe.id": data.societe.id,
+													lastname: (data.lastname ? data.lastname.toUpperCase() : "")
+												};
+
+											//console.log(query);
+
+											ContactModel.findOne(query, function (err, contact) {
+
+												if (err) {
+													console.log(err);
+													return callback();
+												}
+
+												if (contact == null) {
+													contact = new ContactModel(data);
+												} else {
+													console.log("Contact found");
+
+													if (data.Tag)
+														data.Tag = _.union(contact.Tag, data.Tag); // Fusion Tag
+
+													contact = _.extend(contact, data);
+												}
+
+												//console.log(data);
+
+												//console.log(row[10]);
+												//console.log(contact);
+												//console.log(societe.datec);
+
+												contact.save(function (err, doc) {
+													if (err)
+														console.log(err);
+													/*if (doc == null)
+													 console.log("null");
+													 else
+													 console.log(doc);*/
+
+													callback();
+												});
+											});
+										}], function () {
 
 									});
-								} else {
 
+								} else {
 									var query = {
 										$or: []
 									};
 
-									if (data.email !== null)
+									if (data._id)
+										query.$or.push({_id: data._id});
+
+									if (data.email)
 										query.$or.push({email: data.email});
 									//if (data.phone !== null)
 									//	query.$or.push({phone: data.phone});
-									if (data.phone_mobile !== null)
+									if (data.phone_mobile)
 										query.$or.push({phone_mobile: data.phone_mobile});
 
 									if (query.$or.length) {

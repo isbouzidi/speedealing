@@ -1164,6 +1164,32 @@ module.exports = function (app, passport, auth) {
 											});
 
 										});
+									else if (data._id)
+										SocieteModel.findOne({_id: data._id}, function (err, societe) {
+											if (err) {
+												console.log(err);
+												return callback();
+											}
+
+											if (societe == null || societe.zip != data.zip)
+												societe = new SocieteModel(data);
+											else {
+												console.log("Found : update");
+												societe = _.defaults(societe, data);
+											}
+
+											//console.log(row[10]);
+											//console.log(societe)
+											//console.log(societe.datec);
+
+											societe.save(function (err, doc) {
+												if (err)
+													console.log(err);
+
+												callback();
+											});
+
+										});
 									else
 										SocieteModel.findOne({name: data.name}, function (err, societe) {
 											if (err) {
