@@ -15,7 +15,7 @@
 			
 			<p class="button-height inline-label">
 				<label for="ticket_controlledBy">{{t 'ticket:ControlledBy'}}</label>
-				<input type="text" id="ticket_controlledBy" data-ng-model="ticket.controlledBy" data-typeahead-on-select="ticket.affectedTo[0]=ticket.controlledBy" data-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="input"/>
+				<input type="text" id="ticket_controlledBy" data-ng-model="ticket.controlledBy" data-typeahead-on-select="ticket.affectedTo[0]=ticket.controlledBy" data-typeahead="user as user.name for user in AutoComplete($viewValue, '/api/user/name/autocomplete',10) | filter:{name:$viewValue}" class="input"/>
 				<small class="input-info">{{t 'ticket:UserClosedTicket'}}</small>
 			</p>
 
@@ -24,7 +24,7 @@
 				<span  data-ng-repeat="user in ticket.affectedTo">
 					<span class="tag anthracite-gradient glossy">\{{user.name}} <a href="" data-ng-hide="$index==0" data-ng-click="deleteAffected($index)" class="icon-trash"></a></span>
 				</span>
-				<input type="text" id="ticket_affectedTo" data-ng-model="affected" data-typeahead-on-select="ticket.affectedTo.push(affected); affected=null;" data-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="input"/>
+				<input type="text" id="ticket_affectedTo" data-ng-model="affected" data-typeahead-on-select="ticket.affectedTo.push(affected); affected=null;" data-typeahead="user as user.name for user in AutoComplete($viewValue, '/api/user/name/autocomplete',10) | filter:{name:$viewValue}" class="input"/>
 				<!--<select kendo-multi-select id="ticket_affectedTo" k-options="userAutoCompleteEditor" data-ng-model="ticket.affectedTo" class="input"></select>-->
 				<small class="input-info">{{t 'ticket:RecievedNotification'}}</small>
 			</p>

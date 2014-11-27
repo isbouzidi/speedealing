@@ -46,7 +46,7 @@ exports.setAccessCodeGoogle = function (req, res, next) {
 
 					//console.log(user.google.tokens);
 
-					if (!user.google.tokens.refresh_token)
+					if (!user.google || !user.google.tokens.refresh_token)
 						return googleCommon.refreshGoogleTokens(user, function (err) {
 							if (err)
 								console.log(err);

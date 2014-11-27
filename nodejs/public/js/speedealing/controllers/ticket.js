@@ -194,19 +194,6 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			return "";
 		};
 
-		$scope.userAutoComplete = function (val) {
-			return $http.post('api/user/name/autocomplete?status=ENABLE', {
-				take: '5',
-				skip: '0',
-				page: '1',
-				pageSize: '5',
-				filter: {logic: 'and', filters: [{value: val}]
-				}
-			}).then(function (res) {
-				return res.data;
-			});
-		};
-
 		$scope.linkAutoComplete = function (val) {
 			return $http.post($scope.module.searchUrl, {
 				take: '5',
