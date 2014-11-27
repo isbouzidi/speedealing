@@ -25,7 +25,7 @@ module.exports = function (app, passport, auth, usersSocket) {
 	app.put('/api/ticket/read', auth.requiresLogin, function (req, res) {
 
 		var addComment = {
-			title: "<strong>" + req.user.firstname + "</strong> a ouvert le ticket",
+			title: "<strong>" + req.user.firstname + "</strong> a ouvert l'alerte",
 			datec: new Date(),
 			author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
 			icon: "icon-eye"
@@ -35,8 +35,8 @@ module.exports = function (app, passport, auth, usersSocket) {
 		var socket = usersSocket[req.body.controlledBy.id];
 		if (req.body.controlledBy.id != req.user._id && socket)
 			socket.emit('notify', {
-				title: 'Ticket : ' + req.body.name,
-				message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a ouvert le ticket ' + req.body.ref,
+				title: 'Alerte : ' + req.body.name,
+				message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a ouvert l\'alerte ' + req.body.ref,
 				options: {
 					autoClose: true,
 					classes: ["anthracite-gradient"]
@@ -79,7 +79,7 @@ module.exports = function (app, passport, auth, usersSocket) {
 		var socket = usersSocket[req.body.controller.id];
 		if (req.body.controller.id != req.user._id && socket)
 			socket.emit('notify', {
-				title: 'Ticket : ' + req.body.name,
+				title: 'Alerte : ' + req.body.name,
 				message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a changé la date d\'échéance au ' + dateFormat(datef, "dd/mm/yyyy"),
 				options: {
 					autoClose: false,
@@ -118,8 +118,8 @@ module.exports = function (app, passport, auth, usersSocket) {
 				var socket = usersSocket[req.body.addUser.id];
 				if (socket)
 					socket.emit('notify', {
-						title: 'Ticket : ' + req.body.name,
-						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> vous a ajouté sur le ticket ' + req.body.ref + ' et attend votre intervention.',
+						title: 'Alerte : ' + req.body.name,
+						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> vous a ajouté sur l\'alerte ' + req.body.ref + ' et attend votre intervention.',
 						options: {
 							autoClose: false,
 							delay: 300,
@@ -139,8 +139,8 @@ module.exports = function (app, passport, auth, usersSocket) {
 				var socket = usersSocket[req.body.controller.id];
 				if (socket)
 					socket.emit('notify', {
-						title: 'Ticket : ' + req.body.name,
-						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> vous pose un question sur votre ticket ' + req.body.ref + '.',
+						title: 'Alerte : ' + req.body.name,
+						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> vous pose une question sur votre alerte ' + req.body.ref + '.',
 						options: {
 							autoClose: false,
 							delay: 300,
@@ -163,8 +163,8 @@ module.exports = function (app, passport, auth, usersSocket) {
 						var socket = usersSocket[user.id];
 						if (socket)
 							socket.emit('notify', {
-								title: 'Ticket : ' + req.body.name,
-								message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a commenté le ticket ' + req.body.ref + '.',
+								title: 'Alerte : ' + req.body.name,
+								message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a commenté l\'alerte ' + req.body.ref + '.',
 								options: {
 									autoClose: true,
 									delay: 300,
@@ -233,7 +233,7 @@ module.exports = function (app, passport, auth, usersSocket) {
 			datec: new Date(),
 			author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
 			icon: "icon-cross-round",
-			title: "<strong>" + req.user.firstname + "</strong> a cloture le ticket"
+			title: "<strong>" + req.user.firstname + "</strong> a cloture l'alerte."
 		};
 
 		var update = {
@@ -280,8 +280,8 @@ module.exports = function (app, passport, auth, usersSocket) {
 		if (req.body.controller.id != req.user._id && socket) {
 			if (parseInt(req.body.percentage, 10) === 100)
 				socket.emit('notify', {
-					title: 'Ticket : ' + req.body.name,
-					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a terminé le ticket ' + req.body.ref + '.',
+					title: 'Alerte : ' + req.body.name,
+					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a terminé l\'alerte ' + req.body.ref + '.',
 					options: {
 						autoClose: false,
 						link: "#!/ticket/" + req.body.id,
@@ -290,8 +290,8 @@ module.exports = function (app, passport, auth, usersSocket) {
 				});
 			else
 				socket.emit('notify', {
-					title: 'Ticket : ' + req.body.name,
-					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a changé le niveau du ticket ' + req.body.ref + ' à ' + req.body.percentage + '%.',
+					title: 'Alerte : ' + req.body.name,
+					message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a changé le niveau de l\'alerte ' + req.body.ref + ' à ' + req.body.percentage + '%.',
 					options: {
 						autoClose: true,
 						link: "#!/ticket/" + req.body.id,
@@ -380,7 +380,7 @@ Object.prototype = {
 		var ticket = new TicketModel(req.body);
 
 		ticket.comments.push({author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
-			title: "<strong>" + req.user.firstname + "</strong> a crée le ticket",
+			title: "<strong>" + req.user.firstname + "</strong> a crée l'alerte",
 			datec: new Date(),
 			icon: "icon-speech",
 			note: "Date d\'échéance au " + dateFormat(ticket.datef, "dd/mm/yyyy")
@@ -400,8 +400,8 @@ Object.prototype = {
 				var socket = self.usersSocket[user.id];
 				if (socket)
 					socket.emit('notify', {
-						title: 'Ticket : ' + doc.name,
-						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a ajouté le ticket ' + doc.ref + '.',
+						title: 'Alerte : ' + doc.name,
+						message: '<strong>' + req.user.firstname + " " + req.user.lastname[0] + '.</strong> a ajouté l\'alerte ' + doc.ref + '.',
 						options: {
 							autoClose: false,
 							delay: 300,
