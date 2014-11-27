@@ -708,7 +708,7 @@ Contact.prototype = {
 
 		var json2csv = require('json2csv');
 
-		ContactModel.find({Tag: "Arseg", sendEmailing: false, sendSMS: false}, function (err, contacts) {
+		ContactModel.find({Tag: "Arseg", sendEmailing: {$ne :true}, sendSMS: {$ne: true}}, function (err, contacts) {
 			//console.log(contact);
 			
 			for(var i=0; i<contacts.length;i++) {
