@@ -1,12 +1,12 @@
 "use strict";
 /* global angular: true */
 
-angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTitle', '$http', '$timeout', '$upload', '$route', 'Global', 'Order', function($scope, pageTitle, $http, $timeout, $upload, $route, Global, Order) {
+angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTitle', '$http', '$timeout', '$upload', '$route', 'Global', 'Order', function ($scope, pageTitle, $http, $timeout, $upload, $route, Global, Order) {
 		$scope.global = Global;
 
 		pageTitle.setTitle('Nouvelle commande OTIS');
 
-		$scope.init = function() {
+		$scope.init = function () {
 			$scope.active = 1;
 			$scope.order = {};
 			$scope.order.bl = [];
@@ -26,15 +26,15 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			$scope.order.optional = {};
 			$scope.order.optional.dossiers = [];
 			$scope.order.optional.dossiers[0] = {};
-			
+
 			$scope.nbUpload = 0;
 		};
 
-		$scope.newOrder = function() {
+		$scope.newOrder = function () {
 			$route.reload();
 		};
 
-		$scope.create = function() {
+		$scope.create = function () {
 			if (this.order._id)
 				return;
 
@@ -42,7 +42,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 			var order = new Order(this.order);
 
-			order.$save(function(response) {
+			order.$save(function (response) {
 				$scope.order = response;
 
 				$scope.order.optional.dossiers = [];
@@ -53,10 +53,10 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			});
 		};
 
-		$scope.update = function(cb) {
+		$scope.update = function (cb) {
 			var order = $scope.order;
 
-			order.$update(function(response) {
+			order.$update(function (response) {
 				$scope.order = response;
 
 				if (response && typeof cb == "function") {
@@ -66,20 +66,20 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			});
 		};
 
-		$scope.isActive = function(idx) {
+		$scope.isActive = function (idx) {
 			if (idx == $scope.active)
 				return "active";
 		};
 
-		$scope.next = function() {
+		$scope.next = function () {
 			$scope.active++;
 		};
 
-		$scope.previous = function() {
+		$scope.previous = function () {
 			$scope.active--;
 		};
 
-		$scope.goto = function(idx) {
+		$scope.goto = function (idx) {
 			if ($scope.active == 5)
 				return;
 
@@ -87,7 +87,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				$scope.active = idx;
 		};
 
-		$scope.otisAutoComplete = function(val, field) {
+		$scope.otisAutoComplete = function (val, field) {
 			return $http.post('api/chaumeil/otis/autocomplete', {
 				field: field,
 				take: '5',
@@ -96,25 +96,25 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				pageSize: '5',
 				filter: {logic: 'and', filters: [{value: val}]
 				}
-			}).then(function(res) {
+			}).then(function (res) {
 				return res.data;
 			});
 		};
 
-		$scope.initAssistantes = function(centreCout) {
+		$scope.initAssistantes = function (centreCout) {
 			$http({method: 'GET', url: 'api/chaumeil/otis/assistantes', params: {
 					centreCout: centreCout
 				}
 			}).
-					success(function(data, status) {
+					success(function (data, status) {
 						$scope.assistantes = data;
-						$timeout(function() {
+						$timeout(function () {
 							angular.element('select').change();
 						}, 300);
 					});
 		};
 
-		$scope.updateAssistante = function() {
+		$scope.updateAssistante = function () {
 			//console.log($scope.order.optional.assistante);
 			if (!$scope.order.optional.assistante)
 				return;
@@ -138,22 +138,22 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 		};
 
-		$scope.initSelectFiles = function() {
+		$scope.initSelectFiles = function () {
 			$http({method: 'GET', url: 'api/chaumeil/otis/selectFiles'
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				$scope.selectFiles = data;
 
-				$timeout(function() {
+				$timeout(function () {
 					angular.element('select').change();
 				}, 300);
 			});
 		};
 
-		$scope.addDossier = function() {
+		$scope.addDossier = function () {
 			$scope.order.optional.dossiers.push({});
 		};
 
-		$scope.addDest = function() {
+		$scope.addDest = function () {
 			$scope.order.bl.push({
 				products: [
 					{name: 'paper', qty: 0},
@@ -162,13 +162,13 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			});
 		};
 
-		$scope.sendOrder = function() {
+		$scope.sendOrder = function () {
 			$scope.order.datec = new Date();
 			$scope.order.date_livraison = new Date();
 			$scope.order.date_livraison.setDate($scope.order.date_livraison.getDate() + 5);
 
 			$scope.order.Status = "NEW"; // commande validee
-			
+
 			var note;
 
 			for (var i in this.order.bl) {
@@ -218,7 +218,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 
 		};
 
-		$scope.onFileSelect = function($files, idx) {
+		$scope.onFileSelect = function ($files, idx) {
 			$scope.filePercentage[idx] = 0;
 			//console.log(idx);
 			//$files: an array of files selected, each file has name, size, and type.
@@ -228,35 +228,37 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				//console.log(file);
 				if ($scope.order)
 					$scope.nbUpload++;
-					$scope.upload = $upload.upload({
-						url: 'api/commande/file/' + $scope.order._id,
-						method: 'POST',
-						// headers: {'headerKey': 'headerValue'},
-						// withCredential: true,
-						data: {idx: idx},
-						file: file,
-						// file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
-						/* set file formData name for 'Content-Desposition' header. Default: 'file' */
-						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
-						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
-						//formDataAppender: function(formData, key, val){} 
-					}).progress(function(evt) { // FIXME function in a loop !
-						$scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total, 10)); // parseInt(string, radix) eg base 10
-						//console.log(evt);
-					}).success(function(data, status, headers, config) { // FIXME function in a loop !
-						// file is uploaded successfully
-						//$scope.myFiles = "";
-						//console.log(data);
+				$scope.upload = $upload.upload({
+					url: 'api/commande/file/' + $scope.order._id,
+					method: 'POST',
+					// headers: {'headerKey': 'headerValue'},
+					// withCredential: true,
+					data: {idx: idx},
+					file: file,
+					// file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
+					/* set file formData name for 'Content-Desposition' header. Default: 'file' */
+					//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
+					/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
+					//formDataAppender: function(formData, key, val){} 
+				}).progress(function (evt) { // FIXME function in a loop !
+					$scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total, 10)); // parseInt(string, radix) eg base 10
+					//console.log(evt);
+				}).success(function (data, status, headers, config) { // FIXME function in a loop !
+					// file is uploaded successfully
+					//$scope.myFiles = "";
+					//console.log(data);
 
-						$scope.order.files = data.files;
-						$scope.order.__v = data.__v; // for update
-						//$scope.order = data;
-						
-						$scope.nbUpload--;//end Upload
+					$scope.order.files = data.files;
+					$scope.order.__v = data.__v; // for update
+					//$scope.order = data;
 
-						//$scope.filePercentage[idx] = 100;
-						$scope.fileName[idx] = file.name;
-					});
+					$scope.nbUpload--;//end Upload
+
+					//$scope.filePercentage[idx] = 100;
+					$scope.fileName[idx] = file.name;
+				}).error(function(response){
+					$scope.fileName[idx] = "error";
+				});
 				//.error(...)
 				/*		.then(function(response) {
 				 $timeout(function() {
@@ -273,12 +275,27 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 				 });*/
 			}
 		};
-		
-		$scope.reInitFiles = function() {
+
+		$scope.reInitFiles = function () {
 			$scope.nbUpload = 0;
 		};
 
-		$scope.suppressFile = function(id, fileName, idx) {
+		$scope.progressBarType = function (name, value) {
+			//console.log("toto " + name + value);
+
+			if (value == 100)
+				if (typeof name === "string" && name !== "error") {
+					//console.log("success");
+					return "success";
+				} else if(name == "error") {
+					//console.log("danger");
+					return "danger";
+				}
+
+			return "warning";
+		};
+
+		$scope.suppressFile = function (id, fileName, idx) {
 			//console.log(id);
 			//console.log(fileName);
 			//console.log(idx);
@@ -287,7 +304,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			fileName = $scope.order.ref + "_" + idx + "_" + fileName;
 
 			$http({method: 'DELETE', url: 'api/commande/file/' + id + '/' + fileName
-			}).success(function(data, status) {
+			}).success(function (data, status) {
 				//console.log(data);
 				if (status == 200) {
 					$scope.order.files = data.files;
@@ -301,7 +318,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			});
 		};
 
-		$scope.countExemplaires = function() {
+		$scope.countExemplaires = function () {
 
 			$scope.cd = 0;
 			$scope.papier = 0;
@@ -312,7 +329,7 @@ angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTi
 			}
 		};
 
-		$scope.updateDF = function(obj) {
+		$scope.updateDF = function (obj) {
 			$scope.initAssistantes(obj.centreCout.substr(1, 3)); //update liste assistante
 			$scope.order.optional.numDF = obj.centreCout.substr(1, 2) + "/      /" + obj.centreCout.substr(3);
 			$scope.oldNumDF = $scope.order.optional.numDF;
