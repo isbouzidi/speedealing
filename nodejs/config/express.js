@@ -49,7 +49,7 @@ module.exports = function (app, passport, db) {
 		useCookie: false,
 		//cookie: 'speedealingLang',
 		detectLngFromHeaders: false,
-		saveMissing: true,
+		saveMissing: false,
 		debug: false,
 		sendMissingTo: 'fallback',
 		fallbackLng: "fr-FR"
