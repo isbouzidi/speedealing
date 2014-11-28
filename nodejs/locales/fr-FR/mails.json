@@ -122,5 +122,6 @@
     "SomeNotificationsWillBeSent": "%s notifications vont être envoyées par email",
     "AddNewNotification": "Activer une nouvelle demande de notification email",
     "ListOfActiveNotifications": "Liste des demandes de notifications emails actives",
-    "ListOfNotificationsDone": "Liste des notifications emails envoyées"
+    "ListOfNotificationsDone": "Liste des notifications emails envoyées",
+    "Title": "Titre"
 }

@@ -115,6 +115,26 @@
 					"indicateur": false
 				}
 			}
+		],
+                "mails": [
+			{
+				"desc": "Consulter la liste des emailings",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer/modifier les emailings",
+				"perm": {
+					"write": false
+				}
+			},
+			{
+				"desc": "Supprimer ou desactiver les emailings",
+				"perm": {
+					"delete": false
+				}
+			}
 		]
 	},
 	"module_parts": [],
@@ -182,9 +202,17 @@
 							"url": "/admin/tools/listsessions.php",
 							"usertype": 2,
 							"title": "admin:Sessions"
-						}
+						}                                                
 					}
-				}
+				},
+                                "menu:mailing": {
+                                        "position": 3,
+                                        "usertype": 2,
+                                        "url": "#!/mailing",
+                                        "enabled": "$user->admin",
+                                        "perms":"admin",
+                                        "title": "admin:Mailing"
+                                }
 			}
 		},
 		"menu:user": {
