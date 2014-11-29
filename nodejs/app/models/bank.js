@@ -49,7 +49,8 @@ var BankSchema = new Schema({
     author: {
         id: {type: String, ref: 'User'},
         name: String
-    }
+    },
+    entity: {type: String, trim:true}
 }, {
 	toObject: {virtuals: true},
 	toJSON: {virtuals: true}

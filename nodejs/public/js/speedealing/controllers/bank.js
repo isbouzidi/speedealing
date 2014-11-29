@@ -20,12 +20,25 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
                 $scope.dict = data;
 
             });
+            
+            $http({method: 'GET', url: 'api/entity/select'})
+            .success(function (data, status) {
+                $scope.entities = data;
+                $scope.entities.push({
+                    id: "ALL",
+                    name: "ALL"
+                });
+            });
 
         };
 
         $scope.find = function () {
 
-            Bank.query(function (bank) {
+            var params = {
+                entity: Global.user.entity
+            };
+            
+            Bank.query(params, function (bank) {
                 $scope.bank = bank;
                 $scope.countBank = bank.length;
             });
@@ -385,7 +398,8 @@ angular.module('mean.bank').controller('BankCreateController', ['$scope', '$http
                 transaction: [{
                         description: "Initial balance",
                         credit: 0
-                    }]
+                    }],
+                entity: Global.user.entity
             };
 
             var dict = ["fk_country", "fk_currencies", "fk_account_status", "fk_account_type"];
