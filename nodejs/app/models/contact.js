@@ -72,7 +72,7 @@ var contactSchema = new Schema({
 	notes: String,
 	entity: {type: String, trim: true},
 	sex: {type: String, default: "H"},
-	newsletter: Boolean,
+	newsletter: {type: Boolean, default: false},
 	sendEmailing: {type: Boolean, default: true},
 	sendSMS: {type: Boolean, default: true},
 	birthday: Date,

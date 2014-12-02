@@ -708,13 +708,13 @@ Contact.prototype = {
 
 		var json2csv = require('json2csv');
 
-		ContactModel.find({Tag: "Arseg", sendEmailing: {$ne :true}, sendSMS: {$ne: true}}, function (err, contacts) {
+		ContactModel.find({Tag: "Arseg"/*, sendEmailing: {$ne :true}, sendSMS: {$ne: true}*/}, function (err, contacts) {
 			//console.log(contact);
-			
-			for(var i=0; i<contacts.length;i++) {
+
+			for (var i = 0; i < contacts.length; i++) {
 				contacts[i].optional = contacts[i].societe.name;
 			}
-			
+
 			json2csv({data: contacts, fields: ['_id', 'firstname', 'lastname', 'optional', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'], del: ";"}, function (err, csv) {
 				if (err)
 					console.log(err);
