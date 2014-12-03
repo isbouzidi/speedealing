@@ -11,3 +11,4 @@ development.json
 somefile.log
 new.*.json
 /pdfs/
+npm-debug.log

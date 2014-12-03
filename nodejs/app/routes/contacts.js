@@ -713,18 +713,52 @@ Contact.prototype = {
 
 			for (var i = 0; i < contacts.length; i++) {
 				contacts[i].optional = contacts[i].societe.name;
+
+				//modify address
+				if (contacts[i].address)
+					contacts[i].address = contacts[i].address.replace(/\n/g, 0x0A);
 			}
 
-			json2csv({data: contacts, fields: ['_id', 'firstname', 'lastname', 'optional', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'], del: ";"}, function (err, csv) {
-				if (err)
-					console.log(err);
+			var csv = "";
 
-				res.type('application/text');
-				res.attachment('contact_' + dateFormat(new Date(), "ddmmyyyy_HH:MM") + '.csv');
-				res.send(csv);
 
-				//console.log(csv);
-			});
+			var fields = ['_id', 'firstname', 'lastname', 'optional', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'];
+
+			for (var i = 0; i < fields.length; i++) {
+				csv += fields[i];
+
+				if (i === fields.length)
+					csv += "\n";
+				else
+					csv += ";";
+			}
+
+			for (var i = 0; i < contacts.length; i++) {
+				for (var j = 0; j < fields.length; j++) {
+					if (contacts[i][fields[j]]) {
+						if (typeof contacts[i][fields[j]] == 'string')
+							csv += "\"" + contacts[i][fields[j]] + "\"";
+						else
+							csv += contacts[i][fields[j]];
+					}
+
+					if (j === fields.length)
+						csv += "\n";
+					else
+						csv += ";";
+				}
+			}
+
+			//json2csv({data: contacts, fields: ['_id', 'firstname', 'lastname', 'optional', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'], del: ";"}, function (err, csv) {
+			//	if (err)
+			//		console.log(err);
+
+			res.type('application/text');
+			res.attachment('contact_' + dateFormat(new Date(), "ddmmyyyy_HH:MM") + '.csv');
+			res.send(csv);
+
+			//console.log(csv);
+			//});
 		});
 	}
 };

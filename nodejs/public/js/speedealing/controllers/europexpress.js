@@ -380,7 +380,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 
 		$scope.type = {name: "3 derniers mois", id: "THREEMONTH"};
 
-		var crudServiceBaseUrl = "api/europexpress/courses";
+		/*var crudServiceBaseUrl = "api/europexpress/courses";
 
 		$scope.dataSource = new kendo.data.DataSource({
 			serverSorting: true,
@@ -466,7 +466,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 			//e.container.find('div[data-container-for="from"]').hide();
 			e.container.find('label[for="undefined"]').hide();
 			e.container.find('.button-group').hide();
-		};
+		};*/
 
 		$scope.dateTimeEditor = function (container, options) {
 			$('<input data-text-field="' + options.field + '" data-value-field="' + options.field + '" data-bind="value:' + options.field + '" data-format="' + options.format + '"/>')
@@ -474,7 +474,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					.kendoDateTimePicker({});
 		};
 
-		$scope.clientDropDownEditor = function (container, options) {
+		/*$scope.clientDropDownEditor = function (container, options) {
 			$('<input required id="id"/>')
 					.attr("name", options.field)
 					.appendTo(container)
@@ -554,7 +554,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 					}
 				}
 			});
-		};
+		};*/
 
 		$scope.find = function () {
 			Object.query({query: this.type.id, entity: Global.user.entity}, function (courses) {
@@ -597,7 +597,7 @@ angular.module('mean.europexpress').controller('EETransportController', ['$scope
 				{field: 'commission', displayName: 'Comission', cellFilter: "currency", cellClass: "align-right"},
 				{field: 'bordereau', displayName: 'Bordereau'},
 				//{field: 'updatedAt', displayName: 'Dernière MAJ', cellFilter: "date:'dd-MM-yyyy'"},
-				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a class="button icon-pencil" title="Editer" ng-disabled="!editable" ng-href="#!/module/europexpress/transport_edit.html/{{row.getProperty(\'_id\')}}"></a><a class="button icon-download" ng-href="api/europexpress/courses/pdf/{{row.getProperty(\'_id\')}}" target="_blank"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
+				{displayName: "Actions", enableCellEdit: false, width: "100px", cellTemplate: '<div class="ngCellText align-center"><div class="button-group align-center compact children-tooltip"><a class="button icon-pencil" title="Editer" ng-disabled="!editable" ng-href="#!/module/europexpress/transport_edit.html/{{row.getProperty(\'_id\')}}"></a><a class="button icon-download" ng-href="api/europexpress/courses/pdf/{{row.getProperty(\'_id\')}}" target="_blank"></a><a class="button icon-new" ng-href="api/europexpress/courses/odt/{{row.getProperty(\'_id\')}}"></a><button class="button red-gradient icon-trash" disabled title="Supprimer"></button></div></div>'}
 			]
 		};
 
