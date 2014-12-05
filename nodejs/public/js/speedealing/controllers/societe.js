@@ -796,13 +796,14 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			enableRowSelection: false,
 			i18n: 'fr',
 			enableColumnResize: true,
-			sortInfo: {fields: ['createdAt'], directions: ['desc']},
+			sortInfo: {fields: ['dueDate'], directions: ['desc']},
 			columnDefs: [
+				// TODO Type de projet ???
 				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a ng-click="findLead(row.getProperty(\'_id\'))" title=\'{{row.getProperty(col.field)}}\'><span class="icon-briefcase"></span> {{row.getProperty(col.field)}}</a>'},
-				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'dueDate', displayName: 'Date échéance', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'status', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'Status.css\')}} glossy">{{row.getProperty(\'Status.name\')}}</small></div>'},
 				{field: 'potential', displayName: 'Potentiel', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'potentialLevel.css\')}} glossy">{{row.getProperty(\'potentialLevel.name\')}}</small></div>'},
+				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"}
 			]
 		};
 

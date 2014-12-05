@@ -91,7 +91,7 @@ var societeSchema = new Schema({
 		label: String,
 		group: String
 	},
-	caFamily: {type: String, default: "OTHER", uppercase: true},
+	caFamily: {type: String, uppercase: true}, // Enseigne
 	familyProduct: {type: [], set: setTags},
 	notes: [{
 			author: {

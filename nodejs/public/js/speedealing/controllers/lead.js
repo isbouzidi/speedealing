@@ -98,12 +98,13 @@ angular.module('mean.lead').controller('LeadController', ['$scope', '$http', '$r
 			filterOptions: $scope.filterOptionsLead,
 			sortInfo: {fields: ['createdAt'], directions: ['desc']},
 			columnDefs: [
+				// type deprojet ?
 				{field: 'name', displayName: 'Nom', cellTemplate: '<div class="ngCellText"><a ng-click="findLead(row.getProperty(\'_id\'))" title=\'{{row.getProperty(col.field)}}\'><span class="icon-briefcase"></span> {{row.getProperty(col.field)}}</a>'},
 				{field: 'societe.name', displayName: 'Société'},
-				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'dueDate', displayName: 'Date échéance', cellFilter: "date:'dd/MM/yyyy'"},
 				{field: 'status', displayName: 'Etat', cellTemplate: '<div class="ngCellText align-center"><small class="tag {{row.getProperty(\'Status.css\')}} glossy">{{row.getProperty(\'Status.name\')}}</small></div>'},
-				{field: 'commercial_id.name', displayName: 'Commercial'}
+				{field: 'commercial_id.name', displayName: 'Commercial'},
+				{field: 'createdAt', displayName: 'Date création', cellFilter: "date:'dd/MM/yyyy'"}
 			]
 		};
 

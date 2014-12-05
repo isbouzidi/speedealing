@@ -55,7 +55,11 @@ Object.prototype = {
         
         var balances = [];
         
-        BankModel.find({}, function (err, doc) {
+        var query = {
+                entity: {$in: ["ALL", req.query.entity]}
+            };
+            
+        BankModel.find(query, function (err, doc) {
             if (err) {
                     console.log(err);
                     res.send(500, doc);
@@ -75,6 +79,9 @@ Object.prototype = {
         bank.author.id = req.user._id;
         bank.author.name = req.user.name;
         
+        if (bank.entity === null)
+            bank.entity = req.user.entity;
+                    
         console.log(bank);
         bank.save(function (err, doc) {
             if (err) {

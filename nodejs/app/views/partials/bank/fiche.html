@@ -33,6 +33,13 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                        <th scope="row">{{t 'main:Entity'}}</th>
+                                        <td><span class="tag anthracite-gradient glossy" editable-select="bank.entity" buttons="no" e-form="EntityBtnForm" onaftersave="update()" e-ng-options="e.id as e.name for e in entities">
+                                            \{{bank.entity}}</span> 
+                                            <span class="icon-pencil grey" ng-click="EntityBtnForm.$show()" ng-hide="EntityBtnForm.$visible || !global.user.rights.bank.entity"></span>
+                                        </td>
+                                </tr>
+                                <tr>
                                     <th width="40%" scope="row">{{t 'bank:AccountType'}}</th>
                                     <td>
                                         <span class="tag small glossy" 

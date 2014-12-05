@@ -42,6 +42,12 @@
 				"perm": {
 					"create": false
 				}
+			},
+			{
+				"desc": "Modifier l'entité auquel est attaché la banque",
+				"perm": {
+					"entity": false
+				}
 			}
 		],
 		"paiment": [

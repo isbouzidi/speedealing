@@ -40,7 +40,7 @@
 						<option value="">-- {{t 'Select'}} {{t 'companies:Deal'}} --</option>
 					</select>
 					<select ng-model="status_id" ng-change="setCache('status_id', status_id);find();" ng-options="s.id as s.label for s in dict.fk_stcomm.values" class="">
-						<option value="">-- {{t 'Select'}} {{t 'Status'}} --</option>
+						<option value="">-- {{t 'Select'}} {{t 'companies:ProspectStatus'}} --</option>
 					</select>
 				</div>
 				<div class="col-sm-2">	

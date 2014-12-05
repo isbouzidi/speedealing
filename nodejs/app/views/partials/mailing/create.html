@@ -1,0 +1,43 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'mails:NewMailing'}}</h3>
+
+    <ul class="wizard-steps"></ul>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <h4>{{t 'Hello'}}</h4>
+            <p>Bienvenue sur l'interface de création de template d'email.</p>
+        </div>
+        
+        <div class="field-block button-height">
+            <label ><b>{{t 'mails:Title'}}</b></label>
+            <input required type="text" 
+                data-ng-model="mailing.title"
+                id="ref"  
+                class="input" 
+                autocomplete="off">
+        </div>
+        
+        <div class="field-block button-height">
+            <label ><b>{{t 'mails:MailTitle'}}</b></label>
+            <textarea class="input" rows="3" cols="60" data-ng-model="mailing.description"></textarea>
+        </div>
+        
+        <div class="field-block button-height">
+            <label ><b>{{t 'mails:MailFrom'}}</b></label>
+            <input required type="text" 
+                data-ng-model="mailing.transmitter"
+                id="ref"  
+                class="input" 
+                autocomplete="off">
+        </div>
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right" data-ng-disabled="!(bankCategory.name !== null)">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t 'Create'}}
+            </button>
+        </div>	
+    </fieldset>
+</form>

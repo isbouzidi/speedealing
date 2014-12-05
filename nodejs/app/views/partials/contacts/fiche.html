@@ -8,23 +8,23 @@
         <div class="field-block">
             <label><b>{{t 'companies:Lastname'}}</b></label>
 
-			<span
-				editable-select="contact.civilite" 
-				buttons="no"
-				onaftersave="update()"
-				blur="submit"
-				e-form="civilite"
-				e-ng-options="s.label as s.label for s in dict.fk_civilite.values">
+            <span
+                editable-select="contact.civilite" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="civilite"
+                e-ng-options="s.label as s.label for s in dict.fk_civilite.values">
                 \{{contact.civilite|| "Non défini"}}
             </span>
             <span class="icon-pencil grey" ng-click="civilite.$show()" ng-hide="civilite.$visible"></span>
 
             <span class="margin-left"
-				  editable-text="contact.lastname" 
-				  buttons="no"
-				  onaftersave="update()"
-				  blur="submit"
-				  e-form="lastname">
+                  editable-text="contact.lastname" 
+                  buttons="no"
+                  onaftersave="update()"
+                  blur="submit"
+                  e-form="lastname">
                 \{{contact.lastname|| "Non défini"}}
             </span>
             <span class="icon-pencil grey" ng-click="lastname.$show()" ng-hide="lastname.$visible"></span>
@@ -45,36 +45,36 @@
 
         </div>
 
-		<div class="field-block">
+        <div class="field-block">
             <label><b>{{t 'companies:ThirdPartyName'}}</b></label>
-			<a 
-				ng-show ="contact.societe.id"
+            <a 
+                ng-show ="contact.societe.id"
                 data-ng-href="#!/societes/\{{contact.societe.id}}" 
                 target="_blank"
-				class="icon-home"
+                class="icon-home"
                 editable-text="contact.societe"
-				e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
-				buttons="no"
+                e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
+                buttons="no"
                 e-form="eSocieteBtnForm" 
                 onaftersave="update()"
                 blur="submit">\{{contact.societe.name|| "Non defini"}} </a>
-			<span ng-hide="contact.societe.id"
-				  class="icon-home red"
-				  >\{{contact.societe.name|| "Non defini"}} </span>
+            <span ng-hide="contact.societe.id"
+                  class="icon-home red"
+                  >\{{contact.societe.name|| "Non defini"}} </span>
             <span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="eSocieteBtnForm.$visible"></span>
 
-		</div>
+        </div>
 
         <div class="field-block">
             <label><b>{{t 'companies:PostOrFunction'}}</b></label>
 
             <span
-				editable-select="contact.poste" 
-				buttons="no"
-				onaftersave="update()"
-				blur="submit"
-				e-form="poste"
-				e-ng-options="s.label as s.label for s in dict.fk_job.values">
+                editable-select="contact.poste" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="poste"
+                e-ng-options="s.label as s.label for s in dict.fk_job.values">
                 \{{contact.poste|| "Non défini"}}
             </span>
 
@@ -95,8 +95,15 @@
 
         </div>
         <div class="field-block">
-            <label><b>{{t
-				'Email'}}</b></label> 
+            <label><b>{{t 'companies:Soncas'}}</b></label>
+
+            <a href="#" editable-checklist="contact.soncas" e-class="xeditable" e-ng-options="s.value as s.text for s in soncas" onaftersave="update()">
+                \{{ contact.soncas || 'Non défini'}}
+            </a>
+
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'Email'}}</b></label> 
             <a 
                 data-ng-href="mailto:\{{contact.email}}" 
                 target="_blank" 
@@ -111,15 +118,15 @@
         <div class="field-block">
             <label><b>{{t 'companies:Tel-Mobile'}}</b></label>
 
-			<a href="#"
-			   editable-tel="contact.phone_mobile" 
-			   blur="submit" 
-			   buttons="no"
-			   e-form="telMobFrm"
-			   onaftersave="update()">
-				\{{ contact.phone_mobile || 'Non défini' }}
-			</a>
-			<span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
+            <a href="#"
+               editable-tel="contact.phone_mobile" 
+               blur="submit" 
+               buttons="no"
+               e-form="telMobFrm"
+               onaftersave="update()">
+                \{{ contact.phone_mobile || 'Non défini' }}
+            </a>
+            <span class="icon-pencil grey" ng-click="telMobFrm.$show()" ng-hide="telMobFrm.$visible"></span>
 
         </div>
         <div class="field-block">
@@ -139,20 +146,20 @@
 
         </div>
 
-		<div class="field-block">
-			<label><b>{{t 'companies:SendEmailing'}}</b></label>
-			<input type="checkbox" data-ng-model="contact.sendEmailing" data-ng-checked="contact.sendEmailing" data-ng-change="update()" />
-		</div>
+        <div class="field-block">
+            <label><b>{{t 'companies:SendEmailing'}}</b></label>
+            <input type="checkbox" data-ng-model="contact.sendEmailing" data-ng-checked="contact.sendEmailing" data-ng-change="update()" />
+        </div>
 
-		<div class="field-block">
-			<label><b>{{t 'companies:SendSMS'}}</b></label>
-			<input type="checkbox" data-ng-model="contact.sendSMS" data-ng-checked="contact.sendSMS" data-ng-change="update()" />
-		</div>
+        <div class="field-block">
+            <label><b>{{t 'companies:SendSMS'}}</b></label>
+            <input type="checkbox" data-ng-model="contact.sendSMS" data-ng-checked="contact.sendSMS" data-ng-change="update()" />
+        </div>
 
-		<div class="field-block">
-			<label><b>{{t 'companies:Newsletter'}}</b></label>
-			<input type="checkbox" data-ng-model="contact.newsletter" data-ng-checked="contact.newsletter" data-ng-change="update()" />
-		</div>
+        <div class="field-block">
+            <label><b>{{t 'companies:Newsletter'}}</b></label>
+            <input type="checkbox" data-ng-model="contact.newsletter" data-ng-checked="contact.newsletter" data-ng-change="update()" />
+        </div>
 
         <div class="field-block">
             <label><b>{{t 'companies:birthday'}}</b></label>
@@ -168,31 +175,22 @@
 
         </div>
 
-		<div class="field-block">
-            <label><b>{{t 'companies:Soncas'}}</b></label>
-
-			<a href="#" editable-checklist="contact.soncas" e-class="xeditable" e-ng-options="s.value as s.text for s in soncas" onaftersave="update()">
-				\{{ contact.soncas || 'Non défini'}}
-			</a>
-
-        </div>
-
-		<div class="field-block">
+        <div class="field-block">
             <label><b>{{t 'companies:Hobbies'}}</b></label>
 
-			<a href="#" editable-checklist="contact.hobbies" e-class="xeditable" e-ng-options="s.label as s.label for s in dict.fk_hobbies.values" onaftersave="update()">
-				\{{ contact.hobbies || 'Non défini'}}
-			</a>
+            <a href="#" editable-checklist="contact.hobbies" e-class="xeditable" e-ng-options="s.label as s.label for s in dict.fk_hobbies.values" onaftersave="update()">
+                \{{ contact.hobbies || 'Non défini'}}
+            </a>
 
         </div>
 
-		<div class="field-block">
+        <div class="field-block">
             <label><b>{{t
 				'Keywords'}}</b></label>
-			<tags-input ng-model="contact.Tag" placeholder="{{t
-				'Add'}}" on-tag-added='update()' on-tag-removed="update()">
-				<auto-complete source="AutoComplete($query,'api/contact/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
-			</tags-input>
+            <tags-input ng-model="contact.Tag" placeholder="{{t
+							'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+                <auto-complete source="AutoComplete($query,'api/contact/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
+            </tags-input>
         </div>
 
         <div class="field-block">
@@ -256,16 +254,16 @@
                 </div>
 
             </form>
-		</div>
+        </div>
 
-		<div class="twelve-columns small-margin-bottom">
-			<div class="float-right button-height">					
-				<button class="button" ng-disabled="!global.user.rights.contact.delete" confirmed-click="remove(contact)" ng-confirm-click="Supprimer définitivement le contact ?" title="Supprimer le contact">
-					{{t 'main:Delete'}}
-					<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
-				</button>
-			</div>
-		</div>
+        <div class="twelve-columns small-margin-bottom">
+            <div class="float-right button-height">					
+                <button class="button" ng-disabled="!global.user.rights.contact.delete" confirmed-click="remove(contact)" ng-confirm-click="Supprimer définitivement le contact ?" title="Supprimer le contact">
+                    {{t 'main:Delete'}}
+                    <span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
+                </button>
+            </div>
+        </div>
 
     </fieldset>
 </div>

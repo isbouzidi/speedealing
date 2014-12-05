@@ -1,0 +1,88 @@
+<section data-ng-controller="MailingController">
+    <div data-ng-init="findOne()">
+        <hgroup id="main-title" class="thin">
+            <h1>Template Email : \{{mailing.title}}</h1>
+        </hgroup>
+        
+        <div class="twelve-columns small-margin-bottom">
+                    <div class="float-right button-height">					
+                        <a class="button" ng-href="#!/mailing" title="Retour à la liste">
+                            {{t 'List'}}
+                            <span class="button-icon right-side"><span class="icon-list"></span></span>
+                        </a>
+                    </div>
+                </div>
+        <div class="with-padding" data-ng-init="init()">
+            
+            <tabset>
+                <tab>
+                    <tab-heading>
+                        <span class="icon-card">Fiche Template Email</span>
+                    </tab-heading>
+                    <div class="boxed relative large-box-shadow">
+                        <div class="twelve-columns">
+                            <table class="simple-table">
+                                <tbody>
+                                    <tr>
+                                        <th width="40%" scope="row">{{t 'mails:Title'}}</th>
+                                        <td>
+                                            <a href="#" editable-text="mailing.title" buttons="no" e-form="titleForm" onaftersave="update()" blur="submit">
+                                                \{{mailing.title|| "Non defini"}}
+                                            </a>
+                                            <span class="icon-pencil grey" ng-click="titleForm.$show()" ng-hide="titleForm.$visible"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="40%" scope="row">{{t 'mails:MailFrom'}}</th>
+                                        <td>
+                                            <a href="#" editable-text="mailing.transmitter" buttons="no" e-form="transmitterForm" onaftersave="update()" blur="submit">
+                                                \{{mailing.transmitter|| "Non defini"}}
+                                            </a>
+                                            <span class="icon-pencil grey" ng-click="transmitterForm.$show()" ng-hide="transmitterForm.$visible"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th width="40%" scope="row">{{t 'mails:MailTitle'}}</th>
+                                        <td>
+                                            <a href="#" editable-textarea="mailing.description" e-rows="7" e-cols="60" buttons="no" e-form="descriptionForm" onaftersave="update()" blur="submit">
+                                                \{{ mailing.description || 'no description' }}
+                                            </a>
+                                            <span class="icon-pencil grey" ng-click="descriptionForm.$show()" ng-hide="descriptionForm.$visible"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{t 'mails:MailTopic'}}</th>
+                                        <td>
+                                            <a href="#" editable-text="mailing.object" buttons="no" e-form="objectForm" onaftersave="update()" blur="submit">
+                                                \{{mailing.object|| "Non defini"}}
+                                            </a>
+                                            <span class="icon-pencil grey" ng-click="objectForm.$show()" ng-hide="objectForm.$visible"></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <!--
+                                            <span class="icon-pencil grey" ng-click="messageForm.$show()" ng-hide="messageForm.$visible"></span>
+                                            <a editable-textarea="mailing.message" href="#" e-class="ck-editor" e-ng-model="mailing.message" e-form="messageForm" onaftersave="update()" blur="submit">
+                                                <div style="bgcolor: #fff; padding: 10px"ng-bind-html="mailing.message"></div>
+                                            </a>
+                                            -->
+                                            <textarea class="ck-editor" ng-model="mailing.message"></textarea>
+                                            <div class="button-group float-right margin-top">
+                                                <button class="button icon-cross white-gradient" data-ng-click="findOne();">
+                                                    {{t 'Cancel'}}
+                                                </button>
+                                                <button class="button icon-tick blue-gradient" data-ng-click="update()">
+                                                    {{t 'Save'}}
+                                                </button>                                                
+                                            </div>                                            
+                                        </td>
+                                </tbody>
+                            </table>                        
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</section>
