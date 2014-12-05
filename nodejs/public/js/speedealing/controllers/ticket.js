@@ -355,9 +355,11 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		$scope.update = function () {
 			var ticket = $scope.ticket;
 
-			ticket.$update(function () {
+			ticket.$update(function (ticket) {
+				//console.log(ticket);
 				//$location.path("ticket/" /*+ response._id*/);
 				$route.reload();
+
 			});
 		};
 
@@ -379,6 +381,7 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 							}
 						}).
 								success(function (data, status) {
+									$scope.ticket.read.push(Global.user._id);
 								});
 					}
 				});
@@ -418,13 +421,23 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 			//}, 60000);
 		});
 
-		$scope.ticketRead = function (read, user) {
+		$scope.ticketRead = function (read, user, boolean) {
+			console.log(read);
+			console.log(user);
 			if (user == null)
 				user = Global.user._id;
-			if (read.indexOf(user) >= 0)
-				return "white-gradient";
-			else
-				return "orange-gradient";
+			if (boolean) {
+				if (read.indexOf(user) >= 0)
+					return true;
+				else
+					return false;
+			}
+			else {
+				if (read.indexOf(user) >= 0)
+					return "white-gradient";
+				else
+					return "orange-gradient";
+			}
 		};
 
 		$scope.countDown = function (date, reverse) {
