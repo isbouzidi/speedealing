@@ -422,8 +422,8 @@ angular.module('mean.system').controller('TicketController', ['$scope', '$routeP
 		});
 
 		$scope.ticketRead = function (read, user, boolean) {
-			console.log(read);
-			console.log(user);
+			//console.log(read);
+			//console.log(user);
 			if (user == null)
 				user = Global.user._id;
 			if (boolean) {
