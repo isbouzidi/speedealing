@@ -15,12 +15,12 @@
 			<div id="panel-nav" class="panel-load-target scrollable" style="height:490px" ng-style="style(42)" resize>
 				<div class="navigable">
 					<ul class="unstyled-list">						
-						<li class="message-menu" data-ng-class="ticketRead(menuTicket.read)" data-ng-repeat="menuTicket in menuTickets | orderBy:'datef'">
+						<li class="message-menu" data-ng-class="ticketRead(menuTicket.read, null, false)" data-ng-repeat="menuTicket in menuTickets | orderBy:'datef'">
 							<a href="#!/ticket/\{{menuTicket._id}}" title="{{t 'ticket:OpenMessage'}}">
 								<span class="message-status">
 									<span class="grey" data-ng-class="menuTicket.comments[menuTicket.comments.length - 1].icon"></span>
 									<!--<span class="icon-new red" data-ng-show="menuTicket.important"></span>-->
-									<span class="new-message" data-ng-hide="ticketRead(menuTicket.read)=='white-gradient'" title="{{t 'NewMessage'}}"></span>
+									<span class="new-message" data-ng-hide="ticketRead(menuTicket.read, null, false)=='white-gradient'" title="{{t 'NewMessage'}}"></span>
 								</span>
 								<span class="message-info">
 									<span title="{{t 'TimeLeft'}}" data-ng-init='time=countDown(menuTicket.datef, true)'><span class="blue" data-ng-show="time.days < 0">\{{time.days}}j</span><span class="red" data-ng-hide="time.days < 0 || (time.hours == 0 && time.minutes == 0)">\{{time.hours}}:\{{time.minutes}}</span><span  class="red" data-ng-show="time.minutes == 0  && time.hours == 0 && time.days == 0">{{t 'Timeout'}}</span></span><br>
