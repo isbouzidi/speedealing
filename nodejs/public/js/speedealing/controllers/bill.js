@@ -295,12 +295,21 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		};
 
 		$scope.updateAddress = function (data) {
-			$scope.bill.address = data.address.address;
-			$scope.bill.zip = data.address.zip;
-			$scope.bill.town = data.address.town;
-
+			if (data.address) {
+				$scope.bill.address = data.address.address;
+				$scope.bill.zip = data.address.zip;
+				$scope.bill.town = data.address.town;
+				
+			}
+			
+			//console.log(data);
+			
+			$scope.bill.commercial_id = data.commercial_id;
+			$scope.bill.cond_reglement_code = data.cond_reglement_code;
+			$scope.bill.mode_reglement_code = data.mode_reglement_code;
+			
 			$scope.bill.price_level = data.price_level;
-
+			
 			return true;
 		};
 
