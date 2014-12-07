@@ -58,7 +58,8 @@ Object.prototype = {
         var query = {
                 entity: {$in: ["ALL", req.query.entity]}
             };
-            
+        
+		console.log(query);
         BankModel.find(query, function (err, doc) {
             if (err) {
                     console.log(err);
