@@ -155,4 +155,4 @@ BankSchema.virtual('balance').get(function () {
 	return 0;
 });
 
-mongoose.model('bank', BankSchema);
+mongoose.model('bank', BankSchema, 'Bank');
