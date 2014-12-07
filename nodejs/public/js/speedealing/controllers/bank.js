@@ -39,6 +39,7 @@ angular.module('mean.bank').controller('BankController', ['$rootScope', '$scope'
 			};
 
 			Bank.query(params, function (banks) {
+				console.log(banks);
 				$scope.banks = banks;
 				$scope.countBank = banks.length;
 			});
