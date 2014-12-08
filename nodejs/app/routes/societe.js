@@ -892,6 +892,16 @@ module.exports = function (app, passport, auth) {
 	});
 
 	app.post('/api/societe/import', /*ensureAuthenticated,*/ function (req, res) {
+		/**
+		 * oldId;name;address;zip;town;brand;Tag;capital;yearCreated;phone;fax;idprof2;idprof1;idprof3;effectif_id;notes;commercial_id;datec
+		 * 
+		 * contact.firstname;contact.lastname;contact.civilite;contact.phone_mobile;contact.phone;contact.fax;
+		 */
+
+		/*
+		 * Tri par name obligatoire
+		 */
+
 		req.connection.setTimeout(300000);
 		var commercial_list = {};
 
@@ -939,6 +949,17 @@ module.exports = function (app, passport, auth) {
 					"Niveau 2": "PL_MEDIUM",
 					"Niveau 1": "PL_LOW",
 					"Niveau 0": "PL_NONE"
+				},
+				civilite: {
+					"": "NO",
+					"MME": "MME",
+					"MLLE": "MLE",
+					"Mme": "MME",
+					"M.": "MR",
+					"COLONEL": "COLONEL",
+					"DOCTEUR": "DR",
+					"GENERAL": "GENERAL",
+					"PROFESSEUR": "PROF"
 				}
 			};
 
@@ -950,6 +971,9 @@ module.exports = function (app, passport, auth) {
 				var societe = {};
 				societe.country_id = "FR";
 				societe.Tag = [];
+				societe.contact = {
+					Tag: []
+				};
 				societe.remise_client = 0;
 
 				for (var i = 0; i < row.length; i++) {
@@ -957,7 +981,7 @@ module.exports = function (app, passport, auth) {
 						continue;
 
 					/* optional */
-					if (tab[i].indexOf(".") >= 0) {
+					if (tab[i] !== "contact.Tag" && tab[i].indexOf(".") >= 0) {
 						var split = tab[i].split(".");
 
 						if (row[i]) {
@@ -966,7 +990,7 @@ module.exports = function (app, passport, auth) {
 
 							societe[split[0]][split[1]] = row[i];
 						}
-						continue;
+						//continue;
 					}
 
 					if (tab[i] != "effectif_id" && typeof conv_id[tab[i]] !== 'undefined') {
@@ -983,6 +1007,11 @@ module.exports = function (app, passport, auth) {
 					}
 
 					switch (tab[i]) {
+						case "name":
+							if (row[i]) {
+								societe.name = row[i].trim();
+							}
+							break;
 						case "address":
 							if (row[i]) {
 								if (societe.address)
@@ -1008,6 +1037,19 @@ module.exports = function (app, passport, auth) {
 									seg[j] = seg[j].trim();
 
 									societe[tab[i]].push({text: seg[j]});
+								}
+							}
+							break;
+						case "contact.Tag" :
+							if (row[i]) {
+								var seg = row[i].split(',');
+								for (var j = 0; j < seg.length; j++) {
+									seg[j] = seg[j].replace(/\./g, "");
+									seg[j] = seg[j].trim();
+
+									societe.contact.Tag.push({text: seg[j]});
+
+									//console.log(societe.contact);
 								}
 							}
 							break;
@@ -1073,15 +1115,23 @@ module.exports = function (app, passport, auth) {
 							break;
 						case "commercial_id":
 							if (row[i]) {
-								societe.commercial_id = {
-									id: row[i],
-									name: (commercial_list[row[i]] ? commercial_list[row[i]].firstname + " " + commercial_list[row[i]].lastname : row[i])
-								};
+								if (!commercial_list[row[i]])
+									console.log("Error (Not found) commercial_id : " + row[i]);
+								else
+									societe.commercial_id = {
+										id: row[i],
+										name: (commercial_list[row[i]] ? commercial_list[row[i]].firstname + " " + commercial_list[row[i]].lastname : row[i])
+									};
 							}
 							break;
+
 						case "datec":
 							if (row[i])
 								societe[tab[i]] = new Date(row[i]);
+							break;
+						case "entity":
+							if (row[i])
+								societe[tab[i]] = row[i].toLowerCase();
 							break;
 						default :
 							if (row[i])
@@ -1112,110 +1162,222 @@ module.exports = function (app, passport, auth) {
 
 								//return;
 
+								var already_imported = {};
+
 								convertRow(tab, row, index, function (data) {
 
-									if (data.code_client)
-										SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
-											if (err) {
-												console.log(err);
-												return callback();
+									async.series([
+										// import societe
+										function (cb) {
+											/*
+											 * Test si societe deja importe
+											 */
+
+											if (typeof already_imported[data.name] === 'undefined') {
+
+												//import societe
+												if (data.code_client)
+													SocieteModel.findOne({code_client: data.code_client}, function (err, societe) {
+														if (err) {
+															console.log(err);
+															return callback();
+														}
+
+														if (societe == null)
+															societe = new SocieteModel(data);
+														else
+															societe = _.extend(societe, data);
+
+														//console.log(row[10]);
+														//console.log(societe)
+														//console.log(societe.datec);
+
+														societe.save(function (err, doc) {
+															if (err)
+																console.log(err);
+
+															already_imported[doc.name] = {
+																id: doc._id,
+																name: doc.name
+															};
+
+															cb(err, already_imported[doc.name]);
+
+														});
+
+													});
+												else if (data.oldId)
+													SocieteModel.findOne({$or: [{oldId: data.oldId}, {name: data.name}]}, function (err, societe) {
+														if (err) {
+															console.log(err);
+															return callback();
+														}
+
+														if (societe == null || societe.zip != data.zip)
+															societe = new SocieteModel(data);
+														else {
+															console.log("Found : update oldId");
+															societe = _.extend(societe, data);
+														}
+
+														//console.log(row[10]);
+														//console.log(societe)
+														//console.log(societe.datec);
+
+														societe.save(function (err, doc) {
+															if (err)
+																console.log(err);
+
+															already_imported[doc.name] = {
+																id: doc._id,
+																name: doc.name
+															};
+
+															cb(err, already_imported[doc.name]);
+														});
+
+													});
+												else if (data._id)
+													SocieteModel.findOne({_id: data._id}, function (err, societe) {
+														if (err) {
+															console.log(err);
+															return callback();
+														}
+
+														if (societe == null || societe.zip != data.zip)
+															societe = new SocieteModel(data);
+														else {
+															console.log("Found : update _id");
+															societe = _.defaults(societe, data);
+														}
+
+														//console.log(row[10]);
+														//console.log(societe)
+														//console.log(societe.datec);
+
+														societe.save(function (err, doc) {
+															if (err)
+																console.log(err);
+
+															already_imported[doc.name] = {
+																id: doc._id,
+																name: doc.name
+															};
+
+															cb(err, already_imported[doc.name]);
+														});
+
+													});
+												else
+													SocieteModel.findOne({name: data.name}, function (err, societe) {
+														if (err) {
+															console.log(err);
+															return callback();
+														}
+
+														if (societe == null || societe.zip != data.zip)
+															societe = new SocieteModel(data);
+														else {
+															console.log("Found : update Name");
+															societe = _.defaults(societe, data);
+														}
+
+														//console.log(row[10]);
+														//console.log(societe)
+														//console.log(societe.datec);
+
+														societe.save(function (err, doc) {
+															if (err)
+																console.log(err);
+
+															already_imported[doc.name] = {
+																id: doc._id,
+																name: doc.name
+															};
+
+															cb(err, already_imported[doc.name]);
+														});
+
+													});
+											} else {
+												cb(null, already_imported[data.name]);
+											}
+										},
+										//import contact
+										function (cb) {
+											var res_contact = data.contact;
+
+											res_contact.societe = already_imported[data.name];
+											//console.log(res_contact);
+
+											var query = {
+												$or: []
+											};
+
+											if (res_contact._id)
+												query.$or.push({_id: res_contact._id});
+
+											if (res_contact.email)
+												query.$or.push({email: res_contact.email.toLowerCase()});
+											//if (data.phone !== null)
+											//	query.$or.push({phone: data.phone});
+											if (res_contact.phone_mobile)
+												query.$or.push({phone_mobile: res_contact.phone_mobile});
+
+											if (!query.$or.length) {
+												//console.log(data.name);
+												//console.log(already_imported[data.name]);
+												query = {
+													"societe.id": already_imported[data.name].id,
+													lastname: (res_contact.lastname ? res_contact.lastname.toUpperCase() : "")
+												};
 											}
 
-											if (societe == null)
-												societe = new SocieteModel(data);
-											else
-												societe = _.extend(societe, data);
+											//console.log(query);
 
-											//console.log(row[10]);
-											//console.log(societe)
-											//console.log(societe.datec);
+											ContactModel.findOne(query, function (err, contact) {
 
-											societe.save(function (err, doc) {
-												if (err)
+												if (err) {
 													console.log(err);
+													return callback();
+												}
 
-												callback();
+												if (contact == null) {
+													console.log("contact created");
+													contact = new ContactModel(res_contact);
+												} else {
+													console.log("Contact found");
+													
+													if (res_contact.Tag)
+														res_contact.Tag = _.union(contact.Tag, res_contact.Tag); // Fusion Tag
+
+													contact = _.extend(contact, res_contact);
+												}
+
+												//console.log(data);
+
+												//console.log(row[10]);
+												//console.log(contact);
+												//console.log(societe.datec);
+
+												contact.save(function (err, doc) {
+													if (err)
+														console.log(err);
+													/*if (doc == null)
+													 console.log("null");
+													 else
+													 console.log(doc);*/
+
+													cb(null, doc);
+												});
 											});
+										}
+									], function (err, results) {
 
-										});
-									else if (data.oldId)
-										SocieteModel.findOne({$or: [{oldId: data.oldId}, {name: data.name}]}, function (err, societe) {
-											if (err) {
-												console.log(err);
-												return callback();
-											}
 
-											if (societe == null || societe.zip != data.zip)
-												societe = new SocieteModel(data);
-											else {
-												console.log("Found : update");
-												societe = _.extend(societe, data);
-											}
 
-											//console.log(row[10]);
-											//console.log(societe)
-											//console.log(societe.datec);
-
-											societe.save(function (err, doc) {
-												if (err)
-													console.log(err);
-
-												callback();
-											});
-
-										});
-									else if (data._id)
-										SocieteModel.findOne({_id: data._id}, function (err, societe) {
-											if (err) {
-												console.log(err);
-												return callback();
-											}
-
-											if (societe == null || societe.zip != data.zip)
-												societe = new SocieteModel(data);
-											else {
-												console.log("Found : update");
-												societe = _.defaults(societe, data);
-											}
-
-											//console.log(row[10]);
-											//console.log(societe)
-											//console.log(societe.datec);
-
-											societe.save(function (err, doc) {
-												if (err)
-													console.log(err);
-
-												callback();
-											});
-
-										});
-									else
-										SocieteModel.findOne({name: data.name}, function (err, societe) {
-											if (err) {
-												console.log(err);
-												return callback();
-											}
-
-											if (societe == null || societe.zip != data.zip)
-												societe = new SocieteModel(data);
-											else {
-												console.log("Found : update");
-												societe = _.defaults(societe, data);
-											}
-
-											//console.log(row[10]);
-											//console.log(societe)
-											//console.log(societe.datec);
-
-											societe.save(function (err, doc) {
-												if (err)
-													console.log(err);
-
-												callback();
-											});
-
-										});
+										callback();
+									});
 								});
 
 								//return row;

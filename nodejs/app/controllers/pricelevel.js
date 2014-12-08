@@ -3,10 +3,22 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+		i18n = require("i18next"),
 		async = require('async');
 
 var PriceLevelModel = mongoose.model('pricelevel');
 var ProductModel = mongoose.model('product');
+
+var Dict = require('../controllers/dict');
+
+var dict = {};
+Dict.dict({dictName: ['fk_product_status', 'fk_units'], object: true}, function (err, doc) {
+	if (err) {
+		console.log(err);
+		return;
+	}
+	dict = doc;
+});
 
 exports.read = function (req, res) {
 	var query = {};
@@ -152,15 +164,48 @@ exports.autocomplete = function (body, callback) {
 	};
 
 	PriceLevelModel.find(query, "-history", {limit: body.take})
-			.populate("product.id", "label ref minPrice tva_tx caFamily")
+			.populate("product.id", "label ref minPrice tva_tx caFamily units")
 			.exec(function (err, prices) {
 				if (err) {
 					console.log("err : /api/product/price/autocomplete");
 					console.log(err);
 					return;
 				}
-				console.log(prices);
-				callback(prices);
+
+				var result = [];
+
+				for (var i = 0; i < prices.length; i++) {
+
+					var units = prices[i].product.id.units;
+					var res = {};
+
+					if (units && dict.fk_units.values[units].label) {
+						//console.log(this);
+						res.id = units;
+						res.name = i18n.t("products:" + dict.fk_units.values[units].label);
+					} else { // By default
+						res.id = units;
+						res.name = units;
+					}
+
+					var obj = {
+						pu_ht: prices[i].pu_ht,
+						price_level: prices[i].price_level,
+						discount: 0,
+						qtyMin: 0,
+						product: {
+							id: prices[i].product.id,
+							name: prices[i].product.id.ref,
+							unit: res.name
+						}
+					};
+					result.push(obj);
+				}
+
+				//prices[i].product.id._units = res;
+
+				//console.log(result);
+				callback(result);
 			});
 };
 

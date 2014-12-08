@@ -44,11 +44,13 @@ module.exports = function (app, passport, auth) {
 			return pricelevel.autocomplete(req.body, function (prices) {
 				res.json(200, prices);
 			});
+		
 		if (req.body.supplier)
 			query.Status = {'$in': ["SELLBUY", "BUY"]};
 		else
 			query.Status = {'$in': ["SELL", "SELLBUY"]};
 		//console.log(query);
+		
 		ProductModel.find(query, "ref _id label template pu_ht tva_tx minPrice units description caFamily",
 				{limit: req.body.take}, function (err, docs) {
 			if (err) {
