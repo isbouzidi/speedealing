@@ -1307,6 +1307,9 @@ module.exports = function (app, passport, auth) {
 										function (cb) {
 											var res_contact = data.contact;
 
+											if (!res_contact.lastname)
+												return cb(null, null);
+
 											res_contact.societe = already_imported[data.name];
 											//console.log(res_contact);
 
@@ -1347,7 +1350,7 @@ module.exports = function (app, passport, auth) {
 													contact = new ContactModel(res_contact);
 												} else {
 													console.log("Contact found");
-													
+
 													if (res_contact.Tag)
 														res_contact.Tag = _.union(contact.Tag, res_contact.Tag); // Fusion Tag
 
