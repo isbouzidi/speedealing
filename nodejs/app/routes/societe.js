@@ -1357,6 +1357,13 @@ module.exports = function (app, passport, auth) {
 													contact = _.extend(contact, res_contact);
 												}
 
+												// Copy address societe
+												if (!contact.zip) {
+													contact.address = data.address;
+													contact.zip = data.zip;
+													contact.town = data.town;
+												}
+
 												//console.log(data);
 
 												//console.log(row[10]);
