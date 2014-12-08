@@ -141,6 +141,70 @@ module.exports = function (app, passport, auth) {
 		//TODO write code for distinct attribute
 	});
 
+	app.post('/api/contact/spam', /*ensureAuthenticated,*/ function (req, res) {
+		req.connection.setTimeout(300000);
+
+
+
+		var convertRow = function (tab, row, index, cb) {
+			var contact = {};
+			for (var i = 0; i < row.length; i++) {
+				if (tab[i] === "false")
+					continue;
+
+				if (row[i])
+					contact[tab[i]] = row[i];
+
+			}
+			cb(contact);
+		};
+
+		if (req.files) {
+			var filename = req.files.filedata.path;
+			if (fs.existsSync(filename)) {
+
+				var tab = [];
+
+				csv()
+						.from.path(filename, {delimiter: ';', escape: '"'})
+						.transform(function (row, index, callback) {
+							if (index === 0) {
+								tab = row; // Save header line
+								return callback();
+							}
+
+							convertRow(tab, row, index, function (data) {
+								//console.log(data);
+
+								ContactModel.update({email: data.email}, {$set: {sendEmailing: false}}, {multi: true}, function (err, doc) {
+									if(err)
+										console.log(err);
+									
+									if(doc)
+										console.log(data.email + " found and unsubcribe");
+
+									callback();
+								});
+
+							});
+
+							//return row;
+						}/*, {parallel: 1}*/)
+						.on("end", function (count) {
+							console.log('Number of lines: ' + count);
+							fs.unlink(filename, function (err) {
+								if (err)
+									console.log(err);
+							});
+							return res.send(200, {count: count});
+						})
+						.on('error', function (error) {
+							console.log(error.message);
+						});
+			}
+		}
+	});
+
 	app.post('/api/contact/import', /*ensureAuthenticated,*/ function (req, res) {
 		req.connection.setTimeout(300000);
 
