@@ -57,7 +57,7 @@ var contactSchema = new Schema({
 	phone_perso: String,
 	phone_mobile: String, // pro
 	fax: String, // pro
-	email: {type: String, lowercase: true, trim: true},
+	email: {type: String, lowercase: true, trim: true, index: true},
 	emails: [{
 			type: {type: String, default: "pro"},
 			address: String
