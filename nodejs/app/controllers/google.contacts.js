@@ -45,6 +45,10 @@ exports.insertOneContactForOneUser =
 exports.importAddressBooksOfAllUsers =
 		importAddressBooksOfAllUsers;
 
+exports.importAddressBooksOfOneUser =
+		importAddressBooksOfOneUser;
+//(user,callback) {
+
 exports.updateGoogleUserAdressBook =
 		updateGoogleUserAdressBook;
 
@@ -83,6 +87,20 @@ function importAddressBooksOfAllUsers(callback) {
 	gcommon.forEachGoogleUser(imp_treatGoogleUser, callback);
 }
 
+function importAddressBooksOfOneUser(userId, callback) {
+
+	UserModel.findOne({_id: userId}, function (err, user) {
+
+		console.log(">> Scan user : " + user._id);
+
+		if (user && gcommon.isGoogleUser(user)) {
+			console.log("Treat user : " + user._id + " - " + user.email);
+			imp_treatGoogleUser(user, callback);
+		} else {
+			callback(null);
+		}
+	});
+}
 
 
 /*
@@ -114,7 +132,7 @@ function _setGroupHref(user, group_href, callback) {
 /* 
  */
 function imp_getGoogleContacts(user, callback) {
-	console.log("\n\n*** GETTING CONTACTS PROCESS ***\n\n");
+	//console.log("\n\n*** GETTING CONTACTS PROCESS ***\n\n");
 
 	var c = new GoogleContacts(getDefaultGoogleContactsParams(user));
 	c.getContacts(
@@ -315,8 +333,8 @@ function imp_treatGoogleUser(user, callback) {
 						imp_mergeImportedContacts(user, my_gcontacts, cb);
 					}
 				],
-				cb_google
-				);
+						cb_google
+						);
 			},
 			callback
 			);
@@ -783,7 +801,7 @@ GoogleContacts.prototype._get = function (params, cb) {
 		}
 	};
 
-	console.log("HTTP req = ", req, "\n");
+	//console.log("HTTP req = ", req, "\n");
 
 	https.request(req, function (res) {
 		var data = '';
@@ -1129,7 +1147,7 @@ GoogleContacts.prototype.insertContact = function (contact, params, cb) {
 		}
 	};
 
-	console.log("HTTP req = ", opts, "\n");
+	//console.log("HTTP req = ", opts, "\n");
 
 	var req = https.request(opts,
 			function (res) {
@@ -1355,8 +1373,8 @@ GoogleContacts.prototype.createGroup = function (group, params, callback) {
 		}
 	};
 
-	console.log("HTTP req = ", opts, "\n");
-	console.log("HTTP body = ", body, "\n");
+	//console.log("HTTP req = ", opts, "\n");
+	//console.log("HTTP body = ", body, "\n");
 
 	var data = '';
 
