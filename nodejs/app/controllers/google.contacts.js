@@ -194,9 +194,11 @@ function imp_updateContact(contact, gcontact, callback) {
 	});
 }
 
-// *
 function imp_updateContacts(contacts, gcontact, callback) {
 	if (contacts && contacts.length > 0) {
+
+		//console.log("imp_updateContacts : " + contacts.length);
+
 		async.each(contacts,
 				function (contact, cb) {
 					imp_updateContact(contact, gcontact, cb);
@@ -213,7 +215,8 @@ function imp_updateContacts(contacts, gcontact, callback) {
 /* @param gcontact Imported contact
  */
 function imp_insertNewContact(gcontact, callback) {
-	console.log("INSERT NEW CONTACT " + gcontact.firstname);
+	console.log("INSERT NEW CONTACT ");
+	console.log(gcontact);
 	var contact = new ContactModel({
 		Status: "ST_ENABLE"
 	});
@@ -225,9 +228,12 @@ function imp_insertNewContact(gcontact, callback) {
 }
 
 function imp_mergeByPhone(gcontact, callback) {
-	var phone = gcontact.phone || '';
+	//var phone = gcontact.phone || '';
 	var phone_perso = gcontact.phone_perso || '';
 	var phone_mobile = gcontact.phone_mobile || '';
+
+	phone_perso = phone_perso.replace(/ /g, "").replace(/\./g, "");
+	phone_mobile = phone_mobile.replace(/ /g, "").replace(/\./g, "");
 
 	ContactModel.find({
 		$or: [
@@ -254,6 +260,11 @@ function imp_mergeByMail(gcontact, callback) {
 	var addresses = _.pluck(gcontact.emails, 'address');
 	if (typeof addresses.value === 'function')
 		addresses = addresses.value();
+
+	addresses = _.map(addresses, function (n) {
+		return n.toLowerCase().trim();
+	});
+
 	//console.log("addresses = ", addresses);
 	ContactModel.find({$or: [{'emails.address': {$in: addresses}}, {email: {$in: addresses}}]},
 	function (err, contacts) {
@@ -286,7 +297,7 @@ function imp_mergeOneContact(gcontact, callback) {
 			function (err, found) {
 				if (err)
 					callback(err);
-				else if (!found)
+				else if (!found && (gcontact.emails || gcontact.phone_perso || gcontact.phone_mobile))
 					imp_insertNewContact(gcontact, callback);
 				else
 					callback();

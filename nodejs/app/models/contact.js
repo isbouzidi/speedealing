@@ -36,6 +36,11 @@ var setTags = function (tags) {
 	return result;
 };
 
+var setPhone = function (phone) {
+	phone = phone.replace(/ /g, "").replace(/\./g, "");
+	return phone;
+};
+
 
 /**
  * Contact Schema
@@ -53,10 +58,10 @@ var contactSchema = new Schema({
 	country_id: String,
 	state_id: String,
 	DefaultLang: String,
-	phone: String, // pro
-	phone_perso: String,
-	phone_mobile: String, // pro
-	fax: String, // pro
+	phone: {type: String, set: setPhone}, // pro
+	phone_perso: {type: String, set: setPhone},
+	phone_mobile: {type: String, set: setPhone}, // pro
+	fax: {type: String, set: setPhone}, // pro
 	email: {type: String, lowercase: true, trim: true, index: true},
 	emails: [{
 			type: {type: String, default: "pro"},
