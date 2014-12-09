@@ -40,7 +40,9 @@ window.app = angular.module('mean', [
 	'jsonFormatter',
 'mean.bank',
         'mean.transaction',
-        'mean.bankCategory'
+        'mean.bankCategory',
+        'mean.mailing',
+        'mean.export'
 ]);
 
 angular.module('mean.system', []);
@@ -61,6 +63,8 @@ angular.module('mean.lead', []);
 angular.module('mean.bank', []);
 angular.module('mean.transaction', []);
 angular.module('mean.bankCategory', []);
+angular.module('mean.mailing', []);
+angular.module('mean.export', []);
 
 angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
 		$i18nextProvider.options = {

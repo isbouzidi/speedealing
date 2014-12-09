@@ -135,6 +135,14 @@
 					"delete": false
 				}
 			}
+		],                
+                "export": [
+			{
+				"desc": "Exporter fichers CSV",
+				"perm": {
+					"read": true
+				}
+			}
 		]
 	},
 	"module_parts": [],
@@ -212,6 +220,14 @@
                                         "enabled": "$user->admin",
                                         "perms":"admin",
                                         "title": "admin:Mailing"
+                                },
+                                "menu:export": {
+                                        "position": 4,
+                                        "usertype": 1,
+                                        "url": "#!/exportcsv",
+                                        "enabled": "$user->admin",
+                                        "perms":"admin",
+                                        "title": "admin:ExportCSV"
                                 }
 			}
 		},
