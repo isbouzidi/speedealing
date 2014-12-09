@@ -76,7 +76,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 							label: data.product.id.label,
 							unit: data.product.unit
 						},
-						description: data.product.id.description,
+						description: ($scope.delivery.lines[i].description ? $scope.delivery.lines[i].description : data.product.id.description),
 						isNew: true,
 						qty: $scope.delivery.lines[i].qty,
 						no_package: $scope.delivery.lines[i].no_package, // nombre de pieces TODO Delete
@@ -289,17 +289,17 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 				$scope.delivery.address = data.address.address;
 				$scope.delivery.zip = data.address.zip;
 				$scope.delivery.town = data.address.town;
-				
+
 			}
-			
+
 			//console.log(data);
-			
+
 			$scope.delivery.commercial_id = data.commercial_id;
 			$scope.delivery.cond_reglement_code = data.cond_reglement_code;
 			$scope.delivery.mode_reglement_code = data.mode_reglement_code;
-			
+
 			$scope.delivery.price_level = data.price_level;
-			
+
 			return true;
 		};
 
@@ -353,67 +353,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 			}, function () {
 			});
 		};
-
-		/*$scope.addNewLine = function () {
-		 
-		 /*
-		 * cette variable "$rootScope.module" est utilisé dans le controller "LineController"
-		 * pour determiner que l'url "/partials/lines" est appelé 
-		 * depuis le module delivery (bon de livraison)
-		 */
-		/*$rootScope.callModule = 'delivery';
-		 
-		 var modalInstance = $modal.open({
-		 templateUrl: '/partials/lines',
-		 controller: "LineController",
-		 windowClass: "steps",
-		 resolve: {
-		 object: function () {
-		 return {
-		 qty: 0
-		 };
-		 },
-		 options: function () {
-		 return {
-		 price_level: $scope.delivery.price_level
-		 };
-		 }
-		 }
-		 });
-		 
-		 modalInstance.result.then(function (line) {
-		 $scope.delivery.lines.push(line);
-		 $scope.delivery.$update(function (response) {
-		 $scope.delivery = response;
-		 });
-		 }, function () {
-		 });
-		 };*/
-
-		/*$scope.editLine = function (row) {
-		 var modalInstance = $modal.open({
-		 templateUrl: '/partials/lines',
-		 controller: "LineController",
-		 windowClass: "steps",
-		 resolve: {
-		 object: function () {
-		 return row.entity;
-		 },
-		 options: function () {
-		 return {
-		 price_level: $scope.delivery.price_level
-		 };
-		 }
-		 }
-		 });
-		 
-		 modalInstance.result.then(function (line) {
-		 $scope.delivery.$update(function (response) {
-		 $scope.delivery = response;
-		 });
-		 }, function () {
-		 });
-		 };*/
 
 		$scope.addNote = function () {
 			if (!this.note)

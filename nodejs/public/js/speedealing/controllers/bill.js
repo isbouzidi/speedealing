@@ -182,7 +182,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 							name: data.product.id.ref,
 							label: data.product.id.label
 						},
-						description: data.product.id.description,
+						description: ($scope.bill.lines[i].description ? $scope.bill.lines[i].description : data.product.id.description),
 						isNew: true,
 						qty: $scope.bill.lines[i].qty,
 						no_package: $scope.bill.lines[i].no_package, // nombre de pieces
