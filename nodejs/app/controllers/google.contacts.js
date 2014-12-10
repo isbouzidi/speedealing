@@ -239,9 +239,9 @@ function imp_mergeByPhone(gcontact, callback) {
 		$or: []
 	};
 
-	if (phone_perso !== "")
+	if (phone_perso)
 		query.$or.push({phone_perso: phone_perso});
-	if (phone_mobile !== "")
+	if (phone_mobile)
 		query.$or.push({phone_mobile: phone_mobile});
 
 
@@ -250,6 +250,7 @@ function imp_mergeByPhone(gcontact, callback) {
 				function (err, contacts) {
 					if (err)
 						return callback(err);
+					
 					if (!contacts)
 						return callback(null, false);
 					imp_updateContacts(contacts, gcontact, callback);
