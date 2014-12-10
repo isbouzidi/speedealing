@@ -229,8 +229,8 @@ function imp_insertNewContact(gcontact, callback) {
 
 function imp_mergeByPhone(gcontact, callback) {
 	//var phone = gcontact.phone || '';
-	var phone_perso = gcontact.phone_perso;
-	var phone_mobile = gcontact.phone_mobile;
+	var phone_perso = gcontact.phone_perso || '';
+	var phone_mobile = gcontact.phone_mobile || '';
 
 	phone_perso = phone_perso.replace(/ /g, "").replace(/\./g, "");
 	phone_mobile = phone_mobile.replace(/ /g, "").replace(/\./g, "");
@@ -239,9 +239,9 @@ function imp_mergeByPhone(gcontact, callback) {
 		$or: []
 	};
 
-	if (phone_perso)
+	if (phone_perso !== "")
 		query.$or.push({phone_perso: phone_perso});
-	if (phone_mobile)
+	if (phone_mobile !== "")
 		query.$or.push({phone_mobile: phone_mobile});
 
 
