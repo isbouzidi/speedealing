@@ -274,7 +274,7 @@ function imp_mergeByMail(gcontact, callback) {
 	});
 
 	//console.log("addresses = ", addresses);
-	ContactModel.find({$or: [{'emails.address': {$in: addresses}}, {email: {$in: addresses}}]},
+	ContactModel.find({/*$or: [{'emails.address': {$in: addresses}},*/ email: {$in: addresses}},
 	function (err, contacts) {
 		if (err)
 			return callback(err);
