@@ -229,26 +229,33 @@ function imp_insertNewContact(gcontact, callback) {
 
 function imp_mergeByPhone(gcontact, callback) {
 	//var phone = gcontact.phone || '';
-	var phone_perso = gcontact.phone_perso || '';
-	var phone_mobile = gcontact.phone_mobile || '';
+	var phone_perso = gcontact.phone_perso;
+	var phone_mobile = gcontact.phone_mobile;
 
 	phone_perso = phone_perso.replace(/ /g, "").replace(/\./g, "");
 	phone_mobile = phone_mobile.replace(/ /g, "").replace(/\./g, "");
 
-	ContactModel.find({
-		$or: [
-			//{phone: phone},
-			{phone_perso: phone_perso},
-			{phone_mobile: phone_mobile}
-		]
-	},
-	function (err, contacts) {
-		if (err)
-			return callback(err);
-		if (!contacts)
-			return callback(null, false);
-		imp_updateContacts(contacts, gcontact, callback);
-	});
+	var query = {
+		$or: []
+	};
+
+	if (phone_perso)
+		query.$or.push({phone_perso: phone_perso});
+	if (phone_mobile)
+		query.$or.push({phone_mobile: phone_mobile});
+
+
+	if (query.$or.length)
+		ContactModel.find(query,
+				function (err, contacts) {
+					if (err)
+						return callback(err);
+					if (!contacts)
+						return callback(null, false);
+					imp_updateContacts(contacts, gcontact, callback);
+				});
+	else
+		callback(null, false);
 }
 
 
