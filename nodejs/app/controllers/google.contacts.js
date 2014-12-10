@@ -232,8 +232,8 @@ function imp_mergeByPhone(gcontact, callback) {
 	var phone_perso = gcontact.phone_perso || '';
 	var phone_mobile = gcontact.phone_mobile || '';
 
-	phone_perso = phone_perso.replace(/ /g, "").replace(/\./g, "");
-	phone_mobile = phone_mobile.replace(/ /g, "").replace(/\./g, "");
+	phone_perso = phone_perso.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
+	phone_mobile = phone_mobile.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
 
 	var query = {
 		$or: []

@@ -37,7 +37,7 @@ var setTags = function (tags) {
 };
 
 var setPhone = function (phone) {
-	phone = phone.replace(/ /g, "").replace(/\./g, "");
+	phone = phone.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
 	return phone;
 };
 
