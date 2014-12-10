@@ -326,8 +326,10 @@ function imp_mergeImportedContacts(user, gcontacts, callback) {
 				imp_mergeOneContact(gcontact, cb);
 			},
 			function (err) {
-				if (err)
+				if (err) {
+					console.log(err);
 					return callback(err);
+				}
 				_setLatestImport(user, dateFormat(new Date(), "yyyy-mm-dd"), callback);
 			}
 	);
