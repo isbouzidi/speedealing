@@ -303,6 +303,7 @@ function imp_mergeOneContact(gcontact, callback) {
 			cb(null, found);
 		}],
 			function (err, found) {
+				console.log("ici");
 				if (err)
 					callback(err);
 				else if (!found && (gcontact.emails || gcontact.phone_perso || gcontact.phone_mobile))
