@@ -41,7 +41,8 @@ window.app = angular.module('mean', [
 	'mean.bank',
 	'mean.transaction',
 	'mean.bankCategory',
-	'mean.mailing'
+	'mean.mailing',
+    'mean.export'
 ]);
 
 angular.module('mean.system', []);
@@ -63,8 +64,9 @@ angular.module('mean.bank', []);
 angular.module('mean.transaction', []);
 angular.module('mean.bankCategory', []);
 angular.module('mean.mailing', []);
+angular.module('mean.export', []);
 
-angular.module('jm.i18next').config(['$i18nextProvider', function ($i18nextProvider) {
+angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
 		$i18nextProvider.options = {
 			//lng: 'fr',
 			//useCookie: false,
@@ -84,26 +86,26 @@ angular.module('jm.i18next').config(['$i18nextProvider', function ($i18nextProvi
 			fallbackLng: "fr-FR"
 		};
 	}]);
-window.app.run(function (editableOptions, editableThemes) {
+window.app.run(function(editableOptions, editableThemes) {
 	// bootstrap3 theme. Can be also 'bs2', 'default'
 	editableThemes.bs3.inputClass = 'input-sm';
 	editableThemes.bs3.buttonsClass = 'btn-sm';
 	editableOptions.theme = 'bs3';
 });
 window.app.config(['$httpProvider', function ($httpProvider) {
-		$httpProvider.interceptors.push(function ($q) {
-			return {
-				'response': function (response) {
-					//Will only be called for HTTP up to 300
-					//console.log(response);
-					return response;
-				},
-				'responseError': function (rejection) {
-					if (rejection.status === 401) {
-						location.replace("/login");
-					}
-					return $q.reject(rejection);
-				}
-			};
-		});
-	}]);
+    $httpProvider.interceptors.push(function ($q) {
+        return {
+            'response': function (response) {
+                //Will only be called for HTTP up to 300
+                //console.log(response);
+                return response;
+            },
+            'responseError': function (rejection) {
+                if(rejection.status === 401) {
+                    location.replace("/login");
+                }
+                return $q.reject(rejection);
+            }
+        };
+    });
+}]);

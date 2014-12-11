@@ -250,7 +250,7 @@ function imp_mergeByPhone(gcontact, callback) {
 				function (err, contacts) {
 					if (err)
 						return callback(err);
-					
+
 					if (!contacts)
 						return callback(null, false);
 					imp_updateContacts(contacts, gcontact, callback);
@@ -281,8 +281,7 @@ function imp_mergeByMail(gcontact, callback) {
 		if (!contacts)
 			return callback(null, false);
 		imp_updateContacts(contacts, gcontact, callback);
-	}
-	);
+	});
 }
 
 

@@ -1,0 +1,26 @@
+<section data-ng-controller="ExportCSVController" data-ng-init="init()">
+    <hgroup id="main-title" class="thin">
+        <h1>Exportation de données</h1>
+    </hgroup>    
+
+    <div class="with-padding" data-ng-init="find()">
+        <p data-ng-show="msg.enable" class="message \{{msg.icon}} \{{msg.color}}">
+            \{{msg.text}}
+        </p>
+        <textarea class="input" style="width: 100%; background-color: #121111; font-size: 20px; color: #fff; padding: 20px" rows="10" data-ng-model="request"></textarea>            
+        <div style="height: 40px; width: 100%">
+            <button class="button icon-gear blue-gradient right" data-ng-click="getData()">{{t 'Execute'}}</button>
+        </div>
+        <div class="table-header silver-gradient glossy button-height">
+            <div class="row">
+                <div class="col-sm-6">
+                    <button class="button icon-download blue-gradient" data-ng-click="export()">{{t 'Export'}}</button>
+                </div>                
+            </div>
+        </div>
+        <div class="gridStyle" data-ng-grid="gridOptions"resize></div>                
+        <div class="table-footer silver-gradient">
+            \{{count}} ligne(s)
+        </div>                
+    </div>
+</section>
