@@ -49,14 +49,14 @@ module.exports = function(app, passport, auth) {
                         if (i === 0)
                             csvString = fields[i];
                         else
-                            csvString = csvString + ',' + fields[i];
+                            csvString = csvString + ';' + fields[i];
                     }
 
                     csvString = csvString + '\n';
 
                     for (var i = 1; i <= fields.length; i++) {
                         if (i < fields.length)
-                            csvString = csvString + ',';
+                            csvString = csvString + ';';
                         else
                             csvString = csvString + '\n';
                     }
@@ -83,13 +83,13 @@ module.exports = function(app, passport, auth) {
                            res.send(data);
                        };
                         try{
-                            converter.json2csv(result, json2csvCallbackFind);
+                            converter.json2csv(result, json2csvCallbackFind, {DELIMITER: {FIELD  :  ';',ARRAY  :  ','}});
                         }catch(e){
                             res.send(500, e.message);
                         }                   
                    };
                    try{
-                        converter.csv2json(csvString, csv2jsonCallback);
+                        converter.csv2json(csvString, csv2jsonCallback, {DELIMITER: {FIELD  :  ';',ARRAY  :  ','}});
                     }catch(e){
                         res.send(500, e.message);
                     };
@@ -109,7 +109,7 @@ module.exports = function(app, passport, auth) {
                         res.send(data);
                     };
                     try{
-                        converter.json2csv(docs, json2csvCallbackAgg);
+                        converter.json2csv(docs, json2csvCallbackAgg, {DELIMITER: {FIELD  :  ';',ARRAY  :  ','}});
                     }catch(e){
                         res.send(500, e.message);
                     };
