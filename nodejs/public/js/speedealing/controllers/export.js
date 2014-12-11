@@ -14,16 +14,16 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
         };
         
         $scope.colDefs = [];
-
+        
         $scope.$watch('gridData', function() {
-            
+           
             $scope.colDefs = [];
             var i = 0;
             angular.forEach(Object.keys($scope.gridData[0]), function(key){
                 
                 $scope.colDefs.push({ field: key });                
             });
-            
+            $scope.count = $scope.gridData.length;
         });
 
         $scope.gridOptions = {
@@ -39,8 +39,8 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
             var col = str.substring(0,str.indexOf("."));
             str = str.replace(col, "db");
             
-            if($scope.global.user.rights[col] && $scope.global.user.rights[col].export){
-            
+            //if($scope.global.user.rights[col] && $scope.global.user.rights[col].export){
+            if(true){
                 var p = {
                     request: str,
                     model: col
