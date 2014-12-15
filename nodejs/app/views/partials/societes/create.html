@@ -26,7 +26,7 @@
         <div class="field-block button-height">
             <label for="code"><b>{{t
 							'SIRET'}}</b></label>
-            <input required ng-disabled="noSiret" type="text" data-ng-model="societe.idprof2" data-ng-change="isValidSiret()" id="code" class="input" autocomplete="off"><br/>
+            <input ng-disabled="noSiret" type="text" data-ng-model="societe.idprof2" data-ng-change="isValidSiret()" id="code" class="input" autocomplete="off"><br/>
             Organisme public/Association <input type="checkbox" ng-model="noSiret" ng-change="societe.idprof2 = ''" /> 
             <small ng-show="societe.idprof2 == null && !noSiret" class="icon-warning blue input-info"> Ce numéro permet de vérifier que le compte n'existe pas dans la base. (sans espace)</small>
             <small ng-show="societe.idprof2 && !validSiret" class="icon-warning orange input-info"> Code incorrect.</small>
@@ -52,7 +52,7 @@
 
         <div class="field-block button-height wizard-controls clearfix">
             <!--<button type="button" data-ng-disabled="!(societe.name && validSiret && !siretFound)" data-ng-click='next(); create();' class="button glossy mid-margin-right wizard-next float-right">{{t 'Next'}}<span class="button-icon right-side"><span class="icon-forward"></span></span></button>-->
-            <button type="button" data-ng-disabled="!(societe.name && (validSiret || noSiret) && !siretFound)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">
+            <button type="button" data-ng-disabled="!(societe.name  && !siretFound)" data-ng-click='next();' class="button glossy mid-margin-right wizard-next float-right">
                 {{t
 									'Next'}}
                 <span class="button-icon right-side"><span class="icon-forward"></span></span></button>
