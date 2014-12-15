@@ -304,9 +304,10 @@ function imp_mergeOneContact(gcontact, callback) {
 			function (err, found) {
 				if (err)
 					callback(err);
-				else if (!found && (gcontact.emails || gcontact.phone_perso || gcontact.phone_mobile))
+				else if (!found && (gcontact.emails || gcontact.phone_perso || gcontact.phone_mobile)) {
+
 					imp_insertNewContact(gcontact, callback);
-				else
+				} else
 					callback();
 			}
 
@@ -399,7 +400,7 @@ function insertContactsForOneUser(contacts, user, callback) {
 
 function createRemoteContactGroup(user, callback) {
 	var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
-	c.createGroup({'title': 'CRM'},
+	c.createGroup({'title': 'Crm'},
 	{'email': user.email},
 	function (err, group_href) {
 		if (err)
@@ -416,27 +417,50 @@ function hasRemoteContactGroup(user) {
 }
 
 function insertOneContactForOneUser(contact, user, callback) {
-	gcommon.googleAction(user,
-			function (cb) {
-				async.series([
-					function (cb_sub) {
-						if (hasRemoteContactGroup(user))
-							cb_sub();
-						else
-							createRemoteContactGroup(user, cb_sub);
-					},
-					function (cb_sub) {
-						console.log("\n\n*** INSERTING CONTACT ***\n\n");
-						var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
-						c.insertContact(contact,
-								{'email': user.email,
-									'group_href': user.google.contacts.group_href},
-						cb);
-					}],
-						cb);
-			},
-			callback
-			);
+
+
+	var found = false;
+	if (contact.email) {
+		contact.email = contact.email.toLowerCase().trim();
+		found = true;
+	}
+
+	if (contact.phone_perso) {
+		contact.phone_perso = contact.phone_perso.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
+		found = true;
+	}
+
+	if (contact.phone_mobile) {
+		contact.phone_mobile = contact.phone_mobile.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
+		found = true;
+	}
+
+	console.log(contact);
+
+	if (found)
+		gcommon.googleAction(user,
+				function (cb) {
+					async.series([
+						function (cb_sub) {
+							if (hasRemoteContactGroup(user))
+								cb_sub();
+							else
+								createRemoteContactGroup(user, cb_sub);
+						},
+						function (cb_sub) {
+							console.log("\n\n*** INSERTING CONTACT ***\n\n");
+							var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
+							c.insertContact(contact,
+									{'email': user.email,
+										'group_href': user.google.contacts.group_href},
+							cb);
+						}],
+							cb);
+				},
+				callback
+				);
+	else
+		callback();
 }
 
 
@@ -462,31 +486,37 @@ function up_treatContacts(user, gcontact, contacts, callback) {
 	contacts.forEach(
 			function (contact) {
 				//console.log("     {"+contact.firstname+" "+contact.lastname+"}");
-				if (!_belongsToSociete)
+				if (!_belongsToSociete) {
 					_belongsToSociete = belongsToSociete(contact);
+					if (_belongsToSociete) {
+						console.log("DELETE");
+						console.log(contact);
+					}
+				}
 			}
 	);
 
-	if (_belongsToSociete)
-		up_deleteGoogleContact(user, gcontact, callback);
-	else
-		callback();
+	//if (_belongsToSociete)
+	//	up_deleteGoogleContact(user, gcontact, callback);
+	//else
+	callback();
 }
 
 
 
 function up_checkGoogleContacts(user, gcontacts, callback) {
-	console.log("gcontacts =", gcontacts);
+	//console.log("gcontacts =", gcontacts);
 	// old: .each
 	// seems to be too much requests
 	async.eachSeries(gcontacts,
 			function (gcontact, cb) {
-				console.log("   gcontact=", gcontact);
+				//console.log("   gcontact=", gcontact);
 				findNearestContacts(gcontact,
 						function (err, contacts) {
-							console.log("      contacts=", contacts.length);
+							//console.log("      contacts=", contacts.length);
 							if (err || !contacts)
 								return cb(err);
+
 							up_treatContacts(user, gcontact, contacts, cb);
 						}
 				);
@@ -545,45 +575,49 @@ function up_insertContactsFromSociete(user, callback) {
 }
 
 
-function updateGoogleUserAdressBook(user, callback) {
-	console.log(user.id);
-	gcommon.googleAction(user,
-			function (cb_google) {
-				var my_gcontacts = null;
+function updateGoogleUserAdressBook(userId, callback) {
+	UserModel.findOne({_id: userId}, function (err, user) {
 
-				async.series([
-					function (cb) {
-						var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
-						c.getContacts({
-							email: user.email,
-							storeContactId: true
-						}, function (err, gcontacts) {
-							my_gcontacts = gcontacts;
-							console.log("*********** 563");
-							cb(err);
-						});
-					},
-					function (cb) {
-						// old: .parallel
-						// seem to be too much requests
-						async.series([
-							function (cb_sub) {
-								up_checkGoogleContacts(user, my_gcontacts, cb_sub);
-							},
-							function (cb_sub) {
-								up_insertContactsFromSociete(user, cb_sub);
-							}],
-								cb
-								);
-					}
-				],
-						function (err, results) {
-							cb_google(err);
-						});
+		console.log(">> Scan user : " + user._id);
 
-			},
-			callback
-			);
+		gcommon.googleAction(user,
+				function (cb_google) {
+					var my_gcontacts = null;
+
+					async.series([
+						function (cb) {
+							var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
+							c.getContacts({
+								email: user.email,
+								storeContactId: true
+							}, function (err, gcontacts) {
+								my_gcontacts = gcontacts;
+								console.log("*********** 563");
+								cb(err);
+							});
+						},
+						function (cb) {
+							// old: .parallel
+							// seem to be too much requests
+							async.series([
+								function (cb_sub) {
+									up_checkGoogleContacts(user, my_gcontacts, cb_sub);
+								},
+								function (cb_sub) {
+									up_insertContactsFromSociete(user, cb_sub);
+								}],
+									cb
+									);
+						}
+					],
+							function (err, results) {
+								cb_google(err);
+							});
+
+				},
+				callback
+				);
+	});
 }
 
 
@@ -600,23 +634,37 @@ function updateGoogleUserAdressBook(user, callback) {
 /* callback format : fct(err, contacts)
  */
 function findNearestContactsByPhone(gcontact, callback) {
-	if (gcontact.phone ||
+	if (/*gcontact.phone ||*/
 			gcontact.phone_perso ||
 			gcontact.phone_mobile) {
 
-		var phone = gcontact.phone || '';
+		//var phone = gcontact.phone || '';
 		var phone_perso = gcontact.phone_perso || '';
 		var phone_mobile = gcontact.phone_mobile || '';
+		var found = false;
 
-		ContactModel.find(
-				{$or: [
-						{phone: phone},
-						{phone_perso: phone_perso},
-						{phone_mobile: phone_mobile}
-					]
-				},
-		callback
-				);
+		if (phone_perso) {
+			phone_perso = phone_perso.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
+			found = true;
+		}
+
+		if (phone_mobile) {
+			phone_mobile = phone_mobile.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
+			found = true;
+		}
+
+		if (found)
+			ContactModel.find(
+					{$or: [
+							//{phone: phone},
+							{phone_perso: phone_perso},
+							{phone_mobile: phone_mobile}
+						]
+					},
+			callback
+					);
+		else
+			callback(null, []);
 	} else {
 		callback(null, []);
 	}
@@ -629,7 +677,12 @@ function findNearestContactsByMail(gcontact, callback) {
 		var addresses = _.pluck(gcontact.emails, 'address');
 		if (typeof addresses.value === 'function')
 			addresses = addresses.value();
-		ContactModel.find({'emails.address': {$in: addresses}}, callback);
+
+		addresses = _.map(addresses, function (n) {
+			return n.toLowerCase().trim();
+		});
+
+		ContactModel.find({'email': {$in: addresses}}, callback);
 	} else {
 		callback(null, []);
 	}
@@ -647,6 +700,7 @@ function findNearestContacts(gcontact, callback) {
 		}
 	],
 			function (err, results) {
+				//console.log(results);
 				var nearest = _.union(results[0], results[1]).sort("_id");
 				nearest = _array_unique(nearest,
 						function (a, b) {
@@ -1035,7 +1089,7 @@ GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
 		});
 	}
 	console.log("\n_saveContactsFromFeed");
-	console.log(JSON.stringify(self.contacts, null, 2));
+	//console.log(JSON.stringify(self.contacts, null, 2));
 	console.log("Nb contacts = ", self.contacts.length);
 };
 
@@ -1242,29 +1296,39 @@ GoogleContacts.prototype._contactToXML = function (contact) {
 				.endElement();
 	}
 
-	if (contact.emails) {
-		contact.emails.forEach(function (email) {
-			x.startElement('gd:email')
-					.writeAttribute('address', email.address);
+	/*if (contact.emails) {
+	 contact.emails.forEach(function (email) {
+	 x.startElement('gd:email')
+	 .writeAttribute('address', email.address);
+	 
+	 var rel = '';
+	 switch (email.type) {
+	 case "perso":
+	 rel = 'http://schemas.google.com/g/2005#home';
+	 break;
+	 
+	 case "pro":
+	 rel = 'http://schemas.google.com/g/2005#work';
+	 break;
+	 
+	 case "other":
+	 rel = 'http://schemas.google.com/g/2005#other';
+	 break;
+	 }
+	 
+	 x.writeAttribute('rel', rel)
+	 .endElement();
+	 });
+	 }*/
+	if (contact.email) {
+		x.startElement('gd:email')
+				.writeAttribute('address', contact.email);
 
-			var rel = '';
-			switch (email.type) {
-				case "perso":
-					rel = 'http://schemas.google.com/g/2005#home';
-					break;
+		var rel = '';
+		rel = 'http://schemas.google.com/g/2005#work';
 
-				case "pro":
-					rel = 'http://schemas.google.com/g/2005#work';
-					break;
-
-				case "other":
-					rel = 'http://schemas.google.com/g/2005#other';
-					break;
-			}
-
-			x.writeAttribute('rel', rel)
-					.endElement();
-		});
+		x.writeAttribute('rel', rel)
+				.endElement();
 	}
 
 	if (contact.phone) {
@@ -1324,6 +1388,7 @@ GoogleContacts.prototype.deleteContact = function (contact_id, params, cb) {
 	};
 
 	console.log(opts);
+	return cb();
 
 	var req = https.request(opts, function (res) {
 		if (res.statusCode < 200 || res.statusCode >= 300) {

@@ -52,5 +52,7 @@
 	"DeliveryStatusBilled": "Facturé",
 	"DeliveryStatusCanceled": "Abandonnée",
 	"DeliveryNotes": "Bons livraisons",
-	"DeliveryNote": "Bon livraison"
+	"DeliveryNote": "Bon livraison",
+        "ConfirmCloseDelivery":"Etes-vous sur de vouloir générer la facture ? Une fois généré le bon de livraison ne sera plus modifiable et sera classé facturé.",
+        "CloseDelivery":"Facturation du bon de livraison"
 }

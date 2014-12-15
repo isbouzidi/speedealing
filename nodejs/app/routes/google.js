@@ -52,7 +52,8 @@ module.exports = function (app, passport, auth) {
 
 	// Launch the process of exportation : update address book of all users.
 	// Delete and insert contacts.
-	app.post('/api/google/export', auth.requiresLogin, googleRoutes.export);
+	app.get('/api/google/export', auth.requiresLogin, googleRoutes.export);
+	app.get('/api/google/export/:userId', auth.requiresLogin, googleRoutes.export);
 
 	// List all google tasks of the speedealing tasklist of the current user.
 	app.get('/api/google/tasks/list', auth.requiresLogin, googleRoutes.listTasks);
@@ -115,14 +116,24 @@ GoogleRoutes.prototype = {
 		}
 	},
 	export: function (req, res) {
-		googleContacts.updateAddressBooksOfAllUsers(
-				function (err) {
-					if (err)
-						res.send(500, "ERR: " + err);
-					else
-						res.send(200, "ok");
-				}
-		);
+		if (req.params.userId) {
+			googleContacts.updateGoogleUserAdressBook(req.params.userId,
+					function (err) {
+						if (err)
+							res.send(500, "ERR: " + err);
+						else
+							res.send(200, "ok");
+					}
+			);
+		} else
+			googleContacts.updateAddressBooksOfAllUsers(
+					function (err) {
+						if (err)
+							res.send(500, "ERR: " + err);
+						else
+							res.send(200, "ok");
+					}
+			);
 	},
 	listTasks: function (req, res) {
 		googleTasks.listTasks(req.user,

@@ -2,10 +2,10 @@
     <div data-ng-init="findOne()">
         <script type="text/ng-template" id="searchproduct.html">
             <a>
-			<span bind-html-unsafe="match.model.product.id.ref | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.product.id.label"></span> (\{{match.model.price_level}} : \{{match.model.pu_ht|currency}})
+            <span bind-html-unsafe="match.model.product.id.ref | typeaheadHighlight:query"></span> - <span bind-html-unsafe="match.model.product.id.label"></span> (\{{match.model.price_level}} : \{{match.model.pu_ht|currency}})
             </a>
-		</script>
-		
+        </script>
+
         <hgroup id="main-title" class="thin">
             <h1>{{t 'orders:CustomerOrder'}} \{{order.ref}} (\{{order.client.name}})</h1>
             <!--<span class="valign-top tag glossy" data-ng-class="order.status.css">\{{order.status.name}}</span>-->
@@ -30,71 +30,71 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">{{t 'Status'}}</th>
-									<td><span class="tag small glossy" data-ng-class="order.status.css" editable-select="order.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_order_status.values">
-											\{{order.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible ||  order.Status == 'BILLED'"></span>
-									</td>
+                                    <td><span class="tag small glossy" data-ng-class="order.status.css" editable-select="order.Status" buttons="no" e-form="StatusBtnForm" onaftersave="update()" e-ng-options="s.id as s.label for s in dict.fk_order_status.values">
+                                            \{{order.status.name}}</span> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible || order.Status == 'BILLED'"></span>
+                                    </td>
                                 </tr>
-								<tr>
+                                <tr>
                                     <th scope="row">{{t 'Entity'}}</th>
                                     <td><small class="tag anthracite-gradient glossy">\{{order.entity}}</small></td>
                                 </tr>
-								<tr>
+                                <tr>
                                     <th scope="row">{{t 'DateLastModification'}}</th>
                                     <td class="blue">\{{order.updatedAt|date:'dd/MM/yyyy HH:mm'}}</td>
                                 </tr>
-							</tbody>
-						</table>
+                            </tbody>
+                        </table>
 
-						<p class="icon-info green underline margin-top">{{t 'orders:DeliveryTo'}}</p>
+                        <p class="icon-info green underline margin-top">{{t 'orders:DeliveryTo'}}</p>
 
 
                         <table class="info-table">
                             <tbody>
-								<tr>
-									<th width="40%" scope="row">{{t 'companies:Company'}}</th>
+                                <tr>
+                                    <th width="40%" scope="row">{{t 'companies:Company'}}</th>
                                     <td><a
-											data-ng-href="#!/societes/\{{order.client.id}}" 
-											target="_blank"
-											class="icon-home"
-											editable-text="order.client"
-											e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
-											buttons="no"
-											e-form="eSocieteBtnForm"
-											onbeforesave="updateAddress($data)"
-											onaftersave="update()"
-											blur="submit">\{{order.client.name|| "Non defini"}} </a>
-										<span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="!editable || eSocieteBtnForm.$visible"></span>
-									</td>
-								</tr>
-								<tr ng-if="order.client.id == '5333032036f43f0e1882efce'"><!-- Accueil -->
-									<th width="40%" scope="row">{{t 'companies:CompanyName'}}</th>
-                                    <td>
-										<a href="#" editable-text="order.bl[0].name" buttons="no" blur="submit" onbeforesave="updateBillingAddress()" onaftersave="update()">
-											\{{order.bl[0].name|| "Non défini"}}
-										</a>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">{{t 'Address'}}</th>
-									<td>
-										<form editable-form name="editableToAddress" onbeforesave="updateBillingAddress()" onaftersave="update()">
-											<span editable-textarea="order.bl[0].address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ order.bl[0].address ||  "Non defini" }}</pre></span>
-
-											<span editable-text="order.bl[0].zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{order.bl[0].zip}}</span> <span editable-text="order.bl[0].town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{order.bl[0].town}}</span>
-											\{{order.bl[0].country}}
-											<!-- button to show form -->
-											<span type="button" class="icon-pencil grey" ng-click="editableToAddress.$show()" ng-show="!editableToAddress.$visible && editable"></span>
-
-											<div class="small-margin-top button-group" ng-show="editableToAddress.$visible">
-												<button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableToAddress.$waiting"></button>
-
-												<button type="button" class="button icon-cross-round white-gradient" ng-disabled="editableToAddress.$waiting" title="{{t 'Cancel'}}" ng-click="editableToAddress.$cancel()"></button>
-											</div>
-
-										</form>
+                                            data-ng-href="#!/societes/\{{order.client.id}}" 
+                                            target="_blank"
+                                            class="icon-home"
+                                            editable-text="order.client"
+                                            e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
+                                            buttons="no"
+                                            e-form="eSocieteBtnForm"
+                                            onbeforesave="updateAddress($data)"
+                                            onaftersave="update()"
+                                            blur="submit">\{{order.client.name|| "Non defini"}} </a>
+                                        <span class="icon-pencil grey" ng-click="eSocieteBtnForm.$show()" ng-hide="!editable || eSocieteBtnForm.$visible"></span>
                                     </td>
                                 </tr>
-								<tr>
+                                <tr ng-if="order.client.id == '5333032036f43f0e1882efce'"><!-- Accueil -->
+                                    <th width="40%" scope="row">{{t 'companies:CompanyName'}}</th>
+                                    <td>
+                                        <a href="#" editable-text="order.bl[0].name" buttons="no" blur="submit" onbeforesave="updateBillingAddress()" onaftersave="update()">
+                                            \{{order.bl[0].name|| "Non défini"}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">{{t 'Address'}}</th>
+                                    <td>
+                                        <form editable-form name="editableToAddress" onbeforesave="updateBillingAddress()" onaftersave="update()">
+                                            <span editable-textarea="order.bl[0].address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ order.bl[0].address ||  "Non defini" }}</pre></span>
+
+                                            <span editable-text="order.bl[0].zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{order.bl[0].zip}}</span> <span editable-text="order.bl[0].town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{order.bl[0].town}}</span>
+                                            \{{order.bl[0].country}}
+                                            <!-- button to show form -->
+                                            <span type="button" class="icon-pencil grey" ng-click="editableToAddress.$show()" ng-show="!editableToAddress.$visible && editable"></span>
+
+                                            <div class="small-margin-top button-group" ng-show="editableToAddress.$visible">
+                                                <button type="submit" class="button icon-tick blue-gradient" title="{{t 'Save'}}" ng-disabled="editableToAddress.$waiting"></button>
+
+                                                <button type="button" class="button icon-cross-round white-gradient" ng-disabled="editableToAddress.$waiting" title="{{t 'Cancel'}}" ng-click="editableToAddress.$cancel()"></button>
+                                            </div>
+
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th width="40%" scope="row">{{t 'Contact'}}</th>
                                     <td>
                                         <a href="#" editable-text="order.contact.name" buttons="no" blur="submit" onaftersave="update()">
@@ -102,54 +102,54 @@
                                         </a>
                                     </td>
                                 </tr>
-								<tr>
-									<th scope="row">{{t 'companies:Phone'}}</th>
-									<td ><span editable-tel="order.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{order.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
+                                <tr>
+                                    <th scope="row">{{t 'companies:Phone'}}</th>
+                                    <td ><span editable-tel="order.phone" e-title="+xxxxxxxxxxx" buttons="no" e-form="phoneBtnForm" onaftersave="update()">\{{order.phone|| "Non défini" | phone}}</span> <span class="icon-pencil grey" ng-click="phoneBtnForm.$show()" ng-hide="phoneBtnForm.$visible"></span></td>
                                 </tr>
                                 <!--<tr>
                                         <th scope="row">{{t 'companies:Fax'}}</th>
                                         <td><span editable-tel="order.fax" e-title="+xxxxxxxxxxx" buttons="no" e-form="faxBtnForm" onaftersave="update()">\{{order.fax|| "Non défini"}}</span> <span class="icon-pencil grey" ng-click="faxBtnForm.$show()" ng-hide="faxBtnForm.$visible"></span></td>
                                 </tr>-->
                                 <tr>
-									<th scope="row">{{t 'EMail'}}</th> 
-									<td><a data-ng-href="mailto:\{{order.email}}" target="_blank" editable-email="order.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{order.email|| "Non defini"}}</a>
-										<span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span></td>
+                                    <th scope="row">{{t 'EMail'}}</th> 
+                                    <td><a data-ng-href="mailto:\{{order.email}}" target="_blank" editable-email="order.email" buttons="no" e-form="eMailBtnForm" onaftersave="update()">\{{order.email|| "Non defini"}}</a>
+                                        <span class="icon-pencil grey" ng-click="eMailBtnForm.$show()" ng-hide="eMailBtnForm.$visible"></span></td>
                                 </tr>
-							</tbody>
-						</table>
+                            </tbody>
+                        </table>
 
-						<p class="icon-info green underline margin-top">{{t 'orders:BillTo'}}</p>
+                        <p class="icon-info green underline margin-top">{{t 'orders:BillTo'}}</p>
 
                         <table class="info-table">
                             <tbody>
-								<tr ng-if="order.client.id != '5333032036f43f0e1882efce'"><!-- !Accueil -->
-									<th width="40%" scope="row">{{t 'companies:Company'}}</th>
+                                <tr ng-if="order.client.id != '5333032036f43f0e1882efce'"><!-- !Accueil -->
+                                    <th width="40%" scope="row">{{t 'companies:Company'}}</th>
                                     <td><a
-											data-ng-href="#!/societes/\{{order.client.cptBilling.id}}" 
-											target="_blank"
-											class="icon-home"
-											editable-text="order.client.cptBilling"
-											e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
-											buttons="no"
-											e-form="eSocieteBillBtnForm"
-											onaftersave="update()"
-											blur="submit">\{{order.client.cptBilling.name|| "Non defini"}} </a>
-										<span class="icon-pencil grey" ng-click="eSocieteBillBtnForm.$show()" ng-hide="!editable || eSocieteBillBtnForm.$visible"></span>
-									</td>
-								</tr>
-								<tr ng-if="order.client.id == '5333032036f43f0e1882efce'"><!-- Accueil -->
-									<th scope="row">{{t 'companies:CompanyName'}}</th>
+                                            data-ng-href="#!/societes/\{{order.client.cptBilling.id}}" 
+                                            target="_blank"
+                                            class="icon-home"
+                                            editable-text="order.client.cptBilling"
+                                            e-typeahead="societe as societe.name for societe in AutoComplete($viewValue, '/api/societe/autocomplete',5) | filter:{name:$viewValue}"
+                                            buttons="no"
+                                            e-form="eSocieteBillBtnForm"
+                                            onaftersave="update()"
+                                            blur="submit">\{{order.client.cptBilling.name|| "Non defini"}} </a>
+                                        <span class="icon-pencil grey" ng-click="eSocieteBillBtnForm.$show()" ng-hide="!editable || eSocieteBillBtnForm.$visible"></span>
+                                    </td>
+                                </tr>
+                                <tr ng-if="order.client.id == '5333032036f43f0e1882efce'"><!-- Accueil -->
+                                    <th scope="row">{{t 'companies:CompanyName'}}</th>
                                     <td>
-										<input type="checkbox" data-ng-model="order.billing.sameBL0" data-ng-checked="order.billing.sameBL0" data-ng-change="update()" /> Idem expédition <br/>
-										<a ng-hide="order.billing.sameBL0" href="#" editable-text="order.billing.name" buttons="no" blur="submit" onaftersave="update()">
-											\{{order.billing.name|| "Non défini"}}
-										</a>
-									</td>
-								</tr>
-								<tr ng-if="order.client.id == '5333032036f43f0e1882efce' && !order.billing.sameBL0"><!-- Accueil -->
-									<th scope="row">{{t 'Address'}}</th>
-									<td>
-										<form editable-form name="editableBillingAddress" onaftersave="update()">
+                                        <input type="checkbox" data-ng-model="order.billing.sameBL0" data-ng-checked="order.billing.sameBL0" data-ng-change="update()" /> Idem expédition <br/>
+                                        <a ng-hide="order.billing.sameBL0" href="#" editable-text="order.billing.name" buttons="no" blur="submit" onaftersave="update()">
+                                            \{{order.billing.name|| "Non défini"}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr ng-if="order.client.id == '5333032036f43f0e1882efce' && !order.billing.sameBL0"><!-- Accueil -->
+                                    <th scope="row">{{t 'Address'}}</th>
+                                    <td>
+                                        <form editable-form name="editableBillingAddress" onaftersave="update()">
                                             <span editable-textarea="order.billing.address" e-name="address" e-rows="4" e-cols="20" e-required><pre class="no-padding">\{{ order.billing.address ||  "Non defini" }}</pre></span>
 
                                             <span editable-text="order.billing.zip" e-name="zip" e-placeholder="{{t 'companies:Zip'}}" e-title="{{t 'companies:Zip'}}">\{{order.billing.zip}}</span> <span editable-text="order.billing.town" e-name="town" e-placeholder="{{t 'companies:Town'}}" e-title="{{t 'companies:Town'}}">\{{order.billing.town}}</span>
@@ -183,7 +183,7 @@
                 <div class="eight-columns small-margin-bottom">
 
                     <div class="float-right button-height">
-						<button ng-show="order.Status == 'PROCESSING' || order.Status == 'SHIPPING'" ng-disabled="!global.user.rights.order.createDelivery" class="button" ng-confirm-click="{{t 'orders:ConfirmCloseOrder'}}" ng-confirm-title="{{t 'orders:CloseOrder'}}" confirmed-click="createDelivery(1)" canceled-click="createDelivery(0)">
+                        <button ng-show="order.Status == 'PROCESSING' || order.Status == 'SHIPPING'" ng-disabled="!global.user.rights.order.createDelivery" class="button" ng-confirm-click="{{t 'orders:ConfirmCloseOrder'}}" ng-confirm-title="{{t 'orders:CloseOrder'}}" confirmed-click="createDelivery(1)" canceled-click="createDelivery(0)">
                             <span class="button-icon green-gradient"><span class="icon-fwd"></span></span>
                             {{t 'orders:CreateDelivery'}}
                         </button>
@@ -206,10 +206,10 @@
                             <span class="button-icon"><span class="icon-list"></span></span>
                             {{t 'List'}}
                         </button>
-						<button class="margin-left button" ng-disabled="!global.user.rights.order.delete" ng-hide="order.Status == 'BILLED'" confirmed-click="remove(order)" ng-confirm-click="Supprimer le bon de livraison ?" title="Supprimer le bon de livraison">
-							{{t 'Delete'}}
-							<span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
-						</button>
+                        <button class="margin-left button" ng-disabled="!global.user.rights.order.delete" ng-hide="order.Status == 'BILLED'" confirmed-click="remove(order)" ng-confirm-click="Supprimer le bon de livraison ?" title="Supprimer le bon de livraison">
+                            {{t 'Delete'}}
+                            <span class="button-icon right-side red-bg"><span class="icon-trash"></span></span>
+                        </button>
 
                     </div>
                 </div>
@@ -282,14 +282,14 @@
                                                     <th>{{t 'AmountHT'}}</th>
                                                     <td class="align-right">
                                                         <span 
-															editable-text="order.shipping.total_ht"
-															e-style="width: 80px"												blur="submit"
-															buttons="no"
-															onaftersave="update()"
-															e-form="shipping">
-															\{{order.shipping.total_ht| currency}}
-														</span>
-														<span class="icon-pencil grey" ng-click="shipping.$show()" ng-hide="shipping.$visible || !editable"></span>
+                                                            editable-text="order.shipping.total_ht"
+                                                            e-style="width: 80px"												blur="submit"
+                                                            buttons="no"
+                                                            onaftersave="update()"
+                                                            e-form="shipping">
+                                                            \{{order.shipping.total_ht| currency}}
+                                                        </span>
+                                                        <span class="icon-pencil grey" ng-click="shipping.$show()" ng-hide="shipping.$visible || !editable"></span>
 
                                                     </td>
                                                 </tr>
@@ -330,58 +330,58 @@
 
                             </div>
                         </tab>
-						<tab>
-							<tab-heading>
-								<span class="icon-folder">Fichiers<span ng-if='order.files.length' class="count green-bg right">\{{order.files.length}}</span></span>
-							</tab-heading>
-							<div class="boxed relative large-box-shadow">
+                        <tab>
+                            <tab-heading>
+                                <span class="icon-folder">Fichiers<span ng-if='order.files.length' class="count green-bg right">\{{order.files.length}}</span></span>
+                            </tab-heading>
+                            <div class="boxed relative large-box-shadow">
 
-								<div class="panel-content linen">
+                                <div class="panel-content linen">
 
-									<div class="panel-control align-right">
-										<div class="float-right">
-											<div class="button-group">
-												<progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
-											</div>
-											<div class="button-group">
-												<div class="button-height">
-													<input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
-													<!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
-												</div>
-											</div>
-										</div>
-									</div>
+                                    <div class="panel-control align-right">
+                                        <div class="float-right">
+                                            <div class="button-group">
+                                                <progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
+                                            </div>
+                                            <div class="button-group">
+                                                <div class="button-height">
+                                                    <input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
+                                                    <!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-									<div id="panel-content" class="panel-load-target" style="height:500px; width: 100%;">
-										<div class="with-padding">
-											<p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
-											<p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
+                                    <div id="panel-content" class="panel-load-target" style="height:500px; width: 100%;">
+                                        <div class="with-padding">
+                                            <p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
+                                            <p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
 
-											<ul class="files-icons on-dark" data-ng-init="getFileTypes()">
-												<!--<li>
-													<a href="#" class="file-link">
-														<span class="icon folder-net"></span>
-														Dossier public
-													</a>
-												</li>-->
-												<li data-ng-repeat="file in order.files">
-													<span class="icon" data-ng-class="fileType(file.name)"></span>
-													<div class="controls">
-														<span class="button-group compact children-tooltip">
-															<a data-ng-href="api/commande/file/\{{order._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
-															<a data-ng-href="api/commande/file/\{{order._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
-															<button data-ng-click="suppressFile(order._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
-														</span>
-													</div>
-													<a data-ng-href="api/commande/file/\{{order._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
-												</li>
-											</ul>
-										</div>
-									</div>
+                                            <ul class="files-icons on-dark" data-ng-init="getFileTypes()">
+                                                <!--<li>
+                                                        <a href="#" class="file-link">
+                                                                <span class="icon folder-net"></span>
+                                                                Dossier public
+                                                        </a>
+                                                </li>-->
+                                                <li data-ng-repeat="file in order.files">
+                                                    <span class="icon" data-ng-class="fileType(file.name)"></span>
+                                                    <div class="controls">
+                                                        <span class="button-group compact children-tooltip">
+                                                            <a data-ng-href="api/commande/file/\{{order._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
+                                                            <a data-ng-href="api/commande/file/\{{order._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
+                                                            <button data-ng-click="suppressFile(order._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
+                                                        </span>
+                                                    </div>
+                                                    <a data-ng-href="api/commande/file/\{{order._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
 
-								</div>
-							</div>
-						</tab>
+                                </div>
+                            </div>
+                        </tab>
                         <tab>
                             <tab-heading>
                                 <span class="icon-pencil">Notes<span ng-if='order.notes.length' class="count orange-bg right">\{{order.notes.length}}</span></span>
@@ -410,7 +410,7 @@
                                                     <span class="icon-speech">\{{vnote.title}} - <b>\{{vnote.author.name}}</b> <i>\{{vnote.datec| date:'dd-MM-yyyy HH:mm:ss'}}</i></span>
                                                     <div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
                                                 </div>
-												<span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
+                                                <span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -419,7 +419,7 @@
 
                             </div>
                         </tab>
-						<tab ng-if='order.optional'>
+                        <tab ng-if='order.optional'>
                             <tab-heading>
                                 <span class="icon-pencil">Options</span>
                             </tab-heading>
@@ -457,8 +457,8 @@
                                 <ul class="list spaced">
                                     <li ng-repeat="order in order.orders">
                                         <a ng-href="commande/\{{order._id}}" class="list-link icon-bag" title="Click to show">
-											<strong>\{{order.ref}}</strong> <small>(\{{order.ref_client}})</small>
-										</a> Total HT : \{{order.total_ht|currency}}
+                                            <strong>\{{order.ref}}</strong> <small>(\{{order.ref_client}})</small>
+                                        </a> Total HT : \{{order.total_ht|currency}}
                                     </li>
                                 </ul>
                             </div>
@@ -469,30 +469,30 @@
                 <div class="twelve-columns">
                     <h5 class="green underline">{{t 'orders:Details'}}</h5>
 
-					<div class="table-header silver-gradient glossy button-height">
-						<div class="row">
-							<div class="col-sm-8">
-								<div class="button-group">
-									<button class="button icon-plus blue-gradient"  ng-disabled="!editable" data-ng-click="addNewLine()">{{t 'Add'}}</button>
-									<button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="float-right">
-									{{t 'Search'}} <input type="text" data-ng-model="filterOptionsLines.filterText" class="input small mid-margin-left">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="gridStyle"  data-ng-grid="gridOptionsLines" ng-style="style(200)" resize></div>
-					<div class="table-footer silver-gradient">
-						<div class="float-right strong">
-							Total HT : \{{order.total_ht| currency}}  
-						</div>
-						\{{order.lines.length}} ligne(s)
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <div class="table-header silver-gradient glossy button-height">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="button-group">
+                                    <button class="button icon-plus blue-gradient"  ng-disabled="!editable" data-ng-click="addNewLine()">{{t 'Add'}}</button>
+                                    <button title="{{t 'Refresh'}}" class="button" data-ng-click="findOne()"><span class="icon-redo"></span></button>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="float-right">
+                                    {{t 'Search'}} <input type="text" data-ng-model="filterOptionsLines.filterText" class="input small mid-margin-left">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gridStyle"  data-ng-grid="gridOptionsLines" ng-style="style(200)" resize></div>
+                    <div class="table-footer silver-gradient">
+                        <div class="float-right strong">
+                            Total HT : \{{order.total_ht| currency}}  
+                        </div>
+                        \{{order.lines.length}} ligne(s)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

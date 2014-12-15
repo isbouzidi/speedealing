@@ -24,6 +24,7 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
                 $scope.colDefs.push({ field: key });                
             });
             
+            $scope.count = $scope.gridData.length;
         });
 
         $scope.gridOptions = {
@@ -38,11 +39,10 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
             var str = $scope.request;            
             var col = str.substring(0,str.indexOf("."));
             str = str.replace(col, "db");
-			
+            
 			//console.log(col);
-            
             //if($scope.global.user.rights[col] && $scope.global.user.rights[col].export){
-            
+            if(true){
                 var p = {
                     request: str,
                     model: col
@@ -67,14 +67,14 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
                         text: error.data
                     };
                 });
-          /*  }else{
+            }else{
                 $scope.msg={
                     enable: true,
                     icon: "icon-cross",
                     color: "red-gradient",
                     text: "Vous n'avez pas l'autorisation !"
-                };*/
-            //}                                  
+                };
+            }                                  
         };
         
         $scope.export = function(){

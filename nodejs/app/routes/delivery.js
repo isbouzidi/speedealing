@@ -132,7 +132,7 @@ Object.prototype = {
 
 		DeliveryModel.findOne(query, "-latex")
 				.populate("orders", "ref ref_client total_ht")
-				.populate("order", "ref ref_client total_ht")
+				.populate("order", "ref ref_client total_ht datec")
 				.exec(function (err, doc) {
 					if (err)
 						return next(err);
@@ -295,7 +295,7 @@ Object.prototype = {
 				tex = tex.replace(/--TITLE--/g, doc.title);
 				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
 				tex = tex.replace(/--ORDER--/g, (doc.order && doc.order.ref ? doc.order.ref : "-"));
-				tex = tex.replace(/--DATEC--/g, dateFormat(doc.datec, "dd/mm/yyyy"));
+				tex = tex.replace(/--DATEC--/g, (doc.order && doc.order.datec ? dateFormat(doc.order.datec, "dd/mm/yyyy") : "-"));
 				tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
 
 				tex = tex.replace(/--REGLEMENT--/g, cond_reglement_code.values[doc.cond_reglement_code].label);
@@ -321,7 +321,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
-					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].qty_order + "&" + /*latex.number(doc.lines[i].qty, 3)*/ Math.round(doc.lines[i].qty *1000)/1000 + (doc.lines[i].product.unit ? " " + doc.lines[i].product.unit : " U") + "\\tabularnewline\n";
+					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].qty_order + "&" + /*latex.number(doc.lines[i].qty, 3)*/ Math.round(doc.lines[i].qty * 1000) / 1000 + (doc.lines[i].product.unit ? " " + doc.lines[i].product.unit : " U") + "\\tabularnewline\n";
 				}
 				//console.log(products)
 				//console.log(tab_latex);

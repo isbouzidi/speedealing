@@ -21,8 +21,7 @@ module.exports = function(app, passport, auth) {
             var op = struct[1].split('(');
             var operation = op[0];
 
-            var result = [];        
-            var resultMin = [];
+            var result = [];
             var query = eval(req.query.request);
             console.log(query);
             var promise = query.exec();
@@ -33,9 +32,8 @@ module.exports = function(app, passport, auth) {
         
         promise.addBack(function (err, docs) {
             if(err)
-                console.log(err);
-            
-           
+                console.log(err);                        
+                        
             switch(operation){
                 case 'find':
                     /*
@@ -45,7 +43,7 @@ module.exports = function(app, passport, auth) {
                         var fields = Object.keys(query._fields);
                     else
                         return res.send(500, "Champs ne peux pas être vide")
-                        
+                    
                     var csvString;
                     for (var i = 0; i < fields.length; i++) {
                         if (i === 0)
@@ -69,21 +67,19 @@ module.exports = function(app, passport, auth) {
                            throw err;
 
                        for (var i = 0; i < docs.length; i++) {
-                           var doc = docs[i];
-                           obj = JSON.parse(JSON.stringify(json[0]));
-                           obj = _.extend(obj, doc.toObject({virtuals: false}));
-                           result.push(obj);                   
-                           obj = {};
-                       };            
-
+                            var doc = docs[i];
+                            obj = JSON.parse(JSON.stringify(json[0]));
+                            obj = _.extend(obj, doc.toObject({virtuals: false}));
+                            result.push(obj);
+                            obj = {};                           
+                       };
+                       
                        var json2csvCallbackFind = function (err, csv) {
                            if (err) throw err;
                            //console.log(csv);
                            
-                           for(var i = 0; i < 100; i++){
-                               resultMin.push(result[i]);
-                           }
-                           var data = [resultMin, csv];
+                           var data = [result.slice(0, 100), csv];
+                           var data = [result, csv];
                            res.send(data);
                        };
                         try{
@@ -108,11 +104,8 @@ module.exports = function(app, passport, auth) {
                         if (err)
                             throw err;                    
                         
-                        for(var i = 0; i < 100; i++){
-                            resultMin.push(docs[i]);
-                        }
+                        var data = [docs.slice(0, 100), csv];
                         
-                        var data = [resultMin, csv];
                         res.send(data);
                     };
                     try{
@@ -127,5 +120,5 @@ module.exports = function(app, passport, auth) {
             }             
        });
        
-    });
+    });    
 };
