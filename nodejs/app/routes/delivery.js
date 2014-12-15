@@ -296,7 +296,7 @@ Object.prototype = {
 				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
 				tex = tex.replace(/--ORDER--/g, (doc.order && doc.order.ref ? doc.order.ref : "-"));
 				tex = tex.replace(/--DATEC--/g, (doc.order && doc.order.datec ? dateFormat(doc.order.datec, "dd/mm/yyyy") : "-"));
-				tex = tex.replace(/--DATEECH--/g, dateFormat(doc.dater, "dd/mm/yyyy"));
+				tex = tex.replace(/--DATEEXP--/g, dateFormat(doc.datedl, "dd/mm/yyyy"));
 
 				tex = tex.replace(/--REGLEMENT--/g, cond_reglement_code.values[doc.cond_reglement_code].label);
 
