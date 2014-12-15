@@ -216,7 +216,7 @@ function imp_updateContacts(contacts, gcontact, callback) {
  */
 function imp_insertNewContact(gcontact, callback) {
 	console.log("INSERT NEW CONTACT ");
-	console.log(gcontact);
+	//console.log(gcontact);
 	var contact = new ContactModel({
 		Status: "ST_ENABLE"
 	});
@@ -488,18 +488,18 @@ function up_treatContacts(user, gcontact, contacts, callback) {
 				//console.log("     {"+contact.firstname+" "+contact.lastname+"}");
 				if (!_belongsToSociete) {
 					_belongsToSociete = belongsToSociete(contact);
-					if (_belongsToSociete) {
-						console.log("DELETE");
-						console.log(contact);
-					}
+					/*if (_belongsToSociete) {
+					 console.log("DELETE");
+					 console.log(contact);
+					 }*/
 				}
 			}
 	);
 
-	//if (_belongsToSociete)
-	//	up_deleteGoogleContact(user, gcontact, callback);
-	//else
-	callback();
+	if (_belongsToSociete)
+		up_deleteGoogleContact(user, gcontact, callback);
+	else
+		callback();
 }
 
 
@@ -944,7 +944,8 @@ GoogleContacts.prototype.getContacts = function (params, cb) {
 
 GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
 	var self = this;
-	//console.log(feed);
+	//console.log(feed.entry[0]);
+	//return;
 	if (feed && feed.entry) {
 		feed.entry.forEach(function (entry) {
 			try {
@@ -1067,6 +1068,10 @@ GoogleContacts.prototype._saveContactsFromFeed = function (feed) {
 
 					});
 				}
+
+				/* - Notes */
+				if (entry['content'])
+					new_contact.notes = entry['content']['$t'];
 
 				if (self.store_id) {
 					try {
@@ -1366,7 +1371,40 @@ GoogleContacts.prototype._contactToXML = function (contact) {
 				.endElement();
 	}
 
+	if (contact.societe && contact.societe.name) {
+		x.startElement('gd:organization')
+				.writeAttribute('rel', 'http://schemas.google.com/g/2005#other')
+				.startElement('gd:orgName')
+				.text(contact.societe.name)
+				.endElement();
+
+		if (contact.poste)
+			x.startElement('gd:orgTitle')
+					.text(contact.poste)
+					.endElement();
+
+		x.endElement();
+	}
+
+
+	/*if (contact.societe && contact.societe.id) {
+		x.startElement('gContact:externalId')
+				.writeAttribute('label', 'societeId')
+				.writeAttribute('rel', 'http://schemas.google.com/g/2005#organization')
+				.writeAttribute('value', contact.societe.id.toString())
+				.endElement();
+	}*/
+
+	/*x.startElement('gContact:externalId')
+	 .writeAttribute('label', 'contactId')
+	 .writeAttribute('rel', 'account')
+	 .writeAttribute('value', contact._id.toString())
+	 .endElement();
+	 */
+
 	x.endElement();
+
+	//console.log(x.toString());
 
 	return x.toString();
 };
@@ -1387,8 +1425,8 @@ GoogleContacts.prototype.deleteContact = function (contact_id, params, cb) {
 		}
 	};
 
-	console.log(opts);
-	return cb();
+	//console.log(opts);
+	//return cb();
 
 	var req = https.request(opts, function (res) {
 		if (res.statusCode < 200 || res.statusCode >= 300) {
