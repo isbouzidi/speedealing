@@ -103,7 +103,8 @@
 
         </div>
         <div class="field-block">
-            <label><b>{{t 'Email'}}</b></label> 
+            <label><b>{{t
+				'Email'}}</b></label> 
             <a 
                 data-ng-href="mailto:\{{contact.email}}" 
                 target="_blank" 
@@ -188,7 +189,7 @@
             <label><b>{{t
 				'Keywords'}}</b></label>
             <tags-input ng-model="contact.Tag" placeholder="{{t
-							'Add'}}" on-tag-added='update()' on-tag-removed="update()">
+				'Add'}}" on-tag-added='update()' on-tag-removed="update()">
                 <auto-complete source="AutoComplete($query,'api/contact/autocomplete/Tag',10)" min-length="1" max-results-to-show="10"></auto-complete>
             </tags-input>
         </div>
@@ -254,6 +255,20 @@
                 </div>
 
             </form>
+        </div>
+
+        <div class="field-block">
+            <label><b>{{t
+				'Comments'}}</b></label>
+
+            <a href="#" editable-textarea="contact.notes" 
+               e-rows="4" e-cols="40" 
+               onaftersave="update()"
+               blur="submit"
+               e-form="CommentFrm">
+                \{{contact.notes|| 'indéfini'}}
+            </a>
+            <span class="icon-pencil grey" ng-click="CommentFrm.$show()" ng-hide="CommentFrm.$visible"></span>
         </div>
 
         <div class="twelve-columns small-margin-bottom">
