@@ -45,23 +45,23 @@ module.exports = function (app, passport, auth) {
 						return res.send(500, "Champs ne peux pas être vide")
 
 					/*var csvString;
-					for (var i = 0; i < fields.length; i++) {
-						if (i === 0)
-							csvString = fields[i];
-						else
-							csvString = csvString + ';' + fields[i];
-					}
+					 for (var i = 0; i < fields.length; i++) {
+					 if (i === 0)
+					 csvString = fields[i];
+					 else
+					 csvString = csvString + ';' + fields[i];
+					 }
+					 
+					 csvString = csvString + '\n';
+					 
+					 for (var i = 1; i <= fields.length; i++) {
+					 if (i < fields.length)
+					 csvString = csvString + ';';
+					 else
+					 csvString = csvString + '\n';
+					 }*/
 
-					csvString = csvString + '\n';
-
-					for (var i = 1; i <= fields.length; i++) {
-						if (i < fields.length)
-							csvString = csvString + ';';
-						else
-							csvString = csvString + '\n';
-					}*/
-
-					//console.log(docs);
+					console.log(docs);
 
 					var result = docs.map(function (doc) {
 						var newdoc = doc.toObject({virtuals: false});
@@ -76,8 +76,8 @@ module.exports = function (app, passport, auth) {
 							res.send(data);
 						}, {DELIMITER: {FIELD: ';', ARRAY: ',', WRAP: '"'}});
 					} catch (e) {
-						//res.send(500, e.message);
 						console.log(e.message);
+						res.send(500, e.message);
 					}
 
 					return;
