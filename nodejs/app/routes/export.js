@@ -69,7 +69,7 @@ module.exports = function (app, passport, auth) {
 						return newdoc;
 					});
 
-					console.log(result);
+					//console.log(result);
 
 					try {
 						converter.json2csv(result, function (err, csv) {
@@ -82,7 +82,7 @@ module.exports = function (app, passport, auth) {
 						res.send(500, e.message);
 					}
 
-					return;
+					return; // FIN ICI
 
 					var csv2jsonCallback = function (err, json) {
 						var obj;
