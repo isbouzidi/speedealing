@@ -47,22 +47,22 @@ var setPhone = function (phone) {
  */
 var contactSchema = new Schema({
 	ref: String,
-	firstname: {type: String, trim: true},
-	lastname: {type: String, uppercase: true, trim: true},
-	poste: String,
-	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: String},
+	firstname: {type: String, trim: true, default: null},
+	lastname: {type: String, uppercase: true, trim: true, default: null},
+	poste: {type: String, default: null},
+	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: {type: String, default: null}},
 	Status: {type: String, default: "ST_ENABLE"},
-	address: String,
-	zip: String,
-	town: String,
+	address: {type: String,default:null},
+	zip: {type: String,default:null},
+	town: {type: String,default:null},
 	country_id: String,
 	state_id: String,
 	DefaultLang: String,
-	phone: {type: String, set: setPhone}, // pro
-	phone_perso: {type: String, set: setPhone},
-	phone_mobile: {type: String, set: setPhone}, // pro
-	fax: {type: String, set: setPhone}, // pro
-	email: {type: String, lowercase: true, trim: true, index: true},
+	phone: {type: String, set: setPhone, default:null}, // pro
+	phone_perso: {type: String, set: setPhone, default:null},
+	phone_mobile: {type: String, set: setPhone, default:null}, // pro
+	fax: {type: String, set: setPhone, default:null}, // pro
+	email: {type: String, lowercase: true, trim: true, index: true, default:null},
 	emails: [{
 			type: {type: String, default: "pro"},
 			address: String

@@ -61,13 +61,15 @@ module.exports = function (app, passport, auth) {
 					 csvString = csvString + '\n';
 					 }*/
 
-					console.log(docs);
+					//console.log(docs);
 
 					var result = docs.map(function (doc) {
 						var newdoc = doc.toObject({virtuals: false});
 						newdoc._id = newdoc._id.toString();
 						return newdoc;
 					});
+
+					console.log(result);
 
 					try {
 						converter.json2csv(result, function (err, csv) {
