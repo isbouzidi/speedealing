@@ -57,7 +57,8 @@
 		"nodemailer":"latest",
 		"nodemailer-smtp-transport": "latest",
 		"googleapis":"0.8.0",
-                "odt":"latest"
+                "odt":"latest",
+                "json-2-csv":"latest"
 	},
 	"devDependencies": {
 		"supertest": "latest",
