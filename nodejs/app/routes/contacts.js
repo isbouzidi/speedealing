@@ -772,7 +772,7 @@ Contact.prototype = {
 
 		var json2csv = require('json2csv');
 
-		ContactModel.find({Tag: "Arseg"/*, sendEmailing: {$ne :true}, sendSMS: {$ne: true}*/}, function (err, contacts) {
+		ContactModel.find({Tag: "cdaf"/*, sendEmailing: {$ne :true}, sendSMS: {$ne: true}*/}, function (err, contacts) {
 			//console.log(contact);
 
 			for (var i = 0; i < contacts.length; i++) {
@@ -786,7 +786,7 @@ Contact.prototype = {
 			var csv = "";
 
 
-			var fields = ['_id', 'firstname', 'lastname', 'optional', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'];
+			var fields = ['_id', 'firstname', 'lastname', 'optional', 'societe', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'];
 
 			for (var i = 0; i < fields.length; i++) {
 				csv += fields[i];
