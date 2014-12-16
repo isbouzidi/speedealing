@@ -17,7 +17,7 @@ var SeqModel = mongoose.model('Sequence');
 var ticketSchema = new Schema({
 	ref: String,
 	name: {type: String, require: true}, //title
-//	Status: {type: Schema.Types.Mixed, default: 'NEW'},
+	Status: {type: Schema.Types.Mixed, default: 'NEW'},
 	affectedTo: [{id: String, name: String}],
 	read: [String], // readed is in this array
 	controlledBy: {id: {type: String}, name: String},
