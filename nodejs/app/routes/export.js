@@ -23,7 +23,7 @@ module.exports = function (app, passport, auth) {
 
 			var result = [];
 			var query = eval(req.query.request);
-			console.log(query);
+			//console.log(query);
 			var promise = query.exec();
 
 		} catch (e) {
@@ -44,7 +44,7 @@ module.exports = function (app, passport, auth) {
 					else
 						return res.send(500, "Champs ne peux pas être vide")
 
-					var csvString;
+					/*var csvString;
 					for (var i = 0; i < fields.length; i++) {
 						if (i === 0)
 							csvString = fields[i];
@@ -59,7 +59,28 @@ module.exports = function (app, passport, auth) {
 							csvString = csvString + ';';
 						else
 							csvString = csvString + '\n';
+					}*/
+
+					//console.log(docs);
+
+					var result = docs.map(function (doc) {
+						var newdoc = doc.toObject({virtuals: false});
+						newdoc._id = newdoc._id.toString();
+						return newdoc;
+					});
+
+					try {
+						converter.json2csv(result, function (err, csv) {
+							//console.log(csv);
+							var data = [result, csv];
+							res.send(data);
+						}, {DELIMITER: {FIELD: ';', ARRAY: ',', WRAP: '"'}});
+					} catch (e) {
+						//res.send(500, e.message);
+						console.log(e.message);
 					}
+
+					return;
 
 					var csv2jsonCallback = function (err, json) {
 						var obj;
@@ -73,12 +94,11 @@ module.exports = function (app, passport, auth) {
 							result.push(obj);
 							obj = {};
 						}
-						;
 
 						var json2csvCallbackFind = function (err, csv) {
 							if (err)
 								throw err;
-							//console.log(csv);
+							console.log(csv);
 
 							var data = [result.slice(0, 100), csv];
 							var data = [result, csv];
@@ -95,7 +115,7 @@ module.exports = function (app, passport, auth) {
 					} catch (e) {
 						res.send(500, e.message);
 					}
-					;
+
 					break;
 				case 'aggregate':
 
