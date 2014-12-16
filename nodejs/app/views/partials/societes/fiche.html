@@ -563,7 +563,7 @@
                                             <div data-ng-repeat="vnote in societe.notes| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-bottom">
                                                 <div class="with-small-padding silver-gradient no-margin-top">
                                                     <span class="icon-speech"><b>\{{vnote.author.name}}</b> <i>\{{ vnote.datec | date:'{{t 'main:date.format.java.dayhour'}}' }}</i></span>
-                                                    <div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'main:Today'}}</span></div>
+                                                    <div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(vnote.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'main:Today'}}</span> <span ng-if="global.user.rights.societe.delete" title="Supprimer note" class="icon icon-trash" ng-confirm-click="Supprimer la note ?" confirmed-click="removeNote(vnote)" ></span></div>
                                                 </div>
                                                 <span class="with-small-padding" data-ng-if="vnote.note" ng-bind-html="vnote.note"></span>
                                             </div>

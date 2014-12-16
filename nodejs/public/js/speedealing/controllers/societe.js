@@ -218,11 +218,11 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 					});
 					$scope.countBuy = $scope.requestBuy.length;
 				});
-                                
-                                $http({method: 'GET', url: 'api/bill', params:
-                                    {
-                                        "client.id": societe._id
-                                    }
+
+				$http({method: 'GET', url: 'api/bill', params:
+							{
+								"client.id": societe._id
+							}
 				}).success(function (data, status) {
 
 					$scope.bills = data;
@@ -834,8 +834,8 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				{field: 'total_ht', displayName: 'Total HT', cellFilter: "euro", cellClass: "align-right", editableCellTemplate: '<input ng-class="\'colt\' + col.index" ng-model="COL_FIELD" ng-input="COL_FIELD" class="input" ng-blur="updateInPlace(\'/api/europexpress/buy\',\'total_ht\', row)"/>'}
 			]
 		};
-                
-                $scope.filterOptionsBills = {
+
+		$scope.filterOptionsBills = {
 			filterText: "",
 			useExternalFilter: false
 		};
@@ -849,14 +849,14 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 			enableColumnResize: true,
 			enableCellSelection: false,
 			columnDefs: [
-			    {field: 'ref', displayName:'Facture', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/bills/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'> {{row.getProperty(col.field)}} </a></div>'},
-                            {field: 'createdAt', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
-                            {field: 'total_ttc', displayName: 'Montant', cellFilter: "currency:''"},
-                            {field: 'amount.set', displayName: 'Reçu', cellFilter: "currency:''"},
-                            {field: 'amount.rest', displayName: 'Reste à encaisser', cellFilter: "currency:''"}                            
+				{field: 'ref', displayName: 'Facture', cellTemplate: '<div class="ngCellText"><a class="with-tooltip" ng-href="#!/bills/{{row.getProperty(\'_id\')}}" data-tooltip-options=\'{"position":"top"}\' title=\'{{row.getProperty(col.field)}}\'> {{row.getProperty(col.field)}} </a></div>'},
+				{field: 'createdAt', displayName: 'Date', cellFilter: "date:'dd-MM-yyyy'"},
+				{field: 'total_ttc', displayName: 'Montant', cellFilter: "currency:''"},
+				{field: 'amount.set', displayName: 'Reçu', cellFilter: "currency:''"},
+				{field: 'amount.rest', displayName: 'Reste à encaisser', cellFilter: "currency:''"}
 			]
 		};
-                
+
 		$scope.priceLevelAutoComplete = function (val, field) {
 			return $http.post('api/product/price_level/select', {
 				take: '5',
@@ -979,18 +979,18 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 
 		$scope.findLead = function (id) {
 
-                        $routeParams.lead = id;
+			$routeParams.lead = id;
 			var modalInstance = $modal.open({
 				templateUrl: '/partials/leads/view.html',
 				controller: "LeadController",
 				windowClass: "steps"
-				//resolve: {
-				//	object: function () {
-				//		return {
-				//			lead: id
-				//		};
-				//	}
-				//}
+						//resolve: {
+						//	object: function () {
+						//		return {
+						//			lead: id
+						//		};
+						//	}
+						//}
 			});
 		};
 
@@ -1028,29 +1028,37 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 				$scope.countReports = $scope.reports.length;
 			});
 		};
-                
-                $scope.paymentBills = function(){
-                  
-                  var modalInstance = $modal.open({
-                        templateUrl: '/partials/transaction/regulationBills.html',
-                        controller: "TransactionController",
-                        windowClass: "steps",
-                        resolve: {
-                            object: function () {
-                                return {
-                                    societe: $scope.societe,
-                                    bills: $scope.bills
-                                };
-                            }
-                        }
-                    });
-                    modalInstance.result.then(function (bills) {
-                        $scope.bills.push(bills);
-                        $scope.countBills++;
-                        $scope.findOne();
-                    }, function () {
-                    });
-                };
+
+		$scope.paymentBills = function () {
+
+			var modalInstance = $modal.open({
+				templateUrl: '/partials/transaction/regulationBills.html',
+				controller: "TransactionController",
+				windowClass: "steps",
+				resolve: {
+					object: function () {
+						return {
+							societe: $scope.societe,
+							bills: $scope.bills
+						};
+					}
+				}
+			});
+			modalInstance.result.then(function (bills) {
+				$scope.bills.push(bills);
+				$scope.countBills++;
+				$scope.findOne();
+			}, function () {
+			});
+		};
+
+		$scope.removeNote = function (note) {
+			var i = $scope.societe.notes.map(function (e) {
+				return e._id;
+			}).indexOf(note._id);
+			$scope.societe.notes.splice(i, 1);
+			$scope.update();
+		};
 	}]);
 
 angular.module('mean.societes').controller('SocieteCreateController', ['$scope', '$http', '$modalInstance', '$route', 'Global', 'Societes', function ($scope, $http, $modalInstance, $route, Global, Societes) {
