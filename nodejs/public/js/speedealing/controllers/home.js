@@ -57,7 +57,6 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 			}).success(function (cpt, status) {
 
 				$scope.indicateurs.hsupp = cpt;
-				console.log(cpt);
 			});
 		};
 
