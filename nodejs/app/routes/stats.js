@@ -234,7 +234,7 @@ module.exports = function (app, passport, auth) {
 
 					for (var i = 0; i < results.doing.length; i++)
 						if (results.user[results.doing[i]._id.user])
-							results.user[results.doing[i]._id.user].doing[results.realised[i]._id.month] += results.doing[i].count;
+							results.user[results.doing[i]._id.user].doing[results.doing[i]._id.month] += results.doing[i].count;
 
 
 					/*for (var i in results.user) {
