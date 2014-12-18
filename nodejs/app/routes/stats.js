@@ -237,10 +237,10 @@ module.exports = function (app, passport, auth) {
 							results.user[results.doing[i]._id.user].doing[results.realised[i]._id.month] += results.doing[i].count;
 
 
-					for (var i in results.user) {
+					/*for (var i in results.user) {
 						results.user[i].realised = results.user[i].realised.filter(function() { return true; }); 
 						results.user[i].doing = results.user[i].doing.filter(function() { return true; }); 
-					}
+					}*/
 						
 					console.log(results.user);
 					cb(err, results.user);
