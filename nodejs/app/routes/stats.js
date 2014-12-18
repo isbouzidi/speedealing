@@ -228,10 +228,10 @@ module.exports = function (app, passport, auth) {
 					if (err)
 						console.log(err);
 
-					for (var i = 0; i < results.realised.length; i++)
+					/*for (var i = 0; i < results.realised.length; i++)
 						if (results.user[results.realised[i]._id.user])
 							results.user[results.realised[i]._id.user].realised[results.realised[i]._id.month] += results.realised[i].count;
-
+*/
 
 					/*for (var i = 0; i < results.doing.length; i++)
 						if (results.user[results.doing[i]._id.user])
