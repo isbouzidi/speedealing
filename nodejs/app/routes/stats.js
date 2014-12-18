@@ -154,14 +154,14 @@ module.exports = function (app, passport, auth) {
 							for (var i = 0; i < groups.length; i++)
 								objectif_group[groups[i]._id] = groups[i].objectifs;
 
-							UserModel.find({groupe: {$in: ["group:commerciaux", "group:responsable_agence"]}, entity: entity}, "_id name groupe", function (err, users) {
+							UserModel.find({groupe: {$in: ["group:commerciaux", "group:responsable_agence"]}, entity: entity}, "_id firstname lastname groupe", function (err, users) {
 
 								var objectif_user = {};
 
 								for (var i = 0; i < users.length; i++) {
 									if (objectif_group[users[i].groupe] && objectif_group[users[i].groupe].rdv) {
 										objectif_user[users[i]._id] = {
-											name: users[i].name,
+											name: users[i].firstname + " " + users[i].lastname,
 											_id: users[i]._id,
 											objectif: objectif_group[users[i].groupe].rdv.value, // valeur de l'objectif
 											realised: [], // realise m-1, m
@@ -249,7 +249,7 @@ module.exports = function (app, passport, auth) {
 
 					var results =  _.values(results.user);
 
-					console.log(results);
+					//console.log(results);
 					
 					cb(err, results);
 				});
