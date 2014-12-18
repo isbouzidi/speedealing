@@ -168,11 +168,11 @@ module.exports = function (app, passport, auth) {
 											doing: [] // prevu / planifie m-1,m
 										};
 
-										objectif_user[users[i]._id].realised[dateS.getMonth()] = 0;
 										objectif_user[users[i]._id].realised[dateS.getMonth() + 1] = 0;
+										objectif_user[users[i]._id].realised[dateS.getMonth() + 2] = 0;
 
-										objectif_user[users[i]._id].doing[dateS.getMonth()] = 0;
 										objectif_user[users[i]._id].doing[dateS.getMonth() + 1] = 0;
+										objectif_user[users[i]._id].doing[dateS.getMonth() + 2] = 0;
 
 									}
 								}
@@ -233,15 +233,19 @@ module.exports = function (app, passport, auth) {
 							results.user[results.realised[i]._id.user].realised[results.realised[i]._id.month] += results.realised[i].count;
 
 
-					/*for (var i = 0; i < results.doing.length; i++)
-					 if (results.user[results.doing[i]._id.user])
-					 results.user[results.doing[i]._id.user].doing[results.doing[i]._id.month] += results.doing[i].count;
-					 */
+					for (var i = 0; i < results.doing.length; i++)
+						if (results.user[results.doing[i]._id.user])
+							results.user[results.doing[i]._id.user].doing[results.doing[i]._id.month] += results.doing[i].count;
 
-					/*for (var i in results.user) {
-					 results.user[i].realised = results.user[i].realised.filter(function() { return true; }); 
-					 results.user[i].doing = results.user[i].doing.filter(function() { return true; }); 
-					 }*/
+
+					for (var i in results.user) {
+						results.user[i].realised = results.user[i].realised.filter(function () {
+							return true;
+						});
+						results.user[i].doing = results.user[i].doing.filter(function () {
+							return true;
+						});
+					}
 
 					console.log(results.user);
 					cb(err, results.user);
