@@ -25,6 +25,9 @@ var userGroupSchema = new Schema({
 	notes: String,
 	rights: {
 		type: Schema.Types.Mixed
+	},
+	objectifs: {
+		type: Schema.Types.Mixed
 	}
 });
 

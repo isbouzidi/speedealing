@@ -37,13 +37,13 @@ var orderSchema = new Schema({
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String,
 		isNameModified: {type: Boolean},
-		cptBilling: {id: {type: Schema.Types.ObjectId}, name: String},
+		cptBilling: {id: {type: Schema.Types.ObjectId}, name: String}
 	},
 	contact: {
 		id: {type: Schema.Types.ObjectId, ref: 'contact'},
 		name: String,
 		phone: String,
-		email: String,
+		email: String
 	},
 	ref_client: {type: String},
 	datec: {type: Date},

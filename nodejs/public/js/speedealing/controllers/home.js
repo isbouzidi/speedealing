@@ -66,7 +66,7 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 				}
 			}).success(function (data, status) {
 				$scope.statsByEntity = data;
-				//console.log(data);
+				console.log(data);
 			});
 
 			if (Global.user.multiEntities)

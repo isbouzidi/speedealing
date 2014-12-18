@@ -16,6 +16,8 @@ var LeadModel = mongoose.model('lead');
 var ReportModel = mongoose.model('report');
 var EntityModel = mongoose.model('entity');
 var TaskModel = mongoose.model('task');
+var UserModel = mongoose.model('user');
+var GroupModel = mongoose.model('userGroup');
 
 var typeAction = {};
 Dict.dict({dictName: "fk_actioncomm", object: true}, function (err, docs) {
@@ -113,7 +115,7 @@ module.exports = function (app, passport, auth) {
 
 				//console.log(dateS);
 				TaskModel.aggregate([
-					{$match: {entity: entity, createdAt: {$gte: dateS}, "usertodo.name": {$exists: true}}},
+					{$match: {entity: entity, /*createdAt: {$gte: dateS},*/ "usertodo.name": {$exists: true}}},
 					{$project: {_id: 1, user: "$usertodo.name", type: 1}},
 					{$group: {_id: {user: "$user", type: "$type"}, count: {$sum: 1}}},
 					{$sort: {"_id.user": 1}}
@@ -125,7 +127,123 @@ module.exports = function (app, passport, auth) {
 						//console.log(docs[i]._id.type);
 					}
 
+					//console.log(docs);
+
 					cb(err, docs);
+				});
+			},
+			objectif: function (cb) {
+				/**
+				 * Calucl des objectifs et suivi
+				 * 1ere version tres fige sur les rdv mais demandera a etre retravaille en fonction des besoins
+				 * 
+				 */
+
+				var dateS = new Date(dateStart);
+				dateS.setMonth(dateS.getMonth());
+
+				var dateE = new Date(dateEnd);
+				dateE.setMonth(dateE.getMonth() + 1);
+
+				async.parallel({
+					user: function (cbb) {
+
+						GroupModel.find({_id: {$in: ["group:commerciaux", "group:responsable_agence"]}}, "_id name objectifs", function (err, groups) {
+							var objectif_group = {};
+
+							for (var i = 0; i < groups.length; i++)
+								objectif_group[groups[i]._id] = groups[i].objectifs;
+
+							UserModel.find({groupe: {$in: ["group:commerciaux", "group:responsable_agence"]}, entity: entity}, "_id name groupe", function (err, users) {
+
+								var objectif_user = {};
+
+								for (var i = 0; i < users.length; i++) {
+									if (objectif_group[users[i].groupe] && objectif_group[users[i].groupe].rdv) {
+										objectif_user[users[i]._id] = {
+											name: users[i].name,
+											_id: users[i]._id,
+											objectif: objectif_group[users[i].groupe].rdv.value, // valeur de l'objectif
+											realised: [], // realise m-1, m
+											doing: [] // prevu / planifie m-1,m
+										};
+
+										objectif_user[users[i]._id].realised[dateS.getMonth()] = 0;
+										objectif_user[users[i]._id].realised[dateS.getMonth() + 1] = 0;
+
+										objectif_user[users[i]._id].doing[dateS.getMonth()] = 0;
+										objectif_user[users[i]._id].doing[dateS.getMonth() + 1] = 0;
+
+									}
+								}
+
+								//console.log(objectif_user);
+								cbb(err, objectif_user);
+							});
+						});
+					},
+					realised: function (cbb) {
+
+						//console.log(dateS);
+						TaskModel.aggregate([
+							{$match: {entity: entity, datef: {$gte: dateS, $lt: dateE}, "usertodo.id": {$exists: true}, type: {$in: ["AC_RDV", "AC_EAT", "AC_DEMO"]}}},
+							{$project: {_id: 1, user: "$usertodo.id", datef: 1}},
+							{$group: {_id: {user: "$user", month: {$month: "$datef"}}, count: {$sum: 1}}},
+							{$sort: {"_id.month": 1, "_id.user": 1}}
+						], function (err, docs) {
+							//console.log(docs);
+
+							/*for (var i = 0; i < docs.length; i++) {
+							 docs[i]._id.type = i18n.t(typeAction.lang + ":" + typeAction.values[docs[i]._id.type].label);
+							 //console.log(docs[i]._id.type);
+							 }*/
+
+							//console.log(docs);
+
+							cbb(err, docs);
+						});
+					},
+					doing: function (cbb) {
+
+						//console.log(dateS);
+						TaskModel.aggregate([
+							{$match: {entity: entity, createdAt: {$gte: dateS, $lt: dateE}, "usertodo.id": {$exists: true}, type: {$in: ["AC_RDV", "AC_EAT", "AC_DEMO"]}}},
+							{$project: {_id: 1, user: "$usertodo.id", createdAt: 1}},
+							{$group: {_id: {user: "$user", month: {$month: "$createdAt"}}, count: {$sum: 1}}},
+							{$sort: {"_id.month": 1, "_id.user": 1}}
+						], function (err, docs) {
+							//console.log(docs);
+
+							/*for (var i = 0; i < docs.length; i++) {
+							 docs[i]._id.type = i18n.t(typeAction.lang + ":" + typeAction.values[docs[i]._id.type].label);
+							 //console.log(docs[i]._id.type);
+							 }*/
+
+							//console.log(docs);
+
+							cbb(err, docs);
+						});
+					}
+				}, function (err, results) {
+					if (err)
+						console.log(err);
+
+					for (var i = 0; i < results.realised.length; i++)
+						if (results.user[results.realised[i]._id.user])
+							results.user[results.realised[i]._id.user].realised[results.realised[i]._id.month] += results.realised[i].count;
+
+					for (var i = 0; i < results.doing.length; i++)
+						if (results.user[results.doing[i]._id.user])
+							results.user[results.doing[i]._id.user].doing[results.realised[i]._id.month] += results.doing[i].count;
+
+
+					for (var i in results.user) {
+						results.user[i].realised = results.user[i].realised.filter(function() { return true; }); 
+						results.user[i].doing = results.user[i].doing.filter(function() { return true; }); 
+					}
+						
+					console.log(results.user);
+					cb(err, results.user);
 				});
 			}
 		}, function (err, results) {
