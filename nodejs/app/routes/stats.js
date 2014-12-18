@@ -185,10 +185,10 @@ module.exports = function (app, passport, auth) {
 					realised: function (cbb) {
 
 						//console.log(dateS);
-						TaskModel.aggregate([
-							{$match: {entity: entity, datef: {$gte: dateS, $lt: dateE}, "usertodo.id": {$exists: true}, type: {$in: ["AC_RDV", "AC_EAT", "AC_DEMO"]}}},
-							{$project: {_id: 1, user: "$usertodo.id", datef: 1}},
-							{$group: {_id: {user: "$user", month: {$month: "$datef"}}, count: {$sum: 1}}},
+						ReportModel.aggregate([
+							{$match: {entity: entity, dateReport: {$gte: dateS, $lt: dateE}, "author.id": {$exists: true}, model: {$in: ["DISCOVERY", "CONTRACT", "PRE-SIGN"]}}},
+							{$project: {_id: 1, user: "$author.id", dateReport: 1}},
+							{$group: {_id: {user: "$user", month: {$month: "$dateReport"}}, count: {$sum: 1}}},
 							{$sort: {"_id.month": 1, "_id.user": 1}}
 						], function (err, docs) {
 							//console.log(docs);
