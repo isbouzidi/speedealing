@@ -198,7 +198,7 @@ module.exports = function (app, passport, auth) {
 							 //console.log(docs[i]._id.type);
 							 }*/
 
-							console.log(docs);
+							//console.log(docs);
 
 							cbb(err, docs);
 						});
@@ -219,7 +219,7 @@ module.exports = function (app, passport, auth) {
 							 //console.log(docs[i]._id.type);
 							 }*/
 
-							console.log(docs);
+							//console.log(docs);
 
 							cbb(err, docs);
 						});
@@ -247,8 +247,11 @@ module.exports = function (app, passport, auth) {
 						});
 					}
 
-					console.log(results.user);
-					cb(err, results.user);
+					var results =  _.values(results.user);
+
+					console.log(results);
+					
+					cb(err, results);
 				});
 			}
 		}, function (err, results) {
