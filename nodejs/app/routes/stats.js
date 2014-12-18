@@ -115,7 +115,7 @@ module.exports = function (app, passport, auth) {
 
 				//console.log(dateS);
 				TaskModel.aggregate([
-					{$match: {entity: entity, /*createdAt: {$gte: dateS},*/ "usertodo.name": {$exists: true}}},
+					{$match: {entity: entity, createdAt: {$gte: dateS}, "usertodo.name": {$exists: true}}},
 					{$project: {_id: 1, user: "$usertodo.name", type: 1}},
 					{$group: {_id: {user: "$user", type: "$type"}, count: {$sum: 1}}},
 					{$sort: {"_id.user": 1}}
