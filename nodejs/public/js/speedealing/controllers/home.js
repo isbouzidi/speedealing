@@ -83,10 +83,20 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 			if (idx === null)
 				idx = 0;
 
-			if (!tab || !tab[idx] || tab[idx].count === 0)
+			if (!tab || !tab[idx])
 				return 0;
 
-			return (tab[idx + 1].count - tab[idx].count) / tab[idx].count * 100;
+			if (typeof tab[idx] === 'object') {
+				if (tab[idx].count === 0)
+					return 0;
+				else
+					return (tab[idx + 1].count - tab[idx].count) / tab[idx].count * 100;
+			} else {
+				if (tab[idx] === 0)
+					return 0;
+				else
+					return (tab[idx + 1] - tab[idx]) / tab[idx] * 100;
+			}
 		};
 
 		$scope.indicatorHSupp = function () {
@@ -285,13 +295,13 @@ angular.module('mean.system').controller('IndexHomeController', ['$scope', '$roo
 				//plugins: [new ngGridFlexibleHeightPlugin()],
 				enableColumnResize: true,
 				columnDefs: [
-					{field: '_id.user', width:"35%", displayName: 'Collaborateur'},
+					{field: '_id.user', width: "35%", displayName: 'Collaborateur'},
 					{field: '_id.type', displayName: 'Actions'},
 					//{field: 'to.town', width: "15%", displayName: 'Dest.'},
 					//{field: 'Status.name', width: "12%", displayName: 'Etat', cellTemplate: '<div class="ngCellText center"><small class="tag glossy" ng-class="row.getProperty(\'Status.css\')">{{row.getProperty(\"Status.name\")}}</small></div>'},
 					//{field: 'date_enlevement', width: "15%", displayName: 'Date d\'enlevement', cellFilter: "date:'dd-MM-yyyy HH:mm'"},
-					{field: 'count', width:"50px", displayName: 'Total', cellClass: "align-right"},
-					{width:"3px"}
+					{field: 'count', width: "50px", displayName: 'Total', cellClass: "align-right"},
+					{width: "3px"}
 				],
 				aggregateTemplate: "<div ng-click=\"row.toggleExpand()\" ng-style=\"rowStyle(row)\" class=\"ngAggregate\">" +
 						"    <span class=\"ngAggregateText\"><span class='ngAggregateTextLeading'>{{row.label CUSTOM_FILTERS}} : {{aggFunc(row,'count')}} action(s)</span></span>" +
