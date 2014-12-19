@@ -46,6 +46,12 @@ var setAccount = function (account) {
 	return account;
 };
 
+var setPhone = function (phone) {
+	if (phone !== null)
+		phone = phone.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
+	return phone;
+};
+
 /**
  * Article Schema
  */
@@ -63,8 +69,8 @@ var societeSchema = new Schema({
 	town: String,
 	country_id: {type: String, default: 'FR', uppercase: true},
 	state_id: Number,
-	phone: String,
-	fax: String,
+	phone: {type: String, set: setPhone, default: null},
+	fax: {type: String, set: setPhone, default: null},
 	email: {type: String, lowercase: true, trim: true},
 	url: String,
 	typent_id: {type: String, default: 'TE_UNKNOWN'},

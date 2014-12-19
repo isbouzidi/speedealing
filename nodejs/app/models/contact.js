@@ -37,7 +37,8 @@ var setTags = function (tags) {
 };
 
 var setPhone = function (phone) {
-	phone = phone.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
+	if (phone !== null)
+		phone = phone.replace(/ /g, "").replace(/\./g, "").replace(/\(/g, "").replace(/\)/g, "").replace(/\+/g, "");
 	return phone;
 };
 
@@ -52,17 +53,17 @@ var contactSchema = new Schema({
 	poste: {type: String, default: null},
 	societe: {id: {type: Schema.Types.ObjectId, ref: 'Societe'}, name: {type: String, default: null}},
 	Status: {type: String, default: "ST_ENABLE"},
-	address: {type: String,default:null},
-	zip: {type: String,default:null},
-	town: {type: String,default:null},
+	address: {type: String, default: null},
+	zip: {type: String, default: null},
+	town: {type: String, default: null},
 	country_id: String,
 	state_id: String,
 	DefaultLang: String,
-	phone: {type: String, set: setPhone, default:null}, // pro
-	phone_perso: {type: String, set: setPhone, default:null},
-	phone_mobile: {type: String, set: setPhone, default:null}, // pro
-	fax: {type: String, set: setPhone, default:null}, // pro
-	email: {type: String, lowercase: true, trim: true, index: true, default:null},
+	phone: {type: String, set: setPhone, default: null}, // pro
+	phone_perso: {type: String, set: setPhone, default: null},
+	phone_mobile: {type: String, set: setPhone, default: null}, // pro
+	fax: {type: String, set: setPhone, default: null}, // pro
+	email: {type: String, lowercase: true, trim: true, index: true, default: null},
 	emails: [{
 			type: {type: String, default: "pro"},
 			address: String
