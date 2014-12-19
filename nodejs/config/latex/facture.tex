@@ -24,10 +24,6 @@ P\'enlit\'e pour paiement tardif : inter\^et l\'egal x3 et une indemnit\'e forfa
 \newcommand{\specialcell}[2][c]{
 	\parbox[#1]{6.3cm}{#2}}
 
-\newenvironment{strictsupertabular*} 
-      {\let\estimate@lineht\mod@estimate@lineht\@nameuse{supertabular*}} 
-      {\@nameuse{endsupertabular*}}
-
 \begin{document}
 
 
@@ -98,9 +94,9 @@ Qté &
 \flushright 
 {\footnotesize \textit{Montants exprimés en €}}
 \end{minipage}\\
-\begin{strictsupertabular*}{\textwidth}{|p{2.5cm}|p{6.5cm}@{\extracolsep{1mm plus 1fil}}|c|r|r|r|}
+\begin{supertabular*}{\textwidth}{|p{2.5cm}|p{6.5cm}@{\extracolsep{1mm plus 1fil}}|c|r|r|r|}
 --TABULAR--
-\end{strictsupertabular*}
+\end{supertabular*}
 
 
 \begin{minipage}[t]{0.48\textwidth}

@@ -7,6 +7,7 @@
 P\'enlit\'e pour paiement tardif : inter\^et l\'egal x3 et une indemnit\'e forfaitaire pour frais de recouvrement de 40 euros. R\`eglement anticip\'e, pas d'escompte.}
 
 \usepackage{symeos_article}
+\usepackage{ltxtable, tabularx, longtable}
 
 \definecolor{violet}{rgb}{0.58,0.07,0.47}
 \definecolor{bleu}{rgb}{0.01,0.28,0.58}
@@ -24,9 +25,6 @@ P\'enlit\'e pour paiement tardif : inter\^et l\'egal x3 et une indemnit\'e forfa
 \newcommand{\specialcell}[2][c]{
 	\parbox[#1]{5.8cm}{#2}}
 
-\newenvironment{strictsupertabular*} 
-      {\let\estimate@lineht\mod@estimate@lineht\@nameuse{supertabular*}} 
-      {\@nameuse{endsupertabular*}}
 
 \begin{document}
 
@@ -67,6 +65,46 @@ P\'enlit\'e pour paiement tardif : inter\^et l\'egal x3 et une indemnit\'e forfa
 
 Informations : --NOTE--
 
+\begin{minipage}{\textwidth}
+\flushright 
+{\footnotesize \textit{Montants exprimés en €}}
+\end{minipage}\\
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+\setlength\LTpre{0pt}
+\begin{longtable}{|p{2.5cm}|p{6.0cm}@{\extracolsep{1mm plus 1fil}}|c|r|r|r|r|}
+\hline
+\multicolumn{1}{|c}{R\'ef} &
+\multicolumn{1}{c}{D\'esignation} &
+TVA &
+PU &
+Remise &
+Qt\'e &
+\multicolumn{1}{c|}{Total HT} \\
+\hline \hline
+\endfirsthead
+
+\hline
+\multicolumn{7}{|l|}{\small\sl suite de la page pr\'ec\'edente}\\
+\hline \multicolumn{1}{|c}{R\'ef} &
+\multicolumn{1}{c}{D\'esignation} &
+TVA &
+PU &
+Remise &
+Qt\'e &
+\multicolumn{1}{c|}{Total HT} \\ \hline \hline
+\endhead
+
+\hline \multicolumn{7}{|r|}{{\small\sl suite sur la prochaine page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+--TABULAR--
+
+\end{longtable}
+
 \tablefirsthead{%
 \hline
 \multicolumn{1}{|c}{Réf} &
@@ -100,10 +138,9 @@ Qté &
 \flushright 
 {\footnotesize \textit{Montants exprimés en €}}
 \end{minipage}\\
-\begin{strictsupertabular*}{\textwidth}{|p{2.5cm}|p{6.0cm}@{\extracolsep{1mm plus 1fil}}|c|r|r|r|r|}
+\begin{supertabular*}{\textwidth}{|p{2.5cm}|p{6.0cm}@{\extracolsep{1mm plus 1fil}}|c|r|r|r|r|}
 --TABULAR--
-\end{strictsupertabular*}
-
+\end{supertabular*}
 
 \begin{minipage}[t]{0.48\textwidth}
 {\footnotesize \textbf{Conditions de règlement :} --REGLEMENT--}\\
