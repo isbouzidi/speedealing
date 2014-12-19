@@ -89,11 +89,36 @@
 			<li ng-repeat="objectif in statsByEntity.objectif">
 				<span class="event-date">
 					\{{objectif.realised[1]}} <span class="event-hour">/\{{objectif.objectif}}</span>
-					<span class="indic-progress green" ng-show="gain(objectif.realised) > 0">+\{{gain(objectif.realised) | number:0}}% ▲</span>
-					<span class="indic-progress red" ng-show="gain(objectif.realised) < 0">\{{gain(objectif.realised) | number:0}}% ▼</span>
+					<span class="indic-progress green" ng-show="gain(objectif.realised,0) > 0">+\{{gain(objectif.realised,0) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(objectif.realised,0) < 0">\{{gain(objectif.realised,0) | number:0}}% ▼</span>
 				</span>
 				<h4>\{{objectif.name}}</h4>
 				<small>Realise ce mois-ci (base sur les compte-rendus)</small>
+				
+			</li>
+
+		</ul>
+	</div>
+</div>
+
+<div ng-if="global.user.rights.box.reportStatAllEntity" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+	<div class="block large-margin-bottom">
+
+		<div class="block-title">
+			<h3>Previsionnelles commerciaux</h3>
+				<span class="ribbon"><span class="ribbon-inner">CODIR</span></span>
+		</div>
+
+		<ul class="events">
+			<li ng-repeat="objectif in statsByEntity.objectif">
+				<span class="event-date">
+					\{{objectif.doing[1]}} <span class="event-hour"></span>
+					<span class="indic-progress green" ng-show="gain(objectif.doing,0) > 0">+\{{gain(objectif.doing,0) | number:0}}% ▲</span>
+					<span class="indic-progress red" ng-show="gain(objectif.doing,0) < 0">\{{gain(objectif.doing,0) | number:0}}% ▼</span>
+				</span>
+				<h4>\{{objectif.name}}</h4>
+				<small>Rdv pris ce mois-ci (base sur les actions des comptes-rendu)</small>
 				
 			</li>
 
