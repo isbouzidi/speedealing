@@ -89,8 +89,8 @@
             <li ng-repeat="objectif in statsByEntity.objectif">
                 <span class="event-date">
                     \{{objectif.realised[1]}} <span class="event-hour">/\{{objectif.objectif}}</span>
-                    <span class="indic-progress green" ng-show="gain(objectif.realised, 0) > 0">+\{{gain(objectif.realised, 0) | number:0}}% ▲ (objectif.realised[0])</span>
-                    <span class="indic-progress red" ng-show="gain(objectif.realised, 0) < 0">\{{gain(objectif.realised, 0) | number:0}}% ▼ (objectif.realised[0])</span>
+                    <span class="indic-progress green" ng-show="gain(objectif.realised, 0) > 0">+\{{gain(objectif.realised, 0) | number:0}}% ▲ (\{{objectif.realised[0]}})</span>
+                    <span class="indic-progress red" ng-show="gain(objectif.realised, 0) < 0">\{{gain(objectif.realised, 0) | number:0}}% ▼ (\{{objectif.realised[0]}})</span>
                 </span>
                 <h4>\{{objectif.name}}</h4>
                 <small>Realise ce mois-ci (base sur les compte-rendus)</small>
@@ -114,8 +114,8 @@
             <li ng-repeat="objectif in statsByEntity.objectif">
                 <span class="event-date">
                     \{{objectif.doing[1]}} <span class="event-hour"></span>
-                    <span class="indic-progress green" ng-show="gain(objectif.doing, 0) > 0">+\{{gain(objectif.doing, 0) | number:0}}% ▲ (objectif.doing[0])</span>
-                    <span class="indic-progress red" ng-show="gain(objectif.doing, 0) < 0">\{{gain(objectif.doing, 0) | number:0}}% ▼ (objectif.doing[0])</span>
+                    <span class="indic-progress green" ng-show="gain(objectif.doing, 0) > 0">+\{{gain(objectif.doing, 0) | number:0}}% ▲ (\{{objectif.doing[0]}})</span>
+                    <span class="indic-progress red" ng-show="gain(objectif.doing, 0) < 0">\{{gain(objectif.doing, 0) | number:0}}% ▼ (\{{objectif.doing[0]}})</span>
                 </span>
                 <h4>\{{objectif.name}}</h4>
                 <small>Rdv pris ce mois-ci (base sur les actions des comptes-rendu)</small>
