@@ -13,7 +13,7 @@ module.exports = function (app, passport, auth) {
 
 	var object = new Object();
 	var pricelevel = require('../controllers/pricelevel.js');
-	Dict.extrafield({extrafieldName:'Product'}, function (err, doc) {
+	Dict.extrafield({extrafieldName: 'Product'}, function (err, doc) {
 		if (err) {
 			console.log(err);
 			return;
@@ -35,22 +35,22 @@ module.exports = function (app, passport, auth) {
 				{label: new RegExp(req.body.filter.filters[0].value, "i")}
 			]
 		};
-		
+
 		/*
 		 * EN FONCTION DU PRICELEVEL
 		 */
-		
+
 		if (req.body.price_level && req.body.price_level !== 'BASE')
 			return pricelevel.autocomplete(req.body, function (prices) {
 				res.json(200, prices);
 			});
-		
+
 		if (req.body.supplier)
 			query.Status = {'$in': ["SELLBUY", "BUY"]};
 		else
 			query.Status = {'$in': ["SELL", "SELLBUY"]};
 		//console.log(query);
-		
+
 		ProductModel.find(query, "ref _id label template pu_ht tva_tx minPrice units description caFamily",
 				{limit: req.body.take}, function (err, docs) {
 			if (err) {
@@ -70,7 +70,7 @@ module.exports = function (app, passport, auth) {
 					product: {
 						id: docs[i],
 						name: docs[i].ref,
-						unit : docs[i]._units.name
+						unit: docs[i]._units.name
 					}
 				};
 				result.push(obj);

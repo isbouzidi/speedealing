@@ -164,7 +164,7 @@ exports.autocomplete = function (body, callback) {
 	};
 
 	PriceLevelModel.find(query, "-history", {limit: body.take})
-			.populate("product.id", "label ref minPrice tva_tx caFamily units")
+			.populate("product.id", "label ref minPrice tva_tx caFamily units discount")
 			.exec(function (err, prices) {
 				if (err) {
 					console.log("err : /api/product/price/autocomplete");
@@ -191,7 +191,7 @@ exports.autocomplete = function (body, callback) {
 					var obj = {
 						pu_ht: prices[i].pu_ht,
 						price_level: prices[i].price_level,
-						discount: 0,
+						discount: prices[i].discount,
 						qtyMin: 0,
 						product: {
 							id: prices[i].product.id,
