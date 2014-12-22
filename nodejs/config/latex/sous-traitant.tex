@@ -37,7 +37,7 @@
 \hspace{2mm}
 \begin{minipage}[t]{0.89\textwidth}
 %\textbf{nom de l'entreprise} \hspace{0.5cm} ADRESSE PRESTATAIRE
---PRESTATAIRE--
+\textbf{--PRESTATAIRE.NAME--} \hspace{0.5cm} --PRESTATAIRE.ADDRESS-- \textsc{--PRESTATAIRE.ZIP-- --PRESTATAIRE.TOWN--}
 \vspace{-10px}
 \begin{flushright}
 {\small Ci-après dénommée "LE PRESTATAIRE"}
@@ -54,7 +54,7 @@ LE CLIENT  est spécialisé dans le transport express régional et national de c
 \begin{itemize}
 \item[\textbullet]sur la zone Géographique de --ZONEDEPART-- à --ZONEARRIVE--
 \item[\textbullet]Pour la période du --DATE-- au --DATE--
-\item[\textbullet]moyennant la rémunération de --MONTANT-- € H.T. et des péages --CHARGESEXT-- € H.T.
+\item[\textbullet]moyennant la rémunération de --MONTANT.ST-- H.T. et des péages --CHARGESEXT-- H.T.
 \end{itemize}
 \end{fminipage}
 
@@ -72,7 +72,7 @@ Il est interdit de sous-traiter ce Transport.
 \hline 
  & POUR LE PRESTATAIRE & POUR LE CLIENT \\ 
 \hline
- NOM : & --PRESTATAIRENAME-- & --NOMCLIENT-- \\ 
+ NOM : & \textbf{--PRESTATAIRE.NAME--} & --AUTHOR-- \\ 
 \hline
 DATE : &  & \today \\ 
 \hline
@@ -89,18 +89,59 @@ SIGNATURE ET CACHET : &  &
 
 \textbf{ATTENTION ! CETTE CONVENTION DOIT NOUS ETRE RETOURNEE, TAMPONNEE ET SIGNEE SOUS LES 2 HEURES QUI SUIVENT L'ENVOI DE CE FAX, SANS REPONSE DE VOTRE PART, NOUS CONSIDERONS QUE VOUS ACCEPTEZ TACITEMENT LES CONDITIONS PRECISEES CI DESSOUS.}
 
+\newpage
+
+\begin{center}
+\large \bf RECAPITULATIF Course N° : --COURSE--\\
+\end{center}
+\bigskip 
 
 
+\textbf{RECAPITULATIF DU CLIENT :}\\
+\begin{tabular}{p{5cm} p{8cm}}
+    Client : & --CLIENT-- \\
+    Facturation : & --FACTURATION.CLIENT--\\
+ 	Contact : & --CONTACT.CLIENT--\\   
+\end{tabular}
 
+\rule{\linewidth}{.5pt}
+\textbf{RECAPITULATIF DU TRANSPORT :}\\
+\begin{tabular}{p{5cm} p{8cm}}
+    Num. Bordereau : & --NUMBORDEREAU-- \\
+ 	Date du transport : & --DATE--\\
+ 	Type de transport : & --TYPETRANSPORT-- \\ 
+ 	Montant du transport : & --MONTANT--\\
+\end{tabular}
 
+\rule{\linewidth}{.5pt}
+\textbf{RECAPITULATIF DU SOUS TRAITANT :}\\
+\begin{tabular}{p{5cm} p{8cm}}
+    Société de sous traitance : & --PRESTATAIRE.NAME-- \\
+    Tarif : & --MONTANT.ST--\\
+\end{tabular}
 
+\rule{\linewidth}{.5pt}
+\textbf{RECAPITULATIF DEPART :}\\
+\begin{tabular}{p{5cm} p{8cm}}
+	Nom : & --FROM.NAME--\\
+	Adresse : & --FROM.ADDRESS--\\
+	Code postal et ville : & --FROM.ZIP-- --FROM.TOWN--\\
+	Date : & --DATEC--\\
+\end{tabular}
 
+\rule{\linewidth}{.5pt}
+\textbf{RECAPITULATIF ARRIVEE :}\\
+\begin{tabular}{p{5cm} p{8cm}}
+	Nom : & --TO.NAME--\\
+	Adresse : & --TO.ADDRESS--\\
+	Code postal et ville : & --TO.ZIP-- --TO.TOWN--\\
+	Date : & --DATE--\\
+	Contact : & --TO.CONTACT--\\
+	Telephone : & --TO.TEL-- \\
+	Mail : & --TO.EMAIL--\\
+	Date de livraison : & --DATE--\\
+\end{tabular}
 
-
-
-
-
-
-
+\rule{\linewidth}{.5pt}
 
 \end{document}
