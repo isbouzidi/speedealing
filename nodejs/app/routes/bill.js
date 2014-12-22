@@ -31,23 +31,23 @@ module.exports = function (app, passport, auth) {
 	app.del('/api/bill/:billId', auth.requiresLogin, object.destroy);
 	app.get('/api/bill/pdf/:billId', auth.requiresLogin, object.pdf);
 	app.get('/api/bill/releveFacture/pdf/:societeId', auth.requiresLogin, object.releve_facture);
-        
+
 	//add transaction
 	app.post('/api/transaction/add', auth.requiresLogin, function (req, res) {
 		var transaction = req.query.transaction;
 		console.log(req.query.transaction);
-		
+
 		BankModel.update(
-			{ libelle: "salouma bank" },
-			{ $push: { "transaction": req.query.transaction }},
-			function (err, doc) {
-				if (err) {
-					console.log(err);
-					return res.send(500);
-				}
-				
-				return res.send(doc);
-			});
+				{libelle: "salouma bank"},
+		{$push: {"transaction": req.query.transaction}},
+		function (err, doc) {
+			if (err) {
+				console.log(err);
+				return res.send(500);
+			}
+
+			return res.send(doc);
+		});
 	});
 	// list for autocomplete
 	app.post('/api/bill/autocomplete', auth.requiresLogin, function (req, res) {
@@ -144,7 +144,7 @@ Object.prototype = {
 	},
 	read: function (req, res) {
 		var query = {};
-                
+
 		if (req.query) {
 			for (var i in req.query) {
 				if (i == "query") {
@@ -237,8 +237,8 @@ Object.prototype = {
 	},
 	pdf: function (req, res) {
 		// Generation de la facture PDF et download
-		
-		var discount=false;
+
+		var discount = false;
 
 		var cond_reglement_code = {};
 		Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
@@ -249,12 +249,12 @@ Object.prototype = {
 		Dict.dict({dictName: "fk_paiement", object: true}, function (err, docs) {
 			mode_reglement_code = docs;
 		});
-		
+
 		var model = "facture.tex";
-		
+
 		// check if discount
-		for(var i=0; i<req.bill.lines.length; i++) {
-			if(req.bill.lines[i].discount > 0) {
+		for (var i = 0; i < req.bill.lines.length; i++) {
+			if (req.bill.lines[i].discount > 0) {
 				model = "facture_discount.tex";
 				discount = true;
 				break;
@@ -274,7 +274,13 @@ Object.prototype = {
 
 				// replacement des variables
 				tex = tex.replace(/--NUM--/g, doc.ref);
-				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.client.name + "} \\\\" + doc.address.replace(/\n/g, "\\\\") + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}");
+				var destinataire = "";
+				if (doc.client.id != '5333032036f43f0e1882efce') { //Client Accueil
+					destinataire += "\\textbf{\\large " + doc.client.name + "} \\\\";
+				}
+				destinataire += doc.address.replace(/\n/g, "\\\\") + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}";
+
+				tex = tex.replace(/--DESTINATAIRE--/g, destinataire);
 				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
 				tex = tex.replace(/--TITLE--/g, doc.title);
 				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
@@ -304,7 +310,7 @@ Object.prototype = {
 
 				var tab_latex = "";
 				for (var i = 0; i < doc.lines.length; i++) {
-					if(discount)
+					if (discount)
 						tab_latex += doc.lines[i].product.name.substring(0, 12).replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + " & \\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\} & " + doc.lines[i].tva_tx + "\\% & " + latex.price(doc.lines[i].pu_ht) + " & " + (doc.lines[i].discount ? (doc.lines[i].discount + "\\%") : "") + " & " + doc.lines[i].qty + " & " + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
 					else
 						tab_latex += doc.lines[i].product.name.substring(0, 12).replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + " & \\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\} & " + doc.lines[i].tva_tx + "\\% & " + latex.price(doc.lines[i].pu_ht) + " & " + doc.lines[i].qty + " & " + latex.price(doc.lines[i].total_ht) + "\\tabularnewline\n";
