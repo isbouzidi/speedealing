@@ -7,9 +7,18 @@
         <p data-ng-show="msg.enable" class="message \{{msg.icon}} \{{msg.color}}">
             \{{msg.text}}
         </p>
-        <textarea class="input" style="width: 100%; background-color: #121111; font-size: 20px; color: #fff; padding: 20px" rows="10" data-ng-model="request"></textarea>            
+
+        <div class="field-block button-height">
+            <label for="nom"><b>Collection</b></label>
+            <select class="form-control"
+                    data-ng-model="collection" 
+                    data-ng-options="c.name as c.name for c in collections">
+            </select>
+        </div>
+        <br>
+        <textarea class="input" style="width: 100%; background-color: #121111; font-size: 20px; color: #fff; padding: 20px" rows="10" data-ng-model="request"></textarea>
         <div style="height: 40px; width: 100%">
-            <button class="button icon-gear blue-gradient right" data-ng-click="getData()">{{t 'Execute'}}</button>
+                <button class="button icon-gear blue-gradient right" data-ng-click="getData()">{{t 'Execute'}}</button>
         </div>
         <div class="table-header silver-gradient glossy button-height">
             <div class="row">
