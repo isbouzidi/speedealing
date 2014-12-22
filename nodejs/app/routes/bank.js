@@ -52,7 +52,9 @@ Object.prototype = {
         });        
     },
     read: function (req, res) {
-        
+        console.log('bank ********************');
+        console.log(req.query.entity);
+        console.log('bank ********************');        
         var balances = [];
         
         var query = {
