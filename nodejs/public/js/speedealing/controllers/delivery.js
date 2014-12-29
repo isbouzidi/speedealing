@@ -97,8 +97,13 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 			if (varname)
 				line[varname] = data;
 
-			line.total_ht = round(line.qty * (line.pu_ht * (1 - (line.discount / 100))), 2);
-			line.total_tva = line.total_ht * line.tva_tx / 100;
+			if (line.qty) {
+				line.total_ht = round(line.qty * (line.pu_ht * (1 - (line.discount / 100))), 2);
+				line.total_tva = line.total_ht * line.tva_tx / 100;
+			} else {
+				line.total_ht = 0;
+				line.total_tva = 0;
+			}
 		};
 		// filter lines to show
 		$scope.filterLine = function (line) {

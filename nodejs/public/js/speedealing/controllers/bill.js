@@ -57,7 +57,14 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			}
 
 			bill.$update(function (response) {
-				pageTitle.setTitle('Facture ' + bill.ref);
+
+				$scope.bill = response;
+
+				for (var i in $scope.bill.lines) {
+					$scope.bill.lines[i].idLine = i;
+				}
+
+				pageTitle.setTitle('Facture ' + response.ref);
 
 				if (response.Status == "DRAFT")
 					$scope.editable = true;
@@ -203,8 +210,13 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			if (varname)
 				line[varname] = data;
 
-			line.total_ht = round(line.qty * (line.pu_ht * (1 - (line.discount / 100))), 2);
-			line.total_tva = line.total_ht * line.tva_tx / 100;
+			if (line.qty) {
+				line.total_ht = round(line.qty * (line.pu_ht * (1 - (line.discount / 100))), 2);
+				line.total_tva = line.total_ht * line.tva_tx / 100;
+			} else {
+				line.total_ht = 0;
+				line.total_tva = 0;
+			}
 			//console.log(data);
 		};
 		// filter lines to show
@@ -299,17 +311,17 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 				$scope.bill.address = data.address.address;
 				$scope.bill.zip = data.address.zip;
 				$scope.bill.town = data.address.town;
-				
+
 			}
-			
+
 			//console.log(data);
-			
+
 			$scope.bill.commercial_id = data.commercial_id;
 			$scope.bill.cond_reglement_code = data.cond_reglement_code;
 			$scope.bill.mode_reglement_code = data.mode_reglement_code;
-			
+
 			$scope.bill.price_level = data.price_level;
-			
+
 			return true;
 		};
 
