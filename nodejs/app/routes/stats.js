@@ -34,7 +34,7 @@ module.exports = function (app, passport, auth) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 10), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 3), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		function verifyResult(err, docs, cb) {
