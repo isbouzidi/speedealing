@@ -11,19 +11,22 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
         
         $scope.init = function(){
             
+            $scope.collections = [
+                {id: 'contact', name: 'contact'},
+                {id: 'societe', name: 'societe'}
+            ];
         };
         
         $scope.colDefs = [];
-
+        
         $scope.$watch('gridData', function() {
-            
+           
             $scope.colDefs = [];
             var i = 0;
             angular.forEach(Object.keys($scope.gridData[0]), function(key){
                 
                 $scope.colDefs.push({ field: key });                
             });
-            
             $scope.count = $scope.gridData.length;
         });
 
@@ -36,16 +39,14 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
         
         $scope.getData = function () {
                         
-            var str = $scope.request;            
-            var col = str.substring(0,str.indexOf("."));
-            str = str.replace(col, "db");
+            if (typeof $scope.collection !== 'undefined') {
+                var str = "db." + $scope.request;
             
-			//console.log(col);
             //if($scope.global.user.rights[col] && $scope.global.user.rights[col].export){
             if(true){
                 var p = {
                     request: str,
-                    model: col
+                        model: $scope.collection
                 };
 
                 Export.query(p, function (data) {
@@ -73,6 +74,14 @@ angular.module('mean.export').controller('ExportCSVController', ['$scope', '$rou
                     icon: "icon-cross",
                     color: "red-gradient",
                     text: "Vous n'avez pas l'autorisation !"
+                    };
+                }
+            }else{
+                $scope.msg = {
+                    enable: true,
+                    icon: "icon-cross",
+                    color: "red-gradient",
+                    text: "Vous n'avez pas choisi une collection !"
                 };
             }                                  
         };

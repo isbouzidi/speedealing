@@ -39,6 +39,7 @@ angular.module('mean.transaction').controller('TransactionController', ['$scope'
                 });
 
                 $http({method: 'GET', url: '/api/bank', params: {
+                        entity: Global.user.entity
                     }
                 }).success(function (data, status) {
                     $scope.bank = data;
