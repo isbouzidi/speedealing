@@ -1,42 +1,89 @@
 <div ng-if="global.user.rights.box.ca" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
-	<div class="block large-margin-bottom">
+    <div class="block large-margin-bottom">
 
-		<div class="block-title">
-			<h3>Chiffres d'affaires HT</h3>
-		</div>
+        <div class="block-title">
+            <h3>Chiffres d'affaires HT</h3>
+        </div>
 
-		<table class="simple-table responsive-table responsive-table-on" data-ng-init="familleCA()">
+        <table class="simple-table responsive-table responsive-table-on" data-ng-init="familleCA()">
 
-			<thead>
-				<tr>
-					<th scope="col" class="header">Familles</th>
-					<th scope="col" width="33%" class="header align-right">\{{lastMonth}}</th>
-					<th scope="col" width="33%" class="header align-right"><i>\{{thisMonth}}</i></th>
-				</tr>
-			</thead>
+            <thead>
+                <tr>
+                    <th scope="col" class="header">Familles</th>
+                    <th scope="col" width="33%" class="header align-right">\{{lastMonth}}</th>
+                    <th scope="col" width="33%" class="header align-right"><i>\{{thisMonth}}</i></th>
+                </tr>
+            </thead>
 
-			<tfoot>
-				<tr>
-					<td colspan="2" class="align-right">
-						CA \{{lastMonth}} : <strong>\{{total_ca.real | currency}}</strong>
-					</td>
-					<td class="align-right">
-						Prev. : <i>\{{total_ca.prev | currency}}</i>
-					</td>
-				</tr>
-			</tfoot>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="align-right">
+                        CA \{{lastMonth}} : <strong>\{{total_ca.real| currency}}</strong>
+                    </td>
+                    <td class="align-right">
+                        Prev. : <i>\{{total_ca.prev| currency}}</i>
+                    </td>
+                </tr>
+            </tfoot>
 
-			<tbody>
-				<tr data-ng-repeat="ca in familles | orderBy:'family'">
-					<th scope="row">
-						\{{ca.family}}
-					</th>
-					<td class="align-right">\{{ca.total_ht | currency}}</td>
-					<td class="align-right "><i>-</i></td>
-				</tr>
-			</tbody>
+            <tbody>
+                <tr data-ng-repeat="ca in familles| orderBy:'family'">
+                    <th scope="row">
+                        \{{ca.family}}
+                    </th>
+                    <td class="align-right">\{{ca.total_ht| currency}}</td>
+                    <td class="align-right "><i>-</i></td>
+                </tr>
+            </tbody>
 
-		</table>
+        </table>
 
-	</div>
+    </div>
+</div>
+
+<div ng-if="global.user.rights.box.ca" class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+    <div class="block large-margin-bottom">
+
+        <div class="block-title">
+            <h3>CA HT par commercial</h3>
+        </div>
+
+        <table class="simple-table responsive-table responsive-table-on" data-ng-init="familleCA()">
+
+            <thead>
+                <tr>
+                    <th scope="col" class="header">Comm.</th>
+                    <th scope="col" class="header">Client</th>
+                    <th scope="col" width="25%" class="header">Mois</th>
+                    <th scope="col" width="25%" class="header align-right">Total HT</th>
+                    <!--<th scope="col" width="33%" class="header align-right">\{{lastMonth}}</th>
+                    <th scope="col" width="33%" class="header align-right"><i>\{{thisMonth}}</i></th>-->
+                </tr>
+            </thead>
+
+            <!--<tfoot>
+                <tr>
+                    <td colspan="2" class="align-right">
+                        CA \{{lastMonth}} : <strong>\{{total_ca.real| currency}}</strong>
+                    </td>
+                    <td class="align-right">
+                        Prev. : <i>\{{total_ca.prev| currency}}</i>
+                    </td>
+                </tr>
+            </tfoot>-->
+
+            <tbody>
+                <tr data-ng-repeat="ca in statsByEntity.caStats">
+                    <th scope="row">
+                        \{{ca._id.id}}
+                    </th>
+                    <td>\{{ca._id.client}}</td>
+                    <td>\{{ca._id.month}}</td>
+                    <td class="align-right">\{{ca.total_ht| currency}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
 </div>

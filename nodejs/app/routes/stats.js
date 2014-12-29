@@ -11,6 +11,7 @@ var Dict = require('../controllers/dict');
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
 var OrderModel = mongoose.model('commande');
+var FactureModel = mongoose.model('bill');
 var TicketModel = mongoose.model('ticket');
 var LeadModel = mongoose.model('lead');
 var ReportModel = mongoose.model('report');
@@ -34,7 +35,7 @@ module.exports = function (app, passport, auth) {
 
 		var d = new Date();
 		d.setHours(0, 0, 0);
-		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1, 3), 1);
+		var dateStart = new Date(d.getFullYear(), parseInt(d.getMonth() - 1), 1);
 		var dateEnd = new Date(d.getFullYear(), d.getMonth(), 1);
 
 		function verifyResult(err, docs, cb) {
@@ -247,13 +248,30 @@ module.exports = function (app, passport, auth) {
 						});
 					}
 
-					var results =  _.values(results.user);
+					var results = _.values(results.user);
 
 					//console.log(results);
-					
+
 					cb(err, results);
 				});
-			}
+			},
+			caStats: function (cb) {
+				
+
+				//console.log(dateStart);
+				FactureModel.aggregate([
+					{$match: {"commercial_id.id": {$ne: null}, datec: {$gte: dateStart, $lt: dateEnd}}},
+					{$project: {datec: 1, commercial_id: 1, "client": "$client.name", total_ht: 1, }},
+					{$group: {_id: {id: "$commercial_id.id", client: "$client", month: {$month: "$datec"}}, total_ht: {$sum: "$total_ht"}}},
+					{$sort: {"_id.id": 1, "_id.month": 1, "_id.client": 1}}
+				], function (err, docs) {
+					//console.log(docs);
+					
+					//console.log(docs);
+
+					cb(err, docs);
+				});
+			},
 		}, function (err, results) {
 			if (err)
 				return console.log(err);
