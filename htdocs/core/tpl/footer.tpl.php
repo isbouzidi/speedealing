@@ -53,7 +53,7 @@
 	var cancelInPlace = '<?php echo $langs->trans('Cancel'); ?>';
 	var submitInPlace = '<?php echo $langs->trans('Ok'); ?>';
 	var indicatorInPlace = '<img src="img/standard/loaders/loading16.gif">';
-	//var ckeditorConfig = '/js/libs/ckeditor/config.js';
+	var ckeditorConfig = '/js/libs/ckeditor/config.js';
 </script>
 <script type="text/javascript" src="js/editinplace.js" defer></script>
 <!--<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.ckeditor.js" defer></script>-->
