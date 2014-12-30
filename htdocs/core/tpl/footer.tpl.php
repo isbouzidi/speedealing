@@ -53,10 +53,10 @@
 	var cancelInPlace = '<?php echo $langs->trans('Cancel'); ?>';
 	var submitInPlace = '<?php echo $langs->trans('Ok'); ?>';
 	var indicatorInPlace = '<img src="img/standard/loaders/loading16.gif">';
-	var ckeditorConfig = '/js/libs/ckeditor/config.js';
+	//var ckeditorConfig = '/js/libs/ckeditor/config.js';
 </script>
 <script type="text/javascript" src="js/editinplace.js" defer></script>
-<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.ckeditor.js" defer></script>
+<!--<script type="text/javascript" src="includes/jquery/plugins/jeditable/jquery.jeditable.ckeditor.js" defer></script>-->
 <!-- jQuery File Upload -->
 <!--  <script type="text/javascript" src="includes/jquery/plugins/template/tmpl.min.js"></script> -->
 <!-- <script type="text/javascript" src="includes/jquery/plugins/fileupload/js/jquery.iframe-transport.js"></script> -->
@@ -120,7 +120,7 @@
 <script type="text/javascript" src="js/developr.tabs.js"></script>		<!-- Must be loaded last -->
 
 <!-- CKEditor -->
-<script type="text/javascript" src="js/libs/ckeditor/ckeditor.js"></script>
+<!--<script type="text/javascript" src="js/libs/ckeditor/ckeditor.js"></script>-->
 
 <!-- Includes specific JS of Speedealing -->
 <script type="text/javascript" src="js/lib_head.js" defer></script>
