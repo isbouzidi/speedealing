@@ -507,7 +507,7 @@ Billing.prototype = {
 			bill.commercial_id = societe.commercial_id;
 			bill.datec = new Date();
 
-			bill.entity = societe.entity;
+			bill.entity = req.user.entity;
 
 			bill.address = societe.address;
 			bill.zip = societe.zip;
