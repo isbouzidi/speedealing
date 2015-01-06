@@ -31,6 +31,11 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
 		$scope.changeEntity = function () {
 			$scope.title = pageTitle.getTitle();
 			//Global.user.entity = $scope.entity.id;
+			$http({method: 'PUT',url : 'api/user/entity', data: {
+				entity : $scope.global.user.entity
+			}}).success(function(res){
+				//console.log(res);
+			});
 			$route.reload();
 			superCache.removeAll();
 		};

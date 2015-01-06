@@ -133,6 +133,8 @@ module.exports = function (app, passport, auth) {
 	app.del('/api/user/absence/:id', auth.requiresLogin, absence.delete);
 
 	app.get('/api/user/absence/count', auth.requiresLogin, absence.count);
+	// For multi-entites user
+	app.put('/api/user/entity', auth.requiresLogin, object.entityUpdate);
 
 	app.param('userId', object.user);
 	//other routes..
@@ -243,7 +245,20 @@ Object.prototype = {
 
 			res.json(doc);
 		});
-
+	},
+	entityUpdate : function(req, res) {
+		var result = [];
+		//console.log(req.user);
+		
+		if(req.user.multiEntities && req.body.entity) {
+			UserModel.findByIdAndUpdate(req.user._id, {$set : {entity : req.body.entity}}, function(err, user){
+				if(err)
+					console.log(err);
+	
+				//console.log(user);
+				res.json(user);
+			});
+		}
 	}
 };
 
