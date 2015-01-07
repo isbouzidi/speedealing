@@ -256,7 +256,7 @@ module.exports = function (app, passport, auth) {
 				});
 			},
 			caStats: function (cb) {
-				
+
 
 				//console.log(dateStart);
 				FactureModel.aggregate([
@@ -266,7 +266,7 @@ module.exports = function (app, passport, auth) {
 					{$sort: {"_id.id": 1, "_id.month": 1, "_id.client": 1}}
 				], function (err, docs) {
 					//console.log(docs);
-					
+
 					//console.log(docs);
 
 					cb(err, docs);
@@ -302,10 +302,10 @@ module.exports = function (app, passport, auth) {
 			for (var i = 0; i < entityList.length; i++) {
 				//console.log(entityList[i]);
 				result.push({_id: {entity: entityList[i].id, month: dateStart.getMonth() + 1}, count: 0});
-				result.push({_id: {entity: entityList[i].id, month: dateStart.getMonth() + 2}, count: 0});
+				result.push({_id: {entity: entityList[i].id, month: (dateStart.getMonth() + 1) % 12 + 1}, count: 0});
 			}
-
-			//console.log(docs);
+			
+			//console.log(result);
 
 			for (var i = 0; i < docs.length; i++) {
 				var idx = _.findIndex(result, {_id: docs[i]._id});
