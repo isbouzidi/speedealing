@@ -17,7 +17,7 @@ var TransactionModel = mongoose.model('Transaction');
  * Bank Schema
  */
 var BankSchema = new Schema({
-	ref: String,
+	ref: {type: String, unique: true},
 	libelle: String,
 	account_type: String,
 	country: String,

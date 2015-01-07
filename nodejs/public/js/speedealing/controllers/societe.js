@@ -8,6 +8,7 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 		$scope.societe = {};
 		$scope.societes = [];
 		$scope.entities = [];
+		$scope.banks = [];
 		$scope.segementations = [];
 		$scope.gridOptionsSociete = {};
 		$scope.gridOptionsSegementation = {};
@@ -54,6 +55,13 @@ angular.module('mean.societes').controller('SocieteController', ['$scope', '$roo
 							name: "ALL"
 						});
 					});
+
+			$http({method: 'GET', url: '/api/bank', params: {
+					entity: Global.user.entity
+				}
+			}).success(function (data, status) {
+				$scope.banks = data;
+			});
 		};
 
 		/*$scope.segmentationSelect = function (val, max) {

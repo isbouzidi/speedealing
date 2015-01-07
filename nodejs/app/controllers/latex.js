@@ -1,5 +1,4 @@
 "use strict";
-
 var mongoose = require('mongoose'),
 		fs = require("fs-extra"),
 		temp = require("temp"),
@@ -12,13 +11,11 @@ var mongoose = require('mongoose'),
 		dateFormat = require('dateformat'),
 		_ = require('lodash'),
 		config = require('../../config/config');
-
 exports.loadModel = function (file, callback) {
 	fs.readFile(config.root + config.latex.models + file, 'utf8', function (err, data) {
 		callback(err, data);
 	});
 };
-
 /**
  * exports.compileDoc
  * @param req : request object
@@ -27,11 +24,9 @@ exports.loadModel = function (file, callback) {
 exports.compileDoc = function (id, doc, callback) {
 	// initialize the 'response' JS object to send back
 	var response = {infos: [], errors: [], logs: "", compiledDocURI: null};
-
 	// make temporary directory to create and compile latex pdf
 	temp.mkdir("pdfcreator", function (err, dirPath) {
 		var inputPath = path.join(dirPath, id + ".tex");
-
 		var afterCompile = function (err) {
 			// store the logs for the user here
 			fs.readFile(path.join(dirPath, id + ".log"), function (err, data) {
@@ -42,7 +37,6 @@ exports.compileDoc = function (id, doc, callback) {
 				}
 
 				response.logs = (data ? data.toString() : "");
-
 				var errorStr = "An error occured before or during compilation";
 				if (err) {
 					response.errors.push(errorStr);
@@ -52,7 +46,6 @@ exports.compileDoc = function (id, doc, callback) {
 
 				var pdfTitle = id + ".pdf"
 						, tempfile = path.join(dirPath, pdfTitle);
-
 				fs.copy(tempfile, config.root + config.latex.pdfs + pdfTitle, function (err) {
 					if (err) {
 						console.log(err);
@@ -72,7 +65,6 @@ exports.compileDoc = function (id, doc, callback) {
 				});
 			});
 		};
-
 		fs.writeFile(inputPath, doc.data, function (err) {
 			if (err) {
 				response.errors.push("An error occured even before compiling");
@@ -80,11 +72,9 @@ exports.compileDoc = function (id, doc, callback) {
 				return;
 			}
 			process.chdir(dirPath);
-
 			var copyPackages = ["cp -r"
 						, config.root + config.latex.includes + "."
 						, dirPath + "/"].join(" ");
-
 			exec(copyPackages, function (err) {
 				if (err) {
 					console.log(err);
@@ -104,7 +94,6 @@ exports.compileDoc = function (id, doc, callback) {
 		});
 	});
 };
-
 /**
  * exports.servePDF ->
  * @param req : request Object
@@ -114,7 +103,6 @@ exports.compileDoc = function (id, doc, callback) {
 exports.servePDF = function (req, res) {
 	var id = req.params.pdfId
 			, pdfPath = config.root + config.latex.pdfs + id + ".pdf";
-
 	//console.log(pdfPath);
 	fs.exists(pdfPath, function (exists) {
 		if (!exists) {
@@ -128,10 +116,8 @@ exports.servePDF = function (req, res) {
 		}
 	});
 };
-
 exports.getPDF = function (id, callback) {
 	var pdfPath = config.root + config.latex.pdfs + id + ".pdf";
-
 	//console.log(pdfPath);
 	fs.exists(pdfPath, function (exists) {
 		if (!exists) {
@@ -142,8 +128,6 @@ exports.getPDF = function (id, callback) {
 		}
 	});
 };
-
-
 /**
  * Replace --MYSOC-- and create FOOTER
  */
@@ -153,7 +137,6 @@ exports.headfoot = function (entity, tex, callback) {
 
 			var mysoc = "";
 			mysoc = "\\textbf{\\large " + doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town;
-
 			if (doc.phone)
 				mysoc += "\\\\Tel : " + doc.phone;
 			if (doc.fax)
@@ -162,35 +145,26 @@ exports.headfoot = function (entity, tex, callback) {
 				mysoc += "\\\\ Email : " + doc.email;
 			if (doc.tva_intra)
 				mysoc += "\\\\ TVA Intra. : " + doc.tva_intra;
-
 			tex = tex.replace(/--MYSOC--/g, mysoc);
-
 			var foot = "";
-
 			foot = "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town;
-
 			if (doc.phone)
 				foot += " T\\'el.: " + doc.phone;
 			if (doc.idprof1)
 				foot += " R.C.S. " + doc.idprof1;
-
 			tex = tex.replace(/--FOOT--/g, foot);
-
 			tex = tex.replace(/--ENTITY--/g, "\\textbf{" + doc.name + "}");
 			if (doc.iban)
 				tex = tex.replace(/--IBAN--/g, doc.iban.name + "\\\\RIB : " + doc.iban.rib + "\\\\ IBAN : " + doc.iban.iban + "\\\\ BIC : " + doc.iban.bic);
 			else
 				tex = tex.replace(/--IBAN--/g, "RIB sur demande.");
-
 			tex = tex.replace(/--LOGO--/g, doc.logo);
-
 			tex = tex.replace(/é/g, "\\'e");
 			tex = tex.replace(/è/g, "\\`e");
 			callback(tex);
 		});
 	});
 };
-
 /**
  * Replace --MYSOC-- and create FOOTER for Supplier
  */
@@ -206,30 +180,24 @@ exports.headfootlight = function (entity, tex, callback) {
 				tex = tex.replace(/--IBAN--/g, doc.iban.name + "\\\\RIB : " + doc.iban.rib + "\\\\ IBAN : " + doc.iban.iban + "\\\\ BIC : " + doc.iban.bic);
 			else
 				tex = tex.replace(/--IBAN--/g, "RIB sur demande.");
-
 			tex = tex.replace(/é/g, "\\'e");
 			tex = tex.replace(/è/g, "\\`e");
 			callback(tex);
 		});
 	});
 };
-
 /**
  * Number price Format
  */
 exports.price = function (price) {
 	return accounting.formatMoney(price, {symbol: "€", format: "%v %s", decimal: ",", thousand: " ", precision: 2});
 };
-
 exports.number = function (number, precision) {
 	return accounting.formatNumber(number, {decimal: ",", thousand: " ", precision: precision || 2});
 };
-
 exports.percent = function (number, precision) {
 	return accounting.formatNumber(number, {symbol: "\\%", format: "%v %s", decimal: ",", thousand: " ", precision: precision || 2});
 };
-
-
 /**
  * Latex pipe convertion with a pipe
  */
@@ -249,7 +217,6 @@ exports.percent = function (number, precision) {
  */
 
 exports.Template = createTemplate;
-
 /**
  * Simply instantiates a new template instance.
  *
@@ -269,7 +236,6 @@ function createTemplate(path, entity) {
 function Template(arg, entity) {
 	this.handlers = []; // variables
 	this.entity = entity;
-
 	// the constructor now works with a stream, too
 
 	this.stream = fs.createReadStream(config.root + config.latex.models + arg);
@@ -278,7 +244,6 @@ function Template(arg, entity) {
 // inherit from event emitter
 
 util.inherits(Template, events.EventEmitter);
-
 /**
  * Applies the values to the template and emits an `end` event.
  *
@@ -294,32 +259,27 @@ Template.prototype.apply = function (handler) {
 		result[key] = num;
 		return result;
 	}, {}));
-
 	//console.log(this.handlers);
 
 	// if the template is already running the action is complete
 
 	if (this.processing)
 		return this;
-
 	// we have to wait for the number of entries.  they might be resolved in an
 	// asynchronous way
 
 	return apply.call(this);
-
 	function apply() {
 
 		// parse the tex file
 		this
 				.stream
 				.on('data', this.processContent.bind(this));
-
 		// the blip needs a resume to work properly
 		this.processing = true;
 		return this;
 	}
 };
-
 /**
  * Parses the content and applies the handlers.
  *
@@ -330,7 +290,6 @@ Template.prototype.apply = function (handler) {
 Template.prototype.processContent = function (stream) {
 	var emit = this.emit.bind(this);
 	var self = this;
-
 	async.waterfall(
 			[
 				parse(stream),
@@ -342,13 +301,10 @@ Template.prototype.processContent = function (stream) {
 
 		if (err)
 			return emit('error', err);
-
 		emit('finalized', result);
 		emit('compile', result);
-
 	});
 };
-
 /**
  * Apply the content to the various installed handlers.
  *
@@ -358,59 +314,122 @@ Template.prototype.processContent = function (stream) {
 
 Template.prototype.applyHandlers = function () {
 	var handlers = this.handlers;
+
+	function apply(handler, key, callback) {
+		var value = "";
+
+		switch (handler.type) {
+			case "string" :
+				if (handler.value) {
+					value = handler.value.toString();
+					//console.log(handler);
+					value = value.replace(/_/gi, "\\_")
+							.replace(/%/gi, "\\%")
+							.replace(/&/gi, "\\&")
+							.replace(/\n/g, " ");
+				}
+				break;
+			case "area" :
+				if (handler.value) {
+					value = handler.value;
+					value = value.replace(/_/gi, "\\_")
+							.replace(/%/gi, "\\%")
+							.replace(/&/gi, "\\&")
+							.replace(/\n/g, "\\\\");
+				}
+				break;
+			case "number" :
+				value = accounting.formatNumber(handler.value, {decimal: ",", thousand: " ", precision: handler.precision || 2});
+				break;
+			case "euro" :
+				value = accounting.formatMoney(handler.value, {symbol: "€", format: "%v %s", decimal: ",", thousand: " ", precision: 2});
+				break;
+			case "percent" :
+				value = accounting.formatNumber(handler.value, {format: "%v %s", decimal: ",", thousand: " ", precision: handler.precision || 2});
+				value = value.toString() + " \\%";
+				break;
+			case "date" :
+				if (handler.value) {
+					value = dateFormat(handler.value, handler.format);
+				}
+				break;
+			case "cent":
+				break;
+			default :
+				return callback("Handler not found : " + handler.type + " (" + handler.id + ")");
+		}
+
+		return callback(null, key, value);
+
+	}
+
 	return function (content, done) {
 		//console.log(content);
 		async.eachSeries(
 				handlers,
 				function (handler, next) {
 					// apply the handlers to the content
-					
-					var value = "";
-					
-					switch (handler.type) {
-						case "string" :
-							
-							if (handler.value) {
-								value = handler.value;
-								value = value.replace(/_/gi, "\\_")
-										.replace(/%/gi, "\\%")
-										.replace(/&/gi, "\\&");
+
+
+
+					if (_.isArray(handler)) {
+						if (!handler[0] || !handler[0].keys)
+							return next("Array(0) row keys is missing " + handler.id);
+						var columns = handler[0].keys;
+
+						var output = "";
+
+						async.eachSeries(handler, function (tabline, cb) {
+							if (tabline.keys)
+								return cb();
+
+							for (var i = 0; i < columns.length; i++) {
+								//console.log(tabline);
+								if (typeof tabline[columns[i].key] === 'undefined')
+									return next("Value not found in array : " + handler.id + " for key " + columns[i].key);
+
+								if (columns[i].type === 'area') // Specific for array multilines
+									tabline[columns[i].key] = "\\specialcell[t]{" + tabline[columns[i].key] + "\\\\}";
+
+								apply(_.extend(columns[i], {value: tabline[columns[i].key]}), i, function (err, key, value) {
+									if (err)
+										return next(err);
+
+									output += value;
+
+									//console.log(key);
+									if (key === columns.length - 1) { // end line
+										output += "\\tabularnewline\n";
+										cb();
+									} else
+										output += "&"; //next column
+
+								});
 							}
-							break;
-						case "area" :
-							break;
-						case "number" :
-							break;
-						case "euro" :
-							value = accounting.formatMoney(handler.value, {symbol: "€", format: "%v %s", decimal: ",", thousand: " ", precision: 2});
-							break;
-						case "percent" :
-							break;
-						case "date" :
-							if (handler.value) {
-								value = dateFormat(handler.value, handler.format);
-							}
-							break;
-						case "cent":
-							break;
-						default :
-							return next("Handler not found : " + handler.type + " (" + handler.id + ")");
+
+						}, function () {
+							//console.log(output);
+							content = content.replace(new RegExp("--" + handler.id + "--", "g"), output);
+							next();
+						});
+					} else {
+						apply(handler, handler.id, function (err, key, value) {
+							if (err)
+								return next(err);
+
+							content = content.replace(new RegExp("--" + key + "--", "g"), value);
+							next();
+						})
 					}
-
-					content = content.replace(new RegExp("--" + handler.id + "--", "g"), value);
-
-					next();
 				},
 				function (err) {
 					if (err)
 						return done(err);
-
 					done(null, content);
 				}
 		);
 	};
 };
-
 /**
  * Apply the head and foot to the various.
  *
@@ -421,16 +440,13 @@ Template.prototype.applyHandlers = function () {
 Template.prototype.applyHeadFoot = function () {
 	var entity = this.entity;
 	var emit = this.emit.bind(this);
-
 	return function (tex, done) {
 		mongoose.connection.db.collection('Mysoc', function (err, collection) {
 			collection.findOne({_id: entity}, function (err, doc) {
 				if (err || !doc)
 					return emit("error", "Entity not found");
-
 				var mysoc = "";
 				mysoc = "\\textbf{\\large " + doc.name + "}\\\\" + doc.address + "\\\\" + doc.zip + " " + doc.town;
-
 				if (doc.phone)
 					mysoc += "\\\\Tel : " + doc.phone;
 				if (doc.fax)
@@ -439,28 +455,20 @@ Template.prototype.applyHeadFoot = function () {
 					mysoc += "\\\\ Email : " + doc.email;
 				if (doc.tva_intra)
 					mysoc += "\\\\ TVA Intra. : " + doc.tva_intra;
-
 				tex = tex.replace(/--MYSOC--/g, mysoc);
-
 				var foot = "";
-
 				foot = "\\textsc{" + doc.name + "} " + doc.address + " " + doc.zip + " " + doc.town;
-
 				if (doc.phone)
 					foot += " T\\'el.: " + doc.phone;
 				if (doc.idprof1)
 					foot += " R.C.S. " + doc.idprof1;
-
 				tex = tex.replace(/--FOOT--/g, foot);
-
 				tex = tex.replace(/--ENTITY--/g, "\\textbf{" + doc.name + "}");
 				if (doc.iban)
 					tex = tex.replace(/--IBAN--/g, doc.iban.name + "\\\\RIB : " + doc.iban.rib + "\\\\ IBAN : " + doc.iban.iban + "\\\\ BIC : " + doc.iban.bic);
 				else
 					tex = tex.replace(/--IBAN--/g, "RIB sur demande.");
-
 				tex = tex.replace(/--LOGO--/g, doc.logo);
-
 				tex = tex.replace(/é/g, "\\'e");
 				tex = tex.replace(/è/g, "\\`e");
 				done(null, tex);
@@ -468,7 +476,6 @@ Template.prototype.applyHeadFoot = function () {
 		});
 	};
 };
-
 /**
  * Register a handler on the 'finalized' event.  This was formerly needed to
  * launch the finalization of the archive.  But this is done automatically now.
@@ -478,20 +485,17 @@ Template.prototype.finalize = function (done) {
 	this.on('finalized', done);
 	return this;
 };
-
 /**
  * Register a handler on the 'finalized' event. This start latex compilation
  */
 
 Template.prototype.compile = function () {
 	var emit = this.emit.bind(this);
-
 	this.on('compile', function (tex) {
 
 		// make temporary directory to create and compile latex pdf
 		temp.mkdir("pdfcreator", function (err, dirPath) {
 			var inputPath = path.join(dirPath, "main.tex");
-
 			var afterCompile = function (err) {
 				// store the logs for the user here
 				fs.readFile(path.join(dirPath, "main.log"), function (err, data) {
@@ -501,30 +505,23 @@ Template.prototype.compile = function () {
 
 					var pdfTitle = "main.pdf"
 							, tempfile = path.join(dirPath, pdfTitle);
-
 					var outputStream = fs.createReadStream(tempfile);
-
 					emit('pipe', outputStream);
-
 					outputStream.on('end', function () {
 						deleteFolderRecursive(dirPath);
 					});
-
 					return;
 				});
 			};
-
 			fs.writeFile(inputPath, tex, function (err) {
 				if (err) {
 					console.log(err);
 					return emit('error', "An error occured even before compiling");
 				}
 				process.chdir(dirPath);
-
 				var copyPackages = ["cp -r"
 							, config.root + config.latex.includes + "."
 							, dirPath + "/"].join(" ");
-
 				exec(copyPackages, function (err) {
 					if (err) {
 						console.log(err);
@@ -544,7 +541,6 @@ Template.prototype.compile = function () {
 	});
 	return this;
 };
-
 /**
  * Parses the tex file of the document.
  *
@@ -587,10 +583,8 @@ function deleteFolderRecursive(path) {
 
 Template.prototype.pipe = function () {
 	var out = arguments;
-
 	this.on('pipe', function (streamOutput) {
 		streamOutput.pipe.apply(streamOutput, out);
 	});
-
 	return this;
 };

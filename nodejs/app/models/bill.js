@@ -35,6 +35,7 @@ var billSchema = new Schema({
 	Status: {type: String, default: 'DRAFT'},
 	cond_reglement_code: {type: String, default: '30D'},
 	mode_reglement_code: {type: String, default: 'CHQ'},
+	bank_reglement: {type: String},
 	client: {
 		id: {type: Schema.Types.ObjectId, ref: 'Societe'},
 		name: String,

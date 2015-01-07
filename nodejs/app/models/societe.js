@@ -86,6 +86,7 @@ var societeSchema = new Schema({
 	yearCreated: Number,
 	cond_reglement: {type: String, default: 'RECEP'},
 	mode_reglement: {type: String, default: 'CHQ'},
+	bank_reglement: {type: String},
 	en_compte: Boolean,
 	groupOrder: Boolean, // 1 bill for many order
 	groupDelivery: Boolean, // 1 bill for many delivery

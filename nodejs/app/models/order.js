@@ -31,6 +31,7 @@ var orderSchema = new Schema({
 	Status: {type: Schema.Types.Mixed, default: 'DRAFT'},
 	cond_reglement_code: {type: String, default: 'RECEP'},
 	mode_reglement_code: {type: String, default: 'TIP'},
+	bank_reglement: {type: String},
 	//availability_code: {type: String, default: 'AV_NOW'},
 	type: {type: String, default: 'SRC_COMM'},
 	client: {

@@ -95,6 +95,7 @@ module.exports = function (app, passport, auth) {
 
 					result[i].mode_reglement_code = docs[i].mode_reglement;
 					result[i].cond_reglement_code = docs[i].cond_reglement;
+					result[i].bank_reglement = docs[i].bank_reglement;
 					result[i].commercial_id = docs[i].commercial_id;
 				}
 

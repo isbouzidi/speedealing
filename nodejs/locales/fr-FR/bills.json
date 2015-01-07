@@ -401,5 +401,6 @@
 	"NumberCheckTrans": "Numéro (Chèque/Virement N°)",
 	"Transmitter": "Emetteur (Emetteur du chèque)",
 	"Bank": "Banque (Banque du chèque)",
-	"AccountingCode":"Plan comptable"
+	"AccountingCode":"Plan comptable",
+        "PaymentBank": "Banque d'encaissement"
 }

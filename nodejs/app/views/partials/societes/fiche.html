@@ -389,6 +389,14 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <th scope="row">{{t 'bills:PaymentBank'}}</th>
+                                                    <td>
+                                                        <a href="#" editable-select="societe.bank_reglement" buttons="no" e-ng-options="s.ref as s.ref for s in banks" onaftersave="update()">
+                                                            \{{societe.bank_reglement|| '{{t 'main:Undefined'}}' }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <th scope="row">{{t 'products:PriceLevel'}}</th>
                                                     <td>
                                                         <a href="#" editable-text="societe.price_level" e-typeahead="price_level.name for price_level in priceLevelAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" buttons="no" onaftersave="update()">
@@ -576,7 +584,7 @@
                         </tab>
                     </tabset>
                 </div>
-                
+
                 <div class="twelve-columns">
                     <h5 class="green underline">Comptes Rendus</h5>
 
@@ -596,7 +604,7 @@
                         \{{countReports}} ligne(s)
                     </div>
                 </div>
-                
+
                 <div class="twelve-columns">
                     <h5 class="green underline">{{t 'companies:ListOfContacts'}}</h5>
 

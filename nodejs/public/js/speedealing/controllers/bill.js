@@ -15,6 +15,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 		$scope.dict = {};
 		$scope.countTicket = 0;
 		$scope.bills = [];
+		$scope.banks = [];
 		$scope.gridOptionsBills = {};
 
 		$scope.types = [{name: "En cours", id: "WAIT"}, {name: "Toutes", id: "ALL"}];
@@ -25,10 +26,18 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			var dict = ["fk_bill_status", "fk_payment_term", "fk_bill_type", "fk_paiement", "fk_tva"];
 
 			$http({method: 'GET', url: '/api/dict', params: {
-					dictName: dict,
+					dictName: dict
 				}
 			}).success(function (data, status) {
 				$scope.dict = data;
+			});
+			
+			
+			$http({method: 'GET', url: '/api/bank', params: {
+					entity: Global.user.entity
+				}
+			}).success(function (data, status) {
+				$scope.banks = data;
 			});
 		};
 
@@ -319,6 +328,7 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			$scope.bill.commercial_id = data.commercial_id;
 			$scope.bill.cond_reglement_code = data.cond_reglement_code;
 			$scope.bill.mode_reglement_code = data.mode_reglement_code;
+			$scope.bill.bank_reglement = data.bank_reglement;
 
 			$scope.bill.price_level = data.price_level;
 

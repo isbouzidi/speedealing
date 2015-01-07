@@ -302,6 +302,7 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 			$scope.delivery.commercial_id = data.commercial_id;
 			$scope.delivery.cond_reglement_code = data.cond_reglement_code;
 			$scope.delivery.mode_reglement_code = data.mode_reglement_code;
+			$scope.delivery.bank_reglement = data.bank_reglement;
 
 			$scope.delivery.price_level = data.price_level;
 
