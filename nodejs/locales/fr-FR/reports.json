@@ -1,6 +1,6 @@
 {
 	"CHARSET": "UTF-8",
-	"New Report": "Nouveau Compte Rendu",
+	"New Report": "Nouveau Compte-Rendu",
 	"Deployment": "Déploiement",
 	"Satisfaction Survey": "Enquête satisfaction",
 	"Progress Points": "Points progrés",
@@ -21,6 +21,6 @@
 	"DateCall": "Date d'appel",
 	"DurationPrepare": "Durée de préparation",
 	"Potential": "Potentiel du compte",
-	"Details Report": "Fiche Compte Rendu",
+	"Details Report": "Fiche Compte-Rendu",
 	"DateRevival":"Date de relance"
 }
