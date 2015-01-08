@@ -47,8 +47,9 @@ module.exports = function (app, passport, auth) {
 			"$or": [
 				{name: new RegExp("\\b" + req.body.filter.filters[0].value, "i")},
 				{ref: new RegExp(req.body.filter.filters[0].value, "i")},
-				{code_client: new RegExp(req.body.filter.filters[0].value, "i")}
-			]
+				{code_client: req.body.filter.filters[0].value}
+			],
+			entity: {$in: [req.user.entity, "ALL"]}
 		};
 
 		if (req.query.fournisseur || req.body.fournisseur) {
@@ -61,7 +62,7 @@ module.exports = function (app, passport, auth) {
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
 
 		//console.log(query);
-		SocieteModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
+		SocieteModel.find(query, {}, {limit: req.body.take, sort: {name: 1}}, function (err, docs) {
 			if (err) {
 				console.log("err : /api/societe/autocomplete");
 				console.log(err);

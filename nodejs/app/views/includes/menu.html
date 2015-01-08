@@ -3,9 +3,17 @@
 
     <div id="menu-content">
         <header ng-show="showSearchInput">
-            <div id="search_box">
-                <input ng-model="searchQueryItem" ng-change="searchQuery()" class="ac_input focus" id="query" type='text' size='40' placeholder="{{t 'SearchOf'}}" autocomplete="off">
-            </div>
+            <div class="input-group">
+                    <input type="text" ng-model="searchQueryItem" ng-change="searchQuery()" size='40' class="form-control" placeholder="Rechercher contact" autocomplete="off">
+                    <span class="input-group-btn">
+                        <!--<button class="btn btn-primary" data-ng-click="addNewContact()">{{t 'companies:NewContact'}}</button>-->
+                        <button class="btn btn-default" ng-click="searchQuery()" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                    </span>
+                </div>
+            
+            <!--<div id="search_box">
+                <input ng-model="searchQueryItem" ng-change="searchQuery()" class="ac_input focus" id="query" type='text' size='40' placeholder="Rechercher contact" autocomplete="off">
+            </div>-->
         </header>
 
         <div id="profile">

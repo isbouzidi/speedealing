@@ -1,103 +1,132 @@
 <section data-ng-controller="SearchController" ng-init="init()">
     <div class="with-padding">
 
-        <h2>Résultats de recherche : <span class="thin">\{{searchItem}}</span></h2>
+        <h2>Résultats de recherche : <span class="thin">\{{searchItem.firstname}} \{{searchItem.lastname}}</span></h2>
 
-		<div class="row margin-bottom">
-			<div class="col-md-10">
-				<div class="input-group">
-					<span class="input-group-btn">
-						<button class="btn btn-primary" data-ng-click="addNewContact()">{{t 'companies:NewContact'}}</button>
-					</span>
-					<input type="text" ng-model="searchItem" my-focus="true" ng-enter="btnSearch()" class="form-control">
-					<span class="input-group-btn">
-						<button class="btn btn-default" ng-click="btnSearch()" type="button"><i class="glyphicon glyphicon-search"></i></button>
-					</span>
-				</div><!-- /input-group -->
-			</div>
-			<h5 class="thin" ng-if="searchItem.length > 0"><strong>\{{resultsCount}}</strong> résultats trouvés</h5>
-		</div><!-- /.row -->
-		<div class="row margin-top">
-			<ul class="unstyled-list">
-				<li>
-					<ul class="message-menu">
-						<li ng-repeat="result in results" style="cursor: pointer">
-							<div class="row margin-bottom">
-								<div class="col-md-6">
-									<a ng-href="" title="\{{result.name}}" ng-click="showContact(result._id)">
-										<strong class="blue">\{{result.name}}</strong>
-										<small class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</small>
+        <div class="row margin-bottom">
+            <div class="form-horizontal">
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">{{t 'companies:Firstname'}}</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="searchItem.firstname" ng-enter="btnSearch()" class="form-control" id="firstname" placeholder="{{t 'companies:Firstname'}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-2 control-label">{{t 'companies:Lastname'}}</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="searchItem.lastname"  ng-enter="btnSearch()" class="form-control" id="lastname" my-focus="true" placeholder="{{t 'companies:Lastname'}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-sm-2 control-label">{{t 'Email'}}</label>
+                        <div class="col-sm-10">
+                            <input type="email" ng-model="searchItem.email"  ng-enter="btnSearch()" class="form-control" id="email" placeholder="{{t 'Email'}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="company" class="col-sm-2 control-label">{{t 'companies:ThirdPartyName'}}</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="searchItem.societe"  ng-enter="btnSearch()" class="form-control" id="company" placeholder="{{t 'companies:ThirdPartyName'}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tag" class="col-sm-2 control-label">{{t 'Categories'}}</label>
+                        <div class="col-sm-10">
+                            <input type="text" ng-model="searchItem.Tag"  ng-enter="btnSearch()" class="form-control" id="tag" placeholder="{{t 'Categories'}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-primary" ng-click="btnSearch()" type="button">{{t 'Search'}} <i class="glyphicon glyphicon-search"></i></button>
+                            <button class="btn btn-default" data-ng-click="addNewContact()">{{t 'companies:NewContact'}}</button>
+                            <h5 class="thin" ng-if="results !== 0 && endSearch"><strong>\{{resultsCount}}</strong> résultat(s) trouvé(s)</h5>
+                            <h5 class="thin" ng-if="!endSearch"><strong>Traitement en cours</strong></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-										<table class="info-table">
-											<tbody>
-												<tr ng-if="result.societe.name">
-													<th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
-													<td class="h5 blue">\{{result.societe.name}}</td>
-												</tr>
-												<tr ng-if="result.email">
-													<th scope="row">{{t 'Email'}}</th>
-													<td>\{{result.email}}</td>
-												</tr>
-												<tr ng-if="result.poste">
-													<th scope="row">{{t 'companies:PostOrFunction'}}</th>
-													<td>\{{result.poste}}</td>
-												</tr>
-												<tr ng-if="result.phone">
-													<th scope="row">{{t 'companies:Tel-Fixe'}}</th>
-													<td>\{{result.phone}}</td>
-												</tr>
-												<tr ng-if="result.phone_mobile">
-													<th scope="row">{{t 'companies:Tel-Mobile'}}</th>
-													<td>\{{result.phone_mobile}}</td>
-												</tr>
-												<tr ng-if="result.Tag">
-													<th scope="row">{{t 'Keywords'}}</th>
-													<td>\{{result.Tag}}</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:Newsletter'}}</th>
-													<td>
-														<input type="checkbox" ng-disabled data-ng-model="result.newsletter" data-ng-checked="result.newsletter"/>
-													</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:SendEmailing'}}</th>
-													<td>
-														<input type="checkbox" ng-disabled data-ng-model="result.sendEmailing" data-ng-checked="result.sendEmailing"/>
-													</td>
-												</tr>
-												<tr>
-													<th scope="row">{{t 'companies:SendSMS'}}</th>
-													<td>
-														<input type="checkbox" ng-disabled data-ng-model="result.sendSMS" data-ng-checked="result.sendSMS"/>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+        </div><!-- /.row -->
+        <div class="row margin-top">
+            <ul class="unstyled-list">
+                <li>
+                    <ul class="message-menu">
+                        <li ng-repeat="result in results" style="cursor: pointer">
+                            <div class="row margin-bottom">
+                                <div class="col-md-6">
+                                    <a ng-href="" title="\{{result.name}}" ng-click="showContact(result._id)">
+                                        <strong class="blue">\{{result.name}}</strong>
+                                        <small class="tag \{{result.status.css}} glossy">\{{result.status.name|| 'indéfini'}}</small>
+                                    </a>
+                                    <table class="info-table">
+                                        <tbody>
+                                            <tr ng-if="result.societe.name">
+                                                <th width="40%" scope="row">{{t 'companies:ThirdPartyName'}}</th>
+                                                <td class="h5"><a ng-href="#!/societes/\{{result.societe.id}}"  ng-class="{blue:result.societe.id, red:!result.societe.id}">\{{result.societe.name}}</a></td>
+                                            </tr>
+                                            <tr ng-if="result.email">
+                                                <th scope="row">{{t 'Email'}}</th>
+                                                <td>\{{result.email}}</td>
+                                            </tr>
+                                            <tr ng-if="result.poste">
+                                                <th scope="row">{{t 'companies:PostOrFunction'}}</th>
+                                                <td>\{{result.poste}}</td>
+                                            </tr>
+                                            <tr ng-if="result.phone">
+                                                <th scope="row">{{t 'companies:Tel-Fixe'}}</th>
+                                                <td>\{{result.phone}}</td>
+                                            </tr>
+                                            <tr ng-if="result.phone_mobile">
+                                                <th scope="row">{{t 'companies:Tel-Mobile'}}</th>
+                                                <td>\{{result.phone_mobile}}</td>
+                                            </tr>
+                                            <tr ng-if="result.Tag">
+                                                <th scope="row">{{t 'Keywords'}}</th>
+                                                <td>\{{result.Tag}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">{{t 'companies:Newsletter'}}</th>
+                                                <td>
+                                                    <input type="checkbox" ng-disabled data-ng-model="result.newsletter" data-ng-checked="result.newsletter"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">{{t 'companies:SendEmailing'}}</th>
+                                                <td>
+                                                    <input type="checkbox" ng-disabled data-ng-model="result.sendEmailing" data-ng-checked="result.sendEmailing"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">{{t 'companies:SendSMS'}}</th>
+                                                <td>
+                                                    <input type="checkbox" ng-disabled data-ng-model="result.sendSMS" data-ng-checked="result.sendSMS"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-									</a>
-								</div>
-							</div>
+                        </li>
 
-						</li>
+                    </ul>
+                </li>
 
-					</ul>
-				</li>
-
-			</ul>
-		</div>
-	</div>
-	<!--
-		<pagination 
-			total-items="resultsCount" 
-			ng-model="currentPage" 
-			max-size="maxSize" 
-			class="pagination-sm" 
-			boundary-links="true" 
-			items-per-page="numPerPage"
-			previous-text ="Précédent" next-text="Suivant"
-			first-text="Premier" last-text="Dernier">
-		</pagination>
-	-->
+            </ul>
+        </div>
+    </div>
+    <!--
+            <pagination 
+                    total-items="resultsCount" 
+                    ng-model="currentPage" 
+                    max-size="maxSize" 
+                    class="pagination-sm" 
+                    boundary-links="true" 
+                    items-per-page="numPerPage"
+                    previous-text ="Précédent" next-text="Suivant"
+                    first-text="Premier" last-text="Dernier">
+            </pagination>
+    -->
 
 </section>

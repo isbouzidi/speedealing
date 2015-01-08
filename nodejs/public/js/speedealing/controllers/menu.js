@@ -28,10 +28,8 @@ angular.module('mean.system').controller('MenuController', ['$rootScope', '$scop
 
 		$scope.searchQuery = function() {
 			if ($scope.searchQueryItem.length) {
-				$rootScope.searchQuery = $scope.searchQueryItem;
+				$rootScope.searchQuery = {lastname : $scope.searchQueryItem};
 				$location.path("/search");
-
-				//$location.path('/search').search('q',$scope.searchQueryItem);
 				$rootScope.showSearchInput = false;
 				$scope.searchQueryItem = "";
 

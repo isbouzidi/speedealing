@@ -4,6 +4,10 @@
 angular.module('mean.system').controller('SearchController', ['$rootScope', '$scope', '$location', '$routeParams', '$modal', 'Global', 'socket', '$http', function ($rootScope, $scope, $location, $routeParams, $modal, Global, socket, $http) {
 		$scope.global = Global;
 
+		$scope.endSearch = true;
+		$scope.results = 0;
+		$scope.resultsCount = 0;
+
 		$scope.init = function () {
 
 			if ($rootScope.searchQuery) {
@@ -27,13 +31,15 @@ angular.module('mean.system').controller('SearchController', ['$rootScope', '$sc
 
 		$scope.find = function (item) {
 
-			if (item) {
+			if (item && (item.firstname || item.lastname || item.societe || item.email || item.Tag)) {
+				$scope.endSearch = false;
 				$http({method: 'GET', url: '/api/contact/searchEngine',
 					params: {
 						item: item,
 						limit: 300
 					},
 				}).success(function (data) {
+					$scope.endSearch = true;
 					$scope.results = data;
 					$scope.resultsCount = data.length;
 				});
@@ -62,8 +68,13 @@ angular.module('mean.system').controller('SearchController', ['$rootScope', '$sc
 					}
 				}
 			});
+
+			modalInstance.result.then(function (selectedItem) {
+			}, function () {
+				$scope.search();
+			});
 		};
-		
+
 		$scope.addNewContact = function () {
 
 			var modalInstance = $modal.open({

@@ -1,72 +1,72 @@
 {
-	"CHARSET": "UTF-8",
-	"DIRECTION": "ltr",
-	"SeparatorDecimal": ",",
-	"SeparatorThousand": ",",
-	"date": {
-		"day": {
-			"aShort2": [
-				"Di",
-				"Lu",
-				"Ma",
-				"Me",
-				"Je",
-				"Ve",
-				"Sa"
-			],
-			"aShort3": [
-				"Dim",
-				"Lun",
-				"Mar",
-				"Mer",
-				"Jeu",
-				"Ven",
-				"Sam"
-			],
-			"Short1": {
-				"Sunday": "D",
-				"Monday": "L",
-				"Tuesday": "M",
-				"Wednesday": "M",
-				"Thursday": "J",
-				"Friday": "V",
-				"Saturday": "S"
-			},
-			"Short2": {
-				"Sunday": "Di",
-				"Monday": "Lu",
-			    "Tuesday": "Ma",
-			    "Wednesday": "Me",
-			    "Thursday": "Je",
-			    "Friday": "Ve",
-			    "Saturday": "Sa"
-			},
-			"Sunday": "Dimanche",
-			"Monday": "Lundi",
-			"Tuesday": "Mardi",
-			"Wednesday": "Mercredi",
-			"Thursday": "Jeudi",
-			"Friday": "Vendredi",
-			"Saturday": "Samedi",
-			"sunday": "dimanche",
-			"monday": "lundi",
-			"tuesday": "mardi",
-			"wednesday": "mercredi",
-			"thursday": "jeudi",
-			"friday": "vendredi",
-			"saturday": "samedi"
-		},
-		"format": {
-			"java": {
-				"day": "dd/MM/yyyy",
-				"dayhour": "dd/MM/yyyy HH:mm",
-				"dayhoursec": "dd/MM/yyyy HH:mm:ss"
-			},
-			"jquery": {
-				"day": "dd/mm/yy"
-			}
-		}
-	},
+    "CHARSET": "UTF-8",
+    "DIRECTION": "ltr",
+    "SeparatorDecimal": ",",
+    "SeparatorThousand": ",",
+    "date": {
+        "day": {
+            "aShort2": [
+                "Di",
+                "Lu",
+                "Ma",
+                "Me",
+                "Je",
+                "Ve",
+                "Sa"
+            ],
+            "aShort3": [
+                "Dim",
+                "Lun",
+                "Mar",
+                "Mer",
+                "Jeu",
+                "Ven",
+                "Sam"
+            ],
+            "Short1": {
+                "Sunday": "D",
+                "Monday": "L",
+                "Tuesday": "M",
+                "Wednesday": "M",
+                "Thursday": "J",
+                "Friday": "V",
+                "Saturday": "S"
+            },
+            "Short2": {
+                "Sunday": "Di",
+                "Monday": "Lu",
+                "Tuesday": "Ma",
+                "Wednesday": "Me",
+                "Thursday": "Je",
+                "Friday": "Ve",
+                "Saturday": "Sa"
+            },
+            "Sunday": "Dimanche",
+            "Monday": "Lundi",
+            "Tuesday": "Mardi",
+            "Wednesday": "Mercredi",
+            "Thursday": "Jeudi",
+            "Friday": "Vendredi",
+            "Saturday": "Samedi",
+            "sunday": "dimanche",
+            "monday": "lundi",
+            "tuesday": "mardi",
+            "wednesday": "mercredi",
+            "thursday": "jeudi",
+            "friday": "vendredi",
+            "saturday": "samedi"
+        },
+        "format": {
+            "java": {
+                "day": "dd/MM/yyyy",
+                "dayhour": "dd/MM/yyyy HH:mm",
+                "dayhoursec": "dd/MM/yyyy HH:mm:ss"
+            },
+            "jquery": {
+                "day": "dd/mm/yy"
+            }
+        }
+    },
     "FormatDateShort": "%d/%m/%Y",
     "FormatHourShort": "%H:%M",
     "FormatHourShortDuration": "%H:%M",
@@ -201,7 +201,7 @@
     "Search": "Rechercher",
     "SearchOf": "Recherche de",
     "Valid": "Valider",
-	"ToBill": "Facturer",
+    "ToBill": "Facturer",
     "Approve": "Approuver",
     "ReOpen": "Réouvrir",
     "Upload": "Envoyer fichier",
@@ -398,7 +398,7 @@
     "ContactsForCompany": "Contacts de ce tiers",
     "ContactsAddressesForCompany": "Contacts/adresses de ce tiers",
     "AddressesForCompany": "Adresses de ce tiers",
-	"Address": "Adresse",
+    "Address": "Adresse",
     "ActionsOnCompany": "Événements vis à vis de ce tiers",
     "ActionsOnMember": "Événements vis à vis de cet adhérent",
     "NActions": "%s événements",
@@ -708,5 +708,5 @@
     "PreviousMonth": "Mois précédent",
     "NextMonth": "Mois suivant",
     "Download": "Télécharger",
-	"Potential":"Potentiel"
+    "Potential": "Potentiel"
 }

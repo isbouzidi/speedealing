@@ -1,5 +1,4 @@
 "use strict";
-
 var mongoose = require('mongoose'),
 		fs = require('fs'),
 		csv = require('csv'),
@@ -8,46 +7,32 @@ var mongoose = require('mongoose'),
 		dateFormat = require('dateformat'),
 		gridfs = require('../controllers/gridfs'),
 		config = require('../../config/config');
-
 var SocieteModel = mongoose.model('societe');
 var ContactModel = mongoose.model('contact');
-
 module.exports = function (app, passport, auth) {
 
 	var contact = new Contact();
-
 	//create a new contact
 	app.post('/api/contact', auth.requiresLogin, contact.create);
-
 	//get all contacts of a given company
 	app.get('/api/contact', auth.requiresLogin, contact.showAll);
-
 	//get all contacts for search engine
 	app.get('/api/contact/searchEngine', auth.requiresLogin, contact.showList);
-
 	app.get('/api/contact/export', auth.requiresLogin, contact.export);
-
 	// list all contact for a societe
 	app.get('/api/contact/societe', auth.requiresLogin, contact.societe);
-
 	//get a contact
 	app.get('/api/contact/:contactId', auth.requiresLogin, contact.findOne);
-
 	//update a contact
 	app.put('/api/contact/:contactId', auth.requiresLogin, contact.update);
-
 	//delete a contact
 	app.del('/api/contact/:contactId', auth.requiresLogin, contact.delete);
-
 	//get all contacts
 	app.get('/api/contacts', auth.requiresLogin, contact.read);
-
 	app.post('/api/contact/autocomplete', auth.requiresLogin, function (req, res) {
 		console.dir(req.body.filter);
-
 		if (req.body.filter === null)
 			return res.send(200, {});
-
 		var query = {
 			"$or": [
 				{name: new RegExp(req.body.filter.filters[0].value, "i")},
@@ -55,12 +40,10 @@ module.exports = function (app, passport, auth) {
 				{code_client: new RegExp(req.body.filter.filters[0].value, "i")}
 			]
 		};
-
 		if (req.query.fournisseur) {
 			query.fournisseur = req.query.fournisseur;
 		} else // customer Only
 			query.Status = {"$nin": ["ST_NO", "ST_NEVER"]};
-
 		console.log(query);
 		SocieteModel.find(query, {}, {limit: req.body.take}, function (err, docs) {
 			if (err) {
@@ -70,7 +53,6 @@ module.exports = function (app, passport, auth) {
 			}
 
 			var result = [];
-
 			if (docs !== null)
 				for (var i in docs) {
 					//console.log(docs[i].ref);
@@ -83,9 +65,7 @@ module.exports = function (app, passport, auth) {
 						result[i].cptBilling.id = docs[i]._id;
 					} else
 						result[i].cptBilling = docs[i].cptBilling;
-
 					result[i].price_level = docs[i].price_level;
-
 					// add address
 					result[i].address = {};
 					result[i].address.name = docs[i].name;
@@ -93,7 +73,6 @@ module.exports = function (app, passport, auth) {
 					result[i].address.zip = docs[i].zip;
 					result[i].address.town = docs[i].town;
 					result[i].address.country = docs[i].country;
-
 					result[i].mode_reglement_code = docs[i].mode_reglement;
 					result[i].cond_reglement_code = docs[i].cond_reglement;
 				}
@@ -101,17 +80,13 @@ module.exports = function (app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
-
 	app.post('/api/contact/autocomplete/:field', auth.requiresLogin, function (req, res) {
 		//console.dir(req.body);
 
 		if (req.body.filter == null)
 			return res.send(200, {});
-
 		var query = {};
-
 		query[req.params.field] = new RegExp(req.body.filter.filters[0].value, "i");
-
 		if (typeof ContactModel.schema.paths[req.params.field].options.type == "object")
 			//console.log(query);
 			ContactModel.aggregate([
@@ -128,7 +103,6 @@ module.exports = function (app, passport, auth) {
 				}
 				//console.log(docs);
 				var result = [];
-
 				if (docs !== null)
 					for (var i in docs) {
 						//result.push({text: docs[i]._id});
@@ -137,34 +111,25 @@ module.exports = function (app, passport, auth) {
 
 				return res.send(200, result);
 			});
-
 		//TODO write code for distinct attribute
 	});
-
 	app.post('/api/contact/spam', /*ensureAuthenticated,*/ function (req, res) {
 		req.connection.setTimeout(300000);
-
-
-
 		var convertRow = function (tab, row, index, cb) {
 			var contact = {};
 			for (var i = 0; i < row.length; i++) {
 				if (tab[i] === "false")
 					continue;
-
 				if (row[i])
 					contact[tab[i]] = row[i];
-
 			}
 			cb(contact);
 		};
-
 		if (req.files) {
 			var filename = req.files.filedata.path;
 			if (fs.existsSync(filename)) {
 
 				var tab = [];
-
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
 						.transform(function (row, index, callback) {
@@ -177,17 +142,13 @@ module.exports = function (app, passport, auth) {
 								//console.log(data);
 
 								ContactModel.update({email: data.email}, {$set: {sendEmailing: false}}, {multi: true}, function (err, doc) {
-									if(err)
+									if (err)
 										console.log(err);
-									
-									if(doc)
+									if (doc)
 										console.log(data.email + " found and unsubcribe");
-
 									callback();
 								});
-
 							});
-
 							//return row;
 						}/*, {parallel: 1}*/)
 						.on("end", function (count) {
@@ -204,10 +165,8 @@ module.exports = function (app, passport, auth) {
 			}
 		}
 	});
-
 	app.post('/api/contact/import', /*ensureAuthenticated,*/ function (req, res) {
 		req.connection.setTimeout(300000);
-
 		var conv_id = {
 			civilite: {
 				"": "NO",
@@ -257,30 +216,24 @@ module.exports = function (app, passport, auth) {
 				"Niveau 0": "PL_NONE"
 			}
 		};
-
 		var is_Array = [
 			"Tag"
 		];
-
 		var convertRow = function (tab, row, index, cb) {
 			var contact = {
 				Status: "ST_ENABLE",
 				tag: []
 			};
 			contact.country_id = "FR";
-
 			for (var i = 0; i < row.length; i++) {
 				if (tab[i] === "false")
 					continue;
-
 				/* optional */
 				if (tab[i] && tab[i].indexOf(".") >= 0) {
 					var split = tab[i].split(".");
-
 					if (row[i]) {
 						if (typeof contact[split[0]] === "undefined")
 							contact[split[0]] = {};
-
 						contact[split[0]][split[1]] = row[i];
 					}
 					continue;
@@ -290,7 +243,6 @@ module.exports = function (app, passport, auth) {
 
 					if (tab[i] == "civilite" && conv_id[tab[i]][row[i]] === undefined)
 						row[i] = "";
-
 					if (conv_id[tab[i]][row[i]] === undefined) {
 						console.log("error : unknown " + tab[i] + "->" + row[i] + " ligne " + index);
 						return;
@@ -303,7 +255,6 @@ module.exports = function (app, passport, auth) {
 					case "name" :
 						var name = row[i].split(" ");
 						contact.firstname = name[0];
-
 						if (name[1]) {
 							contact.lastname = name[1];
 							for (var j = 2; j < name.length; j++)
@@ -329,11 +280,9 @@ module.exports = function (app, passport, auth) {
 							var seg = row[i].split(',');
 							if (typeof contact[tab[i]] != "object")
 								contact[tab[i]] = [];
-
 							for (var j = 0; j < seg.length; j++) {
 								seg[j] = seg[j].replace(/\./g, "");
 								seg[j] = seg[j].trim();
-
 								contact[tab[i]].push({text: seg[j]});
 							}
 							//console.log(typeof contact[tab[i]]);
@@ -344,11 +293,9 @@ module.exports = function (app, passport, auth) {
 							var seg = JSON.parse(row[i]);
 							if (typeof contact.Tag != "object")
 								contact.Tag = [];
-
 							for (var j = 0; j < seg.length; j++) {
 								seg[j] = seg[j].replace(/\./g, "");
 								seg[j] = seg[j].trim();
-
 								contact.Tag.push({text: seg[j]});
 							}
 							//console.log(typeof contact[tab[i]]);
@@ -390,7 +337,6 @@ module.exports = function (app, passport, auth) {
 						if (row[i]) {
 							if (!_.isArray(contact.notes))
 								contact.notes = [];
-
 							contact[tab[i]].push({
 								author: {
 									name: "Inconnu"
@@ -408,13 +354,11 @@ module.exports = function (app, passport, auth) {
 			//console.log(contact);
 			cb(contact);
 		};
-
 		if (req.files) {
 			var filename = req.files.filedata.path;
 			if (fs.existsSync(filename)) {
 
 				var tab = [];
-
 				csv()
 						.from.path(filename, {delimiter: ';', escape: '"'})
 						.transform(function (row, index, callback) {
@@ -437,7 +381,6 @@ module.exports = function (app, passport, auth) {
 										function (cb) {
 
 											var querySoc = {};
-
 											if (data.societe) {
 												//console.log(data.societe);
 												return cb();
@@ -445,7 +388,6 @@ module.exports = function (app, passport, auth) {
 												querySoc = {code_client: data.code_client};
 											else
 												querySoc = {oldId: data.oldId};
-
 											SocieteModel.findOne(querySoc, function (err, societe) {
 												if (err) {
 													console.log(err);
@@ -461,32 +403,26 @@ module.exports = function (app, passport, auth) {
 													id: societe._id,
 													name: societe.name
 												};
-
 												cb();
-
 											});
 										}, function (cb) {
 
 											var query = {
 												$or: []
 											};
-
 											if (data._id)
 												query.$or.push({_id: data._id});
-
 											if (data.email)
 												query.$or.push({email: data.email.toLowerCase()});
 											//if (data.phone !== null)
 											//	query.$or.push({phone: data.phone});
 											if (data.phone_mobile)
 												query.$or.push({phone_mobile: data.phone_mobile});
-
 											if (!query.$or.length)
 												query = {
 													"societe.id": data.societe.id,
 													lastname: (data.lastname ? data.lastname.toUpperCase() : "")
 												};
-
 											//console.log(query);
 
 											ContactModel.findOne(query, function (err, contact) {
@@ -500,7 +436,6 @@ module.exports = function (app, passport, auth) {
 													contact = new ContactModel(data);
 												} else {
 													console.log("Contact found");
-
 													if (data.Tag)
 														data.Tag = _.union(contact.Tag, data.Tag); // Fusion Tag
 
@@ -527,22 +462,18 @@ module.exports = function (app, passport, auth) {
 										}], function () {
 
 									});
-
 								} else {
 									var query = {
 										$or: []
 									};
-
 									if (data._id)
 										query.$or.push({_id: data._id});
-
 									if (data.email)
 										query.$or.push({email: data.email});
 									//if (data.phone !== null)
 									//	query.$or.push({phone: data.phone});
 									if (data.phone_mobile)
 										query.$or.push({phone_mobile: data.phone_mobile});
-
 									if (query.$or.length) {
 										ContactModel.findOne(query, function (err, contact) {
 
@@ -562,7 +493,6 @@ module.exports = function (app, passport, auth) {
 													delete data.town;
 												if (contact.societe && (contact.societe.name || contact.societe.id))
 													delete data.societe;
-
 												if (data.Tag)
 													data.Tag = _.union(contact.Tag, data.Tag); // Fusion Tag
 
@@ -602,7 +532,6 @@ module.exports = function (app, passport, auth) {
 									}
 								}
 							});
-
 							//return row;
 						}/*, {parallel: 1}*/)
 						.on("end", function (count) {
@@ -619,25 +548,20 @@ module.exports = function (app, passport, auth) {
 			}
 		}
 	});
-
 	app.param('contactId', contact.contact);
 };
-
-
 function Contact() {
 }
 
 Contact.prototype = {
 	contact: function (req, res, next, id) {
-		//TODO Check ACL here
+//TODO Check ACL here
 		var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 		var query = {};
-
 		if (checkForHexRegExp.test(id))
 			query = {_id: id};
 		else
 			query = {code_client: id};
-
 		//console.log(query);
 
 		ContactModel.findOne(query, function (err, doc) {
@@ -654,12 +578,10 @@ Contact.prototype = {
 
 		var contact = new ContactModel(req.body);
 		contact.user_creat = req.user._id;
-
 		contact.save(function (err, doc) {
 			if (err) {
 				console.log(err);
 				return res.json(500, err);
-
 			}
 
 			res.json(200, contact);
@@ -682,10 +604,8 @@ Contact.prototype = {
 	showAll: function (req, res) {
 
 		var query = {};
-
 		if (req.query.Status !== "ALL")
 			query = {"Status": req.query.Status};
-
 		ContactModel.find(query, function (err, doc) {
 			if (err) {
 				console.log(err);
@@ -697,30 +617,43 @@ Contact.prototype = {
 		});
 	},
 	showList: function (req, res) {
-
+		
+		var query = JSON.parse(req.query.item);
 		//var query = {name: new RegExp(req.query.item, "i")};
 		var sort = {};
+		
+		var request = {};
+		
+		if(query.firstname)
+			request.firstname = new RegExp(query.firstname, "gi");
+		
+		if(query.lastname)
+			request.lastname = new RegExp(query.lastname, "gi");
+		
+		if(query.societe)
+			request["societe.name"] = new RegExp(query.societe, "gi");
+		
+		if(query.Tag)
+			request.Tag = new RegExp(query.Tag, "gi");
+			
+		if(query.email)
+			request.email = new RegExp(query.email, "gi");
+			
+		if (req.query.limit)
+			sort.limit = parseInt(req.query.limit);
 
-		var query = {
-			"$or": [
-				{"lastname": new RegExp(req.query.item, "gi")},
-				{"firstname": new RegExp(req.query.item, "gi")},
-				{"societe.name": new RegExp(req.query.item, "gi")},
-				{"Tag": new RegExp(req.query.item, "gi")},
-				{"email": new RegExp(req.query.item, "gi")}
-			]
+		sort.sort = {
+			lastname: 1,
+			firstname: 1
 		};
 
-		//if (req.query.limit)
-		//	sort.limit = parseInt(req.query.limit);
-
-		ContactModel.find(query, "firstname lastname societe.name Tag phone Status email phone_mobile newsletter sendEmailing sendSMS", sort, function (err, doc) {
+		ContactModel.find(request, "firstname lastname societe Tag phone Status email phone_mobile newsletter sendEmailing sendSMS", sort, function (err, doc) {
 			if (err) {
 				console.log(err);
 				res.send(500, doc);
 				return;
 			}
-
+			
 			res.json(200, doc);
 		});
 	},
@@ -743,7 +676,6 @@ Contact.prototype = {
 
 		var contact = req.contact;
 		contact = _.extend(contact, req.body);
-
 		contact.save(function (err, doc) {
 
 			if (err) {
@@ -769,28 +701,21 @@ Contact.prototype = {
 	export: function (req, res) {
 		if (!req.user.admin)
 			return console.log("export non autorised");
-
 		var json2csv = require('json2csv');
-
 		ContactModel.find({Tag: "cdaf"/*, sendEmailing: {$ne :true}, sendSMS: {$ne: true}*/}, function (err, contacts) {
 			//console.log(contact);
 
 			for (var i = 0; i < contacts.length; i++) {
 				contacts[i].optional = contacts[i].societe.name;
-
 				//modify address
 				if (contacts[i].address)
 					contacts[i].address = contacts[i].address.replace(/\n/g, 0x0A);
 			}
 
 			var csv = "";
-
-
 			var fields = ['_id', 'firstname', 'lastname', 'optional', 'societe', 'poste', 'address', 'zip', 'town', 'phone', 'phone_mobile', 'email', 'Tag'];
-
 			for (var i = 0; i < fields.length; i++) {
 				csv += fields[i];
-
 				if (i === fields.length)
 					csv += "\n";
 				else
@@ -820,7 +745,6 @@ Contact.prototype = {
 			res.type('application/text');
 			res.attachment('contact_' + dateFormat(new Date(), "ddmmyyyy_HH:MM") + '.csv');
 			res.send(csv);
-
 			//console.log(csv);
 			//});
 		});
