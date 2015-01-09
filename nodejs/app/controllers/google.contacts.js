@@ -400,7 +400,7 @@ function insertContactsForOneUser(contacts, user, callback) {
 
 function createRemoteContactGroup(user, callback) {
 	var c = new GoogleContacts(gcommon.getDefaultGoogleContactsParams(user));
-	c.createGroup({'title': 'Crm'},
+	c.createGroup({'title': 'Crm-js'},
 	{'email': user.email},
 	function (err, group_href) {
 		if (err)
@@ -1388,12 +1388,12 @@ GoogleContacts.prototype._contactToXML = function (contact) {
 
 
 	/*if (contact.societe && contact.societe.id) {
-		x.startElement('gContact:externalId')
-				.writeAttribute('label', 'societeId')
-				.writeAttribute('rel', 'http://schemas.google.com/g/2005#organization')
-				.writeAttribute('value', contact.societe.id.toString())
-				.endElement();
-	}*/
+	 x.startElement('gContact:externalId')
+	 .writeAttribute('label', 'societeId')
+	 .writeAttribute('rel', 'http://schemas.google.com/g/2005#organization')
+	 .writeAttribute('value', contact.societe.id.toString())
+	 .endElement();
+	 }*/
 
 	/*x.startElement('gContact:externalId')
 	 .writeAttribute('label', 'contactId')
