@@ -1,0 +1,183 @@
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'requestBuy:NumRequestBuy'}} : \{{requestBuy.ref}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Designation'}}</b></label>
+            <span class="margin-left"
+                editable-text="requestBuy.title" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="designation">
+                \{{requestBuy.title|| "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="designation.$show()" 
+                  ng-hide="designation.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:OrderDate'}}</b></label>
+            <a href="#"
+               editable-date="requestBuy.datec"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+                \{{ (requestBuy.datec | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:DeliveryDate'}}</b></label>
+            <a href="#"
+               editable-date="requestBuy.date_livraison"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+                \{{ (requestBuy.date_livraison | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:DeliveryControl'}}</b></label>
+            <input type="checkbox" 
+                   data-ng-model="requestBuy.controlLiv" 
+                   data-ng-checked="requestBuy.controlLiv" 
+                   data-ng-change="update()" />
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Supplier'}}</b></label>
+            <span class="margin-left"
+                editable-text="requestBuy.fournisseur" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-typeahead="supplier as supplier.name for supplier in supplierAutoComplete($viewValue, 'name') | filter:{name:$viewValue}"
+                e-form="supplier">
+                \{{requestBuy.fournisseur.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="supplier.$show()" 
+                  ng-hide="supplier.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:SupplierOrderRef'}}</b></label>
+            <span class="margin-left"
+                editable-text="requestBuy.ref_fournisseur" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="supplier_order_ref">
+                \{{requestBuy.ref_fournisseur|| "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="supplier_order_ref.$show()" 
+                  ng-hide="supplier_order_ref.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Products'}}</b></label>
+            <tags-input 
+                ng-model="requestBuy.products" 
+                placeholder="Ajouter produit..." 
+                display-property="name"
+                on-tag-added='update()' on-tag-removed="update()">
+                <auto-complete source="productAutoComplete($query)" min-length="-1"></auto-complete>
+            </tags-input>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Details'}}</b></label>
+            <a href="#" 
+               editable-textarea="requestBuy.desc" 
+               e-rows="7" e-cols="40"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="details">
+                <pre>\{{ requestBuy.desc || 'Non défini' }}</pre>
+            </a>
+            <span 
+                class="icon-pencil grey" 
+                ng-click="details.$show()"
+                ng-hide="details.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:MttHT'}}</b></label>
+            <span class="margin-left"
+                editable-number="requestBuy.total_ht" 
+                buttons="no"
+                e-min='0' e-step='0.01'
+                onaftersave="update()"
+                blur="submit"
+                e-form="mtt">
+                \{{requestBuy.total_ht || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="mtt.$show()" 
+                  ng-hide="mtt.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Client'}}</b></label>
+            <span class="margin-left"
+                editable-text="requestBuy.client" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}"
+                e-form="client">
+                \{{requestBuy.client.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="client.$show()" 
+                  ng-hide="client.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Vehicle'}}</b></label>
+            <span class="margin-left"
+                editable-text="requestBuy.vehicule.name"
+                buttons="no"
+                e-typeahead="vehicule as vehicule.immat for vehicule in vehiculeAutoComplete($viewValue)"
+                e-typeahead-on-select="requestBuy.vehicule.id = $item.id; requestBuy.vehicule.name = $item.immat; update()"
+                e-form="vehicle">
+                \{{requestBuy.vehicule.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="vehicle.$show()" 
+                  ng-hide="vehicle.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Author'}}</b></label>
+            \{{requestBuy.author.name|| "Non défini"}}
+            
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:ControlledBy'}}</b></label>
+            <span class="margin-left"
+                editable-text="requestBuy.controlBy" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-typeahead="user as user.name for user in userAutoComplete($viewValue, 'immat') | filter:{immat:$viewValue}"
+                e-form="controlled_by">
+                \{{requestBuy.controlBy.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="controlled_by.$show()" 
+                  ng-hide="controlled_by.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'requestbuy:Status'}}</b></label>
+            <span class="tag small glossy" 
+                  data-ng-class="requestBuy.status.css" 
+                  editable-select="requestBuy.Status" 
+                  buttons="no"
+                  onaftersave="update()"
+                  blur="submit"
+                  e-ng-options="s.id as s.label for (id,s) in extrafield.fields.statusBuy.values">
+                \{{requestBuy.status.name|| "Non défini"}}</span>
+        </div>
+    </fieldset>
+</div>

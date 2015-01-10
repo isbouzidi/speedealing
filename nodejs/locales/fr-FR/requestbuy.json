@@ -1,0 +1,19 @@
+{
+    "ListOfReqBuy": "List des demandes d'achats",
+    "NewRequestBuy":"Nouvelle demande d'achat",
+    "Designation":"Désignation",
+    "OrderDate":"Date commande",
+    "DeliveryDate":"Date livraison",
+    "DeliveryControl":"Controle livraison",
+    "Supplier":"Fournisseur",
+    "SupplierOrderRef":"Ref CMD fournisseur",
+    "Products":"Achats",
+    "Details":"Détails",
+    "MttHT":"Montant HT",
+    "Client":"Client",
+    "Vehicle":"Véhicule",
+    "Author":"Demandé par",
+    "ControlledBy":"Controlé par",
+    "Status":"Etat",
+    "NumRequestBuy":"Demande d'achat N°"
+}

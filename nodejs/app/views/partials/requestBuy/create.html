@@ -1,0 +1,106 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'requestbuy:NewRequestBuy'}}</h3>
+    
+    <fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+        <div class="field-block">
+            <h4>{{t 'Hello'}}</h4>
+            <p>Bienvenue sur l'interface de création d'un demande d'achat.</p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Designation'}}</b></label>
+            <input type="text" data-ng-model="requestBuy.title" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:OrderDate'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="requestBuy.datec" is-open="opened[0]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:DeliveryDate'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="requestBuy.date_livraison" is-open="opened[1]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:DeliveryControl'}}</b></label>
+            <input type="checkbox" data-ng-model="requestBuy.controlLiv"/>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Supplier'}}</b></label>
+            <input required type="text" data-ng-model="requestBuy.fournisseur" typeahead="supplier as supplier.name for supplier in supplierAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:SupplierOrderRef'}}</b></label>
+            <input type="text" data-ng-model="requestBuy.ref_fournisseur" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Products'}}</b></label>
+            <!--<input type="text" data-ng-model="requestBuy.products" class="input" autocomplete="off">-->
+            <tags-input 
+                ng-model="requestBuy.products" 
+                placeholder="Ajouter produit..." 
+                display-property="name">
+                <auto-complete source="productAutoComplete($query)" min-length="-1"></auto-complete>
+            </tags-input>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Details'}}</b></label>
+            <textarea class='input' rows='3' cols="60" data-ng-model="requestBuy.desc"></textarea>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:MttHT'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='0.01' ng-model="requestBuy.total_ht" class="form-control">                    
+                </span>
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Client'}}</b></label>
+            <input type="text" data-ng-model="requestBuy.client" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Vehicle'}}</b></label>
+            <input type="text" data-ng-model="requestBuy.vehicule" typeahead-on-select="requestBuy.vehicule.name = $item.immat" typeahead="vehicule as vehicule.immat for vehicule in vehiculeAutoComplete($viewValue)" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Author'}}</b></label>
+            <input type="text" data-ng-model="requestBuy.author.name" data-ng-disabled="true" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:ControlledBy'}}</b></label>
+            <input type="text" data-ng-model="requestBuy.controlBy" typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="name" class="form-control" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'requestbuy:Status'}}</b></label>
+            <select class="form-control"
+                ng-model="requestBuy.Status"
+                ng-options="s as s.label for (id,s) in extrafield.fields.statusBuy.values">
+            </select>            
+        </div>
+        
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t 'Create'}}
+            </button>
+        </div>	
+    </fieldset>
+</form>
