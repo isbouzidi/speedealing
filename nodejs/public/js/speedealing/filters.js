@@ -141,3 +141,12 @@ angular.module('mean.system').filter('userGroupArrayFilter', function () {
 		return myArray.join(', ');
 	};
 });
+angular.module('mean.system').filter('chaumeilProductFilter', function() {
+  return function(myArray) {
+      var listP = [];
+      for(var key in myArray){
+          listP.push(myArray[key].name);
+      }
+    return listP.join(', ');
+  };
+});
