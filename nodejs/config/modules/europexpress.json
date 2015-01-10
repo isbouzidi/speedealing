@@ -1,0 +1,141 @@
+{
+	"_id": "module:EuropExpress",
+	"enabled": true,
+	"boxes": [],
+	"const": [],
+	"rights": {
+		"europexpressCourses": [
+			{
+				"desc": "Lire les courses",
+				"perm": {
+					"read": true
+				}
+			},
+			{
+				"desc": "Creer ou modifier les courses",
+				"perm": {
+					"create": true
+				}
+			},
+			{
+				"desc": "Supprimer les courses",
+				"perm": {
+					"delete": false
+				}
+			},
+			{
+				"desc": "Voir la prefacturation",
+				"perm": {
+					"prefac": false
+				}
+			},
+			{
+				"desc": "Creer la facturation",
+				"perm": {
+					"createBills": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"numero": 1100,
+	"family": "projects",
+	"name": "EuropExpress",
+	"description": "Gestion de production Europ Express",
+	"version": "0.1.73",
+	"const_name": "MAIN_MODULE_EUROPEXPRESS",
+	"picto": "action",
+	"config_page_url": [
+		"admin.php@europexpress"
+	],
+	"depends": [],
+	"requiredby": [],
+	"tabs": [],
+	"menus": {
+		"menu:production": {
+			"position": 30,
+			"perms": "europexpressCourses.read",
+			"enabled": "$conf->europexpress->enabled",
+			"usertype": 2,
+			"title": "Production",
+			"submenus": {
+				"menu:regulier": {
+					"position": 10,
+					"url": "#!/regulier",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Retour de tournées"
+				},
+				"menu:transports": {
+					"position": 20,
+					"url": "#!/module/europexpress/transport.html",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Saisie des transports"
+				},
+				"menu:mouvementstock": {
+					"position": 30,
+					"url": "#!/module/europexpress/mouvementstock.html",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Saisie des mouvements stocks"
+				},
+				"menu:listemouvementstock": {
+					"position": 30,
+					"url": "#!/module/europexpress/stock.html",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Liste des mouvements stocks"
+				},
+				"menu:vehicules": {
+					"position": 40,
+					"url": "#!/vehicule",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Véhicules"
+				},
+				"menu:gazoil_card": {
+					"position": 41,
+					"url": "#!/module/europexpress/gazoil_card.html",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Cartes Gazoil"
+				},
+				"menu:achats": {
+					"position": 50,
+					"url": "#!/requestBuy",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Demandes d'achats"
+				},
+				"menu:planningtournee": {
+					"position": 61,
+					"url": "#!/module/europexpress/planning.html",
+					"perms": "europexpressCourses.read",
+					"enabled": "$conf->europexpress->enabled",
+					"usertype": 2,
+					"title": "Planning des tournées"
+				}
+			}
+		},
+		"menu:factures": {
+			"submenus": {
+				"menu:billseuropexpress": {
+					"position": 4,
+					"url": "#!/module/europexpress/facturation.html",
+					"perms": "europexpressCourses.prefac",
+					"enabled": "$conf->facture->enabled",
+					"usertype": 2,
+					"title": "Pré-facturation"
+				}
+			}
+		}
+	}
+}
