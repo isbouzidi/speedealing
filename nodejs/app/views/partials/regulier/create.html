@@ -1,0 +1,83 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'regulier:NewRegulier'}}</h3>
+
+    <!-- Each form step should be wrapped in a fieldset -->
+    <!-- 1. Profile-->
+    <fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+        <div class="field-block">
+            <h4>{{t 'Hello'}}</h4>
+            <p>Bienvenue sur l'interface de création des trounées.</p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:Driver'}}</b></label>
+            
+                <input type="text" data-ng-model="regulier.driver" typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" class="input" autocomplete="off">
+                
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:RegulierDate'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="regulier.datec" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:Storehouse'}}</b></label>
+            <input type="text" data-ng-model="storehouse" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:Vehicle'}}</b></label>
+            <input type="text" data-ng-model="regulier.immatriculation" typeahead="vehicle.immat as vehicle.immat for vehicle in vehicleAutoComplete($viewValue)" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:Import'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='1' ng-model="regulier.import" class="form-control">
+                </span>
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:Export'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='1' ng-model="regulier.export" class="form-control">                    
+                </span>
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:Workload'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='1' ng-model="regulier.workload" class="form-control">
+                </span>
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'regulier:Ctrembour'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='1' ng-model="regulier.ctrembour" class="form-control">                    
+                </span>
+            </p>
+        </div>        
+                
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t 'Create'}}
+            </button>
+        </div>	
+    </fieldset>
+
+</form>
+

@@ -1,0 +1,108 @@
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">Fiche tournée</h3>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <label><b>{{t 'regulier:Driver'}}</b></label>
+            <span class="margin-left"
+                editable-text="regulier.driver" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-typeahead="user as user.name for user in userAutoComplete($viewValue, 'name') | filter:{name:$viewValue}"
+                e-form="driver">
+                \{{regulier.driver.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="driver.$show()" ng-hide="driver.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'regulier:RegulierDate'}}</b></label>
+            <a href="#"
+               editable-date="regulier.datec"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+
+                \{{ (regulier.datec | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'regulier:Storehouse'}}</b></label>
+            <span class="margin-left"
+                editable-text="regulier.storehouse.name" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="storehouse">
+                \{{regulier.storehouse.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="storehouse.$show()" ng-hide="storehouse.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'regulier:Vehicle'}}</b></label>
+            <span class="margin-left"
+                editable-text="regulier.immatriculation" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-typeahead="vehicule.immat as vehicule.immat for vehicule in vehicleAutoComplete($viewValue)"
+                e-form="vehicle">
+                \{{regulier.immatriculation || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="vehicle.$show()" ng-hide="vehicle.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'regulier:Import'}}</b></label>
+            <span class="margin-left"
+                editable-number="regulier.import" 
+                buttons="no"
+                e-min='0' e-step='1'
+                onaftersave="update()"
+                blur="submit"
+                e-form="import">
+                \{{regulier.import || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="import.$show()" ng-hide="import.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'regulier:Export'}}</b></label>
+            <span class="margin-left"
+                editable-number="regulier.export" 
+                buttons="no"
+                e-min='0' e-step='1'
+                onaftersave="update()"
+                blur="submit"
+                e-form="export">
+                \{{regulier.export || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="export.$show()" ng-hide="export.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'regulier:Workload'}}</b></label>
+            <span class="margin-left"
+                editable-number="regulier.workload" 
+                buttons="no"
+                e-min='0' e-step='1'
+                onaftersave="update()"
+                blur="submit"
+                e-form="workload">
+                \{{regulier.workload || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="workload.$show()" ng-hide="workload.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'regulier:Ctrembour'}}</b></label>
+            <span class="margin-left"
+                editable-number="regulier.ctrembour" 
+                buttons="no"
+                e-min='0' e-step='1'
+                onaftersave="update()"
+                blur="submit"
+                e-form="ctrembour">
+                \{{regulier.ctrembour || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="ctrembour.$show()" ng-hide="ctrembour.$visible"></span>
+        </div>
+    </fieldset>
+</div>
