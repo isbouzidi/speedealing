@@ -29,10 +29,18 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
 		$scope.entity = {id: Global.user.entity, name: Global.user.entity};
 
 		$scope.changeEntity = function () {
-			$scope.title = pageTitle.getTitle();
-			//Global.user.entity = $scope.entity.id;
-			$route.reload();
-			superCache.removeAll();
+                        
+                        $http({method: 'POST', url: '/api/user/changeEntity', params: {
+                            id: Global.user._id,
+                            entity: Global.user.entity
+                        }
+                        }).success(function () {
+                            
+                        });
+                        $scope.title = pageTitle.getTitle();
+                        //Global.user.entity = $scope.entity.id;
+                        $route.reload();
+                        superCache.removeAll();                        
 		};
 
 		$scope.filteredResults = [];

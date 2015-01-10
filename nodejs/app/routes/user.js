@@ -102,7 +102,15 @@ module.exports = function (app, passport, auth) {
 			return res.send(200, result);
 		});
 	});
-
+        
+        app.post('/api/user/changeEntity', auth.requiresLogin, function (req, res) {            
+            
+            UserModel.findOne({ _id: req.query.id }, function (err, doc){
+                doc.entity = req.query.entity;
+                doc.save();
+            });
+        });
+        
 	//liste des collaborateurs
 	app.get('/api/users', auth.requiresLogin, object.read);
 
