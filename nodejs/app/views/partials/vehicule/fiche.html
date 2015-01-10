@@ -1,0 +1,182 @@
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">Fiche véhicule : \{{vehicule.matriculation}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active" data-ng-init="init()">
+        <div class="field-block">
+            <label><b>{{t 'vehicules:Matriculation'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.immat" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="matric">
+                \{{vehicule.immat|| "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="matric.$show()" ng-hide="matric.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:Description'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.desc" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="desc">
+                \{{vehicule.desc || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="desc.$show()" ng-hide="desc.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:Assignment'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.affectation.name" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="assign">
+                \{{vehicule.assignment.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="assign.$show()" ng-hide="assign.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:TechnicalInspectionDate'}}</b></label>
+            <a href="#"
+               editable-date="vehicule.date_CT"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+                \{{ (vehicule.date_CT | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:CurrentKm'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.kms" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="current_km">
+                \{{vehicule.kms || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="current_km.$show()" ng-hide="current_km.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:Tire'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.pneu" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="tire">
+                \{{vehicule.pneu || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="tire.$show()" ng-hide="tire.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:Status'}}</b></label>
+            <span class="tag small glossy" 
+                  data-ng-class="vehicule.Status.css" 
+                  editable-select="vehicule.statusVehicule" 
+                  buttons="no"
+                  onaftersave="update()"
+                  blur="submit"
+                  e-ng-options="s.id as s.label for (id,s) in extrafield.fields.statusVehicule.values">
+                \{{vehicule.Status.name|| "Non défini"}}</span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:FreqReview'}}</b></label>
+            <a href="#"
+               editable-date="vehicule.freq_rev"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+
+                \{{ (vehicule.freq_rev | date:"dd/MM/yyyy") || 'Non défini'}}</a>                        
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:KmLastReview'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.kmLastRev" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="km_last_review">
+                \{{vehicule.kmLastRev || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="km_last_review.$show()" ng-hide="km_last_review.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:FirstCirculationDate'}}</b></label>
+            <a href="#"
+               editable-date="vehicule.date_mise_circu"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+
+                \{{ (vehicule.date_mise_circu | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:EndFunding'}}</b></label>
+            <a href="#"
+               editable-date="vehicule.end_buy"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+
+                \{{ (vehicule.end_buy | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:HighwayBadge'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.badgeAuto" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="highway_badge">
+                \{{vehicule.badgeAuto || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="highway_badge.$show()" ng-hide="highway_badge.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:Telephone'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.phone" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="telephone">
+                \{{vehicule.phone || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="telephone.$show()" ng-hide="telephone.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:FuelCard'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.gazoilCard" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="fuel_card">
+                \{{vehicule.gazoilCard || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="fuel_card.$show()" ng-hide="fuel_card.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:FuelCardCode'}}</b></label>
+            <span class="margin-left"
+                editable-text="vehicule.gazoilCardPIN" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="fuel_card_code">
+                \{{vehicule.gazoilCardPIN || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" ng-click="fuel_card_code.$show()" ng-hide="fuel_card_code.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'vehicules:Geolocation'}}</b></label>
+            <input type="checkbox" data-ng-model="vehicule.geoloc" data-ng-checked="vehicule.geoloc" data-ng-change="update()" />
+        </div>
+    </fieldset>
+</div>

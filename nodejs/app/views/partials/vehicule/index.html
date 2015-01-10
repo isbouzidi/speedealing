@@ -1,0 +1,33 @@
+<section data-ng-controller="VehiculeController">
+    <hgroup id="main-title" class="thin">
+        <h1>{{t 'vehicules:ListOfVehicules'}}</h1>
+    </hgroup>
+
+    <div class="with-padding" data-ng-init="find()">
+
+        <div class="table-header silver-gradient glossy button-height">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="button-group">
+                        <button 
+                            class="button icon-plus blue-gradient" 
+                            data-ng-click="addNew()">
+                            {{t 'Add'}}
+                        </button><!-- ng-disabled="!userGroupRightsCreate" -->
+                        <button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="float-right">
+                        {{t 'Search'}} <input type="text" placeholder="..." data-ng-model="filterOptionsVehicule.filterText" class="input small mid-margin-left">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gridStyle"  data-ng-grid="gridOptions" ng-style="style(170)" resize></div>
+        <div class="table-footer silver-gradient">
+            \{{count}} ligne(s)
+        </div>
+
+    </div>
+</section>

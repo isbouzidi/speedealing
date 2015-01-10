@@ -1,0 +1,148 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'vehicules:NewVehicule'}}</h3>
+
+    <!-- Each form step should be wrapped in a fieldset -->
+    <!-- 1. Profile-->
+    <fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+
+        <div class="field-block">
+            <h4>{{t 'Hello'}}</h4>
+            <p>Bienvenue sur l'interface de création des véhicules.</p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:Matriculation'}}</b></label>
+            <input type="text" data-ng-model="vehicule.immat" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:Description'}}</b></label>
+            <textarea class='input' rows='3' cols="60" data-ng-model="vehicule.desc"></textarea>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:Assignment'}}</b></label>
+            <input type="text" data-ng-model="affectation" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:TechnicalInspectionDate'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="vehicule.date_CT" is-open="opened[0]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:CurrentKm'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <button type="button" class="button number-down">-</button>
+                    <input type="text" 
+                           name="special-input-2" 
+                           ng-model="vehicule.kms"
+                           id="special-input-2" 
+                           class="input-unstyled">
+                    <button type="button" class="button number-up">+</button>
+                </span> Km
+            </p>            
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:Tire'}}</b></label>
+            <input type="text" data-ng-model="vehicule.pneu" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:Status'}}</b></label>
+            <select class="form-control"
+                    ng-model="vehicule.statusVehicule"
+                    ng-options="s as s.label for (id,s) in extrafield.fields.statusVehicule.values">
+            </select>            
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:FreqReview'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <button type="button" class="button number-down">-</button>
+                    <input type="text" 
+                           name="special-input-2" 
+                           ng-model="vehicule.freq_rev"
+                           id="special-input-2" 
+                           class="input-unstyled">
+                    <button type="button" class="button number-up">+</button>
+                </span> Km
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:KmLastReview'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <button type="button" class="button number-down">-</button>
+                    <input type="text" 
+                           name="special-input-2" 
+                           ng-model="vehicule.kmLastRev"
+                           id="special-input-2" 
+                           class="input-unstyled">
+                    <button type="button" class="button number-up">+</button>
+                </span> Km
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:FirstCirculationDate'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="vehicule.date_mise_circu" is-open="opened[1]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:EndFunding'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="vehicule.end_buy" is-open="opened[2]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 2)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:HighwayBadge'}}</b></label>
+            <input type="text" data-ng-model="vehicule.badgeAuto" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:Telephone'}}</b></label>
+            <input type="text" data-ng-model="vehicule.phone" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:FuelCard'}}</b></label>
+            <input type="text" data-ng-model="vehicule.gazoilCard" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:FuelCardCode'}}</b></label>
+            <input type="text" data-ng-model="vehicule.gazoilCardPIN" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'vehicules:Geolocation'}}</b></label>
+            <input type="checkbox" data-ng-model="vehicule.geoloc"/>
+        </div>
+                
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t 'Create'}}
+            </button>
+        </div>	
+    </fieldset>
+
+</form>
+
