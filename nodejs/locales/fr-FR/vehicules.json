@@ -1,0 +1,20 @@
+{
+    "ListOfVehicules": "Liste des véhicules",
+    "NewVehicule": "Nouveau véhicule",
+    "Matriculation": "Immatriculation",
+    "Description" : "Déscription",
+    "Assignment": "Afféctation",
+    "TechnicalInspectionDate": "Date contrôle technique",
+    "CurrentKm": "Km actuel",
+    "Tire": "Pneus",
+    "Status": "Etat",
+    "FreqReview": "Fréquence révision",
+    "KmLastReview": "Km dérnière révision",
+    "FirstCirculationDate": "Date 1ere circulation",
+    "EndFunding": "Fin financement",
+    "HighwayBadge": "Badge autoroute",
+    "Telephone": "Téléphone",
+    "FuelCard": "Carte gazoil",
+    "FuelCardCode": "Code carte gazoil",
+    "Geolocation": "Geolocalisation"
+}
