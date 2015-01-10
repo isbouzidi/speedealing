@@ -42,7 +42,11 @@ window.app = angular.module('mean', [
         'mean.transaction',
         'mean.bankCategory',
         'mean.mailing',
-        'mean.export'
+        'mean.export',
+        'mean.vehicule',
+        'mean.regulier',
+        'mean.requestBuy',
+        'mean.chaumeil'
 ]);
 
 angular.module('mean.system', []);
@@ -65,6 +69,10 @@ angular.module('mean.transaction', []);
 angular.module('mean.bankCategory', []);
 angular.module('mean.mailing', []);
 angular.module('mean.export', []);
+angular.module('mean.vehicule', []);
+angular.module('mean.regulier', []);
+angular.module('mean.requestBuy', []);
+angular.module('mean.chaumeil', []);
 
 angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
 		$i18nextProvider.options = {
