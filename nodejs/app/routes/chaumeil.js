@@ -75,7 +75,7 @@ Planning.prototype = {
         if (req.query.findStatus)
             query.Status = req.query.findStatus;
         
-        console.log(query);
+        query.entity = req.user.entity;
             
         PlanningModel.find(query, function(err, doc){
             if(err) {
