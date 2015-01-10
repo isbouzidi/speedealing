@@ -1,323 +1,227 @@
-"use strict";
-/* global angular: true */
+angular.module('mean.chaumeil').controller('PlanningProdController', ['$scope', '$location', '$http', '$routeParams', '$modal', '$filter', '$timeout', 'pageTitle', 'Global', 'Chaumeil', function ($scope, $location, $http, $routeParams, $modal, $filter, $timeout, pageTitle, Global, Chaumeil) {
 
-angular.module('mean.system').controller('CHMOtisController', ['$scope', 'pageTitle', '$http', '$timeout', '$upload', '$route', 'Global', 'Order', function($scope, pageTitle, $http, $timeout, $upload, $route, Global, Order) {
-		$scope.global = Global;
+        $scope.global = Global;
+        $scope.hstep = 1;
+        $scope.mstep = 15;
+        $scope.ismeridian = false;
+        $scope.planningProd = {
+            date_livraison: new Date().setHours(8,0,0,0)            
+        };
+        
+        $scope.entity = [
+            {"id": "chaumeil", "city": "Chaumeil"},
+            {"id": "clermont", "city": "Clermont"}
+        ];
+        
+        $scope.etat = [
+            {id: "NEW", text : "Nouveau"},
+            {id: "ENCOMPO", text : "En compo"},
+            {id: "ENCOURS", text : "En cours"},
+            {id: "BAT", text : "BAT en cours"},
+            {id: "WAITING_PROD", text : "En attente Prod."},
+            {id: "WAITING_COMM", text : "En attente Comm."},
+            {id: "ACC", text : "Accueil"},
+            {id: "EXP", text : "Expedié"},
+            {id: "LIV", text : "Recu"},
+            {id: "CANCELED", text : "Annulé"},
+            {id: "REJECTED", text : "Rejeté"},
+            {id: "", text : "Tous"}
+        ];
+        
+        $scope.livraison = [
+            {text: "aujourd'hui", value: 0},
+            {text: "5 jours", value: 5},
+            {text: "Tous", value: null}
+        ];
+        
+        $scope.filterEtat = {id: "NEW", text : "Nouveau"};
+        $scope.filterLivraison = {text: "aujourd'hui", value: 0};
+                
+        $scope.init = function () {
 
-		pageTitle.setTitle('Nouvelle commande OTIS');
+        };
 
-		$scope.init = function() {
-			$scope.active = 1;
-			$scope.order = {};
-			$scope.order.bl = [];
-			$scope.order.bl.push({
-				products: [
-					{name: 'paper', qty: 0},
-					{name: 'cd', qty: 0}
-				]
-			});
-			$scope.order.client = Global.user.societe;
-			$scope.filePercentage = {};
-			$scope.fileName = {};
-			$scope.checkFile = false;
-			$scope.validAddress = false;
-			$scope.validOrder = false;
+        $scope.find = function () {
+            
+            var myDate;
+            
+            if($scope.filterLivraison.value !== null){
+                myDate = new Date();
+                var dayOfMonth = myDate.getDate();
+                myDate.setDate(dayOfMonth - $scope.filterLivraison.value);
+            }else{
+                myDate = null;
+            }
+                
+            var cond = {
+                findDelivery: myDate,
+                findStatus: $scope.filterEtat.id
+            };
+            
+            Chaumeil.query(cond, function (planningProd) {
+                $scope.planningProd = planningProd;
+                $scope.count = planningProd.length;
+            });
+        };
 
-			$scope.order.optional = {};
-			$scope.order.optional.dossiers = [];
-			$scope.order.optional.dossiers[0] = {};
-			
-			$scope.nbUpload = 0;
-		};
+        $scope.filterOptionsplanningProd = {
+            filterText: "",
+            useExternalFilter: false
+        };
+        
+        $scope.gridOptions = {
+            data: 'planningProd',
+            multiSelect: true,
+            i18n: 'fr',
+            enableCellSelection: false,
+            enableColumnResize: true,
+            filterOptions: $scope.filterOptionsplanningProd,
+            columnDefs: [
+                {field: 'datec', displayName: 'Date commande', cellTemplate: '<div class="ngCellText"><a ng-click="findPlannig(row.getProperty(\'_id\'))" class="with-tooltip" data-tooltip-options=\'{"position":"right"}\'><span class="icon-calendar"></span> {{row.getProperty(col.field) | date:"dd/MM/yyyy"}}</a></div>'},
+                {field: 'order.name', displayName: 'Commande'},
+                {field: 'order.ref_client', displayName: 'Ref client'},
+                {field: 'jobTicket', displayName: 'Job ticket'},
+                {field: 'societe.name', displayName: 'Societe'},
+                {field: 'description', displayName: 'Déscription'},
+                {field: 'qty', displayName: 'Qte'},
+                {field: 'qtyPages', displayName: 'Qte copies'},
+                {field: 'date_livraison', displayName: 'Livraison', cellFilter: "date:'dd-MM-yyyy HH:mm'"},
+                {field: 'status.name', displayName: 'Etat',
+                    cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small>'},
+                {field: 'step', displayName: 'Etape'}
+                
+            ]
+        };
+        
+        $scope.addNew = function () {
+            var modalInstance = $modal.open({
+                templateUrl: '/partials/chaumeil/create.html',
+                controller: "CreatePlanningProdController",
+                windowClass: "steps"
+            });
 
-		$scope.newOrder = function() {
-			$route.reload();
-		};
+            modalInstance.result.then(function (planningProd) {
+                $scope.planningProd.push(planningProd);
+                $scope.count++;
+            }, function () {
+            });
+        };
+        
+        $scope.findPlannig = function (id) {
+            $routeParams.planning = id;
+            var modalInstance = $modal.open({
+                templateUrl: '/partials/chaumeil/fiche.html',
+                controller: "PlanningProdController",
+                windowClass: "steps"
+            });
+        };
+        
+        $scope.findOne = function () {
+            
+            $http({method: 'GET', url: '/api/extrafield', params: {
+                extrafieldName: "Chaumeil"
+            }
+            }).success(function (data) {
+                    $scope.extrafield = data;                   
+            });
+            
+            Chaumeil.get({
+                Id: $routeParams.planning
+            }, function (planningProd) {
+                $scope.planningProd = planningProd;
+                
+            });
+        };
+                
+        $scope.update = function () {
 
-		$scope.create = function() {
-			if (this.order._id)
-				return;
+            var planningProd = $scope.planningProd;
 
-			this.order.ref_client = "OTIS " + this.order.optional.projet;
+            planningProd.$update(function () {
+                
+            }, function (errorResponse) {
+            });
+        };
+        
+        $scope.societeAutoComplete = function (val, field) {
+            return $http.post('api/societe/autocomplete', {
+                take: '5',
+                skip: '0',
+                page: '1',
+                pageSize: '5',
+                filter: {logic: 'and', filters: [{value: val}]
+                }
+            }).then(function (res) {
+                return res.data;
+            });
+        };
 
-			var order = new Order(this.order);
+    }]);
 
-			order.$save(function(response) {
-				$scope.order = response;
+angular.module('mean.chaumeil').controller('CreatePlanningProdController', ['$scope', '$location', '$http', '$routeParams', '$modalInstance', '$modal', '$filter', '$timeout', 'pageTitle', 'Global', 'Chaumeil', function ($scope, $location, $http, $routeParams,  $modalInstance, $modal, $filter, $timeout, pageTitle, Global, Chaumeil) {
 
-				$scope.order.optional.dossiers = [];
-				$scope.order.optional.dossiers[0] = {};
+        $scope.global = Global;
+        $scope.active = 1;
+        $scope.opened = [];
+        $scope.planningProd = {};
+        $scope.planningProd = {
+            order: {
+                name: null,
+                id: null,
+                ref_client: null
+            }
+        };
+        $scope.hstep = 1;
+        $scope.mstep = 15;
+        $scope.ismeridian = false;
 
-				$scope.countExemplaires();
+        $scope.isActive = function(idx) {
+            if (idx === $scope.active)
+                return "active";
+        };
+        
+        $scope.entity = [
+                {"id": "chaumeil", "city": "Chaumeil"},
+                {"id": "clermont", "city": "Clermont"}
+            ];
+        
+        $scope.open = function ($event, idx) {
+            $event.preventDefault();
+            $event.stopPropagation();
 
-			});
-		};
+            $scope.opened[idx] = true;
+        };
+        
+        $scope.init = function () {
+            $http({method: 'GET', url: '/api/extrafield', params: {
+                extrafieldName: "Chaumeil"
+            }
+            }).success(function (data) {
+                    $scope.extrafield = data;                    
+            });
+            
+        };
+        
+        $scope.create = function(){
+            console.log(this.planningProd);
+            var planningProd = new Chaumeil(this.planningProd);
+                
+            planningProd.$save(function(response) {
+               $modalInstance.close(response);
 
-		$scope.update = function(cb) {
-			var order = $scope.order;
-
-			order.$update(function(response) {
-				$scope.order = response;
-
-				if (response && typeof cb == "function") {
-					console.log("Commande validee !");
-					cb();
-				}
-			});
-		};
-
-		$scope.isActive = function(idx) {
-			if (idx == $scope.active)
-				return "active";
-		};
-
-		$scope.next = function() {
-			$scope.active++;
-		};
-
-		$scope.previous = function() {
-			$scope.active--;
-		};
-
-		$scope.goto = function(idx) {
-			if ($scope.active == 5)
-				return;
-
-			if (idx < $scope.active)
-				$scope.active = idx;
-		};
-
-		$scope.otisAutoComplete = function(val, field) {
-			return $http.post('api/chaumeil/otis/autocomplete', {
-				field: field,
-				take: '5',
-				skip: '0',
-				page: '1',
-				pageSize: '5',
-				filter: {logic: 'and', filters: [{value: val}]
-				}
-			}).then(function(res) {
-				return res.data;
-			});
-		};
-
-		$scope.initAssistantes = function(centreCout) {
-			$http({method: 'GET', url: 'api/chaumeil/otis/assistantes', params: {
-					centreCout: centreCout
-				}
-			}).
-					success(function(data, status) {
-						$scope.assistantes = data;
-						$timeout(function() {
-							angular.element('select').change();
-						}, 300);
-					});
-		};
-
-		$scope.updateAssistante = function() {
-			//console.log($scope.order.optional.assistante);
-			if (!$scope.order.optional.assistante)
-				return;
-
-			$scope.order.bl[0].products = [
-				{name: 'paper', qty: 1},
-				{name: 'cd', qty: 1}
-			];
-
-			$scope.order.bl[0].name = "OTIS";
-			$scope.order.bl[0].address = $scope.order.optional.assistante.address;
-			$scope.order.bl[0].zip = $scope.order.optional.assistante.zip;
-			$scope.order.bl[0].town = $scope.order.optional.assistante.town;
-			$scope.order.bl[0].contact = $scope.order.optional.assistante.firstname + " " + $scope.order.optional.assistante.lastname;
-
-			$scope.order.bl[1] = {};
-			$scope.order.bl[1].products = [
-				{name: 'paper', qty: 0},
-				{name: 'cd', qty: 0}
-			];
-
-		};
-
-		$scope.initSelectFiles = function() {
-			$http({method: 'GET', url: 'api/chaumeil/otis/selectFiles'
-			}).success(function(data, status) {
-				$scope.selectFiles = data;
-
-				$timeout(function() {
-					angular.element('select').change();
-				}, 300);
-			});
-		};
-
-		$scope.addDossier = function() {
-			$scope.order.optional.dossiers.push({});
-		};
-
-		$scope.addDest = function() {
-			$scope.order.bl.push({
-				products: [
-					{name: 'paper', qty: 0},
-					{name: 'cd', qty: 0}
-				]
-			});
-		};
-
-		$scope.sendOrder = function() {
-			$scope.order.datec = new Date();
-			$scope.order.date_livraison = new Date();
-			$scope.order.date_livraison.setDate($scope.order.date_livraison.getDate() + 5);
-
-			$scope.order.Status = "NEW"; // commande validee
-			
-			var note;
-
-			for (var i in this.order.bl) {
-				note = "";
-				note += "Numero de DF (Uniquement pour la facturation) : " + this.order.optional.numDF + "<br/><br/>";
-				note += "Adresse de livraison : <br/><p>" + this.order.bl[i].name + "<br/>";
-				note += this.order.bl[i].contact + "<br/>";
-				note += this.order.bl[i].address + "<br/>";
-				note += this.order.bl[i].zip + " " + this.order.bl[i].town + "</p>";
-				note += "<p> Nombre d'exemplaires papier : " + this.order.bl[i].products[0].qty + "</p>";
-				note += "<p> Nombre d'exemplaires CD : " + this.order.bl[i].products[1].qty + "</p>";
-
-				note += '<br /><a href="api/chaumeil/otis/classeur/' + this.order._id + '?bl=' + i + '" target="_blank" title="Telecharger"><span class="icon-extract"> Fichier classeur</span></a>';
-				note += '<br /><a href="api/chaumeil/otis/bordereau/' + this.order._id + '?bl=' + i + '" target="_blank" title="Telecharger"><span class="icon-extract"> Fichier bordereau</span></a>';
-
-				$scope.order.notes.push({
-					note: note,
-					title: "Destinataire " + (parseInt(i, 10) + 1), // parseInt(string, radix) eg base 10
-					edit: false
-				});
-			}
-
-			for (var j in $scope.order.optional.dossiers) {
-				// Add specific files
-
-				note = "";
-				note += '<h4 class="green underline">' + "Liste des fichiers natifs</h4>";
-				note += '<ul>';
-				for (var i in $scope.order.optional.dossiers[j].selectedFiles) {
-					if ($scope.order.optional.dossiers[j].selectedFiles[i] !== null) {
-						note += '<li><a href="' + $scope.order.optional.dossiers[j].selectedFiles[i].url + '" target="_blank" title="Telecharger - ' + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '">';
-						note += '<span class="icon-extract">' + i + "_" + $scope.order.optional.dossiers[j].selectedFiles[i].filename + '</span>';
-						note += '</a></li>';
-					}
-				}
-				note += '</ul>';
-
-				$scope.order.notes.push({
-					note: note,
-					title: "Fichiers webdoc dossier " + (parseInt(j, 10) + 1), // parseInt(string, radix) eg base 10
-					edit: false
-				});
-				//console.log(note);
-			}
-
-			$scope.update($scope.next);
-
-		};
-
-		$scope.onFileSelect = function($files, idx) {
-			$scope.filePercentage[idx] = 0;
-			//console.log(idx);
-			//$files: an array of files selected, each file has name, size, and type.
-			for (var i = 0; i < $files.length; i++) {
-				var file = $files[i];
-
-				//console.log(file);
-				if ($scope.order)
-					$scope.nbUpload++;
-					$scope.upload = $upload.upload({
-						url: 'api/commande/file/' + $scope.order._id,
-						method: 'POST',
-						// headers: {'headerKey': 'headerValue'},
-						// withCredential: true,
-						data: {idx: idx},
-						file: file,
-						// file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
-						/* set file formData name for 'Content-Desposition' header. Default: 'file' */
-						//fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
-						/* customize how data is added to formData. See #40#issuecomment-28612000 for example */
-						//formDataAppender: function(formData, key, val){} 
-					}).progress(function(evt) { // FIXME function in a loop !
-						$scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total, 10)); // parseInt(string, radix) eg base 10
-						//console.log(evt);
-					}).success(function(data, status, headers, config) { // FIXME function in a loop !
-						// file is uploaded successfully
-						//$scope.myFiles = "";
-						//console.log(data);
-
-						$scope.order.files = data.files;
-						$scope.order.__v = data.__v; // for update
-						//$scope.order = data;
-						
-						$scope.nbUpload--;//end Upload
-
-						//$scope.filePercentage[idx] = 100;
-						$scope.fileName[idx] = file.name;
-					});
-				//.error(...)
-				/*		.then(function(response) {
-				 $timeout(function() {
-				 //	$scope.uploadResult.push(response.data);
-				 console.log(response);
-				 });
-				 }, function(response) {
-				 console.log(response);
-				 if (response.status > 0)
-				 $scope.errorMsg = response.status + ': ' + response.data;
-				 }, function(evt) {
-				 console.log(evt);
-				 $scope.filePercentage[idx] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-				 });*/
-			}
-		};
-		
-		$scope.reInitFiles = function() {
-			$scope.nbUpload = 0;
-		};
-
-		$scope.suppressFile = function(id, fileName, idx) {
-			//console.log(id);
-			//console.log(fileName);
-			//console.log(idx);
-			//CO0214-00060_pvFeuPorte_Dossier1_UGAP_422014.csv
-
-			fileName = $scope.order.ref + "_" + idx + "_" + fileName;
-
-			$http({method: 'DELETE', url: 'api/commande/file/' + id + '/' + fileName
-			}).success(function(data, status) {
-				//console.log(data);
-				if (status == 200) {
-					$scope.order.files = data.files;
-					$scope.order.__v = data.__v; // for update
-					//$scope.order = data;
-
-					$scope.filePercentage[idx] = 0;
-					$scope.fileName[idx] = "";
-
-				}
-			});
-		};
-
-		$scope.countExemplaires = function() {
-
-			$scope.cd = 0;
-			$scope.papier = 0;
-
-			for (var i = 0; i < this.order.bl.length; i++) {
-				$scope.papier += this.order.bl[i].products[0].qty;
-				$scope.cd += this.order.bl[i].products[1].qty;
-			}
-		};
-
-		$scope.updateDF = function(obj) {
-			$scope.initAssistantes(obj.centreCout.substr(1, 3)); //update liste assistante
-			$scope.order.optional.numDF = obj.centreCout.substr(1, 2) + "/      /" + obj.centreCout.substr(3);
-			$scope.oldNumDF = $scope.order.optional.numDF;
-			var date = new Date();
-			$scope.order.optional.DOE = obj.numAffaire + " - DOE - " + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-		};
-
-	}]);
+            });
+        };
+        
+        $scope.societeAutoComplete = function (val, field) {
+            return $http.post('api/societe/autocomplete', {
+                take: '5',
+                skip: '0',
+                page: '1',
+                pageSize: '5',
+                filter: {logic: 'and', filters: [{value: val}]
+                }
+            }).then(function (res) {
+                return res.data;
+            });
+        };
+    }]);
