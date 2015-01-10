@@ -1,0 +1,46 @@
+<section data-ng-controller="PlanningProdController">
+    <hgroup id="main-title" class="thin">
+        <h1>{{t 'chaumeil:ProductionPlanning'}}</h1>
+    </hgroup>
+
+    <div class="with-padding" data-ng-init="find()">
+
+        <div class="table-header silver-gradient glossy button-height">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="button-group">
+                        <button 
+                            class="button icon-plus blue-gradient" 
+                            data-ng-click="addNew()">
+                            {{t 'Add'}}
+                        </button><!-- ng-disabled="!userGroupRightsCreate" -->
+                        <button title="{{t 'Refresh'}}" class="button" data-ng-click="find()"><span class="icon-redo"></span></button>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    
+                    <select ng-model="filterLivraison"
+                            ng-change="find();"
+                            ng-options="c as c.text for c in livraison" class="">
+                        <option value="">-- {{t 'Select'}} {{t 'chaumeil:Delivery'}} --</option>
+                    </select>
+                    <select ng-model="filterEtat" 
+                            ng-change="find();" 
+                            ng-options="s as s.text for s in etat" class="">
+                        <option value="">-- {{t 'Select'}} {{t 'Status'}} --</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">	
+                    <div class="float-right">
+                        <input type="text" placeholder="{{t 'Search'}}" data-ng-model="filterOptionsplanningProd.filterText" class="input small mid-margin-left">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gridStyle"  data-ng-grid="gridOptions" ng-style="style(170)" resize></div>
+        <div class="table-footer silver-gradient">
+            \{{count}} ligne(s)
+        </div>
+
+    </div>
+</section>

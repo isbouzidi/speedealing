@@ -1,0 +1,175 @@
+<div data-ng-init='findOne()' class="block wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <h3 class="block-title">{{t 'chaumeil:JobTicket'}} : \{{planningProd.jobTicket}}</h3>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:OrderDate'}}</b></label>
+                <a href="#"
+                   editable-date="planningProd.datec"
+                   buttons="no"
+                   onaftersave="update()"
+                   blur="submit">
+                    \{{ (planningProd.datec | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Order'}}</b></label>
+            <span class="margin-left"
+                editable-text="planningProd.order.name" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="orderName">
+                \{{planningProd.order.name|| "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="orderName.$show()" 
+                  ng-hide="orderName.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:RefClient'}}</b></label>
+            <span class="margin-left"
+                editable-text="planningProd.order.ref_client" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-form="orderRef">
+                \{{planningProd.order.ref_client|| "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="orderRef.$show()" 
+                  ng-hide="orderRef.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Societe'}}</b></label>
+            <span class="margin-left"
+                editable-text="planningProd.societe" 
+                buttons="no"
+                onaftersave="update()"
+                blur="submit"
+                e-typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}"
+                e-form="client">
+                \{{planningProd.societe.name || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="client.$show()" 
+                  ng-hide="client.$visible">
+            </span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Description'}}</b></label>
+            <a href="#" 
+               editable-textarea="planningProd.description" 
+               e-rows="7" e-cols="40"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="desc">
+                <pre>\{{ planningProd.description || 'Non défini' }}</pre>
+            </a>
+            <span 
+                class="icon-pencil grey" 
+                ng-click="desc.$show()"
+                ng-hide="desc.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Qte'}}</b></label>
+            <span class="margin-left"
+                editable-number="planningProd.qty" 
+                buttons="no"
+                e-min='0' e-step='1'
+                onaftersave="update()"
+                blur="submit"
+                e-form="qty">
+                \{{planningProd.qty || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="mtt.$show()" 
+                  ng-hide="mtt.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:QteCopies'}}</b></label>
+            <span class="margin-left"
+                editable-number="planningProd.qtyPages" 
+                buttons="no"
+                e-min='0' e-step='0.01'
+                onaftersave="update()"
+                blur="submit"
+                e-form="qtyPages">
+                \{{planningProd.qtyPages || "Non défini"}}
+            </span>
+            <span class="icon-pencil grey" 
+                  ng-click="qtyPages.$show()" 
+                  ng-hide="qtyPages.$visible"></span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Delivery'}}</b></label>
+            <a href="#"
+               editable-date="planningProd.date_livraison"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit">
+                \{{ (planningProd.date_livraison | date:"dd/MM/yyyy") || 'Non défini'}}</a>
+        
+            <a href="#" 
+                editable-bstime="planningProd.date_livraison" 
+                e-show-meridian="false" 
+                e-minute-step="15"
+                buttons="no"
+                onaftersave="update()"
+                blur="submit">
+                \{{ (planningProd.date_livraison | date:"HH:mm") || 'Non défini' }}
+            </a>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Status'}}</b></label>
+            <span class="tag small glossy" 
+                  data-ng-class="planningProd.status.css" 
+                  editable-select="planningProd.Status" 
+                  buttons="no"
+                  onaftersave="update()"
+                  blur="submit"
+                  e-ng-options="id as s.label for (id,s) in extrafield.fields.planningStatus.values">
+                \{{planningProd.status.name|| "Non défini"}}</span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Step'}}</b></label>
+            <span class="" 
+                  editable-select="planningProd.step" 
+                  buttons="no"
+                  onaftersave="update()"
+                  blur="submit"
+                  e-ng-options="s as s for s in extrafield.fields.planningStep.values">
+                \{{planningProd.step || "Non défini"}}</span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Entity'}}</b></label>
+            <span class="" 
+                  editable-select="planningProd.entity" 
+                  buttons="no"
+                  onaftersave="update()"
+                  blur="submit"
+                  e-ng-options="e.id as e.city for e in entity">
+                \{{planningProd.entity || "Non défini"}}</span>
+        </div>
+        <div class="field-block">
+            <label><b>{{t 'chaumeil:Notes'}}</b></label>
+            <a href="#" 
+               editable-textarea="planningProd.notes" 
+               e-rows="7" e-cols="40"
+               buttons="no"
+               onaftersave="update()"
+               blur="submit"
+               e-form="notes">
+                <pre>\{{ planningProd.notes || 'Non défini' }}</pre>
+            </a>
+            <span 
+                class="icon-pencil grey" 
+                ng-click="notes.$show()"
+                ng-hide="notes.$visible"></span>
+        </div>
+    </fieldset>
+    
+</div>

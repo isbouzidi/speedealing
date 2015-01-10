@@ -1,0 +1,82 @@
+{
+	"_id": "module:Chaumeil",
+	"enabled": true,
+	"boxes": [],
+	"const": [
+		[
+			"FICHEINTER_ADDON_PDF",
+			"chaine",
+			"soleil"
+		],
+		[
+			"FICHEINTER_ADDON",
+			"chaine",
+			"pacific"
+		]
+	],
+	"rights": {
+		"chaumeilPlanning": [
+			{
+				"desc": "Lire les plannings de production",
+				"perm": {
+					"read": false
+				}
+			},
+			{
+				"desc": "Creer/modifier les plannings de production",
+				"perm": {
+					"write": false
+				}
+			},
+			{
+				"desc": "Supprimer des lignes des plannings de production",
+				"perm": {
+					"delete": false
+				}
+			}
+		]
+	},
+	"module_parts": [],
+	"family": "crm",
+	"name": "Chaumeil",
+	"description": "Modules Societe Chaumeil",
+	"version": "0.1.08",
+	"const_name": "MAIN_MODULE_CHAUMEIL",
+	"picto": "intervention",
+	"depends": [
+		"modSociete"
+	],
+	"requiredby": [],
+	"conflictwith": [],
+	"config_page_url": [
+		"fichinter.php"
+	],
+	"menus": {
+		"menu:commandes": {
+			"submenus": {
+				"menu:planning": {
+					"position": 10,
+					"url": "#!//chaumeil",
+					"perms": "chaumeilPlanning.read",
+					"enabled": "$conf->chaumeil->enabled",
+					"usertype": 2,
+					"title": "Planning"
+				}
+			}
+		}
+	},
+	"export_code": {
+		"1": "chaumeil_1"
+	},
+	"export_label": {
+		"1": "InterventionCardsAndInterventionLines"
+	},
+	"export_permission": {
+		"1": [
+			[
+				"ficheinter",
+				"export"
+			]
+		]
+	}
+}

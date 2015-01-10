@@ -1,0 +1,104 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <h3 class="block-title">{{t 'chaumeil:NewPlanningProd'}}</h3>
+    <fieldset class="wizard-fieldset fields-list" data-ng-class='isActive(1)'>
+        <div class="field-block">
+            <h4>{{t 'Hello'}}</h4>
+            <p>Bienvenue sur l'interface de création d'un nouveau job.</p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:OrderDate'}}</b></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="planningProd.datec" is-open="opened[0]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Order'}}</b></label>
+            <input type="text" data-ng-model="planningProd.order.name" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:RefClient'}}</b></label>
+            <input type="text" data-ng-model="planningProd.order.ref_client" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Societe'}}</b></label>
+            <input type="text" data-ng-model="planningProd.societe" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" class="input" autocomplete="off">
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Description'}}</b></label>
+            <textarea class='input' rows='3' cols="60" data-ng-model="planningProd.description"></textarea>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Qte'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='1' ng-model="planningProd.qty" class="form-control">                    
+                </span>
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:QteCopies'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='1' ng-model="planningProd.qtyPages" class="form-control">                    
+                </span>
+            </p>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Delivery'}}</b></label>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 34px;">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="planningProd.date_livraison" is-open="opened[1]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <timepicker ng-model="planningProd.date_livraison" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+                </div>
+            </div>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Status'}}</b></label>
+            <select class="form-control"
+                ng-model="planningProd.Status"
+                ng-options="id as s.label for (id,s) in extrafield.fields.planningStatus.values">
+            </select>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Step'}}</b></label>
+            <select class="form-control"
+                ng-model="planningProd.step"
+                ng-options="s as s for s in extrafield.fields.planningStep.values">
+            </select>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Entity'}}</b></label>
+            <select class="form-control"
+                ng-model="planningProd.entity"
+                ng-options="e.id as e.city for e in entity">
+            </select>
+        </div>
+        <div class="field-block button-height">
+            <label><b>{{t 'chaumeil:Notes'}}</b></label>
+            <textarea class='input' rows='3' cols="60" data-ng-model="planningProd.notes"></textarea>
+        </div>
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t 'Create'}}
+            </button>
+        </div>	
+    </fieldset>
+</form>
+    
+    
