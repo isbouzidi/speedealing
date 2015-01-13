@@ -1,82 +1,83 @@
 <section data-ng-controller="IndexHomeController">
-	<hgroup class="thin" id="main-title">
-		<h1>{{t 'Dashboard'}}</h1>
-		<h2>\{{dateNow| date:'MMM'}} <strong>\{{dateNow| date:'dd'}}</strong></h2>
-	</hgroup>
+    <hgroup class="thin" id="main-title">
+        <h1>{{t 'Dashboard'}}</h1>
+        <h2>\{{dateNow| date:'MMM'}} <strong>\{{dateNow| date:'dd'}}</strong></h2>
+    </hgroup>
 
-	<div class="dashboard">
-		<div class="columns">
-			<div ng-if="global.user.rights.box.dashboardGraph" class="nine-columns twelve-columns-mobile chart" data-ng-init="initCharts()">
-				<highchart id="caChart" config="caChartConfig" style="min-width: 100px; height: 270px; margin: 0 auto;"></highchart>
-			</div>
+    <div class="dashboard">
+        <div class="columns">
+            <div ng-if="global.user.rights.box.dashboardGraph" class="nine-columns twelve-columns-mobile chart" data-ng-init="initCharts()">
+                <highchart id="caChart" config="caChartConfig" style="min-width: 100px; height: 270px; margin: 0 auto;"></highchart>
+            </div>
 
-			<div class="three-columns twelve-columns-mobile new-row-mobile" data-ng-init="statsGlobal()">
-				<ul class="stats split-on-mobile">
-					<li>
-						<div class="row">
-							<div class="col-md-9">
-								<a href="#!/societes">
-									<strong>\{{statsByEntity.newAccounts[1].count}}</strong> Nouveaux<br/>comptes<br/><small>ce mois-ci</small>
-								</a>
-							</div>
-							<div  class="col-md-3">
-								<span class="indic-progress green" ng-show="gain(statsByEntity.newAccounts) > 0">+\{{gain(statsByEntity.newAccounts) | number:0}}% ▲</span>
-								<span class="indic-progress red" ng-show="gain(statsByEntity.newAccounts) < 0">\{{gain(statsByEntity.newAccounts) | number:0}}% ▼</span>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="row">
-							<div class="col-md-9">
-								<a href="#!/orders"> <strong>\{{statsByEntity.newOrders[1].count}}</strong> Nouvelles <br>commandes<br/><small>ce mois-ci</small>
-								</a>
-							</div>
-							<div  class="col-md-3">
-								<span class="indic-progress green" ng-show="gain(statsByEntity.newOrders) > 0">+\{{gain(statsByEntity.newOrders) | number:0}}% ▲</span>
-								<span class="indic-progress red" ng-show="gain(statsByEntity.newOrders) < 0">\{{gain(statsByEntity.newOrders) | number:0}}% ▼</span>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="row">
-							<div class="col-md-9">
-								<a href="#!/leads"> <strong>\{{statsByEntity.newLeads[1].count}}</strong> Nouveaux <br>projets<br/><small>ce mois-ci</small>
-								</a>
-							</div>
-							<div  class="col-md-3">
-								<span class="indic-progress green" ng-show="gain(statsByEntity.newLeads) > 0">+\{{gain(statsByEntity.newLeads) | number:0}}% ▲</span>
-								<span class="indic-progress red" ng-show="gain(statsByEntity.newLeads) < 0">\{{gain(statsByEntity.newLeads) | number:0}}% ▼</span>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="row">
-							<div class="col-md-9">
-								<a href="#!/task"> <strong>\{{statsByEntity.newTasks[1].count}}</strong> Nouvelles <br>actions<br/><small>ce mois-ci</small>
-								</a>
-							</div>
-							<div  class="col-md-3">
-								<span class="indic-progress green" ng-show="gain(statsByEntity.newTasks) > 0">+\{{gain(statsByEntity.newTasks) | number:0}}% ▲</span>
-								<span class="indic-progress red" ng-show="gain(statsByEntity.newTasks) < 0">\{{gain(statsByEntity.newTasks) | number:0}}% ▼</span>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+            <div class="three-columns twelve-columns-mobile new-row-mobile" data-ng-init="statsGlobal()">
+                <ul class="stats split-on-mobile">
+                    <li>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <a href="#!/societes">
+                                    <strong>\{{statsByEntity.newAccounts[1].count}}</strong> Nouveaux<br/>comptes<br/><small>ce mois-ci</small>
+                                </a>
+                            </div>
+                            <div  class="col-md-3">
+                                <span class="indic-progress green" ng-show="gain(statsByEntity.newAccounts) > 0">+\{{gain(statsByEntity.newAccounts) | number:0}}% ▲</span>
+                                <span class="indic-progress red" ng-show="gain(statsByEntity.newAccounts) < 0">\{{gain(statsByEntity.newAccounts) | number:0}}% ▼</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <a href="#!/orders"> <strong>\{{statsByEntity.newOrders[1].count}}</strong> Nouvelles <br>commandes<br/><small>ce mois-ci</small>
+                                </a>
+                            </div>
+                            <div  class="col-md-3">
+                                <span class="indic-progress green" ng-show="gain(statsByEntity.newOrders) > 0">+\{{gain(statsByEntity.newOrders) | number:0}}% ▲</span>
+                                <span class="indic-progress red" ng-show="gain(statsByEntity.newOrders) < 0">\{{gain(statsByEntity.newOrders) | number:0}}% ▼</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <a href="#!/leads"> <strong>\{{statsByEntity.newLeads[1].count}}</strong> Nouveaux <br>projets<br/><small>ce mois-ci</small>
+                                </a>
+                            </div>
+                            <div  class="col-md-3">
+                                <span class="indic-progress green" ng-show="gain(statsByEntity.newLeads) > 0">+\{{gain(statsByEntity.newLeads) | number:0}}% ▲</span>
+                                <span class="indic-progress red" ng-show="gain(statsByEntity.newLeads) < 0">\{{gain(statsByEntity.newLeads) | number:0}}% ▼</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <a href="#!/task"> <strong>\{{statsByEntity.newTasks[1].count}}</strong> Nouvelles <br>actions<br/><small>ce mois-ci</small>
+                                </a>
+                            </div>
+                            <div  class="col-md-3">
+                                <span class="indic-progress green" ng-show="gain(statsByEntity.newTasks) > 0">+\{{gain(statsByEntity.newTasks) | number:0}}% ▲</span>
+                                <span class="indic-progress red" ng-show="gain(statsByEntity.newTasks) < 0">\{{gain(statsByEntity.newTasks) | number:0}}% ▼</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-	<div class="with-padding">
-		<div class='columns'>
+    <div class="with-padding">
+        <div class='columns'>
 
-			{{> 'box/absence'}}
-			{{> 'box/result'}}
-			{{> 'box/cost'}}
-			{{> 'box/indicateur'}}
-			{{> 'box/statreports'}}
-			{{> 'box/ca'}}
-			{{> 'box/infologin'}}
-			{{> 'box/report'}}
-		</div>
-	</div>
+            {{> 'box/report'}}
+            {{> 'box/absence'}}
+            {{> 'box/result'}}
+            {{> 'box/cost'}}
+            {{> 'box/indicateur'}}
+            {{> 'box/statreports'}}
+            {{> 'box/ca'}}
+            {{> 'box/infologin'}}
+
+        </div>
+    </div>
 </section>
