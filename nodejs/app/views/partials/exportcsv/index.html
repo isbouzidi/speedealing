@@ -15,7 +15,8 @@
             </select>
         </div>
         <br>
-        <textarea class="input" style="width: 100%; background-color: #121111; font-size: 20px; color: #fff; padding: 20px" rows="10" data-ng-model="request"></textarea>            
+        <textarea class="input" style="width: 100%; background-color: #121111; font-size: 20px; color: #fff; padding: 20px" rows="10" data-ng-model="request" placeholder='requete'></textarea>
+        <p>exemple de requete : find({Tag: "Nouveau"},"_id firstname lastname societe.name societe poste address zip town phone phone_mobile email Tag")</p>
         <div style="height: 40px; width: 100%">
             <button class="button icon-gear blue-gradient right" data-ng-click="getData()">{{t 'Execute'}}</button>
         </div>
