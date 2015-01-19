@@ -256,9 +256,9 @@ module.exports = function (app, passport, auth) {
 				});
 			},
 			caStats: function (cb) {
-				var dateEnd = new Date(dateEnd);
+				var dateStart = new Date(dateStart);
 				
-				dateEnd.setMonth(dateEnd.getMonth() - 2);
+				dateStart.setMonth(dateStart.getMonth() - 2);
 
 				//console.log(dateStart);
 				FactureModel.aggregate([
