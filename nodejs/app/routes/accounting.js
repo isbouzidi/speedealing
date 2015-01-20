@@ -136,7 +136,9 @@ Object.prototype = {
 							line.credit = lineBill.total_ht;
 
 							//console.log(line);
-							result.push(line);
+							if(line.credit !== 0)
+								result.push(line);
+							
 							cb();
 						});
 					}, function (err) {
@@ -162,7 +164,8 @@ Object.prototype = {
 
 							line.credit = bill.total_tva[i].total;
 
-							result.push(line);
+							if(line.credit !== 0)
+								result.push(line);
 						}
 
 						callback();
