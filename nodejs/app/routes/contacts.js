@@ -578,6 +578,7 @@ Contact.prototype = {
 
 		var contact = new ContactModel(req.body);
 		contact.user_creat = req.user._id;
+		contact.user_modif = req.user._id;
 		contact.save(function (err, doc) {
 			if (err) {
 				console.log(err);
@@ -676,6 +677,7 @@ Contact.prototype = {
 
 		var contact = req.contact;
 		contact = _.extend(contact, req.body);
+		contact.user_modif = req.user._id;
 		contact.save(function (err, doc) {
 
 			if (err) {
