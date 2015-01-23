@@ -31,8 +31,8 @@ angular.module('mean.bills').controller('BillController', ['$scope', '$location'
 			}).success(function (data, status) {
 				$scope.dict = data;
 			});
-			
-			
+
+
 			$http({method: 'GET', url: '/api/bank', params: {
 					entity: Global.user.entity
 				}
@@ -669,12 +669,21 @@ angular.module('mean.bills').controller('BillCreateController', ['$scope', '$htt
 			if ($scope.bill.client.name === "Accueil")
 				$scope.bill.client.isNameModified = true;
 
+			if (item.address) {
+				$scope.bill.address = item.address.address;
+				$scope.bill.zip = item.address.zip;
+				$scope.bill.town = item.address.town;
+
+			}
+
 			$scope.bill.price_level = item.price_level;
-			$scope.bill.address = item.address.address;
-			$scope.bill.zip = item.address.zip;
-			$scope.bill.town = item.address.town;
+
 			$scope.bill.mode_reglement_code = item.mode_reglement_code;
 			$scope.bill.cond_reglement_code = item.cond_reglement_code;
+
+			$scope.bill.commercial_id = item.commercial_id;
+			$scope.bill.bank_reglement = item.bank_reglement;
+
 		};
 
 		$scope.userAutoComplete = function (val) {

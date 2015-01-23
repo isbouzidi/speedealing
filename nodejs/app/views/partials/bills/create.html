@@ -21,6 +21,7 @@
 		<div class="field-block button-height">
 			<label for="client"><b>{{t 'companies:Company'}}</b></label>
 			<input required type="text" data-ng-model="bill.client" typeahead-on-select="updateCoord($item, $model, $label)" typeahead="societe as societe.name for societe in societeAutoComplete($viewValue, 'name') | filter:{name:$viewValue}" id="client" class="input" autocomplete="off">
+                        <span class="margin-left">Commercial : \{{bill.commercial_id.name}}</span>
 		</div>
 		
 		<div class="field-block button-height" ng-show="bill.client.isNameModified">
