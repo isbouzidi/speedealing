@@ -339,7 +339,12 @@ Template.prototype.applyHandlers = function () {
 				}
 				break;
 			case "number" :
-				value = accounting.formatNumber(handler.value, {decimal: ",", thousand: " ", precision: handler.precision || 2});
+				if (typeof handler.value === "object") {
+					value = accounting.formatNumber(handler.value.value, {decimal: ",", thousand: " ", precision: handler.precision || 2});
+					if (handler.value.unit)
+						value += " " + handler.value.unit;
+				} else
+					value = accounting.formatNumber(handler.value, {decimal: ",", thousand: " ", precision: handler.precision || 2});
 				break;
 			case "euro" :
 				value = accounting.formatMoney(handler.value, {symbol: "€", format: "%v %s", decimal: ",", thousand: " ", precision: 2});
@@ -369,8 +374,6 @@ Template.prototype.applyHandlers = function () {
 				handlers,
 				function (handler, next) {
 					// apply the handlers to the content
-
-
 
 					if (_.isArray(handler)) {
 						if (!handler[0] || !handler[0].keys)

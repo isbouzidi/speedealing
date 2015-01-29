@@ -190,7 +190,6 @@ angular.module('mean.delivery').controller('DeliveryController', ['$scope', '$lo
 				}
 			}
 			delivery.$update(function (response) {
-				$scope.delivery = response;
 				pageTitle.setTitle('Bon Livraison ' + delivery.ref);
 
 				if (response.Status === "DRAFT")

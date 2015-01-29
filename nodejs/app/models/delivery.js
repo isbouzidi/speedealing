@@ -93,21 +93,21 @@ var deliverySchema = new Schema({
 				label: String,
 				unit: String,
 			},
-			qty: Number,
+			qty: {type: Number, default: 0},
 			pu_ht: Number,
 			tva_tx: Number,
 			total_tva: Number,
 			total_ht: {type: Number, set: setPrice},
 			discount: {type: Number, default: 0},
 			no_package: Number, // Colis Number TODO a supprimer
-			qty_order: Number
+			qty_order: {type: Number, default: 0}
 		}],
 	history: [{date: Date, author: {id: String, name: String}, Status: Schema.Types.Mixed}],
-	latex: {
-		title: String,
-		createdAt: {type: Date},
-		data: Buffer,
-	},
+	/*latex: {
+	 title: String,
+	 createdAt: {type: Date},
+	 data: Buffer,
+	 },*/
 	feeDelivering: {type: Boolean, default: true} // Frais de facturation
 }, {
 	toObject: {virtuals: true},

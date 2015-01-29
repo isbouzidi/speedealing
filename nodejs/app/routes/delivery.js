@@ -255,8 +255,7 @@ Object.prototype = {
 		});
 	},
 	pdf: function (req, res) {
-		// Generation de la livraison PDF et download
-
+		// Generation du BL PDF et download
 		var fk_livraison;
 		Dict.extrafield({extrafieldName: 'BonLivraison'}, function (err, doc) {
 			if (err) {
@@ -267,108 +266,83 @@ Object.prototype = {
 			fk_livraison = doc;
 		});
 
-		var cond_reglement_code = {};
-		Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
-			cond_reglement_code = docs;
-		});
+		var doc = req.delivery;
 
-		var mode_reglement_code = {};
-		Dict.dict({dictName: "fk_paiement", object: true}, function (err, docs) {
-			mode_reglement_code = docs;
-		});
+		if (doc.Status === "DRAFT") {
+			res.type('html');
+			return res.send(500, "Impossible de générer le PDF, le bon livraison n'est pas validé");
+		}
 
-		latex.loadModel("delivery.tex", function (err, tex) {
+		var model = "delivery.tex";
 
-			var doc = req.delivery;
+		SocieteModel.findOne({_id: doc.client.id}, function (err, societe) {
 
-			if (doc.Status === "DRAFT") {
-				res.type('html');
-				return res.send(500, "Impossible de générer le PDF, le bon livraison n'est pas validé");
+			// replacement des variables
+			var destinataire = "";
+			if (doc.client.id != '5333032036f43f0e1882efce') { //Client Accueil
+				destinataire = doc.client.name;
 			}
 
-			SocieteModel.findOne({_id: doc.client.id}, function (err, societe) {
+			// Array of lines
+			var tabLines = [];
 
-				// replacement des variables
-				tex = tex.replace(/--NUM--/g, doc.ref);
-				tex = tex.replace(/--DESTINATAIRE--/g, "\\textbf{\\large " + doc.client.name + "} \\\\" + doc.address + "\\\\ \\textsc{" + doc.zip + " " + doc.town + "}");
-				tex = tex.replace(/--CODECLIENT--/g, societe.code_client);
-				tex = tex.replace(/--TITLE--/g, doc.title);
-				tex = tex.replace(/--REFCLIENT--/g, doc.ref_client);
-				tex = tex.replace(/--ORDER--/g, (doc.order && doc.order.ref ? doc.order.ref : "-"));
-				tex = tex.replace(/--DATEC--/g, (doc.order && doc.order.datec ? dateFormat(doc.order.datec, "dd/mm/yyyy") : "-"));
-				tex = tex.replace(/--DATEEXP--/g, dateFormat(doc.datedl, "dd/mm/yyyy"));
 
-				tex = tex.replace(/--REGLEMENT--/g, cond_reglement_code.values[doc.cond_reglement_code].label);
-
-				tex = tex.replace(/--PAID--/g, mode_reglement_code.values[doc.mode_reglement_code].label);
-
-				switch (doc.mode_reglement_code) {
-					case "VIR" :
-						tex = tex.replace(/--BK--/g, "\\\\ --IBAN--");
-						break;
-
-					case "CHQ" :
-						tex = tex.replace(/--BK--/g, "A l'ordre de --ENTITY--");
-						break;
-
-					default :
-						tex = tex.replace(/--BK--/g, "");
-				}
-				//tex = tex.replace(/--NOTE--/g, doc.desc.replace(/\n/g, "\\\\"));
-				tex = tex.replace(/--NOTE--/g, "");
-
-				//console.log(doc);
-
-				var tab_latex = "";
-				for (var i = 0; i < doc.lines.length; i++) {
-					tab_latex += doc.lines[i].product.name.substring(0, 11).replace(/_/g, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "&\\specialcell[t]{\\textbf{" + doc.lines[i].product.label.replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "}\\\\" + doc.lines[i].description.replace(/\n/g, "\\\\").replace(/_/gi, "\\_").replace(/%/gi, "\\%").replace(/&/gi, "\\&") + "\\\\}&" + doc.lines[i].qty_order + "&" + /*latex.number(doc.lines[i].qty, 3)*/ Math.round(doc.lines[i].qty * 1000) / 1000 + (doc.lines[i].product.unit ? " " + doc.lines[i].product.unit : " U") + "\\tabularnewline\n";
-				}
-				//console.log(products)
-				//console.log(tab_latex);
-				//return;
-
-				tex = tex.replace("--TABULAR--", tab_latex);
-
-				tab_latex = "";
-				tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
-				for (var i = 0; i < doc.total_tva.length; i++) {
-					tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
-				}
-				tab_latex += "\\vhline\n";
-				tab_latex += "Total TTC &" + latex.price(doc.total_ttc) + "\\tabularnewline\n";
-				//Payé & --PAYE--\\ 
-				tex = tex.replace("--TOTAL--", tab_latex);
-
-				tex = tex.replace(/--APAYER--/g, latex.price(doc.total_ttc));
-
-				latex.headfoot(doc.entity, tex, function (tex) {
-
-					tex = tex.replace(/undefined/g, "");
-
-					doc.latex.data = new Buffer(tex);
-					doc.latex.createdAt = new Date();
-					doc.latex.title = "Livraison - " + doc.ref;
-
-					doc.save(function (err) {
-						if (err) {
-							console.log("Error while trying to save this document");
-							res.send(403, "Error while trying to save this document");
-						}
-
-						latex.compileDoc(doc._id, doc.latex, function (result) {
-							if (result.errors.length) {
-								//console.log(pdf);
-								return res.send(500, result.errors);
-							}
-							return latex.getPDF(result.compiledDocId, function (err, pdfPath) {
-								res.type('application/pdf');
-								//res.attachment(doc.ref + ".pdf"); // for douwnloading
-								res.sendfile(pdfPath);
-							});
-						});
-					});
-				});
+			tabLines.push({
+				keys: [
+					{key: "ref", type: "string"},
+					{key: "description", type: "area"},
+					{key: "qty_order", type: "number", precision: 3},
+					{key: "qty", type: "number", precision: 3}
+				]
 			});
+
+			for (var i = 0; i < doc.lines.length; i++) {
+				tabLines.push({
+					ref: doc.lines[i].product.name.substring(0, 12),
+					description: "\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description,
+					qty_order: doc.lines[i].qty_order,
+					qty: {value: doc.lines[i].qty, unit: (doc.lines[i].product.unit ? " " + doc.lines[i].product.unit : "U")}
+				});
+				//tab_latex += " & \\specialcell[t]{\\\\" + "\\\\} & " +   + " & " + " & " +  "\\tabularnewline\n";
+			}
+
+			res.setHeader('Content-type', 'application/pdf');
+			latex.Template(model, req.user.entity)
+					.apply({
+						"NUM": {"type": "string", "value": doc.ref},
+						"DESTINATAIRE.NAME": {"type": "string", "value": destinataire},
+						"DESTINATAIRE.ADDRESS": {"type": "area", "value": doc.address},
+						"DESTINATAIRE.ZIP": {"type": "string", "value": doc.zip},
+						"DESTINATAIRE.TOWN": {"type": "string", "value": doc.town},
+						"CODECLIENT": {"type": "string", "value": societe.code_client},
+						//"TITLE": {"type": "string", "value": doc.title},
+						"REFCLIENT": {"type": "string", "value": doc.ref_client},
+						"DATEC": {
+							"type": "date",
+							"value": doc.datec,
+							"format": "dd/mm/yyyy"
+						},
+						"DATEEXP": {
+							"type": "date",
+							"value": doc.datedl,
+							"format": "dd/mm/yyyy"
+						},
+						"ORDER": {"type": "string", "value": (doc.order && doc.order.ref ? doc.order.ref : "-")},
+						"NOTE": {"type": "string", "value": ""},
+						"TABULAR": tabLines
+					})
+					.on('error', function (err) {
+						console.log(err);
+						res.send(500, err);
+					})
+					.finalize(function (tex) {
+						//console.log('The document was converted.');
+					})
+					.compile()
+					.pipe(res)
+					.on('close', function () {
+						console.log('document written');
+					});
 		});
 	},
 	caFamily: function (req, res) {
