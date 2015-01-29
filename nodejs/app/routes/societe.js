@@ -1791,6 +1791,7 @@ Object.prototype = {
 	update: function (req, res) {
 		var societe = req.societe;
 		societe = _.extend(societe, req.body);
+		societe.user_modif = req.user._id;
 		//console.log(req.body);
 
 		societe.save(function (err, doc) {
