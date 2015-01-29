@@ -133,12 +133,15 @@ Object.prototype = {
 									monnaie: "E"
 								};
 
-							line.credit = lineBill.total_ht;
+							if (lineBill.total_ht > 0)
+								line.credit = lineBill.total_ht;
+							else
+								line.debit = Math.abs(lineBill.total_ht);
 
 							//console.log(line);
-							if(line.credit !== 0)
+							if (line.credit !== 0 || line.debit !== 0)
 								result.push(line);
-							
+
 							cb();
 						});
 					}, function (err) {
@@ -162,9 +165,12 @@ Object.prototype = {
 								monnaie: "E"
 							};
 
-							line.credit = bill.total_tva[i].total;
+							if (bill.total_tva[i].total > 0)
+								line.credit = bill.total_tva[i].total;
+							else
+								line.debit = Math.abs(bill.total_tva[i].total);
 
-							if(line.credit !== 0)
+							if (line.credit !== 0 || line.debit !== 0)
 								result.push(line);
 						}
 
