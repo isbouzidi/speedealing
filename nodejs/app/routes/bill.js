@@ -401,8 +401,19 @@ Object.prototype = {
 					return console.log(err);
 
 				var texOutput = "";
+
+				function compare(a, b) {
+					if (a.id < b.id)
+						return -1;
+					if (a.id > b.id)
+						return 1;
+					return 0;
+				}
+
+				tabTex.sort(compare);
+
 				for (var i = 0; i < tabTex.length; i++) {
-					if (i !== 0){
+					if (i !== 0) {
 						texOutput += "\\newpage\n\n";
 						texOutput += "\\setcounter{page}{1}\n\n";
 					}
@@ -428,7 +439,7 @@ Object.prototype = {
 
 		function createBill(doc, callback) {
 			var discount = false;
-		
+
 			if (doc.Status == "DRAFT") {
 				res.type('html');
 				return callback("Impossible de générer le PDF, la facture n'est pas validée");
