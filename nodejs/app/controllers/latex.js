@@ -237,8 +237,8 @@ function Template(arg, entity) {
 	this.handlers = []; // variables
 	this.entity = entity;
 	// the constructor now works with a stream, too
-
-	this.stream = fs.createReadStream(config.root + config.latex.models + arg);
+	if (arg)
+		this.stream = fs.createReadStream(config.root + config.latex.models + arg);
 }
 
 // inherit from event emitter
@@ -492,21 +492,26 @@ Template.prototype.finalize = function (done) {
  * Register a handler on the 'finalized' event. This start latex compilation
  */
 
-Template.prototype.compile = function () {
-	var emit = this.emit.bind(this);
-	this.on('compile', function (tex) {
+Template.prototype.compile = function (layout, inputTex) {
 
+	if (typeof layout === 'undefined') // Choose an other model latex
+		layout = "main"; // .tex .log ...
+
+	var emit = this.emit.bind(this);
+
+	var compile = function (tex) {
 		// make temporary directory to create and compile latex pdf
 		temp.mkdir("pdfcreator", function (err, dirPath) {
-			var inputPath = path.join(dirPath, "main.tex");
+			var inputPath = path.join(dirPath, "texfile.tex");
+			var compilePath = path.join(dirPath, layout + ".tex");
 			var afterCompile = function (err) {
 				// store the logs for the user here
-				fs.readFile(path.join(dirPath, "main.log"), function (err, data) {
+				fs.readFile(path.join(dirPath, layout + ".log"), function (err, data) {
 					if (err) {
 						return emit('error', "Error while trying to read logs.");
 					}
 
-					var pdfTitle = "main.pdf"
+					var pdfTitle = layout + ".pdf"
 							, tempfile = path.join(dirPath, pdfTitle);
 					var outputStream = fs.createReadStream(tempfile);
 					emit('pipe', outputStream);
@@ -533,15 +538,21 @@ Template.prototype.compile = function () {
 					}
 
 					// compile the document (or at least try) 
-					exec("pdflatex -interaction=nonstopmode " + inputPath + " > /dev/null 2>&1"
+					exec("pdflatex -interaction=nonstopmode " + compilePath + " > /dev/null 2>&1"
 							, function () {
-								exec("pdflatex -interaction=nonstopmode " + inputPath + " > /dev/null 2>&1"
+								exec("pdflatex -interaction=nonstopmode " + compilePath + " > /dev/null 2>&1"
 										, afterCompile);
 							});
 				});
 			});
 		});
-	});
+	};
+
+	if (typeof inputTex === 'undefined')
+		this.on('compile', compile);
+	else
+		compile(inputTex);
+
 	return this;
 };
 /**

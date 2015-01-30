@@ -20,6 +20,7 @@ module.exports = function (app, passport, auth) {
 	var object = new Object();
 	app.get('/api/bill', auth.requiresLogin, object.read);
 	app.get('/api/bill/caFamily', auth.requiresLogin, object.caFamily);
+	app.get('/api/bill/pdf/', auth.requiresLogin, object.pdfAll);
 	app.get('/api/bill/:billId', auth.requiresLogin, object.show);
 	app.post('/api/bill', auth.requiresLogin, object.create);
 	app.post('/api/bill/:billId', auth.requiresLogin, object.create);
@@ -366,6 +367,229 @@ Object.prototype = {
 						});
 			});
 		});
+	},
+	pdfAll: function (req, res) {
+		// Generation de la facture PDF et download
+
+		var discount = false;
+		var cond_reglement_code = {};
+		Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
+			cond_reglement_code = docs;
+		});
+		var mode_reglement_code = {};
+		Dict.dict({dictName: "fk_paiement", object: true}, function (err, docs) {
+			mode_reglement_code = docs;
+		});
+
+		var tabTex = [];
+
+		BillModel.find({Status: {$ne: "DRAFT"}}, function (err, bills) {
+			if (err)
+				return console.log(err);
+
+			async.each(bills, function (bill, cb) {
+				//console.log(bill);
+
+				createBill(bill, function (err, tex) {
+					if (err)
+						return cb(err);
+
+					tabTex.push({id: bill.ref, tex: tex});
+					cb();
+				});
+			}, function (err) {
+				if (err)
+					return console.log(err);
+
+				var texOutput = "";
+				for (var i = 0; i < tabTex.length; i++) {
+					if (i !== 0){
+						texOutput += "\\newpage\n\n";
+						texOutput += "\\setcounter{page}{1}\n\n";
+					}
+
+					texOutput += tabTex[i].tex;
+				}
+
+				//console.log(texOutput);
+				res.setHeader('Content-type', 'application/pdf');
+				latex.Template(null, req.user.entity)
+						.on('error', function (err) {
+							console.log(err);
+							res.send(500, err);
+						})
+						.compile("main", texOutput)
+						.pipe(res)
+						.on('close', function () {
+							console.log('document written');
+						});
+			});
+		});
+
+
+		function createBill(doc, callback) {
+
+			if (doc.Status == "DRAFT") {
+				res.type('html');
+				return res.send(500, "Impossible de générer le PDF, la facture n'est pas validée");
+			}
+
+			var model = "facture.tex";
+			// check if discount
+			for (var i = 0; i < doc.lines.length; i++) {
+				if (doc.lines[i].discount > 0) {
+					model = "facture_discount.tex";
+					discount = true;
+					break;
+				}
+			}
+
+			SocieteModel.findOne({_id: doc.client.id}, function (err, societe) {
+				if (societe == null) {
+					console.log("Societe deleted");
+					return callback();
+				}
+
+				BankModel.findOne({ref: doc.bank_reglement}, function (err, bank) {
+					if (bank)
+						var iban = bank.name_bank + "\n RIB : " + bank.code_bank + " " + bank.code_counter + " " + bank.account_number + " " + bank.rib + "\n IBAN : " + bank.iban + "\n BIC : " + bank.bic;
+
+
+					// replacement des variables
+					var destinataire = "";
+					if (doc.client.id != '5333032036f43f0e1882efce') { //Client Accueil
+						destinataire = doc.client.name;
+					}
+
+					// Array of lines
+					var tabLines = [];
+
+					if (discount)
+						tabLines.push({
+							keys: [
+								{key: "ref", type: "string"},
+								{key: "description", type: "area"},
+								{key: "tva_tx", type: "string"},
+								{key: "pu_ht", type: "number", precision: 3},
+								{key: "discount", type: "string"},
+								{key: "qty", type: "number", precision: 3},
+								{key: "total_ht", type: "euro"}
+							]
+						});
+					else
+						tabLines.push({
+							keys: [
+								{key: "ref", type: "string"},
+								{key: "description", type: "area"},
+								{key: "tva_tx", type: "string"},
+								{key: "pu_ht", type: "number", precision: 3},
+								{key: "qty", type: "number", precision: 3},
+								{key: "total_ht", type: "euro"}
+							]
+						});
+
+					for (var i = 0; i < doc.lines.length; i++) {
+						tabLines.push({
+							ref: doc.lines[i].product.name.substring(0, 12),
+							description: "\\textbf{" + doc.lines[i].product.label + "}\\\\" + doc.lines[i].description,
+							tva_tx: doc.lines[i].tva_tx,
+							pu_ht: doc.lines[i].pu_ht,
+							discount: (doc.lines[i].discount ? (doc.lines[i].discount + " %") : ""),
+							qty: doc.lines[i].qty,
+							total_ht: doc.lines[i].total_ht
+						});
+						//tab_latex += " & \\specialcell[t]{\\\\" + "\\\\} & " +   + " & " + " & " +  "\\tabularnewline\n";
+					}
+
+					// Array of totals
+					var tabTotal = [{
+							keys: [
+								{key: "label", type: "string"},
+								{key: "total", type: "euro"}
+							]
+						}];
+
+					//Total HT
+					tabTotal.push({
+						label: "Total HT",
+						total: doc.total_ht
+					});
+
+					for (var i = 0; i < doc.total_tva.length; i++) {
+						tabTotal.push({
+							label: "Total TVA " + doc.total_tva[i].tva_tx + " %",
+							total: doc.total_tva[i].total
+						});
+					}
+
+					//Total TTC
+					tabTotal.push({
+						label: "Total TTC",
+						total: doc.total_ttc
+					});
+
+					var reglement = "";
+					switch (doc.mode_reglement_code) {
+						case "VIR" :
+							if (doc.bank_reglement) { // Bank specific for payment
+								reglement = "\n" + iban;
+							}
+							else // Default IBAN
+								reglement = "\n --IBAN--";
+							break;
+						case "CHQ" :
+							reglement = "A l'ordre de --ENTITY--";
+							break;
+					}
+
+					/*tab_latex += "Total HT &" + latex.price(doc.total_ht) + "\\tabularnewline\n";
+					 for (var i = 0; i < doc.total_tva.length; i++) {
+					 tab_latex += "Total TVA " + doc.total_tva[i].tva_tx + "\\% &" + latex.price(doc.total_tva[i].total) + "\\tabularnewline\n";
+					 }
+					 tab_latex += "\\vhline\n";
+					 tab_latex += "Total TTC &" + latex.price(doc.total_ttc) + "\\tabularnewline\n";*/
+
+					latex.Template(model, req.user.entity)
+							.apply({
+								"NUM": {"type": "string", "value": doc.ref},
+								"DESTINATAIRE.NAME": {"type": "string", "value": destinataire},
+								"DESTINATAIRE.ADDRESS": {"type": "area", "value": doc.address},
+								"DESTINATAIRE.ZIP": {"type": "string", "value": doc.zip},
+								"DESTINATAIRE.TOWN": {"type": "string", "value": doc.town},
+								"CODECLIENT": {"type": "string", "value": societe.code_client},
+								//"TITLE": {"type": "string", "value": doc.title},
+								"REFCLIENT": {"type": "string", "value": doc.ref_client},
+								"DATEC": {
+									"type": "date",
+									"value": doc.datec,
+									"format": "dd/mm/yyyy"
+								},
+								"DATEECH": {
+									"type": "date",
+									"value": doc.dater,
+									"format": "dd/mm/yyyy"
+								},
+								"REGLEMENT": {"type": "string", "value": cond_reglement_code.values[doc.cond_reglement_code].label},
+								"PAID": {"type": "string", "value": mode_reglement_code.values[doc.mode_reglement_code].label},
+								"NOTE": {"type": "string", "value": ""},
+								"BK": {"type": "area", "value": reglement},
+								"TABULAR": tabLines,
+								"TOTAL": tabTotal,
+								"APAYER": {
+									"type": "euro",
+									"value": doc.total_ttc || 0
+								}
+							})
+							.on('error', callback)
+							.finalize(function (tex) {
+								//console.log('The document was converted.');
+								callback(null, tex);
+							});
+				});
+			});
+		}
+
+
 	},
 	releve_facture: function (req, res) {
 		// Generation de la facture PDF et download

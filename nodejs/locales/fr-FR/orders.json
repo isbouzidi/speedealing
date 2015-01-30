@@ -56,6 +56,7 @@
     "StatusOrderError": "Erreur",
     "StatusOrderReceivedPartially": "Reçu partiellement",
     "StatusOrderReceivedAll": "Reçu complètement",
+    "StatusOrderApprobation" : "Attente approb. client",
     "ShippingExist": "Une expédition existe",
     "DraftOrWaitingApproved": "Brouillon ou approuvée pas encore commandée",
     "DraftOrWaitingShipped": "Brouillon ou validée pas encore expédiée",
