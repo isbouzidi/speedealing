@@ -371,7 +371,6 @@ Object.prototype = {
 	pdfAll: function (req, res) {
 		// Generation de la facture PDF et download
 
-		var discount = false;
 		var cond_reglement_code = {};
 		Dict.dict({dictName: "fk_payment_term", object: true}, function (err, docs) {
 			cond_reglement_code = docs;
@@ -428,10 +427,11 @@ Object.prototype = {
 
 
 		function createBill(doc, callback) {
-
+			var discount = false;
+		
 			if (doc.Status == "DRAFT") {
 				res.type('html');
-				return res.send(500, "Impossible de générer le PDF, la facture n'est pas validée");
+				return callback("Impossible de générer le PDF, la facture n'est pas validée");
 			}
 
 			var model = "facture.tex";
