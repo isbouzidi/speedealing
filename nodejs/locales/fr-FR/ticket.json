@@ -19,5 +19,9 @@
 	"Callback": "Rappel",
 	"CallbackNotification": "Date à partir duquel l'alerte sera re-ouverte",
 	"Recurrency" : "Récurrence",
-	"RecurrencyNotification" : "Récurrence de l'alerte en jours"
+	"RecurrencyNotification" : "Récurrence de l'alerte en jours",
+        "ListTickets": "Liste des alertes",
+        "Info":"Infos",
+        "Files":"Fichiers",
+        "Notes":"Notes"
 }

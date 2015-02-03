@@ -46,7 +46,8 @@ window.app = angular.module('mean', [
         'mean.vehicule',
         'mean.regulier',
         'mean.requestBuy',
-        'mean.chaumeil'
+        'mean.chaumeil',
+        'mean.tickets'
 ]);
 
 angular.module('mean.system', []);
@@ -73,6 +74,7 @@ angular.module('mean.vehicule', []);
 angular.module('mean.regulier', []);
 angular.module('mean.requestBuy', []);
 angular.module('mean.chaumeil', []);
+angular.module('mean.tickets', []);
 
 angular.module('jm.i18next').config(['$i18nextProvider', function($i18nextProvider) {
 		$i18nextProvider.options = {

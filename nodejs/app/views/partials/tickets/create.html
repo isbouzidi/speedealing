@@ -1,0 +1,110 @@
+<form data-ng-init='init()' data-ng-submit='create()' class="no-margin-bottom block margin-bottom wizard same-height wizard-enabled" style="width: 800px;margin: 0 auto;">
+
+    <!-- Block style is optional, you can use any layout -->
+    <h3 class="block-title">{{t 'ticket:NewTicket'}}</h3>
+
+    <ul class="wizard-steps">
+
+    </ul>
+
+    <fieldset class="wizard-fieldset fields-list active">
+        <div class="field-block">
+            <h4>{{t 'Hello'}}</h4>
+            <p>Bienvenue sur l'interface de création de ticket.</p>
+        </div>
+
+        <div class="field-block button-height">
+            <label><b>{{t 'Title'}}</b></label>
+            <input type="text" data-ng-model="ticket.name" required id="ticket_name" class="input full-width">
+        </div>
+
+        <div class="field-block button-height">
+            <label><b>{{t 'ticket:ControlledBy'}}</b></label>
+            <input type="text" id="ticket_controlledBy" data-ng-model="ticket.controlledBy" data-typeahead-on-select="ticket.affectedTo[0]=ticket.controlledBy" data-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}" class="input"/>
+            <small class="input-info">{{t 'ticket:UserClosedTicket'}}</small>
+        </div>
+
+        <div class="field-block button-height">
+            <label><b>{{t 'ticket:AffectedTo'}}</b></label>
+            <tags-input 
+                ng-model="ticket.affectedTo" 
+                placeholder="Ajouter collaborateur..." 
+                display-property="name">
+                <auto-complete source="affectedToAutoComplete($query)" min-length="-1"></auto-complete>
+            </tags-input>
+        </div>
+
+        <div class="field-block button-height">
+            <label style="margin-top: 34px;"><b>{{t 'ticket:Expire'}}</b></label>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 34px;">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="ticket.datef" is-open="opened[0]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <timepicker ng-model="ticket.datef" hour-step="hstep0" minute-step="mstep0" show-meridian="ismeridian0"></timepicker>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-block button-height">
+            <label style="margin-top: 34px;"><b>{{t 'ticket:Callback'}}</b></label>
+            <div class="row">
+                <div class="col-md-6" style="margin-top: 34px;">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="ticket.callback" is-open="opened[1]" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <timepicker ng-model="ticket.callback" hour-step="hstep1" minute-step="mstep1" show-meridian="ismeridian1"></timepicker>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-block button-height">
+            <label><b>{{t 'ticket:Recurrency'}}</b></label>
+            <p class="button-height">
+                <span class="number input margin-right">
+                    <input type="number" min='0' step='1' ng-model="ticket.recurrency" class="form-control">                    
+                </span>
+            </p>
+            <small class="input-info">{{t 'ticket:RecurrencyNotification'}}</small>
+        </div>
+
+        <div class="field-block button-height">
+            <label><b>{{t 'Links'}}</b></label>
+
+            <span class="input">
+                <select class="expandable-list"
+                        ng-options="s.name for s in modules" 
+                        ng-model="module">                    
+                </select>                
+                <input type="text" placeholder="{{t 'Search'}}..." data-ng-model="item" data-typeahead-on-select="addLink()" data-typeahead="item as item.name for item in linkAutoComplete($viewValue) | filter:{name:$viewValue}" class="input-unstyled"/>                
+            </span>
+            <div class="boxed left-border">
+                <dl class="definition">
+                    <dt data-ng-repeat-start="item in ticket.linked" data-ng-class="icon(item)">\{{item.title}}</dt>
+                    <dd data-ng-repeat-end>\{{item.name|| item.ref}} <a href="" data-ng-click="deleteLink($index)" class="red icon-trash"></a></dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="field-block button-height">
+            <label><b>{{t 'Description'}}</b></label>
+            <textarea kendo-editor id="note" k-options="noteKendoEditor" data-ng-model="ticket.task"></textarea>
+        </div>
+        <div class="field-block button-height wizard-controls clearfix">
+            <button type="submit" class="button glossy mid-margin-right float-right">
+                <span class="button-icon"><span class="icon-tick"></span></span>
+                {{t 'Create'}}
+            </button>
+        </div>
+    </fieldset>
+</form>

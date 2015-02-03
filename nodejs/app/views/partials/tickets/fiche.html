@@ -1,0 +1,306 @@
+<section data-ng-controller="TicketsController">
+    <div data-ng-init="findOne()">
+        <hgroup id="main-title" class="six-columns thin">
+            <h1 class="thin mid-margin-bottom">\{{ticket.ref}} : \{{ticket.name}} <small class="valign-top tag orange-bg ">En cours</small></h1>
+            <h4 class="no-margin-top">{{t 'ticket:From'}}: \{{ticket.controlledBy.name}}</h4>
+        </hgroup>
+        <div class="with-padding">
+            <div class="columns">                
+                <div class="four-columns twelve-columns-mobile">
+                    <div class="boxed">
+                        <p class="icon-user green underline">{{t 'Links'}}</p>                        
+                        <table class="info-table">
+                            <tbody>                                
+                                <tr>
+                                    <td colspan="2">                                                        
+                                        <span class="input" style=" background: white">
+                                            <select class="expandable-list"
+                                                    data-ng-options=" s.name for s in modules"
+                                                    data-ng-model="module">
+                                            </select>
+                                            <input type="text" placeholder="{{t 'Search'}}..." data-ng-model="item" data-typeahead-on-select="addLink()" data-typeahead="item as item.name for item in linkAutoComplete($viewValue) | filter:{name:$viewValue}" class="input" style="width: 114px"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="boxed left-border">
+                                            <dl class="definition">
+                                                <dt data-ng-repeat-start="item in ticket.linked" data-ng-class="icon(item)">\{{item.title}}</dt>
+                                                <dd data-ng-repeat-end>\{{item.name|| item.ref}} <a href="" data-ng-click="deleteLink($index)" class="red icon-trash"></a></dd>
+                                            </dl>                                        
+                                        </div>
+                                    </td>   
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>                    
+                </div>
+                <div class="eight-columns">
+                    <tabset>
+                        <tab>
+                            <tab-heading>
+                                <span class="icon-info">Infos</span>
+                            </tab-heading>
+                            <div class="boxed relative large-box-shadow">
+                                <div class="columns">
+                                    <div class="twelve-columns">
+                                        <table class="simple-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">
+                                                        <span style="position: absolute;top: 40px;">
+                                                            Avancement
+                                                        </span>
+                                                        <p class="big-message black-gradient green-color" style="width: 60px !important; height: 32px !important; padding: 8px !important; margin-left: 86px">
+                                                            <span class="block-arrow left"><span></span></span>
+                                                            <strong>\{{ticket.percentage}} <span class="color">%</span></strong>
+                                                        </p>
+                                                    </th>
+                                                    <td>
+                                                        <div style="position: relative; margin-bottom:30px">
+                                                        <input 
+                                                            type="range" 
+                                                            tooltip="\{{ticket.percentage}}%" 
+                                                            data-ng-model="ticket.percentage" 
+                                                            ng-change="updatePercentage()" 
+                                                            min="0" max="100" step="20" 
+                                                            class="slider margin-top margin-bottom padding-bottom" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'Title'}}</th>
+                                                    <td>
+                                                        <a href="#" class="blue h4" editable-text="ticket.name" buttons="no" onaftersave="update()" blur="submit" e-form="name" >
+                                                            \{{ ticket.name || 'undefined' }}
+                                                        </a>
+                                                        <span class="icon-pencil grey" 
+                                                              ng-click="name.$show()" 
+                                                              ng-hide="name.$visible">
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'ticket:ControlledBy'}}</th>
+                                                    <td>
+                                                        <a href="#" class="blue h4" editable-text="ticket.controlledBy.name" buttons="no">
+                                                            \{{ ticket.controlledBy.name || 'undefined' }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'ticket:AffectedTo'}}</th>
+                                                    <td>
+                                                        <tags-input 
+                                                            ng-model="ticket.affectedTo" 
+                                                            placeholder="Ajouter collaborateur..." 
+                                                            display-property="name"
+                                                            on-tag-added='update()' on-tag-removed="update()">
+                                                            <auto-complete source="affectedToAutoComplete($query)" min-length="-1"></auto-complete>
+                                                        </tags-input>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'ticket:Expire'}}</th>
+                                                    <td>
+                                                        <a href="#"
+                                                           editable-date="ticket.datef"
+                                                           buttons="no"
+                                                           onaftersave="update()"
+                                                           blur="submit">
+                                                            \{{ (ticket.datef | date:"dd/MM/yyyy") || 'undefined'}}
+                                                        </a>
+                                                        <a href="#" 
+                                                           editable-bstime="ticket.datef" 
+                                                           e-show-meridian="false" 
+                                                           e-minute-step="15" 
+                                                           buttons="no"
+                                                           onaftersave="update()"
+                                                           blur="submit">
+                                                            \{{ (ticket.datef | date:"HH:mm") || 'undefined'}}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'ticket:Callback'}}</th>
+                                                    <td>
+                                                        <a href="#"
+                                                           editable-date="ticket.callback"
+                                                           buttons="no"
+                                                           onaftersave="update()"
+                                                           blur="submit">
+                                                            \{{ (ticket.callback | date:"dd/MM/yyyy") || 'undefined'}}
+                                                        </a>
+                                                        <a href="#" 
+                                                           editable-bstime="ticket.callback" 
+                                                           e-show-meridian="false" 
+                                                           e-minute-step="15" 
+                                                           buttons="no"
+                                                           onaftersave="update()"
+                                                           blur="submit">
+                                                            \{{ (ticket.callback | date:"HH:mm") || 'undefined'}}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">{{t 'ticket:Recurrency'}}</th>
+                                                    <td>
+                                                        <span class="margin-left"
+                                                              editable-number="ticket.recurrency" 
+                                                              buttons="no"
+                                                              e-min='0' e-step='1'
+                                                              onaftersave="update()"
+                                                              blur="submit"
+                                                              e-form="recurrency">
+                                                            \{{ticket.recurrency|| "Non défini"}}
+                                                        </span>
+                                                        <span class="icon-pencil grey" 
+                                                              ng-click="recurrency.$show()" 
+                                                              ng-hide="recurrency.$visible">                                                                  
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        
+                                                        <div ng-show="!updateTask">
+                                                            <textarea kendo-editor k-options="noteKendoEditor"data-ng-model="ticket.task"></textarea>
+                                                            <button type="button" class="button glossy mid-margin-right mid-margin-top float-right" ng-click="update(); updateTask = !updateTask">
+                                                                    <span class="button-icon green-gradient"><span class="icon-tick"></span></span>
+                                                                    Modifier
+                                                            </button>
+                                                            <button type="button" class="button glossy mid-margin-right mid-margin-top float-right" ng-click="findOne(); updateTask = !updateTask">
+                                                                    <span class="button-icon red-gradient"><span class="icon-tick"></span></span>
+                                                                    Annuler
+                                                            </button>
+                                                        </div>
+                                                        <div ng-show="updateTask" class="large-box-shadow white-gradient with-border margin-top">
+                                                            <div class="with-small-padding silver-gradient no-margin-top">
+                                                                <span>Tâche à faire</span>                                                                
+                                                                <div class="float-right">
+                                                                    <a href="javascript:void(0)" class="button blue-gradient tiny" ng-click="updateTask = !updateTask">Editer</a>                                                                    
+                                                                </div>
+                                                            </div>
+                                                            <div class="with-small-padding" style="background: white" data-ng-bind-html="ticket.task"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </tab>                        
+                        <tab>
+                            <tab-heading>
+                                <span class="icon-pencil">{{t 'ticket:Notes'}}</span>
+                            </tab-heading>
+                            <div class="boxed relative large-box-shadow">
+                                <div class="columns">
+                                    <div class="twelve-columns">
+
+                                        <span class="button-group children-tooltip">
+                                            <a href="" data-ng-click="enableComment()" class="button blue-gradient icon-speech" title="{{t 'ticket:AddComment'}}">{{t 'ticket:Comment'}}</a>
+                                            <a href="" data-ng-click="enableReply()" class="button" title="{{t 'ticket:ReplyMessage'}}"><span class="icon-reply"></span></a>
+                                            <a href="" data-ng-click="enableForward()" class="button" title="{{t
+                                                                        'Forward'}}"><span class="icon-extract"></span></a>
+                                            <button data-ng-click="setClosed()" data-ng-disabled='ticket.controlledBy.id != global.user._id' class="button" title="{{t
+                                                                        'Close'}}"><span class="icon-cross-round"></span></button>
+                                        </span>
+                                        <form data-ng-show="editMode" data-ng-submit="addComment()">
+                                            <div data-ng-show="editMode == 'reply'"><h5 class="green underline">{{t 'Reply'}}</h5></div>
+                                            <div data-ng-show="editMode == 'comment'"><h5 class="green underline">{{t 'Comment'}}</h5></div>
+                                            <div data-ng-show="editMode == 'forward'"><h5 class="green underline">{{t 'Forward'}}</h5></div>
+
+                                            <p data-ng-show="editMode == 'forward'" class="button-height inline-label">
+                                                <label for="ticket_addUser">{{t 'ticket:ForwardTo'}}</label>
+                                                <input type="text" id="ticket_addUser" data-ng-model="ticket.addUser" data-typeahead="user as user.name for user in userAutoComplete($viewValue) | filter:{name:$viewValue}"  class="input"/>
+                                            </p>
+
+                                            <textarea kendo-editor k-options="noteKendoEditor" data-ng-model="ticket.newNote"></textarea>
+
+                                            <div class="button-height align-center margin-top">
+                                                <button type="submit" class="button glossy mid-margin-right">
+                                                    <span class="button-icon green-gradient"><span class="icon-tick"></span></span>
+                                                    {{t 'Add'}}
+                                                </button>
+
+                                                <button type="button" class="button glossy" data-ng-click="ficheCancel();">
+                                                    <span class="button-icon red-gradient"><span class="icon-cross-round"></span></span>
+                                                    {{t 'Cancel'}}
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <div data-ng-repeat="comment in ticket.comments| orderBy:'-datec'" class="large-box-shadow white-gradient with-border margin-top">
+                                            <div class="with-small-padding silver-gradient no-margin-top">
+                                                <span class="\{{comment.icon}}" data-ng-bind-html="comment.title"></span> <i>(\{{comment.datec| date:'dd-MM-yyyy HH:mm:ss'}})</i>
+                                                <div class="float-right" title="{{t 'ticket:TimeCreate'}}" data-ng-init='timeComment = countDown(comment.datec, false)'><span data-ng-show="timeComment.days > 0">\{{timeComment.days}}j</span><span data-ng-hide="timeComment.days > 0">{{t 'Today'}}</span></div>
+                                            </div>
+                                            <div class="with-small-padding" style="background: white" data-ng-if="comment.note" data-ng-bind-html="comment.note"></div>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </tab>
+                        <tab>
+                            <tab-heading>
+                                <span class="icon-folder">{{t 'ticket:Files'}}</span>
+                            </tab-heading>
+                            <div class="boxed relative large-box-shadow">
+
+                                <div class="panel-content linen">
+
+                                    <div class="panel-control align-right">
+                                        <div class="float-right">
+                                            <!--
+                                            <div class="button-group">
+                                                <progressbar style="width:100px;" class="progress-striped" value="35" type="success">35%</progressbar>
+                                            </div>
+                                            -->
+                                            <div class="button-group">
+                                                <div class="button-height">
+                                                    <input type="file" ng-model="myFiles" ng-file-select="onFileSelect($files)" multiple class="file">
+                                                    <!--<a href="#" class="button icon-cloud-upload margin-left">Add file...</a>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="panel-content" class="panel-load-target" style="height:500px">
+                                        <div class="with-padding">
+                                            <p ng-file-drop="onFileSelect($files)" class="message icon-info-round white-gradient drop-box dark-stripes animated" ng-show="dropSupported">drop files here</p>
+                                            <p ng-file-drop-available="dropSupported=true" class="message icon-info-round white-gradient" ng-show="!dropSupported">HTML5 Drop File is not supported!</p>
+
+                                            <ul class="files-icons on-dark" data-ng-init="getFileTypes()">
+                                                <!--<li>
+                                                        <a href="#" class="file-link">
+                                                                <span class="icon folder-net"></span>
+                                                                Dossier public
+                                                        </a>
+                                                </li>-->
+                                                <li data-ng-repeat="file in ticket.files">
+                                                    <span class="icon" data-ng-class="fileType(file.name)"></span>
+                                                    <div class="controls">
+                                                        <span class="button-group compact children-tooltip">
+                                                            <a data-ng-href="api/tickets/file/\{{ticket._id}}/\{{file.name}}" target="_blank" class="button icon-eye" title="Ouvrir"></a>
+                                                            <a data-ng-href="api/tickets/file/\{{ticket._id}}/\{{file.name}}?download=1" class="button icon-download" title="Télécharger"></a>
+                                                            <button data-ng-click="suppressFile(ticket._id, file.name, $index)" class="button icon-trash" title="Supprimer"></button>
+                                                        </span>
+                                                    </div>
+                                                    <a data-ng-href="api/tickets/file/\{{ticket._id}}/\{{file.name}}" target="_blank">\{{file.originalFilename|| file.name}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </tab>
+                        
+                    </tabset>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
