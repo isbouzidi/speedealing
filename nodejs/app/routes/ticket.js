@@ -316,11 +316,12 @@ module.exports = function (app, passport, auth, usersSocket) {
 	app.post('/api/ticket/file/:Id', auth.requiresLogin, function (req, res) {
 		var id = req.params.Id;
 		//console.log(id);
-
+                console.log('terrrrrr');
+                console.log(req.files.file);
 		if (req.files && id) {
 			//console.log(req.files);
 
-			gridfs.addFile(TicketModel, id, req.files.files, function (err) {
+                        gridfs.addFile(TicketModel, id, req.files.file, function (err) {
 				if (err)
 					res.send(500, err);
 				else
@@ -376,7 +377,7 @@ function Object() {
 
 Object.prototype = {
 	create: function (req, res) {
-		var self = this;
+		var self = this;                
 		var ticket = new TicketModel(req.body);
 
 		ticket.comments.push({author: {id: req.user._id, name: req.user.firstname + " " + req.user.lastname},
@@ -451,7 +452,7 @@ Object.prototype = {
 					res.send(500, doc);
 					return;
 				}
-
+                                
 				res.send(200, doc);
 			});
 		}
@@ -476,8 +477,8 @@ Object.prototype = {
 
 			ticket = _.extend(ticket, req.body);
 
-			ticket.save(function (err) {
-				return res.send(200, {_id: ticket._id});
+			ticket.save(function (err, doc) {
+				return res.send(200, doc);
 			});
 		});
 	},

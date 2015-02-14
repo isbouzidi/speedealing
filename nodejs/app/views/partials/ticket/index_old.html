@@ -1,68 +1,69 @@
 <section data-ng-controller="TicketController" data-ng-init="find()">
-	<noscript class="message black-gradient simpler">Your browser does not support JavaScript! Some features won't work as expected...</noscript>
+    <noscript class="message black-gradient simpler">Your browser does not support JavaScript! Some features won't work as expected...</noscript>
 
-	<div class="content-panel">
+    <div class="content-panel">
 
-		<div class="panel-navigation silver-gradient">
+        <div class="panel-navigation silver-gradient">
 
-			<div class="panel-control">
-				<button data-ng-click="enableNew();" class="button icon-star">{{t 'ticket:NewTicket'}}</button>
-				<div class="float-right">
-					<button data-ng-click="find()" class="button" title="Reload"><span class="icon-redo"></span></button>
-				</div>
-			</div>
+            <div class="panel-control">
+                <button data-ng-click="enableNew();" class="button icon-star">{{t 'ticket:NewTicket'}}</button>
+                <button data-ng-click="addNew();" class="button icon-star">terrrrrrrr</button>
+                <div class="float-right">
+                    <button data-ng-click="find()" class="button" title="Reload"><span class="icon-redo"></span></button>
+                </div>
+            </div>
 
-			<div id="panel-nav" class="panel-load-target scrollable" style="height:490px" ng-style="style(42)" resize>
-				<div class="navigable">
-					<ul class="unstyled-list">						
-						<li class="message-menu" data-ng-class="ticketRead(menuTicket.read)" data-ng-repeat="menuTicket in menuTickets | orderBy:'datef'">
-							<a href="#!/ticket/\{{menuTicket._id}}" title="{{t 'ticket:OpenMessage'}}">
-								<span class="message-status">
-									<span class="grey" data-ng-class="menuTicket.comments[menuTicket.comments.length - 1].icon"></span>
-									<!--<span class="icon-new red" data-ng-show="menuTicket.important"></span>-->
-									<span class="new-message" data-ng-hide="ticketRead(menuTicket.read)=='white-gradient'" title="{{t 'NewMessage'}}"></span>
-								</span>
-								<span class="message-info">
-									<span title="{{t 'TimeLeft'}}" data-ng-init='time=countDown(menuTicket.datef, true)'><span class="blue" data-ng-show="time.days < 0">\{{time.days}}j</span><span class="red" data-ng-hide="time.days < 0 || (time.hours == 0 && time.minutes == 0)">\{{time.hours}}:\{{time.minutes}}</span><span  class="red" data-ng-show="time.minutes == 0  && time.hours == 0 && time.days == 0">{{t 'Timeout'}}</span></span><br>
-									<br />
-									<span class="grey">\{{menuTicket.ref}}</span>
-								</span>
-								<strong class="blue">\{{menuTicket.name}}</strong><br>
-								<small class="grey" data-ng-init="timec=countDown(menuTicket.comments[menuTicket.comments.length - 1].datec, false)"><strong class="black">\{{menuTicket.comments[menuTicket.comments.length - 1].author.name}} </strong><span data-ng-show="timec.days > 0">\{{timec.days}} {{t 'Day'}}</span><span data-ng-hide="timec.days > 0">\{{timec.hours}}:\{{timec.minutes}}</span> {{t 'Ago'}}</small><br/>
-								<progressbar class="progress-striped thin" value="menuTicket.percentage" type="success"></progressbar>
-							</a>
-						</li>
-					</ul>
+            <div id="panel-nav" class="panel-load-target scrollable" style="height:490px" ng-style="style(42)" resize>
+                <div class="navigable">
+                    <ul class="unstyled-list">						
+                        <li class="message-menu" data-ng-class="ticketRead(menuTicket.read)" data-ng-repeat="menuTicket in menuTickets| orderBy:'datef'">
+                            <a href="#!/ticket/\{{menuTicket._id}}" title="{{t 'ticket:OpenMessage'}}">
+                                <span class="message-status">
+                                    <span class="grey" data-ng-class="menuTicket.comments[menuTicket.comments.length - 1].icon"></span>
+                                    <!--<span class="icon-new red" data-ng-show="menuTicket.important"></span>-->
+                                    <span class="new-message" data-ng-hide="ticketRead(menuTicket.read) == 'white-gradient'" title="{{t 'NewMessage'}}"></span>
+                                </span>
+                                <span class="message-info">
+                                    <span title="{{t 'TimeLeft'}}" data-ng-init='time = countDown(menuTicket.datef, true)'><span class="blue" data-ng-show="time.days < 0">\{{time.days}}j</span><span class="red" data-ng-hide="time.days < 0 || (time.hours == 0 && time.minutes == 0)">\{{time.hours}}:\{{time.minutes}}</span><span  class="red" data-ng-show="time.minutes == 0 && time.hours == 0 && time.days == 0">{{t 'Timeout'}}</span></span><br>
+                                    <br />
+                                    <span class="grey">\{{menuTicket.ref}}</span>
+                                </span>
+                                <strong class="blue">\{{menuTicket.name}}</strong><br>
+                                <small class="grey" data-ng-init="timec = countDown(menuTicket.comments[menuTicket.comments.length - 1].datec, false)"><strong class="black">\{{menuTicket.comments[menuTicket.comments.length - 1].author.name}} </strong><span data-ng-show="timec.days > 0">\{{timec.days}} {{t 'Day'}}</span><span data-ng-hide="timec.days > 0">\{{timec.hours}}:\{{timec.minutes}}</span> {{t 'Ago'}}</small><br/>
+                                <progressbar class="progress-striped thin" value="menuTicket.percentage" type="success"></progressbar>
+                            </a>
+                        </li>
+                    </ul>
 
-				</div>
+                </div>
 
-			</div>
+            </div>
 
-		</div>
+        </div>
 
-		<div class="panel-content linen">
+        <div class="panel-content linen">
 
-			<div class="panel-control">
-			</div>
+            <div class="panel-control">
+            </div>
 
-			<div id="panel-content" class="panel-load-target scrollable" style="height:450px" ng-style="style(42)" resize>
-				<div class="with-padding">
-				<div data-ng-if="!new && selected() && !edit">
-					<div data-ng-include data-src="'partials/ticket/fiche.html'"></div>
-				</div> 
-				<div data-ng-hide="selected() || new">
-					<div class="with-padding align-center">
-						<p>Nothing selected.</p>
-					</div>
-				</div>
-				<div data-ng-if="new">
-					<div data-ng-include data-src="'partials/ticket/new.html'"></div>
-				</div>
-				<div data-ng-if="edit">
-					<div data-ng-include data-src="'partials/ticket/edit.html'"></div>
-				</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div id="panel-content" class="panel-load-target scrollable" style="height:450px" ng-style="style(42)" resize>
+                <div class="with-padding">
+                    <div data-ng-if="!new && selected() && !edit">
+                        <div data-ng-include data-src="'partials/ticket/fiche.html'"></div>
+                    </div> 
+                    <div data-ng-hide="selected() || new">
+                        <div class="with-padding align-center">
+                            <p>Nothing selected.</p>
+                        </div>
+                    </div>
+                    <div data-ng-if="new">
+                        <div data-ng-include data-src="'partials/ticket/new.html'"></div>
+                    </div>
+                    <div data-ng-if="edit">
+                        <div data-ng-include data-src="'partials/ticket/edit.html'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

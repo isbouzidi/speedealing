@@ -67,7 +67,7 @@ module.exports = function (app, passport, auth) {
 				]};
 
 		if (req.query.status) {
-			query.Status = {$in : req.query.status};
+			query.Status =  req.query.status;
 		} else {
 			query.Status = {$ne : "DISABLE"};
 		}

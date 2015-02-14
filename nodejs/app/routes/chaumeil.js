@@ -27,6 +27,7 @@ module.exports = function (app, passport, auth) {
     app.get('/api/chaumeil/planning/:planningId', auth.requiresLogin, planning.show);
     app.post('/api/chaumeil/planning', auth.requiresLogin, planning.create);
     app.put('/api/chaumeil/planning/:planningId', auth.requiresLogin, planning.update);
+    app.put('/api/chaumeil/:planningId/:field', auth.requiresLogin, planning.updateField);
     
     app.param('planningId', planning.planningId);
     
@@ -77,7 +78,7 @@ Planning.prototype = {
         
         query.entity = req.user.entity;
             
-        PlanningModel.find(query, function(err, doc){
+        PlanningModel.find(query,{}, {sort: {"date_livraison": -1}}, function(err, doc){
             if(err) {
                 console.log(err);
                 res.send(500);
@@ -106,5 +107,17 @@ Planning.prototype = {
             
             res.json(200, doc);
         });
+    },
+    updateField: function (req, res) {
+        if (req.body.value) {
+            var planningProd = req.planningProd;
+
+            planningProd[req.params.field] = req.body.value;
+
+            planningProd.save(function (err, doc) {
+                res.json(doc);
+            });
+        } else
+            res.send(500);
     }
 };

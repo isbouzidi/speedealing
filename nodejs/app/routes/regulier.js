@@ -49,7 +49,7 @@ Object.prototype = {
                 datec: {$gte: req.query.find}
             };            
             
-        RegulierModel.find(query, function(err, doc){
+        RegulierModel.find(query,{}, {sort: {"datec": -1}}, function(err, doc){
             if(err) {
                 console.log(err);
                 res.send(500);

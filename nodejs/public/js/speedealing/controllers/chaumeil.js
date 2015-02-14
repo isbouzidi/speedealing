@@ -40,7 +40,36 @@ angular.module('mean.chaumeil').controller('PlanningProdController', ['$scope', 
         $scope.init = function () {
 
         };
-
+        
+        $scope.isDateEqual = function(date){
+            
+            if(date){
+                var date2 = new Date();
+                var date1 = new Date(date);
+                var diff = {}                           // Initialisation du retour
+                var tmp = date2 - date1;
+             
+                tmp = Math.floor(tmp/1000);             // Nombre de secondes entre les 2 dates
+                diff.sec = tmp % 60;                    // Extraction du nombre de secondes
+             
+                tmp = Math.floor((tmp-diff.sec)/60);    // Nombre de minutes (partie entière)
+                diff.min = tmp % 60;                    // Extraction du nombre de minutes
+             
+                tmp = Math.floor((tmp-diff.min)/60);    // Nombre d'heures (entières)
+                diff.hour = tmp % 24;                   // Extraction du nombre d'heures
+                 
+                tmp = Math.floor((tmp-diff.hour)/24);   // Nombre de jours restants
+                diff.day = tmp;
+                
+                if(diff.day == 0){
+                    if(date2.getHours() > diff.hour){
+                        return true
+                    }                    
+                }                
+            }
+            return false;                                                
+        };
+        
         $scope.find = function () {
             
             var myDate;
@@ -62,6 +91,13 @@ angular.module('mean.chaumeil').controller('PlanningProdController', ['$scope', 
                 $scope.planningProd = planningProd;
                 $scope.count = planningProd.length;
             });
+            
+            $http({method: 'GET', url: '/api/extrafield', params: {
+                extrafieldName: "Chaumeil"
+            }
+            }).success(function (data) {
+                    $scope.extrafield = data;                   
+            });
         };
 
         $scope.filterOptionsplanningProd = {
@@ -73,7 +109,6 @@ angular.module('mean.chaumeil').controller('PlanningProdController', ['$scope', 
             data: 'planningProd',
             multiSelect: true,
             i18n: 'fr',
-            enableCellSelection: false,
             enableColumnResize: true,
             filterOptions: $scope.filterOptionsplanningProd,
             columnDefs: [
@@ -85,11 +120,14 @@ angular.module('mean.chaumeil').controller('PlanningProdController', ['$scope', 
                 {field: 'description', displayName: 'Déscription'},
                 {field: 'qty', displayName: 'Qte'},
                 {field: 'qtyPages', displayName: 'Qte copies'},
-                {field: 'date_livraison', displayName: 'Livraison', cellFilter: "date:'dd-MM-yyyy HH:mm'"},
-                {field: 'status.name', displayName: 'Etat',
-                    cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')">{{row.getProperty(\'status.name\')}}</small>'},
-                {field: 'step', displayName: 'Etape'}
-                
+                {field: 'date_livraison', displayName: 'Livraison',cellTemplate: 
+                '<div ng-class="{blue: isDateEqual(row.entity.date_livraison) }"><div class="ngCellText">{{row.getProperty(col.field)| date:"dd/MM/yyyy HH:mm"}}</div></div>'},
+                {field: 'status.name', displayName: 'Etat', headerClass: "blue",
+                    cellTemplate: '<div class="ngCellText align-center"><small class="tag glossy" ng-class="row.getProperty(\'status.css\')" editable-select="row.getProperty(\'Status\')" buttons="no" e-form="StatusBtnForm" onbeforesave="updateInPlace(\'/api/chaumeil\',\'Status\', row, $data)" e-ng-options="c.id as c.text for c in etat">{{row.getProperty(\'status.name\')}}</small> <span class="icon-pencil grey" ng-click="StatusBtnForm.$show()" ng-hide="StatusBtnForm.$visible"></span></div>'
+                },
+                {field: 'step', displayName: 'Etape', headerClass: "blue",
+                    cellTemplate: '<div class="ngCellText align-center"><span editable-select="row.getProperty(col.field)" buttons="no" e-form="StepBtnForm" onbeforesave="updateInPlace(\'/api/chaumeil\',\'step\', row, $data)" e-ng-options="s as s for s in extrafield.fields.planningStep.values">{{row.getProperty(\'step\')}}</span> <span class="icon-pencil grey" ng-click="StepBtnForm.$show()" ng-hide="StepBtnForm.$visible"></span></div>'
+                }
             ]
         };
         
@@ -141,6 +179,37 @@ angular.module('mean.chaumeil').controller('PlanningProdController', ['$scope', 
                 
             }, function (errorResponse) {
             });
+        };
+        
+        $scope.updateInPlace = function (api, field, row, newdata) {
+            
+            if (!$scope.save) {
+                $scope.save = {promise: null, pending: false, row: null};
+            }
+            $scope.save.row = row.rowIndex;
+
+            if (!$scope.save.pending) {
+                $scope.save.pending = true;
+                $scope.save.promise = $timeout(function () {
+                    $http({method: 'PUT', url: api + '/' + row.entity._id + '/' + field,
+                        data: {
+                            oldvalue: row.entity[field],
+                            value: newdata
+                        }
+                    }).
+                            success(function (data, status) {
+                                if (status == 200) {
+                                    if (data) {
+                                        row.entity = data;
+                                    }
+                                }
+                            });
+
+                    $scope.save.pending = false;
+                }, 200);
+            }
+
+            return false;
         };
         
         $scope.societeAutoComplete = function (val, field) {

@@ -204,7 +204,7 @@ module.exports = function(app, passport, auth) {
 		var view = req.params.view;
 		res.render('partials/' + view, {user: req.user}); // Mode list view
 	});
-
+	/*
 	app.get('/partials/ticket/:id', auth.html.hasAuthorization, function(req, res) {
 		var view = "ticket";
 		var pos = req.params.id.search(".html"); // search if id is an html page
@@ -213,7 +213,7 @@ module.exports = function(app, passport, auth) {
 		} else
 			res.render('partials/' + view, {user: req.user});
 	});
-
+	*/
 	app.get('/partials/:view/:id', auth.html.hasAuthorization, function(req, res) {
 		var view = req.params.view;
 		var pos = req.params.id.search(".html"); // search if id is an html page
